@@ -618,6 +618,7 @@
     "__type__": "9b950jwM6BOeL3R+aprXRSL",
     "_name": "",
     "_objFlags": 0,
+    "__editorExtras__": {},
     "node": {
       "__id__": 5
     },
@@ -625,6 +626,9 @@
     "__prefab": null,
     "camera": {
       "__id__": 4
+    },
+    "mover": {
+      "__id__": 15
     },
     "_id": "57MN3qdQNHn54d1dsln40K"
   },
