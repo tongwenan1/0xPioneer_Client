@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.SceneAsset",
-    "_name": "Loading",
+    "_name": "test_loading",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_native": "",
