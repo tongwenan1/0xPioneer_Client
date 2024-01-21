@@ -7,7 +7,7 @@ const { ccclass, property } = _decorator;
 @ccclass('mover')
 export class mover extends Component {
     start() {
-        this.target = this.node.position.clone();
+        this.target = this.node.worldPosition.clone();
 
     }
     cleaner: tiledhelp
@@ -16,10 +16,10 @@ export class mover extends Component {
     }
 
     update(deltaTime: number) {
-        var curpos = this.node.position.clone();
+        var curpos = this.node.worldPosition.clone();
         var dist = cc.Vec2.distance(this.target, curpos);
         if (dist < 10) {
-            this.node.setPosition(curpos);
+            this.node.setWorldPosition(curpos);
         }
         else {
 
@@ -27,7 +27,7 @@ export class mover extends Component {
             cc.math.Vec3.subtract(dir, this.target, curpos);
             let len = dir.length();
             if (len < 10) {
-                this.node.setPosition(curpos);
+                this.node.setWorldPosition(curpos);
             }
             else {
                 dir = dir.normalize();
@@ -35,12 +35,14 @@ export class mover extends Component {
                 if (dmove > dist) dmove = dist;
                 dir = dir.multiplyScalar(dmove);
                 curpos = curpos.add(dir);
-                this.node.setPosition(curpos);
+                this.node.setWorldPosition(curpos);
             }
-        }
-     
 
-        this.cleaner.CleanMapWorldPos(curpos);
+
+            this.cleaner.CleanMapWorldPos(curpos);
+        }
+
+
     }
     target: cc.Vec3;
     MoveTo(vec3: cc.Vec3) {

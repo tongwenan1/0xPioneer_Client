@@ -27,12 +27,15 @@ export class tiledhelp extends cc.Component {
 
         //set shadow layer to dynamic
         let layer = this._tile.getLayer("shadow");
+        layer.node.active = true;
+
         let size = this._tile.getMapSize();
         for (var y = 0; y < size.height; y++) {
             for (var x = 0; x < size.width; x++) {
                 let node = new cc.Node();
                 layer.node.addChild(node);
                 let t = node.addComponent(cc.TiledTile);
+                layer.getPositionAt(x, y);
                 t.x = x;
                 t.y = y;
                 t.grid = 1;
@@ -46,34 +49,60 @@ export class tiledhelp extends cc.Component {
     }
     onTouchStart(event: cc.EventTouch) {
 
-        let wpos = tiledhelp.Touchpos2NodePos(this.node, event, this.camera);
-        wpos.y *= -1;
-        console.log("wpos", wpos.x, wpos.y);
-        //wpos = this.camera.convertToUINode(wpos, this.node.parent)
+        let wpos = tiledhelp.Touchpos2WorldPos(event, this.camera);
+
         this.mover.MoveTo(wpos);
 
-        let tpos = tiledhelp.NodePos2GridmapPos(this._tile, wpos.x, wpos.y * -1);
-        //let tpos = this.TouchPos2GridmapPos(event);
-        //this.CleanMap(tpos.x, tpos.y);
+        //this.CleanMapWorldPos(wpos);
+
+
     }
     CleanMapWorldPos(pos: cc.Vec3): void {
-        let tpos = tiledhelp.NodePos2GridmapPos(this._tile, pos.x, pos.y * -1);
+        let npos = this.camera.convertToUINode(pos, this.node);
+        let tpos = tiledhelp.NodePos2GridmapPos(this._tile, npos.x, npos.y);
         this.CleanMap(tpos.x, tpos.y);
     }
     CleanMap(gridx: number, gridy: number): void {
-
+        let maptype = this._tile.getMapOrientation();
         let layer = this._tile.getLayer("shadow");
         let size = this._tile.getMapSize();
 
-        for (var y = gridy - 3; y <= gridy + 3; y++) {
-            for (var x = gridx - 3; x <= gridx + 3; x++) {
-                if (x < 0 || y < 0 || x >= size.width || y >= size.height)
-                    continue;
-                let t = layer.getTiledTileAt(x, y);
-                if (t == null)
-                    continue;
-                t.grid = 0;
+        if (maptype == 2)//degree 45
+        {
+            for (var y = gridy - 2; y <= gridy + 2; y++) {
+                for (var x = gridx - 2; x <= gridx + 2; x++) {
+                    if (x < 0 || y < 0 || x >= size.width || y >= size.height)
+                        continue;
+                    let t = layer.getTiledTileAt(x, y);
+                    if (t == null)
+                        continue;
+                    t.grid = 0;
 
+                }
+            }
+        }
+        else if (maptype == 1)//hex
+        {
+            var posgrid = layer.getPositionAt(gridx, gridy);
+
+            for (var y = gridy - 3; y <= gridy + 3; y++) {
+
+                for (var x = gridx - 3; x <= gridx + 3; x++) {
+
+                    if (x < 0 || y < 0 || x >= size.width || y >= size.height)
+                        continue;
+                    var pos = layer.getPositionAt(x, y);
+                    if (cc.Vec2.distance(posgrid, pos) > 300)
+                        continue;
+                   
+
+                    let t = layer.getTiledTileAt(x, y);
+
+                    if (t == null)
+                        continue;
+                    t.grid = 0;
+
+                }
             }
         }
         layer.updateViewPort(0, 0, size.width, size.height)
@@ -81,9 +110,11 @@ export class tiledhelp extends cc.Component {
     }
     static Touchpos2WorldPos(touchevent: cc.EventTouch, camera: cc.Camera): cc.Vec3 {
 
-        let sposview = touchevent.getLocationInView();
+        let sposview = touchevent.getLocation();
+
         let spos = new cc.Vec3(sposview.x, sposview.y, 0);
         let wpos = camera.screenToWorld(spos);
+
         return wpos;
 
     }
@@ -95,41 +126,51 @@ export class tiledhelp extends cc.Component {
         return camera.convertToUINode(wpos, node);
 
     }
-    //this calc only for center (anthor point =0.5,0.5)
-    static WorldPos2GridmapPos(node: cc.Node, camera: cc.Camera, map: cc.TiledMap, wpos: cc.Vec3) {
-
-        let uipos = camera.convertToUINode(wpos, node);
-        let mapSize = map.getMapSize();
-        let tileSize = map.getTileSize();
-
-        //let halfh = (mapSize.height * tileSize.height) / 2;
-
-        let x = (uipos.x / tileSize.width + (uipos.y) / tileSize.height)
-        let y = (-uipos.x / tileSize.width + (uipos.y) / tileSize.height)
-
-        x += mapSize.width / 2 - 0.5;
-        y += mapSize.height / 2 - 0.5;
-
-        x |= 0;
-        y |= 0;
-        return new cc.Vec2(x, y);
-    }
 
 
     static NodePos2GridmapPos(map: cc.TiledMap, nodex: number, nodey: number) {
         let mapSize = map.getMapSize();
         let tileSize = map.getTileSize();
         //let halfh = (mapSize.height * tileSize.height) / 2;
+        let maptype = map.getMapOrientation();
+        console.log("nodex=" + nodex + ",nodey=" + nodey);
+        console.log("tileSize=" + tileSize.x + "," + tileSize.y);
+        if (maptype == 2) {//map Isometric orientation. degree 45
+            let x = (nodex / tileSize.width + (-nodey) / tileSize.height)
+            let y = (-nodex / tileSize.width + (-nodey) / tileSize.height)
 
-        let x = (nodex / tileSize.width + (nodey) / tileSize.height)
-        let y = (-nodex / tileSize.width + (nodey) / tileSize.height)
+            x += mapSize.width / 2 - 0.5;
+            y += mapSize.height / 2 - 0.5;
 
-        x += mapSize.width / 2 - 0.5;
-        y += mapSize.height / 2 - 0.5;
+            x |= 0;
+            y |= 0;
+            return new cc.Vec2(x, y);
+        }
+        else if (maptype == 1)//hex map
+        {
+            var gridheight = (tileSize.height * 0.5);
+            var mappixelheight = (gridheight * mapSize.height) + gridheight; //height more one gird
+            var mappixelwidth = (tileSize.width * mapSize.width) + tileSize.width * 0.5; //width  more halfgird
+            console.log("mappixel=" + mappixelwidth + "," + mappixelheight);
+            var py = mappixelheight * 0.5 - nodey;
+            var px = nodex + mappixelwidth * 0.5;
 
-        x |= 0;
-        y |= 0;
-        return new cc.Vec2(x, y);
+            let y = py / gridheight;
+
+            let x = px / tileSize.width;
+            if (y % 2 == 0) {
+                x += 0.5
+            }
+
+
+
+
+
+            x |= 0;
+            y |= 0;
+            //console.log("tpos", x, y);
+            return new cc.Vec2(x, y);
+        }
     }
 
     TouchPos2GridmapPos(touchevent: cc.EventTouch): cc.Vec2 {
