@@ -41,10 +41,10 @@ export class MapItemFactory extends MapItem {
         }
 
         this._upgradeIng = true;
-        GameMain.inst.innerSceneMap.playBuildAnim(this.node,5,()=>{
+        GameMain.inst.innerSceneMap.playBuildAnim(this.node,5, async()=>{
             log('onUpgradeClick callback');
             EventMgr.emit(EventName.BUILD_LEVEL_UP,this.buildID);
-            UserInfo.Instance.upgradeBuild(this.buildID);
+            await UserInfo.Instance.upgradeBuild(this.buildID);
 
             this.refresh();
             this.initBuildNode();
@@ -116,10 +116,10 @@ export class MapItemFactory extends MapItem {
         }
     }
 
-    start() {
+    async start() {
         super.start();
-        this.buildData = UserInfo.Instance.innerBuilds.get(this.buildID);
-
+        const innerBuildData = await UserInfo.Instance.getInnerBuilds();
+        this.buildData = innerBuildData.get(this.buildID);
         this.refresh();
         this.initBuildNode();
 

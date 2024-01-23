@@ -66,11 +66,12 @@ export class MainBuildUI extends PopUpUI {
         return level_data;
     }
 
-    initDataView(){
+    async initDataView(){
         let content = this.dataNode.content;
 
         // convert map to array
-        let build_data = Array.from(UserInfo.Instance.innerBuilds.values())
+        const innerBuildData = await UserInfo.Instance.getInnerBuilds();
+        let build_data = Array.from(innerBuildData.values())
         content.getComponent(UITransform).contentSize = new Size(940,5+build_data.length*130);
         this.dataItemIns.active = false;
         content.removeAllChildren();
@@ -101,10 +102,12 @@ export class MainBuildUI extends PopUpUI {
 
     }
 
-    initBuildView(){
+    async initBuildView(){
         let content = this.buildNode.content;
         // convert map to array
-        let build_data = Array.from(UserInfo.Instance.innerBuilds.values());
+
+        let innerBuildData = await UserInfo.Instance.getInnerBuilds();
+        let build_data = Array.from(innerBuildData.values());
         // content.getComponent(UITransform).contentSize = 
         this.buildItemIns.active = false;
         content.removeAllChildren();

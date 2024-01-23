@@ -1,4 +1,4 @@
-import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3 } from 'cc';
+import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn } from 'cc';
 import { GameMain } from '../GameMain';
 import EventMgr from '../Manger/EventMgr';
 import { EventName } from '../Datas/ConstDefine';
@@ -36,7 +36,7 @@ export default class TopUI extends Component {
         EventMgr.on(EventName.COIN_CHANGE, this.onCoinUpdate, this);
     }
 
-    onEmergencyUpdate(value: number) {
+    async onEmergencyUpdate(value: number) {
         const info = UserInfo.Instance;
         // upward +1 anim
         let node = new Node();
@@ -45,18 +45,20 @@ export default class TopUI extends Component {
         node.parent = this.node;
         node.position = v3(this.txtEnergy.node.position.x, this.txtEnergy.node.position.y - 50);
 
-        info.energy += value;
+        let energy: number = await info.getEnergy();
+        energy += value;
+        info.changeEnergy(energy);
 
         let seq = new Tween(node);
         seq.to(0.5, { position: v3(node.position.x, node.position.y + 50) }, null);
         seq.call(() => {
             node.destroy();
-            this.txtEnergy.string = info.energy.toString();
+            this.txtEnergy.string = energy.toString();
         });
         seq.start();
     }
 
-    onCoinUpdate(value: number) {
+    async onCoinUpdate(value: number) {
         const info = UserInfo.Instance;
         // upward +1 anim
         let node = new Node();
@@ -65,24 +67,32 @@ export default class TopUI extends Component {
         node.parent = this.node;
         node.position = v3(this.txtMoney.node.position.x, this.txtMoney.node.position.y - 50);
 
-        info.money += value;
+        let money: number = await info.getMoney();
+        money += value;
+        info.changeMoney(money);
 
         let seq = new Tween(node);
         seq.to(0.5, { position: v3(node.position.x, node.position.y + 50) }, null);
         seq.call(() => {
             node.destroy();
-            this.txtMoney.string = info.money.toString();
+            this.txtMoney.string = money.toString();
         });
         seq.start();
     }
 
-    refreshTopUI() {
+    async refreshTopUI() {
         const info = UserInfo.Instance;
-        this.txtPlayerName.string = info.playerName;
-        this.txtPlayerLV.string = "LV" + info.level;
-        this.txtLvProgress.string = `${info.exp}/${1000}`;
-        this.txtMoney.string = "" + info.money;
-        this.txtEnergy.string = "" + info.energy;
+        const name = await info.getPlayerName();
+        const level = await info.getLevel();
+        const exp = await info.getExp();
+        const money = await info.getMoney();
+        const energy = await info.getEnergy();
+
+        this.txtPlayerName.string = name;
+        this.txtPlayerLV.string = "LV" + level;
+        this.txtLvProgress.string = `${exp}/${1000}`;
+        this.txtMoney.string = "" + money;
+        this.txtEnergy.string = "" + energy;
         this.lvProgress.progress = 0;
     }
 }

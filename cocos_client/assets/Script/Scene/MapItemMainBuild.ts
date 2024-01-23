@@ -47,8 +47,8 @@ export class MapItemMainBuild extends MapItem {
 
         let up_time = 5;
         this.buildingAnim.active = true;
-        this.scheduleOnce(() => {
-            UserInfo.Instance.upgradeBuild('0');
+        this.scheduleOnce(async () => {
+            await UserInfo.Instance.upgradeBuild('0');
 
             this.refresh();
             this._buildUpgrading = false;
@@ -56,13 +56,14 @@ export class MapItemMainBuild extends MapItem {
         this.buildInfoUI.setProgressTime(up_time);
     }
 
-    start() {
+    async start() {
         super.start();
 
         EventMgr.on(EventName.MAIN_BUILD_LEVEL_UP, this.upgradeBuild, this)
 
         this.buildInfoUI = this.node.getChildByName('innerBuildUI')?.getComponent(InnerBuildUI);
-        this._data = UserInfo.Instance.innerBuilds.get('0');
+        const innerBuildData = await UserInfo.Instance.getInnerBuilds();
+        this._data = innerBuildData.get('0');
         this.refresh();
     }
 
