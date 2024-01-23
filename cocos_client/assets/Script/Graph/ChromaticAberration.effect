@@ -1,0 +1,67 @@
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vert
+      frag: frag
+      pass: chromaticaberration
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+}%
+
+CCProgram vert %{
+  precision highp float;
+  #include <legacy/input-standard>
+  #include <builtin/uniforms/cc-global>
+  #include <common/common-define>
+
+  uniform MyConstants {
+    vec4 params;
+    vec4 color;
+  };
+
+  out vec2 v_uv;
+
+  void main () {
+    StandardVertInput In;
+    CCVertInput(In);
+    CC_HANDLE_GET_CLIP_FLIP(In.position.xy);
+    gl_Position = In.position;
+    v_uv = a_texCoord;
+  }
+}%
+
+CCProgram frag %{
+  precision highp float;
+  #include <legacy/input-standard>
+  #include <builtin/uniforms/cc-global>
+  #include <common/common-define>
+  
+  uniform MyConstants {
+    vec4 params;
+    vec4 color;
+  };
+
+  in vec2 v_uv;
+
+  #pragma rate outputResultMap pass
+  uniform sampler2D outputResultMap;
+
+  layout(location = 0) out vec4 fragColor;
+
+  void main () {
+	vec2 rectangle = vec2(v_uv.x - params.x, v_uv.y - params.x);
+	float dist = sqrt(pow(rectangle.x,2.0) + pow(rectangle.y,2.0));
+    
+	float mov = params.y * dist;
+    vec2 uvR = vec2(v_uv.x - mov, v_uv.y);
+    vec2 uvG = vec2(v_uv.x + mov, v_uv.y);
+    vec2 uvB = vec2(v_uv.x, v_uv.y - mov);
+    
+    vec3 colR = texture(outputResultMap, uvR).rgb;
+    vec3 colG = texture(outputResultMap, uvG).rgb;
+    vec3 colB = texture(outputResultMap, uvB).rgb;
+
+    fragColor = vec4(colR.x, colG.y, colG.z, 1.0);
+  }
+}%

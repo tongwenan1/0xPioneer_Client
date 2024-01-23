@@ -1,0 +1,33 @@
+{
+    "towns":{
+        "1":{
+            "playerID":"1",
+            "playerName":"Player1",
+            "level":1,
+            "money":9999,
+            "diamond":1000,
+            "water":8888
+        },
+        "2":{
+            "playerID":"2",
+            "playerName":"Player2",
+            "level":1,
+            "money":9999,
+            "diamond":1000,
+            "water":8888
+        },
+        "3":{
+            "playerID":"3",
+            "playerName":"Player3",
+            "level":1,
+            "money":9999,
+            "diamond":1000,
+            "water":8888
+        }
+    },
+    "monsters":{
+        "1":{
+            
+        }
+    }
+}

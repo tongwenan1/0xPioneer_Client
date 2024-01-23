@@ -118,8 +118,11 @@
       "marionette": {
         "_value": false
       },
-      "custom-pipeline": {
+      "procedural-animation": {
         "_value": false
+      },
+      "custom-pipeline": {
+        "_value": true
       }
     },
     "includeModules": [
@@ -127,6 +130,7 @@
       "animation",
       "audio",
       "base",
+      "custom-pipeline",
       "dragon-bones",
       "gfx-webgl",
       "gfx-webgl2",
@@ -146,5 +150,8 @@
       "version": ""
     },
     "flags": {}
+  },
+  "macroConfig": {
+    "CUSTOM_PIPELINE_NAME": "Custom"
   }
 }

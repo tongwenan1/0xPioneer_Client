@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.SceneAsset",
-    "_name": "test_loading",
+    "_name": "test_Loading",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_native": "",
@@ -56,7 +56,7 @@
     "_globals": {
       "__id__": 135
     },
-    "_id": "83937539-54c5-40c2-914b-fa8278d1512f"
+    "_id": "e7b43bb6-cdec-4537-b25f-30b10a9a1549"
   },
   {
     "__type__": "cc.Node",
@@ -116,7 +116,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 959.9999999999999,
+      "x": 960,
       "y": 540,
       "z": 0
     },
@@ -202,7 +202,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 582.2511627906977,
+    "_orthoHeight": 602.4413145539905,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -1137,7 +1137,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框",
+    "_name": "film_frame",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1246,7 +1246,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框-001",
+    "_name": "film_frame-001",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1355,7 +1355,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框-002",
+    "_name": "film_frame-002",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1464,7 +1464,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框-003",
+    "_name": "film_frame-003",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1573,7 +1573,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框-004",
+    "_name": "film_frame-004",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1682,7 +1682,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框-005",
+    "_name": "film_frame-005",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1791,7 +1791,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框-006",
+    "_name": "film_frame-006",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1989,7 +1989,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框",
+    "_name": "film_frame",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -2098,7 +2098,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框-001",
+    "_name": "film_frame-001",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -2207,7 +2207,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框-002",
+    "_name": "film_frame-002",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -2316,7 +2316,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框-003",
+    "_name": "film_frame-003",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -2425,7 +2425,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框-004",
+    "_name": "film_frame-004",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -2534,7 +2534,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框-005",
+    "_name": "film_frame-005",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -2643,7 +2643,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "胶片边框-006",
+    "_name": "film_frame-006",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -3805,7 +3805,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1919.9999999999998,
+      "width": 1920,
       "height": 1080
     },
     "_anchorPoint": {

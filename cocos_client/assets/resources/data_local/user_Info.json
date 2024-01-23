@@ -1,0 +1,47 @@
+{
+	"playerData": {
+		"playerID": "1001",
+		"playerName": "Player3",
+		"level": 1,
+		"money": 1000,
+		"energy": 10000,
+        "exp":0
+	},
+	"innerBuildData": {
+        "0": {
+			"buildID": "0",
+			"buildLevel": 1,
+			"buildUpTime": 0,
+            "buildName":"City Hall",
+            "unlock":0
+		},
+		"1": {
+			"buildID": "1",
+			"buildLevel": 0,
+			"buildUpTime": 0,
+            "buildName":"Factory1",
+            "unlock":0
+		},
+        "2": {
+			"buildID": "2",
+			"buildLevel": 0,
+			"buildUpTime": 0,
+            "buildName":"Factory2",
+            "unlock":0
+		},
+        "3": {
+			"buildID": "3",
+			"buildLevel": 0,
+			"buildUpTime": 0,
+            "buildName":"Factory3",
+            "unlock":0
+		},
+        "4": {
+			"buildID": "4",
+			"buildLevel": 1,
+			"buildUpTime": 0,
+            "buildName":"Store House",
+            "unlock":0
+		}
+	}
+}
