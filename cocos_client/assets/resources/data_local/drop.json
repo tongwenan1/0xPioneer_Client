@@ -1,0 +1,145 @@
+{
+  "20001": {
+    "id": "20001",
+    "type": 1,
+    "drop_group": [
+      [
+        "backpack_item",
+        1,
+        10,
+        12
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        14
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        16
+      ]]
+  },
+  "20002": {
+    "id": "20002",
+    "type": 1,
+    "drop_group": [
+      [
+        "backpack_item",
+        1,
+        10,
+        12
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        14
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        16
+      ]
+    ]
+  },
+  "20003": {
+    "id": "20003",
+    "type": 1,
+    "drop_group": [
+      [
+        "backpack_item",
+        1,
+        10,
+        12
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        14
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        16
+      ]
+    ]
+  },
+  "20004": {
+    "id": "20004",
+    "type": 1,
+    "drop_group": [
+      [
+        "backpack_item",
+        1,
+        10,
+        1
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        2
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        3
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        4
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        5
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        6
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        7
+      ]
+    ]
+  },
+  "20005": {
+    "id": "20005",
+    "type": 1,
+    "drop_group": [
+      [
+        "backpack_item",
+        1,
+        10,
+        13
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        15
+      ],
+      [
+        "backpack_item",
+        1,
+        10,
+        17
+      ]
+    ]
+  }
+}

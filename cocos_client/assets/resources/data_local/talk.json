@@ -1,0 +1,417 @@
+[
+    {
+        "id": "talk01",
+        "messsages": [
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "prophetess",
+                "text": "Finally you are here."
+            },
+            {
+                "type": "chat",
+                "leftShow": false,
+                "name": "default_player",
+                "text": "Who the hell are you?"
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "prophetess",
+                "text": "Tinuvel, a prophetess. I've seen the vision of you leading this city to a prosperous future."
+            },
+            {
+                "type": "chat",
+                "leftShow": false,
+                "name": "default_player",
+                "text": "What the hell? I'm just a passerby. I'm not even sure if I can get a place to stay in this town tonight!"
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "prophetess",
+                "text": "The lord here was just killed by gangsters, and now the town is in complete chaos."
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "prophetess",
+                "text": "I will provide for your basic needs, but in exchange, you are required to take up the mantle of responsibility. I will guide you as you need."
+            },
+            {
+                "type": "chat",
+                "leftShow": false,
+                "name": "default_player",
+                "text": "Well, sounds not bad. So what should I do now?"
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "prophetess",
+                "text": "See the gangsters over there? GET RID OF THE GANGSTERS!"
+            },
+            {
+                "type": "action",
+                "text": "You need to GET RID OF THE GANGSTERS!",
+                "select": [
+                    "Easy job"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "talk02",
+        "messsages": [
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "doomsdayGangSpy",
+                "text": "Wow! A new face!"
+            },
+            {
+                "type": "chat",
+                "leftShow": false,
+                "name": "default_player",
+                "text": "And who the hell are you?"
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "doomsdayGangSpy",
+                "text": "Just a survivor in this disaster. And you?"
+            },
+            {
+                "type": "chat",
+                "leftShow": false,
+                "name": "default_player",
+                "text": "I made a deal with a prophetess and am going to repel the gangsters over there. You wanna help me? You'll get your share of rewards."
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "doomsdayGangSpy",
+                "text": "Hahaha, the prophetess? Called Tinuvel?"
+            },
+            {
+                "type": "chat",
+                "leftShow": false,
+                "name": "default_player",
+                "text": "...You know her?"
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "doomsdayGangSpy",
+                "text": "A prophetess alone without even one follower? Come on! She's just a selfish priestess."
+            },
+            {
+                "type": "chat",
+                "leftShow": false,
+                "name": "default_player",
+                "text": "So...I was tricked by her?"
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "doomsdayGangSpy",
+                "text": "Of Course, dude. But you are not the only one. we are also pawns in her plan."
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "doomsdayGangSpy",
+                "text": "It's not too late to wake up now. As long as you can KILL THAT PROPHETESS... I think our cooperation will be much more trustworthy."
+            },
+            {
+                "type": "action",
+                "text": "KILL THE PROPHETES and cooperate with doomsdayGang?",
+                "select": [
+                    "Deal!",
+                    "Refuse"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "talk03",
+        "messsages": [
+            {
+                "type": "chat",
+                "leftShow": false,
+                "name": "default_player",
+                "text": "Nice scenery, isn't it?"
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "hunter",
+                "text": "Maybe. But it will be even better when the herd runs by."
+            },
+            {
+                "type": "chat",
+                "leftShow": false,
+                "name": "default_player",
+                "text": "Sounds like you are experienced. Do you need help?"
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "hunter",
+                "text": "If you want...Come on then!"
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "hunter",
+                "text": "HUNT THE HERD before they run away. Confident?"
+            },
+            {
+                "type": "action",
+                "text": "Are you confident to HUNT THE HERD before they run away?",
+                "select": [
+                    "Of course!",
+                    "Nope"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "talk04",
+        "messsages": [
+            {
+                "type": "chat",
+                "leftShow": false,
+                "name": "default_player",
+                "text": "Tinuvel, honestly, I don't know whether I can trust you."
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "prophetess",
+                "text": "I expect that. You don't need my guidance. You can rely on yourself."
+            },{
+                "type": "chat",
+                "leftShow": false,
+                "name": "default_player",
+                "text": "But how?"
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "prophetess",
+                "text": "See that ruin? It was left by last lord."
+            },
+            {
+                "type": "chat",
+                "leftShow": true,
+                "name": "prophetess",
+                "text": "EXPLORE THE RUIN and show us that you are the chosen one."
+            },
+            {
+                "type": "action",
+                "text": "EXPLORE THE RUIN and show something to the prophetess",
+                "select": [
+                    "I'm on it",
+                    "Seriously?"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "talk05",
+        "messsages": [
+            {
+                "name": "secretGuard",
+                "leftShow": true,
+                "text": "Who are you...(Saw the token of the lord)"
+            },
+            {
+                "name": "secretGuard",
+                "leftShow": true,
+                "text": "Well...You must be the new lord. Please command me if you need!"
+            },{
+                "name": "default_player",
+                "leftShow": true,
+                "text": "REPEL THE GANGSTERS outside the town!"
+            },
+            {
+                "name": "secretGuard",
+                "leftShow": true,
+                "text": "Yes, sir!"
+            },
+            {
+                "type": "action",
+                "text": "The secretGuard is going to REPEL THE GANGSTERS outside the town!",
+                "select": [
+                    "Nice!",
+                    "Take care"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "talk06",
+        "messsages": [
+            {
+                "type": "chat",
+                "leftShow": false,
+                "name": "default_player",
+                "text": "Tinuvel, the big one is coming. Any idea?"
+            },
+            {
+                "name": "prophetess",
+                "leftShow": true,
+                "text": "I've already prepared for it."
+            },
+            {
+                "name": "prophetess",
+                "leftShow": true,
+                "text": "There is a stronghold there, where you can AMBUSH THEM."
+            },
+            {
+                "type": "action",
+                "text": "You are going to AMBUSH THE BIG TEAM.",
+                "select": [
+                    "Good job",
+                    "I'll try"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "talk07",
+        "messsages": [
+            {
+                "name": "doomsdayGangBigTeam",
+                "leftShow": true,
+                "text": "Lucky guy, we're not going to kill you."
+            },
+            {
+                "name": "doomsdayGangBigTeam",
+                "leftShow": true,
+                "text": "But you will act as our agent and TAKE OVER THE TOWN."
+            },
+            {
+                "name": "doomsdayGangBigTeam",
+                "leftShow": true,
+                "text": "OK?"
+            },
+            {
+                "type": "action",
+                "text": "Are you going to cooperate with the gang or fight with them?",
+                "select": [
+                    "Deal!",
+                    "Fight!"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "talk08",
+        "messsages": [
+            {
+                "name": "artisan",
+                "leftShow": true,
+                "text": "The town was ransacked by those bastards."
+            },
+            {
+                "name": "artisan",
+                "leftShow": true,
+                "text": "You may be the one to save us and recuperate the town."
+            },
+            {
+                "name": "artisan",
+                "leftShow": true,
+                "text": "We need some material reserves. Try to EXPLORE RESOURCES FOR 3 TIMES and BRING THEM BACK TO ME."
+            },
+            {
+                "type": "action",
+                "text": "Will you help them EXPLORE RESOURCES FOR 3 TIMES?",
+                "select": [
+                    "All right",
+                    "I'm busy"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "talk09",
+        "messsages": [
+            {
+                "name": "prophetess",
+                "leftShow": true,
+                "text": "The right token."
+            },
+            {
+                "name": "prophetess",
+                "leftShow": true,
+                "text": "All right. You are indeed qualified TO BE THE LORD."
+            },
+            {
+                "name": "prophetess",
+                "leftShow": true,
+                "text": "Go ahead, there's a lot of things waiting for you."
+            }
+        ]
+    },
+    {
+        "id": "talk10",
+        "messsages": [
+            {
+                "name": "artisan",
+                "leftShow": true,
+                "text": "You've been a great help. Thank you very much."
+            },
+            {
+                "name": "artisan",
+                "leftShow": true,
+                "text": "Now we need to BUILD UP THE HOUSE in the town. Can you give us a hand?"
+            }
+        ]
+    },
+    {
+        "id": "talk11",
+        "messsages": [
+            {
+                "name": "doomsdayGangBigTeam",
+                "leftShow": true,
+                "text": "Lucky guy, we're not going to kill you."
+            },
+            {
+                "name": "doomsdayGangBigTeam",
+                "leftShow": true,
+                "text": "But you will act as our agent and TAKE OVER THE TOWN."
+            }
+        ]
+    },
+    {
+        "id": "talk12",
+        "messsages": [
+            {
+                "name": "artisan",
+                "leftShow": true,
+                "text": "You've been a great help. Thank you very much.2222222"
+            },
+            {
+                "name": "artisan",
+                "leftShow": true,
+                "text": "Now we need to BUILD UP THE HOUSE in the town. Can you give us a hand?"
+            }
+        ]
+    },
+    {
+        "id": "talk13",
+        "messsages": [
+            {
+                "name": "artisan",
+                "leftShow": true,
+                "text": "You've been a great help. Thank you very much.3333333"
+            },
+            {
+                "name": "artisan",
+                "leftShow": true,
+                "text": "Now we need to BUILD UP THE HOUSE in the town. Can you give us a hand?"
+            }
+        ]
+    }
+]

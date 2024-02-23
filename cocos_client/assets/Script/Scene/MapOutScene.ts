@@ -1,37 +1,22 @@
-import { _decorator, Component, Node, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, Prefab, instantiate } from 'cc';
-import { PioneerStatus } from '../Datas/ConstDefine';
-import { GameMain } from '../GameMain';
-import { GameMap } from './Map';
-import { MapItemTown } from './MapItemTown';
-import { MapPioneer } from './MapPioneer';
+import { _decorator, Component, Node, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, Prefab, instantiate, resources, UITransform, v3, warn } from 'cc';
+import { MapBG } from './MapBG';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapOutScene')
-export class MapOutScene extends GameMap {
+export class MapOutScene extends Component {
 
-    @property(Prefab)
-    PioneerPfb:Prefab;
-    
-    @property(Prefab)
-    PioneerOtherPfb:Prefab;
-    
-    @property(Prefab)
-    FootLinePfb:Prefab;
-    
-    @property(Node)
-    LineLayerNode:Node;
+    public mapBG: MapBG = null;
 
-    @property(Node)
-    DynamicLayerNode:Node;
+    protected async onLoad() {
+        this.mapBG = this.node.getChildByName("Floor").getComponent(MapBG);
+    }
 
-    public SelfTown:MapItemTown;
-    public Towns:Map<string, MapItemTown> = new Map<string, MapItemTown>();
+    start() {
 
-    start() { 
     }
 
     update(deltaTime: number) {
-        
+
     }
 }
 

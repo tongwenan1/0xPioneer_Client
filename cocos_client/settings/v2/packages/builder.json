@@ -3,7 +3,7 @@
   "splash-setting": {
     "logo": {
       "type": "custom",
-      "image": "project://settings/Loading.jpg"
+      "image": "project://settings/1707203382289.jpg"
     },
     "background": {
       "image": "project://settings/Loading.jpg",
@@ -15,6 +15,7 @@
         "w": 1
       }
     },
-    "displayRatio": 5
+    "displayRatio": 1,
+    "totalTime": 1000
   }
 }

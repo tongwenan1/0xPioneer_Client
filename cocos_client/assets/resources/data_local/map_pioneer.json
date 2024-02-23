@@ -1,0 +1,289 @@
+[
+    {
+        "id": "pioneer_0",
+        "name": "default_player",
+        "type": "player",
+        "friendly": true,
+        "show": true,
+        "hp": 100,
+        "attack": 15,
+        "pos": {
+            "x": 22,
+            "y": 43
+        }
+    },
+    {
+        "id": "pioneer_1",
+        "name": "secretGuard",
+        "type": "player",
+        "friendly": true,
+        "show": false,
+        "hp": 80,
+        "attack": 15,
+        "pos": {
+            "x": 31,
+            "y": 29
+        },
+        "logics": [
+            {
+                "type": "targetmove",
+                "pos": {
+                    "x": 28,
+                    "y": 25
+                }
+            }
+        ]
+    },
+    {
+        "id": "pioneer_2",
+        "name": "doomsdayGangSpy",
+        "type": "player",
+        "friendly": true,
+        "show": false,
+        "hp": 50,
+        "attack": 10,
+        "pos": {
+            "x": 31,
+            "y": 29
+        }
+    },
+    {
+        "id": "pioneer_3",
+        "name": "rebels",
+        "type": "player",
+        "friendly": true,
+        "show": false,
+        "hp": 30,
+        "attack": 6,
+        "pos": {
+            "x": 30,
+            "y": 26
+        }
+    },
+    {
+        "id": "npc_0",
+        "name": "prophetess",
+        "type": "npc",
+        "friendly": true,
+        "show": true,
+        "hp": 50,
+        "attack": 8,
+        "pos": {
+            "x": 27,
+            "y": 31
+        },
+        "winprogress": 4
+    },
+    {
+        "id": "npc_1",
+        "name": "artisan",
+        "type": "npc",
+        "friendly": true,
+        "show": false,
+        "hp": 50,
+        "attack": 5,
+        "pos": {
+            "x": 30,
+            "y": 31
+        },
+        "winprogress": 5
+    },
+    {
+        "id": "npc_2",
+        "name": "secretGuard",
+        "type": "npc",
+        "friendly": true,
+        "show": false,
+        "hp": 80,
+        "attack": 15,
+        "pos": {
+            "x": 31,
+            "y": 29
+        },
+        "winprogress": 6
+    },
+    {
+        "id": "npc_3",
+        "name": "doomsdayGangSpy",
+        "type": "npc",
+        "friendly": true,
+        "show": false,
+        "hp": 50,
+        "attack": 10,
+        "pos": {
+            "x": 31,
+            "y": 29
+        },
+        "winprogress": 7
+    },
+    {
+        "id": "npc_4",
+        "name": "hunter",
+        "type": "npc",
+        "friendly": true,
+        "show": true,
+        "hp": 50,
+        "attack": 12,
+        "pos": {
+            "x": 43,
+            "y": 33
+        },
+        "winprogress": 8
+    },
+    {
+        "id": "gangster_1",
+        "name": "doomsdayGangTeam",
+        "type": "gangster",
+        "friendly": false,
+        "show": false,
+        "hp": 30,
+        "attack": 6,
+        "pos": {
+            "x": 28,
+            "y": 25
+        },
+        "winprogress": 2
+    },
+    {
+        "id": "gangster_2",
+        "name": "rebels",
+        "type": "gangster",
+        "friendly": false,
+        "show": false,
+        "hp": 30,
+        "attack": 6,
+        "pos": {
+            "x": 30,
+            "y": 26
+        },
+        "winprogress": 3
+    },
+    {
+        "id": "gangster_3",
+        "name": "doomsdayGangBigTeam",
+        "type": "gangster",
+        "friendly": false,
+        "show": false,
+        "hp": 180,
+        "attack": 24,
+        "pos": {
+            "x": 20,
+            "y": 11
+        },
+        "logics": [
+            {
+                "cond": "KillDoomsDayGangTeam",
+                "type": "stepmove",
+                "step": 1,
+                "cd": 2,
+                "direction": {
+                    "x": 0,
+                    "y": 1,
+                    "z": -1
+                },
+                "repeat": -1
+            }
+        ],
+        "winprogress": 10
+    },
+    {
+        "id": "hred_1",
+        "name": "hunter_hred",
+        "type": "hred",
+        "animType": "monster_a_1",
+        "friendly": false,
+        "show": false,
+        "hp": 60,
+        "attack": 15,
+        "pos": {
+            "x": 49,
+            "y": 17
+        },
+        "logics": [
+            {
+                "type": "stepmove",
+                "step": 1,
+                "cd": 2,
+                "direction": {
+                    "x": -1,
+                    "y": 1,
+                    "z": 0
+                },
+                "repeat": 10
+            },
+            {
+                "type": "hide"
+            }
+        ],
+        "winprogress": 3
+    },
+    {
+        "id": "hred_2",
+        "name": "",
+        "type": "hred",
+        "animType": "monster_b_2",
+        "friendly": false,
+        "show": true,
+        "hp": 40,
+        "attack": 10,
+        "pos": {
+            "x": 50,
+            "y": 28
+        },
+        "logics": [
+            {
+                "type": "patrol",
+                "interval": [2, 3],
+                "range": 6,
+                "speed": 200,
+                "repeat": -1
+            }
+        ],
+        "winprogress": 3
+    },
+    {
+        "id": "hred_3",
+        "name": "",
+        "type": "hred",
+        "animType": "monster_c_3",
+        "friendly": false,
+        "show": true,
+        "hp": 40,
+        "attack": 10,
+        "pos": {
+            "x": 39,
+            "y": 15
+        },
+        "winprogress": 3
+    },
+    {
+        "id": "hred_4",
+        "name": "",
+        "type": "hred",
+        "animType": "monster_c_1",
+        "friendly": false,
+        "show": true,
+        "hp": 40,
+        "attack": 10,
+        "pos": {
+            "x": 17,
+            "y": 23
+        },
+        "winprogress": 3
+    },
+    {
+        "id": "hred_5",
+        "name": "",
+        "type": "hred",
+        "animType": "monster_a_1",
+        "friendly": false,
+        "show": true,
+        "hp": 40,
+        "attack": 10,
+        "pos": {
+            "x": 40,
+            "y": 43
+        },
+        "winprogress": 3
+    }
+]

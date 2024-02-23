@@ -1,0 +1,164 @@
+{
+  "1": {
+    "id": "1",
+    "itemType": 1,
+    "itemName": "Celestial Aura",
+    "itemDesc": "A gem with a heavenly glow.",
+    "grade": 3,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "2": {
+    "id": "2",
+    "itemType": 1,
+    "itemName": "Jade Journey",
+    "itemDesc": "Ancient jade for wisdom's path.",
+    "grade": 2,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "3": {
+    "id": "3",
+    "itemType": 1,
+    "itemName": "Last Whisper",
+    "itemDesc": "Artifact of whispered secrets.",
+    "grade": 2,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "4": {
+    "id": "4",
+    "itemType": 1,
+    "itemName": "Topaz Twilight",
+    "itemDesc": "Gem of the setting sun's warmth.",
+    "grade": 2,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "5": {
+    "id": "5",
+    "itemType": 1,
+    "itemName": "Dawn's Tear",
+    "itemDesc": "Pure diamond of a new day's hope.",
+    "grade": 3,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "6": {
+    "id": "6",
+    "itemType": 1,
+    "itemName": "Void Iron",
+    "itemDesc": "Cosmic strength in metal form.",
+    "grade": 3,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "7": {
+    "id": "7",
+    "itemType": 1,
+    "itemName": "Opferritual",
+    "itemDesc": "Tool for divine rituals.",
+    "grade": 2,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "8": {
+    "id": "8",
+    "itemType": 1,
+    "itemName": "Lord Proof",
+    "itemDesc": "Maybe you should show this to someone.",
+    "grade": 1,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "9": {
+    "id": "9",
+    "itemType": 1,
+    "itemName": "Key of Trust",
+    "itemDesc": "Now you are the lord.",
+    "grade": 1,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "10": {
+    "id": "10",
+    "itemType": 1,
+    "itemName": "Krass Letter",
+    "itemDesc": "",
+    "grade": 1,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "11": {
+    "id": "11",
+    "itemType": 1,
+    "itemName": "Krass Badge",
+    "itemDesc": "",
+    "grade": 1,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "12": {
+    "id": "12",
+    "itemType": 2,
+    "itemName": "A few foods",
+    "itemDesc": "Gain 30 foods after use it.",
+    "grade": 1,
+    "gainPropName": "food",
+    "gainPropCount": 30
+  },
+  "13": {
+    "id": "13",
+    "itemType": 2,
+    "itemName": "Many foods",
+    "itemDesc": "Gain 100 foods after use it.",
+    "grade": 2,
+    "gainPropName": "food",
+    "gainPropCount": 100
+  },
+  "14": {
+    "id": "14",
+    "itemType": 2,
+    "itemName": "A few woods",
+    "itemDesc": "Gain 30 woods after use it.",
+    "grade": 1,
+    "gainPropName": "wood",
+    "gainPropCount": 30
+  },
+  "15": {
+    "id": "15",
+    "itemType": 2,
+    "itemName": "Many woods",
+    "itemDesc": "Gain 100 woods after use it.",
+    "grade": 2,
+    "gainPropName": "wood",
+    "gainPropCount": 100
+  },
+  "16": {
+    "id": "16",
+    "itemType": 2,
+    "itemName": "A few stones",
+    "itemDesc": "Gain 30 stones after use it.",
+    "grade": 1,
+    "gainPropName": "stone",
+    "gainPropCount": 30
+  },
+  "17": {
+    "id": "17",
+    "itemType": 2,
+    "itemName": "Many stones",
+    "itemDesc": "Gain 100 stones after use it.",
+    "grade": 2,
+    "gainPropName": "stone",
+    "gainPropCount": 100
+  },
+  "18": {
+    "id": "18",
+    "itemType": 1,
+    "itemName": "Special token",
+    "itemDesc": "Token of an ancient.",
+    "grade": 3,
+    "gainPropName": null,
+    "gainPropCount": null
+  }
+}

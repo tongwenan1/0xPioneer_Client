@@ -1,0 +1,104 @@
+{
+  "0": {
+    "buildId": "0",
+    "maxLevel": 1,
+    "up": {
+      "1": {
+        "cost": [
+          {
+            "type": "resource_02",
+            "num": 100
+          },
+          {
+            "type": "resource_01",
+            "num": 100
+          }
+        ],
+        "pic": "",
+        "progress": 10
+      },
+      "2": {
+        "cost": [
+          {
+            "type": "resource_02",
+            "num": 200
+          },
+          {
+            "type": "resource_01",
+            "num": 200
+          }
+        ],
+        "pic": "",
+        "progress": 20
+      }
+    }
+  },
+  "3": {
+    "id": "3",
+    "maxLevel": 1,
+    "up": {
+      "1": {
+        "cost": [
+          {
+            "type": "resource_02",
+            "num": 100
+          },
+          {
+            "type": "resource_01",
+            "num": 100
+          }
+        ],
+        "pic": "",
+        "progress": 10
+      },
+      "2": {
+        "cost": [
+          {
+            "type": "resource_02",
+            "num": 200
+          },
+          {
+            "type": "resource_01",
+            "num": 200
+          }
+        ],
+        "pic": "",
+        "progress": 20
+      }
+    }
+  },
+  "4": {
+    "id": "4",
+    "maxLevel": 1,
+    "up": {
+      "1": {
+        "cost": [
+          {
+            "type": "resource_02",
+            "num": 100
+          },
+          {
+            "type": "resource_01",
+            "num": 100
+          }
+        ],
+        "pic": "",
+        "progress": 10
+      },
+      "2": {
+        "cost": [
+          {
+            "type": "resource_02",
+            "num": 200
+          },
+          {
+            "type": "resource_01",
+            "num": 200
+          }
+        ],
+        "pic": "",
+        "progress": 20
+      }
+    }
+  }
+}

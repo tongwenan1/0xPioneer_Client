@@ -1,12 +1,8 @@
-import { _decorator, Vec3,Node, Animation, Prefab, instantiate, log } from 'cc';
-import { GameMain } from '../GameMain';
-import { GameMap } from './Map';
-import { MapItemTown } from './MapItemTown';
-import { MapPioneer } from './MapPioneer';
+import { _decorator, Vec3,Node, Animation, Prefab, instantiate, log, Component } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapInnerScene')
-export class MapInnerScene extends GameMap {
+export class MapInnerScene extends Component {
 
     @property(Prefab)
     private buildAnimPfb:Prefab;

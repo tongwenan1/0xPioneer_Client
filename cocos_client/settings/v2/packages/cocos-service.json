@@ -1,20 +1,31 @@
 {
   "__version__": "3.0.7",
   "game": {
-    "name": "UNKNOW GAME",
-    "app_id": "UNKNOW",
-    "c_id": "0"
+    "app_id": "686669952",
+    "c_id": "0",
+    "name": "Pioneer"
   },
   "appConfigMaps": [
     {
       "app_id": "UNKNOW",
       "config_id": "928bba"
+    },
+    {
+      "app_id": "686669952",
+      "config_id": "71fa99"
     }
   ],
   "configs": [
     {
       "app_id": "UNKNOW",
       "config_id": "928bba",
+      "config_name": "Default",
+      "config_remarks": "",
+      "services": []
+    },
+    {
+      "app_id": "686669952",
+      "config_id": "71fa99",
       "config_name": "Default",
       "config_remarks": "",
       "services": []

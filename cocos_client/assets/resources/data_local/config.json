@@ -1,0 +1,10 @@
+{
+  "10001": {
+    "id": "10001",
+    "NOTES": "max and min scale of camera zoom",
+    "para": [
+      0.3,
+      1.5
+    ]
+  }
+}

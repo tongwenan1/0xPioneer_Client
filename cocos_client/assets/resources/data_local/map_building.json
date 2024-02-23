@@ -1,0 +1,380 @@
+[
+    {
+        "id": "building_1",
+        "name": "city",
+        "type": "city",
+        "show": true,
+        "positions": [
+            {
+                "x": 29,
+                "y": 28
+            },
+            {
+                "x": 30,
+                "y": 28
+            },
+            {
+                "x": 28,
+                "y": 29
+            },
+            {
+                "x": 29,
+                "y": 29
+            },
+            {
+                "x": 30,
+                "y": 29
+            },
+            {
+                "x": 29,
+                "y": 30
+            },
+            {
+                "x": 30,
+                "y": 30
+            }
+            
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "hp": 240,
+        "attack": 20,
+        "winprogress": 20
+    },
+    {
+        "id": "building_2",
+        "name": "Ruins",
+        "type": "explore",
+        "show": false,
+        "positions": [
+            {
+                "x": 26,
+                "y": 30
+            },
+            {
+                "x": 25,
+                "y": 31
+            },
+            {
+                "x": 26,
+                "y": 31
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "progress": 5
+    },
+    {
+        "id": "building_3",
+        "name": "Treasure",
+        "type": "explore",
+        "show": false,
+        "positions": [
+            {
+                "x": 26,
+                "y": 23
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "progress":5
+    },
+    {
+        "id": "building_4",
+        "name": "ambush",
+        "type": "stronghold",
+        "show": false,
+        "positions": [
+            {
+                "x": 27,
+                "y": 25
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1
+    },
+    {
+        "id": "building_5",
+        "name": "swamp jungle 01",
+        "type": "resource",
+        "show": true,
+        "positions": [
+            {
+                "x": 37,
+                "y": 22
+            },
+            {
+                "x": 36,
+                "y": 23
+            },
+            {
+                "x": 37,
+                "y": 23
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "resources": [
+            {
+                "id": "resource_01",
+                "num": 100
+            }
+        ],
+        "quota": 1,
+        "progress":5
+    },
+    {
+        "id": "building_6",
+        "name": "swamp jungle 02",
+        "type": "resource",
+        "show": true,
+        "positions": [
+            {
+                "x": 18,
+                "y": 16
+            },
+            {
+                "x": 17,
+                "y": 17
+            },
+            {
+                "x": 18,
+                "y": 17
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "resources": [
+            {
+                "id": "resource_01",
+                "num": 100
+            }
+        ],
+        "quota": 1,
+        "progress":5
+    },
+    {
+        "id": "building_7",
+        "name": "desert oasis 01",
+        "type": "resource",
+        "show": true,
+        "positions": [
+            {
+                "x": 8,
+                "y": 9
+            },
+            {
+                "x": 8,
+                "y": 10
+            },
+            {
+                "x": 9,
+                "y": 10
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "resources": [
+            {
+                "id": "resource_03",
+                "num": 100
+            }
+        ],
+        "quota": 1,
+        "progress":5
+    },
+    {
+        "id": "building_8",
+        "name": "desert oasis 02",
+        "type": "resource",
+        "show": true,
+        "positions": [
+            {
+                "x": 49,
+                "y": 15
+            },
+            {
+                "x": 49,
+                "y": 16
+            },
+            {
+                "x": 50,
+                "y": 16
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "resources": [
+            {
+                "id": "resource_03",
+                "num": 100
+            }
+        ],
+        "quota": 1,
+        "progress":5
+    },
+    {
+        "id": "building_9",
+        "name": "desert oasis 03",
+        "type": "resource",
+        "show": true,
+        "positions": [
+            {
+                "x": 33,
+                "y": 47
+            },
+            {
+                "x": 33,
+                "y": 48
+            },
+            {
+                "x": 34,
+                "y": 48
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "resources": [
+            {
+                "id": "resource_03",
+                "num": 100
+            }
+        ],
+        "quota": 1,
+        "progress":5
+    },
+    {
+        "id": "building_10",
+        "name": "sand mineral 01",
+        "type": "resource",
+        "show": true,
+        "positions": [
+            {
+                "x": 11,
+                "y": 23
+            },
+            {
+                "x": 11,
+                "y": 24
+            },
+            {
+                "x": 12,
+                "y": 24
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "resources": [
+            {
+                "id": "resource_02",
+                "num": 100
+            }
+        ],
+        "quota": 1,
+        "progress":5
+    },
+    {
+        "id": "building_11",
+        "name": "sand mineral 02",
+        "type": "resource",
+        "show": true,
+        "positions": [
+            {
+                "x": 35,
+                "y": 10
+            },
+            {
+                "x": 34,
+                "y": 11
+            },
+            {
+                "x": 35,
+                "y": 11
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "resources": [
+            {
+                "id": "resource_02",
+                "num": 100
+            }
+        ],
+        "quota": 1,
+        "progress":5
+    },
+    {
+        "id": "building_12",
+        "name": "sand mineral 03",
+        "type": "resource",
+        "show": true,
+        "positions": [
+            {
+                "x": 48,
+                "y": 45
+            },
+            {
+                "x": 48,
+                "y": 46
+            },
+            {
+                "x": 49,
+                "y": 46
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "resources": [
+            {
+                "id": "resource_02",
+                "num": 100
+            }
+        ],
+        "quota": 1,
+        "progress":5
+    },
+    {
+        "id": "building_13",
+        "name": "sand mineral 01",
+        "type": "event",
+        "show": true,
+        "positions": [
+            {
+                "x": 15,
+                "y": 23
+            },
+            {
+                "x": 15,
+                "y": 24
+            },
+            {
+                "x": 16,
+                "y": 24
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "resources": [
+            {
+                "id": "resource_02",
+                "num": 100
+            }
+        ],
+        "quota": 1,
+        "progress":5,
+        "event": "910201"
+    }
+]

@@ -1,5 +1,5 @@
 import { _decorator, Component, Node, Button, SpriteFrame, Sprite } from 'cc';
-import { EventName } from '../Datas/ConstDefine';
+import { EventName } from '../Basic/ConstDefine';
 import { GameMain } from '../GameMain';
 import EventMgr from '../Manger/EventMgr';
 const { ccclass, property } = _decorator;
@@ -22,23 +22,20 @@ export class InnerOutChangeBtn extends Component {
         EventMgr.on(EventName.SCENE_CHANGE, this.onSceneChange,this);
 
         this.node.on(Node.EventType.MOUSE_DOWN, (event) => {
-            
             GameMain.inst.changeScene();
         }, this)
     }
     
     onSceneChange() {
         if(GameMain.inst.isInnerScene()){
-            this._sprite.spriteFrame = this.InnerIcon;
+            this._sprite.spriteFrame = this.OutIcon;
         }
         else {
-            this._sprite.spriteFrame = this.OutIcon;
+            this._sprite.spriteFrame = this.InnerIcon;
         }
     }
 
     update(deltaTime: number) {
-
-        
         
     }
 }

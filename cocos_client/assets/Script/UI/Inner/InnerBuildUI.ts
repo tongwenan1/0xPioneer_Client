@@ -1,6 +1,5 @@
 import { _decorator, Component, Label, Node, ProgressBar, Tween,v3 } from 'cc';
-import { InnerBuildInfo } from '../../Datas/DataDefine';
-import { UserInnerBuildInfo } from '../../v2/DataMgr/user_Info';
+import { UserInnerBuildInfo } from '../../Manger/UserInfoMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerBuildUI')
@@ -28,12 +27,8 @@ export class InnerBuildUI extends Component {
     }
 
     refreshUI(buildData: UserInnerBuildInfo) {
-        console.log("buildData:" + JSON.stringify(buildData));
-        
         this.txtBuildName.string = `${buildData.buildName} LV.${buildData.buildLevel}`;
         
-        console.log("txtBuildName.string:" + this.txtBuildName.string);
-
         if(!buildData || buildData.buildLevel <= 0){// unlock
             this.unlockStatusIconNode.active = false;
             this.lockStatusIconNode.active = true;

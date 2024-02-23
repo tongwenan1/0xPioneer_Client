@@ -1,10 +1,9 @@
 import { _decorator, ToggleContainer, ScrollView, instantiate, Label, Node, log, Button, EventTouch, Size, UITransform, Toggle, Color, Event } from 'cc';
 import { GameMain } from '../../GameMain';
-import { PopUpUI } from '../TemplateUI/PopUpUI';
-import { InnerBuildInfo, InnerBuildUpData } from '../../Datas/DataDefine';
 import EventMgr from '../../Manger/EventMgr';
-import { EventName } from '../../Datas/ConstDefine';
-import UserInfo from '../../v2/DataMgr/user_Info';
+import { EventName } from '../../Basic/ConstDefine';
+import UserInfo from '../../Manger/UserInfoMgr';
+import { PopUpUI } from '../../BasicView/PopUpUI';
 
 const { ccclass, property } = _decorator;
 
@@ -56,21 +55,11 @@ export class MainBuildUI extends PopUpUI {
         // this.onMenuToggleChange(this.menuToggleCon.toggleItems[1]);
     }
 
-    private getBuildDataInfo(buildId: string,level: number){
-        let data:InnerBuildUpData[] = GameMain.localDatas.InnerBuildData.innerBuildUp[buildId];
-        if(!data)return null;
-        level = level || 1;
-        let level_data = data[level-1];
-        if(!level_data)return null;
-
-        return level_data;
-    }
-
     async initDataView(){
         let content = this.dataNode.content;
 
         // convert map to array
-        const innerBuildData = await UserInfo.Instance.getInnerBuilds();
+        const innerBuildData = await UserInfo.Instance.innerBuilds;
         let build_data = Array.from(innerBuildData.values())
         content.getComponent(UITransform).contentSize = new Size(940,5+build_data.length*130);
         this.dataItemIns.active = false;
@@ -82,22 +71,22 @@ export class MainBuildUI extends PopUpUI {
                 item.setParent(content);
             }
             item.active = true;
-            let data = this.getBuildDataInfo(build_data[i].buildID,build_data[i].buildLevel)
-            if(data ){
-                let title = item.getChildByName('title').getComponent(Label);
-                title.string = data.buildName;
+            // let data = this.getBuildDataInfo(build_data[i].buildID,build_data[i].buildLevel)
+            // if(data ){
+            //     let title = item.getChildByName('title').getComponent(Label);
+            //     title.string = data.buildName;
 
-                let desc = item.getChildByName('desc').getComponent(Label);
-                let desc_str = '';
-                for (let j = 0; j < data.upgradeEffectArr.length; j++) {
-                    const element = data.upgradeEffectArr[j];
-                    desc_str += element;
-                    if(j != data.upgradeEffectArr.length-1){
-                        desc_str += '\n';
-                    }
-                }
-                desc.string = desc_str;
-            }
+            //     let desc = item.getChildByName('desc').getComponent(Label);
+            //     let desc_str = '';
+            //     for (let j = 0; j < data.upgradeEffectArr.length; j++) {
+            //         const element = data.upgradeEffectArr[j];
+            //         desc_str += element;
+            //         if(j != data.upgradeEffectArr.length-1){
+            //             desc_str += '\n';
+            //         }
+            //     }
+            //     desc.string = desc_str;
+            // }
         }
 
     }
@@ -106,7 +95,7 @@ export class MainBuildUI extends PopUpUI {
         let content = this.buildNode.content;
         // convert map to array
 
-        let innerBuildData = await UserInfo.Instance.getInnerBuilds();
+        let innerBuildData = await UserInfo.Instance.innerBuilds;
         let build_data = Array.from(innerBuildData.values());
         // content.getComponent(UITransform).contentSize = 
         this.buildItemIns.active = false;
@@ -123,44 +112,44 @@ export class MainBuildUI extends PopUpUI {
             }
 
             item.active = true;
-            let data = this.getBuildDataInfo(build_data[i].buildID,build_data[i].buildLevel)
-            if(data){
-                let title = item.getChildByName('title').getComponent(Label);
-                title.string = `${data.buildName} LV${build_data[i].buildLevel} —> LV${build_data[i].buildLevel+1}`;
+        //     let data = this.getBuildDataInfo(build_data[i].buildID,build_data[i].buildLevel)
+        //     if(data){
+        //         let title = item.getChildByName('title').getComponent(Label);
+        //         title.string = `${data.buildName} LV${build_data[i].buildLevel} —> LV${build_data[i].buildLevel+1}`;
 
-                let desc = item.getChildByName('desc').getComponent(Label);
-                let desc_str = '';
-                for (let j = 0; j < data.upgradeEffectArr.length; j++) {
-                    const element = data.upgradeEffectArr[j];
-                    desc_str += element;
-                    if(j != data.upgradeEffectArr.length-1){
-                        desc_str += '\n';
-                    }
-                }
-                desc.string = desc_str;
+        //         let desc = item.getChildByName('desc').getComponent(Label);
+        //         let desc_str = '';
+        //         for (let j = 0; j < data.upgradeEffectArr.length; j++) {
+        //             const element = data.upgradeEffectArr[j];
+        //             desc_str += element;
+        //             if(j != data.upgradeEffectArr.length-1){
+        //                 desc_str += '\n';
+        //             }
+        //         }
+        //         desc.string = desc_str;
 
-                let layout = item.getChildByName('resLayout');
-                for(let j = 0; j < data.upgradeCostArr.length/2;j++){
-                    let res_item = layout.children[j];
-                    if(!res_item){
-                        res_item = instantiate(layout.children[0]);
-                        res_item.setParent(layout);
-                    }
+        //         let layout = item.getChildByName('resLayout');
+        //         for(let j = 0; j < data.upgradeCostArr.length/2;j++){
+        //             let res_item = layout.children[j];
+        //             if(!res_item){
+        //                 res_item = instantiate(layout.children[0]);
+        //                 res_item.setParent(layout);
+        //             }
 
-                    let count = res_item.getChildByName('count').getComponent(Label);
-                    count.string = "x"+data.upgradeCostArr[2*j+1];
+        //             let count = res_item.getChildByName('count').getComponent(Label);
+        //             count.string = "x"+data.upgradeCostArr[2*j+1];
 
-                    let name = res_item.getChildByName('name').getComponent(Label);
-                    name.string = '';
-                }
+        //             let name = res_item.getChildByName('name').getComponent(Label);
+        //             name.string = '';
+        //         }
 
-                for(let j = data.upgradeCostArr.length/2;j < layout.children.length;j++){
-                    layout.children[j].active = false;
-                }
+        //         for(let j = data.upgradeCostArr.length/2;j < layout.children.length;j++){
+        //             layout.children[j].active = false;
+        //         }
 
-                let btn_up = item.getChildByName('btn_upgrade').getComponent(Button);
-                btn_up.node.attr({buildId: build_data[i].buildID,buildLevel: build_data[i].buildLevel});
-            }
+        //         let btn_up = item.getChildByName('btn_upgrade').getComponent(Button);
+        //         btn_up.node.attr({buildId: build_data[i].buildID,buildLevel: build_data[i].buildLevel});
+        //     }
         }
     }
 
@@ -181,21 +170,20 @@ export class MainBuildUI extends PopUpUI {
             return ;
         }
 
-        let data = GameMain.localDatas.InnerBuildData.innerBuildUp[build_id];
-        let lv_data = null
-        if(data){
-            lv_data = data[build_lv - 1];
-        }
+        // let data = GameMain.localDatas.InnerBuildData.innerBuildUp[build_id];
+        // let lv_data = null
+        // if(data){
+        //     lv_data = data[build_lv - 1];
+        // }
 
-        if(!data || !lv_data){
-            console.log(`localDatas.outMapData.build [${build_id}] not exist`);
-            return;
-        }
-        else {
-            GameMain.inst.UI.mainBuildUI.show(false);
-            GameMain.inst.UI.factoryInfoUI.refreshUI(lv_data);
-            GameMain.inst.UI.factoryInfoUI.show(true);
-        }
+        // if(!data || !lv_data){
+        //     return;
+        // }
+        // else {
+        //     GameMain.inst.UI.mainBuildUI.show(false);
+        //     GameMain.inst.UI.factoryInfoUI.refreshUI(lv_data);
+        //     GameMain.inst.UI.factoryInfoUI.show(true);
+        // }
     }
 
     closeClick(){

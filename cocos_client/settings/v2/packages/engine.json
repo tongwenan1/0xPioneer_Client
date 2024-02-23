@@ -52,7 +52,7 @@
         "_value": false
       },
       "physics-2d": {
-        "_value": true,
+        "_value": false,
         "_option": "physics-2d-box2d"
       },
       "physics-2d-box2d": {
@@ -89,7 +89,7 @@
         "_value": true
       },
       "webview": {
-        "_value": true
+        "_value": false
       },
       "tween": {
         "_value": true
@@ -136,14 +136,12 @@
       "gfx-webgl2",
       "intersection-2d",
       "particle-2d",
-      "physics-2d-box2d",
       "profiler",
       "spine",
       "tiled-map",
       "tween",
       "ui",
-      "video",
-      "webview"
+      "video"
     ],
     "noDeprecatedFeatures": {
       "value": false,
@@ -152,6 +150,7 @@
     "flags": {}
   },
   "macroConfig": {
-    "CUSTOM_PIPELINE_NAME": "Custom"
+    "CUSTOM_PIPELINE_NAME": "Custom",
+    "BATCHER2D_MEM_INCREMENT": 1024
   }
 }

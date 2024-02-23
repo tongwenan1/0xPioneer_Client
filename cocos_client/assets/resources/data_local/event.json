@@ -1,0 +1,870 @@
+{
+  "910101": {
+    "id": "910101",
+    "NOTES": "spider/ enter the cave",
+    "type": 1,
+    "result": "910102",
+    "text": "You found and entered a cave.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910102": {
+    "id": "910102",
+    "NOTES": "spider/ fight small spiders",
+    "type": 3,
+    "result": null,
+    "text": "You encounter a small swarm of sand spiders and fight them.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "gangster_2",
+    "enemy_result": [
+      "910103",
+      "910104"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910103": {
+    "id": "910103",
+    "NOTES": "spider/ fight small spiders/ win-find egg",
+    "type": 2,
+    "result": null,
+    "text": "You killed the spiders, and found some spider cocoons with different shapes.",
+    "select": [
+      "910105",
+      "910106"
+    ],
+    "select_txt": [
+      "open human-shaped cocoons",
+      "open egg-shaped cocoons"
+    ],
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910104": {
+    "id": "910104",
+    "NOTES": "spider/ fight small spiders/ lose-end",
+    "type": 1,
+    "result": "-1",
+    "text": "You are killed by the spiders!",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910105": {
+    "id": "910105",
+    "NOTES": "spider/ human egg",
+    "type": 1,
+    "result": "910107",
+    "text": "You opened the human-shaped cocoons and you found some humans who are not dead yet.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910106": {
+    "id": "910106",
+    "NOTES": "spider/ egg egg",
+    "type": 1,
+    "result": "910109",
+    "text": "You opened the egg-shaped cocoons and...",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910107": {
+    "id": "910107",
+    "NOTES": "spider/ human egg/recover hp",
+    "type": 5,
+    "result": "910108",
+    "text": "Those who were saved by you decided to join you!",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": [
+      [
+        -1,
+        1,
+        1,
+        20
+      ]
+    ],
+    "judge": null,
+    "judge_result": null
+  },
+  "910108": {
+    "id": "910108",
+    "NOTES": "spider/ human egg/gain res",
+    "type": 4,
+    "result": "910112",
+    "text": "And they also gave you some resources.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        2,
+        "resource_01",
+        20
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910109": {
+    "id": "910109",
+    "NOTES": "spider/ egg egg/ fight small spiders",
+    "type": 3,
+    "result": null,
+    "text": "Surprise! Another swarm of sand spiders!",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "gangster_2",
+    "enemy_result": [
+      "910110",
+      "910111"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910110": {
+    "id": "910110",
+    "NOTES": "spider/ egg egg/ fight small spiders/ win - gain res",
+    "type": 4,
+    "result": "910112",
+    "text": "You killed the spiders, and found some resources.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        2,
+        "resource_01",
+        20
+      ],
+      [
+        2,
+        "resource_02",
+        20
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910111": {
+    "id": "910111",
+    "NOTES": "spider/ egg egg/ fight small spiders/ lose - end",
+    "type": 1,
+    "result": "-1",
+    "text": "You are killed by the spiders!",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910112": {
+    "id": "910112",
+    "NOTES": "spider/ fight spider queen",
+    "type": 3,
+    "result": null,
+    "text": "You continued deeper into the cave and eventually discovered the spider queen.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "gangster_2",
+    "enemy_result": [
+      "910113",
+      "910114"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910113": {
+    "id": "910113",
+    "NOTES": "spider/ fight spider queen/ win - get reward",
+    "type": 4,
+    "result": "-1",
+    "text": "You killed the spider queen and obtained her treasure.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "5",
+        1
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910114": {
+    "id": "910114",
+    "NOTES": "spider/ fight spider queen/ lose -end",
+    "type": 1,
+    "result": "-1",
+    "text": "You are killed by the spider queen!",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910201": {
+    "id": "910201",
+    "NOTES": "ancient/come to the ancient",
+    "type": 2,
+    "result": null,
+    "text": "You found an ancient.",
+    "select": [
+      "910202",
+      "910209"
+    ],
+    "select_txt": [
+      "enter the ancient",
+      "observe around"
+    ],
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910202": {
+    "id": "910202",
+    "NOTES": "ancient/ enter the ancient",
+    "type": 1,
+    "result": "910203",
+    "text": "You entered the ancient.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910203": {
+    "id": "910203",
+    "NOTES": "ancient/ find guard",
+    "type": 2,
+    "result": null,
+    "text": "You saw a guardian.",
+    "select": [
+      "910204",
+      "910207"
+    ],
+    "select_txt": [
+      "fight",
+      "evade"
+    ],
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910204": {
+    "id": "910204",
+    "NOTES": "ancient/ find guard/ fight the guard",
+    "type": 3,
+    "result": null,
+    "text": "You fight with the guardian.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "gangster_2",
+    "enemy_result": [
+      "910205",
+      "910206"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910205": {
+    "id": "910205",
+    "NOTES": "ancient/ find guard/ fight the guard/ win - gain res and token",
+    "type": 4,
+    "result": "910215",
+    "text": "You killed the guardian and got a special token.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "18",
+        1
+      ],
+      [
+        2,
+        "resource_02",
+        20
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910206": {
+    "id": "910206",
+    "NOTES": "ancient/ find guard/ fight the guard/ lose - end",
+    "type": 1,
+    "result": "-1",
+    "text": "You are killed by the guardian.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910207": {
+    "id": "910207",
+    "NOTES": "ancient/ find guard/ evd",
+    "type": 1,
+    "result": "910208",
+    "text": "You evaded.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910208": {
+    "id": "910208",
+    "NOTES": "ancient/ find guard/ reach the last room",
+    "type": 1,
+    "result": "910215",
+    "text": "You reached the door to the last room.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910209": {
+    "id": "910209",
+    "NOTES": "ancient/ observe and find another entry",
+    "type": 2,
+    "result": null,
+    "text": "You found a secret entry and you are considering how to get into it.",
+    "select": [
+      "910210",
+      "910211"
+    ],
+    "select_txt": [
+      "make a rope and use it",
+      "jump into it"
+    ],
+    "select_cond": [
+      [
+        1,
+        "resource_01",
+        50
+      ],
+      []
+    ],
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910210": {
+    "id": "910210",
+    "NOTES": "ancient/ observe and find another entry/ use rope - lose wood",
+    "type": 4,
+    "result": "910212",
+    "text": "You made a rope and used it to get into the ancient.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": [
+      [
+        2,
+        "resource_01",
+        50
+      ]
+    ],
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910211": {
+    "id": "910211",
+    "NOTES": "ancient/ observe and find another entry/ jump in - lose hp",
+    "type": 5,
+    "result": "910212",
+    "text": "You jumped into the ancient and lost a little HP.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": [
+      [
+        -1,
+        1,
+        1,
+        -50
+      ]
+    ],
+    "judge": null,
+    "judge_result": null
+  },
+  "910212": {
+    "id": "910212",
+    "NOTES": "ancient/ fight the mecha-mon",
+    "type": 3,
+    "result": null,
+    "text": "You got into the ancient and found a mecha-mon waiting for you.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "gangster_2",
+    "enemy_result": [
+      "910213",
+      "910214"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910213": {
+    "id": "910213",
+    "NOTES": "ancient/ fight the mecha-mon/ win - gain token",
+    "type": 4,
+    "result": "910215",
+    "text": "You destroyed the mecha-mon and got a special token.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "18",
+        1
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910214": {
+    "id": "910214",
+    "NOTES": "ancient/ fight the mecha-mon/ lose - end",
+    "type": 1,
+    "result": "-1",
+    "text": "You are killed.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910215": {
+    "id": "910215",
+    "NOTES": "ancient/ enter the last room",
+    "type": 1,
+    "result": "910216",
+    "text": "You entered the last room.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910216": {
+    "id": "910216",
+    "NOTES": "ancient/ use token?",
+    "type": 2,
+    "result": null,
+    "text": "Do you want to use the token to open the big box?",
+    "select": [
+      "910217",
+      "910218"
+    ],
+    "select_txt": [
+      "use the token",
+      "don't use the token"
+    ],
+    "select_cond": [
+      [
+        2,
+        "18",
+        1
+      ],
+      []
+    ],
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910217": {
+    "id": "910217",
+    "NOTES": "ancient/ use token?/ gain big reward - end",
+    "type": 4,
+    "result": "-1",
+    "text": "You opened the big treasure box and gain a lot!",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": [
+      [
+        1,
+        "18",
+        1
+      ]
+    ],
+    "reward": [
+      [
+        2,
+        "resource_01",
+        100
+      ],
+      [
+        2,
+        "resource_02",
+        100
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910218": {
+    "id": "910218",
+    "NOTES": "ancient/ use token?/ gain a few - end",
+    "type": 4,
+    "result": "-1",
+    "text": "You could not obtain the big reward, so you took away a few resources.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        2,
+        "resource_02",
+        50
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910301": {
+    "id": "910301",
+    "NOTES": "lab/ fight the guard",
+    "type": 3,
+    "result": null,
+    "text": "You entered a deserted lab and encountered a dangerous guardian.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "gangster_2",
+    "enemy_result": [
+      "910302",
+      "910303"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910302": {
+    "id": "910302",
+    "NOTES": "lab/ fight the guard/ win - choose way",
+    "type": 2,
+    "result": null,
+    "text": "You killed the guardian and now you are considering which way to go.",
+    "select": [
+      "910304",
+      "910305"
+    ],
+    "select_txt": [
+      "to the warehouse",
+      "to the energy room"
+    ],
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910303": {
+    "id": "910303",
+    "NOTES": "lab/ fight the guard/ lose - end",
+    "type": 1,
+    "result": "-1",
+    "text": "You are killed.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910304": {
+    "id": "910304",
+    "NOTES": "lab/ storage/ gain res - end",
+    "type": 4,
+    "result": "-1",
+    "text": "You found a few resources in the warehouse.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        2,
+        "resource_02",
+        30
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910305": {
+    "id": "910305",
+    "NOTES": "lab/ energy/ repair the tube?",
+    "type": 2,
+    "result": null,
+    "text": "You found a broken tube in the energy room.",
+    "select": [
+      "910306",
+      "910308"
+    ],
+    "select_txt": [
+      "use stones to repair the tube",
+      "take away the tube"
+    ],
+    "select_cond": [
+      [
+        1,
+        "resource_02",
+        50
+      ],
+      []
+    ],
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910306": {
+    "id": "910306",
+    "NOTES": "lab/ repair the tube - lose 50 stone",
+    "type": 4,
+    "result": "910307",
+    "text": "You repaired the tube.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": [
+      [
+        2,
+        "resource_02",
+        50
+      ]
+    ],
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910307": {
+    "id": "910307",
+    "NOTES": "lab/ repair the tube - gain res- end",
+    "type": 4,
+    "result": "-1",
+    "text": "You got a lot of energy.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        2,
+        "resource_05",
+        100
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  },
+  "910308": {
+    "id": "910308",
+    "NOTES": "lab/ take away the tube - gain little res - end",
+    "type": 4,
+    "result": "-1",
+    "text": "You got a little energy.",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": null,
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        2,
+        "resource_05",
+        40
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null
+  }
+}
