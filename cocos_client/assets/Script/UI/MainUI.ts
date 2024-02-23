@@ -164,9 +164,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
             await LocalDataLoader.instance.loadLocalDatas();
         }
         EventMgr.emit("Event_LoadOver");
-
-        this.backpackUI.initItems(ItemMgr.Instance.localItemDatas);
-
+        
         const bigGanster = PioneerMgr.instance.getPioneerById("gangster_3");
         if (bigGanster != null && bigGanster.show) {
             this.checkCanShowGansterComingTip(bigGanster.id);

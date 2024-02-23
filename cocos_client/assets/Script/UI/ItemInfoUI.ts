@@ -4,11 +4,44 @@ import { BackpackItem } from './BackpackItem';
 import { GameMain } from '../GameMain';
 import UserInfo from '../Manger/UserInfoMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
+import ItemMgr from '../Manger/ItemMgr';
 const { ccclass, property } = _decorator;
 
 
+
+export interface ItemInfoShowModel {
+    itemConfig: ItemConfigData,
+    count: number
+}
+
 @ccclass('ItemInfoUI')
 export class ItemInfoUI extends PopUpUI {
+
+    public async showItem(items: ItemInfoShowModel[], isGet: Boolean = false) {
+        this._items = items;
+        if (this._items.length > 0) {
+            let frame = await BackpackItem.getItemIcon(this._items[0].itemConfig.configId);
+            this.icon.spriteFrame = frame;
+    
+            this.typeLabel.string = this._items[0].itemConfig.itemType.toString();
+            this.nameLabel.string = this._items[0].itemConfig.itemName;
+            this.descTxt.string = this._items[0].itemConfig.itemDesc;
+    
+            this._isGet = isGet;
+
+            this.useButton.node.active = false;
+            if (this._isGet) {
+                this.useButton.node.active = true;
+                this.useButtonLabel.string = "Get";
+            } else {
+                if (this._items[0].itemConfig.itemType == ItemType.AddProp) {
+                    this.useButton.node.active = true;
+                    this.useButtonLabel.string = "Use";
+                } 
+            }
+            this.show(true);
+        }
+    }
 
     @property(Sprite)
     icon: Sprite;
@@ -32,8 +65,7 @@ export class ItemInfoUI extends PopUpUI {
     useButtonLabel: Label;
 
     private _isGet: Boolean;
-    private _itemdatas: ItemData[];
-    private _itemconfs: ItemConfigData[];
+    private _items: ItemInfoShowModel[];
 
     start() {
 
@@ -44,76 +76,34 @@ export class ItemInfoUI extends PopUpUI {
         this.useButton.node.on(Button.EventType.CLICK, () => {
             this._clickUseBtn();
         }, this);
-
-
     }
 
-
-    async showItem(itemdatas: ItemData[], itemConfs: ItemConfigData[], isGet: Boolean = false) {
-        this._itemconfs = itemConfs;
-        this._itemdatas = itemdatas;
-
-        // TO DO : show multi items
-        let frame = await BackpackItem.getItemIcon(this._itemdatas[0].itemConfigId);
-        this.icon.spriteFrame = frame;
-
-        this.typeLabel.string = itemConfs[0].itemType.toString();
-        this.nameLabel.string = itemConfs[0].itemName;
-        this.descTxt.string = itemConfs[0].itemDesc;
-
-        this._isGet = isGet;
-        if (isGet) {
-            this.useButtonLabel.string = "Get";
+    private _addItems() {
+        const addItems: ItemData[] = [];
+        for (const temple of this._items) {
+            const itemModel = new ItemData(temple.itemConfig.configId, temple.count);
+            addItems.push(itemModel);
         }
-        else {
-            this.useButtonLabel.string = "Use";
-        }
-
-        this.show(true);
-    }
+        ItemMgr.Instance.addItem(addItems);
+    }    
 
     //---------------------------------------------------- action
     private _onTapClose() {
         if (this._isGet) {
-            GameMain.inst.UI.backpackUI.addItems(this._itemdatas);
+            this._addItems();
         }
         this.show(false);
     }
 
     private _clickUseBtn() {
         if (this._isGet) {
-            GameMain.inst.UI.backpackUI.addItems(this._itemdatas);
-            this.show(false);
+            this._addItems();
 
         } else {
-            for (let i = 0; i < this._itemdatas.length; ++i) {
-                // sub item
-                GameMain.inst.UI.backpackUI.subItem(this._itemdatas[i].itemId, 1);
-
-                // use item
-                if (this._itemconfs[i].itemType == ItemType.AddProp) {
-                    this._useAddPropItem(this._itemconfs[i]);
-                }
+            for (const temple of this._items) {
+                ItemMgr.Instance.subItem(temple.itemConfig.configId, 1);
             }
-
-            this.show(false);
         }
-    }
-
-    private _useAddPropItem(itemConf: ItemConfigData) {
-        switch (itemConf.gainPropName) {
-            case "wood":
-                UserInfo.Instance.wood = UserInfo.Instance.wood + itemConf.gainPropCount;
-                break;
-            case "food":
-                UserInfo.Instance.food = UserInfo.Instance.food + itemConf.gainPropCount;
-                break;
-            case "troop":
-                UserInfo.Instance.troop = UserInfo.Instance.troop + itemConf.gainPropCount;
-                break;
-            case "stone":
-                UserInfo.Instance.stone = UserInfo.Instance.stone + itemConf.gainPropCount;
-                break;
-        }
+        this.show(false);
     }
 }

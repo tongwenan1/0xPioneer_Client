@@ -1,170 +1,79 @@
-import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate } from 'cc';
+import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
 import ItemData from '../Model/ItemData';
 import { BackpackItem } from './BackpackItem';
-import ItemMgr from '../Manger/ItemMgr';
+import ItemMgr, { ItemMgrEvent, ItemArrangeType } from '../Manger/ItemMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
 const { ccclass, property } = _decorator;
 
 
 @ccclass('BackpackUI')
-export class BackpackUI extends PopUpUI {
+export class BackpackUI extends PopUpUI implements ItemMgrEvent {
+
 
     @property(Prefab)
     BackpackItemPfb: Prefab;
 
     @property(Slider)
-    ContentSlider:Slider;
+    ContentSlider: Slider;
 
     @property(Node)
-    Content:Node;
+    Content: Node;
 
     @property(Label)
-    QuantityNum:Label;
+    QuantityNum: Label;
 
     @property(Button)
-    closeButton:Button;
+    closeButton: Button;
 
     @property(Button)
-    ArrangeButton:Button;
+    ArrangeButton: Button;
 
-    private maxItemCount:number = 100;
-    private itemCount:number;
-    private items:ItemData[] = [];
+    private maxItemCount: number = 100;
+    private itemCount: number;
 
-    private freeItemTile:BackpackItem[] = [];
-    
+    private freeItemTile: BackpackItem[] = [];
+
+    private _selectSortMenuShow: boolean = false;
+    private _currentArrangeType: ItemArrangeType = null;
+
+    private _sortMenu: Node = null;
+    private _menuArrow: Node = null;
+    onLoad(): void {
+        this._sortMenu = this.node.getChildByName("SortMenu");
+        this._sortMenu.active = false;
+
+        this._menuArrow = this.node.getChildByPath("Bg/SortView/Menu/Arrow");
+    }
     start() {
-        
-        this.closeButton.node.on(Button.EventType.CLICK, ()=>{
-            this.node.active = false;
-        }, this);
-        
-        this.ArrangeButton.node.on(Button.EventType.CLICK, ()=>{
-            this.arrangeItem();
-        }, this);
+        ItemMgr.Instance.addObserver(this);
 
-        
-        // TO DO : slider event
+        this._refreshBackpackUI();
     }
 
-    initItems(items:ItemData[]) {
-        this.items = items;
-        this.refreshBackpackUI();
+    onDestroy(): void {
+        ItemMgr.Instance.removeObserver(this);
     }
 
-    clearItems() {
-        this.items = [];
-        this.refreshBackpackUI();
-    }
+    private _refreshBackpackUI() {
+        const items = ItemMgr.Instance.localItemDatas;
 
-    isPackageFull() {
-        return this.itemCount >= this.maxItemCount;
-    }
-
-    addItem(itemdata:ItemData) {
-        this.items.push(itemdata);
-
-        ItemMgr.Instance.modityItemData(this.items);
-
-        // TO DO : add item tile replace refresh
-        this.refreshBackpackUI();
-    }
-
-    addItems(itemdatas:ItemData[]) {
-        this.items = this.items.concat(itemdatas);
-
-        ItemMgr.Instance.modityItemData(this.items);
-        
-        // TO DO : add item tile replace refresh
-        this.refreshBackpackUI();
-    }
-
-    removeItem(itemId:number) {
-        let idx = this.items.findIndex((v)=>{
-            return v.itemId == itemId;
-        });
-
-        if(idx < 0) {
-            return;
-        }
-
-        this.items.splice(idx, 1);
-        
-        ItemMgr.Instance.modityItemData(this.items);
-            
-        // TO DO : remove item tile replace refresh
-        this.refreshBackpackUI();
-    }
-
-    subItem(itemId:number, count:number):Boolean {
-        let idx = this.items.findIndex((v)=>{
-            return v.itemId == itemId;
-        });
-
-        if(idx < 0) {
-            return false;
-        }
-
-        if(this.items[idx].count < count) {
-            return false;
-        }
-
-        this.items[idx].count = this.items[idx].count - count;
-        if(this.items[idx].count <= 0) {
-            this.items.splice(idx, 1);
-        }
-        
-        ItemMgr.Instance.modityItemData(this.items);
-     
-        // TO DO : remove item tile replace refresh
-        this.refreshBackpackUI();
-
-        return true;
-    }
-
-    arrangeItem() {
-        let itemMap = {};
-        for(let i=this.items.length - 1; i>=0; --i){
-            let key = this.items[i].itemConfigId;
-            if(key in itemMap){
-                itemMap[key].count += this.items[i].count;
-                this.items.splice(i, 1);
-            }
-            else {
-                itemMap[key] = this.items[i];
-            }
-        }
-
-        this.items = [];
-        for(let k in itemMap) {
-            this.items.push(itemMap[k]);
-        }
-
-        ItemMgr.Instance.modityItemData(this.items);
-
-        this.refreshBackpackUI();
-        
-    }
-
-    refreshBackpackUI() {
-
-        let cAry:BackpackItem[] = [];
-        this.Content.children.forEach((node)=>{
+        let cAry: BackpackItem[] = [];
+        this.Content.children.forEach((node) => {
             let bi = node.getComponent(BackpackItem);
-            if(bi){
+            if (bi) {
                 cAry.push(bi);
             }
         });
 
-        for(let i=0; i<cAry.length; ++i) {
+        for (let i = 0; i < cAry.length; ++i) {
             cAry[i].node.parent = null;
             this.freeItemTile.push(cAry[i]);
         }
 
         this.itemCount = 0;
-        for(let i=0; i<this.items.length; ++i){
-            let itemTile:BackpackItem;
-            if(this.freeItemTile.length >0){
+        for (let i = 0; i < items.length; ++i) {
+            let itemTile: BackpackItem;
+            if (this.freeItemTile.length > 0) {
                 itemTile = this.freeItemTile.pop();
             }
             else {
@@ -172,15 +81,50 @@ export class BackpackUI extends PopUpUI {
                 itemTile = itemTileNode.getComponent(BackpackItem);
             }
 
-            itemTile.initItem(this.items[i]);
+            itemTile.initItem(items[i]);
             itemTile.node.parent = this.Content;
 
-            this.itemCount += this.items[i].count;
+            this.itemCount += items[i].count;
         }
 
-        this.QuantityNum.string = ""+this.itemCount+"/"+this.maxItemCount;
+        this.QuantityNum.string = "" + this.itemCount + "/" + this.maxItemCount;
 
-        // TO DO : update slider
+        this.Content.getComponent(Layout).updateLayout();
+    }
 
+    private _refreshMenu() {
+        this._sortMenu.active = this._selectSortMenuShow;
+        this._menuArrow.angle = this._selectSortMenuShow ? 180 : 0;
+    }
+
+    //------------------------------------------------------------ action
+    private onTapClose() {
+        this._selectSortMenuShow = false;
+        this._refreshMenu();
+        this.show(false);
+    }
+    private onTapArrange() {
+        ItemMgr.Instance.arrange(this._currentArrangeType)
+    }
+
+    private onTapSortMenuAction() {
+        this._selectSortMenuShow = !this._selectSortMenuShow;
+
+        this._refreshMenu();
+    }
+    private onTapSelectSortCondition(event: Event, customEventData: string) {
+        if (customEventData == this._currentArrangeType) {
+            return;
+        }
+        this._currentArrangeType = customEventData as ItemArrangeType;
+        this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = this._currentArrangeType;
+        this._selectSortMenuShow = false;
+        this._refreshMenu();
+    }
+
+    //--------------------------------------
+    //ItemMgrEvent
+    itemChanged(): void {
+        this._refreshBackpackUI();
     }
 }

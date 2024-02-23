@@ -47,9 +47,7 @@ export class BackpackItem extends Component {
     protected _itemConf:ItemConfigData;
     
     start() {
-        this.node.on(Node.EventType.MOUSE_UP, (event: cc.EventMouse) => {
-            this._onItemClick();
-        }, this);
+       
     }
 
     public async initItem(itemdata:ItemData) {
@@ -65,7 +63,7 @@ export class BackpackItem extends Component {
         this.CountLabel.string = itemdata.count.toString();
     }
 
-    private _onItemClick() {
-        GameMain.inst.UI.itemInfoUI.showItem([this._itemData], [this._itemConf]);
+    private onTapItem() {
+        GameMain.inst.UI.itemInfoUI.showItem([{ itemConfig: this._itemConf, count: this._itemData.count }]);
     }
 }

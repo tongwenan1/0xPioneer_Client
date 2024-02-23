@@ -1,34 +1,28 @@
-export enum ItemType{
+export enum ItemType {
     TaskItem = 1,
     AddProp = 2, // coin, energy, wood, food, stone, troop
 }
 
-export default class ItemData{
-    itemId:number; // item unique id
-    itemConfigId:number; // item config id 
-    count:number; // count
+export default class ItemData {
 
-    /**
-     * 
-     * @param count 
-     * @param itemId reserved, use first itemType
-     */
-    public constructor(count:number, itemConfigId:number, itemId:number = 0) {
-        this.itemId = itemId;
-        this.count = count;
+    public itemConfigId: number; // item config id 
+    public count: number; // count
+    public addTimeStamp: number;
+
+    public constructor(itemConfigId: number, count: number) {
         this.itemConfigId = itemConfigId;
+        this.count = count;
+        this.addTimeStamp = 0;
     }
-    
 }
 
 export class ItemConfigData {
-    Id:number;
+    configId: number;
     itemType: ItemType; // item type
-    itemName:string;
-    itemDesc:string;
-    grade:number; // grade 1-5
-
+    itemName: string;
+    itemDesc: string;
+    grade: number; // grade 1-5
     // gain prop config, itemType = ItemType.GainProp
-    gainPropName:string;
-    gainPropCount:number;
+    gainPropName: string;
+    gainPropCount: number;
 }

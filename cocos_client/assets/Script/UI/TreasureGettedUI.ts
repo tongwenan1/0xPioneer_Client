@@ -14,9 +14,9 @@ const { ccclass, property } = _decorator;
 export class TreasureGettedUI extends PopUpUI {
 
     @property([Color])
-    frameGradeColors:Color[] = [];
+    frameGradeColors: Color[] = [];
 
-    public async dialogShow(box: any, gettedCallback: ()=> void) {
+    public async dialogShow(box: any, gettedCallback: () => void) {
         for (let i = 0; i < 3; i++) {
             this.node.getChildByPath("Content/Treasure_box_" + i).active = i == box.icon;
         }
@@ -27,7 +27,7 @@ export class TreasureGettedUI extends PopUpUI {
 
         let tbcAni = treasureBoxCameraNode.getComponent(Animation);
         let tbAni = treasureBoxNode.getComponent(Animation);
-        
+
         let tbcAniState = tbcAni.getState(tbcAni.defaultClip.name);
         let tbAniState = tbAni.getState(tbAni.defaultClip.name);
         tbcAniState.time = 0;
@@ -37,9 +37,9 @@ export class TreasureGettedUI extends PopUpUI {
 
         // prepare item show node
         let itemShowNode = this.node.getChildByPath("Content/Treasure_box_" + box.icon + "/itemShow");
-        itemShowNode.scale = v3(0.01,0.01,0.01);
+        itemShowNode.scale = v3(0.01, 0.01, 0.01);
         itemShowNode.active = false;
-        
+
         let resultReward = null;
         const drop = DropMgr.Instance.getDropById(box.drop);
         if (drop.length > 0) {
@@ -50,13 +50,13 @@ export class TreasureGettedUI extends PopUpUI {
                 items.push({
                     type: temple[0],
                     num: temple[1],
-                    itemConfigId: temple.length > 3? temple[3]:0
+                    itemConfigId: temple.length > 3 ? temple[3] : 0
                 });
                 weights.push(temple[2]);
             }
             resultReward = this._weightedRandomValue(items, weights);
-            
-            if(resultReward) {
+
+            if (resultReward) {
                 let iconspr = itemShowNode.getChildByPath("icon").getComponent(Sprite);
                 let framespr = itemShowNode.getChildByPath("Item_frame").getComponent(Sprite);
                 framespr.color = Color.WHITE;
@@ -72,7 +72,7 @@ export class TreasureGettedUI extends PopUpUI {
                 } else if (resultReward.type == "backpack_item") {
                     iconspr.spriteFrame = await BackpackItem.getItemIcon(resultReward.itemConfigId);
                     let itemConf = ItemMgr.Instance.getItemConf(resultReward.itemConfigId);
-                    if(itemConf) {
+                    if (itemConf) {
                         framespr.color = this.frameGradeColors[itemConf.grade - 1];
                     }
                     else {
@@ -85,13 +85,13 @@ export class TreasureGettedUI extends PopUpUI {
         let thisptr = this;
         tween(itemShowNode)
             .delay(5.5)
-            .set({active:true})
-            .to(0.3, {scale: v3(0.1, 0.1, 0.1)})
-            .to(0.1, {scale: v3(0.8, 0.8, 0.8)})
-            .to(0.2, {scale: v3(0.7, 0.7, 0.7)})
+            .set({ active: true })
+            .to(0.3, { scale: v3(0.1, 0.1, 0.1) })
+            .to(0.1, { scale: v3(0.8, 0.8, 0.8) })
+            .to(0.2, { scale: v3(0.7, 0.7, 0.7) })
             .delay(0.5)
             .call(() => {
-                if(resultReward) {
+                if (resultReward) {
                     if (resultReward.type == "resource_01") {
                         UserInfoMgr.Instance.wood += resultReward.num;
                     } else if (resultReward.type == "resource_02") {
@@ -102,14 +102,12 @@ export class TreasureGettedUI extends PopUpUI {
                         UserInfoMgr.Instance.troop += resultReward.num;
                     } else if (resultReward.type == "backpack_item") {
                         let itemConf = ItemMgr.Instance.getItemConf(resultReward.itemConfigId);
-                        if(itemConf) {
-
-                            let itemid = ItemMgr.Instance.allocItemId();
-                            let itemd = new ItemData(resultReward.num, resultReward.itemConfigId, itemid);
-
-                            GameMain.inst.UI.itemInfoUI.showItem([itemd], [itemConf], true);
-                        }
-                        else {
+                        if (itemConf) {
+                            GameMain.inst.UI.itemInfoUI.showItem([{
+                                itemConfig: itemConf,
+                                count: resultReward.num,
+                            }], true);
+                        }  else {
                             // TO DO : config error
                         }
                     }

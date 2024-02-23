@@ -3,6 +3,7 @@ import TaskMgr from "./TaskMgr";
 import ItemMgr from "./ItemMgr";
 import ItemData from "../Model/ItemData";
 import { GameMain } from "../GameMain";
+import { ItemInfoShowModel } from "../UI/ItemInfoUI";
 
 export interface UserInnerBuildInfo {
     buildID: string,
@@ -552,7 +553,7 @@ export default class UserInfoMgr {
                 observe.taskProgressChanged(task.id);
             }
         }
-        if (taskForceOver || 
+        if (taskForceOver ||
             (step.condwinStep > step.condwin.length - 1)) {
             // step over
             step.over = true;
@@ -597,8 +598,7 @@ export default class UserInfoMgr {
 
             // reward backpack item
             if (step.rewardBackpackItem != null) {
-                let itemDataAry = [];
-                let itemConfAry = [];
+                const showDatas: ItemInfoShowModel[] = [];
                 for (const r of step.rewardBackpackItem) {
                     let itemConf = ItemMgr.Instance.getItemConf(r.itemConfigId);
                     if (!itemConf) {
@@ -622,13 +622,12 @@ export default class UserInfoMgr {
                         continue;
                     }
 
-                    itemConfAry.push(itemConf);
-
-                    let itemid = ItemMgr.Instance.allocItemId();
-                    let itemd = new ItemData(r.num, r.itemConfigId, itemid);
-                    itemDataAry.push(itemd);
+                    showDatas.push({
+                        itemConfig: itemConf,
+                        count: r.num
+                    });
                 }
-                GameMain.inst.UI.itemInfoUI.showItem(itemDataAry, itemConfAry, true);
+                GameMain.inst.UI.itemInfoUI.showItem(showDatas, true);
             }
         }
         let canStepForward: boolean = false;

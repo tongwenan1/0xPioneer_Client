@@ -6,6 +6,7 @@ import ItemMgr from '../../Manger/ItemMgr';
 import ItemData, { ItemConfigData } from '../../Model/ItemData';
 import BranchEventMgr from '../../Manger/BranchEventMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
+import { ItemInfoShowModel } from '../ItemInfoUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -252,8 +253,8 @@ export class EventUI extends PopUpUI {
 
     private _loseOrGainItemAndResource(datas: any[], cost: boolean): string {
         let showTip: string = "";
-        const obtainedItems: ItemData[] = [];
-        const obtainedConfs: ItemConfigData[] = [];
+        const itemInfoShows: ItemInfoShowModel[] = [];
+
         for (const temple of datas) {
             if (temple.length == 3) {
                 const type: number = temple[0];
@@ -265,17 +266,19 @@ export class EventUI extends PopUpUI {
                         for (const item of ItemMgr.Instance.localItemDatas) {
                             if (item.itemConfigId == id) {
                                 const itemConf = ItemMgr.Instance.getItemConf(id as number);
-                                GameMain.inst.UI.backpackUI.subItem(item.itemId, num);
+                                ItemMgr.Instance.subItem(item.itemConfigId, num);
                                 showTip += ("You lost" + num + " " + itemConf.itemName + "\n");
                                 break;
                             }
                         }
                     } else {
                         const itemConf = ItemMgr.Instance.getItemConf(id as number);
-                        let tempitemid = ItemMgr.Instance.allocItemId();
-                        let itemd = new ItemData(num, id as number, tempitemid);
-                        obtainedItems.push(itemd);
-                        obtainedConfs.push(itemConf);
+                        if (itemConf != null) {
+                            itemInfoShows.push({
+                                itemConfig: itemConf,
+                                count: num
+                            });
+                        }
                         showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
                     }
                 } else if (type == 2) {
@@ -321,9 +324,7 @@ export class EventUI extends PopUpUI {
             }
         }
         if (!cost) {
-            if (obtainedItems.length > 0 && obtainedItems.length == obtainedConfs.length) {
-                GameMain.inst.UI.itemInfoUI.showItem(obtainedItems, obtainedConfs, true);
-            }
+            GameMain.inst.UI.itemInfoUI.showItem(itemInfoShows, true);
         }
         return showTip;
     }
