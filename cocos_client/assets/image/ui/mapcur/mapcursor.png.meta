@@ -40,7 +40,7 @@
       "name": "spriteFrame",
       "userData": {
         "trimType": "auto",
-        "trimThreshold": 1,
+        "trimThreshold": 0,
         "rotated": false,
         "offsetX": 0,
         "offsetY": 0,
