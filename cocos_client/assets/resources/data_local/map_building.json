@@ -352,16 +352,16 @@
         "show": true,
         "positions": [
             {
-                "x": 15,
-                "y": 23
+                "x": 12,
+                "y": 21
             },
             {
-                "x": 15,
-                "y": 24
+                "x": 12,
+                "y": 22
             },
             {
-                "x": 16,
-                "y": 24
+                "x": 13,
+                "y": 22
             }
         ],
         "faction": "netural",
@@ -376,5 +376,69 @@
         "quota": 1,
         "progress":5,
         "event": "910201"
+    },
+    {
+        "id": "building_14",
+        "name": "sand mineral 01",
+        "type": "event",
+        "show": true,
+        "positions": [
+            {
+                "x": 31,
+                "y": 9
+            },
+            {
+                "x": 31,
+                "y": 10
+            },
+            {
+                "x": 32,
+                "y": 10
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "resources": [
+            {
+                "id": "resource_02",
+                "num": 100
+            }
+        ],
+        "quota": 1,
+        "progress":5,
+        "event": "910101"
+    },
+    {
+        "id": "building_15",
+        "name": "sand mineral 01",
+        "type": "event",
+        "show": true,
+        "positions": [
+            {
+                "x": 27,
+                "y": 49
+            },
+            {
+                "x": 27,
+                "y": 50
+            },
+            {
+                "x": 28,
+                "y": 50
+            }
+        ],
+        "faction": "netural",
+        "defendPioneerIds": [],
+        "level": 1,
+        "resources": [
+            {
+                "id": "resource_02",
+                "num": 100
+            }
+        ],
+        "quota": 1,
+        "progress":5,
+        "event": "910301"
     }
 ]

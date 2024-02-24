@@ -72,7 +72,9 @@ export class OuterBuildingView extends Component {
             }
         } else if (building.type == MapBuildingType.event) {
             this._neturalView.active = true;
-            if (building.id == "building_13") {
+            if (building.id == "building_13" ||
+            building.id == "building_14" ||
+            building.id == "building_15") {
                 sand.active = true;
             }
         }
