@@ -1040,7 +1040,7 @@ export default class PioneerMgr {
             if (stayBuilding.type == MapBuildingType.city) {
                 if (
                     (pioneer.type == MapPioneerType.player && pioneer.friendly && stayBuilding.faction == BuildingFactionType.enemy) ||
-                    (pioneer.name == "gangster_3" && !pioneer.friendly && stayBuilding.faction != BuildingFactionType.enemy)
+                    (pioneer.id == "gangster_3" && !pioneer.friendly && stayBuilding.faction != BuildingFactionType.enemy)
                 ) {
                     const cityBuilding = stayBuilding as MapMainCityBuildingModel;
                     if (cityBuilding.taskObj != null) {
