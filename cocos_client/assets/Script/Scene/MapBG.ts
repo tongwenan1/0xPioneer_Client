@@ -260,6 +260,8 @@ export class MapBG extends Component {
                                     if (stayBuilding.stayMapPositions.length > 1 && stayBuilding.stayMapPositions.length <= 3) {
                                         this.mapcur.spriteFrame = this.mapcurMultiSelectFrame[1];
                                         this.mapcur.node.setWorldPosition(v3(wpos2.x, wpos2.y + 8, wpos2.z));
+                                    } else if (stayBuilding.stayMapPositions.length == 1) {
+                                        this.mapcur.spriteFrame = this.mapcurMultiSelectFrame[0];
                                     }
                                     else {
                                         this.mapcur.spriteFrame = this.mapcurMultiSelectFrame[2];
