@@ -69,8 +69,8 @@
         "hp": 50,
         "attack": 8,
         "pos": {
-            "x": 27,
-            "y": 31
+            "x": 26,
+            "y": 34
         },
         "winprogress": 4
     },
@@ -97,8 +97,8 @@
         "hp": 80,
         "attack": 15,
         "pos": {
-            "x": 31,
-            "y": 29
+            "x": 34,
+            "y": 32
         },
         "winprogress": 6
     },
@@ -111,7 +111,7 @@
         "hp": 50,
         "attack": 10,
         "pos": {
-            "x": 32,
+            "x": 30,
             "y": 26
         },
         "winprogress": 7
@@ -284,6 +284,126 @@
             "x": 40,
             "y": 43
         },
+        "winprogress": 3
+    },
+    {
+        "id": "hred_6",
+        "name": "",
+        "type": "hred",
+        "animType": "monster_b_2",
+        "friendly": false,
+        "show": true,
+        "hp": 40,
+        "attack": 10,
+        "pos": {
+            "x": 38,
+            "y": 5
+        },
+        "logics": [
+            {
+                "type": "patrol",
+                "interval": [2, 5],
+                "range": 2,
+                "speed": 180,
+                "repeat": -1
+            }
+        ],
+        "winprogress": 3
+    },
+    {
+        "id": "hred_7",
+        "name": "",
+        "type": "hred",
+        "animType": "monster_b_2",
+        "friendly": false,
+        "show": true,
+        "hp": 40,
+        "attack": 10,
+        "pos": {
+            "x": 24,
+            "y": 7
+        },
+        "logics": [
+            {
+                "type": "patrol",
+                "interval": [4, 6],
+                "range": 3,
+                "speed": 100,
+                "repeat": -1
+            }
+        ],
+        "winprogress": 3
+    },
+    {
+        "id": "hred_8",
+        "name": "",
+        "type": "hred",
+        "animType": "monster_b_2",
+        "friendly": false,
+        "show": true,
+        "hp": 40,
+        "attack": 10,
+        "pos": {
+            "x": 8,
+            "y": 16
+        },
+        "logics": [
+            {
+                "type": "patrol",
+                "interval": [2, 3],
+                "range": 2,
+                "speed": 150,
+                "repeat": -1
+            }
+        ],
+        "winprogress": 3
+    },
+    {
+        "id": "hred_9",
+        "name": "",
+        "type": "hred",
+        "animType": "monster_a_1",
+        "friendly": false,
+        "show": true,
+        "hp": 40,
+        "attack": 10,
+        "pos": {
+            "x": 39,
+            "y": 52
+        },
+        "logics": [
+            {
+                "type": "patrol",
+                "interval": [2, 3],
+                "range": 2,
+                "speed": 200,
+                "repeat": -1
+            }
+        ],
+        "winprogress": 3
+    },
+    {
+        "id": "hred_8",
+        "name": "",
+        "type": "hred",
+        "animType": "monster_a_1",
+        "friendly": false,
+        "show": true,
+        "hp": 40,
+        "attack": 10,
+        "pos": {
+            "x": 53,
+            "y": 9
+        },
+        "logics": [
+            {
+                "type": "patrol",
+                "interval": [4, 7],
+                "range": 2,
+                "speed": 100,
+                "repeat": -1
+            }
+        ],
         "winprogress": 3
     }
 ]
