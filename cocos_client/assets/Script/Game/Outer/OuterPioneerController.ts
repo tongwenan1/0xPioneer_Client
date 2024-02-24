@@ -177,6 +177,10 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         // }
 
         let nexttile = pioneer.movePaths[0];
+        if (nexttile == null || nexttile == undefined) {
+            console.log("pionm: " + JSON.stringify(pioneer));
+            return;
+        }
         pioneer.stayPos = v2(nexttile.x, nexttile.y);
         var nextwpos = GameMain.inst.outSceneMap.mapBG.getPosWorld(nexttile.x, nexttile.y);
         var dist = Vec3.distance(pioneermap.worldPosition, nextwpos);
@@ -470,15 +474,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         if (logic.type == MapPioneerLogicType.stepmove) {
             const targetTiledPos = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(pioneer.stayPos, logic.direction);
             if (targetTiledPos != null) {
-                targetMapPos = v2(targetTiledPos.x, targetTiledPos.y);
+                PioneerMgr.instance.pioneerBeginMove(pioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, v2(targetTiledPos.x, targetTiledPos.y)));
             }
-        } else if (logic.type == MapPioneerLogicType.targetmove) {
+        } else if (logic.type == MapPioneerLogicType.commonmove) {
             targetMapPos = logic.targetPos;
-        } else if (logic.type == MapPioneerLogicType.patrol) {
-            targetMapPos = logic.patrolTargetPos;
-        }
-        if (targetMapPos != null) {
-            PioneerMgr.instance.pioneerBeginMove(pioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, targetMapPos));
+            PioneerMgr.instance.pioneerBeginMove(pioneer.id, [logic.commonMoveTilePos]);
         }
     }
     pioneerShowCount(pioneerId: string, count: number): void {

@@ -23,7 +23,8 @@ export enum MapPioneerLogicType {
     stepmove = "stepmove",
     targetmove = "targetmove",
     hide = "hide",
-    patrol = "patrol"
+    patrol = "patrol",
+    commonmove = "commonmove",
 }
 
 export enum MapPioneerMoveDirection {
@@ -341,6 +342,9 @@ export class MapPioneerLogicModel {
     public set moveSpeed(value: number) {  
         this._moveSpeed = value;
     }
+    public set commonMoveTilePos(value: TilePos) {
+        this._commonMoveTilePos = value;
+    }
 
 
     public get type(): MapPioneerLogicType {
@@ -386,6 +390,9 @@ export class MapPioneerLogicModel {
     public get moveSpeed(): number {
         return this._moveSpeed;
     }
+    public get commonMoveTilePos(): TilePos {
+        return this._commonMoveTilePos;
+    }
 
     public constructor(type: MapPioneerLogicType) {
         this._type = type;
@@ -407,4 +414,5 @@ export class MapPioneerLogicModel {
     private _patrolTargetPos: Vec2;
 
     private _moveSpeed: number;
+    private _commonMoveTilePos: TilePos;
 }

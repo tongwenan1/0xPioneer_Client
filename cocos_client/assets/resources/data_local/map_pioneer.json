@@ -234,7 +234,7 @@
             {
                 "type": "patrol",
                 "interval": [2, 3],
-                "range": 6,
+                "range": 3,
                 "speed": 200,
                 "repeat": -1
             }

@@ -51,7 +51,14 @@ export class MapBG extends Component {
     }
 
     public getTiledMovePath(fromWorldPos: Vec3, toWorldPos: Vec3): TilePos[] {
-        return this._tiledhelper.Path_FromTo(this._tiledhelper.getPosByWorldPos(fromWorldPos), this._tiledhelper.getPosByWorldPos(toWorldPos));
+        const paths = this._tiledhelper.Path_FromTo(this._tiledhelper.getPosByWorldPos(fromWorldPos), this._tiledhelper.getPosByWorldPos(toWorldPos));
+        for (let i = 0; i < paths.length; i++) {
+            if (paths[i] == null || paths[i] == undefined) {
+                paths.splice(i, 1);
+                i--;
+            }
+        }
+        return paths;
     }
     public getTiledMovePathByTiledPos(fromTilePos: Vec2, toTilePos: Vec2): TilePos[] {
         fromTilePos = v2(Math.min(this._tiledhelper.width - 1, fromTilePos.x), Math.min(this._tiledhelper.height - 1, fromTilePos.y));

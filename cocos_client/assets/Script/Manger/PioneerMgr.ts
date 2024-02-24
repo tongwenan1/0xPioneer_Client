@@ -1,4 +1,4 @@
-import { Vec2, builtinResMgr, log, math, pingPong, resources, v2, v3 } from "cc";
+import { Details, Vec2, builtinResMgr, log, math, nextPow2, pingPong, resources, v2, v3 } from "cc";
 import UserInfo from "./UserInfoMgr";
 import CommonTools from "../Tool/CommonTools";
 import { GameMain } from "../GameMain";
@@ -277,10 +277,6 @@ export default class PioneerMgr {
 
             if (findPioneer.movePaths.length > 0) {
                 findPioneer.movePaths.splice(0, 1);
-                if (findPioneer.type != MapPioneerType.player && !findPioneer.friendly) {
-                    // one step over to check will fight
-                    this._pioneerActionTypeChangedByMeetTrigger(findPioneer, false);
-                }
             }
             if (findPioneer.movePaths.length == 0) {
                 //moveover savelocaldata
@@ -331,7 +327,7 @@ export default class PioneerMgr {
         }
     }
 
-    public eventFight(attackerId: string, enemyId: string, temporaryAttributes: Map<string, number>, fightOverCallback: (succeed: boolean)=> void) {
+    public eventFight(attackerId: string, enemyId: string, temporaryAttributes: Map<string, number>, fightOverCallback: (succeed: boolean) => void) {
         const attacker = this.getPioneerById(attackerId);
         const enemy = this.getPioneerById(enemyId);
         if (attacker != null && enemy != null) {
@@ -348,7 +344,7 @@ export default class PioneerMgr {
             let enemyAttack = enemy.attack;
 
             // gain temporaryAttributes
-            temporaryAttributes.forEach((value: number, key: string)=> {
+            temporaryAttributes.forEach((value: number, key: string) => {
                 const id = key.split("|")[0];
                 const type = parseInt(key.split("|")[1]);
                 if (id == enemyId) {
@@ -549,11 +545,21 @@ export default class PioneerMgr {
     }
 
 
-
+    private _lastTimeStamp: number = null;
     public constructor() {
         setInterval(() => {
+            const currentTimeStamp = new Date().getTime();
+            if (this._lastTimeStamp == null) {
+                this._lastTimeStamp = currentTimeStamp;
+            }
+            const deltaTime = currentTimeStamp - this._lastTimeStamp;
+            let isOneSecond: boolean = false;
+            if (deltaTime >= 1000) {
+                isOneSecond = true;
+                this._lastTimeStamp = currentTimeStamp;
+            }
             for (const pioneer of this._pioneers) {
-                if (pioneer.showCountTime > 0) {
+                if (pioneer.showCountTime > 0 && isOneSecond) {
                     pioneer.showCountTime -= 1;
                     for (const observe of this._observers) {
                         observe.pioneerShowCount(pioneer.id, pioneer.showCountTime);
@@ -576,8 +582,9 @@ export default class PioneerMgr {
                                 canAction = true;
                             }
                             if (canAction) {
+                                //all move logic change to move one step by step
                                 if (logic.type == MapPioneerLogicType.stepmove) {
-                                    if (logic.repeat > 0 || logic.repeat == -1) {
+                                    if ((logic.repeat > 0 || logic.repeat == -1) && isOneSecond) {
                                         if (logic.currentCd > 0) {
                                             //move cd count
                                             logic.currentCd -= 1;
@@ -600,10 +607,13 @@ export default class PioneerMgr {
                                     }
 
                                 } else if (logic.type == MapPioneerLogicType.targetmove) {
-                                    for (const observe of this._observers) {
-                                        observe.pioneerLogicMove(pioneer, logic);
-                                    }
                                     pioneer.logics.splice(0, 1);
+                                    const movePaths: TilePos[] = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, logic.targetPos);
+                                    for (let i = movePaths.length - 1; i >= 0; i--) {
+                                        const temleLogic = new MapPioneerLogicModel(MapPioneerLogicType.commonmove);
+                                        temleLogic.commonMoveTilePos = movePaths[i];
+                                        pioneer.logics.splice(0, 0, temleLogic);
+                                    }
 
                                 } else if (logic.type == MapPioneerLogicType.hide) {
                                     this.hidePioneer(pioneer.id);
@@ -649,14 +659,22 @@ export default class PioneerMgr {
                                             if (logic.repeat > 0) {
                                                 logic.repeat -= 1;
                                             }
-                                            for (const observe of this._observers) {
-                                                observe.pioneerLogicMove(pioneer, logic);
+                                            if (logic.repeat == 0) {
+                                                pioneer.logics.splice(0, 1);
+                                            }
+                                            const movePaths: TilePos[] = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, logic.patrolTargetPos);
+                                            for (let i = movePaths.length - 1; i >= 0; i--) {
+                                                const temleLogic = new MapPioneerLogicModel(MapPioneerLogicType.commonmove);
+                                                temleLogic.commonMoveTilePos = movePaths[i];
+                                                pioneer.logics.splice(0, 0, temleLogic);
                                             }
                                         }
-                                        if (logic.repeat == 0) {
-                                            pioneer.logics.splice(0, 1);
-                                        }
                                     }
+                                } else if (logic.type == MapPioneerLogicType.commonmove) {
+                                    for (const observe of this._observers) {
+                                        observe.pioneerLogicMove(pioneer, logic);
+                                    }
+                                    pioneer.logics.splice(0, 1);
                                 }
                                 this._savePioneerData();
                             }
@@ -666,52 +684,56 @@ export default class PioneerMgr {
                     // task time count
                     if (pioneer instanceof MapNpcPioneerModel) {
                         const npc = pioneer as MapNpcPioneerModel;
-                        if (npc.taskHideTime > 0) {
-                            npc.taskHideTime -= 1;
-                            if (npc.taskHideTime == 0) {
-                                npc.hideTaskIds.push(npc.taskObj.id);
-                                npc.taskObj = null;
+                        if (isOneSecond) {
+                            if (npc.taskHideTime > 0) {
+                                npc.taskHideTime -= 1;
+                                if (npc.taskHideTime == 0) {
+                                    npc.hideTaskIds.push(npc.taskObj.id);
+                                    npc.taskObj = null;
+                                }
+                                this._savePioneerData();
+                                for (const observe of this._observers) {
+                                    observe.pioneerTaskHideTimeCountChanged(npc.id, npc.taskHideTime);
+                                }
                             }
-                            this._savePioneerData();
-                            for (const observe of this._observers) {
-                                observe.pioneerTaskHideTimeCountChanged(npc.id, npc.taskHideTime);
-                            }
-                        }
-                        if (npc.taskCdEndTime > 0) {
-                            npc.taskCdEndTime -= 1;
-                            this._savePioneerData();
-                            for (const observe of this._observers) {
-                                observe.pioneerTaskCdTimeCountChanged(npc.id, npc.taskCdEndTime);
+                            if (npc.taskCdEndTime > 0) {
+                                npc.taskCdEndTime -= 1;
+                                this._savePioneerData();
+                                for (const observe of this._observers) {
+                                    observe.pioneerTaskCdTimeCountChanged(npc.id, npc.taskCdEndTime);
+                                }
                             }
                         }
                     }
 
                 } else {
                     if (pioneer instanceof MapPlayerPioneerModel) {
-                        if (pioneer.rebirthCountTime > 0) {
-                            pioneer.rebirthCountTime -= 1;
-                            for (const observe of this._observers) {
-                                observe.pionerrRebirthCount(pioneer.id, pioneer.rebirthCountTime);
-                            }
-                            if (pioneer.rebirthCountTime == 0) {
-                                let rebirthMapPos = null;
-                                const mainCity = BuildingMgr.instance.getBuildingById("building_1");
-                                if (mainCity != null && mainCity.faction != BuildingFactionType.enemy) {
-                                    rebirthMapPos = mainCity.stayMapPositions[1];
-                                }
-                                let rebirthHp: number = Math.max(1, Math.min(UserInfo.Instance.troop, pioneer.hpMax));
-                                UserInfo.Instance.troop -= rebirthHp;
-                                pioneer.rebirth(rebirthHp, rebirthMapPos);
+                        if (isOneSecond) {
+                            if (pioneer.rebirthCountTime > 0) {
+                                pioneer.rebirthCountTime -= 1;
                                 for (const observe of this._observers) {
-                                    observe.pioneerRebirth(pioneer.id);
+                                    observe.pionerrRebirthCount(pioneer.id, pioneer.rebirthCountTime);
                                 }
+                                if (pioneer.rebirthCountTime == 0) {
+                                    let rebirthMapPos = null;
+                                    const mainCity = BuildingMgr.instance.getBuildingById("building_1");
+                                    if (mainCity != null && mainCity.faction != BuildingFactionType.enemy) {
+                                        rebirthMapPos = mainCity.stayMapPositions[1];
+                                    }
+                                    let rebirthHp: number = Math.max(1, Math.min(UserInfo.Instance.troop, pioneer.hpMax));
+                                    UserInfo.Instance.troop -= rebirthHp;
+                                    pioneer.rebirth(rebirthHp, rebirthMapPos);
+                                    for (const observe of this._observers) {
+                                        observe.pioneerRebirth(pioneer.id);
+                                    }
+                                }
+                                this._savePioneerData();
                             }
-                            this._savePioneerData();
                         }
                     }
                 }
             }
-        }, 1000);
+        }, 200);
     }
 
     private static _instance: PioneerMgr;

@@ -318,6 +318,9 @@
                         "type": "pioneershow|npc_2"
                     },
                     {
+                        "type": "pioneerhide|npc_3"
+                    },
+                    {
                         "type": "buildingtoself|building_1"
                     },
                     {
