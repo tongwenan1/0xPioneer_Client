@@ -4,7 +4,7 @@
     "itemType": 1,
     "itemName": "Celestial Aura",
     "itemDesc": "A gem with a heavenly glow.",
-    "grade": 3,
+    "grade": 5,
     "gainPropName": null,
     "gainPropCount": null
   },
@@ -13,7 +13,7 @@
     "itemType": 1,
     "itemName": "Jade Journey",
     "itemDesc": "Ancient jade for wisdom's path.",
-    "grade": 2,
+    "grade": 4,
     "gainPropName": null,
     "gainPropCount": null
   },
@@ -22,7 +22,7 @@
     "itemType": 1,
     "itemName": "Last Whisper",
     "itemDesc": "Artifact of whispered secrets.",
-    "grade": 2,
+    "grade": 4,
     "gainPropName": null,
     "gainPropCount": null
   },
@@ -31,7 +31,7 @@
     "itemType": 1,
     "itemName": "Topaz Twilight",
     "itemDesc": "Gem of the setting sun's warmth.",
-    "grade": 2,
+    "grade": 4,
     "gainPropName": null,
     "gainPropCount": null
   },
@@ -40,7 +40,7 @@
     "itemType": 1,
     "itemName": "Dawn's Tear",
     "itemDesc": "Pure diamond of a new day's hope.",
-    "grade": 3,
+    "grade": 5,
     "gainPropName": null,
     "gainPropCount": null
   },
@@ -49,7 +49,7 @@
     "itemType": 1,
     "itemName": "Void Iron",
     "itemDesc": "Cosmic strength in metal form.",
-    "grade": 3,
+    "grade": 5,
     "gainPropName": null,
     "gainPropCount": null
   },
@@ -58,7 +58,7 @@
     "itemType": 1,
     "itemName": "Opferritual",
     "itemDesc": "Tool for divine rituals.",
-    "grade": 2,
+    "grade": 4,
     "gainPropName": null,
     "gainPropCount": null
   },
@@ -67,7 +67,7 @@
     "itemType": 1,
     "itemName": "Lord Proof",
     "itemDesc": "Maybe you should show this to someone.",
-    "grade": 1,
+    "grade": 4,
     "gainPropName": null,
     "gainPropCount": null
   },
@@ -76,7 +76,7 @@
     "itemType": 1,
     "itemName": "Key of Trust",
     "itemDesc": "Now you are the lord.",
-    "grade": 1,
+    "grade": 4,
     "gainPropName": null,
     "gainPropCount": null
   },
@@ -85,7 +85,7 @@
     "itemType": 1,
     "itemName": "Krass Letter",
     "itemDesc": "",
-    "grade": 1,
+    "grade": 3,
     "gainPropName": null,
     "gainPropCount": null
   },
@@ -94,7 +94,7 @@
     "itemType": 1,
     "itemName": "Krass Badge",
     "itemDesc": "",
-    "grade": 1,
+    "grade": 3,
     "gainPropName": null,
     "gainPropCount": null
   },
@@ -157,7 +157,7 @@
     "itemType": 1,
     "itemName": "Special token",
     "itemDesc": "Token of an ancient.",
-    "grade": 3,
+    "grade": 4,
     "gainPropName": null,
     "gainPropCount": null
   }
