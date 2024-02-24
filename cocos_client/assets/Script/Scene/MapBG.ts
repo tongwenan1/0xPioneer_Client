@@ -430,10 +430,6 @@ export class MapBG extends Component {
         this.mapcur.node.removeFromParent();
         this._decorationView.addChild(this.mapcur.node);
 
-        const pioneerView = this.node.getChildByName("PioneerContent");
-        pioneerView.removeFromParent();
-        node.addChild(pioneerView);
-
         // force change shadow siblingIndex
         node.getChildByName("shadow").setSiblingIndex(99);
         this.mapcur.node.setSiblingIndex(99);
