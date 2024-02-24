@@ -199,6 +199,11 @@ export class TaskListUI extends PopUpUI {
 
     private _toDoButton: Node = null;
     private _completedButton: Node = null;
+
+    public override get typeName(): string {
+        return "TaskListUI";
+    }
+
     onLoad(): void {
         this._actionTaskView = this.node.getChildByName("ActionTaskView");
         this._detailTaskView = this.node.getChildByName("TaskDetailView");
@@ -238,7 +243,6 @@ export class TaskListUI extends PopUpUI {
     // action
     private onTapClose() {
         GameMain.inst.UI.taskListUI.show(false);
-        this._isDetailShow = false;
     }
     private onTapShowDetail() {
         if (this._isDetailShow) {

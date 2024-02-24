@@ -16,7 +16,11 @@ export class PopUpUI extends BaseUI {
     public static hideAllShowingPopUpUI() {
         for(let uiid in PopUpUI._sPopUpUIs){
             let ui:PopUpUI = PopUpUI._sPopUpUIs[uiid];
-            ui.node.active = false;
+            if (ui.typeName == "TaskListUI") {
+                // donnot hide white list
+            } else {
+                ui.node.active = false;
+            }
         }
 
         PopUpUI._sPopUpUIs = {};
