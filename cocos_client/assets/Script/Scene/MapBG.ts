@@ -23,6 +23,26 @@ class PrefabInfo {
 @ccclass('MapBG')
 export class MapBG extends Component {
 
+    public decorationLayer(): Node {
+        return this._decorationView;
+    }
+    public sortMapItemSiblingIndex() {
+        const items: { node: Node, tilePos: TilePos }[] = [];
+        for (const children of this._decorationView.children) {
+            items.push({
+                node: children,
+                tilePos: this._tiledhelper.getPosByWorldPos(children.worldPosition)
+            })
+        };
+        items.sort((a, b) => {
+            return a.tilePos.y - b.tilePos.y;
+        });
+        for (let i = 0; i < items.length; i++) {
+            items[i].node.setSiblingIndex(i);
+        }
+        this.mapcur.node.setSiblingIndex(0);
+    }
+
     public addDynamicBlock(mapPos: Vec2) {
         this._tiledhelper.Path_AddDynamicBlock({
             TileX: mapPos.x,
@@ -97,10 +117,26 @@ export class MapBG extends Component {
 
     _mouseDown: boolean = false;
     private _localEraseShadowWorldPos: Vec2[] = [];
-
     private _localEraseDataKey: string = "erase_shadow";
-    start() {
 
+    private _decorationView: Node = null;
+    protected onLoad(): void {
+        // local shadow erase
+        this.InitTileMap();
+
+        this._localEraseShadowWorldPos = [];
+        const eraseShadowData: any = localStorage.getItem(this._localEraseDataKey);
+        if (eraseShadowData != null) {
+            for (const temple of JSON.parse(eraseShadowData)) {
+                this._localEraseShadowWorldPos.push(v2(temple.x, temple.y));
+            }
+        }
+        for (const pos of this._localEraseShadowWorldPos) {
+            var tiledpos = this._tiledhelper.getPos(pos.x, pos.y);
+            this._tiledhelper.Shadow_Earse(tiledpos, 0, 6, false);
+        }
+    }
+    start() {
         this._mouseDown = false;
         let thisptr = this;
 
@@ -265,22 +301,9 @@ export class MapBG extends Component {
                 }
 
             }
-        }, this)
+        }, this);
 
-        this.InitTileMap();
-
-        // local shadow erase
-        this._localEraseShadowWorldPos = [];
-        const eraseShadowData: any = localStorage.getItem(this._localEraseDataKey);
-        if (eraseShadowData != null) {
-            for (const temple of JSON.parse(eraseShadowData)) {
-                this._localEraseShadowWorldPos.push(v2(temple.x, temple.y));
-            }
-        }
-        for (const pos of this._localEraseShadowWorldPos) {
-            var tiledpos = this._tiledhelper.getPos(pos.x, pos.y);
-            this._tiledhelper.Shadow_Earse(tiledpos, 0, 6, false);
-        }
+        
     }
     private _isShowAcionDialog: boolean = false;
     ClickOnMap(worldpos: Vec3) {
@@ -403,9 +426,9 @@ export class MapBG extends Component {
         var node = cc.instantiate(this.tiledmap);
         this.node.addChild(node);
 
-        const buildingView = this.node.getChildByName("BuildingContent");
-        buildingView.removeFromParent();
-        node.addChild(buildingView);
+        this._decorationView = node.getChildByName("deco_layer");
+        this.mapcur.node.removeFromParent();
+        this._decorationView.addChild(this.mapcur.node);
 
         const pioneerView = this.node.getChildByName("PioneerContent");
         pioneerView.removeFromParent();
@@ -413,6 +436,7 @@ export class MapBG extends Component {
 
         // force change shadow siblingIndex
         node.getChildByName("shadow").setSiblingIndex(99);
+        this.mapcur.node.setSiblingIndex(99);
 
         var _tilemap = node.getComponent(cc.TiledMap);
         _tilemap.enableCulling = false;

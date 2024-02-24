@@ -15,6 +15,7 @@ import { OuterFightView } from './View/OuterFightView';
 import { OuterOtherPioneerView } from './View/OuterOtherPioneerView';
 import { MapItemMonster } from './View/MapItemMonster';
 import { MapPioneer } from './View/MapPioneer';
+import { MapBG } from '../../Scene/MapBG';
 
 
 const { ccclass, property } = _decorator;
@@ -82,7 +83,12 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     private _refreshUI() {
+        const decorationView = this.node.getComponent(MapBG).decorationLayer();
+        if (decorationView == null) {
+            return;
+        }
         const allPioneers = PioneerMgr.instance.getAllPioneer();
+        let changed: boolean = false;
         for (const pioneer of allPioneers) {
             if (pioneer.show) {
                 let firstInit: boolean = false;
@@ -102,9 +108,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     } else if (pioneer.type == MapPioneerType.hred) {
                         temple = instantiate(this.battleSmall);
                     }
-                    temple.setParent(this.node);
+                    temple.setParent(decorationView);
                     firstInit = true;
                     this._pioneerMap.set(pioneer.id, temple);
+
+                    changed = true;
                 }
                 if (temple != null) {
                     if (pioneer.type == MapPioneerType.player) {
@@ -163,6 +171,10 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 this._pioneerMap.delete(key);
             }
         });
+
+        if (changed) {
+            this.node.getComponent(MapBG).sortMapItemSiblingIndex();
+        }
     }
 
     updateMoveStep(speed: number, deltaTime: number, pioneer: MapPioneerModel, pioneermap: Node) {
@@ -513,6 +525,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 footView.destroy();
             }
         }
+        this.node.getComponent(MapBG).sortMapItemSiblingIndex();
     }
 
     //---------------------------------------------

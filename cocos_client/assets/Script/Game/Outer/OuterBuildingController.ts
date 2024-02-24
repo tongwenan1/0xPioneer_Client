@@ -9,6 +9,7 @@ import { TilePos } from '../TiledMap/TileTool';
 import { MapBuildingType, BuildingFactionType } from './Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel } from './Model/MapPioneerModel';
 import { OuterBuildingView } from './View/OuterBuildingView';
+import { MapBG } from '../../Scene/MapBG';
 
 
 const { ccclass, property } = _decorator;
@@ -57,6 +58,11 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     }
 
     private _refreshUI() {
+        const decorationView = this.node.getComponent(MapBG).decorationLayer();
+        if (decorationView == null) {
+            return;
+        }
+        let changed: boolean = false;
         const allBuildings = BuildingMgr.instance.getAllBuilding();
         for (const building of allBuildings) {
             if (building.show) {
@@ -67,8 +73,10 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                 } else {
                     // new
                     temple = instantiate(this.buildingPrefab);
-                    temple.setParent(this.node);
+                    temple.setParent(decorationView);
                     this._buildingMap.set(building.id, { node: temple, stayPositons: building.stayMapPositions });
+
+                    changed = true;
                 }
                 if (temple != null) {
                     temple.getComponent(OuterBuildingView).refreshUI(building, PioneerMgr.instance.getPlayerPioneer());
@@ -119,6 +127,10 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                 this._buildingMap.delete(key);
             }
         });
+
+        if (changed) {
+            this.node.getComponent(MapBG).sortMapItemSiblingIndex();
+        }
     }
 
     //-----------------------------------------------------------
