@@ -1,5 +1,7 @@
 export enum EventName{
     SCENE_CHANGE = "SCENE_CHANGE",
+    
+    MAP_SCALED = "MAP_SCALED",
 
     /**
      * MainBuildUpgrade

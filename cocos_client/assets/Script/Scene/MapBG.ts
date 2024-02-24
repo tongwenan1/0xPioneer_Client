@@ -9,6 +9,8 @@ import { PopUpUI } from '../BasicView/PopUpUI';
 import { TilePos, TileMapHelper } from '../Game/TiledMap/TileTool';
 import { MapBuildingType, BuildingFactionType } from '../Game/Outer/Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
+import EventMgr from '../Manger/EventMgr';
+import { EventName } from '../Basic/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('CPrefabInfo')
@@ -200,6 +202,7 @@ export class MapBG extends Component {
                 sc = useConf.para[0];
             }
             thisptr.node.parent.setScale(v3(sc, sc, sc));
+            EventMgr.emit(EventName.MAP_SCALED);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: cc.EventMouse) => {

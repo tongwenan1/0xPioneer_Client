@@ -3,6 +3,8 @@ import { GameMain } from '../GameMain';
 import * as cc from "cc";
 import ConfigMgr from '../Manger/ConfigMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
+import { EventName } from '../Basic/ConstDefine';
+import EventMgr from '../Manger/EventMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerMapBG')
@@ -65,6 +67,7 @@ export class InnerMapBG extends Component {
                 sc = useConf.para[0];
             }
             thisptr.node.parent.setScale(v3(sc,sc,sc));
+            EventMgr.emit(EventName.MAP_SCALED);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: cc.EventMouse) => {

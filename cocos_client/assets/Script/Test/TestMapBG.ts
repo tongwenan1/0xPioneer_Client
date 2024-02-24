@@ -10,6 +10,7 @@ import { MapBuildingType, BuildingFactionType } from '../Game/Outer/Model/MapBui
 import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
 import LocalDataLoader from '../Manger/LocalDataLoader';
 import EventMgr from '../Manger/EventMgr';
+import { EventName } from '../Basic/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('TestMapBG')
@@ -130,6 +131,7 @@ export class TestMapBG extends Component {
                 sc = useConf.para[0];
             }
             thisptr.node.parent.setScale(v3(sc, sc, sc));
+            EventMgr.emit(EventName.MAP_SCALED);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: cc.EventMouse) => {
