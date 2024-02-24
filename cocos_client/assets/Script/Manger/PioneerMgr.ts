@@ -807,7 +807,7 @@ export default class PioneerMgr {
                         const logics = [];
                         for (const logic of temple.logics) {
                             const model = new MapPioneerLogicModel(logic.type);
-
+                            let checkLogicUseful: boolean = true;
                             if (logic.type == MapPioneerLogicType.stepmove) {
                                 model.setStepMoveData(logic.step, logic.cd, logic.cd, v3(logic.direction.x, logic.direction.y, logic.direction.z), logic.repeat);
 
@@ -816,10 +816,14 @@ export default class PioneerMgr {
 
                             } else if (logic.type == MapPioneerLogicType.patrol) {
                                 model.setPatrolData(pioneer.stayPos, logic.interval, logic.range, logic.repeat, -1, null);
+                            } else if (logic.type == MapPioneerLogicType.commonmove) {
+                                checkLogicUseful = false;
                             }
                             model.condition = logic.cond;
                             model.moveSpeed = logic.speed;
-                            logics.push(model);
+                            if (checkLogicUseful) {
+                                logics.push(model);
+                            }
                         }
                         pioneer.logics = logics;
                     }
@@ -900,7 +904,7 @@ export default class PioneerMgr {
                 const logics = [];
                 for (const logic of temple._logics) {
                     const model = new MapPioneerLogicModel(logic._type);
-
+                    let checkLogicUseful: boolean = true;
                     if (logic._type == MapPioneerLogicType.stepmove) {
                         model.setStepMoveData(logic._step, logic._cd, logic._currentCd, v3(logic._direction.x, logic._direction.y, logic._direction.z), logic._repeat);
 
@@ -909,10 +913,14 @@ export default class PioneerMgr {
 
                     } else if (logic._type == MapPioneerLogicType.patrol) {
                         model.setPatrolData(newModel.stayPos, logic._interval, logic._range, logic._repeat, logic._currentCd, logic._patrolTargetPos);
+                    } else if (logic._type == MapPioneerLogicType.commonmove) {
+                        checkLogicUseful = false;
                     }
                     model.condition = logic._condition;
                     model.moveSpeed = logic._moveSpeed;
-                    logics.push(model);
+                    if (checkLogicUseful) {
+                        logics.push(model);
+                    }
                 }
                 newModel.logics = logics;
                 newModel.winprogress = temple._winprogress;

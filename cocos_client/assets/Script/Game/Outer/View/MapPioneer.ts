@@ -192,10 +192,7 @@ export class MapPioneer extends Component {
     }
     start() {
     }
-
-    // TO DO : ?? update not called ??
-    //update(deltaTime: number) {
-    doUpdate(deltaTime: number) {
+    update(deltaTime: number) {
         const currentTimeStamp = new Date().getTime();
 
         if (this._actionTimeStamp > currentTimeStamp) {

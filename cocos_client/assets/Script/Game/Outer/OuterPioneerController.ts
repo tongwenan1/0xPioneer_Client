@@ -177,10 +177,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         // }
 
         let nexttile = pioneer.movePaths[0];
-        if (nexttile == null || nexttile == undefined) {
-            console.log("pionm: " + JSON.stringify(pioneer));
-            return;
-        }
         pioneer.stayPos = v2(nexttile.x, nexttile.y);
         var nextwpos = GameMain.inst.outSceneMap.mapBG.getPosWorld(nexttile.x, nexttile.y);
         var dist = Vec3.distance(pioneermap.worldPosition, nextwpos);
@@ -235,25 +231,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 let pioneermap = this._pioneerMap.get(pioneer.id);
                 this.updateMoveStep(usedSpeed, deltaTime, pioneer, pioneermap);
             }
-        }
-
-        // sort by y 
-        let pary = [];
-        this._pioneerMap.forEach((pnode) => {
-            pnode.setParent(null);
-            pary.push(pnode);
-        })
-
-        pary.sort((a: Node, b: Node) => {
-            return b.position.y - a.position.y;
-        })
-
-        for (let i = 0; i < pary.length; ++i) {
-            pary[i].setParent(this.node);
-
-            // TO DO : ?? MapPioneer.update not called ??
-            // manual call
-            pary[i].getComponent(MapPioneer)?.doUpdate(deltaTime);
         }
     }
 
