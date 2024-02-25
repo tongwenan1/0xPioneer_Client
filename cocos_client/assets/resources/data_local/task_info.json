@@ -106,12 +106,6 @@
                         "type": "pioneerfriendly|gangster_1"
                     }
                 ],
-                "rewardBackpackItem":[
-                    {
-                        "itemConfigId":10,
-                        "num":1
-                    }
-                ],
                 "progress":5
             }
         ]
