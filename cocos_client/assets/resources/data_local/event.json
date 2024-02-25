@@ -287,7 +287,7 @@
     "NOTES": "ancient/come to the ancient",
     "type": 2,
     "result": null,
-    "text": "You found an ancient.",
+    "text": "You found an ancient looked mysterious and full of crisis.",
     "select": [
       "910202",
       "910209"
@@ -310,7 +310,7 @@
     "NOTES": "ancient/ enter the ancient",
     "type": 1,
     "result": "910203",
-    "text": "You entered the ancient.",
+    "text": "You entered the ancient directly, completely unafraid of the potential dangers.",
     "select": null,
     "select_txt": null,
     "select_cond": null,
@@ -327,14 +327,14 @@
     "NOTES": "ancient/ find guard",
     "type": 2,
     "result": null,
-    "text": "You saw a guardian.",
+    "text": "You saw something that looks like the guardian of this ancient.",
     "select": [
       "910204",
       "910207"
     ],
     "select_txt": [
-      "fight",
-      "evade"
+      "fight with it",
+      "evade it"
     ],
     "select_cond": null,
     "enemy": null,
@@ -415,7 +415,7 @@
     "NOTES": "ancient/ find guard/ evd",
     "type": 1,
     "result": "910208",
-    "text": "You evaded.",
+    "text": "You evaded the guardian carefully.",
     "select": null,
     "select_txt": null,
     "select_cond": null,
