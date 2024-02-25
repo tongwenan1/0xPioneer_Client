@@ -243,13 +243,35 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
         label.fontSize = 30;
 
         // TO DO : change color by input parameter
-        label.color = Color.RED;
+        label.color = Color.WHITE;
         let labelOutline = node.addComponent(LabelOutline);
         labelOutline.color = Color.BLACK;
         labelOutline.width = 3;
 
         let action = new Tween(node);
         action.to(0.2, { position: v3(0, 200, 0) });
+        action.delay(1.5);
+        action.call(() => {
+            node.destroy();
+        });
+        action.start();
+    }
+
+    public NewTaskTip(str: string) {
+        let node = this.node.getChildByName("task_tip");
+        //node.setParent(this.UIRoot);
+        let label = node.addComponent(Label);
+        label.string = str;
+        label.fontSize = 30;
+
+        // TO DO : change color by input parameter
+        label.color = Color.YELLOW;
+        let labelOutline = node.addComponent(LabelOutline);
+        labelOutline.color = Color.BLACK;
+        labelOutline.width = 3;
+
+        let action = new Tween(node);
+        action.to(0.2, { position: v3(800, 280, 0) });
         action.delay(1.5);
         action.call(() => {
             node.destroy();

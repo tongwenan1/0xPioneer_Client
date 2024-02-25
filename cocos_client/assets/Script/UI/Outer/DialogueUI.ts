@@ -121,7 +121,7 @@ export class DialogueUI extends PopUpUI {
         if (this._task.entrypoint.result.includes(customEventData)) {
             // get task
             UserInfo.Instance.getNewTask(this._task);
-            GameMain.inst.UI.ShowTip("Obtain new tasks, which can be viewed in the battle report");
+            GameMain.inst.UI.NewTaskTip("New Task Taken");
 
         } else if (this._task.exitpoint != null &&
             this._task.exitpoint.result.includes(customEventData)) {

@@ -187,7 +187,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 622.9585798816568,
+    "_orthoHeight": 616.6057441253264,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -24233,7 +24233,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 622.9585798816568,
+    "_orthoHeight": 616.6057441253264,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -24571,7 +24571,7 @@
     ],
     "value": {
       "__type__": "cc.Size",
-      "width": 78.14385986328125,
+      "width": 78.14387512207031,
       "height": 25.2
     }
   },
