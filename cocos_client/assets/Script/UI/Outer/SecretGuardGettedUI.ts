@@ -13,10 +13,22 @@ export class SecretGuardGettedUI extends PopUpUI {
             "doomsdayGangSpy",
             "rebels",
         ];
+        const keen = [
+            "Dual Guns Jack",
+            "Dual Blades Keen",
+            "Rebels Camus"
+        ];
+        const wind = [
+            "Gunman as Graceful as a Gazelle",
+            "Warrior as Wild as the Wind",
+            "Berserker as Fearless as a Beast"
+        ]
         for (const name of names) {
             this.node.getChildByPath("bgc/" + name).active = name == pioneerName;
         }
-        this.node.getChildByPath("lable/Label keen").getComponent(Label).string = pioneerName;
+        let index = names.indexOf(pioneerName);
+        this.node.getChildByPath("lable/Label keen").getComponent(Label).string = keen[index];
+        this.node.getChildByPath("lable/Label wind").getComponent(Label).string = wind[index];
         
         tween(this.node)
         .delay(2)
