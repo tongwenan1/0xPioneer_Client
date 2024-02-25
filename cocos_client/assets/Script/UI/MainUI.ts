@@ -258,8 +258,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
     }
 
     public NewTaskTip(str: string) {
-        let node = this.node.getChildByName("task_tip");
-        //node.setParent(this.UIRoot);
+        let parent = this.node.getChildByName("task_tip");
+        let node = new Node();
+        node.setParent(parent);
         let label = node.addComponent(Label);
         label.string = str;
         label.fontSize = 30;
@@ -271,7 +272,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
         labelOutline.width = 3;
 
         let action = new Tween(node);
-        action.to(0.2, { position: v3(800, 280, 0) });
+        action.to(0.2, { position: v3(-200, 0, 0) });
         action.delay(1.5);
         action.call(() => {
             node.destroy();
