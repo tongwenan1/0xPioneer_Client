@@ -90,9 +90,15 @@ export class MapBG extends Component {
         return paths;
     }
     public getTiledMovePathByTiledPos(fromTilePos: Vec2, toTilePos: Vec2): TilePos[] {
-        fromTilePos = v2(Math.min(this._tiledhelper.width - 1, fromTilePos.x), Math.min(this._tiledhelper.height - 1, fromTilePos.y));
-        toTilePos = v2(Math.min(this._tiledhelper.width - 1, toTilePos.x), Math.min(this._tiledhelper.height - 1, toTilePos.y));
-        return this._tiledhelper.Path_FromTo(this._tiledhelper.getPos(fromTilePos.x, fromTilePos.y), this._tiledhelper.getPos(toTilePos.x, toTilePos.y));
+        const fromPos = this._tiledhelper.getPos(
+            Math.min(Math.max(0, fromTilePos.x), this._tiledhelper.width - 1),
+            Math.min(Math.max(0, fromTilePos.y), this._tiledhelper.height - 1)
+        );
+        const toPos = this._tiledhelper.getPos(
+            Math.min(Math.max(0, toTilePos.x), this._tiledhelper.width - 1),
+            Math.min(Math.max(0, toTilePos.y), this._tiledhelper.height - 1)
+        );
+        return this._tiledhelper.Path_FromTo(fromPos, toPos);
     }
     public isAllBlackShadow(x: number, y: number): boolean {
         return this._tiledhelper.Shadow_IsAllBlack(x, y);
