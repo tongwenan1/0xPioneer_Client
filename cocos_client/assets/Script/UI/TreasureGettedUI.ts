@@ -103,11 +103,12 @@ export class TreasureGettedUI extends PopUpUI {
                     } else if (resultReward.type == "backpack_item") {
                         let itemConf = ItemMgr.Instance.getItemConf(resultReward.itemConfigId);
                         if (itemConf) {
+                            ItemMgr.Instance.addItem([new ItemData(itemConf.configId, resultReward.num)]);
                             GameMain.inst.UI.itemInfoUI.showItem([{
                                 itemConfig: itemConf,
                                 count: resultReward.num,
                             }], true);
-                        }  else {
+                        } else {
                             // TO DO : config error
                         }
                     }

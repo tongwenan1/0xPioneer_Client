@@ -442,7 +442,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
         const event = BranchEventMgr.Instance.getEventById(eventId);
         if (event.length > 0) {
-            GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void)=> {
+            GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void)=> {
                 PioneerMgr.instance.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
             });
             GameMain.inst.UI.eventUI.show(true);
@@ -475,6 +475,10 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {
+        const decorationView = this.node.getComponent(MapBG).decorationLayer();
+        if (decorationView == null) {
+            return;
+        }
         const footViews = [];
         for (let i = 0; i < path.length; i++) {
             if (i == path.length - 1) {
@@ -483,7 +487,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 const currentPath = path[i];
                 const nextPath = path[i + 1];
                 const footView = instantiate(this.footPathPrefab);
-                footView.setParent(this.node);
+                footView.name = "footView";
+                decorationView.insertChild(footView, 0);
                 let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(currentPath.x, currentPath.y);
                 footView.setWorldPosition(worldPos);
                 footViews.push(footView);

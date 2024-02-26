@@ -42,7 +42,7 @@
                         "type": "killpioneer|gangster_1"
                     }
                 ],
-                "progress":5
+                "progress": 5
             }
         ]
     },
@@ -106,7 +106,7 @@
                         "type": "pioneerfriendly|gangster_1"
                     }
                 ],
-                "progress":5
+                "progress": 5
             }
         ]
     },
@@ -129,7 +129,7 @@
                     }
                 ],
                 "condfail": [],
-                "progress":5
+                "progress": 5
             },
             {
                 "name": "defeat the rebels",
@@ -148,7 +148,7 @@
                         "type": "killpioneer|gangster_2"
                     }
                 ],
-                "progress":5
+                "progress": 5
             },
             {
                 "name": "explore big ganster team",
@@ -170,7 +170,7 @@
                         "type": "explorewithpioneer|gangster_3"
                     }
                 ],
-                "progress":5
+                "progress": 5
             },
             {
                 "name": "defeat the main city",
@@ -192,7 +192,7 @@
                         "type": "destroybuilding|building_1"
                     }
                 ],
-                "progress":5
+                "progress": 5
             }
         ]
     },
@@ -228,13 +228,13 @@
                         "pioneerid": "hred_1"
                     }
                 ],
-                "rewardBackpackItem":[
+                "rewardBackpackItem": [
                     {
-                        "itemConfigId":13,
-                        "num":1
+                        "itemConfigId": 13,
+                        "num": 1
                     }
                 ],
-                "progress":5
+                "progress": 5
             }
         ]
     },
@@ -260,7 +260,6 @@
                 ],
                 "winaction": [
                     {
-                        
                         "type": "buildinghide|building_2"
                     }
                 ],
@@ -270,7 +269,7 @@
                     }
                 ],
                 "condfail": [],
-                "progress":5
+                "progress": 5
             },
             {
                 "name": "explore treasure",
@@ -296,13 +295,13 @@
                         "pioneerid": "gangster_3"
                     }
                 ],
-                "rewardBackpackItem":[
+                "rewardBackpackItem": [
                     {
-                        "itemConfigId":8,
-                        "num":1
+                        "itemConfigId": 8,
+                        "num": 1
                     }
                 ],
-                "progress":5
+                "progress": 5
             },
             {
                 "name": "talk with prophetess, become city master",
@@ -327,13 +326,14 @@
                     }
                 ],
                 "condfail": [],
-                "rewardBackpackItem":[
+                "afterTalkRewardItem": [
                     {
-                        "itemConfigId":9,
-                        "num":1
+                        "talkId": "talk09",
+                        "itemConfigId": 9,
+                        "num": 1
                     }
                 ],
-                "progress":5
+                "progress": 5
             }
         ]
     },
@@ -365,7 +365,7 @@
                 "winaction": [],
                 "condwin": [],
                 "condfail": [],
-                "progress":5
+                "progress": 5
             }
         ]
     },
@@ -397,7 +397,7 @@
                     }
                 ],
                 "condfail": [],
-                "progress":5
+                "progress": 5
             },
             {
                 "name": "wait doomsdayGangBigTeam come and win fight",
@@ -416,7 +416,7 @@
                     }
                 ],
                 "condfail": [],
-                "progress":5
+                "progress": 5
             }
         ]
     },
@@ -439,7 +439,7 @@
                     }
                 ],
                 "condfail": [],
-                "progress":5
+                "progress": 5
             }
         ]
     },
@@ -486,13 +486,13 @@
                 ],
                 "condwin": [],
                 "condfail": [],
-                "rewardBackpackItem":[
+                "rewardBackpackItem": [
                     {
-                        "itemConfigId":11,
-                        "num":1
+                        "itemConfigId": 11,
+                        "num": 1
                     }
                 ],
-                "progress":5
+                "progress": 5
             }
         ]
     },
@@ -534,7 +534,7 @@
                     }
                 ],
                 "winaction": [],
-                "progress":5
+                "progress": 5
             },
             {
                 "name": "talk to artisan",
@@ -571,30 +571,33 @@
                         }
                     }
                 ],
-                "rewardBackpackItem":[
+                "afterTalkRewardItem": [
                     {
-                        "itemConfigId":15,
-                        "num":1,
+                        "talkId": "talk10",
+                        "itemConfigId": 15,
+                        "num": 1,
                         "condi": {
                             "limitcount": 1
                         }
                     },
                     {
-                        "itemConfigId":15,
-                        "num":2,
+                        "talkId": "talk12",
+                        "itemConfigId": 15,
+                        "num": 2,
                         "condi": {
                             "limitcount": 2
                         }
                     },
                     {
-                        "itemConfigId":15,
-                        "num":3,
+                        "talkId": "talk13",
+                        "itemConfigId": 15,
+                        "num": 3,
                         "condi": {
                             "limitcount": 3
                         }
                     }
                 ],
-                "progress":5
+                "progress": 5
             },
             {
                 "name": "fix wall and build house",
@@ -614,7 +617,7 @@
                         "type": "pioneerhide|npc_1"
                     }
                 ],
-                "progress":5
+                "progress": 5
             }
         ]
     }

@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, ParticleSystem2D } from 'cc';
+import { _decorator, Component, Node, ParticleSystem2D, v3 } from 'cc';
 import EventMgr from '../../../Manger/EventMgr';
 import { EventName } from '../../../Basic/ConstDefine';
 const { ccclass, property } = _decorator;
@@ -17,7 +17,8 @@ export class OuterParticleView extends Component {
         
     }
     
-    private mapScaled() {
+    private mapScaled(scale: number) {
+        this.node.setScale(v3(scale, scale, scale));
         if (this.node.getComponent(ParticleSystem2D) != null) {
             this.node.getComponent(ParticleSystem2D).resetSystem();
         }

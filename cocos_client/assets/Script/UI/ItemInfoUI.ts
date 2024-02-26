@@ -17,8 +17,9 @@ export interface ItemInfoShowModel {
 @ccclass('ItemInfoUI')
 export class ItemInfoUI extends PopUpUI {
 
-    public async showItem(items: ItemInfoShowModel[], isGet: Boolean = false) {
+    public async showItem(items: ItemInfoShowModel[], isGet: Boolean = false, closeCallback:()=> void = null) {
         this._items = items;
+        this._closeCallback = closeCallback;
         if (this._items.length > 0) {
             let frame = await BackpackItem.getItemIcon(this._items[0].itemConfig.configId);
             this.icon.spriteFrame = frame;
@@ -64,6 +65,8 @@ export class ItemInfoUI extends PopUpUI {
     @property(Label)
     useButtonLabel: Label;
 
+    private _closeCallback: ()=> void;
+
     private _isGet: Boolean;
     private _items: ItemInfoShowModel[];
 
@@ -78,32 +81,25 @@ export class ItemInfoUI extends PopUpUI {
         }, this);
     }
 
-    private _addItems() {
-        const addItems: ItemData[] = [];
-        for (const temple of this._items) {
-            const itemModel = new ItemData(temple.itemConfig.configId, temple.count);
-            addItems.push(itemModel);
-        }
-        ItemMgr.Instance.addItem(addItems);
-    }    
-
     //---------------------------------------------------- action
     private _onTapClose() {
-        if (this._isGet) {
-            this._addItems();
-        }
         this.show(false);
+        if (this._closeCallback != null) {
+            this._closeCallback();
+        }
     }
 
     private _clickUseBtn() {
         if (this._isGet) {
-            this._addItems();
-
+           
         } else {
             for (const temple of this._items) {
                 ItemMgr.Instance.subItem(temple.itemConfig.configId, 1);
             }
         }
         this.show(false);
+        if (this._closeCallback != null) {
+            this._closeCallback();
+        }
     }
 }

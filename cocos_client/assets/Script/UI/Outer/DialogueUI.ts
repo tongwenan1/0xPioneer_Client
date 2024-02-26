@@ -104,11 +104,20 @@ export class DialogueUI extends PopUpUI {
         }
     }
 
+    private _talkOver() {
+        //talk over
+        if (UserInfo.Instance.afterTalkItemGetData.has(this._talk.id)) {
+            GameMain.inst.UI.itemInfoUI.showItem(UserInfo.Instance.afterTalkItemGetData.get(this._talk.id), true);
+            UserInfo.Instance.afterTalkItemGetData.delete(this._talk.id);
+        }
+    }
+
     //------------------------------------------------ action
     private onTapNext() {
         this._dialogStep += 1;
         if (this._dialogStep > this._talk.messsages.length - 1) {
             GameMain.inst.UI.dialogueUI.show(false);
+            this._talkOver();
         } else {
             this._refreshUI();
         }
@@ -133,6 +142,7 @@ export class DialogueUI extends PopUpUI {
         this._dialogStep += 1;
         if (this._dialogStep > this._talk.messsages.length - 1) {
             GameMain.inst.UI.dialogueUI.show(false);
+            this._talkOver();
         } else {
             this._refreshUI();
         }

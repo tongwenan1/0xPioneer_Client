@@ -7,13 +7,15 @@ import ItemData, { ItemConfigData } from '../../Model/ItemData';
 import BranchEventMgr from '../../Manger/BranchEventMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
 import { ItemInfoShowModel } from '../ItemInfoUI';
+import BuildingMgr from '../../Manger/BuildingMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
 export class EventUI extends PopUpUI {
 
-    public eventUIShow(triggerPioneerId: string, event: any, fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => void) {
+    public eventUIShow(triggerPioneerId: string, eventBuildingId: string, event: any, fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => void) {
         this._triggerPioneerId = triggerPioneerId;
+        this._eventBuildingId = eventBuildingId;
         this._temporaryAttributes = new Map();
         this._fightCallback = fightCallback;
 
@@ -25,6 +27,7 @@ export class EventUI extends PopUpUI {
     }
 
     private _triggerPioneerId: string = null;
+    private _eventBuildingId: string = null;  
     private _temporaryAttributes: Map<string, number> = null;
     private _fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => void = null;
 
@@ -323,8 +326,16 @@ export class EventUI extends PopUpUI {
                 }
             }
         }
-        if (!cost) {
-            GameMain.inst.UI.itemInfoUI.showItem(itemInfoShows, true);
+        if (itemInfoShows.length > 0) {
+            this._contentView.active = false;
+            const items = [];
+            for (const temple of itemInfoShows) {
+                items.push(new ItemData(temple.itemConfig.configId, temple.count));
+            }
+            ItemMgr.Instance.addItem(items);
+            GameMain.inst.UI.itemInfoUI.showItem(itemInfoShows, true, ()=> {
+                this._contentView.active = true;
+            });
         }
         return showTip;
     }
@@ -333,6 +344,9 @@ export class EventUI extends PopUpUI {
     private onTapNext(actionEvent: Event, customEventData: string) {
         const eventId = customEventData;
         if (eventId == "-1") {
+            if (this._eventBuildingId != null) {
+                BuildingMgr.instance.hideBuilding(this._eventBuildingId);
+            }
             GameMain.inst.UI.ShowTip("Event Ended");
             this.show(false);
         } else {

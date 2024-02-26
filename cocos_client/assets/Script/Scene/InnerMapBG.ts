@@ -16,6 +16,7 @@ export class InnerMapBG extends Component {
         this._mouseDown = false;
         let thisptr = this;
 
+        const cameraOriginalOrthoHeight = GameMain.inst.MainCamera.orthoHeight;
         let halfCameraWidth = GameMain.inst.MainCamera.camera.width / 2;
         let halfCameraHeight = GameMain.inst.MainCamera.camera.height / 2;
 
@@ -48,25 +49,25 @@ export class InnerMapBG extends Component {
         }, this);
         
         this.node.on(Node.EventType.MOUSE_WHEEL, (event:cc.EventMouse)=>{
-            let sc = thisptr.node.parent.scale.x;
-
+            let sc = GameMain.inst.MainCamera.orthoHeight / cameraOriginalOrthoHeight;
             let config = ConfigMgr.Instance.getConfigById("10001");
             if (config.length <= 0) return;
             let useConf = config[0];
 
-            if(event.getScrollY() > 0){
+            if (event.getScrollY() > 0) {
                 sc += 0.05;
             }
             else {
                 sc -= 0.05;
             }
-            if(sc > useConf.para[1]){
+            if (sc > useConf.para[1]) {
                 sc = useConf.para[1];
             }
-            else if(sc < useConf.para[0]) {
+            else if (sc < useConf.para[0]) {
                 sc = useConf.para[0];
             }
-            thisptr.node.parent.setScale(v3(sc,sc,sc));
+            console.log("exce sc: " + sc);
+            GameMain.inst.MainCamera.orthoHeight = sc * cameraOriginalOrthoHeight;
             EventMgr.emit(EventName.MAP_SCALED);
         }, this);
 

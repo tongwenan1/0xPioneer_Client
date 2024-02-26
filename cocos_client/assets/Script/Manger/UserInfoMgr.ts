@@ -243,6 +243,9 @@ export default class UserInfoMgr {
         this._localDataChanged(this._localJsonData);
     }
 
+    public get afterTalkItemGetData() {
+        return this._afterTalkItemGetData;
+    }
     public get currentTasks() {
         return this._currentTasks;
     }
@@ -442,6 +445,8 @@ export default class UserInfoMgr {
 
     private static _instance: UserInfoMgr = null;
 
+    private _afterTalkItemGetData: Map<string, ItemInfoShowModel[]> = new Map();
+
     private _currentTasks: any[] = [];
     private _finishedEvents: FinishedEvent[] = [];
     private _isFinishRookie: boolean = false;
@@ -599,6 +604,7 @@ export default class UserInfoMgr {
             // reward backpack item
             if (step.rewardBackpackItem != null) {
                 const showDatas: ItemInfoShowModel[] = [];
+                const addItems: ItemData[] = [];
                 for (const r of step.rewardBackpackItem) {
                     let itemConf = ItemMgr.Instance.getItemConf(r.itemConfigId);
                     if (!itemConf) {
@@ -626,8 +632,49 @@ export default class UserInfoMgr {
                         itemConfig: itemConf,
                         count: r.num
                     });
+                    addItems.push(new ItemData(r.itemConfigId, r.num));
                 }
+                ItemMgr.Instance.addItem(addItems);
                 GameMain.inst.UI.itemInfoUI.showItem(showDatas, true);
+            }
+
+            if (step.afterTalkRewardItem != null) {
+                let talkId: string = null;
+                const showDatas: ItemInfoShowModel[] = [];
+                const addItems: ItemData[] = [];
+                for (const r of step.afterTalkRewardItem) {
+                    let itemConf = ItemMgr.Instance.getItemConf(r.itemConfigId);
+                    if (!itemConf) {
+                        continue;
+                    }
+                    let canUseAction: boolean = true;
+                    if (step.winActionAndRewardAdditionStepAlias != null &&
+                        r.condi != null) {
+                        let additionStepProgress: number = 0;
+                        for (const templeStep of task.steps) {
+                            if (templeStep.alias == step.winActionAndRewardAdditionStepAlias) {
+                                additionStepProgress = templeStep.condwinStep;
+                                break;
+                            }
+                        }
+                        if (r.condi.limitcount != additionStepProgress) {
+                            canUseAction = false;
+                        }
+                    }
+                    if (!canUseAction) {
+                        continue;
+                    }
+                    talkId = r.talkId;
+                    showDatas.push({
+                        itemConfig: itemConf,
+                        count: r.num
+                    });
+                    addItems.push(new ItemData(r.itemConfigId, r.num));
+                }
+                ItemMgr.Instance.addItem(addItems);
+                if (talkId != null) {
+                    this._afterTalkItemGetData.set(talkId, showDatas);
+                }
             }
         }
         let canStepForward: boolean = false;

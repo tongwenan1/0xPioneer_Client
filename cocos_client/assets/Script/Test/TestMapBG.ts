@@ -131,7 +131,7 @@ export class TestMapBG extends Component {
                 sc = useConf.para[0];
             }
             thisptr.node.parent.setScale(v3(sc, sc, sc));
-            EventMgr.emit(EventName.MAP_SCALED);
+            EventMgr.emit(EventName.MAP_SCALED, sc);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: cc.EventMouse) => {

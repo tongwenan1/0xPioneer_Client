@@ -29,20 +29,27 @@ export class MapBG extends Component {
         return this._decorationView;
     }
     public sortMapItemSiblingIndex() {
+        this.mapcur.node.setSiblingIndex(0);
+        let index = 1;
         const items: { node: Node, tilePos: TilePos }[] = [];
         for (const children of this._decorationView.children) {
-            items.push({
-                node: children,
-                tilePos: this._tiledhelper.getPosByWorldPos(children.worldPosition)
-            })
+            if (children.name == "footView") {
+                children.setSiblingIndex(index);
+                index += 1;
+            } else {
+                items.push({
+                    node: children,
+                    tilePos: this._tiledhelper.getPosByWorldPos(children.worldPosition)
+                });
+            }
         };
         items.sort((a, b) => {
             return a.tilePos.y - b.tilePos.y;
         });
-        for (let i = 0; i < items.length; i++) {
-            items[i].node.setSiblingIndex(i);
+        for (const item of items) {
+            item.node.setSiblingIndex(index);
+            index += 1;
         }
-        this.mapcur.node.setSiblingIndex(0);
     }
 
     public addDynamicBlock(mapPos: Vec2) {
@@ -118,6 +125,7 @@ export class MapBG extends Component {
     }
 
     _mouseDown: boolean = false;
+    private _cameraOriginalOrthoHeight: number = 0;
     private _localEraseShadowWorldPos: Vec2[] = [];
     private _localEraseDataKey: string = "erase_shadow";
 
@@ -141,17 +149,7 @@ export class MapBG extends Component {
     start() {
         this._mouseDown = false;
         let thisptr = this;
-
-        let halfCameraWidth = GameMain.inst.MainCamera.camera.width / 2;
-        let halfCameraHeight = GameMain.inst.MainCamera.camera.height / 2;
-
-        let uiTrans = this.node.getComponent(UITransform);
-        let halfMapWidth = uiTrans.contentSize.width / 2;
-        let halfMapHeight = uiTrans.contentSize.height / 2;
-
-        let moveDistX = halfMapWidth - halfCameraWidth;
-        let moveDistY = halfMapHeight - halfCameraHeight;
-
+        this._cameraOriginalOrthoHeight = GameMain.inst.MainCamera.orthoHeight;
         let downx = 0;
         let downy = 0;
         let mouseActionBeginTimeStamp: number = 0;
@@ -183,8 +181,7 @@ export class MapBG extends Component {
         }, this);
 
         this.node.on(Node.EventType.MOUSE_WHEEL, (event: cc.EventMouse) => {
-            let sc = thisptr.node.parent.scale.x;
-
+            let sc = GameMain.inst.MainCamera.orthoHeight / this._cameraOriginalOrthoHeight;
             let config = ConfigMgr.Instance.getConfigById("10001");
             if (config.length <= 0) return;
             let useConf = config[0];
@@ -201,28 +198,19 @@ export class MapBG extends Component {
             else if (sc < useConf.para[0]) {
                 sc = useConf.para[0];
             }
-            thisptr.node.parent.setScale(v3(sc, sc, sc));
+            GameMain.inst.MainCamera.orthoHeight = sc * this._cameraOriginalOrthoHeight;
+
+            this._fixCameraPos(GameMain.inst.MainCamera.node.position);
+
             EventMgr.emit(EventName.MAP_SCALED);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: cc.EventMouse) => {
             GameMain.inst.UI.ChangeCursor(0);
             if (thisptr._mouseDown) {
-
                 let pos = GameMain.inst.MainCamera.node.position.add(new Vec3(-event.movementX, event.movementY, 0));
-                if (pos.x < -moveDistX) {
-                    pos.x = -moveDistX;
-                }
-                else if (pos.x > moveDistX) {
-                    pos.x = moveDistX;
-                }
-                if (pos.y < -moveDistY) {
-                    pos.y = -moveDistY;
-                }
-                else if (pos.y > moveDistY) {
-                    pos.y = moveDistY;
-                }
-                GameMain.inst.MainCamera.node.setPosition(pos);
+
+                this._fixCameraPos(pos);
             }
             else {
                 if (this._tiledhelper != null) {
@@ -293,6 +281,7 @@ export class MapBG extends Component {
                         }
                         else {
                             this.mapcur.color = cc.Color.RED;
+                            this.mapcur.node.active = false;
 
                             GameMain.inst.UI.ChangeCursor(2);
                         }
@@ -308,7 +297,7 @@ export class MapBG extends Component {
             }
         }, this);
 
-        
+
     }
     private _isShowAcionDialog: boolean = false;
     ClickOnMap(worldpos: Vec3) {
@@ -421,6 +410,22 @@ export class MapBG extends Component {
         } else if (actionType == -1) {
             PioneerInfo.instance.pioneerBeginMove(currentActionPioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y)));
         }
+    }
+
+    private _fixCameraPos(pos: Vec3) {
+        let sc = GameMain.inst.MainCamera.orthoHeight / this._cameraOriginalOrthoHeight;
+
+        const cameraSize = cc.size(GameMain.inst.MainCamera.camera.width, GameMain.inst.MainCamera.camera.height);
+        const contentSize = this.node.parent.getComponent(UITransform).contentSize;
+        const scale = this.node.parent.scale;
+
+        const minx = -contentSize.width * scale.x / 2 - contentSize.width * scale.x * 0.1 + cameraSize.width / 2 * sc;
+        const maxx = contentSize.width * scale.x / 2 + contentSize.width * scale.x * 0.1 - cameraSize.width / 2 * sc;
+        const miny = -contentSize.height * scale.y / 2 - contentSize.height * scale.y * 0.1 + cameraSize.height / 2 * sc;
+        const maxy = contentSize.height * scale.y / 2 + contentSize.height * scale.y * 0.1 - cameraSize.height / 2 * sc;
+        pos.x = Math.min(Math.max(minx, pos.x), maxx);
+        pos.y = Math.min(Math.max(miny, pos.y), maxy);
+        GameMain.inst.MainCamera.node.setPosition(pos);
     }
 
     private _tiledhelper: TileMapHelper = null;
