@@ -809,7 +809,7 @@ export default class PioneerMgr {
                             const model = new MapPioneerLogicModel(logic.type);
                             let checkLogicUseful: boolean = true;
                             if (logic.type == MapPioneerLogicType.stepmove) {
-                                model.setStepMoveData(logic.step, logic.cd, logic.cd, v3(logic.direction.x, logic.direction.y, logic.direction.z), logic.repeat);
+                                model.setStepMoveData(logic.step, logic.cd, logic.cd, logic.direction, logic.repeat);
 
                             } else if (logic.type == MapPioneerLogicType.targetmove) {
                                 model.targetPos = v2(logic.pos.x, logic.pos.y);
@@ -906,7 +906,7 @@ export default class PioneerMgr {
                     const model = new MapPioneerLogicModel(logic._type);
                     let checkLogicUseful: boolean = true;
                     if (logic._type == MapPioneerLogicType.stepmove) {
-                        model.setStepMoveData(logic._step, logic._cd, logic._currentCd, v3(logic._direction.x, logic._direction.y, logic._direction.z), logic._repeat);
+                        model.setStepMoveData(logic._step, logic._cd, logic._currentCd, logic._direction, logic._repeat);
 
                     } else if (logic._type == MapPioneerLogicType.targetmove) {
                         model.targetPos = v2(logic._targetPos.x, logic._targetPos.y);

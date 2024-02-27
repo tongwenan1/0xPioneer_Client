@@ -66,7 +66,6 @@ export class InnerMapBG extends Component {
             else if (sc < useConf.para[0]) {
                 sc = useConf.para[0];
             }
-            console.log("exce sc: " + sc);
             GameMain.inst.MainCamera.orthoHeight = sc * cameraOriginalOrthoHeight;
             EventMgr.emit(EventName.MAP_SCALED);
         }, this);

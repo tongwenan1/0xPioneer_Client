@@ -308,7 +308,7 @@ export class MapNpcPioneerModel extends MapPioneerModel {
 
 export class MapPioneerLogicModel {
 
-    public setStepMoveData(step: number, cd: number, currentCd: number, direction: Vec3, repeat: number) {
+    public setStepMoveData(step: number, cd: number, currentCd: number, direction: number, repeat: number) {
         this._step = step;
         this._cd = cd;
         this._currentCd = currentCd;
@@ -362,7 +362,7 @@ export class MapPioneerLogicModel {
     public get currentCd(): number {
         return this._currentCd;
     }
-    public get direction(): Vec3 {
+    public get direction(): number {
         return this._direction;
     }
     public get repeat(): number {
@@ -404,7 +404,7 @@ export class MapPioneerLogicModel {
     private _step: number;
     private _cd: number;
     private _currentCd: number;
-    private _direction: Vec3;
+    private _direction: number;
     private _repeat: number;
     private _targetPos: Vec2;
 
