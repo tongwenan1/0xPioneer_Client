@@ -164,7 +164,7 @@
     "angleVar": 360,
     "startSize": 3,
     "startSizeVar": 6,
-    "endSize": 10,
+    "endSize": 8,
     "endSizeVar": 0,
     "startSpin": 0,
     "startSpinVar": 0,
@@ -177,8 +177,8 @@
     },
     "posVar": {
       "__type__": "cc.Vec2",
-      "x": 60,
-      "y": 20
+      "x": 40,
+      "y": 10
     },
     "emitterMode": 0,
     "gravity": {
@@ -209,7 +209,7 @@
       "__uuid__": "7d0147fc-0b57-4daa-b9f4-709be08c5dea@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
-    "_totalParticles": 20,
+    "_totalParticles": 10,
     "_startColor": {
       "__type__": "cc.Color",
       "r": 122,
@@ -267,6 +267,7 @@
       "__id__": 0
     },
     "fileId": "fewJFsfLlEL5K08wbo+ocf",
+    "instance": null,
     "targetOverrides": null
   }
 ]

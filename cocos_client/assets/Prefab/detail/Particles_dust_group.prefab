@@ -165,9 +165,9 @@
     "lifeVar": 0,
     "angle": 0,
     "angleVar": 0,
-    "startSize": 3,
-    "startSizeVar": 6,
-    "endSize": 6,
+    "startSize": 1,
+    "startSizeVar": 3,
+    "endSize": 3,
     "endSizeVar": 0,
     "startSpin": 0,
     "startSpinVar": 30,
@@ -187,7 +187,7 @@
     "gravity": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -60
+      "y": -25
     },
     "speed": 0,
     "speedVar": 0,
@@ -203,7 +203,7 @@
     "rotatePerS": 0,
     "rotatePerSVar": 0,
     "playOnLoad": true,
-    "autoRemoveOnFinish": false,
+    "autoRemoveOnFinish": true,
     "_preview": true,
     "preview": true,
     "_custom": true,
@@ -367,9 +367,9 @@
     "lifeVar": 0,
     "angle": 0,
     "angleVar": 0,
-    "startSize": 20,
+    "startSize": 10,
     "startSizeVar": 0,
-    "endSize": 20,
+    "endSize": 10,
     "endSizeVar": 0,
     "startSpin": 0,
     "startSpinVar": 0,
@@ -389,7 +389,7 @@
     "gravity": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -60
+      "y": -25
     },
     "speed": 0,
     "speedVar": 0,
@@ -405,7 +405,7 @@
     "rotatePerS": 0,
     "rotatePerSVar": 0,
     "playOnLoad": true,
-    "autoRemoveOnFinish": false,
+    "autoRemoveOnFinish": true,
     "_preview": true,
     "preview": true,
     "_custom": true,
@@ -472,6 +472,7 @@
       "__id__": 0
     },
     "fileId": "398qwOc29C174dCzFhIEs/",
+    "instance": null,
     "targetOverrides": null
   }
 ]
