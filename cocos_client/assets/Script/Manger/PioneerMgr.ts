@@ -592,6 +592,7 @@ export default class PioneerMgr {
                                         for (const observe of this._observers) {
                                             observe.pioneerLogicMoveTimeCountChanged(pioneer);
                                         }
+                                        console.log('exce logic' + JSON.stringify(logic));
                                         if (logic.currentCd == 0) {
                                             logic.currentCd = logic.cd;
                                             if (logic.repeat > 0) {

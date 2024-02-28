@@ -14,6 +14,7 @@ export class OuterBuildingView extends Component {
         const oasis = this.node.getChildByName("oasis");
         const city = this.node.getChildByName("city");
         const ambush = this.node.getChildByName("ambush");
+        const spiderCave = this.node.getChildByName("spider_cave");
 
         treasure.active = false;
         swamp.active = false;
@@ -22,6 +23,7 @@ export class OuterBuildingView extends Component {
         oasis.active = false;
         city.active = false;
         ambush.active = false;
+        spiderCave.active = false;
 
         this._neturalView.active = false;
         this._selfView.active = false;
@@ -72,10 +74,10 @@ export class OuterBuildingView extends Component {
             }
         } else if (building.type == MapBuildingType.event) {
             this._neturalView.active = true;
-            if (building.id == "building_13" ||
-            building.id == "building_14" ||
-            building.id == "building_15") {
-                sand.active = true;
+            if (building.eventId == "910101") {
+                spiderCave.active = true;
+            } else {
+                spiderCave.active = true;
             }
         }
     }
