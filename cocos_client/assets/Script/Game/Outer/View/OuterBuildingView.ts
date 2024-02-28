@@ -15,6 +15,8 @@ export class OuterBuildingView extends Component {
         const city = this.node.getChildByName("city");
         const ambush = this.node.getChildByName("ambush");
         const spiderCave = this.node.getChildByName("spider_cave");
+        const laboratory = this.node.getChildByName("laboratory");
+        const ancientRuins = this.node.getChildByName("ancient_ruins");
 
         treasure.active = false;
         swamp.active = false;
@@ -24,6 +26,8 @@ export class OuterBuildingView extends Component {
         city.active = false;
         ambush.active = false;
         spiderCave.active = false;
+        laboratory.active = false;
+        ancientRuins.active = false;
 
         this._neturalView.active = false;
         this._selfView.active = false;
@@ -76,8 +80,10 @@ export class OuterBuildingView extends Component {
             this._neturalView.active = true;
             if (building.eventId == "910101") {
                 spiderCave.active = true;
-            } else {
-                spiderCave.active = true;
+            } else if (building.eventId == "910201") {
+                ancientRuins.active = true;
+            } else if (building.eventId == "910301") {
+                laboratory.active = true;
             }
         }
     }

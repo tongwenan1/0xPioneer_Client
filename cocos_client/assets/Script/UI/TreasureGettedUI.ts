@@ -1,4 +1,4 @@
-import { _decorator, Color, Component, Label, Node, Sprite, tween, v3, Animation } from 'cc';
+import { _decorator, Color, Component, Label, Node, Sprite, tween, v3, Animation, ParticleSystem2D } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import ItemData from '../Model/ItemData';
 import { GameMain } from '../GameMain';
@@ -36,6 +36,8 @@ export class TreasureGettedUI extends PopUpUI {
         tbAniState.play();
 
         // prepare item show node
+        let itemShowAnim = this.node.getChildByPath("Content/Treasure_box_" + box.icon + "/OpenAnim");
+        itemShowAnim.active = false;
         let itemShowNode = this.node.getChildByPath("Content/Treasure_box_" + box.icon + "/itemShow");
         itemShowNode.scale = v3(0.01, 0.01, 0.01);
         itemShowNode.active = false;
@@ -83,6 +85,15 @@ export class TreasureGettedUI extends PopUpUI {
         }
 
         let thisptr = this;
+        tween(itemShowAnim)
+            .delay(5.5)
+            .set({ active: true })
+            .call(() => {
+                itemShowAnim.getChildByName("Treasure_box_open_a").getComponent(ParticleSystem2D).resetSystem();
+                itemShowAnim.getChildByName("Treasure_box_open_b").getComponent(ParticleSystem2D).resetSystem();
+            })
+            .start();
+
         tween(itemShowNode)
             .delay(5.5)
             .set({ active: true })
