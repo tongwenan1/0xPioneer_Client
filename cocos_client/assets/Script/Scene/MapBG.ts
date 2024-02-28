@@ -139,6 +139,10 @@ export class MapBG extends Component {
 
     private _decorationView: Node = null;
     private _fogView: OuterFogMask = null;
+    private _boundContent: Node = null;
+    private _boundItem: Node = null;
+    private _boundItemMap: Map<string, Node> = new Map();
+    private _boundPrefabItems: Node[] = [];
     protected onLoad(): void {
         // local shadow erase
         this.InitTileMap();
@@ -493,6 +497,11 @@ export class MapBG extends Component {
 
         this._fogView = this.node.getChildByName("Fog").getComponent(OuterFogMask);
         this._fogView.node.setSiblingIndex(99);
+
+        this._boundContent = this.node.getChildByName("BoundContent");
+        this._boundContent.setSiblingIndex(100);
+        this._boundItem = this._boundContent.getChildByName("BoundView");
+        this._boundItem.active = false;
     }
     private SetObjLayer(obj: cc.Node, layer: number) {
         obj.layer = layer;
@@ -539,9 +548,12 @@ export class MapBG extends Component {
     private _refreshFog() {
         const allClearedShadowPositions = this._tiledhelper.Shadow_GetClearedTiledPositons();
         const getAllBoundLines: { startPos: Vec2, endPos: Vec2 }[] = [];
+        const getAllBoundPos: Vec3[] = [];
+
         const hexViewRadius = this._tiledhelper.tilewidth / 2 / 2;
         const sinValue = Math.sin(30 * Math.PI / 180);
         for (const pos of allClearedShadowPositions) {
+            let isBound: boolean = false;
             const centerPos = this._tiledhelper.getPosWorld(pos.x, pos.y);
             // direction around no hex or hex is shadow, direction is bound.
             const leftTop = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.LeftTop);
@@ -550,6 +562,7 @@ export class MapBG extends Component {
                     startPos: v2(centerPos.x, hexViewRadius + centerPos.y),
                     endPos: v2(-hexViewRadius + centerPos.x, sinValue * hexViewRadius + centerPos.y)
                 });
+                isBound = true;
             }
 
             const left = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.Left);
@@ -558,6 +571,7 @@ export class MapBG extends Component {
                     startPos: v2(-hexViewRadius + centerPos.x, sinValue * hexViewRadius + centerPos.y),
                     endPos: v2(-hexViewRadius + centerPos.x, -sinValue * hexViewRadius + centerPos.y)
                 });
+                isBound = true;
             }
 
             const leftBottom = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.LeftBottom);
@@ -566,6 +580,7 @@ export class MapBG extends Component {
                     startPos: v2(-hexViewRadius + centerPos.x, -sinValue * hexViewRadius + centerPos.y),
                     endPos: v2(centerPos.x, -hexViewRadius + centerPos.y),
                 });
+                isBound = true;
             }
 
             const rightbottom = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.RightBottom);
@@ -574,6 +589,7 @@ export class MapBG extends Component {
                     startPos: v2(centerPos.x, -hexViewRadius + centerPos.y),
                     endPos: v2(hexViewRadius + centerPos.x, -sinValue * hexViewRadius + centerPos.y),
                 });
+                isBound = true;
             }
 
             const right = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.Right);
@@ -582,6 +598,7 @@ export class MapBG extends Component {
                     startPos: v2(hexViewRadius + centerPos.x, -sinValue * hexViewRadius + centerPos.y),
                     endPos: v2(hexViewRadius + centerPos.x, sinValue * hexViewRadius + centerPos.y)
                 });
+                isBound = true;
             }
 
             const rightTop = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.RightTop);
@@ -590,6 +607,10 @@ export class MapBG extends Component {
                     startPos: v2(hexViewRadius + centerPos.x, sinValue * hexViewRadius + centerPos.y),
                     endPos: v2(centerPos.x, hexViewRadius + centerPos.y)
                 });
+                isBound = true;
+            }
+            if (isBound) {
+                getAllBoundPos.push(centerPos);
             }
         }
         for (const line of getAllBoundLines) {
@@ -600,6 +621,37 @@ export class MapBG extends Component {
             line.endPos = v2(Math.floor(inFogEndPos.x), Math.floor(inFogEndPos.y));
         }
         this._fogView.draw(getAllBoundLines);
+        // bound fog
+        for (const pos of getAllBoundPos) {
+            if (this._boundItemMap.has(pos.x + "|" + pos.y)) {
+
+            } else {
+                let item = null;
+                if (this._boundPrefabItems.length > 0) {
+                    item = this._boundPrefabItems.pop();
+                } else {
+                    item = cc.instantiate(this._boundItem);
+                }
+                item.active = true;
+                item.setParent(this._boundContent);
+                item.setWorldPosition(pos);
+                this._boundItemMap.set(pos.x + "|" + pos.y, item);
+            }
+        }
+        this._boundItemMap.forEach((value: Node, key: string)=> {
+            let isNeed = false;
+            for (const tempPos of getAllBoundPos) {
+                if (key == (tempPos.x + "|" + tempPos.y)) {
+                    isNeed = true;
+                    break;
+                }
+            }
+            if (!isNeed) {
+                value.removeFromParent();
+                this._boundPrefabItems.push(value);
+                this._boundItemMap.delete(key);
+            }
+        });
     }
 }
 

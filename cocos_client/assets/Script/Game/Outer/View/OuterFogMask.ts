@@ -33,7 +33,7 @@ export class OuterFogMask extends Component {
 
     protected onLoad(): void {
         this._graphics = this.node.getComponent(Graphics);
-        this._graphics.lineWidth = 10;
+        this._graphics.lineWidth = 1;
         this._graphics.lineJoin = 2;
         this._graphics.lineCap = 0;
     }
@@ -71,41 +71,5 @@ export class OuterFogMask extends Component {
             }
         }
         return null;
-    }
-
-    private _areEdgesEqual(edge1: { startPos: Vec2, endPos: Vec2 }, edge2: { startPos: Vec2, endPos: Vec2 }) {
-        if ((edge1.startPos.x == edge2.startPos.x && edge1.startPos.y == edge2.startPos.y &&
-            edge1.endPos.x == edge2.endPos.x && edge1.endPos.y == edge2.endPos.y) ||
-
-            (edge1.startPos.x == edge2.endPos.x && edge1.startPos.y == edge2.endPos.y &&
-                edge1.endPos.x == edge2.startPos.x && edge1.endPos.y == edge2.startPos.y)) {
-            return true;
-        }
-        return false;
-    }
-
-    private _areEdgesConnected(edge1: { startPos: Vec2, endPos: Vec2 }, edge2: { startPos: Vec2, endPos: Vec2 }) {
-        return (
-            (edge1.endPos.x === edge2.startPos.x && edge1.endPos.y === edge2.startPos.y) ||
-            (edge1.endPos.x === edge2.endPos.x && edge1.endPos.y === edge2.endPos.y) ||
-            (edge1.startPos.x === edge2.startPos.x && edge1.startPos.y === edge2.startPos.y) ||
-            (edge1.startPos.x === edge2.endPos.x && edge1.startPos.y === edge2.endPos.y)
-        );
-    }
-
-    private _calcEachSexAngle(pos: Vec3, radius: number) {
-        const leftRightAngle: number = 30;
-        const sinValue = Math.sin(leftRightAngle * Math.PI / 180);
-        // top begin
-        this._graphics.moveTo(pos.x, radius + pos.y);
-        this._graphics.lineTo(-radius + pos.x, sinValue * radius + pos.y);
-        this._graphics.lineTo(-radius + pos.x, -sinValue * radius + pos.y);
-        this._graphics.lineTo(pos.x, -radius + pos.y);
-        this._graphics.lineTo(radius + pos.x, -sinValue * radius + pos.y);
-        this._graphics.lineTo(radius + pos.x, sinValue * radius + pos.y);
-
-        this._graphics.close();
-        this._graphics.stroke();
-        this._graphics.fill();
     }
 }
