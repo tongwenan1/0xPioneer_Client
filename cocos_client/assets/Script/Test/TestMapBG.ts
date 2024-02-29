@@ -5,7 +5,7 @@ import PioneerMgr from '../Manger/PioneerMgr';
 import BuildingMgr from '../Manger/BuildingMgr';
 import ConfigMgr from '../Manger/ConfigMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
-import { TilePos, TileMapHelper } from '../Game/TiledMap/TileTool';
+import { TilePos, TileMapHelper, TileHexDirection } from '../Game/TiledMap/TileTool';
 import { MapBuildingType, BuildingFactionType } from '../Game/Outer/Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
 import LocalDataLoader from '../Manger/LocalDataLoader';
@@ -32,7 +32,7 @@ export class TestMapBG extends Component {
         mapPos = v2(Math.min(this._tiledhelper.width - 1, mapPos.x), Math.min(this._tiledhelper.height - 1, mapPos.y));
         return this._tiledhelper.Path_GetAround(this._tiledhelper.getPos(mapPos.x, mapPos.y));
     }
-    public getAroundByDirection(mapPos: Vec2, direction: Vec3): TilePos {
+    public getAroundByDirection(mapPos: Vec2, direction: TileHexDirection): TilePos {
         mapPos = v2(Math.min(this._tiledhelper.width - 1, mapPos.x), Math.min(this._tiledhelper.height - 1, mapPos.y));
         return this._tiledhelper.Path_GetAroundByDirection(this._tiledhelper.getPos(mapPos.x, mapPos.y), direction);
     }

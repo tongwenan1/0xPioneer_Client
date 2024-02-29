@@ -6,11 +6,12 @@ import PioneerMgr from '../Manger/PioneerMgr';
 import BuildingMgr from '../Manger/BuildingMgr';
 import ConfigMgr from '../Manger/ConfigMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
-import { TilePos, TileMapHelper } from '../Game/TiledMap/TileTool';
+import { TilePos, TileMapHelper, TileHexDirection } from '../Game/TiledMap/TileTool';
 import { MapBuildingType, BuildingFactionType } from '../Game/Outer/Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
 import EventMgr from '../Manger/EventMgr';
 import { EventName } from '../Const/ConstDefine';
+import { OuterFogMask } from '../Game/Outer/View/OuterFogMask';
 const { ccclass, property } = _decorator;
 
 @ccclass('CPrefabInfo')
@@ -68,7 +69,7 @@ export class MapBG extends Component {
         mapPos = v2(Math.min(this._tiledhelper.width - 1, mapPos.x), Math.min(this._tiledhelper.height - 1, mapPos.y));
         return this._tiledhelper.Path_GetAround(this._tiledhelper.getPos(mapPos.x, mapPos.y));
     }
-    public getAroundByDirection(mapPos: Vec2, direction: Vec3): TilePos {
+    public getAroundByDirection(mapPos: Vec2, direction: TileHexDirection): TilePos {
         mapPos = v2(Math.min(this._tiledhelper.width - 1, mapPos.x), Math.min(this._tiledhelper.height - 1, mapPos.y));
         return this._tiledhelper.Path_GetAroundByDirection(this._tiledhelper.getPos(mapPos.x, mapPos.y), direction);
     }
@@ -136,6 +137,11 @@ export class MapBG extends Component {
     private _localEraseDataKey: string = "erase_shadow";
 
     private _decorationView: Node = null;
+    private _fogView: OuterFogMask = null;
+    private _boundContent: Node = null;
+    private _boundItem: Node = null;
+    private _boundItemMap: Map<string, Node> = new Map();
+    private _boundPrefabItems: Node[] = [];
     protected onLoad(): void {
         // local shadow erase
         this.InitTileMap();
@@ -302,9 +308,10 @@ export class MapBG extends Component {
 
             }
         }, this);
-
-
+        // local fog
+        this._refreshFog();
     }
+
     private _isShowAcionDialog: boolean = false;
     ClickOnMap(worldpos: Vec3) {
         if (this._isShowAcionDialog) {
@@ -486,6 +493,14 @@ export class MapBG extends Component {
                 }
             }
         );
+
+        this._fogView = this.node.getChildByName("Fog").getComponent(OuterFogMask);
+        this._fogView.node.setSiblingIndex(99);
+
+        this._boundContent = this.node.getChildByName("BoundContent");
+        this._boundContent.setSiblingIndex(100);
+        this._boundItem = this._boundContent.getChildByName("BoundView");
+        this._boundItem.active = false;
     }
     private SetObjLayer(obj: cc.Node, layer: number) {
         obj.layer = layer;
@@ -513,18 +528,128 @@ export class MapBG extends Component {
                         break;
                     }
                 }
+                var tiledpos = this._tiledhelper.getPos(pioneer.stayPos.x, pioneer.stayPos.y);
+                this._tiledhelper.Shadow_Earse(tiledpos, pioneer.id, 6, false);
                 if (!isExsit) {
                     this._localEraseShadowWorldPos.push(pioneer.stayPos);
                     localStorage.setItem(this._localEraseDataKey, JSON.stringify(this._localEraseShadowWorldPos));
+                    // has new, deal with fog
+                    this._refreshFog();
                 }
-                var tiledpos = this._tiledhelper.getPos(pioneer.stayPos.x, pioneer.stayPos.y);
-                this._tiledhelper.Shadow_Earse(tiledpos, pioneer.id, 6, false);
             }
         }
     }
-    private _clearmaintown = false;
     update(deltaTime: number) {
         this.UpdateTiledmap(deltaTime);
+    }
+
+    private _refreshFog() {
+        const allClearedShadowPositions = this._tiledhelper.Shadow_GetClearedTiledPositons();
+        const getAllBoundLines: { startPos: Vec2, endPos: Vec2 }[] = [];
+        const getAllBoundPos: Vec3[] = [];
+
+        const hexViewRadius = this._tiledhelper.tilewidth / 2 / 2;
+        const sinValue = Math.sin(30 * Math.PI / 180);
+        for (const pos of allClearedShadowPositions) {
+            let isBound: boolean = false;
+            const centerPos = this._tiledhelper.getPosWorld(pos.x, pos.y);
+            // direction around no hex or hex is shadow, direction is bound.
+            const leftTop = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.LeftTop);
+            if (leftTop == null || this._tiledhelper.Shadow_IsAllBlack(leftTop.x, leftTop.y)) {
+                getAllBoundLines.push({
+                    startPos: v2(centerPos.x, hexViewRadius + centerPos.y),
+                    endPos: v2(-hexViewRadius + centerPos.x, sinValue * hexViewRadius + centerPos.y)
+                });
+                isBound = true;
+            }
+
+            const left = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.Left);
+            if (left == null || this._tiledhelper.Shadow_IsAllBlack(left.x, left.y)) {
+                getAllBoundLines.push({
+                    startPos: v2(-hexViewRadius + centerPos.x, sinValue * hexViewRadius + centerPos.y),
+                    endPos: v2(-hexViewRadius + centerPos.x, -sinValue * hexViewRadius + centerPos.y)
+                });
+                isBound = true;
+            }
+
+            const leftBottom = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.LeftBottom);
+            if (leftBottom == null || this._tiledhelper.Shadow_IsAllBlack(leftBottom.x, leftBottom.y)) {
+                getAllBoundLines.push({
+                    startPos: v2(-hexViewRadius + centerPos.x, -sinValue * hexViewRadius + centerPos.y),
+                    endPos: v2(centerPos.x, -hexViewRadius + centerPos.y),
+                });
+                isBound = true;
+            }
+
+            const rightbottom = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.RightBottom);
+            if (rightbottom == null || this._tiledhelper.Shadow_IsAllBlack(rightbottom.x, rightbottom.y)) {
+                getAllBoundLines.push({
+                    startPos: v2(centerPos.x, -hexViewRadius + centerPos.y),
+                    endPos: v2(hexViewRadius + centerPos.x, -sinValue * hexViewRadius + centerPos.y),
+                });
+                isBound = true;
+            }
+
+            const right = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.Right);
+            if (right == null || this._tiledhelper.Shadow_IsAllBlack(right.x, right.y)) {
+                getAllBoundLines.push({
+                    startPos: v2(hexViewRadius + centerPos.x, -sinValue * hexViewRadius + centerPos.y),
+                    endPos: v2(hexViewRadius + centerPos.x, sinValue * hexViewRadius + centerPos.y)
+                });
+                isBound = true;
+            }
+
+            const rightTop = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.RightTop);
+            if (rightTop == null || this._tiledhelper.Shadow_IsAllBlack(rightTop.x, rightTop.y)) {
+                getAllBoundLines.push({
+                    startPos: v2(hexViewRadius + centerPos.x, sinValue * hexViewRadius + centerPos.y),
+                    endPos: v2(centerPos.x, hexViewRadius + centerPos.y)
+                });
+                isBound = true;
+            }
+            if (isBound) {
+                getAllBoundPos.push(centerPos);
+            }
+        }
+        for (const line of getAllBoundLines) {
+            const inFogStartPos = this._fogView.node.getComponent(UITransform).convertToNodeSpaceAR(v3(line.startPos.x, line.startPos.y, 0));
+            line.startPos = v2(Math.floor(inFogStartPos.x), Math.floor(inFogStartPos.y));
+
+            const inFogEndPos = this._fogView.node.getComponent(UITransform).convertToNodeSpaceAR(v3(line.endPos.x, line.endPos.y, 0));
+            line.endPos = v2(Math.floor(inFogEndPos.x), Math.floor(inFogEndPos.y));
+        }
+        this._fogView.draw(getAllBoundLines);
+        // bound fog
+        for (const pos of getAllBoundPos) {
+            if (this._boundItemMap.has(pos.x + "|" + pos.y)) {
+
+            } else {
+                let item = null;
+                if (this._boundPrefabItems.length > 0) {
+                    item = this._boundPrefabItems.pop();
+                } else {
+                    item = cc.instantiate(this._boundItem);
+                }
+                item.active = true;
+                item.setParent(this._boundContent);
+                item.setWorldPosition(pos);
+                this._boundItemMap.set(pos.x + "|" + pos.y, item);
+            }
+        }
+        this._boundItemMap.forEach((value: Node, key: string)=> {
+            let isNeed = false;
+            for (const tempPos of getAllBoundPos) {
+                if (key == (tempPos.x + "|" + tempPos.y)) {
+                    isNeed = true;
+                    break;
+                }
+            }
+            if (!isNeed) {
+                value.removeFromParent();
+                this._boundPrefabItems.push(value);
+                this._boundItemMap.delete(key);
+            }
+        });
     }
 }
 

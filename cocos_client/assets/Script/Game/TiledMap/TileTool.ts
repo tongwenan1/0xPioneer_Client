@@ -1,5 +1,13 @@
 import * as cc from 'cc';
 
+export enum TileHexDirection {
+    LeftTop = 0,
+    Left = 1,
+    LeftBottom = 2,
+    RightTop = 3,
+    Right = 4,
+    RightBottom = 5
+}
 
 export enum TileMapType {
     /**
@@ -335,6 +343,15 @@ export class TileMapHelper {
     Shadow_IsAllBlack(x: number, y: number): boolean {
         return this._shadowtiles[y * this.width + x].grid == this._shadowtag;
     }
+    Shadow_GetClearedTiledPositons(): TilePos[] {
+        const positions = [];
+        for (const tiles of this._shadowtiles) {
+            if (tiles.grid != this._shadowtag) {
+                positions.push(this.getPos(tiles.x, tiles.y));
+            }
+        }
+        return positions;
+    } 
 
     Shadow_Reset() {
         for (var i = 0; i < this._shadowtiles.length; i++) {
@@ -404,12 +421,42 @@ export class TileMapHelper {
         return around;
     }
     /**
+     * lefttop:x:0,y:-1,z:1
+     * left:x:-1,y:0,z:1
      * leftbottom:x:-1,y:1,z:0
+     * righttop:x:1,y:-1,z:0
+     * right:x:1,y:0,z:-1
      * rightbottom:x:0,y:1,z:-1
      * @param direction
      */
-    Path_GetAroundByDirection(pos: TilePos, direction: cc.Vec3): TilePos | null {
-        const p = this.getPosByCalcPos(pos.calc_x + direction.x, pos.calc_y + direction.y, pos.calc_z + direction.z);
+    Path_GetAroundByDirection(pos: TilePos, direction: TileHexDirection): TilePos | null {
+        const directionPos = cc.v3(0, 0, 0);
+        if (direction == TileHexDirection.LeftTop) {
+            directionPos.x = 0;
+            directionPos.y = -1;
+            directionPos.z = 1;
+        } else if (direction == TileHexDirection.Left) {
+            directionPos.x = -1;
+            directionPos.y = 0;
+            directionPos.z = 1;
+        } else if (direction == TileHexDirection.LeftBottom) {
+            directionPos.x = -1;
+            directionPos.y = 1;
+            directionPos.z = 0;
+        } else if (direction == TileHexDirection.RightTop) {
+            directionPos.x = 1;
+            directionPos.y = -1;
+            directionPos.z = 0;
+        } else if (direction == TileHexDirection.Right) {
+            directionPos.x = 1;
+            directionPos.y = 0;
+            directionPos.z = -1;
+        } else if (direction == TileHexDirection.RightBottom) {
+            directionPos.x = 0;
+            directionPos.y = 1;
+            directionPos.z = -1;
+        }
+        const p = this.getPosByCalcPos(pos.calc_x + directionPos.x, pos.calc_y + directionPos.y, pos.calc_z + directionPos.z);
         if (p != null) {
             return p;
         }
@@ -468,10 +515,6 @@ export class TileMapHelper {
             //     sort and get lowest F
             openPathTiles.sort((a, b) => (a.g + a.h) - (b.g + b.h));
             currentTile = openPathTiles[0];
-            if (currentTile == null) {
-                console.log("exce opp: " + JSON.stringify(openPathTiles));
-                console.log("exce from: " + JSON.stringify(from));
-            }
             //    move current from open to close
             var ic = openPathTiles.indexOf(currentTile);
             openPathTiles.splice(ic, 1);
