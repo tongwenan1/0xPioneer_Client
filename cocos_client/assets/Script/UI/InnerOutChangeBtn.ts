@@ -1,5 +1,5 @@
 import { _decorator, Component, Node, Button, SpriteFrame, Sprite } from 'cc';
-import { EventName } from '../Basic/ConstDefine';
+import { EventName } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import EventMgr from '../Manger/EventMgr';
 const { ccclass, property } = _decorator;

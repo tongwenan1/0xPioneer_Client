@@ -1,5 +1,5 @@
 import { _decorator, Component, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
-import { EventName } from '../../Basic/ConstDefine';
+import { EventName } from '../../Const/ConstDefine';
 import { GameMain } from '../../GameMain';
 import BranchEventMgr from '../../Manger/BranchEventMgr';
 import BuildingMgr from '../../Manger/BuildingMgr';

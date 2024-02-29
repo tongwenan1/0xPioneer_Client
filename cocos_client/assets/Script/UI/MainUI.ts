@@ -25,7 +25,7 @@ import { MainBuildUI } from './Inner/MainBuildUI';
 import { DialogueUI } from './Outer/DialogueUI';
 import { RecruitUI } from './Inner/RecruitUI';
 import { ResOprUI } from './Outer/ResOprUI';
-import { EventName } from '../Basic/ConstDefine';
+import { EventName } from '../Const/ConstDefine';
 
 const { ccclass, property } = _decorator;
 

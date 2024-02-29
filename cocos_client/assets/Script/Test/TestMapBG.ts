@@ -10,7 +10,7 @@ import { MapBuildingType, BuildingFactionType } from '../Game/Outer/Model/MapBui
 import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
 import LocalDataLoader from '../Manger/LocalDataLoader';
 import EventMgr from '../Manger/EventMgr';
-import { EventName } from '../Basic/ConstDefine';
+import { EventName } from '../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('TestMapBG')

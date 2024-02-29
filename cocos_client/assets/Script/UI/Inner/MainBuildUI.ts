@@ -1,7 +1,7 @@
 import { _decorator, ToggleContainer, ScrollView, instantiate, Label, Node, log, Button, EventTouch, Size, UITransform, Toggle, Color, Event } from 'cc';
 import { GameMain } from '../../GameMain';
 import EventMgr from '../../Manger/EventMgr';
-import { EventName } from '../../Basic/ConstDefine';
+import { EventName } from '../../Const/ConstDefine';
 import UserInfo from '../../Manger/UserInfoMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
 

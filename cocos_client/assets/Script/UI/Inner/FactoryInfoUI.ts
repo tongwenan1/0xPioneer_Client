@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, Button, SpriteFrame, Sprite, Label, ToggleContainer, ScrollView, log, instantiate, ProgressBar, ShadowsInfo } from 'cc';
 import EventMgr from '../../Manger/EventMgr';
-import { EventName } from '../../Basic/ConstDefine';
+import { EventName } from '../../Const/ConstDefine';
 import { UserInnerBuildInfo } from '../../Manger/UserInfoMgr';
 import InnerBuildingMgr from '../../Manger/InnerBuildingMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';

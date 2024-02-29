@@ -10,7 +10,7 @@ import { TilePos, TileMapHelper } from '../Game/TiledMap/TileTool';
 import { MapBuildingType, BuildingFactionType } from '../Game/Outer/Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
 import EventMgr from '../Manger/EventMgr';
-import { EventName } from '../Basic/ConstDefine';
+import { EventName } from '../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('CPrefabInfo')

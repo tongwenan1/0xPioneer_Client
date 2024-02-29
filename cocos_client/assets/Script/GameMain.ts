@@ -1,10 +1,11 @@
 import { _decorator, Component, Node, Camera, EventHandler } from 'cc';
 import { MainUI } from './UI/MainUI';
 import EventMgr from './Manger/EventMgr';
-import { EventName } from './Basic/ConstDefine';
+import { EventName } from './Const/ConstDefine';
 import { MapOutScene } from './Scene/MapOutScene';
 import { MapInnerScene } from './Scene/MapInnerScene';
 import UserInfoMgr from './Manger/UserInfoMgr';
+import { AudioMgr } from './Basic/AudioMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameMain')
@@ -32,14 +33,6 @@ export class GameMain extends Component {
     public innerSceneMap: MapInnerScene;
 
     protected _currentScene: Node;
-
-    constructor() {
-        super();
-        GameMain.inst = this;
-        UserInfoMgr.Instance;
-    }
-
-
 
     public changeScene() {
         if (this._currentScene == this.InnerScene) {
@@ -72,6 +65,8 @@ export class GameMain extends Component {
     }
 
     async onLoad() {
+        GameMain.inst = this;
+        UserInfoMgr.Instance;
         this.outSceneMap = this.OutScene.getComponent(MapOutScene);
     }
     

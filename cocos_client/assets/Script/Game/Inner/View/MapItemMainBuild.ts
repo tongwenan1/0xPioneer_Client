@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, Vec2, Vec3, CCString, Prefab, instantiate } from 'cc';
 import { MapItem } from '../../../BasicView/MapItem';
-import { EventName } from '../../../Basic/ConstDefine';
+import { EventName } from '../../../Const/ConstDefine';
 import { GameMain } from '../../../GameMain';
 import EventMgr from '../../../Manger/EventMgr';
 import UserInfoMgr, { UserInnerBuildInfo } from '../../../Manger/UserInfoMgr';

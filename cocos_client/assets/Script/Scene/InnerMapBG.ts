@@ -3,7 +3,7 @@ import { GameMain } from '../GameMain';
 import * as cc from "cc";
 import ConfigMgr from '../Manger/ConfigMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
-import { EventName } from '../Basic/ConstDefine';
+import { EventName } from '../Const/ConstDefine';
 import EventMgr from '../Manger/EventMgr';
 const { ccclass, property } = _decorator;
 
