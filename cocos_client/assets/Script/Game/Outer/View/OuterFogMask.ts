@@ -8,6 +8,9 @@ export class OuterFogMask extends Component {
         if (boundLines.length <= 0) {
             return;
         }
+        if (this._graphics == null) {
+            return;
+        }
         this._graphics.clear();
         const drawedPoses: Vec2[] = [];
         //start
