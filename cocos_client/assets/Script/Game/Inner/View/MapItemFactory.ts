@@ -7,12 +7,13 @@ import InnerBuildingMgr from '../../../Manger/InnerBuildingMgr';
 import UserInfoMgr, { UserInfoEvent, UserInnerBuildInfo, FinishedEvent } from '../../../Manger/UserInfoMgr';
 import CommonTools from '../../../Tool/CommonTools';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
+import CountMgr, { CountType } from '../../../Manger/CountMgr';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('MapItemFactory')
 export class MapItemFactory extends MapItem implements UserInfoEvent {
-    
+
 
     @property(CCString)
     buildID = "1";
@@ -147,9 +148,10 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
                     UserInfoMgr.Instance.troop -= resource.num;
                 }
             }
+            UserInfoMgr.Instance.upgradeBuild(this.buildID);
+            UserInfoMgr.Instance.explorationValue += nextLevelInfo.progress;
+
             GameMain.inst.innerSceneMap.playBuildAnim(this.node, 5, () => {
-                UserInfoMgr.Instance.upgradeBuild(this.buildID);
-                UserInfoMgr.Instance.explorationValue += nextLevelInfo.progress;
                 this.refresh();
                 this._upgradeIng = false;
             });
@@ -161,59 +163,59 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
     //---------------------------------------------------
     // UserInfoEvent
     playerNameChanged(value: string): void {
-       
+
     }
     playerEnergyChanged?(value: number): void {
-       
+
     }
     playerMoneyChanged?(value: number): void {
-       
+
     }
     playerFoodChanged?(value: number): void {
-       
+
     }
     playerWoodChanged?(value: number): void {
-       
+
     }
     playerStoneChanged?(value: number): void {
-       
+
     }
     playerTroopChanged?(value: number): void {
-       
+
     }
     playerExplorationValueChanged?(value: number): void {
-       
+
     }
     getNewTask(taskId: string): void {
-       
+
     }
     triggerTaskStepAction(action: string, delayTime: number): void {
-       
+
     }
     finishEvent(event: FinishedEvent): void {
-       
+
     }
     taskProgressChanged(taskId: string): void {
-       
+
     }
     taskFailed(taskId: string): void {
-       
+
     }
     getProp(propId: string, num: number): void {
-       
+
     }
     gameTaskOver(): void {
-       
+
     }
     generateTroopTimeCountChanged(leftTime: number): void {
-       if (this._recruitCountTime != null) {
+        if (this._recruitCountTime != null) {
             if (leftTime > 0) {
                 this._recruitCountTime.node.active = true;
                 this._recruitCountTime.string = CommonTools.formatSeconds(leftTime);
             } else {
                 this._recruitCountTime.node.active = false;
             }
-       }
+        }
     }
 }
 

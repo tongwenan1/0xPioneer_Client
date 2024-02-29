@@ -6,6 +6,7 @@ import { TilePos } from "../Game/TiledMap/TileTool";
 import MapBuildingModel, { BuildingFactionType, MapBuildingType, MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
 import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel, MapPlayerPioneerModel, MapPioneerType, MapNpcPioneerModel, MapPioneerLogicType } from "../Game/Outer/Model/MapPioneerModel";
 import BuildingMgr from "./BuildingMgr";
+import CountMgr, { CountType } from "./CountMgr";
 
 export interface PioneerMgrEvent {
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void;
@@ -319,11 +320,24 @@ export default class PioneerMgr {
     public showPioneer(pioneerId: string) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
-            findPioneer.show = true;
-            for (const observe of this._observers) {
-                observe.pioneerDidShow(findPioneer.id);
+            if (pioneerId == "pioneer_3") {
+                let serectGuardShow: boolean = false;
+                for (const player of this.getPlayerPioneer()) {
+                    if (player.id == "pioneer_1") {
+                        serectGuardShow = player.show;
+                        break;
+                    }
+                }
+                findPioneer.show = !serectGuardShow;
+            } else {
+                findPioneer.show = true;
             }
-            this._savePioneerData();
+            if (findPioneer.show) {
+                for (const observe of this._observers) {
+                    observe.pioneerDidShow(findPioneer.id);
+                }
+                this._savePioneerData();
+            }
         }
     }
 
@@ -458,22 +472,7 @@ export default class PioneerMgr {
                     actionTargetPioneer.showCountTime = delayTime;
                     this._savePioneerData();
                 } else {
-                    if (actionTargetPioneer.id == "pioneer_3") {
-                        let serectGuardShow: boolean = false;
-                        for (const player of this.getPlayerPioneer()) {
-                            if (player.id == "pioneer_1") {
-                                serectGuardShow = player.show;
-                                break;
-                            }
-                        }
-                        actionTargetPioneer.show = !serectGuardShow;
-                    } else {
-                        actionTargetPioneer.show = true;
-                    }
-                    this._savePioneerData();
-                    for (const observer of this._observers) {
-                        observer.pioneerDidShow(actionTargetPioneer.id);
-                    }
+                    this.showPioneer(actionTargetPioneer.id);
                 }
             }
                 break;
@@ -592,7 +591,6 @@ export default class PioneerMgr {
                                         for (const observe of this._observers) {
                                             observe.pioneerLogicMoveTimeCountChanged(pioneer);
                                         }
-                                        console.log('exce logic' + JSON.stringify(logic));
                                         if (logic.currentCd == 0) {
                                             logic.currentCd = logic.cd;
                                             if (logic.repeat > 0) {
@@ -964,6 +962,17 @@ export default class PioneerMgr {
                 }
             }
             if (interactPioneer != null) {
+                if (pioneer.type == MapPioneerType.player ||
+                    interactPioneer.type == MapPioneerType.player) {
+                    CountMgr.instance.addNewCount({
+                        type: CountType.actionPioneer,
+                        timeStamp: new Date().getTime(),
+                        data: {
+                            actionPid: pioneer.id,
+                            interactPid: interactPioneer.id
+                        }
+                    });
+                }
                 if (pioneer.friendly && interactPioneer.friendly) {
                     if (interactPioneer.type == MapPioneerType.npc) {
                         // get task
@@ -1038,6 +1047,16 @@ export default class PioneerMgr {
         } else {
             // building
             // need changed. use manger to deal with pioneer and building 
+            if (pioneer.type == MapPioneerType.player) {
+                CountMgr.instance.addNewCount({
+                    type: CountType.actionBuilding,
+                    timeStamp: new Date().getTime(),
+                    data: {
+                        actionPid: pioneer.id,
+                        interactBId: stayBuilding.id
+                    }
+                });
+            }
             if (stayBuilding.type == MapBuildingType.city) {
                 if (
                     (pioneer.type == MapPioneerType.player && pioneer.friendly && stayBuilding.faction == BuildingFactionType.enemy) ||

@@ -5,6 +5,7 @@ import { GameMain } from '../GameMain';
 import UserInfo from '../Manger/UserInfoMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import ItemMgr from '../Manger/ItemMgr';
+import CountMgr, { CountType } from '../Manger/CountMgr';
 const { ccclass, property } = _decorator;
 
 
@@ -95,6 +96,14 @@ export class ItemInfoUI extends PopUpUI {
         } else {
             for (const temple of this._items) {
                 ItemMgr.Instance.subItem(temple.itemConfig.configId, 1);
+                CountMgr.instance.addNewCount({
+                    type: CountType.useItem,
+                    timeStamp: new Date().getTime(),
+                    data: {
+                        itemId: temple.itemConfig.configId,
+                        num: 1
+                    }
+                });
             }
         }
         this.show(false);

@@ -3,6 +3,7 @@ import { GameMain } from '../../GameMain';
 import PioneerMgr from '../../Manger/PioneerMgr';
 import UserInfo from '../../Manger/UserInfoMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
+import CountMgr, { CountType } from '../../Manger/CountMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -139,6 +140,15 @@ export class DialogueUI extends PopUpUI {
                 PioneerMgr.instance.dealWithTaskAction(temp.type, 0);
             }
         }
+
+        CountMgr.instance.addNewCount({
+            type: CountType.selectDialog,
+            timeStamp: new Date().getTime(),
+            data: {
+                selectText: customEventData
+            }
+        });
+
         this._dialogStep += 1;
         if (this._dialogStep > this._talk.messsages.length - 1) {
             GameMain.inst.UI.dialogueUI.show(false);

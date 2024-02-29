@@ -8,6 +8,7 @@ import BranchEventMgr from '../../Manger/BranchEventMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
 import { ItemInfoShowModel } from '../ItemInfoUI';
 import BuildingMgr from '../../Manger/BuildingMgr';
+import CountMgr, { CountType } from '../../Manger/CountMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -162,6 +163,14 @@ export class EventUI extends PopUpUI {
                 }
             }
         }
+
+        CountMgr.instance.addNewCount({
+            type: CountType.showEvent,
+            timeStamp: new Date().getTime(),
+            data: {
+                eventId: event.id
+            }
+        });
     }
 
     private _checkIsSatisfiedCondition(condition: any[]): { satisfy: boolean, tipText: string } {

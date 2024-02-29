@@ -4,6 +4,7 @@ import ItemMgr from "./ItemMgr";
 import ItemData from "../Model/ItemData";
 import { GameMain } from "../GameMain";
 import { ItemInfoShowModel } from "../UI/ItemInfoUI";
+import CountMgr, { CountType } from "./CountMgr";
 
 export interface UserInnerBuildInfo {
     buildID: string,
@@ -226,12 +227,29 @@ export default class UserInfoMgr {
                 // build house
                 this.checkCanFinishedTask("buildhouse", "-1");
             }
+
+            CountMgr.instance.addNewCount({
+                type: CountType.buildInnerBuilding,
+                timeStamp: new Date().getTime(),
+                data: {
+                    bId: buildID,
+                    level: buildInfo.buildLevel,
+                }
+            });
         }
     }
     public getExplorationReward(boxId: string) {
         this._gettedExplorationRewardIds.push(boxId);
         this._localJsonData.playerData.gettedExplorationRewardIds = this._gettedExplorationRewardIds;
         this._localDataChanged(this._localJsonData);
+
+        CountMgr.instance.addNewCount({
+            type: CountType.openBox,
+            timeStamp: new Date().getTime(),
+            data: {
+                id: boxId
+            }
+        });
     }
 
     public beginGenerateTroop(leftTime: number, troopNum: number) {
@@ -241,6 +259,14 @@ export default class UserInfoMgr {
         };
         this._localJsonData.playerData.generateTroopInfo = this._generateTroopInfo;
         this._localDataChanged(this._localJsonData);
+
+        CountMgr.instance.addNewCount({
+            type: CountType.generateTroops,
+            timeStamp: new Date().getTime(),
+            data: {
+                num: troopNum
+            }
+        });
     }
 
     public get afterTalkItemGetData() {
