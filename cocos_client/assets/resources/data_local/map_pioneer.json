@@ -211,7 +211,7 @@
     },
     {
         "id": "hred_2",
-        "name": "",
+        "name": "hred_2",
         "type": "hred",
         "animType": "monster_b_2",
         "friendly": false,
@@ -235,7 +235,7 @@
     },
     {
         "id": "hred_3",
-        "name": "",
+        "name": "hred_3",
         "type": "hred",
         "animType": "monster_c_3",
         "friendly": false,
@@ -250,7 +250,7 @@
     },
     {
         "id": "hred_4",
-        "name": "",
+        "name": "hred_4",
         "type": "hred",
         "animType": "monster_c_1",
         "friendly": false,
@@ -265,7 +265,7 @@
     },
     {
         "id": "hred_5",
-        "name": "",
+        "name": "hred_5",
         "type": "hred",
         "animType": "monster_a_1",
         "friendly": false,
@@ -280,7 +280,7 @@
     },
     {
         "id": "hred_6",
-        "name": "",
+        "name": "hred_6",
         "type": "hred",
         "animType": "monster_b_2",
         "friendly": false,
@@ -304,7 +304,7 @@
     },
     {
         "id": "hred_7",
-        "name": "",
+        "name": "hred_7",
         "type": "hred",
         "animType": "monster_b_2",
         "friendly": false,
@@ -328,7 +328,7 @@
     },
     {
         "id": "hred_8",
-        "name": "",
+        "name": "hred_8",
         "type": "hred",
         "animType": "monster_b_2",
         "friendly": false,
@@ -352,7 +352,7 @@
     },
     {
         "id": "hred_9",
-        "name": "",
+        "name": "hred_9",
         "type": "hred",
         "animType": "monster_a_1",
         "friendly": false,
@@ -367,7 +367,7 @@
             {
                 "type": "patrol",
                 "interval": [2, 3],
-                "range": 2,
+                "range": 6,
                 "speed": 200,
                 "repeat": -1
             }
@@ -376,7 +376,7 @@
     },
     {
         "id": "hred_10",
-        "name": "",
+        "name": "hred_10",
         "type": "hred",
         "animType": "monster_a_1",
         "friendly": false,

@@ -2,7 +2,7 @@ import { _decorator, Component, instantiate, math, misc, Node, pingPong, Prefab,
 import BranchEventMgr from '../Manger/BranchEventMgr';
 import BuildingMgr from '../Manger/BuildingMgr';
 import EventMgr from '../Manger/EventMgr';
-import PioneerMgr, { PioneerMgrEvent } from '../Manger/PioneerMgr';
+import PioneerMgr from '../Manger/PioneerMgr';
 import TalkMgr from '../Manger/TalkMgr';
 import TaskMgr from '../Manger/TaskMgr';
 import UserInfoMgr, { UserInfoEvent, FinishedEvent } from '../Manger/UserInfoMgr';

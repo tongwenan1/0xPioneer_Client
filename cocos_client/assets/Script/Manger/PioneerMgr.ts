@@ -40,6 +40,7 @@ export interface PioneerMgrEvent {
 
     pioneerTaskHideTimeCountChanged(pioneerId: string, timeCount: number): void;
     pioneerTaskCdTimeCountChanged(pioneerId: string, timeCount: number): void;
+    pioneerLogicMovePathPrepared(pioneer: MapPioneerModel): void;
     pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void;
     pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void;
 
@@ -613,6 +614,9 @@ export default class PioneerMgr {
                                         temleLogic.commonMoveTilePos = movePaths[i];
                                         pioneer.logics.splice(0, 0, temleLogic);
                                     }
+                                    for (const observe of this._observers) {
+                                        observe.pioneerLogicMovePathPrepared(pioneer);
+                                    }
 
                                 } else if (logic.type == MapPioneerLogicType.hide) {
                                     this.hidePioneer(pioneer.id);
@@ -666,6 +670,9 @@ export default class PioneerMgr {
                                                 const temleLogic = new MapPioneerLogicModel(MapPioneerLogicType.commonmove);
                                                 temleLogic.commonMoveTilePos = movePaths[i];
                                                 pioneer.logics.splice(0, 0, temleLogic);
+                                            }
+                                            for (const observe of this._observers) {
+                                                observe.pioneerLogicMovePathPrepared(pioneer);
                                             }
                                         }
                                     }

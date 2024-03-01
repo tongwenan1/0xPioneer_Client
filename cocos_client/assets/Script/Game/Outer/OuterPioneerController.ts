@@ -1,5 +1,4 @@
 import { _decorator, Component, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
-import { EventName } from '../../Const/ConstDefine';
 import { GameMain } from '../../GameMain';
 import BranchEventMgr from '../../Manger/BranchEventMgr';
 import BuildingMgr from '../../Manger/BuildingMgr';
@@ -20,8 +19,70 @@ import { MapBG } from '../../Scene/MapBG';
 
 const { ccclass, property } = _decorator;
 
-@ccclass('OuterPioneerController') 
+@ccclass('OuterPioneerController')
 export class OuterPioneerController extends Component implements PioneerMgrEvent, UserInfoEvent {
+
+    public showMovingPioneerAction(tilePos: TilePos, movingPioneerId: string, usedCursor: Node) {
+        this._actionShowPioneerId = movingPioneerId;
+        this._actionUsedCursor = usedCursor;
+        if (this._actionPioneerView != null) {
+            this._actionPioneerView.destroy();
+            this._actionPioneerView = null;
+        }
+        if (this._pioneerMap.has(movingPioneerId)) {
+            const view = this._pioneerMap.get(movingPioneerId);
+            if (view.getComponent(MapItemMonster) != null) {
+                this._actionPioneerView = instantiate(view);
+                this._actionPioneerView.setParent(view.getParent());
+                this._actionPioneerView.worldPosition = GameMain.inst.outSceneMap.mapBG.getPosWorld(tilePos.x, tilePos.y);
+                this._actionPioneerView.setSiblingIndex(view.getSiblingIndex());
+                this._actionPioneerView.getComponent(MapItemMonster).shadowMode();
+            }
+            const pioneer: MapPioneerModel = PioneerMgr.instance.getPioneerById(movingPioneerId);
+            if (pioneer != null) {
+                const path = [];
+                let stepLogic: MapPioneerLogicModel = null;
+                for (const logic of pioneer.logics) {
+                    if (logic.type == MapPioneerLogicType.stepmove) {
+                        stepLogic = logic;
+                        break;
+                    }
+                }
+                if (stepLogic != null) {
+                    let nextTilePos = tilePos;
+                    for (let i = 0; i < 15; i++) {
+                        nextTilePos = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(nextTilePos.x, nextTilePos.y), stepLogic.direction);
+                        path.push(nextTilePos);
+                    }
+                } else {
+                    for (const logic of pioneer.logics) {
+                        if (logic.type == MapPioneerLogicType.commonmove) {
+                            path.push(logic.commonMoveTilePos);
+                        }
+                    }
+                }
+                if (path.length > 0) {
+                    this._actionPioneerFootStepViews = this._addFootSteps(path, stepLogic == null);
+                }
+            }
+        }
+    }
+    public hideMovingPioneerAction() {
+        if (this._actionPioneerView != null) {
+            this._actionPioneerView.destroy();
+            this._actionPioneerView = null;
+        }
+        if (this._actionPioneerFootStepViews != null) {
+            for (const view of this._actionPioneerFootStepViews) {
+                view.destroy();
+            }
+            this._actionPioneerFootStepViews = null;
+        }
+        this._actionShowPioneerId = null;
+        this._actionUsedCursor = null;
+    }
+
+
     @property(Prefab)
     private selfPioneer: Prefab;
 
@@ -36,14 +97,22 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
     @property(Prefab)
     private footPathPrefab: Prefab;
+    @property(Prefab)
+    private footPathTargetPrefab: Prefab;
 
     private _pioneerMap: Map<string, Node> = new Map();
     private _movingPioneerIds: string[] = [];
     private _fightViewMap: Map<string, OuterFightView> = new Map();
     private _footPathMap: Map<string, Node[]> = new Map();
 
+    private _actionPioneerView: Node = null;
+    private _actionUsedCursor: Node = null;
+    private _actionPioneerFootStepViews: Node[] = null;
+
     private _started: boolean = false;
     private _dataLoaded: boolean = false;
+
+    private _actionShowPioneerId: string = null;
     protected onLoad(): void {
         PioneerMgr.instance.addObserver(this);
         UserInfoMgr.Instance.addObserver(this);
@@ -196,6 +265,9 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         if (dist < add) //havemove 2 target
         {
             pioneermap.setWorldPosition(nextwpos);
+            if (pioneer.id == this._actionShowPioneerId && this._actionUsedCursor != null) {
+                this._actionUsedCursor.setWorldPosition(nextwpos);
+            }
             PioneerMgr.instance.pioneerDidMoveOneStep(pioneer.id);
             return;
         }
@@ -207,6 +279,9 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             newpos.x += dir.x * add;
             newpos.y += dir.y * add;
             pioneermap.setWorldPosition(newpos);
+            if (pioneer.id == this._actionShowPioneerId && this._actionUsedCursor != null) {
+                this._actionUsedCursor.setWorldPosition(newpos);
+            }
             //pioneer move direction
             let curMoveDirection = null;
             if (dir.y != 0) {
@@ -237,13 +312,21 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             for (const logic of pioneer.logics) {
                 if (logic.moveSpeed > 0) {
                     usedSpeed = logic.moveSpeed;
-                }                
+                }
             }
             if (this._movingPioneerIds.indexOf(pioneer.id) != -1 && this._pioneerMap.has(pioneer.id)) {
+                if (pioneer.type != MapPioneerType.player) {
+                    usedSpeed = 50;
+                }
                 let pioneermap = this._pioneerMap.get(pioneer.id);
                 this.updateMoveStep(usedSpeed, deltaTime, pioneer, pioneermap);
             }
         }
+    }
+
+    private onLocalDataLoadOver() {
+        this._dataLoaded = true;
+        this._startAction();
     }
 
     private _refreshFightView(fightId: string, attacker: { name: string; hp: number; hpMax: number; }, defender: { name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositons: Vec2[]) {
@@ -273,9 +356,59 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         }
     }
 
-    private onLocalDataLoadOver() {
-        this._dataLoaded = true;
-        this._startAction();
+    private _addFootSteps(path: TilePos[], isTargetPosShowFlag: boolean = false): Node[] {
+        const decorationView = this.node.getComponent(MapBG).decorationLayer();
+        if (decorationView == null) {
+            return;
+        }
+        const footViews = [];
+        for (let i = 0; i < path.length; i++) {
+            if (i == path.length - 1) {
+                if (isTargetPosShowFlag) {
+                    const footView = instantiate(this.footPathTargetPrefab);
+                    footView.name = "footViewTarget";
+                    decorationView.insertChild(footView, 0);
+                    let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(path[i].x, path[i].y);
+                    footView.setWorldPosition(worldPos);
+                    footViews.push(footView);
+                }
+            } else {
+                const currentPath = path[i];
+                const nextPath = path[i + 1];
+                const footView = instantiate(this.footPathPrefab);
+                footView.name = "footView";
+                decorationView.insertChild(footView, 0);
+                let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(currentPath.x, currentPath.y);
+                footView.setWorldPosition(worldPos);
+                footViews.push(footView);
+                if (nextPath.calc_x - currentPath.calc_x == -1 &&
+                    nextPath.calc_y - currentPath.calc_y == 0 &&
+                    nextPath.calc_z - currentPath.calc_z == 1) {
+                    footView.angle = 90;
+                } else if (nextPath.calc_x - currentPath.calc_x == 1 &&
+                    nextPath.calc_y - currentPath.calc_y == 0 &&
+                    nextPath.calc_z - currentPath.calc_z == -1) {
+                    footView.angle = 270;
+                } else if (nextPath.calc_x - currentPath.calc_x == 1 &&
+                    nextPath.calc_y - currentPath.calc_y == -1 &&
+                    nextPath.calc_z - currentPath.calc_z == 0) {
+                    footView.angle = 330;
+                } else if (nextPath.calc_x - currentPath.calc_x == -1 &&
+                    nextPath.calc_y - currentPath.calc_y == 1 &&
+                    nextPath.calc_z - currentPath.calc_z == 0) {
+                    footView.angle = 150;
+                } else if (nextPath.calc_x - currentPath.calc_x == 0 &&
+                    nextPath.calc_y - currentPath.calc_y == 1 &&
+                    nextPath.calc_z - currentPath.calc_z == -1) {
+                    footView.angle = 210;
+                } else if (nextPath.calc_x - currentPath.calc_x == 0 &&
+                    nextPath.calc_y - currentPath.calc_y == -1 &&
+                    nextPath.calc_z - currentPath.calc_z == 1) {
+                    footView.angle = 390;
+                }
+            }
+        }
+        return footViews;
     }
 
     //---------------------------------------------
@@ -301,13 +434,13 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
     pioneerDidGainHpMax(pioneerId: string, value: number): void {
         this._refreshUI();
-        
+
     }
     pioneerDidGainAttack(pioneerId: string, value: number): void {
         this._refreshUI();
     }
     pioneerLoseHp(pioneerId: string, value: number): void {
-        
+
     }
     pionerrRebirthCount(pioneerId: string, count: number): void {
 
@@ -442,7 +575,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
         const event = BranchEventMgr.Instance.getEventById(eventId);
         if (event.length > 0) {
-            GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void)=> {
+            GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => {
                 PioneerMgr.instance.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
             });
             GameMain.inst.UI.eventUI.show(true);
@@ -470,55 +603,31 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             PioneerMgr.instance.pioneerBeginMove(pioneer.id, [logic.commonMoveTilePos]);
         }
     }
+    pioneerLogicMovePathPrepared(pioneer: MapPioneerModel) {
+        if (this._actionShowPioneerId == pioneer.id) {
+            if (this._actionPioneerFootStepViews != null) {
+                for (const view of this._actionPioneerFootStepViews) {
+                    view.destroy();
+                }
+                this._actionPioneerFootStepViews = null;
+            }
+            const path = [];
+            for (const logic of pioneer.logics) {
+                if (logic.type == MapPioneerLogicType.commonmove) {
+                    path.push(logic.commonMoveTilePos);
+                }
+            }
+            if (path.length > 0) {
+                this._actionPioneerFootStepViews = this._addFootSteps(path, true);
+            }
+        }
+    }
     pioneerShowCount(pioneerId: string, count: number): void {
 
     }
 
     playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {
-        const decorationView = this.node.getComponent(MapBG).decorationLayer();
-        if (decorationView == null) {
-            return;
-        }
-        const footViews = [];
-        for (let i = 0; i < path.length; i++) {
-            if (i == path.length - 1) {
-
-            } else {
-                const currentPath = path[i];
-                const nextPath = path[i + 1];
-                const footView = instantiate(this.footPathPrefab);
-                footView.name = "footView";
-                decorationView.insertChild(footView, 0);
-                let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(currentPath.x, currentPath.y);
-                footView.setWorldPosition(worldPos);
-                footViews.push(footView);
-                if (nextPath.calc_x - currentPath.calc_x == -1 &&
-                    nextPath.calc_y - currentPath.calc_y == 0 &&
-                    nextPath.calc_z - currentPath.calc_z == 1) {
-                    footView.angle = 90;
-                } else if (nextPath.calc_x - currentPath.calc_x == 1 &&
-                    nextPath.calc_y - currentPath.calc_y == 0 &&
-                    nextPath.calc_z - currentPath.calc_z == -1) {
-                    footView.angle = 270;
-                } else if (nextPath.calc_x - currentPath.calc_x == 1 &&
-                    nextPath.calc_y - currentPath.calc_y == -1 &&
-                    nextPath.calc_z - currentPath.calc_z == 0) {
-                    footView.angle = 330;
-                } else if (nextPath.calc_x - currentPath.calc_x == -1 &&
-                    nextPath.calc_y - currentPath.calc_y == 1 &&
-                    nextPath.calc_z - currentPath.calc_z == 0) {
-                    footView.angle = 150;
-                } else if (nextPath.calc_x - currentPath.calc_x == 0 &&
-                    nextPath.calc_y - currentPath.calc_y == 1 &&
-                    nextPath.calc_z - currentPath.calc_z == -1) {
-                    footView.angle = 210;
-                } else if (nextPath.calc_x - currentPath.calc_x == 0 &&
-                    nextPath.calc_y - currentPath.calc_y == -1 &&
-                    nextPath.calc_z - currentPath.calc_z == 1) {
-                    footView.angle = 390;
-                }
-            }
-        }
+        const footViews = this._addFootSteps(path);
         this._footPathMap.set(pioneerId, footViews);
     }
 
@@ -576,7 +685,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         GameMain.inst.UI.ShowTip("Boot ends");
     }
     generateTroopTimeCountChanged(leftTime: number): void {
-        
+
     }
 }
 

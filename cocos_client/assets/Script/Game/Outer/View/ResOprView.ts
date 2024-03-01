@@ -1,13 +1,8 @@
 import { _decorator, Button, Component, Label, log, Node, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
-import { PopUpUI } from '../../BasicView/PopUpUI';
 const { ccclass, property } = _decorator;
 
-@ccclass('ResOprUI')
-export class ResOprUI extends PopUpUI {
-
-    public override get typeName() {
-        return "ResOprUI";
-    }
+@ccclass('ResOprView')
+export class ResOprView extends Component {
 
     @property(Button)
     btnAttack: Button = null;
@@ -35,7 +30,11 @@ export class ResOprUI extends PopUpUI {
      * 
      * @param actionType 0-talk 1-explore 2-collect 3-fight 4-camp 
      */
-    public showDialog(actionType: number, confirmCallback: () => void, closeCallback: ()=> void) {
+    public show(worldPos: Vec3, actionType: number, confirmCallback: () => void, closeCallback: ()=> void) {
+        this.node.active = true;
+        this.node.worldPosition = worldPos;
+
+        this.btnStay.node.active = false;
         this.btnInfo.node.active = actionType == 0;
         this.btnSearch.node.active = actionType == 1 || actionType == 5;
         this.btnGetRes.node.active = actionType == 2;
@@ -44,9 +43,15 @@ export class ResOprUI extends PopUpUI {
         this._confirmCallback = confirmCallback;
         this._closeCallback = closeCallback;
     }
+    public hide() {
+        this.node.active = false;
+    }
+    public get isShow() {
+        return this.node.active;
+    }
 
     private _confirmCallback: () => void = null;
-    private _closeCallback: () => void = null;
+    private _closeCallback: ()=> void = null;
 
     start() {
     }
@@ -59,46 +64,49 @@ export class ResOprUI extends PopUpUI {
         if (this._confirmCallback) {
             this._confirmCallback();
         }
-        this.show(false);
+        this.hide();
     }
 
     onGetResClick() {
         if (this._confirmCallback) {
             this._confirmCallback();
         }
-        this.show(false);
+        this.hide();
     }
 
     onAtkClick() {
         if (this._confirmCallback) {
             this._confirmCallback();
         }
-        this.show(false);
+        this.hide();
     }
 
     onStayClick() {
-        this.show(false);
+        if (this._confirmCallback) {
+            this._confirmCallback();
+        }
+        this.hide();
     }
 
     onCampClick() {
         if (this._confirmCallback) {
             this._confirmCallback();
         }
-        this.show(false);
+        this.hide();
     }
 
     onInfoClick() {
         if (this._confirmCallback) {
             this._confirmCallback();
         }
-        this.show(false);
+        this.hide();
     }
 
     onCloseClick() {
         if (this._closeCallback) {
             this._closeCallback();
         }
-        this.show(false);
+        this.hide();
     }
 }
 

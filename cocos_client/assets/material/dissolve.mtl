@@ -10,9 +10,7 @@
   },
   "_techIdx": 0,
   "_defines": [
-    {
-      "USE_MASK": true
-    }
+    {}
   ],
   "_states": [
     {
@@ -35,7 +33,7 @@
         "__uuid__": "4909b7cb-b167-4f6a-8ab0-92354deffeec@6c48a",
         "__expectedType__": "cc.Texture2D"
       },
-      "dissolveThreshold": 0.48
+      "dissolveThreshold": 0.43
     }
   ]
 }

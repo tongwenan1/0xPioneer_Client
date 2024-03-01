@@ -2,12 +2,12 @@
   "ver": "1.1.49",
   "importer": "prefab",
   "imported": true,
-  "uuid": "212051bc-e6f1-4f53-95a7-0800945bb19b",
+  "uuid": "1e513654-0f82-4f02-aa0f-1445688cf3a5",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "FootLine"
+    "syncNodeName": "FootLineTarget"
   }
 }

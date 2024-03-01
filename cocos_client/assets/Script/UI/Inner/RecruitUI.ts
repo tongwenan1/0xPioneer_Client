@@ -9,7 +9,7 @@ export class RecruitUI extends PopUpUI {
 
     public refreshUI(initSelectGenerate: boolean = false) {
         if (initSelectGenerate) {
-            this._selectGenerateNum = 1;
+            this._selectGenerateNum = 0;
         }
         const maxTroop: number = 9999999;
         this._totalTroop.string = maxTroop.toString();
@@ -39,7 +39,7 @@ export class RecruitUI extends PopUpUI {
     private _perTroopStone: number = 0.01;
     private _maxRecruitTroop: number = 0;
 
-    private _selectGenerateNum: number = 1;
+    private _selectGenerateNum: number = 0;
     private _generateTimeNum: number = 0;
 
     private _totalTroopProgress: ProgressBar = null;

@@ -24,7 +24,6 @@ import { FactoryInfoUI } from './Inner/FactoryInfoUI';
 import { MainBuildUI } from './Inner/MainBuildUI';
 import { DialogueUI } from './Outer/DialogueUI';
 import { RecruitUI } from './Inner/RecruitUI';
-import { ResOprUI } from './Outer/ResOprUI';
 import { EventName } from '../Const/ConstDefine';
 
 const { ccclass, property } = _decorator;
@@ -43,9 +42,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
 
     @property(Prefab)
     factoryInfoUIPfb: Prefab;
-
-    @property(Prefab)
-    ResOprPfb: Prefab;
 
     @property(Prefab)
     private dialoguePrefab: Prefab;
@@ -72,7 +68,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
 
     public mainBuildUI: MainBuildUI;
     public factoryInfoUI: FactoryInfoUI;
-    public resOprUI: ResOprUI;
 
     public dialogueUI: DialogueUI;
     public serectGuardGettedUI: SecretGuardGettedUI;
@@ -114,15 +109,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
 
         let factoryInfoUINode = instantiate(this.factoryInfoUIPfb);
         factoryInfoUINode.setParent(this.UIRoot);
-
-        let resOprUINode = instantiate(this.ResOprPfb);
-        resOprUINode.setParent(this.UIRoot);
-
-
-        this.mainBuildUI = mainBuildUINode.getComponent(MainBuildUI);
-        this.factoryInfoUI = factoryInfoUINode.getComponent(FactoryInfoUI);
-        this.resOprUI = resOprUINode.getComponent(ResOprUI);
-
 
         this.dialogueUI = instantiate(this.dialoguePrefab).getComponent(DialogueUI);
         this.dialogueUI.node.setParent(this.UIRoot);
@@ -381,6 +367,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
     }
     pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void {
 
+    }
+    pioneerLogicMovePathPrepared(pioneer: MapPioneerModel) {
+        
     }
     pioneerShowCount(pioneerId: string, count: number): void {
         if (pioneerId == "gangster_3" && count > 0) {

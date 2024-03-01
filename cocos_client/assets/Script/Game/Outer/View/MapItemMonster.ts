@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Vec2, Vec3, CCString, UITransform, Label } from 'cc';
+import { _decorator, Component, Node, Vec2, Vec3, CCString, UITransform, Label, UIOpacity } from 'cc';
 import { FinishedEvent } from '../../../Manger/UserInfoMgr';
 import MapPioneerModel, { MapPioneerLogicType, MapPioneerActionType, MapPioneerMoveDirection } from '../Model/MapPioneerModel';
 
@@ -29,6 +29,7 @@ export class MapItemMonster extends Component {
             const view = this.node.getChildByPath("role/" + type);
             view.active = type == model.animType;
             if (view.active) {
+                this._currentShowMonster = view;
                 view.getChildByName("idle").active = model.actionType == MapPioneerActionType.idle;
                 view.getChildByName("walk_left").active = model.actionType == MapPioneerActionType.moving && model.moveDirection == MapPioneerMoveDirection.left;
                 view.getChildByName("walk_right").active = model.actionType == MapPioneerActionType.moving && model.moveDirection == MapPioneerMoveDirection.right;
@@ -38,9 +39,29 @@ export class MapItemMonster extends Component {
         }
     }
 
+    public shadowMode() {
+        this.node.getComponent(UIOpacity).opacity = 100;
+        for (const type of this._monsterTypeNames) {
+            const view = this.node.getChildByPath("role/" + type);
+            if (view.active) {
+                this._currentShowMonster = view;
+                view.getChildByName("idle").active = true;
+                view.getChildByPath("idle/Monster_Shadow").active = false;
+                view.getChildByName("walk_left").active = false;
+                view.getChildByName("walk_right").active = false;
+                view.getChildByName("walk_top").active = false;
+                view.getChildByName("walk_bottom").active = false;
+            }
+        }
+        this._nameLabel.node.active = false;
+        this._fightView.active = false;
+        this._moveCountLabel.node.active = false;
+    }
+
     private _nameLabel: Label = null;
     private _fightView: Node = null;
     private _moveCountLabel: Label = null;
+    private _currentShowMonster: Node = null;
     private _monsterTypeNames: string[] = [
         "monster_a_1",
         "monster_a_2",

@@ -8,10 +8,12 @@ import ConfigMgr from '../Manger/ConfigMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { TilePos, TileMapHelper, TileHexDirection } from '../Game/TiledMap/TileTool';
 import { MapBuildingType, BuildingFactionType } from '../Game/Outer/Model/MapBuildingModel';
-import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
+import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel, MapPioneerLogicType } from '../Game/Outer/Model/MapPioneerModel';
 import EventMgr from '../Manger/EventMgr';
 import { EventName } from '../Const/ConstDefine';
 import { OuterFogMask } from '../Game/Outer/View/OuterFogMask';
+import { ResOprView } from '../Game/Outer/View/ResOprView';
+import { OuterPioneerController } from '../Game/Outer/OuterPioneerController';
 const { ccclass, property } = _decorator;
 
 @ccclass('CPrefabInfo')
@@ -30,6 +32,9 @@ export class MapBG extends Component {
         return this._decorationView;
     }
     public sortMapItemSiblingIndex() {
+        if (this._actionMapCursor != null) {
+            this._actionMapCursor.node.setSiblingIndex(0);
+        }
         this.mapcur.node.setSiblingIndex(0);
         let index = 1;
         const items: { node: Node, tilePos: TilePos }[] = [];
@@ -79,7 +84,6 @@ export class MapBG extends Component {
     public getTiledPos(worldPos: Vec3): TilePos {
         return this._tiledhelper.getPosByWorldPos(worldPos);
     }
-
     public getTiledMovePath(fromWorldPos: Vec3, toWorldPos: Vec3): TilePos[] {
         const paths = this._tiledhelper.Path_FromTo(this._tiledhelper.getPosByWorldPos(fromWorldPos), this._tiledhelper.getPosByWorldPos(toWorldPos));
         for (let i = 0; i < paths.length; i++) {
@@ -108,11 +112,15 @@ export class MapBG extends Component {
         return this._tiledhelper.Path_IsBlock(mapPos.x, mapPos.y);
     }
 
+
     @property(Prefab)
     tiledmap: Prefab
 
     @property(cc.Sprite)
     mapcur: cc.Sprite
+
+    @property(Prefab)
+    private resOprPrefab = null;
 
     @property([cc.SpriteFrame])
     mapcurMultiSelectFrame: cc.SpriteFrame[] = [];
@@ -131,20 +139,24 @@ export class MapBG extends Component {
         return null;
     }
 
-    _mouseDown: boolean = false;
+    private _mouseDown: boolean = false;
+    private _tiledhelper: TileMapHelper = null;
     private _cameraOriginalOrthoHeight: number = 0;
     private _localEraseShadowWorldPos: Vec2[] = [];
     private _localEraseDataKey: string = "erase_shadow";
 
+    private _buildinglayer: Node = null;
     private _decorationView: Node = null;
     private _fogView: OuterFogMask = null;
     private _boundContent: Node = null;
     private _boundItem: Node = null;
     private _boundItemMap: Map<string, Node> = new Map();
     private _boundPrefabItems: Node[] = [];
+    private _actionView: ResOprView = null;
+    private _actionMapCursor: cc.Sprite = null; 
     protected onLoad(): void {
         // local shadow erase
-        this.InitTileMap();
+        this._initTileMap();
 
         this._localEraseShadowWorldPos = [];
         const eraseShadowData: any = localStorage.getItem(this._localEraseDataKey);
@@ -164,15 +176,12 @@ export class MapBG extends Component {
         this._cameraOriginalOrthoHeight = GameMain.inst.MainCamera.orthoHeight;
         let downx = 0;
         let downy = 0;
-        let mouseActionBeginTimeStamp: number = 0;
         this.node.on(Node.EventType.MOUSE_DOWN, (event: cc.EventMouse) => {
             thisptr._mouseDown = true;
 
             downx = event.getLocation().x;
             downy = event.getLocation().y;
             PopUpUI.hideAllShowingPopUpUI();
-
-            mouseActionBeginTimeStamp = new Date().getTime();
         }, this);
 
         this.node.on(Node.EventType.MOUSE_UP, (event: cc.EventMouse) => {
@@ -184,7 +193,7 @@ export class MapBG extends Component {
                 //if pick a empty area.
                 //let pioneer move to
                 var wpos = GameMain.inst.MainCamera.screenToWorld(new cc.Vec3(pos.x, pos.y, 0));
-                this.ClickOnMap(wpos);
+                this._clickOnMap(wpos);
             };
         }, this);
 
@@ -312,11 +321,121 @@ export class MapBG extends Component {
         this._refreshFog();
     }
 
-    private _isShowAcionDialog: boolean = false;
-    ClickOnMap(worldpos: Vec3) {
-        if (this._isShowAcionDialog) {
-            GameMain.inst.UI.resOprUI.show(false);
-            this._isShowAcionDialog = false;
+    update(deltaTime: number) {
+        this._updateTiledmap(deltaTime);
+    }
+
+    //------------------------------------
+    private _initTileMap(): void {
+        if (this.tiledmap == null)
+            return;
+        var node = cc.instantiate(this.tiledmap);
+        this.node.addChild(node);
+
+        this._decorationView = node.getChildByName("deco_layer");
+        this.mapcur.node.removeFromParent();
+        this._decorationView.addChild(this.mapcur.node);
+
+        // force change shadow siblingIndex
+        node.getChildByName("shadow").setSiblingIndex(99);
+        this.mapcur.node.setSiblingIndex(99);
+
+        var _tilemap = node.getComponent(cc.TiledMap);
+        _tilemap.enableCulling = false;
+        let c = new cc.Color(255, 255, 255, 255);
+        _tilemap.getLayer("shadow").color = c;
+
+        //init tiledmap by a helper class
+        this._tiledhelper = new TileMapHelper(_tilemap);
+        this._tiledhelper.Shadow_Init(0, 75);
+        this._tiledhelper._shadowhalftag = 73;
+        this._tiledhelper._shadowhalf2tag = 74;
+
+        //place building on blayer, will be coverd by shadow.
+
+        var _lnode = new Node("blayer");
+        _lnode.parent = node;
+        _lnode.layer = node.layer;
+        _lnode.setSiblingIndex(1);
+        this._buildinglayer = _lnode;
+
+        //add this for findpath.
+        //maybe can use. no check enough.
+        //
+        //set a callback here. 35 is block,other tag place a  view only prefab on there.
+        this._tiledhelper.Path_InitBlock(35,
+            (x, y, tag) => {
+                //create decoration
+                var obj = this.CreateDecoration(tag);
+                if (obj != null) {
+                    obj.parent = this._buildinglayer;
+                    this._setObjLayer(obj, this._buildinglayer.layer);
+
+                    var posworld = this._tiledhelper.getPosWorld(x, y);
+                    obj.setWorldPosition(posworld);
+                }
+            }
+        );
+
+        this._fogView = this.node.getChildByName("Fog").getComponent(OuterFogMask);
+        this._fogView.node.setSiblingIndex(99);
+
+        this._boundContent = this.node.getChildByName("BoundContent");
+        this._boundContent.setSiblingIndex(100);
+        this._boundItem = this._boundContent.getChildByName("BoundView");
+        this._boundItem.active = false;
+
+        this._actionView = cc.instantiate(this.resOprPrefab).getComponent(ResOprView);
+        this._actionView.node.setScale(v3(2, 2, 2));
+        this._actionView.node.setParent(this.node);
+        this._actionView.hide();
+    }
+    private _setObjLayer(obj: cc.Node, layer: number) {
+        obj.layer = layer;
+        if (obj.children == null) return;
+        for (var i = 0; i < obj.children.length; i++) {
+            this._setObjLayer(obj.children[i], layer);
+        }
+    }
+
+    private async _updateTiledmap(delta: number) {
+
+        if (this._tiledhelper == null)
+            return;
+
+        this._tiledhelper.Shadow_Update(delta);
+
+        //clean pioneer view
+        const selfPioneer = await PioneerInfo.instance.getPlayerPioneer();
+        for (const pioneer of selfPioneer) {
+            if (pioneer.show) {
+                let isExsit: boolean = false;
+                for (const localErase of this._localEraseShadowWorldPos) {
+                    if (pioneer.stayPos.x === localErase.x &&
+                        pioneer.stayPos.y === localErase.y) {
+                        isExsit = true;
+                        break;
+                    }
+                }
+                var tiledpos = this._tiledhelper.getPos(pioneer.stayPos.x, pioneer.stayPos.y);
+                this._tiledhelper.Shadow_Earse(tiledpos, pioneer.id, 6, false);
+                if (!isExsit) {
+                    this._localEraseShadowWorldPos.push(pioneer.stayPos);
+                    localStorage.setItem(this._localEraseDataKey, JSON.stringify(this._localEraseShadowWorldPos));
+                    // has new, deal with fog
+                    this._refreshFog();
+                }
+            }
+        }
+    }
+    
+    private _clickOnMap(worldpos: Vec3) {
+        if (this._actionView.isShow) {
+            this._actionView.hide();
+            if (this._actionMapCursor != null) {
+                this._actionMapCursor.node.active = false;
+            }
+            this.node.getComponent(OuterPioneerController).hideMovingPioneerAction();
             return;
         }
         const tiledPos = this._tiledhelper.getPosByWorldPos(worldpos);
@@ -341,6 +460,7 @@ export class MapBG extends Component {
         //0-talk 1-explore 2-collect 3-fight 4-camp 5-event
         //-1 move -2 no action
         let actionType: number = -1;
+        let actionMovingPioneerId: string = null;
         let stayPositons: Vec2[] = [];
         let purchaseMovingPioneerId = null;
         let purchaseMovingBuildingId = null;
@@ -385,6 +505,19 @@ export class MapBG extends Component {
                     }
                 } else {
                     actionType = 3;
+                    let isMoving: boolean = false;
+                    for (const logic of currentPioneer.logics) {
+                        if (logic.type == MapPioneerLogicType.targetmove ||
+                            logic.type == MapPioneerLogicType.stepmove ||
+                            logic.type == MapPioneerLogicType.patrol ||
+                            logic.type == MapPioneerLogicType.commonmove) {
+                            isMoving = true;
+                            break;
+                        }
+                    }
+                    if (isMoving) {
+                        actionMovingPioneerId = currentPioneer.id;
+                    }
                 }
                 if (actionType != 3) {
                     purchaseMovingPioneerId = currentPioneer.id;
@@ -393,18 +526,16 @@ export class MapBG extends Component {
             }
         }
         if (actionType >= 0) {
-            GameMain.inst.UI.resOprUI.showDialog(actionType, () => {
-                currentActionPioneer.purchaseMovingPioneerId = purchaseMovingPioneerId;
-                currentActionPioneer.purchaseMovingBuildingId = purchaseMovingBuildingId;
-                PioneerInfo.instance.pioneerBeginMove(currentActionPioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y)));
-                this._isShowAcionDialog = false;
-            }, () => {
-                this._isShowAcionDialog = false;
-            });
-            GameMain.inst.UI.resOprUI.show(true);
+            if (this._actionMapCursor == null) {
+                this._actionMapCursor = cc.instantiate(this.mapcur.node).getComponent(cc.Sprite);
+                this._actionMapCursor.node.setParent(this._decorationView);
+                this._actionMapCursor.node.setSiblingIndex(0);
+            }
             let setWorldPosition = null;
             if (stayPositons.length == 1) {
                 setWorldPosition = this._tiledhelper.getPosWorld(stayPositons[0].x, stayPositons[0].y);
+                this._actionMapCursor.spriteFrame = this.mapcurMultiSelectFrame[0];
+
             } else if (stayPositons.length == 3) {
                 const beginWorldPos = this._tiledhelper.getPosWorld(stayPositons[0].x, stayPositons[0].y);
                 const endWorldPos = this._tiledhelper.getPosWorld(stayPositons[1].x, stayPositons[1].y);
@@ -413,13 +544,40 @@ export class MapBG extends Component {
                     endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2,
                     0
                 );
+                this._actionMapCursor.spriteFrame = this.mapcurMultiSelectFrame[1];
+
             } else if (stayPositons.length == 7) {
                 setWorldPosition = this._tiledhelper.getPosWorld(stayPositons[3].x, stayPositons[3].y);
+                this._actionMapCursor.spriteFrame = this.mapcurMultiSelectFrame[2];
             }
-            const usedWorldPos = setWorldPosition.subtract(GameMain.inst.MainCamera.node.position);
-            usedWorldPos.z = 0;
-            GameMain.inst.UI.resOprUI.node.setWorldPosition(usedWorldPos);
-            this._isShowAcionDialog = true;
+            this._actionView.show(setWorldPosition, actionType, () => {
+                currentActionPioneer.purchaseMovingPioneerId = purchaseMovingPioneerId;
+                currentActionPioneer.purchaseMovingBuildingId = purchaseMovingBuildingId;
+
+                let targetTilePos: Vec2 = null;
+                if (actionMovingPioneerId != null) {
+                    targetTilePos = PioneerMgr.instance.getPioneerById(actionMovingPioneerId).stayPos;
+                } else {
+                    targetTilePos = v2(tiledPos.x, tiledPos.y);
+                }
+                PioneerInfo.instance.pioneerBeginMove(currentActionPioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, targetTilePos));
+                if (this._actionMapCursor != null) {
+                    this._actionMapCursor.node.active = false;
+                }
+                this.node.getComponent(OuterPioneerController).hideMovingPioneerAction();
+            }, ()=> {
+                if (this._actionMapCursor != null) {
+                    this._actionMapCursor.node.active = false;
+                }
+                this.node.getComponent(OuterPioneerController).hideMovingPioneerAction();
+            });
+            this._actionMapCursor.node.active = true;
+            this._actionMapCursor.node.worldPosition = setWorldPosition;
+            this.sortMapItemSiblingIndex();
+            if (actionMovingPioneerId != null) {
+                this.node.getComponent(OuterPioneerController).showMovingPioneerAction(tiledPos, actionMovingPioneerId, this._actionMapCursor.node);
+            }
+            
         } else if (actionType == -1) {
             PioneerInfo.instance.pioneerBeginMove(currentActionPioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y)));
         }
@@ -439,108 +597,6 @@ export class MapBG extends Component {
         pos.x = Math.min(Math.max(minx, pos.x), maxx);
         pos.y = Math.min(Math.max(miny, pos.y), maxy);
         GameMain.inst.MainCamera.node.setPosition(pos);
-    }
-
-    private _tiledhelper: TileMapHelper = null;
-    private _buildinglayer: Node = null;
-    InitTileMap(): void {
-        if (this.tiledmap == null)
-            return;
-        var node = cc.instantiate(this.tiledmap);
-        this.node.addChild(node);
-
-        this._decorationView = node.getChildByName("deco_layer");
-        this.mapcur.node.removeFromParent();
-        this._decorationView.addChild(this.mapcur.node);
-
-        // force change shadow siblingIndex
-        node.getChildByName("shadow").setSiblingIndex(99);
-        this.mapcur.node.setSiblingIndex(99);
-
-        var _tilemap = node.getComponent(cc.TiledMap);
-        _tilemap.enableCulling = false;
-        let c = new cc.Color(255, 255, 255, 255);
-        _tilemap.getLayer("shadow").color = c;
-
-        //init tiledmap by a helper class
-        this._tiledhelper = new TileMapHelper(_tilemap);
-        this._tiledhelper.Shadow_Init(0, 75);
-        this._tiledhelper._shadowhalftag = 73;
-        this._tiledhelper._shadowhalf2tag = 74;
-
-        //place building on blayer, will be coverd by shadow.
-
-        var _lnode = new Node("blayer");
-        _lnode.parent = node;
-        _lnode.layer = node.layer;
-        _lnode.setSiblingIndex(1);
-        this._buildinglayer = _lnode;
-
-        //add this for findpath.
-        //maybe can use. no check enough.
-        //
-        //set a callback here. 35 is block,other tag place a  view only prefab on there.
-        this._tiledhelper.Path_InitBlock(35,
-            (x, y, tag) => {
-                //create decoration
-                var obj = this.CreateDecoration(tag);
-                if (obj != null) {
-                    obj.parent = this._buildinglayer;
-                    this.SetObjLayer(obj, this._buildinglayer.layer);
-
-                    var posworld = this._tiledhelper.getPosWorld(x, y);
-                    obj.setWorldPosition(posworld);
-                }
-            }
-        );
-
-        this._fogView = this.node.getChildByName("Fog").getComponent(OuterFogMask);
-        this._fogView.node.setSiblingIndex(99);
-
-        this._boundContent = this.node.getChildByName("BoundContent");
-        this._boundContent.setSiblingIndex(100);
-        this._boundItem = this._boundContent.getChildByName("BoundView");
-        this._boundItem.active = false;
-    }
-    private SetObjLayer(obj: cc.Node, layer: number) {
-        obj.layer = layer;
-        if (obj.children == null) return;
-        for (var i = 0; i < obj.children.length; i++) {
-            this.SetObjLayer(obj.children[i], layer);
-        }
-    }
-    private async UpdateTiledmap(delta: number) {
-
-        if (this._tiledhelper == null)
-            return;
-
-        this._tiledhelper.Shadow_Update(delta);
-
-        //clean pioneer view
-        const selfPioneer = await PioneerInfo.instance.getPlayerPioneer();
-        for (const pioneer of selfPioneer) {
-            if (pioneer.show) {
-                let isExsit: boolean = false;
-                for (const localErase of this._localEraseShadowWorldPos) {
-                    if (pioneer.stayPos.x === localErase.x &&
-                        pioneer.stayPos.y === localErase.y) {
-                        isExsit = true;
-                        break;
-                    }
-                }
-                var tiledpos = this._tiledhelper.getPos(pioneer.stayPos.x, pioneer.stayPos.y);
-                this._tiledhelper.Shadow_Earse(tiledpos, pioneer.id, 6, false);
-                if (!isExsit) {
-                    this._localEraseShadowWorldPos.push(pioneer.stayPos);
-                    localStorage.setItem(this._localEraseDataKey, JSON.stringify(this._localEraseShadowWorldPos));
-                    // has new, deal with fog
-                    this._refreshFog();
-                }
-            }
-        }
-    }
-    update(deltaTime: number) {
-        this.UpdateTiledmap(deltaTime);
     }
 
     private _refreshFog() {
