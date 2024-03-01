@@ -547,6 +547,9 @@ export default class PioneerMgr {
 
     private _lastTimeStamp: number = null;
     public constructor() {
+        if (GameMain.inst == null) {
+            return;
+        }
         setInterval(() => {
             const currentTimeStamp = new Date().getTime();
             if (this._lastTimeStamp == null) {
