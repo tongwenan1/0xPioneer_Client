@@ -16,5 +16,12 @@
       "6D9467FC25C628FFD18B3438F82C2535",
       "DA44DCA629B633759A43EE6A107DF136"
     ]
+  },
+  "10003": {
+    "id": "10003",
+    "NOTES": "city feature names",
+    "para": [
+      "Outside_Player_Base_A"
+    ]
   }
 }
