@@ -12,8 +12,9 @@ CCEffect %{
       rasterizerState:
         cullMode: none
       properties:
-        u_dissolveMap: { value: white, editor: { tooltip: '噪声贴图' } }
-        dissolveThreshold: { value: 0.5, editor: { range:[0, 1, 0.01], slide: true, tooltip: '溶解阈值' } } # 此处定义的参数都必须指向 CCProgram 处对应声明的 uniform
+        u_maskMap: { value: white, editor: { tooltip: 'Mask Texture' } }
+        u_dissolveMap: { value: white, editor: { tooltip: 'Noise Texture' } }
+        dissolveThreshold: { value: 0.5, editor: { range:[0, 1, 0.01], slide: true, tooltip: 'Dissolve Threshold' } }
 }%
 
 CCProgram vs %{
@@ -43,36 +44,42 @@ CCProgram fs %{
   in vec4 color;
 
   uniform Dissolve{
-    float dissolveThreshold;// 熔岩阀值[0, 1];
+    float dissolveThreshold;// threshold[0, 1];
   };
 
-  #if USE_TEXTURE
-    in vec2 uv0;
-    uniform sampler2D u_dissolveMap;// 熔岩形状的纹理;
-    #pragma builtin(local)
-    layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
+  in vec2 uv0;
+  uniform sampler2D u_dissolveMap;
+  #pragma builtin(local)
+  layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
+  
+  #if USE_MASK
+    uniform sampler2D u_maskMap; // mask map;
   #endif
+  
+  vec4 frag () {
+    
+    #if USE_MASK
+      vec4 maskC = texture(u_maskMap, uv0);  
+      if (maskC.r < 1.0) { 
+        discard;
+      }
+    #endif 
 
-   vec4 frag () {
     vec4 o = vec4(1, 1, 1, 1);
     float value = 1.0;
 
-    #if USE_TEXTURE
-        vec4 dissolveMap = texture(u_dissolveMap, uv0); // 如果颜色的 r 分量小于阀值，将这个着色操作丢弃;
-        value *= dissolveMap.r;
-    #endif
+    vec4 dissolveMap = texture(u_dissolveMap, uv0); 
+    value *= dissolveMap.r;
 
      if (value < dissolveThreshold) {
-      discard; // 将小于阈值的片段丢弃，形成溶解
+      discard; 
     }
 
-    #if USE_TEXTURE
-      o *= texture(cc_spriteTexture, uv0); // 与原纹理混合;
-    #endif
+    o *= texture(cc_spriteTexture, uv0); // blend;
 
     o *= color;
     if (value < dissolveThreshold + 0.05) {
-      o = vec4(0.9, 0.6, 0.3, o.a); // 溶解的边缘设置一个边缘过度色
+      o = vec4(0.9, 0.6, 0.3, o.a); // fade to edge
     }
 
     return o;

@@ -11,7 +11,7 @@
   "_techIdx": 0,
   "_defines": [
     {
-      "USE_TEXTURE": true
+      "USE_MASK": true
     }
   ],
   "_states": [
@@ -27,11 +27,15 @@
   ],
   "_props": [
     {
+      "u_maskMap": {
+        "__uuid__": "3ce7cc5b-581f-4e15-9c9d-1715fe4f4ffe@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
       "u_dissolveMap": {
         "__uuid__": "4909b7cb-b167-4f6a-8ab0-92354deffeec@6c48a",
         "__expectedType__": "cc.Texture2D"
       },
-      "dissolveThreshold": 0.43
+      "dissolveThreshold": 0.48
     }
   ]
 }
