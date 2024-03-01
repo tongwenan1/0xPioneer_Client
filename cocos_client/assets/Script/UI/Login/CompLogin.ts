@@ -71,11 +71,11 @@ export class CompLogin extends Component {
         let l = this.node.getChildByName("Label").getComponent(Label);
         l.string = "prepare metamask ing";
 
-        let b = await Web3Helper.LinkWallet();
-        l.string = "prepare metamask = " + b;
-        if (b) {
-            l.string = l.string + " addr=" + Web3Helper.getPubAddr();
-        }
+        // let b = await Web3Helper.LinkWallet();
+        // l.string = "prepare metamask = " + b;
+        // if (b) {
+        //     l.string = l.string + " addr=" + Web3Helper.getPubAddr();
+        // }
     }
 
     async OnEventRecall() {
