@@ -1,0 +1,902 @@
+{
+  "1": {
+    "id": "1",
+    "exp": 50,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 1,
+    "city_feature": 1,
+    "event": null
+  },
+  "2": {
+    "id": "2",
+    "exp": 75,
+    "extra_res": 0.01,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "3": {
+    "id": "3",
+    "exp": 100,
+    "extra_res": 0.01,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "4": {
+    "id": "4",
+    "exp": 125,
+    "extra_res": 0.01,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "5": {
+    "id": "5",
+    "exp": 150,
+    "extra_res": 0,
+    "hp_max": 20,
+    "city_vision": 1,
+    "city_feature": 0,
+    "event": null
+  },
+  "6": {
+    "id": "6",
+    "exp": 175,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "7": {
+    "id": "7",
+    "exp": 200,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "8": {
+    "id": "8",
+    "exp": 225,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "9": {
+    "id": "9",
+    "exp": 250,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "10": {
+    "id": "10",
+    "exp": 275,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "11": {
+    "id": "11",
+    "exp": 300,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "12": {
+    "id": "12",
+    "exp": 325,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "13": {
+    "id": "13",
+    "exp": 350,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "14": {
+    "id": "14",
+    "exp": 375,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "15": {
+    "id": "15",
+    "exp": 400,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "16": {
+    "id": "16",
+    "exp": 425,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "17": {
+    "id": "17",
+    "exp": 450,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "18": {
+    "id": "18",
+    "exp": 475,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "19": {
+    "id": "19",
+    "exp": 500,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "20": {
+    "id": "20",
+    "exp": 525,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "21": {
+    "id": "21",
+    "exp": 550,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "22": {
+    "id": "22",
+    "exp": 575,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "23": {
+    "id": "23",
+    "exp": 600,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "24": {
+    "id": "24",
+    "exp": 625,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "25": {
+    "id": "25",
+    "exp": 650,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "26": {
+    "id": "26",
+    "exp": 675,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "27": {
+    "id": "27",
+    "exp": 700,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "28": {
+    "id": "28",
+    "exp": 725,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "29": {
+    "id": "29",
+    "exp": 750,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "30": {
+    "id": "30",
+    "exp": 775,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "31": {
+    "id": "31",
+    "exp": 800,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "32": {
+    "id": "32",
+    "exp": 825,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "33": {
+    "id": "33",
+    "exp": 850,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "34": {
+    "id": "34",
+    "exp": 875,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "35": {
+    "id": "35",
+    "exp": 900,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "36": {
+    "id": "36",
+    "exp": 925,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "37": {
+    "id": "37",
+    "exp": 950,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "38": {
+    "id": "38",
+    "exp": 975,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "39": {
+    "id": "39",
+    "exp": 1000,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "40": {
+    "id": "40",
+    "exp": 1025,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "41": {
+    "id": "41",
+    "exp": 1050,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "42": {
+    "id": "42",
+    "exp": 1075,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "43": {
+    "id": "43",
+    "exp": 1100,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "44": {
+    "id": "44",
+    "exp": 1125,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "45": {
+    "id": "45",
+    "exp": 1150,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "46": {
+    "id": "46",
+    "exp": 1175,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "47": {
+    "id": "47",
+    "exp": 1200,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "48": {
+    "id": "48",
+    "exp": 1225,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "49": {
+    "id": "49",
+    "exp": 1250,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "50": {
+    "id": "50",
+    "exp": 1275,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "51": {
+    "id": "51",
+    "exp": 1300,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "52": {
+    "id": "52",
+    "exp": 1325,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "53": {
+    "id": "53",
+    "exp": 1350,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "54": {
+    "id": "54",
+    "exp": 1375,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "55": {
+    "id": "55",
+    "exp": 1400,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "56": {
+    "id": "56",
+    "exp": 1425,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "57": {
+    "id": "57",
+    "exp": 1450,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "58": {
+    "id": "58",
+    "exp": 1475,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "59": {
+    "id": "59",
+    "exp": 1500,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "60": {
+    "id": "60",
+    "exp": 1525,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "61": {
+    "id": "61",
+    "exp": 1550,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "62": {
+    "id": "62",
+    "exp": 1575,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "63": {
+    "id": "63",
+    "exp": 1600,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "64": {
+    "id": "64",
+    "exp": 1625,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "65": {
+    "id": "65",
+    "exp": 1650,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "66": {
+    "id": "66",
+    "exp": 1675,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "67": {
+    "id": "67",
+    "exp": 1700,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "68": {
+    "id": "68",
+    "exp": 1725,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "69": {
+    "id": "69",
+    "exp": 1750,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "70": {
+    "id": "70",
+    "exp": 1775,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "71": {
+    "id": "71",
+    "exp": 1800,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "72": {
+    "id": "72",
+    "exp": 1825,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "73": {
+    "id": "73",
+    "exp": 1850,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "74": {
+    "id": "74",
+    "exp": 1875,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "75": {
+    "id": "75",
+    "exp": 1900,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "76": {
+    "id": "76",
+    "exp": 1925,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "77": {
+    "id": "77",
+    "exp": 1950,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "78": {
+    "id": "78",
+    "exp": 1975,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "79": {
+    "id": "79",
+    "exp": 2000,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "80": {
+    "id": "80",
+    "exp": 2025,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "81": {
+    "id": "81",
+    "exp": 2050,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "82": {
+    "id": "82",
+    "exp": 2075,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "83": {
+    "id": "83",
+    "exp": 2100,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "84": {
+    "id": "84",
+    "exp": 2125,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "85": {
+    "id": "85",
+    "exp": 2150,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "86": {
+    "id": "86",
+    "exp": 2175,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "87": {
+    "id": "87",
+    "exp": 2200,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "88": {
+    "id": "88",
+    "exp": 2225,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "89": {
+    "id": "89",
+    "exp": 2250,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "90": {
+    "id": "90",
+    "exp": 2275,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "91": {
+    "id": "91",
+    "exp": 2300,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "92": {
+    "id": "92",
+    "exp": 2325,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "93": {
+    "id": "93",
+    "exp": 2350,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "94": {
+    "id": "94",
+    "exp": 2375,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "95": {
+    "id": "95",
+    "exp": 2400,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "96": {
+    "id": "96",
+    "exp": 2425,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "97": {
+    "id": "97",
+    "exp": 2450,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "98": {
+    "id": "98",
+    "exp": 2475,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "99": {
+    "id": "99",
+    "exp": 2500,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  },
+  "100": {
+    "id": "100",
+    "exp": 2525,
+    "extra_res": 0,
+    "hp_max": 0,
+    "city_vision": 0,
+    "city_feature": 0,
+    "event": null
+  }
+}
