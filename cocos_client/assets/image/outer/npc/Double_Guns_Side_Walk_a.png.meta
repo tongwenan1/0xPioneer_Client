@@ -1,0 +1,134 @@
+{
+  "ver": "1.0.26",
+  "importer": "image",
+  "imported": true,
+  "uuid": "46bb1fbb-aaab-4dba-a354-57c264e09a10",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "46bb1fbb-aaab-4dba-a354-57c264e09a10@6c48a",
+      "displayName": "Double_Guns_Side_Walk_a",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "46bb1fbb-aaab-4dba-a354-57c264e09a10",
+        "isUuid": true,
+        "visible": false,
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "46bb1fbb-aaab-4dba-a354-57c264e09a10@f9941",
+      "displayName": "Double_Guns_Side_Walk_a",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": -1,
+        "offsetY": -2.5,
+        "trimX": 0,
+        "trimY": 8,
+        "width": 135,
+        "height": 141,
+        "rawWidth": 137,
+        "rawHeight": 152,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -67.5,
+            -70.5,
+            0,
+            67.5,
+            -70.5,
+            0,
+            -67.5,
+            70.5,
+            0,
+            67.5,
+            70.5,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            0,
+            144,
+            135,
+            144,
+            0,
+            3,
+            135,
+            3
+          ],
+          "nuv": [
+            0,
+            0.019736842105263157,
+            0.9854014598540146,
+            0.019736842105263157,
+            0,
+            0.9473684210526315,
+            0.9854014598540146,
+            0.9473684210526315
+          ],
+          "minPos": [
+            -67.5,
+            -70.5,
+            0
+          ],
+          "maxPos": [
+            67.5,
+            70.5,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "46bb1fbb-aaab-4dba-a354-57c264e09a10@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "sprite-frame",
+    "hasAlpha": true,
+    "fixAlphaTransparencyArtifacts": false,
+    "redirect": "46bb1fbb-aaab-4dba-a354-57c264e09a10@f9941"
+  }
+}
