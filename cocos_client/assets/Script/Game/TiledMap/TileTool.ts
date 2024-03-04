@@ -292,9 +292,10 @@ export class TileMapHelper {
             this._tilemap.getLayer("shadow").updateViewPort(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
         }
     }
-    Shadow_Earse(pos: TilePos, owner: any, extlen: number = 1, fall: boolean = false): void {
+    Shadow_Earse(pos: TilePos, owner: any, extlen: number = 1, fall: boolean = false): TilePos[] {
         //console.log("pos=" + pos.x + "," + pos.y + ":" + pos.worldx + "," + pos.worldy);
         //for (var z = pos.calc_z - extlen; z <= pos.calc_z + extlen; z++) {
+        const newCleardPositons = [];
         let vx = 10000;
         let vy = 10000;
         for (var y = pos.calc_y - extlen; y <= pos.calc_y + extlen; y++) {
@@ -316,7 +317,11 @@ export class TileMapHelper {
                             s.timer = 0;
                             continue;//Strengthen other people’s vision
                         }
+                        if (s.grid == this._shadowtag) {
+                            newCleardPositons.push(gpos);
+                        }
                         s.grid = this._shadowcleantag;
+
                         if (extlen > 1) {
                             var border = Math.abs(pos.calc_x - x) == extlen || Math.abs(pos.calc_y - y) == extlen || Math.abs(pos.calc_z - z) == extlen;
                             if (border) {
@@ -338,6 +343,7 @@ export class TileMapHelper {
         }
         //}
         this._tilemap.getLayer("shadow").updateViewPort(vx, vy, extlen * 2 + 1, extlen * 2 + 1);
+        return newCleardPositons;
     }
 
     Shadow_IsAllBlack(x: number, y: number): boolean {
@@ -351,7 +357,7 @@ export class TileMapHelper {
             }
         }
         return positions;
-    } 
+    }
 
     Shadow_Reset() {
         for (var i = 0; i < this._shadowtiles.length; i++) {
@@ -366,16 +372,16 @@ export class TileMapHelper {
     Path_InitBlock(blocktag: number = 0, other: (x: number, y: number, tag: number) => void = null) {
         let layb = this._tilemap.getLayer("block");
         let layd = this._tilemap.getLayer("decoration");
-        layb.node.active=false;
-        layd.node.active=false;
+        layb.node.active = false;
+        layd.node.active = false;
 
-       
+
 
         for (var y = 0; y < this.height; y++) {
 
             for (var x = 0; x < this.width; x++) {
                 var btag = layb.tiles[y * this.height + x];
-                var btag2 =layd.tiles[y * this.height + x];//decoration
+                var btag2 = layd.tiles[y * this.height + x];//decoration
 
                 if (btag2 != 0) {
                     if (other != null)
@@ -384,9 +390,9 @@ export class TileMapHelper {
 
                 //block
                 var block = btag == blocktag;
-               
+
                 this._blocked[y * this.height + x] = block;
-             
+
             }
         }
     }

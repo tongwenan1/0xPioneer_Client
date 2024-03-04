@@ -304,7 +304,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
     async update(deltaTime: number) {
         // default speed
-        const defaultSpeed = 500;
+        const defaultSpeed = 250;
         const allPioneers = PioneerMgr.instance.getAllPioneer();
         for (var i = 0; i < allPioneers.length; i++) {
             let pioneer = allPioneers[i];
@@ -315,9 +315,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 }
             }
             if (this._movingPioneerIds.indexOf(pioneer.id) != -1 && this._pioneerMap.has(pioneer.id)) {
-                if (pioneer.type != MapPioneerType.player) {
-                    usedSpeed = 50;
-                }
                 let pioneermap = this._pioneerMap.get(pioneer.id);
                 this.updateMoveStep(usedSpeed, deltaTime, pioneer, pioneermap);
             }

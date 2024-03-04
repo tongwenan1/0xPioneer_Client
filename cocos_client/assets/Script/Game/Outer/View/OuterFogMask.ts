@@ -29,7 +29,7 @@ export class OuterFogMask extends Component {
         } while (nexPos != null);
         this._graphics.close();
         this._graphics.stroke();
-        this._graphics.fill();
+        this._graphics.fill(); 
     }
 
     private _graphics: Graphics = null;
