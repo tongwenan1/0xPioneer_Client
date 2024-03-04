@@ -159,7 +159,7 @@ export default class PioneerMgr {
             return false;
         });
     }
-    public pioneerChangeHpMax(pioneerId: string, value: number, forceChangeHp: boolean = false) {
+    public pioneerChangeHpMax(pioneerId: string, value: number, forceChangeHp: boolean = true) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
             if (findPioneer.hp > 0) {
@@ -170,6 +170,13 @@ export default class PioneerMgr {
                     observer.pioneerDidGainHpMax(pioneerId, value);
                 }
             }
+        }
+    }
+    public changeAllMyPioneerHpMax(value: number) {
+        const pioneers = this.getPlayerPioneer();
+        for (let i = 0; i < pioneers.length; i++) {
+            let hpmax = pioneers[i].hpMax + value;
+            this.pioneerChangeHpMax(pioneers[i].id, hpmax, false);
         }
     }
     public addNewOne() {

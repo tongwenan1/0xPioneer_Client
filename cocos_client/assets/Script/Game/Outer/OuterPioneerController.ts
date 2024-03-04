@@ -15,6 +15,7 @@ import { OuterOtherPioneerView } from './View/OuterOtherPioneerView';
 import { MapItemMonster } from './View/MapItemMonster';
 import { MapPioneer } from './View/MapPioneer';
 import { MapBG } from '../../Scene/MapBG';
+import LvlupMgr from '../../Manger/LvlupMgr';
 
 
 const { ccclass, property } = _decorator;
@@ -558,11 +559,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 for (const resource of building.resources) {
                     actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resource.num, () => {
                         if (resource.id == "resource_01") {
-                            UserInfoMgr.Instance.wood += resource.num;
+                            UserInfoMgr.Instance.wood += Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
                         } else if (resource.id == "resource_02") {
-                            UserInfoMgr.Instance.stone += resource.num;
+                            UserInfoMgr.Instance.stone += Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
                         } else if (resource.id == "resource_03") {
-                            UserInfoMgr.Instance.food += resource.num;
+                            UserInfoMgr.Instance.food += Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
                         } else if (resource.id == "resource_04") {
                             UserInfoMgr.Instance.troop += resource.num;
                         }

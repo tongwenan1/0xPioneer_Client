@@ -6,6 +6,7 @@ import { GameMain } from "../GameMain";
 import { ItemInfoShowModel } from "../UI/ItemInfoUI";
 import CountMgr, { CountType } from "./CountMgr";
 import LvlupMgr from "./LvlupMgr";
+import PioneerMgr from "./PioneerMgr";
 
 export interface UserInnerBuildInfo {
     buildID: string,
@@ -396,6 +397,10 @@ export default class UserInfoMgr {
                 if (observe.playerLvlupChanged != null) { 
                     observe.playerLvlupChanged(this._level);
                 }
+            }
+
+            if (nextLvConfig[0].hp_max > 0) {
+                PioneerMgr.instance.changeAllMyPioneerHpMax(nextLvConfig[0].hp_max);
             }
         }
     }
