@@ -377,11 +377,6 @@ export default class UserInfoMgr {
                 isLvlup = true;
                 this._level += 1;
                 this._exp -= lvlConfig[0].exp;
-                for (const observe of this._observers) {
-                    if (observe.playerLvlupChanged != null) {
-                        observe.playerLvlupChanged(this._level);
-                    }
-                }
             }
         }
         
@@ -398,7 +393,7 @@ export default class UserInfoMgr {
 
         if (isLvlup) {
             for (const observe of this._observers) {
-                if (observe.playerLvlupChanged != null) {
+                if (observe.playerLvlupChanged != null) { 
                     observe.playerLvlupChanged(this._level);
                 }
             }

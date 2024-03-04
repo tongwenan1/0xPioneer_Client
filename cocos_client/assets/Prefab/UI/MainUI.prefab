@@ -2572,10 +2572,6 @@
       "__uuid__": "1c987d34-7aed-4a54-bdeb-503b6a903ea7",
       "__expectedType__": "cc.Prefab"
     },
-    "ResOprPfb": {
-      "__uuid__": "653635dc-31d3-4485-8fb8-9e819e71f382",
-      "__expectedType__": "cc.Prefab"
-    },
     "dialoguePrefab": {
       "__uuid__": "8e8fa480-625c-4e75-adc7-9f6b9f2f697b",
       "__expectedType__": "cc.Prefab"
@@ -2598,6 +2594,10 @@
     },
     "eventPrefab": {
       "__uuid__": "5d7fab3c-5fc2-4846-aa6f-1af18d0ff146",
+      "__expectedType__": "cc.Prefab"
+    },
+    "civilizationLevelUpPrefab": {
+      "__uuid__": "d1e10f73-42a4-4a7a-9725-5527d161e110",
       "__expectedType__": "cc.Prefab"
     },
     "BackpackUIPfb": {

@@ -25,6 +25,7 @@ import { MainBuildUI } from './Inner/MainBuildUI';
 import { DialogueUI } from './Outer/DialogueUI';
 import { RecruitUI } from './Inner/RecruitUI';
 import { EventName } from '../Const/ConstDefine';
+import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
 
 const { ccclass, property } = _decorator;
 
@@ -55,7 +56,8 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
     private recruitPrefab: Prefab;
     @property(Prefab)
     private eventPrefab: Prefab;
-
+    @property(Prefab)
+    private civilizationLevelUpPrefab: Prefab;
 
     @property(Prefab)
     BackpackUIPfb: Prefab;
@@ -75,6 +77,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
     public taskListUI: TaskListUI;
     public recruitUI: RecruitUI;
     public eventUI: EventUI;
+    public civilizationLevelUpUI: CivilizationLevelUpUI;
 
     public backpackUI: BackpackUI;
     public itemInfoUI: ItemInfoUI;
@@ -134,6 +137,10 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
         this.eventUI = instantiate(this.eventPrefab).getComponent(EventUI);
         this.eventUI.node.setParent(this.UIRoot);
         this.eventUI.node.active = false;
+
+        this.civilizationLevelUpUI = instantiate(this.civilizationLevelUpPrefab).getComponent(CivilizationLevelUpUI);
+        this.civilizationLevelUpUI.node.setParent(this.UIRoot);
+        this.civilizationLevelUpUI.node.active = false;
 
         this.backpackUI = instantiate(this.BackpackUIPfb).getComponent(BackpackUI);
         this.backpackUI.node.setParent(this.UIRoot);

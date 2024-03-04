@@ -1,4 +1,4 @@
-import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt } from 'cc';
+import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt, UIOpacity, instantiate, tween } from 'cc';
 import { GameMain } from '../GameMain';
 import EventMgr from '../Manger/EventMgr';
 import LvlupMgr from '../Manger/LvlupMgr';
@@ -32,7 +32,13 @@ export default class TopUI extends Component implements UserInfoEvent {
 
     private _started: boolean = false;
     private _dataLoaded: boolean = false;
+
+    private _expAnimLabel: Label = null;
     protected onLoad(): void {
+
+        this._expAnimLabel = this.node.getChildByPath("progressLv/AnimLabel").getComponent(Label);
+        this._expAnimLabel.node.active = false;
+
         UserInfo.Instance.addObserver(this);
 
         EventMgr.on("Event_LoadOver", this.loadOver, this);
@@ -114,6 +120,30 @@ export default class TopUI extends Component implements UserInfoEvent {
         seq.start();
     }
 
+    private _playExpGettedAnim(getExpValue: number, playOver: ()=> void = null) {
+        if (getExpValue <= 0) {
+            return;
+        }
+        const animNode: Node = instantiate(this._expAnimLabel.node);
+        animNode.setParent(this._expAnimLabel.node.parent);
+        animNode.active = true;
+        animNode.getComponent(Label).string = "+" + getExpValue;
+        animNode.position = v3(
+            animNode.position.x,
+            animNode.position.y - 30,
+            animNode.position.z
+        );
+        tween(animNode)
+            .to(0.4, { position: v3(animNode.position.x, animNode.position.y + 30, animNode.position.z) })
+            .call(()=> {
+                animNode.destroy();
+                if (playOver != null) {
+                    playOver();
+                }
+            })
+            .start();
+    }
+
     //------------------------------------------------ action
     private onTapTaskList() {
         GameMain.inst.UI.taskListUI.refreshUI();
@@ -143,10 +173,16 @@ export default class TopUI extends Component implements UserInfoEvent {
         this.refreshTopUI();
     }
     playerExpChanged(value: number): void {
-        this.refreshTopUI();
+        this._playExpGettedAnim(value, ()=> {
+            this.refreshTopUI();
+        });
     }
     playerLvlupChanged(value: number): void {
-        this.refreshTopUI();
+        const levelConfig = LvlupMgr.Instance.getConfigByLvl(value);
+        if (levelConfig.length > 0) {
+            GameMain.inst.UI.civilizationLevelUpUI.refreshUI(levelConfig[0]);
+            GameMain.inst.UI.civilizationLevelUpUI.show(true);
+        }
     }
 
     getNewTask(taskId: string): void {
@@ -165,12 +201,12 @@ export default class TopUI extends Component implements UserInfoEvent {
 
     }
     taskProgressChanged(taskId: string): void {
-        
+
     }
     taskFailed(taskId: string): void {
-        
+
     }
     generateTroopTimeCountChanged(leftTime: number): void {
-        
+
     }
 }
