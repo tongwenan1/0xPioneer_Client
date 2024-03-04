@@ -6,16 +6,38 @@
     "hp_max": 0,
     "city_vision": 1,
     "city_feature": 1,
-    "event": null
+    "event_building": null,
+    "reward": [
+      [
+        2,
+        "resource_01",
+        20
+      ],
+      [
+        2,
+        "resource_02",
+        20
+      ]
+    ]
   },
   "2": {
     "id": "2",
     "exp": 75,
     "extra_res": 0.01,
-    "hp_max": 1000,
+    "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": [
+      "building_16",
+      "building_17"
+    ],
+    "reward": [
+      [
+        1,
+        "5",
+        1
+      ]
+    ]
   },
   "3": {
     "id": "3",
@@ -24,7 +46,19 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": [
+      [
+        1,
+        "18",
+        1
+      ],
+      [
+        2,
+        "resource_02",
+        20
+      ]
+    ]
   },
   "4": {
     "id": "4",
@@ -33,7 +67,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "5": {
     "id": "5",
@@ -42,7 +77,8 @@
     "hp_max": 20,
     "city_vision": 1,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "6": {
     "id": "6",
@@ -51,7 +87,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "7": {
     "id": "7",
@@ -60,7 +97,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "8": {
     "id": "8",
@@ -69,7 +107,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "9": {
     "id": "9",
@@ -78,7 +117,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "10": {
     "id": "10",
@@ -87,7 +127,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "11": {
     "id": "11",
@@ -96,7 +137,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "12": {
     "id": "12",
@@ -105,7 +147,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "13": {
     "id": "13",
@@ -114,7 +157,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "14": {
     "id": "14",
@@ -123,7 +167,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "15": {
     "id": "15",
@@ -132,7 +177,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "16": {
     "id": "16",
@@ -141,7 +187,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "17": {
     "id": "17",
@@ -150,7 +197,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "18": {
     "id": "18",
@@ -159,7 +207,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "19": {
     "id": "19",
@@ -168,7 +217,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "20": {
     "id": "20",
@@ -177,7 +227,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "21": {
     "id": "21",
@@ -186,7 +237,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "22": {
     "id": "22",
@@ -195,7 +247,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "23": {
     "id": "23",
@@ -204,7 +257,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "24": {
     "id": "24",
@@ -213,7 +267,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "25": {
     "id": "25",
@@ -222,7 +277,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "26": {
     "id": "26",
@@ -231,7 +287,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "27": {
     "id": "27",
@@ -240,7 +297,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "28": {
     "id": "28",
@@ -249,7 +307,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "29": {
     "id": "29",
@@ -258,7 +317,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "30": {
     "id": "30",
@@ -267,7 +327,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "31": {
     "id": "31",
@@ -276,7 +337,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "32": {
     "id": "32",
@@ -285,7 +347,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "33": {
     "id": "33",
@@ -294,7 +357,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "34": {
     "id": "34",
@@ -303,7 +367,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "35": {
     "id": "35",
@@ -312,7 +377,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "36": {
     "id": "36",
@@ -321,7 +387,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "37": {
     "id": "37",
@@ -330,7 +397,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "38": {
     "id": "38",
@@ -339,7 +407,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "39": {
     "id": "39",
@@ -348,7 +417,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "40": {
     "id": "40",
@@ -357,7 +427,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "41": {
     "id": "41",
@@ -366,7 +437,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "42": {
     "id": "42",
@@ -375,7 +447,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "43": {
     "id": "43",
@@ -384,7 +457,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "44": {
     "id": "44",
@@ -393,7 +467,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "45": {
     "id": "45",
@@ -402,7 +477,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "46": {
     "id": "46",
@@ -411,7 +487,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "47": {
     "id": "47",
@@ -420,7 +497,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "48": {
     "id": "48",
@@ -429,7 +507,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "49": {
     "id": "49",
@@ -438,7 +517,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "50": {
     "id": "50",
@@ -447,7 +527,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "51": {
     "id": "51",
@@ -456,7 +537,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "52": {
     "id": "52",
@@ -465,7 +547,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "53": {
     "id": "53",
@@ -474,7 +557,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "54": {
     "id": "54",
@@ -483,7 +567,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "55": {
     "id": "55",
@@ -492,7 +577,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "56": {
     "id": "56",
@@ -501,7 +587,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "57": {
     "id": "57",
@@ -510,7 +597,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "58": {
     "id": "58",
@@ -519,7 +607,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "59": {
     "id": "59",
@@ -528,7 +617,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "60": {
     "id": "60",
@@ -537,7 +627,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "61": {
     "id": "61",
@@ -546,7 +637,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "62": {
     "id": "62",
@@ -555,7 +647,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "63": {
     "id": "63",
@@ -564,7 +657,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "64": {
     "id": "64",
@@ -573,7 +667,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "65": {
     "id": "65",
@@ -582,7 +677,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "66": {
     "id": "66",
@@ -591,7 +687,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "67": {
     "id": "67",
@@ -600,7 +697,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "68": {
     "id": "68",
@@ -609,7 +707,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "69": {
     "id": "69",
@@ -618,7 +717,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "70": {
     "id": "70",
@@ -627,7 +727,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "71": {
     "id": "71",
@@ -636,7 +737,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "72": {
     "id": "72",
@@ -645,7 +747,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "73": {
     "id": "73",
@@ -654,7 +757,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "74": {
     "id": "74",
@@ -663,7 +767,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "75": {
     "id": "75",
@@ -672,7 +777,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "76": {
     "id": "76",
@@ -681,7 +787,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "77": {
     "id": "77",
@@ -690,7 +797,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "78": {
     "id": "78",
@@ -699,7 +807,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "79": {
     "id": "79",
@@ -708,7 +817,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "80": {
     "id": "80",
@@ -717,7 +827,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "81": {
     "id": "81",
@@ -726,7 +837,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "82": {
     "id": "82",
@@ -735,7 +847,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "83": {
     "id": "83",
@@ -744,7 +857,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "84": {
     "id": "84",
@@ -753,7 +867,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "85": {
     "id": "85",
@@ -762,7 +877,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "86": {
     "id": "86",
@@ -771,7 +887,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "87": {
     "id": "87",
@@ -780,7 +897,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "88": {
     "id": "88",
@@ -789,7 +907,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "89": {
     "id": "89",
@@ -798,7 +917,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "90": {
     "id": "90",
@@ -807,7 +927,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "91": {
     "id": "91",
@@ -816,7 +937,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "92": {
     "id": "92",
@@ -825,7 +947,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "93": {
     "id": "93",
@@ -834,7 +957,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "94": {
     "id": "94",
@@ -843,7 +967,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "95": {
     "id": "95",
@@ -852,7 +977,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "96": {
     "id": "96",
@@ -861,7 +987,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "97": {
     "id": "97",
@@ -870,7 +997,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "98": {
     "id": "98",
@@ -879,7 +1007,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "99": {
     "id": "99",
@@ -888,7 +1017,8 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   },
   "100": {
     "id": "100",
@@ -897,6 +1027,7 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event": null
+    "event_building": null,
+    "reward": null
   }
 }
