@@ -530,15 +530,17 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     exploredBuilding(buildingId: string): void {
         UserInfoMgr.Instance.checkCanFinishedTask("explorewithbuilding", buildingId);
         const building = BuildingMgr.instance.getBuildingById(buildingId);
-        if (building != null && building.progress > 0) {
-            UserInfoMgr.Instance.explorationValue += building.progress;
+        if (building != null) {
+            if (building.progress > 0) UserInfoMgr.Instance.explorationValue += building.progress;
+            if (building.exp > 0) UserInfoMgr.Instance.exp += building.exp;
         }
     }
     miningBuilding(actionPioneerId: string, buildingId: string): void {
         UserInfoMgr.Instance.checkCanFinishedTask("getresourcereached", buildingId);
         const building = BuildingMgr.instance.getBuildingById(buildingId);
-        if (building != null && building.progress > 0) {
-            UserInfoMgr.Instance.explorationValue += building.progress;
+        if (building != null) {
+            if (building.progress > 0) UserInfoMgr.Instance.explorationValue += building.progress;
+            if (building.exp > 0) UserInfoMgr.Instance.exp += building.exp;
         }
         if (building != null && building instanceof MapResourceBuildingModel) {
             if (building.resources != null && building.resources.length > 0) {

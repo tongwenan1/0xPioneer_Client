@@ -35,6 +35,9 @@ export default class MapBuildingModel {
     public set eventId(value: string) {
         this._eventId = value;
     }
+    public set exp(value: number) {
+        this._exp = value;
+    }
 
 
     public get show(): boolean {
@@ -70,6 +73,9 @@ export default class MapBuildingModel {
     public get eventId(): string {
         return this._eventId;
     }
+    public get exp(): number {
+        return this._exp;
+    }
 
     public constructor(show: boolean, id: string, type: MapBuildingType, name: string, faction: BuildingFactionType, defendPioneerIds: string[], level: number, stayMapPositions: Vec2[]) {
         this._show = show;
@@ -82,6 +88,7 @@ export default class MapBuildingModel {
         this._stayMapPositions = stayMapPositions;
         this._progress = 0;
         this._winprogress = 0;
+        this._exp = 0;
     }
 
     private _show: boolean;
@@ -95,6 +102,7 @@ export default class MapBuildingModel {
     private _progress: number;
     private _winprogress: number;
     private _eventId: string;
+    private _exp: number;
 }
 
 export class MapMainCityBuildingModel extends MapBuildingModel {

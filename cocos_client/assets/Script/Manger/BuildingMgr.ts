@@ -292,6 +292,9 @@ export default class BuildingMgr {
                     if (temple.event != null) {
                         newModel.eventId = temple.event;
                     }
+                    if (temple.exp != null) {
+                        newModel.exp = temple.exp;
+                    }
                     this._buildings.push(newModel);
                 }
             }
@@ -356,6 +359,7 @@ export default class BuildingMgr {
                 newModel.progress = temple._progress;
                 newModel.winprogress = temple._winprogress;
                 newModel.eventId = temple._eventId;
+                newModel.exp = temple._exp;
                 this._buildings.push(newModel);
             }
         }

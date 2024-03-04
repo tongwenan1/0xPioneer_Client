@@ -150,6 +150,8 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
             }
             UserInfoMgr.Instance.upgradeBuild(this.buildID);
             UserInfoMgr.Instance.explorationValue += nextLevelInfo.progress;
+            // exp
+            if (nextLevelInfo.exp) UserInfoMgr.Instance.exp += nextLevelInfo.exp;
 
             GameMain.inst.innerSceneMap.playBuildAnim(this.node, 5, () => {
                 this.refresh();
