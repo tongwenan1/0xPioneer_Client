@@ -42,7 +42,8 @@
                         "type": "killpioneer|gangster_1"
                     }
                 ],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             }
         ]
     },

@@ -12,7 +12,7 @@
     "id": "2",
     "exp": 75,
     "extra_res": 0.01,
-    "hp_max": 0,
+    "hp_max": 1000,
     "city_vision": 0,
     "city_feature": 0,
     "event": null
