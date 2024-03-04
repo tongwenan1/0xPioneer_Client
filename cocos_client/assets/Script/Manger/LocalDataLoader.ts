@@ -10,6 +10,7 @@ import TalkMgr from "./TalkMgr";
 import TaskMgr from "./TaskMgr";
 import UserInfo from "./UserInfoMgr";
 import BranchEventMgr from "./BranchEventMgr";
+import LvlupMgr from "./LvlupMgr";
 
 export default class LocalDataLoader {
 
@@ -33,6 +34,7 @@ export default class LocalDataLoader {
         await PioneerMgr.instance.initData();
         await ItemMgr.Instance.initData();
         await ConfigMgr.Instance.initData();
+        await LvlupMgr.Instance.initData();
         this._loadStatus = 2;
     }
 

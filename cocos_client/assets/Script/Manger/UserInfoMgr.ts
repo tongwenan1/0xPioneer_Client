@@ -5,6 +5,7 @@ import ItemData from "../Model/ItemData";
 import { GameMain } from "../GameMain";
 import { ItemInfoShowModel } from "../UI/ItemInfoUI";
 import CountMgr, { CountType } from "./CountMgr";
+import LvlupMgr from "./LvlupMgr";
 
 export interface UserInnerBuildInfo {
     buildID: string,
@@ -38,6 +39,8 @@ export interface UserInfoEvent {
     playerWoodChanged?(value: number): void;
     playerStoneChanged?(value: number): void;
     playerTroopChanged?(value: number): void;
+    playerExpChanged?(value: number): void;
+    playerLvlupChanged?(value: number): void;
 
     playerExplorationValueChanged?(value: number): void;
 
@@ -362,6 +365,45 @@ export default class UserInfoMgr {
             }
         }
     }
+    public set exp(value: number) {
+        const original = this._exp;
+        this._exp = value;
+
+        let isLvlup: boolean = false;
+        const lvlConfig = LvlupMgr.Instance.getConfigByLvl(this._level);
+        const nextLvConfig = LvlupMgr.Instance.getConfigByLvl(this._level + 1);
+        if (nextLvConfig != null) {
+            if (this._exp > lvlConfig[0].exp) {
+                isLvlup = true;
+                this._level += 1;
+                this._exp -= lvlConfig[0].exp;
+                for (const observe of this._observers) {
+                    if (observe.playerLvlupChanged != null) {
+                        observe.playerLvlupChanged(this._level);
+                    }
+                }
+            }
+        }
+        
+        this._localJsonData.playerData.exp = value;
+        this._localDataChanged(this._localJsonData);
+
+        if (this._exp != original) {
+            for (const observe of this._observers) {
+                if (observe.playerExpChanged != null) {
+                    observe.playerExpChanged(this._exp - original);
+                }
+            }
+        }
+
+        if (isLvlup) {
+            for (const observe of this._observers) {
+                if (observe.playerLvlupChanged != null) {
+                    observe.playerLvlupChanged(this._level);
+                }
+            }
+        }
+    }
     public set money(value: number) {
         const original = this._money;
         this._money = value;
@@ -383,11 +425,9 @@ export default class UserInfoMgr {
         this._localDataChanged(this._localJsonData);
 
         if (this._food != original) {
-            if (this._food != original) {
-                for (const observe of this._observers) {
-                    if (observe.playerFoodChanged != null) {
-                        observe.playerFoodChanged(this._food - original);
-                    }
+            for (const observe of this._observers) {
+                if (observe.playerFoodChanged != null) {
+                    observe.playerFoodChanged(this._food - original);
                 }
             }
         }
@@ -591,6 +631,10 @@ export default class UserInfoMgr {
             // progress
             if (step.progress != null) {
                 this.explorationValue += step.progress;
+            }
+            // exp
+            if (step.exp != null) {
+                this.exp += step.exp;
             }
 
             // winaction

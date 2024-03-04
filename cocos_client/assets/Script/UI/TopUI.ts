@@ -1,6 +1,7 @@
 import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt } from 'cc';
 import { GameMain } from '../GameMain';
 import EventMgr from '../Manger/EventMgr';
+import LvlupMgr from '../Manger/LvlupMgr';
 import UserInfo, { FinishedEvent, UserInfoEvent } from '../Manger/UserInfoMgr';
 const { ccclass, property } = _decorator;
 
@@ -64,8 +65,12 @@ export default class TopUI extends Component implements UserInfoEvent {
         this.txtLvProgress.string = `${info.exp}/${1000}`;
         this.txtMoney.string = "" + info.money;
         this.txtEnergy.string = "" + info.energy;
-        this.lvProgress.progress = 0;
 
+        const lvlupConfig = LvlupMgr.Instance.getConfigByLvl(info.level);
+        const maxExp = lvlupConfig[0].exp;
+        this.lvProgress.progress =  Math.min(1, info.exp / maxExp);
+        this.node.getChildByPath("progressLv/txtLvProgress").getComponent(Label).string = info.exp + "/" + maxExp;
+        
         const resourceView = this.node.getChildByName("Resource");
         resourceView.getChildByPath("Food/Label").getComponent(Label).string = info.food.toString();
         resourceView.getChildByPath("Wood/Label").getComponent(Label).string = info.wood.toString();
@@ -135,6 +140,12 @@ export default class TopUI extends Component implements UserInfoEvent {
         this.refreshTopUI();
     }
     playerTroopChanged(value: number): void {
+        this.refreshTopUI();
+    }
+    playerExpChanged(value: number): void {
+        this.refreshTopUI();
+    }
+    playerLvlupChanged(value: number): void {
         this.refreshTopUI();
     }
 
