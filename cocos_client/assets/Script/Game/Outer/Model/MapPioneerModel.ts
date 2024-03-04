@@ -50,9 +50,11 @@ export default class MapPioneerModel {
     public gainHp(value: number) {
         this._hp = Math.min(this._hpMax, this._hp + value);
     }
-    public changeHpMax(value: number) {
+    public changeHpMax(value: number, forceChangeHp: boolean = false) {
         this._hpMax = Math.max(1, this._hpMax + value);
-        this._hp = this._hpMax;
+        if (forceChangeHp) {
+            this._hp = this._hpMax;
+        }
     }
     public gainAttack(value: number) {
         this._attack += value;

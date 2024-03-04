@@ -159,12 +159,12 @@ export default class PioneerMgr {
             return false;
         });
     }
-    public pioneerChangeHpMax(pioneerId: string, value: number) {
+    public pioneerChangeHpMax(pioneerId: string, value: number, forceChangeHp: boolean = false) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
             if (findPioneer.hp > 0) {
                 // alive
-                findPioneer.changeHpMax(value);
+                findPioneer.changeHpMax(value, forceChangeHp);
                 this._savePioneerData();
                 for (const observer of this._observers) {
                     observer.pioneerDidGainHpMax(pioneerId, value);
