@@ -6,7 +6,6 @@ const { ccclass, property } = _decorator;
 export class OuterFogAnimShapMask extends Component {
 
     public draw(sixPos: Vec2[], radius: number) {
-        console.log("exce sixp: " + JSON.stringify(sixPos));
         if (sixPos.length <= 0) {
             return;
         }
