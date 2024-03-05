@@ -1,4 +1,4 @@
-import { _decorator, Component, director, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
+import { _decorator, Color, Component, director, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
 import { GameMain } from '../../GameMain';
 import BranchEventMgr from '../../Manger/BranchEventMgr';
 import BuildingMgr from '../../Manger/BuildingMgr';
@@ -147,7 +147,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 if (actionPioneer != null && prophetess != null) {
                     const paths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(actionPioneer.stayPos, prophetess.stayPos);
                     actionPioneer.purchaseMovingPioneerId = prophetess.id;
-                    PioneerMgr.instance.pioneerBeginMove(actionPioneer.id, paths, true);
+                    PioneerMgr.instance.pioneerBeginMove(actionPioneer.id, paths);
                 }
             }
         }
@@ -270,7 +270,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             PioneerMgr.instance.pioneerDidMoveOneStep(pioneer.id);
             if (pioneer.id == this._actionShowPioneerId && this._actionUsedCursor != null) {
                 this._actionUsedCursor.hide();
-                this._actionUsedCursor.show([pioneer.stayPos], false);
+                this._actionUsedCursor.show([pioneer.stayPos], Color.WHITE);
             }
             return;
         }

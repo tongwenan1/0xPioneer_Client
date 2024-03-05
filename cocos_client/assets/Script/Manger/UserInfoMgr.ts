@@ -311,6 +311,9 @@ export default class UserInfoMgr {
     public get exp() {
         return this._exp;
     }
+    public get cityVision() {
+        return this._cityVision;
+    }
     public get innerBuilds(): Map<string, UserInnerBuildInfo> {
         return this._innerBuilds;
     }
@@ -378,6 +381,7 @@ export default class UserInfoMgr {
                 isLvlup = true;
                 this._level += 1;
                 this._exp -= lvlConfig[0].exp;
+                this.cityVision += nextLvConfig[0].city_vision;
             }
         }
         
@@ -403,6 +407,12 @@ export default class UserInfoMgr {
                 PioneerMgr.instance.changeAllMyPioneerHpMax(nextLvConfig[0].hp_max);
             }
         }
+    }
+    public set cityVision(value: number) {
+        const original = this._cityVision;
+        this._cityVision = value;
+        this._localJsonData.playerData.cityVision = value;
+        this._localDataChanged(this._localJsonData);
     }
     public set money(value: number) {
         const original = this._money;
@@ -523,6 +533,7 @@ export default class UserInfoMgr {
     private _money: number = null;
     private _energy: number = null;
     private _exp: number = null;
+    private _cityVision: number = null;
     private _innerBuilds: Map<string, UserInnerBuildInfo> = null;
 
     private _food: number = null;
@@ -568,6 +579,7 @@ export default class UserInfoMgr {
         this._money = jsonObject.playerData.money;
         this._energy = jsonObject.playerData.energy;
         this._exp = jsonObject.playerData.exp;
+        this._cityVision = jsonObject.playerData.cityVision;
         this._food = jsonObject.playerData.food;
         this._wood = jsonObject.playerData.wood;
         this._stone = jsonObject.playerData.stone;

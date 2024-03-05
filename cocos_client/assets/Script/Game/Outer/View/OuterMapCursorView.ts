@@ -9,103 +9,14 @@ export class OuterMapCursorView extends Component {
         this._hexViewRadius = hexViewRadius;
         this._parentScale = parentScale;
     }
-    public show(tiledPosions: Vec2[], isError: boolean) {
+    public show(tiledPositions: Vec2[], tiledColor: Color, visionPostions: Vec2[] = null, visionColor: Color = null) {
         if (this._hexViewRadius == null ||
             this._parentScale == null) {
             return;
         }
-        const worldPositons: { centerPos: Vec3, borderAngle: number, lineWidth: number }[] = [];
-        const sinValue = Math.sin(30 * Math.PI / 180);
-        for (let i = 0; i < tiledPosions.length; i++) {
-            const tiledPos = tiledPosions[i];
-            const centerWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(tiledPos.x, tiledPos.y);
-            // left top
-            const leftTop = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.LeftTop);
-            if (leftTop == null ||
-                !tiledPosions.some(pos => pos.x === leftTop.x && pos.y === leftTop.y)) {
-                worldPositons.push({
-                    centerPos: v3(
-                        -this._hexViewRadius / 2 + centerWorldPos.x,
-                        sinValue * this._hexViewRadius + (this._hexViewRadius - sinValue * this._hexViewRadius) / 2 + centerWorldPos.y,
-                        0
-                    ),
-                    borderAngle: 30,
-                    lineWidth: this._hexViewRadius / this._parentScale / Math.cos(30 * Math.PI / 180)
-                });
-            }
-            // left 
-            const left = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.Left);
-            if (left == null ||
-                !tiledPosions.some(pos => pos.x === left.x && pos.y === left.y)) {
-                worldPositons.push({
-                    centerPos: v3(
-                        -this._hexViewRadius + centerWorldPos.x,
-                        0 + centerWorldPos.y,
-                        0
-                    ),
-                    borderAngle: 90,
-                    lineWidth: this._hexViewRadius / this._parentScale
-                });
-            }
-            // left bottom
-            const leftBottom = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.LeftBottom);
-            if (leftBottom == null ||
-                !tiledPosions.some(pos => pos.x === leftBottom.x && pos.y === leftBottom.y)) {
-                worldPositons.push({
-                    centerPos: v3(
-                        -this._hexViewRadius / 2 + centerWorldPos.x,
-                        -sinValue * this._hexViewRadius - Math.abs(-this._hexViewRadius + sinValue * this._hexViewRadius) / 2 + centerWorldPos.y,
-                        0
-                    ),
-                    borderAngle: -30,
-                    lineWidth: this._hexViewRadius / this._parentScale / Math.cos(30 * Math.PI / 180)
-                });
-            }
-            // right bottom
-            const rightBottom = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.RightBottom);
-            if (rightBottom == null ||
-                !tiledPosions.some(pos => pos.x === rightBottom.x && pos.y === rightBottom.y)) {
-                worldPositons.push({
-                    centerPos: v3(
-                        this._hexViewRadius / 2 + centerWorldPos.x,
-                        -sinValue * this._hexViewRadius - Math.abs(-this._hexViewRadius + sinValue * this._hexViewRadius) / 2 + centerWorldPos.y,
-                        0
-                    ),
-                    borderAngle: 30,
-                    lineWidth: this._hexViewRadius / this._parentScale / Math.cos(30 * Math.PI / 180)
-                });
-            }
-            // right
-            const right = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.Right);
-            if (right == null ||
-                !tiledPosions.some(pos => pos.x === right.x && pos.y === right.y)) {
-                worldPositons.push({
-                    centerPos: v3(
-                        this._hexViewRadius + centerWorldPos.x,
-                        0 + centerWorldPos.y,
-                        0
-                    ),
-                    borderAngle: 90,
-                    lineWidth: this._hexViewRadius / this._parentScale
-                });
-            }
-            // right top
-            const rightTop = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.RightTop);
-            if (rightTop == null ||
-                !tiledPosions.some(pos => pos.x === rightTop.x && pos.y === rightTop.y)) {
-                worldPositons.push({
-                    centerPos: v3(
-                        this._hexViewRadius / 2 + centerWorldPos.x,
-                        sinValue * this._hexViewRadius + (this._hexViewRadius - sinValue * this._hexViewRadius) / 2 + centerWorldPos.y,
-                        0
-                    ),
-                    borderAngle: -30,
-                    lineWidth: this._hexViewRadius / this._parentScale / Math.cos(30 * Math.PI / 180)
-                });
-            }
-        }
         let index = 0;
-        for (; index < worldPositons.length; index++) {
+        const tiledUsed = this._prepareBorderPos(tiledPositions);
+        for (; index < tiledUsed.length; index++) {
             let line: Node = null;
             if (index < this._cursorBorderPool.length) {
                 line = this._cursorBorderPool[index];
@@ -114,12 +25,33 @@ export class OuterMapCursorView extends Component {
                 line.setParent(this.node);
                 this._cursorBorderPool.push(line);
             }
-            line.getComponent(UITransform).setContentSize(size(worldPositons[index].lineWidth, 6));
+            line.getComponent(UITransform).setContentSize(size(tiledUsed[index].lineWidth, 6));
             line.active = true;
-            line.getComponent(Sprite).color = isError ? Color.RED : Color.WHITE;
-            line.setPosition(this.node.getComponent(UITransform).convertToNodeSpaceAR(worldPositons[index].centerPos));
-            line.angle = worldPositons[index].borderAngle;
+            line.getComponent(Sprite).color = tiledColor;
+            line.setPosition(this.node.getComponent(UITransform).convertToNodeSpaceAR(tiledUsed[index].centerPos));
+            line.angle = tiledUsed[index].borderAngle;
         }
+
+        if (visionPostions != null && visionColor != null) {
+            const visionUsed = this._prepareBorderPos(visionPostions);
+            for (; index < visionUsed.length + tiledUsed.length; index++) {
+                let line: Node = null;
+                if (index < this._cursorBorderPool.length) {
+                    line = this._cursorBorderPool[index];
+                } else {
+                    line = instantiate(this._cursorBorderNode);
+                    line.setParent(this.node);
+                    this._cursorBorderPool.push(line);
+                }
+                const usedIndex: number = index - tiledUsed.length;
+                line.getComponent(UITransform).setContentSize(size(visionUsed[usedIndex].lineWidth, 6));
+                line.active = true;
+                line.getComponent(Sprite).color = visionColor;
+                line.setPosition(this.node.getComponent(UITransform).convertToNodeSpaceAR(visionUsed[usedIndex].centerPos));
+                line.angle = visionUsed[usedIndex].borderAngle;
+            }
+        }
+
         for (; index < this._cursorBorderPool.length; index++) {
             this._cursorBorderPool[index].destroy();
             this._cursorBorderPool.splice(index, 1);
@@ -164,6 +96,104 @@ export class OuterMapCursorView extends Component {
 
     update(deltaTime: number) {
 
+    }
+
+    private _prepareBorderPos(tiledPositions: Vec2[]): {
+        centerPos: Vec3;
+        borderAngle: number;
+        lineWidth: number;
+    }[] {
+        const worldPositons: { centerPos: Vec3, borderAngle: number, lineWidth: number }[] = [];
+        const sinValue = Math.sin(30 * Math.PI / 180);
+        for (let i = 0; i < tiledPositions.length; i++) {
+            const tiledPos = tiledPositions[i];
+            const centerWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(tiledPos.x, tiledPos.y);
+            // left top
+            const leftTop = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.LeftTop);
+            if (leftTop == null ||
+                !tiledPositions.some(pos => pos.x === leftTop.x && pos.y === leftTop.y)) {
+                worldPositons.push({
+                    centerPos: v3(
+                        -this._hexViewRadius / 2 + centerWorldPos.x,
+                        sinValue * this._hexViewRadius + (this._hexViewRadius - sinValue * this._hexViewRadius) / 2 + centerWorldPos.y,
+                        0
+                    ),
+                    borderAngle: 30,
+                    lineWidth: this._hexViewRadius / this._parentScale / Math.cos(30 * Math.PI / 180)
+                });
+            }
+            // left 
+            const left = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.Left);
+            if (left == null ||
+                !tiledPositions.some(pos => pos.x === left.x && pos.y === left.y)) {
+                worldPositons.push({
+                    centerPos: v3(
+                        -this._hexViewRadius + centerWorldPos.x,
+                        0 + centerWorldPos.y,
+                        0
+                    ),
+                    borderAngle: 90,
+                    lineWidth: this._hexViewRadius / this._parentScale
+                });
+            }
+            // left bottom
+            const leftBottom = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.LeftBottom);
+            if (leftBottom == null ||
+                !tiledPositions.some(pos => pos.x === leftBottom.x && pos.y === leftBottom.y)) {
+                worldPositons.push({
+                    centerPos: v3(
+                        -this._hexViewRadius / 2 + centerWorldPos.x,
+                        -sinValue * this._hexViewRadius - Math.abs(-this._hexViewRadius + sinValue * this._hexViewRadius) / 2 + centerWorldPos.y,
+                        0
+                    ),
+                    borderAngle: -30,
+                    lineWidth: this._hexViewRadius / this._parentScale / Math.cos(30 * Math.PI / 180)
+                });
+            }
+            // right bottom
+            const rightBottom = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.RightBottom);
+            if (rightBottom == null ||
+                !tiledPositions.some(pos => pos.x === rightBottom.x && pos.y === rightBottom.y)) {
+                worldPositons.push({
+                    centerPos: v3(
+                        this._hexViewRadius / 2 + centerWorldPos.x,
+                        -sinValue * this._hexViewRadius - Math.abs(-this._hexViewRadius + sinValue * this._hexViewRadius) / 2 + centerWorldPos.y,
+                        0
+                    ),
+                    borderAngle: 30,
+                    lineWidth: this._hexViewRadius / this._parentScale / Math.cos(30 * Math.PI / 180)
+                });
+            }
+            // right
+            const right = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.Right);
+            if (right == null ||
+                !tiledPositions.some(pos => pos.x === right.x && pos.y === right.y)) {
+                worldPositons.push({
+                    centerPos: v3(
+                        this._hexViewRadius + centerWorldPos.x,
+                        0 + centerWorldPos.y,
+                        0
+                    ),
+                    borderAngle: 90,
+                    lineWidth: this._hexViewRadius / this._parentScale
+                });
+            }
+            // right top
+            const rightTop = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.RightTop);
+            if (rightTop == null ||
+                !tiledPositions.some(pos => pos.x === rightTop.x && pos.y === rightTop.y)) {
+                worldPositons.push({
+                    centerPos: v3(
+                        this._hexViewRadius / 2 + centerWorldPos.x,
+                        sinValue * this._hexViewRadius + (this._hexViewRadius - sinValue * this._hexViewRadius) / 2 + centerWorldPos.y,
+                        0
+                    ),
+                    borderAngle: -30,
+                    lineWidth: this._hexViewRadius / this._parentScale / Math.cos(30 * Math.PI / 180)
+                });
+            }
+        }
+        return worldPositons;
     }
 }
 

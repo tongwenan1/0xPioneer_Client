@@ -51,6 +51,11 @@ export default class BuildingMgr {
             return buiding.type === MapBuildingType.resource;
         });
     }
+    public getStrongholdBuildings(): MapBuildingModel[] {
+        return this._buildings.filter((buiding) => {
+            return buiding.type === MapBuildingType.stronghold;
+        });
+    }
     /**
      * find buiding on pos,
      * @param tiledPosX 

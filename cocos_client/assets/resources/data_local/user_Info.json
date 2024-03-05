@@ -6,6 +6,7 @@
 		"money": 0,
 		"energy": 0,
         "exp":0,
+		"cityVision": 7,
 		"food": 0,
 		"wood": 0,
 		"stone": 0,

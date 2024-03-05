@@ -72,7 +72,7 @@ export class TestOuterPioneerController extends Component {
                 if (actionPioneer != null && prophetess != null) {
                     const paths = this.mapBG.getTiledMovePathByTiledPos(actionPioneer.stayPos, prophetess.stayPos);
                     actionPioneer.purchaseMovingPioneerId = prophetess.id;
-                    PioneerMgr.instance.pioneerBeginMove(actionPioneer.id, paths, true);
+                    PioneerMgr.instance.pioneerBeginMove(actionPioneer.id, paths);
                 }
             }
         }

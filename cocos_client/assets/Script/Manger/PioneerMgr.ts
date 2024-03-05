@@ -220,7 +220,7 @@ export default class PioneerMgr {
     }
 
 
-    public pioneerBeginMove(pioneerId: string, paths: TilePos[], force: boolean = false) {
+    public pioneerBeginMove(pioneerId: string, paths: TilePos[]) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
             findPioneer.actionType = MapPioneerActionType.moving;
@@ -253,9 +253,6 @@ export default class PioneerMgr {
             }
             for (const observer of this._observers) {
                 observer.pioneerActionTypeChanged(pioneerId, MapPioneerActionType.moving, 0);
-            }
-            if (force) {
-                this._pioneerIsForceMovingMap.set(pioneerId, true);
             }
             let needFootPath: boolean = false;
             for (const temple of this.getPlayerPioneer()) {
@@ -346,6 +343,23 @@ export default class PioneerMgr {
                 }
                 this._savePioneerData();
             }
+        }
+    }
+    public pioneerToIdle(pioneerId: string) {
+        const findPioneer = this.getPioneerById(pioneerId);
+        if (findPioneer != null) {
+            findPioneer.actionType = MapPioneerActionType.idle;
+            findPioneer.actionEndTimeStamp = 0;
+            for (const observer of this._observers) {
+                observer.pioneerActionTypeChanged(findPioneer.id, findPioneer.actionType, findPioneer.actionEndTimeStamp);
+            }
+            for (const building of BuildingMgr.instance.getStrongholdBuildings()) {
+                if (building.defendPioneerIds.indexOf(pioneerId) != -1) {
+                    BuildingMgr.instance.removeDefendPioneer(building.id, pioneerId);
+                    break;
+                }
+            }
+            this._savePioneerData();
         }
     }
 
