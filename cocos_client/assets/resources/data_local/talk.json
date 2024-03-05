@@ -6,13 +6,13 @@
                 "type": "chat",
                 "leftShow": true,
                 "name": "prophetess",
-                "text": "talk.01"
+                "text": "Finally you are here."
             },
             {
                 "type": "chat",
                 "leftShow": false,
                 "name": "default_player",
-                "text": "talk.02"
+                "text": "Who the hell are you?"
             },
             {
                 "type": "chat",

@@ -16,6 +16,7 @@ import { OuterPioneerController } from '../Game/Outer/OuterPioneerController';
 import { OuterFogAnimShapMask } from '../Game/Outer/View/OuterFogAnimShapMask';
 import { OuterMapCursorView } from '../Game/Outer/View/OuterMapCursorView';
 import UserInfoMgr from '../Manger/UserInfoMgr';
+import LanMgr from '../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('CPrefabInfo')
@@ -467,16 +468,28 @@ export class MapBG extends Component {
         }
         const isBlock = this._tiledhelper.Path_IsBlock(tiledPos.x, tiledPos.y);
         if (isBlock) {
+            
+            // useLanMgr
+            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.ShowTip("cann't move to block");
+
             return;
         }
         if (PioneerInfo.instance.currentActionPioneerIsBusy()) {
+
+            // useLanMgr
+            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.ShowTip("pioneer is busy");
+
             return;
         }
         const currentActionPioneer = PioneerInfo.instance.getCurrentPlayerPioneer();
         if (!currentActionPioneer.show && currentActionPioneer.rebirthCountTime > 0) {
+
+            // useLanMgr
+            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.ShowTip("pioneer is dead");
+
             return;
         }
         const stayBuilding = BuildingMgr.instance.getShowBuildingByMapPos(v2(tiledPos.x, tiledPos.y));
@@ -493,7 +506,11 @@ export class MapBG extends Component {
                 stayPositons = stayBuilding.stayMapPositions;
             } else {
                 actionType = -2;
+
+                // useLanMgr
+                // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
                 GameMain.inst.UI.ShowTip("pioneer is defending");
+                
             }
         } else {
             if (stayBuilding != null) {

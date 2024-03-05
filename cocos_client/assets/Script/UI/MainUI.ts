@@ -26,6 +26,7 @@ import { DialogueUI } from './Outer/DialogueUI';
 import { RecruitUI } from './Inner/RecruitUI';
 import { EventName } from '../Const/ConstDefine';
 import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
+import LanMgr from '../Manger/LanMgr';
 
 const { ccclass, property } = _decorator;
 
@@ -103,6 +104,12 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
 
         PioneerMgr.instance.addObserver(this);
         UserInfo.Instance.addObserver(this);
+    }
+
+    onEnable(): void {
+        // useLanMgr
+        // this.node.getChildByPath("LeftNode/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("icon_treasure_box/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
     }
 
     async start() {
@@ -383,7 +390,11 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
             this._gangsterComingTipView.active = true;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = false;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
+
+            // useLanMgr
+            // this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.Instance.replaceLanById("107549", [this.secondsToTime(count)]);
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = "Big Team Coming: " + this.secondsToTime(count);
+            
         }
     }
     playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {

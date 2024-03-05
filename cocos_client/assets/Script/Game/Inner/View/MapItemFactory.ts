@@ -8,6 +8,7 @@ import UserInfoMgr, { UserInfoEvent, UserInnerBuildInfo, FinishedEvent } from '.
 import CommonTools from '../../../Tool/CommonTools';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import CountMgr, { CountType } from '../../../Manger/CountMgr';
+import LanMgr from '../../../Manger/LanMgr';
 
 const { ccclass, property } = _decorator;
 
@@ -33,7 +34,11 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
         super._onClick();
 
         if (this._upgradeIng) {
+
+            // useLanMgr
+            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
+
             return;
         }
 
@@ -42,7 +47,11 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
         }
         if (this.buildData.buildID == "3" && this.buildData.buildLevel > 0) {
             if (UserInfoMgr.Instance.isGeneratingTroop) {
+                
+                // useLanMgr
+                // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
                 GameMain.inst.UI.ShowTip("Recruiting…Please wait…");
+
                 return;
             }
             GameMain.inst.UI.recruitUI.show(true);
@@ -108,7 +117,11 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
 
     onUpgrade() {
         if (this._upgradeIng) {
+
+            // useLanMgr
+            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
+
             return;
         }
         let canUpgrade: boolean = true;
@@ -132,7 +145,11 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
                 }
             }
             if (!canUpgrade) {
+
+                // useLanMgr
+                // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
                 GameMain.inst.UI.ShowTip("Insufficient resources for building upgrades");
+                
                 return;
             }
             this._upgradeIng = true;

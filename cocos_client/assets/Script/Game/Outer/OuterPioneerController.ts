@@ -684,7 +684,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     gameTaskOver(): void {
+
+        // useLanMgr
+        // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
         GameMain.inst.UI.ShowTip("Boot ends");
+        
     }
     generateTroopTimeCountChanged(leftTime: number): void {
 

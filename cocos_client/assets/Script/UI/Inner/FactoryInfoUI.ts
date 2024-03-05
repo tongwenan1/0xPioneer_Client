@@ -42,6 +42,11 @@ export class FactoryInfoUI extends PopUpUI {
 
     private _data: UserInnerBuildInfo;
 
+    onEnable(): void {
+        // useLanMgr
+        
+    }
+
     start() {
 
     }

@@ -7,6 +7,7 @@ import EventMgr from '../Manger/EventMgr';
 
 import { TilePos } from '../Game/TiledMap/TileTool';
 import MapPioneerModel, { MapPlayerPioneerModel, MapPioneerActionType, MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
+import LanMgr from '../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerListUI')
@@ -35,6 +36,11 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
         this._playerItem.active = false;
 
         EventMgr.on("Event_LoadOver", this.loadOver, this);
+    }
+
+    onEnable(): void {
+        // useLanMgr
+        // this.node.getChildByPath("content/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
     }
 
     start() {

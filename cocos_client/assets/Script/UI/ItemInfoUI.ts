@@ -6,6 +6,7 @@ import UserInfo from '../Manger/UserInfoMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import ItemMgr from '../Manger/ItemMgr';
 import CountMgr, { CountType } from '../Manger/CountMgr';
+import LanMgr from '../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 
@@ -26,6 +27,10 @@ export class ItemInfoUI extends PopUpUI {
             this.icon.spriteFrame = frame;
     
             this.typeLabel.string = this._items[0].itemConfig.itemType.toString();
+
+            // useLanMgr
+            // this.nameLabel.string = LanMgr.Instance.getLanById(this._items[0].itemConfig.itemName);
+            // this.descTxt.string = LanMgr.Instance.getLanById(this._items[0].itemConfig.itemDesc);
             this.nameLabel.string = this._items[0].itemConfig.itemName;
             this.descTxt.string = this._items[0].itemConfig.itemDesc;
     
@@ -34,10 +39,17 @@ export class ItemInfoUI extends PopUpUI {
             this.useButton.node.active = false;
             if (this._isGet) {
                 this.useButton.node.active = true;
+
+                // useLanMgr
+                // this.useButtonLabel.string = LanMgr.Instance.getLanById("107549");
                 this.useButtonLabel.string = "Get";
+
             } else {
                 if (this._items[0].itemConfig.itemType == ItemType.AddProp) {
                     this.useButton.node.active = true;
+
+                    // useLanMgr
+                    // this.useButtonLabel.string = LanMgr.Instance.getLanById("107549");
                     this.useButtonLabel.string = "Use";
                 } 
             }

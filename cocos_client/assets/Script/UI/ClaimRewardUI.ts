@@ -3,6 +3,7 @@ import UserInfoMgr from "../Manger/UserInfoMgr";
 import { GameMain } from "../GameMain";
 import BoxMgr from "../Manger/BoxMgr";
 import EventMgr from "../Manger/EventMgr"; 
+import LanMgr from "../Manger/LanMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("ClaimRewardUI")
@@ -129,6 +130,9 @@ export class ClaimRewardUI extends Component {
                 this.refreshUI();
             });
         } else if (getStatus == 0) {
+
+            // useLanMgr
+            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.ShowTip("Please explore more to get it");
         }
     }

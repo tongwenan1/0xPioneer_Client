@@ -3,6 +3,7 @@ import ItemData from '../Model/ItemData';
 import { BackpackItem } from './BackpackItem';
 import ItemMgr, { ItemMgrEvent, ItemArrangeType } from '../Manger/ItemMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
+import LanMgr from '../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 
@@ -44,6 +45,19 @@ export class BackpackUI extends PopUpUI implements ItemMgrEvent {
 
         this._menuArrow = this.node.getChildByPath("Bg/SortView/Menu/Arrow");
     }
+
+    onEnable(): void {
+        // useLanMgr
+        // this.node.getChildByPath("Bg/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Bg/QuantityLabel").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Bg/SortView/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Bg/ArrangeButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._sortMenu.getChildByPath("Content/Recently").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._sortMenu.getChildByPath("Content/Type").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+    }
+
     start() {
         ItemMgr.Instance.addObserver(this);
 
@@ -117,7 +131,21 @@ export class BackpackUI extends PopUpUI implements ItemMgrEvent {
             return;
         }
         this._currentArrangeType = customEventData as ItemArrangeType;
-        this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = this._currentArrangeType;
+        
+        // useLanMgr**
+        switch (this._currentArrangeType) {
+            case ItemArrangeType.Rarity:
+                this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string;
+                break;
+            case ItemArrangeType.Recently:
+                this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Recently").getComponent(Label).string;
+                break;
+            case ItemArrangeType.Type:
+                this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Type").getComponent(Label).string;
+                break;
+        }
+        //this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = this._currentArrangeType;
+
         this._selectSortMenuShow = false;
         this._refreshMenu();
     }

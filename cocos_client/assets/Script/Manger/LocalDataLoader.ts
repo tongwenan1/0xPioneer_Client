@@ -11,6 +11,7 @@ import TaskMgr from "./TaskMgr";
 import UserInfo from "./UserInfoMgr";
 import BranchEventMgr from "./BranchEventMgr";
 import LvlupMgr from "./LvlupMgr";
+import LanMgr from "./LanMgr";
 
 export default class LocalDataLoader {
 
@@ -23,6 +24,7 @@ export default class LocalDataLoader {
 
     public async loadLocalDatas() {
         this._loadStatus = 1;
+        await LanMgr.Instance.initData();
         await BranchEventMgr.Instance.initData();
         await DropMgr.Instance.initData();
         await BoxMgr.Instance.initData();

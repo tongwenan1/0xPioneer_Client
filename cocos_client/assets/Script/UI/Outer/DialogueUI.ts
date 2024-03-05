@@ -4,8 +4,7 @@ import PioneerMgr from '../../Manger/PioneerMgr';
 import UserInfo from '../../Manger/UserInfoMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
 import CountMgr, { CountType } from '../../Manger/CountMgr';
-import { useI18n } from '../../Const/ConstDefine';
-import * as i18n from 'db://i18n/LanguageData';
+import LanMgr from '../../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -37,8 +36,14 @@ export class DialogueUI extends PopUpUI {
         "secretGuard"
     ];
     onLoad(): void {
-
+        
     }
+
+    onEnable(): void {
+        // useLanMgr
+        // this.node.getChildByPath("Dialog/NextButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+    }
+    
 
     start() {
 
@@ -74,7 +79,11 @@ export class DialogueUI extends PopUpUI {
                 dialogView.getChildByName("player_name").active = true;
                 dialogView.getChildByPath("player_name/Label").getComponent(Label).string = UserInfo.Instance.playerName;
             }
-            dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = useI18n ? i18n.t(currentMesssage.text) : currentMesssage.text;
+
+            // useLanMgr
+            // dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.text);
+            dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = currentMesssage.text;
+
             for (const roleName of this._roleNames) {
                 dialogView.getChildByName(roleName).active = roleName == currentMesssage.name;
             }
@@ -83,7 +92,11 @@ export class DialogueUI extends PopUpUI {
                 dialogView.active = true;
                 dialogView.getChildByName("name_bg").active = false;
                 dialogView.getChildByName("player_name").active = false;
-                dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = useI18n ? i18n.t(currentMesssage.text) : currentMesssage.text;
+
+                // useLanMgr
+                // dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.text);
+                dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = currentMesssage.text;
+
                 for (const roleName of this._roleNames) {
                     dialogView.getChildByName(roleName).active = false;
                 }
@@ -133,6 +146,9 @@ export class DialogueUI extends PopUpUI {
         if (this._task.entrypoint.result.includes(customEventData)) {
             // get task
             UserInfo.Instance.getNewTask(this._task);
+
+            // useLanMgr
+            // GameMain.inst.UI.NewTaskTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.NewTaskTip("New Task Taken");
 
         } else if (this._task.exitpoint != null &&

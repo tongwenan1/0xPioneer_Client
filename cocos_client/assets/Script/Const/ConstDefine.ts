@@ -11,6 +11,3 @@ export enum EventName{
     BUILD_LEVEL_UP = "BUILD_LEVEL_UP",
 } 
 
-
-
-export const useI18n = false;

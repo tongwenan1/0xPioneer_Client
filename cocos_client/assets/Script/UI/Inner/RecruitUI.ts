@@ -2,6 +2,7 @@ import { _decorator, Component, Label, Layout, Node, ProgressBar, Slider } from 
 import UserInfo from '../../Manger/UserInfoMgr';
 import CommonTools from '../../Tool/CommonTools';
 import { PopUpUI } from '../../BasicView/PopUpUI';
+import LanMgr from '../../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
@@ -77,6 +78,16 @@ export class RecruitUI extends PopUpUI {
         this._maxWood = this.node.getChildByPath("Bg/footer/material/wood/num/right").getComponent(Label);
         this._usedStone = this.node.getChildByPath("Bg/footer/material/stone/num/left").getComponent(Label);
         this._maxStone = this.node.getChildByPath("Bg/footer/material/stone/num/right").getComponent(Label);
+    }
+
+    onEnable(): void {
+        // useLanMgr
+        // this.node.getChildByPath("Bg/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("Bg/current_res/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("Bg/recruiting/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("Bg/footer/time/txt").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("Bg/footer/Button/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+
     }
 
     start() {

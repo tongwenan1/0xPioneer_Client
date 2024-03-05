@@ -9,8 +9,7 @@ import { PopUpUI } from '../../BasicView/PopUpUI';
 import { ItemInfoShowModel } from '../ItemInfoUI';
 import BuildingMgr from '../../Manger/BuildingMgr';
 import CountMgr, { CountType } from '../../Manger/CountMgr';
-import { useI18n } from '../../Const/ConstDefine';
-import * as i18n from 'db://i18n/LanguageData';
+import LanMgr from '../../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -57,6 +56,12 @@ export class EventUI extends PopUpUI {
         this._selectItem.active = false;
     }
 
+    onEnable(): void {
+        // useLanMgr
+        // this._dialogView.getChildByPath("nextButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._dialogView.getChildByPath("fightButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+    }
+
     start() {
 
     }
@@ -76,7 +81,10 @@ export class EventUI extends PopUpUI {
         // type = 4：exchange
         // type = 5：Attributes
         // type = 6：jungle
-        this._dialogView.getChildByPath("content/label").getComponent(Label).string = useI18n ? i18n.t(event.text) : event.text;
+
+        // useLanMgr
+        // this._dialogView.getChildByPath("content/label").getComponent(Label).string = LanMgr.Instance.getLanById(event.text);
+        this._dialogView.getChildByPath("content/label").getComponent(Label).string = event.text;
 
         this._dialogNextButton.active = false;
         this._dialogFightButton.active = false;
@@ -159,7 +167,10 @@ export class EventUI extends PopUpUI {
                             // other is temporary
                             this._temporaryAttributes.set(pioneerId + "|" + changedType, useChangedValue);
                         }
+
+                        // useLanMgr
                         showTip += ((isPlayer ? "Your" : (pioneerInfo == null ? "Enemy's" : pioneerInfo.name + "'s")) + " " + (changedType == 1 ? "HP" : "Attack") + " has changed\n");
+
                     }
                     GameMain.inst.UI.ShowTip(showTip);
                 }
@@ -281,7 +292,11 @@ export class EventUI extends PopUpUI {
                             if (item.itemConfigId == id) {
                                 const itemConf = ItemMgr.Instance.getItemConf(id as number);
                                 ItemMgr.Instance.subItem(item.itemConfigId, num);
+                                
+                                // useLanMgr
+                                // showTip += LanMgr.Instance.replaceLanById("107549", [num, LanMgr.Instance.getLanById(itemConf.itemName)]) + "\n";
                                 showTip += ("You lost" + num + " " + itemConf.itemName + "\n");
+
                                 break;
                             }
                         }
@@ -293,6 +308,9 @@ export class EventUI extends PopUpUI {
                                 count: num
                             });
                         }
+
+                        // useLanMgr
+                        // showTip += LanMgr.Instance.replaceLanById("107549", [num, LanMgr.Instance.getLanById(itemConf.itemName)]) + "\n";
                         showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
                     }
                 } else if (type == 2) {
@@ -301,36 +319,60 @@ export class EventUI extends PopUpUI {
                     if (resourceId == "resource_01") {
                         if (cost) {
                             UserInfo.Instance.wood -= num;
+
+                            // useLanMgr
+                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
                             showTip += ("You lost" + num + " wood\n");
                         } else {
                             UserInfo.Instance.wood += num;
+
+                            // useLanMgr
+                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
                             showTip += ("You obtained" + num + " wood\n");
                         }
 
                     } else if (resourceId == "resource_02") {
                         if (cost) {
                             UserInfo.Instance.stone -= num;
+
+                            // useLanMgr
+                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
                             showTip += ("You lost" + num + " stone\n");
                         } else {
                             UserInfo.Instance.stone += num;
+
+                            // useLanMgr
+                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
                             showTip += ("You obtained" + num + " stone\n");
                         }
 
                     } else if (resourceId == "resource_03") {
                         if (cost) {
                             UserInfo.Instance.food -= num;
+
+                            // useLanMgr
+                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
                             showTip += ("You lost" + num + " food\n");
                         } else {
                             UserInfo.Instance.food += num;
+
+                            // useLanMgr
+                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
                             showTip += ("You obtained" + num + " food\n");
                         }
 
                     } else if (resourceId == "resource_04") {
                         if (cost) {
                             UserInfo.Instance.troop -= num;
+
+                            // useLanMgr
+                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
                             showTip += ("You lost" + num + " troop\n");
                         } else {
                             UserInfo.Instance.troop += num;
+
+                            // useLanMgr
+                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
                             showTip += ("You obtained" + num + " troop\n");
                         }
                     }
@@ -358,7 +400,11 @@ export class EventUI extends PopUpUI {
             if (this._eventBuildingId != null) {
                 BuildingMgr.instance.hideBuilding(this._eventBuildingId);
             }
+
+            // useLanMgr
+            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.ShowTip("Event Ended");
+            
             this.show(false);
         } else {
             const event = BranchEventMgr.Instance.getEventById(eventId);
