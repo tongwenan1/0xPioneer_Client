@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, director, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
 import { GameMain } from '../../GameMain';
 import BranchEventMgr from '../../Manger/BranchEventMgr';
 import BuildingMgr from '../../Manger/BuildingMgr';
@@ -16,6 +16,7 @@ import { MapItemMonster } from './View/MapItemMonster';
 import { MapPioneer } from './View/MapPioneer';
 import { MapBG } from '../../Scene/MapBG';
 import LvlupMgr from '../../Manger/LvlupMgr';
+import { OuterMapCursorView } from './View/OuterMapCursorView';
 
 
 const { ccclass, property } = _decorator;
@@ -23,7 +24,7 @@ const { ccclass, property } = _decorator;
 @ccclass('OuterPioneerController')
 export class OuterPioneerController extends Component implements PioneerMgrEvent, UserInfoEvent {
 
-    public showMovingPioneerAction(tilePos: TilePos, movingPioneerId: string, usedCursor: Node) {
+    public showMovingPioneerAction(tilePos: TilePos, movingPioneerId: string, usedCursor: OuterMapCursorView) {
         this._actionShowPioneerId = movingPioneerId;
         this._actionUsedCursor = usedCursor;
         if (this._actionPioneerView != null) {
@@ -107,7 +108,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     private _footPathMap: Map<string, Node[]> = new Map();
 
     private _actionPioneerView: Node = null;
-    private _actionUsedCursor: Node = null;
+    private _actionUsedCursor: OuterMapCursorView = null;
     private _actionPioneerFootStepViews: Node[] = null;
 
     private _started: boolean = false;
@@ -153,7 +154,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     private _refreshUI() {
-        const decorationView = this.node.getComponent(MapBG).decorationLayer();
+        const decorationView = this.node.getComponent(MapBG).mapDecorationView();
         if (decorationView == null) {
             return;
         }
@@ -266,10 +267,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         if (dist < add) //havemove 2 target
         {
             pioneermap.setWorldPosition(nextwpos);
-            if (pioneer.id == this._actionShowPioneerId && this._actionUsedCursor != null) {
-                this._actionUsedCursor.setWorldPosition(nextwpos);
-            }
             PioneerMgr.instance.pioneerDidMoveOneStep(pioneer.id);
+            if (pioneer.id == this._actionShowPioneerId && this._actionUsedCursor != null) {
+                this._actionUsedCursor.hide();
+                this._actionUsedCursor.show([pioneer.stayPos], false);
+            }
             return;
         }
         else {
@@ -281,7 +283,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             newpos.y += dir.y * add;
             pioneermap.setWorldPosition(newpos);
             if (pioneer.id == this._actionShowPioneerId && this._actionUsedCursor != null) {
-                this._actionUsedCursor.setWorldPosition(newpos);
+                this._actionUsedCursor.move(v2(dir.x * add * 2, dir.y * add * 2));
             }
             //pioneer move direction
             let curMoveDirection = null;
@@ -355,8 +357,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     private _addFootSteps(path: TilePos[], isTargetPosShowFlag: boolean = false): Node[] {
-        const decorationView = this.node.getComponent(MapBG).decorationLayer();
-        if (decorationView == null) {
+        const mapBottomView = this.node.getComponent(MapBG).mapBottomView();
+        if (mapBottomView == null) {
             return;
         }
         const footViews = [];
@@ -365,7 +367,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 if (isTargetPosShowFlag) {
                     const footView = instantiate(this.footPathTargetPrefab);
                     footView.name = "footViewTarget";
-                    decorationView.insertChild(footView, 0);
+                    mapBottomView.insertChild(footView, 0);
                     let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(path[i].x, path[i].y);
                     footView.setWorldPosition(worldPos);
                     footViews.push(footView);
@@ -375,7 +377,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 const nextPath = path[i + 1];
                 const footView = instantiate(this.footPathPrefab);
                 footView.name = "footView";
-                decorationView.insertChild(footView, 0);
+                mapBottomView.insertChild(footView, 0);
                 let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(currentPath.x, currentPath.y);
                 footView.setWorldPosition(worldPos);
                 footViews.push(footView);
