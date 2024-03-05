@@ -58,7 +58,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     }
 
     private _refreshUI() {
-        const decorationView = this.node.getComponent(MapBG).decorationLayer();
+        const decorationView = this.node.getComponent(MapBG).mapDecorationView();
         if (decorationView == null) {
             return;
         }

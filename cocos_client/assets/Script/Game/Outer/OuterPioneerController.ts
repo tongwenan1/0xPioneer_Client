@@ -153,7 +153,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     private _refreshUI() {
-        const decorationView = this.node.getComponent(MapBG).decorationLayer();
+        const decorationView = this.node.getComponent(MapBG).mapDecorationView();
         if (decorationView == null) {
             return;
         }
@@ -355,8 +355,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     private _addFootSteps(path: TilePos[], isTargetPosShowFlag: boolean = false): Node[] {
-        const decorationView = this.node.getComponent(MapBG).decorationLayer();
-        if (decorationView == null) {
+        const mapBottomView = this.node.getComponent(MapBG).mapBottomView();
+        if (mapBottomView == null) {
             return;
         }
         const footViews = [];
@@ -365,7 +365,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 if (isTargetPosShowFlag) {
                     const footView = instantiate(this.footPathTargetPrefab);
                     footView.name = "footViewTarget";
-                    decorationView.insertChild(footView, 0);
+                    mapBottomView.insertChild(footView, 0);
                     let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(path[i].x, path[i].y);
                     footView.setWorldPosition(worldPos);
                     footViews.push(footView);
@@ -375,7 +375,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 const nextPath = path[i + 1];
                 const footView = instantiate(this.footPathPrefab);
                 footView.name = "footView";
-                decorationView.insertChild(footView, 0);
+                mapBottomView.insertChild(footView, 0);
                 let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(currentPath.x, currentPath.y);
                 footView.setWorldPosition(worldPos);
                 footViews.push(footView);

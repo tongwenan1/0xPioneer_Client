@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3, Mask, tween, CCString, SpriteFrame, instantiate, Sprite, EventMouse, Color, TiledMap, size, RenderRoot2D } from 'cc';
+import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3, Mask, tween, CCString, SpriteFrame, instantiate, Sprite, EventMouse, Color, TiledMap, size, RenderRoot2D, Widget, CCInteger } from 'cc';
 import { GameMain } from '../GameMain';
 import PioneerInfo from '../Manger/PioneerMgr';
 import PioneerMgr from '../Manger/PioneerMgr';
@@ -14,6 +14,7 @@ import { OuterFogMask } from '../Game/Outer/View/OuterFogMask';
 import { ResOprView } from '../Game/Outer/View/ResOprView';
 import { OuterPioneerController } from '../Game/Outer/OuterPioneerController';
 import { OuterFogAnimShapMask } from '../Game/Outer/View/OuterFogAnimShapMask';
+import { OuterMapCursorView } from '../Game/Outer/View/OuterMapCursorView';
 const { ccclass, property } = _decorator;
 
 @ccclass('CPrefabInfo')
@@ -28,14 +29,13 @@ class PrefabInfo {
 @ccclass('MapBG')
 export class MapBG extends Component {
 
-    public decorationLayer(): Node {
+    public mapBottomView(): Node {
+        return this._mapBottomView;
+    }
+    public mapDecorationView(): Node {
         return this._decorationView;
     }
     public sortMapItemSiblingIndex() {
-        if (this._actionMapCursor != null) {
-            this._actionMapCursor.node.setSiblingIndex(0);
-        }
-        this.mapcur.node.setSiblingIndex(0);
         let index = 1;
         const items: { node: Node, tilePos: TilePos }[] = [];
         for (const children of this._decorationView.children) {
@@ -116,14 +116,14 @@ export class MapBG extends Component {
     @property(Prefab)
     tiledmap: Prefab
 
-    @property(Sprite)
-    mapcur: Sprite
-
     @property(Prefab)
     private resOprPrefab = null;
 
     @property([SpriteFrame])
     mapcurMultiSelectFrame: SpriteFrame[] = [];
+
+    @property([CCString])
+    private tiledMapTogetherBlock: string[] = [];
 
     @property([PrefabInfo])
     PrefabInfo: PrefabInfo[] = [];
@@ -149,8 +149,11 @@ export class MapBG extends Component {
     private _fogAnimPlaying: boolean = false;
     private _fogAnimDatas: { allClearedTilePosions: { startPos: Vec2, endPos: Vec2 }[], animTilePostions: TilePos[] }[] = [];
 
+    private _togetherBlockPositons: Vec2[][] = [];
 
     private _buildinglayer: Node = null;
+    private _mapBottomView: Node = null;
+    private _mapCursorView: OuterMapCursorView = null;
     private _decorationView: Node = null;
     private _fogView: OuterFogMask = null;
     private _fogAnimView: Mask = null;
@@ -242,86 +245,66 @@ export class MapBG extends Component {
             }
             else {
                 if (this._tiledhelper != null) {
-
+                    const hexScale: number = 0.5;
+                    const hexViewRadius: number = this._tiledhelper.tilewidth * hexScale / 2;
                     var pos = event.getLocation();
                     var wpos = GameMain.inst.MainCamera.screenToWorld(new Vec3(pos.x, pos.y, 0));
-                    //this.mapcur.node.setWorldPosition(new Vec3(wpos.x, wpos.y, 0));
                     var tp = this._tiledhelper.getPosByWorldPos(wpos);
-                    if (tp != null) {
-                        var wpos2 = this._tiledhelper.getPosWorld(tp.x, tp.y);
-                        this.mapcur.node.active = true;
-                        this.mapcur.spriteFrame = this.mapcurMultiSelectFrame[0];
-                        this.mapcur.node.setWorldPosition(wpos2);
-                        this.mapcur.color = Color.WHITE;
-
+                    if (tp != null) {                
                         if (!this.isAllBlackShadow(tp.x, tp.y)) {
-                            //let s = 1.0;
-                            const stayBuilding = BuildingMgr.instance.getShowBuildingByMapPos(v2(tp.x, tp.y));
-                            if (stayBuilding != null) {
-                                if (stayBuilding.show) {
-                                    wpos2.x = 0;
-                                    wpos2.y = 0;
-                                    stayBuilding.stayMapPositions.forEach((v) => {
-                                        let wp3 = this._tiledhelper.getPosWorld(v.x, v.y);
-                                        wpos2.x += wp3.x;
-                                        wpos2.y += wp3.y;
-                                    });
-                                    wpos2.x = wpos2.x / stayBuilding.stayMapPositions.length;
-                                    wpos2.y = wpos2.y / stayBuilding.stayMapPositions.length;
-                                    this.mapcur.node.setWorldPosition(wpos2);
-
-                                    //s = Math.sqrt(stayBuilding.stayMapPositions.length);
-                                    //s = 2.5;
-
-                                    if (stayBuilding.stayMapPositions.length > 1 && stayBuilding.stayMapPositions.length <= 3) {
-                                        this.mapcur.spriteFrame = this.mapcurMultiSelectFrame[1];
-                                        this.mapcur.node.setWorldPosition(v3(wpos2.x, wpos2.y + 8, wpos2.z));
-                                    } else if (stayBuilding.stayMapPositions.length == 1) {
-                                        this.mapcur.spriteFrame = this.mapcurMultiSelectFrame[0];
-                                    }
-                                    else {
-                                        this.mapcur.spriteFrame = this.mapcurMultiSelectFrame[2];
-                                    }
-
-                                    GameMain.inst.UI.ChangeCursor(1);
-                                }
-                            } else {
-                                const stayPioneers = PioneerMgr.instance.getShowPioneersByMapPos(v2(tp.x, tp.y));
-                                let exitOtherPioneer: boolean = false;
-                                for (const templePioneer of stayPioneers) {
-                                    if (templePioneer.type != MapPioneerType.player) {
-                                        exitOtherPioneer = true;
+                            const isBlock = this._tiledhelper.Path_IsBlock(tp.x, tp.y);
+                            if (isBlock) {
+                                let cursorShowTilePositions: Vec2[] = null;
+                                for (const positions of this._togetherBlockPositons) {
+                                    if (positions.some(temple => temple.x === tp.x && temple.y === tp.y)) {
+                                        cursorShowTilePositions = positions;
                                         break;
                                     }
                                 }
-                                if (exitOtherPioneer) {
-                                    GameMain.inst.UI.ChangeCursor(1);
+                                if (cursorShowTilePositions == null) {
+                                    cursorShowTilePositions = [v2(tp.x, tp.y)];
+                                }
+                                this._mapCursorView.show(hexViewRadius, hexScale, cursorShowTilePositions, true);
+                                GameMain.inst.UI.ChangeCursor(2);
+
+                            } else {
+                                const stayBuilding = BuildingMgr.instance.getShowBuildingByMapPos(v2(tp.x, tp.y));
+                                if (stayBuilding != null) {
+                                    if (stayBuilding.show) {
+                                        this._mapCursorView.show(hexViewRadius, hexScale, stayBuilding.stayMapPositions, false);
+    
+                                        GameMain.inst.UI.ChangeCursor(1);
+                                    }
+                                } else {
+                                    const stayPioneers = PioneerMgr.instance.getShowPioneersByMapPos(v2(tp.x, tp.y));
+                                    let existOtherPioneer: MapPioneerModel = null;
+                                    for (const templePioneer of stayPioneers) {
+                                        if (templePioneer.type != MapPioneerType.player) {
+                                            existOtherPioneer = templePioneer;
+                                            break;
+                                        }
+                                    }
+                                    if (existOtherPioneer != null) {
+                                        GameMain.inst.UI.ChangeCursor(1);
+                                    }
+                                    if (stayPioneers.length > 0) {
+                                        this._mapCursorView.show(this._tiledhelper.tilewidth /2 / 2, 0.5, [stayPioneers[0].stayPos], false);
+                                    } else {
+                                        this._mapCursorView.hide();
+                                    }
+                                    this._mapCursorView.show(hexViewRadius, hexScale, [v2(tp.x, tp.y)], false);
                                 }
                             }
-                            //this.mapcur.node.scale = new Vec3(s, s, s);
-
-                            const isBlock = this._tiledhelper.Path_IsBlock(tp.x, tp.y);
-                            if (isBlock) {
-                                this.mapcur.color = Color.RED;
-
-                                GameMain.inst.UI.ChangeCursor(2);
-                            }
-                        }
-                        else {
-                            this.mapcur.color = Color.RED;
-                            this.mapcur.node.active = false;
-
+                        } else {
+                            this._mapCursorView.hide();
                             GameMain.inst.UI.ChangeCursor(2);
                         }
+                    } else {
+                        this._mapCursorView.hide();
                     }
-                    else {
-                        this.mapcur.node.active = false;
-                    }
+                } else {
+                    this._mapCursorView.hide();
                 }
-                else if (this.mapcur != null) {
-                    this.mapcur.node.active = false;
-                }
-
             }
         }, this);
         // local fog
@@ -336,18 +319,34 @@ export class MapBG extends Component {
     private _initTileMap(): void {
         if (this.tiledmap == null)
             return;
-        var node = instantiate(this.tiledmap);
-        this.node.addChild(node);
+        const mapView = instantiate(this.tiledmap);
+        this.node.addChild(mapView);
 
-        this._decorationView = node.getChildByName("deco_layer");
-        this.mapcur.node.removeFromParent();
-        this._decorationView.addChild(this.mapcur.node);
+        this._togetherBlockPositons = [];
+        for (const positionsString of this.tiledMapTogetherBlock) {
+            const temple = [];
+            for (const posString of positionsString.split(";")) {
+                temple.push(v2(parseInt(posString.split(",")[0]), parseInt(posString.split(",")[1])));
+            }
+            this._togetherBlockPositons.push(temple);
+        }
+
+        this._decorationView = mapView.getChildByName("deco_layer");
+
+        this._mapBottomView = new Node("bottomContent");
+        this._mapBottomView.layer = this.node.layer;
+        mapView.addChild(this._mapBottomView);
+        this._mapBottomView.addComponent(UITransform).setContentSize(mapView.getComponent(UITransform).contentSize);
+        this._mapBottomView.setSiblingIndex(this._decorationView.getSiblingIndex());
+
+        this._mapCursorView = this.node.getChildByName("PointerCursor").getComponent(OuterMapCursorView);
+        this._mapCursorView.node.removeFromParent();
+        this._mapBottomView.addChild(this._mapCursorView.node);
 
         // force change shadow siblingIndex
-        node.getChildByName("shadow").setSiblingIndex(99);
-        this.mapcur.node.setSiblingIndex(99);
+        mapView.getChildByName("shadow").setSiblingIndex(99);
 
-        var _tilemap = node.getComponent(TiledMap);
+        var _tilemap = mapView.getComponent(TiledMap);
         _tilemap.enableCulling = false;
         let c = new Color(255, 255, 255, 255);
         _tilemap.getLayer("shadow").color = c;
@@ -361,8 +360,8 @@ export class MapBG extends Component {
         //place building on blayer, will be coverd by shadow.
 
         var _lnode = new Node("blayer");
-        _lnode.parent = node;
-        _lnode.layer = node.layer;
+        _lnode.parent = mapView;
+        _lnode.layer = mapView.layer;
         _lnode.setSiblingIndex(1);
         this._buildinglayer = _lnode;
 
@@ -541,9 +540,8 @@ export class MapBG extends Component {
         }
         if (actionType >= 0) {
             if (this._actionMapCursor == null) {
-                this._actionMapCursor = instantiate(this.mapcur.node).getComponent(Sprite);
-                this._actionMapCursor.node.setParent(this._decorationView);
-                this._actionMapCursor.node.setSiblingIndex(0);
+                // this._actionMapCursor = instantiate(this.mapcur.node).getComponent(Sprite);
+                // this._actionMapCursor.node.setParent(this._mapBottomView);
             }
             let setWorldPosition = null;
             if (stayPositons.length == 1) {
