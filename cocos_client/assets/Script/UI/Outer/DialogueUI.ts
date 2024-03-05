@@ -4,6 +4,8 @@ import PioneerMgr from '../../Manger/PioneerMgr';
 import UserInfo from '../../Manger/UserInfoMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
 import CountMgr, { CountType } from '../../Manger/CountMgr';
+import { useI18n } from '../../Const/ConstDefine';
+import * as i18n from 'db://i18n/LanguageData';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -72,7 +74,7 @@ export class DialogueUI extends PopUpUI {
                 dialogView.getChildByName("player_name").active = true;
                 dialogView.getChildByPath("player_name/Label").getComponent(Label).string = UserInfo.Instance.playerName;
             }
-            dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = currentMesssage.text;
+            dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = useI18n ? i18n.t(currentMesssage.text) : currentMesssage.text;
             for (const roleName of this._roleNames) {
                 dialogView.getChildByName(roleName).active = roleName == currentMesssage.name;
             }
@@ -81,7 +83,7 @@ export class DialogueUI extends PopUpUI {
                 dialogView.active = true;
                 dialogView.getChildByName("name_bg").active = false;
                 dialogView.getChildByName("player_name").active = false;
-                dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = currentMesssage.text;
+                dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = useI18n ? i18n.t(currentMesssage.text) : currentMesssage.text;
                 for (const roleName of this._roleNames) {
                     dialogView.getChildByName(roleName).active = false;
                 }

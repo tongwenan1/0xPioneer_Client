@@ -9,6 +9,8 @@ import { PopUpUI } from '../../BasicView/PopUpUI';
 import { ItemInfoShowModel } from '../ItemInfoUI';
 import BuildingMgr from '../../Manger/BuildingMgr';
 import CountMgr, { CountType } from '../../Manger/CountMgr';
+import { useI18n } from '../../Const/ConstDefine';
+import * as i18n from 'db://i18n/LanguageData';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -74,7 +76,7 @@ export class EventUI extends PopUpUI {
         // type = 4：exchange
         // type = 5：Attributes
         // type = 6：jungle
-        this._dialogView.getChildByPath("content/label").getComponent(Label).string = event.text;
+        this._dialogView.getChildByPath("content/label").getComponent(Label).string = useI18n ? i18n.t(event.text) : event.text;
 
         this._dialogNextButton.active = false;
         this._dialogFightButton.active = false;

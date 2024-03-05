@@ -13,4 +13,4 @@ export enum EventName{
 
 
 
-
+export const useI18n = false;

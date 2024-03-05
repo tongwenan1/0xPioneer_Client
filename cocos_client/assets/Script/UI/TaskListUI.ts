@@ -5,6 +5,8 @@ import BuildingMgr from '../Manger/BuildingMgr';
 import PioneerMgr from '../Manger/PioneerMgr';
 import CommonTools from '../Tool/CommonTools';
 import UserInfoMgr from '../Manger/UserInfoMgr';
+import { useI18n } from '../Const/ConstDefine';
+import * as i18n from 'db://i18n/LanguageData';
 
 const { ccclass, property } = _decorator;
 
@@ -51,8 +53,8 @@ export class TaskListUI extends PopUpUI {
             const curStepCondIndex = curStep.condwinStep == null ? 0 : curStep.condwinStep;
             const action = instantiate(this._actionItem);
             action.active = true;
-            action.getChildByName("Title").getComponent(Label).string = toDoTasks[i].name;
-            action.getChildByName("SubTitle").getComponent(Label).string = curStep.name;
+            action.getChildByName("Title").getComponent(Label).string = useI18n ? i18n.t(toDoTasks[i].name) : toDoTasks[i].name;
+            action.getChildByName("SubTitle").getComponent(Label).string = useI18n ? i18n.t(curStep.name) : curStep.name;
             action.getChildByName("Progress").getComponent(Label).string = curStepCondIndex + "/" + curStep.condwin.length;
             action.getComponent(Button).clickEvents[0].customEventData = JSON.stringify(curStep);
             action.setParent(this._actionItem.getParent());
@@ -72,7 +74,7 @@ export class TaskListUI extends PopUpUI {
             for (let i = 0; i < showTasks.length; i++) {
                 const detail = instantiate(this._detailTaskItem);
                 detail.active = true;
-                detail.getChildByName("Label").getComponent(Label).string = showTasks[i].name;
+                detail.getChildByName("Label").getComponent(Label).string = useI18n ? i18n.t(showTasks[i].name) : showTasks[i].name;
                 detail.getChildByName("Selected").active = i == this._detailSelectedIndex;
                 detail.getComponent(Button).clickEvents[0].customEventData = i.toString();
                 detail.setParent(this._detailTaskItem.getParent());
@@ -147,7 +149,7 @@ export class TaskListUI extends PopUpUI {
                             const finish = instantiate(this._detailProgressFinishItem);
                             finish.active = true;
                             finish.setParent(this._detailProgressFinishItem.getParent());
-                            finish.getChildByName("Title").getComponent(Label).string = temple.stepData.name;
+                            finish.getChildByName("Title").getComponent(Label).string = useI18n ? i18n.t(temple.stepData.name) : temple.stepData.name;
                             finish.getChildByName("Progress").getComponent(Label).string = curStepCondIndex + "/" + temple.stepData.condwin.length;
                             this._detailProgressList.push(finish);
 
@@ -162,7 +164,7 @@ export class TaskListUI extends PopUpUI {
                             const finish = instantiate(this._detailProgressToDoItem);
                             finish.active = true;
                             finish.setParent(this._detailProgressToDoItem.getParent());
-                            finish.getChildByName("Title").getComponent(Label).string = temple.stepData.name;
+                            finish.getChildByName("Title").getComponent(Label).string = useI18n ? i18n.t(temple.stepData.name) : temple.stepData.name;
                             finish.getChildByName("Progress").getComponent(Label).string = curStepCondIndex + "/" + temple.stepData.condwin.length;
                             this._detailProgressList.push(finish);
                         }
