@@ -154,6 +154,7 @@ export class MapBG extends Component {
     private _buildinglayer: Node = null;
     private _mapBottomView: Node = null;
     private _mapCursorView: OuterMapCursorView = null;
+    private _mapActionCursorView: OuterMapCursorView = null;
     private _decorationView: Node = null;
     private _fogView: OuterFogMask = null;
     private _fogAnimView: Mask = null;
@@ -163,7 +164,9 @@ export class MapBG extends Component {
     private _boundItemMap: Map<string, Node> = new Map();
     private _boundPrefabItems: Node[] = [];
     private _actionView: ResOprView = null;
-    private _actionMapCursor: Sprite = null;
+
+    private _hexScale: number = 0.5;
+    private _hexViewRadius: number = 0;
     protected onLoad(): void {
         // local shadow erase
         this._initTileMap();
@@ -245,12 +248,10 @@ export class MapBG extends Component {
             }
             else {
                 if (this._tiledhelper != null) {
-                    const hexScale: number = 0.5;
-                    const hexViewRadius: number = this._tiledhelper.tilewidth * hexScale / 2;
                     var pos = event.getLocation();
                     var wpos = GameMain.inst.MainCamera.screenToWorld(new Vec3(pos.x, pos.y, 0));
                     var tp = this._tiledhelper.getPosByWorldPos(wpos);
-                    if (tp != null) {                
+                    if (tp != null) {
                         if (!this.isAllBlackShadow(tp.x, tp.y)) {
                             const isBlock = this._tiledhelper.Path_IsBlock(tp.x, tp.y);
                             if (isBlock) {
@@ -264,15 +265,15 @@ export class MapBG extends Component {
                                 if (cursorShowTilePositions == null) {
                                     cursorShowTilePositions = [v2(tp.x, tp.y)];
                                 }
-                                this._mapCursorView.show(hexViewRadius, hexScale, cursorShowTilePositions, true);
+                                this._mapCursorView.show(cursorShowTilePositions, true);
                                 GameMain.inst.UI.ChangeCursor(2);
 
                             } else {
                                 const stayBuilding = BuildingMgr.instance.getShowBuildingByMapPos(v2(tp.x, tp.y));
                                 if (stayBuilding != null) {
                                     if (stayBuilding.show) {
-                                        this._mapCursorView.show(hexViewRadius, hexScale, stayBuilding.stayMapPositions, false);
-    
+                                        this._mapCursorView.show(stayBuilding.stayMapPositions, false);
+
                                         GameMain.inst.UI.ChangeCursor(1);
                                     }
                                 } else {
@@ -287,12 +288,7 @@ export class MapBG extends Component {
                                     if (existOtherPioneer != null) {
                                         GameMain.inst.UI.ChangeCursor(1);
                                     }
-                                    if (stayPioneers.length > 0) {
-                                        this._mapCursorView.show(this._tiledhelper.tilewidth /2 / 2, 0.5, [stayPioneers[0].stayPos], false);
-                                    } else {
-                                        this._mapCursorView.hide();
-                                    }
-                                    this._mapCursorView.show(hexViewRadius, hexScale, [v2(tp.x, tp.y)], false);
+                                    this._mapCursorView.show([v2(tp.x, tp.y)], false);
                                 }
                             }
                         } else {
@@ -342,6 +338,10 @@ export class MapBG extends Component {
         this._mapCursorView = this.node.getChildByName("PointerCursor").getComponent(OuterMapCursorView);
         this._mapCursorView.node.removeFromParent();
         this._mapBottomView.addChild(this._mapCursorView.node);
+
+        this._mapActionCursorView = this.node.getChildByName("ActionCursor").getComponent(OuterMapCursorView);
+        this._mapActionCursorView.node.removeFromParent();
+        this._mapBottomView.addChild(this._mapActionCursorView.node);
 
         // force change shadow siblingIndex
         mapView.getChildByName("shadow").setSiblingIndex(99);
@@ -402,6 +402,11 @@ export class MapBG extends Component {
         this._actionView.node.setScale(v3(2, 2, 2));
         this._actionView.node.setParent(this.node);
         this._actionView.hide();
+
+        this._hexViewRadius = this._tiledhelper.tilewidth * this._hexScale / 2;
+
+        this._mapCursorView.initData(this._hexViewRadius, this._hexScale);
+        this._mapActionCursorView.initData(this._hexViewRadius, this._hexScale);
     }
     private _setObjLayer(obj: Node, layer: number) {
         obj.layer = layer;
@@ -445,9 +450,7 @@ export class MapBG extends Component {
     private _clickOnMap(worldpos: Vec3) {
         if (this._actionView.isShow) {
             this._actionView.hide();
-            if (this._actionMapCursor != null) {
-                this._actionMapCursor.node.active = false;
-            }
+            this._mapActionCursorView.hide();
             this.node.getComponent(OuterPioneerController).hideMovingPioneerAction();
             return;
         }
@@ -539,14 +542,10 @@ export class MapBG extends Component {
             }
         }
         if (actionType >= 0) {
-            if (this._actionMapCursor == null) {
-                // this._actionMapCursor = instantiate(this.mapcur.node).getComponent(Sprite);
-                // this._actionMapCursor.node.setParent(this._mapBottomView);
-            }
+            this._mapActionCursorView.show(stayPositons, false);
             let setWorldPosition = null;
             if (stayPositons.length == 1) {
                 setWorldPosition = this._tiledhelper.getPosWorld(stayPositons[0].x, stayPositons[0].y);
-                this._actionMapCursor.spriteFrame = this.mapcurMultiSelectFrame[0];
 
             } else if (stayPositons.length == 3) {
                 const beginWorldPos = this._tiledhelper.getPosWorld(stayPositons[0].x, stayPositons[0].y);
@@ -556,11 +555,9 @@ export class MapBG extends Component {
                     endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2,
                     0
                 );
-                this._actionMapCursor.spriteFrame = this.mapcurMultiSelectFrame[1];
 
             } else if (stayPositons.length == 7) {
                 setWorldPosition = this._tiledhelper.getPosWorld(stayPositons[3].x, stayPositons[3].y);
-                this._actionMapCursor.spriteFrame = this.mapcurMultiSelectFrame[2];
             }
             this._actionView.show(setWorldPosition, actionType, () => {
                 currentActionPioneer.purchaseMovingPioneerId = purchaseMovingPioneerId;
@@ -573,21 +570,14 @@ export class MapBG extends Component {
                     targetTilePos = v2(tiledPos.x, tiledPos.y);
                 }
                 PioneerInfo.instance.pioneerBeginMove(currentActionPioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, targetTilePos));
-                if (this._actionMapCursor != null) {
-                    this._actionMapCursor.node.active = false;
-                }
+                this._mapActionCursorView.hide();
                 this.node.getComponent(OuterPioneerController).hideMovingPioneerAction();
             }, () => {
-                if (this._actionMapCursor != null) {
-                    this._actionMapCursor.node.active = false;
-                }
+                this._mapActionCursorView.hide();
                 this.node.getComponent(OuterPioneerController).hideMovingPioneerAction();
             });
-            this._actionMapCursor.node.active = true;
-            this._actionMapCursor.node.worldPosition = setWorldPosition;
-            this.sortMapItemSiblingIndex();
             if (actionMovingPioneerId != null) {
-                this.node.getComponent(OuterPioneerController).showMovingPioneerAction(tiledPos, actionMovingPioneerId, this._actionMapCursor.node);
+                this.node.getComponent(OuterPioneerController).showMovingPioneerAction(tiledPos, actionMovingPioneerId, this._mapActionCursorView);
             }
 
         } else if (actionType == -1) {

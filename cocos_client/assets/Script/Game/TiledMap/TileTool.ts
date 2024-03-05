@@ -390,7 +390,7 @@ export class TileMapHelper {
 
                 //block
                 var block = btag == blocktag;
-
+                
                 this._blocked[y * this.height + x] = block;
 
             }

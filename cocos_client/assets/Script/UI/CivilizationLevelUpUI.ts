@@ -6,7 +6,6 @@ const { ccclass, property } = _decorator;
 export class CivilizationLevelUpUI extends PopUpUI {
 
     public refreshUI(levelConfig: any) {
-        console.log("exce config: ", levelConfig);
         if (levelConfig == null) {
             return;
         }

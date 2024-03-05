@@ -5,7 +5,15 @@ const { ccclass, property } = _decorator;
 
 @ccclass('OuterMapCursorView')
 export class OuterMapCursorView extends Component {
-    public show(hexViewRadius: number, parentScale: number, tiledPosions: Vec2[], isError: boolean) {
+    public initData(hexViewRadius: number, parentScale: number) {
+        this._hexViewRadius = hexViewRadius;
+        this._parentScale = parentScale;
+    }
+    public show(tiledPosions: Vec2[], isError: boolean) {
+        if (this._hexViewRadius == null ||
+            this._parentScale == null) {
+            return;
+        }
         const worldPositons: { centerPos: Vec3, borderAngle: number, lineWidth: number }[] = [];
         const sinValue = Math.sin(30 * Math.PI / 180);
         for (let i = 0; i < tiledPosions.length; i++) {
@@ -17,12 +25,12 @@ export class OuterMapCursorView extends Component {
                 !tiledPosions.some(pos => pos.x === leftTop.x && pos.y === leftTop.y)) {
                 worldPositons.push({
                     centerPos: v3(
-                        -hexViewRadius / 2 + centerWorldPos.x,
-                        sinValue * hexViewRadius + (hexViewRadius - sinValue * hexViewRadius) / 2 + centerWorldPos.y,
+                        -this._hexViewRadius / 2 + centerWorldPos.x,
+                        sinValue * this._hexViewRadius + (this._hexViewRadius - sinValue * this._hexViewRadius) / 2 + centerWorldPos.y,
                         0
                     ),
                     borderAngle: 30,
-                    lineWidth: hexViewRadius / parentScale / Math.cos(30 * Math.PI / 180)
+                    lineWidth: this._hexViewRadius / this._parentScale / Math.cos(30 * Math.PI / 180)
                 });
             }
             // left 
@@ -31,12 +39,12 @@ export class OuterMapCursorView extends Component {
                 !tiledPosions.some(pos => pos.x === left.x && pos.y === left.y)) {
                 worldPositons.push({
                     centerPos: v3(
-                        -hexViewRadius + centerWorldPos.x,
+                        -this._hexViewRadius + centerWorldPos.x,
                         0 + centerWorldPos.y,
                         0
                     ),
                     borderAngle: 90,
-                    lineWidth: hexViewRadius / parentScale
+                    lineWidth: this._hexViewRadius / this._parentScale
                 });
             }
             // left bottom
@@ -45,12 +53,12 @@ export class OuterMapCursorView extends Component {
                 !tiledPosions.some(pos => pos.x === leftBottom.x && pos.y === leftBottom.y)) {
                 worldPositons.push({
                     centerPos: v3(
-                        -hexViewRadius / 2 + centerWorldPos.x,
-                        -sinValue * hexViewRadius - Math.abs(-hexViewRadius + sinValue * hexViewRadius) / 2 + centerWorldPos.y,
+                        -this._hexViewRadius / 2 + centerWorldPos.x,
+                        -sinValue * this._hexViewRadius - Math.abs(-this._hexViewRadius + sinValue * this._hexViewRadius) / 2 + centerWorldPos.y,
                         0
                     ),
                     borderAngle: -30,
-                    lineWidth: hexViewRadius / parentScale / Math.cos(30 * Math.PI / 180)
+                    lineWidth: this._hexViewRadius / this._parentScale / Math.cos(30 * Math.PI / 180)
                 });
             }
             // right bottom
@@ -59,12 +67,12 @@ export class OuterMapCursorView extends Component {
                 !tiledPosions.some(pos => pos.x === rightBottom.x && pos.y === rightBottom.y)) {
                 worldPositons.push({
                     centerPos: v3(
-                        hexViewRadius / 2 + centerWorldPos.x,
-                        -sinValue * hexViewRadius - Math.abs(-hexViewRadius + sinValue * hexViewRadius) / 2  + centerWorldPos.y,
+                        this._hexViewRadius / 2 + centerWorldPos.x,
+                        -sinValue * this._hexViewRadius - Math.abs(-this._hexViewRadius + sinValue * this._hexViewRadius) / 2 + centerWorldPos.y,
                         0
                     ),
                     borderAngle: 30,
-                    lineWidth: hexViewRadius / parentScale / Math.cos(30 * Math.PI / 180)
+                    lineWidth: this._hexViewRadius / this._parentScale / Math.cos(30 * Math.PI / 180)
                 });
             }
             // right
@@ -73,12 +81,12 @@ export class OuterMapCursorView extends Component {
                 !tiledPosions.some(pos => pos.x === right.x && pos.y === right.y)) {
                 worldPositons.push({
                     centerPos: v3(
-                        hexViewRadius + centerWorldPos.x,
+                        this._hexViewRadius + centerWorldPos.x,
                         0 + centerWorldPos.y,
                         0
                     ),
                     borderAngle: 90,
-                    lineWidth: hexViewRadius / parentScale
+                    lineWidth: this._hexViewRadius / this._parentScale
                 });
             }
             // right top
@@ -87,12 +95,12 @@ export class OuterMapCursorView extends Component {
                 !tiledPosions.some(pos => pos.x === rightTop.x && pos.y === rightTop.y)) {
                 worldPositons.push({
                     centerPos: v3(
-                        hexViewRadius / 2 + centerWorldPos.x,
-                        sinValue * hexViewRadius + (hexViewRadius - sinValue * hexViewRadius) / 2 + centerWorldPos.y,
+                        this._hexViewRadius / 2 + centerWorldPos.x,
+                        sinValue * this._hexViewRadius + (this._hexViewRadius - sinValue * this._hexViewRadius) / 2 + centerWorldPos.y,
                         0
                     ),
                     borderAngle: -30,
-                    lineWidth: hexViewRadius / parentScale / Math.cos(30 * Math.PI / 180)
+                    lineWidth: this._hexViewRadius / this._parentScale / Math.cos(30 * Math.PI / 180)
                 });
             }
         }
@@ -106,13 +114,12 @@ export class OuterMapCursorView extends Component {
                 line.setParent(this.node);
                 this._cursorBorderPool.push(line);
             }
-            line.getComponent(UITransform).setContentSize(size( worldPositons[index].lineWidth, 6));
+            line.getComponent(UITransform).setContentSize(size(worldPositons[index].lineWidth, 6));
             line.active = true;
             line.getComponent(Sprite).color = isError ? Color.RED : Color.WHITE;
             line.setPosition(this.node.getComponent(UITransform).convertToNodeSpaceAR(worldPositons[index].centerPos));
             line.angle = worldPositons[index].borderAngle;
         }
-        index += 1;
         for (; index < this._cursorBorderPool.length; index++) {
             this._cursorBorderPool[index].destroy();
             this._cursorBorderPool.splice(index, 1);
@@ -123,10 +130,21 @@ export class OuterMapCursorView extends Component {
         for (const node of this._cursorBorderPool) {
             node.active = false;
         }
+        this.node.position = v3(0, 0, 0);
+    }
+    public move(sub: Vec2) {
+        this.node.position = v3(
+            this.node.position.x + sub.x,
+            this.node.position.y + sub.y,
+            this.node.position.z
+        );
     }
 
     @property(SpriteFrame)
     private cursorBorderImage: SpriteFrame = null;
+
+    private _hexViewRadius: number = 0;
+    private _parentScale: number = 0;
 
     private _cursorBorderNode: Node = null;
     private _cursorBorderPool: Node[] = null;
