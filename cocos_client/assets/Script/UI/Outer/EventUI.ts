@@ -267,36 +267,38 @@ export class EventUI extends PopUpUI {
                         temple.tipText = "you need AT LEAST " + num + " " + itemConf.itemName;
                     }
                 }
-            } else if (type == 3) {
-                if (this._triggerPioneerId != null) {
-                    const pioneer = PioneerMgr.instance.getPioneerById(this._triggerPioneerId);
-                    if (id == 1) {
-                        // hp
-                        if (pioneer.hp > num) {
-                            // only hp need left 1
-                            temple.satisfy = true;
-                        } else {
-                            temple.satisfy = false;
-
-                            // useLanMgr
-                            // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num+1]);
-                            temple.tipText = "you need AT LEAST " + (num + 1) + " HP";
-                        }
-
-                    } else if (id == 2) {
-                        // attack
-                        if (pioneer.attack >= num) {
-                            temple.satisfy = true;
-                        } else {
-                            temple.satisfy = false;
-
-                            // useLanMgr
-                            // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
-                            temple.tipText = "you need AT LEAST " + num + " Attack";
-                        }
-                    }
-                }
             }
+            // reserved for later
+            // } else if (type == 3) {
+            //     if (this._triggerPioneerId != null) {
+            //         const pioneer = PioneerMgr.instance.getPioneerById(this._triggerPioneerId);
+            //         if (id == 1) {
+            //             // hp
+            //             if (pioneer.hp > num) {
+            //                 // only hp need left 1
+            //                 temple.satisfy = true;
+            //             } else {
+            //                 temple.satisfy = false;
+
+            //                 // useLanMgr
+            //                 // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num+1]);
+            //                 temple.tipText = "you need AT LEAST " + (num + 1) + " HP";
+            //             }
+
+            //         } else if (id == 2) {
+            //             // attack
+            //             if (pioneer.attack >= num) {
+            //                 temple.satisfy = true;
+            //             } else {
+            //                 temple.satisfy = false;
+
+            //                 // useLanMgr
+            //                 // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
+            //                 temple.tipText = "you need AT LEAST " + num + " Attack";
+            //             }
+            //         }
+            //     }
+            // }
         }
         return temple;
     }
