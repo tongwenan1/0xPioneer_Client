@@ -27,6 +27,8 @@ import { RecruitUI } from './Inner/RecruitUI';
 import { EventName } from '../Const/ConstDefine';
 import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
 import LanMgr from '../Manger/LanMgr';
+import { ArtifactUI } from './ArtifactUI';
+import { ArtifactInfoUI } from './ArtifactInfoUI';
 
 const { ccclass, property } = _decorator;
 
@@ -62,9 +64,14 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
 
     @property(Prefab)
     BackpackUIPfb: Prefab;
-    
     @property(Prefab)
     ItemInfoUIPfb: Prefab;
+
+    @property(Prefab)
+    ArtifactUIPfb: Prefab;
+    @property(Prefab)
+    ArtifactInfoUIPfb: Prefab;
+
     
     @property([SpriteFrame])
     ResourceIconSpriteFrame: SpriteFrame[] = [];
@@ -83,6 +90,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
     public backpackUI: BackpackUI;
     public itemInfoUI: ItemInfoUI;
 
+    public artifactUI: ArtifactUI;
+    public artifactInfoUI: ArtifactInfoUI;
+
     private _claimRewardUI: ClaimRewardUI;
 
     @property(Node)
@@ -93,6 +103,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
 
     @property(Button)
     backpackBtn:Button = null;
+
+    @property(Button)
+    artifactBtn:Button = null;
     
     private _gangsterComingTipView: Node = null;
 
@@ -156,6 +169,14 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
         this.itemInfoUI.node.setParent(this.UIRoot);
         this.itemInfoUI.node.active = false;
 
+
+        this.artifactUI = instantiate(this.ArtifactUIPfb).getComponent(ArtifactUI);
+        this.artifactUI.node.setParent(this.UIRoot);
+        this.artifactUI.node.active = false;
+        this.artifactInfoUI = instantiate(this.ArtifactInfoUIPfb).getComponent(ArtifactInfoUI);
+        this.artifactInfoUI.node.setParent(this.UIRoot);
+        this.artifactInfoUI.node.active = false;
+
         this._claimRewardUI = this.node.getChildByName("reward_ui").getComponent(ClaimRewardUI);
 
         EventMgr.on(EventName.SCENE_CHANGE, this.onSceneChange, this);
@@ -175,7 +196,11 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
         
         this.backpackBtn.node.on(Button.EventType.CLICK, ()=>{
             GameMain.inst.UI.backpackUI.show(true);
-        }, this);        
+        }, this);
+
+        this.artifactBtn.node.on(Button.EventType.CLICK, ()=>{
+            GameMain.inst.UI.artifactUI.show(true);
+        }, this);    
     }
 
     update(deltaTime: number) {
