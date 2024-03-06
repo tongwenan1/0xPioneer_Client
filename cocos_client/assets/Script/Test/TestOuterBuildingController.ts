@@ -4,6 +4,7 @@ import EventMgr from '../Manger/EventMgr';
 import PioneerMgr from '../Manger/PioneerMgr';
 import { OuterBuildingView } from '../Game/Outer/View/OuterBuildingView';
 import { TestMapBG } from './TestMapBG';
+import { EventName } from '../Const/ConstDefine';
 
 const { ccclass, property } = _decorator;
 
@@ -21,7 +22,7 @@ export class TestOuterBuildingController extends Component {
     private _started: boolean = false;
     private _dataLoaded: boolean = false;
     protected onLoad() {
-        EventMgr.on("Event_LoadOver", this.onLocalDataLoadOver, this);
+        EventMgr.on(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
        
     }
 

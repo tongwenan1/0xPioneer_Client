@@ -4,6 +4,8 @@ import { BackpackItem } from './BackpackItem';
 import ItemMgr, { ItemMgrEvent, ItemArrangeType } from '../Manger/ItemMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import LanMgr from '../Manger/LanMgr';
+import EventMgr from '../Manger/EventMgr';
+import { EventName } from '../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 
@@ -44,18 +46,8 @@ export class BackpackUI extends PopUpUI implements ItemMgrEvent {
         this._sortMenu.active = false;
 
         this._menuArrow = this.node.getChildByPath("Bg/SortView/Menu/Arrow");
-    }
 
-    onEnable(): void {
-        // useLanMgr
-        // this.node.getChildByPath("Bg/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Bg/QuantityLabel").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Bg/SortView/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Bg/ArrangeButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._sortMenu.getChildByPath("Content/Recently").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._sortMenu.getChildByPath("Content/Type").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        EventMgr.on(EventName.CHANGE_LANG, this._refreshBackpackUI, this);
     }
 
     start() {
@@ -66,9 +58,22 @@ export class BackpackUI extends PopUpUI implements ItemMgrEvent {
 
     onDestroy(): void {
         ItemMgr.Instance.removeObserver(this);
+
+        EventMgr.off(EventName.CHANGE_LANG, this._refreshBackpackUI, this);
     }
 
     private _refreshBackpackUI() {
+
+        // useLanMgr
+        // this.node.getChildByPath("Bg/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Bg/QuantityLabel").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Bg/SortView/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Bg/ArrangeButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._sortMenu.getChildByPath("Content/Recently").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._sortMenu.getChildByPath("Content/Type").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+
         const items = ItemMgr.Instance.localItemDatas;
 
         let cAry: BackpackItem[] = [];
@@ -132,7 +137,6 @@ export class BackpackUI extends PopUpUI implements ItemMgrEvent {
         }
         this._currentArrangeType = customEventData as ItemArrangeType;
         
-        // useLanMgr**
         switch (this._currentArrangeType) {
             case ItemArrangeType.Rarity:
                 this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string;
@@ -144,7 +148,6 @@ export class BackpackUI extends PopUpUI implements ItemMgrEvent {
                 this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Type").getComponent(Label).string;
                 break;
         }
-        //this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = this._currentArrangeType;
 
         this._selectSortMenuShow = false;
         this._refreshMenu();

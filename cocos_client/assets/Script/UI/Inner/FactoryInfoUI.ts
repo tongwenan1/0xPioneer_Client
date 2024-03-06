@@ -4,6 +4,7 @@ import { EventName } from '../../Const/ConstDefine';
 import { UserInnerBuildInfo } from '../../Manger/UserInfoMgr';
 import InnerBuildingMgr from '../../Manger/InnerBuildingMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
+import LanMgr from '../../Manger/LanMgr';
 
 const { ccclass, property } = _decorator;
 
@@ -42,13 +43,25 @@ export class FactoryInfoUI extends PopUpUI {
 
     private _data: UserInnerBuildInfo;
 
-    onEnable(): void {
-        // useLanMgr
-        
+    onLoad(): void {
+        EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
     }
-
     start() {
 
+    }
+    onDestroy(): void {
+        EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
+    }
+
+    changeLang(): void {
+        if (this.node.active === false) return;
+
+        // useLanMgr
+        // this.node.getChildByPath("bg_inner_upgrade_info/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Info/Glod-001").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Info/Energy").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Info/Civil").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Info/Working").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
     }
 
     public get canUpgrade() {
@@ -63,6 +76,9 @@ export class FactoryInfoUI extends PopUpUI {
     }
 
     refreshUI(data: UserInnerBuildInfo) {
+
+        this.changeLang();
+
         log('initUI ', data);
         this._data = data;
 
@@ -72,10 +88,18 @@ export class FactoryInfoUI extends PopUpUI {
         if (data.buildLevel < buildingInfo.maxLevel) {
             this.btnUpgrade.node.active = true;
             if (data.buildLevel == 0) {
+                
+                // useLanMgr
+                // this.btnUpgradeTxt.string = LanMgr.Instance.getLanById("107549");
                 this.btnUpgradeTxt.string = "Unlock";
+
                 this.progressNode.active = false;
             } else {
+
+                // useLanMgr
+                // this.btnUpgradeTxt.string = LanMgr.Instance.getLanById("107549");
                 this.btnUpgradeTxt.string = "Upgrade";
+
                 this.progressNode.active = true;
             }
         } else {

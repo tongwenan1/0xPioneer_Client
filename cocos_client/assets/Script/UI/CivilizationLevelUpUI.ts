@@ -1,15 +1,36 @@
 import { _decorator, Component, Label, Node } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
+import { EventName } from '../Const/ConstDefine';
+import EventMgr from '../Manger/EventMgr';
 import LanMgr from '../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('CivilizationLevelUpUI')
 export class CivilizationLevelUpUI extends PopUpUI {
 
+    onLoad(): void {
+        EventMgr.on(EventName.CHANGE_LANG, this.refreshUI, this);
+    }
+
+    onDestroy(): void {
+        EventMgr.off(EventName.CHANGE_LANG, this.refreshUI, this);
+    }
+
     public refreshUI(levelConfig: any) {
         if (levelConfig == null) {
             return;
         }
+
+        // useLanMgr
+        // this.node.getChildByPath("Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Content/LevelChanged").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Content/RewardContent/CityFeature").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Content/RewardContent/CityVersion").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Content/RewardContent/EventUpdate").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Content/RewardContent/ResGetRateUp").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Content/RewardContent/GetHpMax").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Content/RewardContent/Rewards/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+
         // title
         this.node.getChildByPath("Content/LevelChanged").getComponent(Label).string = "Lv " + (levelConfig.id - 1) + "  >  Lv " + levelConfig.id;
 
@@ -43,18 +64,6 @@ export class CivilizationLevelUpUI extends PopUpUI {
 
     start() {
 
-    }
-
-    onEnable(): void {
-        // useLanMgr
-        // this.node.getChildByPath("Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/LevelChanged").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/RewardContent/CityFeature").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/RewardContent/CityVersion").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/RewardContent/EventUpdate").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/RewardContent/ResGetRateUp").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/RewardContent/GetHpMax").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/RewardContent/Rewards/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
     }
 
     update(deltaTime: number) {

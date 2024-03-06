@@ -3,6 +3,8 @@ import UserInfo from '../../Manger/UserInfoMgr';
 import CommonTools from '../../Tool/CommonTools';
 import { PopUpUI } from '../../BasicView/PopUpUI';
 import LanMgr from '../../Manger/LanMgr';
+import EventMgr from '../../Manger/EventMgr';
+import { EventName } from '../../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
@@ -12,6 +14,14 @@ export class RecruitUI extends PopUpUI {
         if (initSelectGenerate) {
             this._selectGenerateNum = 0;
         }
+
+        // useLanMgr
+        // this.node.getChildByPath("Bg/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("Bg/current_res/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("Bg/recruiting/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("Bg/footer/time/txt").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("Bg/footer/Button/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+
         const maxTroop: number = 9999999;
         this._totalTroop.string = maxTroop.toString();
         this._currentTroop.string = UserInfo.Instance.troop.toString();
@@ -78,16 +88,8 @@ export class RecruitUI extends PopUpUI {
         this._maxWood = this.node.getChildByPath("Bg/footer/material/wood/num/right").getComponent(Label);
         this._usedStone = this.node.getChildByPath("Bg/footer/material/stone/num/left").getComponent(Label);
         this._maxStone = this.node.getChildByPath("Bg/footer/material/stone/num/right").getComponent(Label);
-    }
 
-    onEnable(): void {
-        // useLanMgr
-        // this.node.getChildByPath("Bg/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByName("Bg/current_res/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByName("Bg/recruiting/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByName("Bg/footer/time/txt").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByName("Bg/footer/Button/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-
+        EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
     }
 
     start() {
@@ -96,6 +98,15 @@ export class RecruitUI extends PopUpUI {
 
     update(deltaTime: number) {
         
+    }
+
+    onDestroy(): void {
+        EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
+    }
+
+    changeLang(): void {
+        if (this.node.active === false) return;
+        this.refreshUI();
     }
 
     //---------------------------------- action

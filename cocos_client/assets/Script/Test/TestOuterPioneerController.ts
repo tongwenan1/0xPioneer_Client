@@ -14,6 +14,7 @@ import { OuterOtherPioneerView } from '../Game/Outer/View/OuterOtherPioneerView'
 import { MapItemMonster } from '../Game/Outer/View/MapItemMonster';
 import { MapPioneer } from '../Game/Outer/View/MapPioneer';
 import { TestMapBG } from './TestMapBG';
+import { EventName } from '../Const/ConstDefine';
 
 
 const { ccclass, property } = _decorator;
@@ -48,7 +49,7 @@ export class TestOuterPioneerController extends Component {
     protected onLoad(): void {
         
         this._pioneerMap = new Map();
-        EventMgr.on("Event_LoadOver", this.onLocalDataLoadOver, this);
+        EventMgr.on(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
     }
 
     start() {

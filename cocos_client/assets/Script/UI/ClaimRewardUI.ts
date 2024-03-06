@@ -4,6 +4,7 @@ import { GameMain } from "../GameMain";
 import BoxMgr from "../Manger/BoxMgr";
 import EventMgr from "../Manger/EventMgr"; 
 import LanMgr from "../Manger/LanMgr";
+import { EventName } from "../Const/ConstDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("ClaimRewardUI")
@@ -71,7 +72,7 @@ export class ClaimRewardUI extends Component {
     private _boxViews: Node[] = [];
 
     protected onLoad(): void {
-        EventMgr.on("Event_LoadOver", this.loadOver, this);
+        EventMgr.on(EventName.LOADING_FINISH, this.loadOver, this);
     }
     start() {
         this._started = true;

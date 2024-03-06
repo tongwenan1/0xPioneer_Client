@@ -5,6 +5,8 @@ import UserInfo from '../../Manger/UserInfoMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
 import CountMgr, { CountType } from '../../Manger/CountMgr';
 import LanMgr from '../../Manger/LanMgr';
+import EventMgr from '../../Manger/EventMgr';
+import { EventName } from '../../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -15,8 +17,6 @@ export class DialogueUI extends PopUpUI {
         this._dialogStep = 0;
         this._refreshUI();
     }
-
-
 
     public override get typeName() {
         return "DialogueUI";
@@ -36,21 +36,16 @@ export class DialogueUI extends PopUpUI {
         "secretGuard"
     ];
     onLoad(): void {
-        
+        EventMgr.on(EventName.CHANGE_LANG, this._refreshUI, this);
     }
-
-    onEnable(): void {
-        // useLanMgr
-        // this.node.getChildByPath("Dialog/NextButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-    }
-    
-
     start() {
 
     }
-
     update(deltaTime: number) {
 
+    }
+    onDestroy(): void {
+        EventMgr.off(EventName.CHANGE_LANG, this._refreshUI, this);
     }
 
 
@@ -59,6 +54,10 @@ export class DialogueUI extends PopUpUI {
             this._dialogStep > this._talk.messsages.length - 1) {
             return;
         }
+        
+        // useLanMgr
+        // this.node.getChildByPath("Dialog/NextButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+
         const dialogView = this.node.getChildByName("Dialog");
         const selectView = this.node.getChildByName("SelectView");
 

@@ -17,6 +17,8 @@ import { MapPioneer } from './View/MapPioneer';
 import { MapBG } from '../../Scene/MapBG';
 import LvlupMgr from '../../Manger/LvlupMgr';
 import { OuterMapCursorView } from './View/OuterMapCursorView';
+import { EventName } from '../../Const/ConstDefine';
+import LanMgr from '../../Manger/LanMgr';
 
 
 const { ccclass, property } = _decorator;
@@ -121,7 +123,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
         this._pioneerMap = new Map();
 
-        EventMgr.on("Event_LoadOver", this.onLocalDataLoadOver, this);
+        EventMgr.on(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
     }
 
     start() {

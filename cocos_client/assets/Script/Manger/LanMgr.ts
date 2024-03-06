@@ -1,4 +1,6 @@
 import { resources } from "cc";
+import { EventName } from "../Const/ConstDefine";
+import EventMgr from "./EventMgr";
 
 export default class LanMgr {
 
@@ -18,7 +20,15 @@ export default class LanMgr {
 
     public replaceLanById(id: string, args: any[]) {
         let lan = this.getLanById(id);
+        for (let i = 0; i < args.length; i++) {
+            lan = lan.replace("%s", args[i]);
+        }
         return lan;
+    }
+
+    public changeLang(lang: string) {
+        this._language = lang;
+        EventMgr.emit(EventName.CHANGE_LANG);
     }
 
     public static get Instance() {

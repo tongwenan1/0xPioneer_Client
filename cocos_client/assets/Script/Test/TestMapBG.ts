@@ -160,7 +160,7 @@ export class TestMapBG extends Component {
         this.InitTileMap();
 
         await LocalDataLoader.instance.loadLocalDatas();
-        EventMgr.emit("Event_LoadOver");
+        EventMgr.emit(EventName.LOADING_FINISH);
     }
     
     private _tiledhelper: TileMapHelper = null;

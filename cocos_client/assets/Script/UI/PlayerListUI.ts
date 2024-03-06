@@ -8,6 +8,7 @@ import EventMgr from '../Manger/EventMgr';
 import { TilePos } from '../Game/TiledMap/TileTool';
 import MapPioneerModel, { MapPlayerPioneerModel, MapPioneerActionType, MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import LanMgr from '../Manger/LanMgr';
+import { EventName } from '../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerListUI')
@@ -35,12 +36,8 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
         }
         this._playerItem.active = false;
 
-        EventMgr.on("Event_LoadOver", this.loadOver, this);
-    }
-
-    onEnable(): void {
-        // useLanMgr
-        // this.node.getChildByPath("content/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        EventMgr.on(EventName.LOADING_FINISH, this.loadOver, this);
+        EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
     }
 
     start() {
@@ -51,11 +48,21 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
 
     protected onDestroy(): void {
         PioneerInfo.instance.removeObserver(this);
+        EventMgr.off(EventName.LOADING_FINISH, this.loadOver, this);
+        EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
     }
 
     private loadOver() {
         this._dataLoaded = true;
+        this.changeLang();
         this._startAction();
+    }
+
+    private changeLang() {
+        if (this.node.active === false) return;
+
+        // useLanMgr
+        // this.node.getChildByName("title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
     }
 
     private _startAction() {

@@ -10,6 +10,8 @@ import { ItemInfoShowModel } from '../ItemInfoUI';
 import BuildingMgr from '../../Manger/BuildingMgr';
 import CountMgr, { CountType } from '../../Manger/CountMgr';
 import LanMgr from '../../Manger/LanMgr';
+import EventMgr from '../../Manger/EventMgr';
+import { EventName } from '../../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -56,12 +58,8 @@ export class EventUI extends PopUpUI {
         this._dialogSelectView = this._dialogView.getChildByName("selectView");
         this._selectItem = this._dialogSelectView.getChildByName("button");
         this._selectItem.active = false;
-    }
 
-    onEnable(): void {
-        // useLanMgr
-        // this._dialogView.getChildByPath("nextButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._dialogView.getChildByPath("fightButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        EventMgr.on(EventName.CHANGE_LANG, this._refreshUI, this);
     }
 
     start() {
@@ -70,6 +68,10 @@ export class EventUI extends PopUpUI {
 
     update(deltaTime: number) {
 
+    }
+
+    onDestroy(): void {
+        EventMgr.off(EventName.CHANGE_LANG, this._refreshUI, this);
     }
 
     private _refreshUI(event: any) {
@@ -85,6 +87,8 @@ export class EventUI extends PopUpUI {
         // type = 6：jungle
 
         // useLanMgr
+        // this._dialogView.getChildByPath("nextButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._dialogView.getChildByPath("fightButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this._dialogView.getChildByPath("content/label").getComponent(Label).string = LanMgr.Instance.getLanById(event.text);
         this._dialogView.getChildByPath("content/label").getComponent(Label).string = event.text;
 

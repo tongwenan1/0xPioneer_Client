@@ -1,4 +1,5 @@
 import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt, UIOpacity, instantiate, tween } from 'cc';
+import { EventName } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import EventMgr from '../Manger/EventMgr';
 import LvlupMgr from '../Manger/LvlupMgr';
@@ -41,7 +42,7 @@ export default class TopUI extends Component implements UserInfoEvent {
 
         UserInfo.Instance.addObserver(this);
 
-        EventMgr.on("Event_LoadOver", this.loadOver, this);
+        EventMgr.on(EventName.LOADING_FINISH, this.loadOver, this);
     }
 
     start() {

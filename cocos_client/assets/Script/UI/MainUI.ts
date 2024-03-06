@@ -104,12 +104,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
 
         PioneerMgr.instance.addObserver(this);
         UserInfo.Instance.addObserver(this);
-    }
 
-    onEnable(): void {
-        // useLanMgr
-        // this.node.getChildByPath("LeftNode/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("icon_treasure_box/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
+
     }
 
     async start() {
@@ -119,6 +116,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
 
         let factoryInfoUINode = instantiate(this.factoryInfoUIPfb);
         factoryInfoUINode.setParent(this.UIRoot);
+        factoryInfoUINode.active = false;
+
+        this.factoryInfoUI = factoryInfoUINode.getComponent(FactoryInfoUI);
 
         this.dialogueUI = instantiate(this.dialoguePrefab).getComponent(DialogueUI);
         this.dialogueUI.node.setParent(this.UIRoot);
@@ -163,7 +163,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
         if (LocalDataLoader.instance.loadStatus == 0) {
             await LocalDataLoader.instance.loadLocalDatas();
         }
-        EventMgr.emit("Event_LoadOver");
+        EventMgr.emit(EventName.LOADING_FINISH);
+
+        this.changeLang();
         
         const bigGanster = PioneerMgr.instance.getPioneerById("gangster_3");
         if (bigGanster != null && bigGanster.show) {
@@ -173,7 +175,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
         
         this.backpackBtn.node.on(Button.EventType.CLICK, ()=>{
             GameMain.inst.UI.backpackUI.show(true);
-        }, this);
+        }, this);        
     }
 
     update(deltaTime: number) {
@@ -183,6 +185,14 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
     onDestroy(): void {
         PioneerMgr.instance.removeObserver(this);
         UserInfo.Instance.removeObserver(this);
+
+        EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
+    }
+
+    changeLang(): void {
+        // useLanMgr
+        // this.node.getChildByPath("LeftNode/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("icon_treasure_box/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
     }
 
     onSceneChange() {

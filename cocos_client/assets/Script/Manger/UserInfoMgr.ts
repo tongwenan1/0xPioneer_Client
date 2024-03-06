@@ -406,6 +406,11 @@ export default class UserInfoMgr {
             if (nextLvConfig[0].hp_max > 0) {
                 PioneerMgr.instance.changeAllMyPioneerHpMax(nextLvConfig[0].hp_max);
             }
+
+            // event_building
+            if (nextLvConfig[0].event_building != null) {
+                
+            }
         }
     }
     public set cityVision(value: number) {

@@ -1,7 +1,8 @@
-import { _decorator, Component, Node, Button, SpriteFrame, Sprite } from 'cc';
+import { _decorator, Component, Node, Button, SpriteFrame, Sprite, resources } from 'cc';
 import { EventName } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import EventMgr from '../Manger/EventMgr';
+import LanMgr from '../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerOutChangeBtn')
@@ -15,6 +16,44 @@ export class InnerOutChangeBtn extends Component {
 
     _sprite:Sprite;
 
+    async refreshUI(): Promise<void> {
+        let innerIcon = LanMgr.Instance.getLanById("107549");
+        let outIcon = LanMgr.Instance.getLanById("107549");
+
+        const innerIconFrame = await new Promise((resolve) => {
+            resources.load(innerIcon+"/spriteFrame", SpriteFrame, (err: Error, icon) => {
+                if (err) {
+                    resolve(null);
+                    return;
+                }
+                resolve(icon);
+            });
+        });
+        if (innerIconFrame != null) {
+            this.InnerIcon = innerIconFrame as SpriteFrame;
+        }
+
+        const outIconFrame = await new Promise((resolve) => {
+            resources.load(outIcon+"/spriteFrame", SpriteFrame, (err: Error, icon) => {
+                if (err) {
+                    resolve(null);
+                    return;
+                }
+                resolve(icon);
+            });
+        });
+        if (outIconFrame != null) {
+            this.OutIcon = outIconFrame as SpriteFrame;
+        }
+
+        this.onSceneChange();
+    }
+
+    onLoad(): void {
+        EventMgr.on(EventName.LOADING_FINISH, this.refreshUI, this);
+        EventMgr.on(EventName.CHANGE_LANG, this.refreshUI, this);
+    }
+
     start() {
 
         this._sprite = this.node.getComponent(Sprite);
@@ -24,6 +63,12 @@ export class InnerOutChangeBtn extends Component {
         this.node.on(Node.EventType.MOUSE_DOWN, (event) => {
             GameMain.inst.changeScene();
         }, this)
+        
+    }
+
+    onDestroy(): void {
+        EventMgr.off(EventName.CHANGE_LANG, this.refreshUI, this);
+        EventMgr.off(EventName.LOADING_FINISH, this.refreshUI, this);
     }
     
     onSceneChange() {
@@ -38,6 +83,8 @@ export class InnerOutChangeBtn extends Component {
     update(deltaTime: number) {
         
     }
+
+
 }
 
 
