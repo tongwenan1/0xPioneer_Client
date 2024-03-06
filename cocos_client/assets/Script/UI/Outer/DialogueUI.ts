@@ -112,8 +112,8 @@ export class DialogueUI extends PopUpUI {
                     button.active = true;
 
                     // useLanMgr
-                    button.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.select[i]);
-                    // button.getChildByName("Label").getComponent(Label).string = currentMesssage.select[i];
+                    // button.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.select[i]);
+                    button.getChildByName("Label").getComponent(Label).string = currentMesssage.select[i];
 
                     button.getComponent(Button).clickEvents[0].customEventData = currentMesssage.select[i];
                 } else {

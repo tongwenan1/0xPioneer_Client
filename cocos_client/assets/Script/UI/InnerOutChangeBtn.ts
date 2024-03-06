@@ -17,6 +17,7 @@ export class InnerOutChangeBtn extends Component {
     _sprite:Sprite;
 
     async refreshUI(): Promise<void> {
+        // useLanMgr
         let innerIcon = LanMgr.Instance.getLanById("107549");
         let outIcon = LanMgr.Instance.getLanById("107549");
 
