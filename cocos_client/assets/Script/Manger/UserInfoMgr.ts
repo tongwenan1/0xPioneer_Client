@@ -7,7 +7,8 @@ import { ItemInfoShowModel } from "../UI/ItemInfoUI";
 import CountMgr, { CountType } from "./CountMgr";
 import LvlupMgr from "./LvlupMgr";
 import PioneerMgr from "./PioneerMgr";
-import { ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { ItemGetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import BuildingMgr from "./BuildingMgr";
 
 export interface UserInnerBuildInfo {
     buildID: string,
@@ -347,7 +348,7 @@ export default class UserInfoMgr {
                 this.cityVision += nextLvConfig[0].city_vision;
             }
         }
-        
+
         this._localJsonData.playerData.exp = value;
         this._localDataChanged(this._localJsonData);
 
@@ -361,7 +362,7 @@ export default class UserInfoMgr {
 
         if (isLvlup) {
             for (const observe of this._observers) {
-                if (observe.playerLvlupChanged != null) { 
+                if (observe.playerLvlupChanged != null) {
                     observe.playerLvlupChanged(this._level);
                 }
             }
@@ -372,7 +373,27 @@ export default class UserInfoMgr {
 
             // event_building
             if (nextLvConfig[0].event_building != null) {
-                
+                for (const buidingId of nextLvConfig[0].event_building) {
+                    BuildingMgr.instance.showBuilding(buidingId);
+                }
+            }
+
+            // reward
+            if (nextLvConfig[0].reward != null) {
+                const items = [];
+                for (const reward of nextLvConfig[0].reward) {
+                    if (reward.length == 3) {
+                        if (reward[0] == ItemGetType.Item) {
+                            items.push(new ItemData(
+                                parseInt(reward[1]),
+                                reward[2]
+                            ));
+                        }
+                    }
+                }
+                if (items.length > 0) {
+                    ItemMgr.Instance.addItem(items);
+                }
             }
         }
     }
@@ -601,7 +622,7 @@ export default class UserInfoMgr {
                             count: r.num
                         });
                     }
-                    
+
                     addItems.push(new ItemData(r.itemConfigId, r.num));
                 }
                 ItemMgr.Instance.addItem(addItems);

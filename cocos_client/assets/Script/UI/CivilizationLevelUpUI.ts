@@ -1,14 +1,21 @@
-import { _decorator, Component, Label, Node } from 'cc';
+import { _decorator, Component, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { EventName } from '../Const/ConstDefine';
 import EventMgr from '../Manger/EventMgr';
 import LanMgr from '../Manger/LanMgr';
+import { BackpackItem } from './BackpackItem';
+import ItemMgr from '../Manger/ItemMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('CivilizationLevelUpUI')
 export class CivilizationLevelUpUI extends PopUpUI {
 
+    private _rewardItem: Node = null;
+
+    private _showRewardItems: Node[] = [];
     onLoad(): void {
+        this._rewardItem = this.node.getChildByPath("Content/RewardContent/Rewards/Content/Item")
+        this._rewardItem.active = false;
         EventMgr.on(EventName.CHANGE_LANG, this.refreshUI, this);
     }
 
@@ -16,7 +23,7 @@ export class CivilizationLevelUpUI extends PopUpUI {
         EventMgr.off(EventName.CHANGE_LANG, this.refreshUI, this);
     }
 
-    public refreshUI(levelConfig: any) {
+    public async refreshUI(levelConfig: any) {
         if (levelConfig == null) {
             return;
         }
@@ -57,6 +64,23 @@ export class CivilizationLevelUpUI extends PopUpUI {
 
         if (levelConfig.reward != null && levelConfig.reward.length > 0) {
             content.getChildByName("Rewards").active = true;
+            for (const item of this._showRewardItems) {
+                item.destroy();
+            }
+            this._showRewardItems = [];
+            for (const data of levelConfig.reward) {
+                if (data.length == 3) {
+                    const type = data[0];
+                    const id = parseInt(data[1]);
+                    const num = data[2];
+                    const view = instantiate(this._rewardItem);
+                    view.active = true;
+                    view.getChildByName("Icon").getComponent(Sprite).spriteFrame = await BackpackItem.getItemIcon(ItemMgr.Instance.getItemConf(id).icon);
+                    view.getChildByName("Num").getComponent(Label).string = "x" + num;
+                    view.setParent(content.getChildByPath("Rewards/Content"));
+                }
+            }
+            content.getChildByPath("Rewards/Content").getComponent(Layout).updateLayout();
         } else {
             content.getChildByName("Rewards").active = false;
         }
