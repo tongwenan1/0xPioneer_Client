@@ -1,12 +1,13 @@
 import { Asset, __private, resources, sys } from "cc";
 import TaskMgr from "./TaskMgr";
 import ItemMgr from "./ItemMgr";
-import ItemData from "../Model/ItemData";
+import ItemData, { ItemType } from "../Model/ItemData";
 import { GameMain } from "../GameMain";
 import { ItemInfoShowModel } from "../UI/ItemInfoUI";
 import CountMgr, { CountType } from "./CountMgr";
 import LvlupMgr from "./LvlupMgr";
 import PioneerMgr from "./PioneerMgr";
+import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 
 export interface UserInnerBuildInfo {
     buildID: string,
@@ -34,12 +35,6 @@ export enum FinishedEvent {
 
 export interface UserInfoEvent {
     playerNameChanged(value: string): void;
-    playerEnergyChanged?(value: number): void;
-    playerMoneyChanged?(value: number): void;
-    playerFoodChanged?(value: number): void;
-    playerWoodChanged?(value: number): void;
-    playerStoneChanged?(value: number): void;
-    playerTroopChanged?(value: number): void;
     playerExpChanged?(value: number): void;
     playerLvlupChanged?(value: number): void;
 
@@ -302,12 +297,6 @@ export default class UserInfoMgr {
     public get level() {
         return this._level;
     }
-    public get money() {
-        return this._money;
-    }
-    public get energy() {
-        return this._energy;
-    }
     public get exp() {
         return this._exp;
     }
@@ -316,18 +305,6 @@ export default class UserInfoMgr {
     }
     public get innerBuilds(): Map<string, UserInnerBuildInfo> {
         return this._innerBuilds;
-    }
-    public get food() {
-        return this._food;
-    }
-    public get wood() {
-        return this._wood;
-    }
-    public get stone() {
-        return this._stone;
-    }
-    public get troop() {
-        return this._troop;
     }
     public get explorationValue() {
         return this._explorationValue;
@@ -353,20 +330,6 @@ export default class UserInfoMgr {
 
         for (const observe of this._observers) {
             observe.playerNameChanged(value);
-        }
-    }
-    public set energy(value: number) {
-        const original = this._energy;
-        this._energy = value;
-        this._localJsonData.playerData.energy = value;
-        this._localDataChanged(this._localJsonData);
-
-        if (this._energy != original) {
-            for (const observe of this._observers) {
-                if (observe.playerEnergyChanged != null) {
-                    observe.playerEnergyChanged(this._energy - original);
-                }
-            }
         }
     }
     public set exp(value: number) {
@@ -419,76 +382,6 @@ export default class UserInfoMgr {
         this._localJsonData.playerData.cityVision = value;
         this._localDataChanged(this._localJsonData);
     }
-    public set money(value: number) {
-        const original = this._money;
-        this._money = value;
-        this._localJsonData.playerData.money = value;
-        this._localDataChanged(this._localJsonData);
-
-        if (this._money != original) {
-            for (const observe of this._observers) {
-                if (observe.playerMoneyChanged != null) {
-                    observe.playerMoneyChanged(this._money - original);
-                }
-            }
-        }
-    }
-    public set food(value: number) {
-        const original = this._food;
-        this._food = value;
-        this._localJsonData.playerData.food = value;
-        this._localDataChanged(this._localJsonData);
-
-        if (this._food != original) {
-            for (const observe of this._observers) {
-                if (observe.playerFoodChanged != null) {
-                    observe.playerFoodChanged(this._food - original);
-                }
-            }
-        }
-    }
-    public set wood(value: number) {
-        const original = this._wood;
-        this._wood = value;
-        this._localJsonData.playerData.wood = value;
-        this._localDataChanged(this._localJsonData);
-
-        if (this._wood != original) {
-            for (const observe of this._observers) {
-                if (observe.playerWoodChanged != null) {
-                    observe.playerWoodChanged(this._wood - original);
-                }
-            }
-        }
-    }
-    public set stone(value: number) {
-        const original = this._stone;
-        this._stone = value;
-        this._localJsonData.playerData.stone = value;
-        this._localDataChanged(this._localJsonData);
-
-        if (this._stone != original) {
-            for (const observe of this._observers) {
-                if (observe.playerStoneChanged != null) {
-                    observe.playerStoneChanged(this._stone - original);
-                }
-            }
-        }
-    }
-    public set troop(value: number) {
-        const original = this._troop;
-        this._troop = Math.max(0, value);
-        this._localJsonData.playerData.troop = this._troop;
-        this._localDataChanged(this._localJsonData);
-
-        if (this._troop != original) {
-            for (const observe of this._observers) {
-                if (observe.playerTroopChanged != null) {
-                    observe.playerTroopChanged(this._troop - original);
-                }
-            }
-        }
-    }
     public set explorationValue(value: number) {
         const original = this._explorationValue;
         this._explorationValue = value;
@@ -512,7 +405,7 @@ export default class UserInfoMgr {
                     this._generateTroopInfo.countTime -= 1;
                 }
                 if (this._generateTroopInfo.countTime <= 0) {
-                    this.troop += this._generateTroopInfo.troopNum;
+                    ItemMgr.Instance.addItem([new ItemData(ResourceCorrespondingItem.Troop, this._generateTroopInfo.troopNum)]);
                     this._generateTroopInfo = null;
                 }
                 for (const observe of this._observers) {
@@ -535,16 +428,9 @@ export default class UserInfoMgr {
     private _playerID: string = null;
     private _playerName: string = null;
     private _level: number = null;
-    private _money: number = null;
-    private _energy: number = null;
     private _exp: number = null;
     private _cityVision: number = null;
     private _innerBuilds: Map<string, UserInnerBuildInfo> = null;
-
-    private _food: number = null;
-    private _wood: number = null
-    private _stone: number = null;
-    private _troop: number = null;
 
     private _explorationValue: number = 0;
     private _gettedExplorationRewardIds: string[] = [];
@@ -581,14 +467,8 @@ export default class UserInfoMgr {
         this._playerID = jsonObject.playerData.playerID;
         this._playerName = jsonObject.playerData.playerName;
         this._level = jsonObject.playerData.level;
-        this._money = jsonObject.playerData.money;
-        this._energy = jsonObject.playerData.energy;
         this._exp = jsonObject.playerData.exp;
         this._cityVision = jsonObject.playerData.cityVision;
-        this._food = jsonObject.playerData.food;
-        this._wood = jsonObject.playerData.wood;
-        this._stone = jsonObject.playerData.stone;
-        this._troop = jsonObject.playerData.troop;
 
         if (jsonObject.playerData.currentTasks != null) {
             this._currentTasks = jsonObject.playerData.currentTasks;
@@ -715,14 +595,19 @@ export default class UserInfoMgr {
                         continue;
                     }
 
-                    showDatas.push({
-                        itemConfig: itemConf,
-                        count: r.num
-                    });
+                    if (itemConf.itemType != ItemType.Resource) {
+                        showDatas.push({
+                            itemConfig: itemConf,
+                            count: r.num
+                        });
+                    }
+                    
                     addItems.push(new ItemData(r.itemConfigId, r.num));
                 }
                 ItemMgr.Instance.addItem(addItems);
-                GameMain.inst.UI.itemInfoUI.showItem(showDatas, true);
+                if (showDatas.length > 0) {
+                    GameMain.inst.UI.itemInfoUI.showItem(showDatas, true);
+                }
             }
 
             if (step.afterTalkRewardItem != null) {

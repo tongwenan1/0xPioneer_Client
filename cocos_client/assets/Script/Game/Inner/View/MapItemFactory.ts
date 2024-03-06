@@ -9,6 +9,7 @@ import CommonTools from '../../../Tool/CommonTools';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import CountMgr, { CountType } from '../../../Manger/CountMgr';
 import LanMgr from '../../../Manger/LanMgr';
+import ItemMgr from '../../../Manger/ItemMgr';
 
 const { ccclass, property } = _decorator;
 
@@ -130,16 +131,7 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
             // resource save waiting changed
             const nextLevelInfo = buildingInfo.up[this.buildData.buildLevel + 1];
             for (const resource of nextLevelInfo.cost) {
-                if (resource.type == "resource_01" && UserInfoMgr.Instance.wood < resource.num) {
-                    canUpgrade = false;
-                    break;
-                } else if (resource.type == "resource_02" && UserInfoMgr.Instance.stone < resource.num) {
-                    canUpgrade = false;
-                    break;
-                } else if (resource.type == "resource_03" && UserInfoMgr.Instance.food < resource.num) {
-                    canUpgrade = false;
-                    break;
-                } else if (resource.type == "resource_04" && UserInfoMgr.Instance.troop < resource.num) {
+                if (ItemMgr.Instance.getOwnItemCount(parseInt(resource.type)) < resource.num) {
                     canUpgrade = false;
                     break;
                 }
@@ -154,16 +146,7 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
             }
             this._upgradeIng = true;
             for (const resource of nextLevelInfo.cost) {
-                // resource save waiting changed
-                if (resource.type == "resource_01") {
-                    UserInfoMgr.Instance.wood -= resource.num;
-                } else if (resource.type == "resource_02") {
-                    UserInfoMgr.Instance.stone -= resource.num;
-                } else if (resource.type == "resource_03") {
-                    UserInfoMgr.Instance.food -= resource.num;
-                } else if (resource.type == "resource_04") {
-                    UserInfoMgr.Instance.troop -= resource.num;
-                }
+                ItemMgr.Instance.subItem(parseInt(resource.type), resource.num);
             }
             UserInfoMgr.Instance.upgradeBuild(this.buildID);
             UserInfoMgr.Instance.explorationValue += nextLevelInfo.progress;
@@ -182,24 +165,6 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
     //---------------------------------------------------
     // UserInfoEvent
     playerNameChanged(value: string): void {
-
-    }
-    playerEnergyChanged?(value: number): void {
-
-    }
-    playerMoneyChanged?(value: number): void {
-
-    }
-    playerFoodChanged?(value: number): void {
-
-    }
-    playerWoodChanged?(value: number): void {
-
-    }
-    playerStoneChanged?(value: number): void {
-
-    }
-    playerTroopChanged?(value: number): void {
 
     }
     playerExplorationValueChanged?(value: number): void {

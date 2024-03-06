@@ -9,13 +9,13 @@ const { ccclass, property } = _decorator;
 export class BackpackItem extends Component {
 
     private static __itemIconSpriteFrames = {};
-    static async getItemIcon(ItemConfigId:number):Promise<SpriteFrame> {
-        if(ItemConfigId in BackpackItem.__itemIconSpriteFrames) {
-            return BackpackItem.__itemIconSpriteFrames[ItemConfigId];
+    static async getItemIcon(iconName: string):Promise<SpriteFrame> {
+        if(iconName in BackpackItem.__itemIconSpriteFrames) {
+            return BackpackItem.__itemIconSpriteFrames[iconName];
         }
 
         const frame = await new Promise((resolve) => {
-            cc.resources.load("ui/icon/item_"+ItemConfigId+"/spriteFrame", SpriteFrame, (err: Error, icon) => {
+            cc.resources.load("ui/icon/" + iconName +"/spriteFrame", SpriteFrame, (err: Error, icon) => {
                 if (err) {
                     resolve(null);
                     return;
@@ -25,10 +25,10 @@ export class BackpackItem extends Component {
         });
         if (frame != null) {
 
-            BackpackItem.__itemIconSpriteFrames[ItemConfigId] = frame;
+            BackpackItem.__itemIconSpriteFrames[iconName] = frame;
         }
 
-        return BackpackItem.__itemIconSpriteFrames[ItemConfigId];
+        return BackpackItem.__itemIconSpriteFrames[iconName];
     }
     
     @property(Sprite)
@@ -52,11 +52,11 @@ export class BackpackItem extends Component {
 
     public async initItem(itemdata:ItemData) {
         this._itemData = itemdata;
+        this._itemConf = ItemMgr.Instance.getItemConf(this._itemData.itemConfigId);
 
-        let frame = await BackpackItem.getItemIcon(this._itemData.itemConfigId);
+        let frame = await BackpackItem.getItemIcon(this._itemConf.icon);
         this.IconSprite.spriteFrame = frame;
 
-        this._itemConf = ItemMgr.Instance.getItemConf(this._itemData.itemConfigId);
         
         this.BgSprite.spriteFrame = this.BgSpriteFrames[this._itemConf.grade - 1];
 

@@ -8,6 +8,8 @@ import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel, MapPlayerP
 import BuildingMgr from "./BuildingMgr";
 import CountMgr, { CountType } from "./CountMgr";
 import BranchEventMgr from "./BranchEventMgr";
+import ItemMgr from "./ItemMgr";
+import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 
 export interface PioneerMgrEvent {
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void;
@@ -810,8 +812,8 @@ export default class PioneerMgr {
                                     if (mainCity != null && mainCity.faction != BuildingFactionType.enemy) {
                                         rebirthMapPos = mainCity.stayMapPositions[1];
                                     }
-                                    let rebirthHp: number = Math.max(1, Math.min(UserInfo.Instance.troop, pioneer.hpMax));
-                                    UserInfo.Instance.troop -= rebirthHp;
+                                    let rebirthHp: number = Math.max(1, Math.min(ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Troop), pioneer.hpMax));
+                                    ItemMgr.Instance.subItem(ResourceCorrespondingItem.Troop, rebirthHp);
                                     pioneer.rebirth(rebirthHp, rebirthMapPos);
                                     pioneer.eventStatus = MapPioneerEventStatus.None;
                                     pioneer.actionType = MapPioneerActionType.idle;

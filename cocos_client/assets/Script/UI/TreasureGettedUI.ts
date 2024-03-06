@@ -1,11 +1,12 @@
 import { _decorator, Color, Component, Label, Node, Sprite, tween, v3, Animation, ParticleSystem2D } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
-import ItemData from '../Model/ItemData';
+import ItemData, { ItemType } from '../Model/ItemData';
 import { GameMain } from '../GameMain';
 import DropMgr from '../Manger/DropMgr';
 import ItemMgr from '../Manger/ItemMgr';
 import UserInfoMgr from '../Manger/UserInfoMgr';
 import { BackpackItem } from './BackpackItem';
+import { ItemGetType } from '../Const/ConstDefine';
 
 
 const { ccclass, property } = _decorator;
@@ -48,6 +49,10 @@ export class TreasureGettedUI extends PopUpUI {
             const useDrop = drop[0];
             const items = [];
             const weights = [];
+            // drop type index 0
+            // drop num index 1
+            // drop weight index 2
+            // drop id index 3
             for (const temple of useDrop.drop_group) {
                 items.push({
                     type: temple[0],
@@ -62,16 +67,7 @@ export class TreasureGettedUI extends PopUpUI {
                 let iconspr = itemShowNode.getChildByPath("icon").getComponent(Sprite);
                 let framespr = itemShowNode.getChildByPath("Item_frame").getComponent(Sprite);
                 framespr.color = Color.WHITE;
-
-                if (resultReward.type == "resource_01") {
-                    iconspr.spriteFrame = GameMain.inst.UI.ResourceIconSpriteFrame[0];
-                } else if (resultReward.type == "resource_02") {
-                    iconspr.spriteFrame = GameMain.inst.UI.ResourceIconSpriteFrame[1];
-                } else if (resultReward.type == "resource_03") {
-                    iconspr.spriteFrame = GameMain.inst.UI.ResourceIconSpriteFrame[2];
-                } else if (resultReward.type == "resource_04") {
-                    iconspr.spriteFrame = GameMain.inst.UI.ResourceIconSpriteFrame[3];
-                } else if (resultReward.type == "backpack_item") {
+                if (resultReward.type == ItemGetType.Item) {
                     iconspr.spriteFrame = await BackpackItem.getItemIcon(resultReward.itemConfigId);
                     let itemConf = ItemMgr.Instance.getItemConf(resultReward.itemConfigId);
                     if (itemConf) {
@@ -81,6 +77,18 @@ export class TreasureGettedUI extends PopUpUI {
                         // error
                     }
                 }
+                // wait xx changed
+                // if (resultReward.type == "resource_01") {
+                //     iconspr.spriteFrame = GameMain.inst.UI.ResourceIconSpriteFrame[0];
+                // } else if (resultReward.type == "resource_02") {
+                //     iconspr.spriteFrame = GameMain.inst.UI.ResourceIconSpriteFrame[1];
+                // } else if (resultReward.type == "resource_03") {
+                //     iconspr.spriteFrame = GameMain.inst.UI.ResourceIconSpriteFrame[2];
+                // } else if (resultReward.type == "resource_04") {
+                //     iconspr.spriteFrame = GameMain.inst.UI.ResourceIconSpriteFrame[3];
+                // } else if (resultReward.type == "backpack_item") {
+                    
+                // }
             }
         }
 
@@ -103,22 +111,16 @@ export class TreasureGettedUI extends PopUpUI {
             .delay(0.5)
             .call(() => {
                 if (resultReward) {
-                    if (resultReward.type == "resource_01") {
-                        UserInfoMgr.Instance.wood += resultReward.num;
-                    } else if (resultReward.type == "resource_02") {
-                        UserInfoMgr.Instance.stone += resultReward.num;
-                    } else if (resultReward.type == "resource_03") {
-                        UserInfoMgr.Instance.food += resultReward.num;
-                    } else if (resultReward.type == "resource_04") {
-                        UserInfoMgr.Instance.troop += resultReward.num;
-                    } else if (resultReward.type == "backpack_item") {
+                    if (resultReward.type == ItemGetType.Item) {
                         let itemConf = ItemMgr.Instance.getItemConf(resultReward.itemConfigId);
                         if (itemConf) {
                             ItemMgr.Instance.addItem([new ItemData(itemConf.configId, resultReward.num)]);
-                            GameMain.inst.UI.itemInfoUI.showItem([{
-                                itemConfig: itemConf,
-                                count: resultReward.num,
-                            }], true);
+                            if (itemConf.itemType != ItemType.Resource) {
+                                GameMain.inst.UI.itemInfoUI.showItem([{
+                                    itemConfig: itemConf,
+                                    count: resultReward.num,
+                                }], true);
+                            }
                         } else {
                             // TO DO : config error
                         }

@@ -21,10 +21,25 @@ export default class ItemMgr {
         }
         return null;
     }
-    public get itemIsFull(): boolean {
-        return this._localItemDatas.length >= this._maxItemLength;
+    public getOwnItemCount(itemConfigId: number): number {
+        let count: number = 0;
+        for (const item of this._localItemDatas) {
+            if (item.itemConfigId == itemConfigId) {
+                count += item.count;
+            }
+        }
+        return count;
     }
 
+    public get itemIsFull(): boolean {
+        let count: number = 0;
+        for (const temple of this._localItemDatas) {
+            if (this.getItemConf(temple.itemConfigId).itemType != ItemType.Resource) {
+                count += 1;
+            }
+        }
+        return count >= this._maxItemLength;
+    }
     public get localItemDatas(): ItemData[] {
         return this._localItemDatas;
     }
@@ -35,17 +50,36 @@ export default class ItemMgr {
         }
         let changed: boolean = false;
         for (const item of items) {
-            if (this.itemIsFull) {
-                break;
+            const itemConfig = this.getItemConf(item.itemConfigId);
+            if (itemConfig == null) {
+
+            } else {
+                if (itemConfig.itemType == ItemType.Resource) {
+
+                } else if (this.itemIsFull) {
+                    continue;
+                }
+                changed = true;
+                if (item.itemConfigId == 9) {
+                    //get master key
+                    UserInfoMgr.Instance.finishEvent(FinishedEvent.BecomeCityMaster);
+                }
+                // add timestamp
+                if (itemConfig.itemType == ItemType.Resource) {
+                    const exsitItems = this._localItemDatas.filter(v => v.itemConfigId == item.itemConfigId);
+                    if (exsitItems.length > 0) {
+                        exsitItems[0].count += item.count;
+                        exsitItems[0].addTimeStamp = new Date().getTime();
+                    } else {
+                        item.addTimeStamp = new Date().getTime();
+                        this._localItemDatas.push(item);
+                    }
+
+                } else {
+                    item.addTimeStamp = new Date().getTime();
+                    this._localItemDatas.push(item);
+                }
             }
-            changed = true;
-            if (item.itemConfigId == 9) {
-                //get master key
-                UserInfoMgr.Instance.finishEvent(FinishedEvent.BecomeCityMaster);
-            }
-            // add timestamp
-            item.addTimeStamp = new Date().getTime();
-            this._localItemDatas.push(item);
         }
         if (changed) {
             for (const observe of this._observers) {
@@ -68,23 +102,18 @@ export default class ItemMgr {
         }
 
         this._localItemDatas[idx].count -= count;
-        
+
         const itemConfig = this.getItemConf(itemConfigId);
         if (itemConfig != null) {
             if (itemConfig.itemType == ItemType.AddProp) {
-                switch (itemConfig.gainPropName) {
-                    case "wood":
-                        UserInfoMgr.Instance.wood += itemConfig.gainPropCount;
-                        break;
-                    case "food":
-                        UserInfoMgr.Instance.food += itemConfig.gainPropCount;
-                        break;
-                    case "troop":
-                        UserInfoMgr.Instance.troop += itemConfig.gainPropCount;
-                        break;
-                    case "stone":
-                        UserInfoMgr.Instance.stone += itemConfig.gainPropCount;
-                        break;
+                const exsitItems = this._localItemDatas.filter(v => v.itemConfigId.toString() == itemConfig.gainPropId);
+                if (exsitItems.length > 0) {
+                    exsitItems[0].count += itemConfig.gainPropCount;
+                    exsitItems[0].addTimeStamp = new Date().getTime();
+                } else {
+                    const newItem = new ItemData(parseInt(itemConfig.gainPropId), itemConfig.gainPropCount);
+                    newItem.addTimeStamp = new Date().getTime();
+                    this._localItemDatas.push(newItem);
                 }
             }
         }
@@ -175,7 +204,6 @@ export default class ItemMgr {
             for (var id in jsonObj) {
                 let jd = jsonObj[id];
                 let d = new ItemConfigData();
-
                 for (var key in jd) {
                     if (!d.hasOwnProperty(key)) {
                         continue;
@@ -186,7 +214,6 @@ export default class ItemMgr {
                 this._itemConfs[id] = d;
             }
         }
-
 
         // load local item data
         let jsonStr = sys.localStorage.getItem(this._localStorageKey);

@@ -11328,7 +11328,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "resource_03",
+    "_name": "8001",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -11464,7 +11464,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "resource_02",
+    "_name": "8003",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -11600,7 +11600,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "resource_04",
+    "_name": "8004",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -11736,7 +11736,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "resource_01",
+    "_name": "8002",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {

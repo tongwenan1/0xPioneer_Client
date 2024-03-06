@@ -154,10 +154,10 @@ export class MapPioneer extends Component {
         animView.active = true;
         animView.setParent(this.node);
         const resourceName = [
-            "resource_01",
-            "resource_02",
-            "resource_03",
-            "resource_04",
+            "8001",
+            "8002",
+            "8003",
+            "8004",
         ];
         for (const name of resourceName) {
             animView.getChildByName(name).active = resourceId == name;

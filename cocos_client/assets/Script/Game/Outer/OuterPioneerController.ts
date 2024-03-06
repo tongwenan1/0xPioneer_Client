@@ -17,8 +17,9 @@ import { MapPioneer } from './View/MapPioneer';
 import { MapBG } from '../../Scene/MapBG';
 import LvlupMgr from '../../Manger/LvlupMgr';
 import { OuterMapCursorView } from './View/OuterMapCursorView';
-import { EventName } from '../../Const/ConstDefine';
-import LanMgr from '../../Manger/LanMgr';
+import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import ItemMgr from '../../Manger/ItemMgr';
+import ItemData from '../../Model/ItemData';
 
 
 const { ccclass, property } = _decorator;
@@ -528,7 +529,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     exploredPioneer(pioneerId: string): void {
         const pioneer = PioneerMgr.instance.getPioneerById(pioneerId);
         if (pioneer != null && pioneer.type == MapPioneerType.gangster) {
-            UserInfoMgr.Instance.troop += pioneer.hpMax;
+            ItemMgr.Instance.addItem([new ItemData(ResourceCorrespondingItem.Troop, pioneer.hpMax)]);
         }
         UserInfoMgr.Instance.checkCanFinishedTask("explorewithpioneer", pioneerId);
     }
@@ -561,16 +562,9 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     actionView = this._pioneerMap.get(actionPioneerId);
                 }
                 for (const resource of building.resources) {
-                    actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resource.num, () => {
-                        if (resource.id == "resource_01") {
-                            UserInfoMgr.Instance.wood += Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
-                        } else if (resource.id == "resource_02") {
-                            UserInfoMgr.Instance.stone += Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
-                        } else if (resource.id == "resource_03") {
-                            UserInfoMgr.Instance.food += Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
-                        } else if (resource.id == "resource_04") {
-                            UserInfoMgr.Instance.troop += resource.num;
-                        }
+                    const resultNum: number = Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
+                    actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resultNum, () => {
+                        ItemMgr.Instance.addItem([new ItemData(parseInt(resource.id), resultNum)]);
                     });
                 }
             }

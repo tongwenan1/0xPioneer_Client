@@ -11,7 +11,7 @@ import BuildingMgr from '../../Manger/BuildingMgr';
 import CountMgr, { CountType } from '../../Manger/CountMgr';
 import LanMgr from '../../Manger/LanMgr';
 import EventMgr from '../../Manger/EventMgr';
-import { EventName } from '../../Const/ConstDefine';
+import { EventName, ItemGetType } from '../../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -117,7 +117,7 @@ export class EventUI extends PopUpUI {
                     if (event.select_cond != null && i < event.select_cond.length) {
                         conditionResult = this._checkIsSatisfiedCondition(event.select_cond[i]);
                     }
-                    
+
                     // useLanMgr
                     item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? LanMgr.Instance.getLanById(event.select_txt[i]) : conditionResult.tipText) : LanMgr.Instance.getLanById(event.select_txt[i]);
                     // item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? event.select_txt[i] : conditionResult.tipText) : event.select_txt[i];
@@ -251,76 +251,19 @@ export class EventUI extends PopUpUI {
         const temple: { satisfy: boolean, tipText: string } = { satisfy: true, tipText: "" };
         if (condition.length == 3) {
             const type: number = condition[0];
-            const id: number | string = condition[1];
+            const id: number = parseInt(condition[1]);
             const num: number = condition[2];
-            if (type == 1) {
-                // resource
-                const resourceId: string = id as string;
-                if (resourceId == "resource_01") {
-                    if (UserInfo.Instance.wood >= num) {
-                        temple.satisfy = true;
-                    } else {
-                        temple.satisfy = false;
 
-                        // useLanMgr
-                        // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
-                        temple.tipText = "you need AT LEAST " + num + " wood";
-                    }
-
-                } else if (resourceId == "resource_02") {
-                    if (UserInfo.Instance.stone >= num) {
-                        temple.satisfy = true;
-                    } else {
-                        temple.satisfy = false;
-
-                        // useLanMgr
-                        // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
-                        temple.tipText = "you need AT LEAST " + num + " stone";
-                    }
-
-                } else if (resourceId == "resource_03") {
-                    if (UserInfo.Instance.food >= num) {
-                        temple.satisfy = true;
-                    } else {
-                        temple.satisfy = false;
-
-                        // useLanMgr
-                        // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
-                        temple.tipText = "you need AT LEAST " + num + " food";
-                    }
-
-                } else if (resourceId == "resource_04") {
-                    if (UserInfo.Instance.troop >= num) {
-                        temple.satisfy = true;
-                    } else {
-                        temple.satisfy = false;
-
-                        // useLanMgr
-                        // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
-                        temple.tipText = "you need AT LEAST " + num + " troop";
-                    }
-                }
-            } else if (type == 2) {
-                // item
-                const itemId: number = id as number;
-                let satisfy: boolean = false;
-                for (const item of ItemMgr.Instance.localItemDatas) {
-                    if (item.itemConfigId == itemId) {
-                        if (item.count >= num) {
-                            satisfy = true;
-                        }
-                        break;
-                    }
-                }
-                if (satisfy) {
+            if (type == ItemGetType.Item) {
+                const currentNum = ItemMgr.Instance.getOwnItemCount(id);
+                if (currentNum >= num) {
                     temple.satisfy = true;
                 } else {
                     temple.satisfy = false;
-                    const itemConf = ItemMgr.Instance.getItemConf(itemId);
+                    const itemConf = ItemMgr.Instance.getItemConf(id);
                     if (itemConf != null) {
-
                         // useLanMgr
-                        // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num, LanMgr.Instance.getLanById(itemConf.itemName)]);
+                        // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
                         temple.tipText = "you need AT LEAST " + num + " " + itemConf.itemName;
                     }
                 }
@@ -367,7 +310,7 @@ export class EventUI extends PopUpUI {
                 const type: number = temple[0];
                 const id: number | string = temple[1];
                 const num = temple[2];
-                if (type == 1) {
+                if (type == ItemGetType.Item) {
                     // item
                     if (cost) {
                         for (const item of ItemMgr.Instance.localItemDatas) {
@@ -395,69 +338,6 @@ export class EventUI extends PopUpUI {
                         // showTip += LanMgr.Instance.replaceLanById("107549", [num, LanMgr.Instance.getLanById(itemConf.itemName)]) + "\n";
                         showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
                     }
-                } else if (type == 2) {
-                    // resource
-                    const resourceId: string = id as string;
-                    if (resourceId == "resource_01") {
-                        if (cost) {
-                            UserInfo.Instance.wood -= num;
-
-                            // useLanMgr
-                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
-                            showTip += ("You lost" + num + " wood\n");
-                        } else {
-                            UserInfo.Instance.wood += num;
-
-                            // useLanMgr
-                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
-                            showTip += ("You obtained" + num + " wood\n");
-                        }
-
-                    } else if (resourceId == "resource_02") {
-                        if (cost) {
-                            UserInfo.Instance.stone -= num;
-
-                            // useLanMgr
-                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
-                            showTip += ("You lost" + num + " stone\n");
-                        } else {
-                            UserInfo.Instance.stone += num;
-
-                            // useLanMgr
-                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
-                            showTip += ("You obtained" + num + " stone\n");
-                        }
-
-                    } else if (resourceId == "resource_03") {
-                        if (cost) {
-                            UserInfo.Instance.food -= num;
-
-                            // useLanMgr
-                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
-                            showTip += ("You lost" + num + " food\n");
-                        } else {
-                            UserInfo.Instance.food += num;
-
-                            // useLanMgr
-                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
-                            showTip += ("You obtained" + num + " food\n");
-                        }
-
-                    } else if (resourceId == "resource_04") {
-                        if (cost) {
-                            UserInfo.Instance.troop -= num;
-
-                            // useLanMgr
-                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
-                            showTip += ("You lost" + num + " troop\n");
-                        } else {
-                            UserInfo.Instance.troop += num;
-
-                            // useLanMgr
-                            // showTip += LanMgr.Instance.replaceLanById("107549", [num]) + "\n";
-                            showTip += ("You obtained" + num + " troop\n");
-                        }
-                    }
                 }
             }
         }
@@ -484,11 +364,9 @@ export class EventUI extends PopUpUI {
                     BuildingMgr.instance.hideBuilding(this._eventBuildingId);
 
                 } else if (eventId == "-2") {
-                    console.log('exce step3: ');
                     const building = BuildingMgr.instance.getBuildingById(this._eventBuildingId);
 
                     if (building != null) {
-                        console.log('exce step4: ' + building.originalEventId);
                         BuildingMgr.instance.changeBuildingEventId(this._eventBuildingId, building.originalEventId);
                     }
                 }
@@ -530,7 +408,7 @@ export class EventUI extends PopUpUI {
                 }
 
                 if (succeed) {
-                    
+
                 } else {
                     const event = BranchEventMgr.Instance.getEventById(eventId);
                     if (event.length > 0) {

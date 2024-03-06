@@ -416,24 +416,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
     playerNameChanged(value: string): void {
 
     }
-    playerEnergyChanged?(value: number): void {
-
-    }
-    playerMoneyChanged?(value: number): void {
-
-    }
-    playerFoodChanged?(value: number): void {
-
-    }
-    playerWoodChanged?(value: number): void {
-
-    }
-    playerStoneChanged?(value: number): void {
-
-    }
-    playerTroopChanged?(value: number): void {
-
-    }
     playerExplorationValueChanged?(value: number): void {
         this._claimRewardUI.refreshUI();
     }

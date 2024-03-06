@@ -23,7 +23,7 @@ export class ItemInfoUI extends PopUpUI {
         this._items = items;
         this._closeCallback = closeCallback;
         if (this._items.length > 0) {
-            let frame = await BackpackItem.getItemIcon(this._items[0].itemConfig.configId);
+            let frame = await BackpackItem.getItemIcon(this._items[0].itemConfig.icon);
             this.icon.spriteFrame = frame;
     
             this.typeLabel.string = this._items[0].itemConfig.itemType.toString();
@@ -31,8 +31,8 @@ export class ItemInfoUI extends PopUpUI {
             // useLanMgr
             // this.nameLabel.string = LanMgr.Instance.getLanById(this._items[0].itemConfig.itemName);
             // this.descTxt.string = LanMgr.Instance.getLanById(this._items[0].itemConfig.itemDesc);
-            this.nameLabel.string = this._items[0].itemConfig.itemName;
-            this.descTxt.string = this._items[0].itemConfig.itemDesc;
+            this.nameLabel.string = this._items[0].itemConfig.itemName == null ? "" : this._items[0].itemConfig.itemName;
+            this.descTxt.string = this._items[0].itemConfig.itemDesc == null ? "" : this._items[0].itemConfig.itemDesc;
     
             this._isGet = isGet;
 
