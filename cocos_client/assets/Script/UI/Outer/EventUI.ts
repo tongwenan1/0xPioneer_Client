@@ -117,7 +117,11 @@ export class EventUI extends PopUpUI {
                     if (event.select_cond != null && i < event.select_cond.length) {
                         conditionResult = this._checkIsSatisfiedCondition(event.select_cond[i]);
                     }
-                    item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? event.select_txt[i] : conditionResult.tipText) : event.select_txt[i];
+                    
+                    // useLanMgr
+                    item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? LanMgr.Instance.getLanById(event.select_txt[i]) : conditionResult.tipText) : LanMgr.Instance.getLanById(event.select_txt[i]);
+                    // item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? event.select_txt[i] : conditionResult.tipText) : event.select_txt[i];
+
                     item.getComponent(Sprite).grayscale = conditionResult != null ? !conditionResult.satisfy : false;
                     item.getComponent(Button).interactable = conditionResult != null ? conditionResult.satisfy : true;
                     item.getComponent(Button).clickEvents[0].customEventData = event.select[i];
@@ -177,8 +181,45 @@ export class EventUI extends PopUpUI {
                             this._temporaryAttributes.set(pioneerId + "|" + changedType, useChangedValue);
                         }
 
-                        // useLanMgr
-                        showTip += ((isPlayer ? "Your" : (pioneerInfo == null ? "Enemy's" : pioneerInfo.name + "'s")) + " " + (changedType == 1 ? "HP" : "Attack") + " has changed\n");
+                        if (isPlayer) {
+                            if (changedType == 1) {
+
+                                // useLanMgr
+                                // showTip += LanMgr.Instance.getLanById("107549");
+                                showTip += "Your HP has changed\n";
+                            }
+                            else {
+                                // useLanMgr
+                                // showTip += LanMgr.Instance.getLanById("107549");
+                                showTip += "Your Attack has changed\n";
+                            }
+                        }
+                        else {
+                            if (pioneerInfo == null) {
+                                if (changedType == 1) {
+                                    // useLanMgr
+                                    // showTip += LanMgr.Instance.getLanById("107549");
+                                    showTip += "Enemy's HP has changed\n";
+                                }
+                                else {
+                                    // useLanMgr
+                                    // showTip += LanMgr.Instance.getLanById("107549");
+                                    showTip += "Enemy's Attack has changed\n";
+                                }
+                            }
+                            else {
+                                if (changedType == 1) {
+                                    // useLanMgr
+                                    // showTip += LanMgr.Instance.replaceLanById("107549", [pioneerInfo.name]);
+                                    showTip += pioneerInfo.name + " HP has changed\n";
+                                }
+                                else {
+                                    // useLanMgr
+                                    // showTip += LanMgr.Instance.replaceLanById("107549", [pioneerInfo.name]);
+                                    showTip += pioneerInfo.name + " Attack has changed\n";
+                                }
+                            }
+                        }
 
                     }
                     GameMain.inst.UI.ShowTip(showTip);
@@ -220,6 +261,9 @@ export class EventUI extends PopUpUI {
                         temple.satisfy = true;
                     } else {
                         temple.satisfy = false;
+
+                        // useLanMgr
+                        // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
                         temple.tipText = "you need AT LEAST " + num + " wood";
                     }
 
@@ -228,6 +272,9 @@ export class EventUI extends PopUpUI {
                         temple.satisfy = true;
                     } else {
                         temple.satisfy = false;
+
+                        // useLanMgr
+                        // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
                         temple.tipText = "you need AT LEAST " + num + " stone";
                     }
 
@@ -236,6 +283,9 @@ export class EventUI extends PopUpUI {
                         temple.satisfy = true;
                     } else {
                         temple.satisfy = false;
+
+                        // useLanMgr
+                        // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
                         temple.tipText = "you need AT LEAST " + num + " food";
                     }
 
@@ -244,6 +294,9 @@ export class EventUI extends PopUpUI {
                         temple.satisfy = true;
                     } else {
                         temple.satisfy = false;
+
+                        // useLanMgr
+                        // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
                         temple.tipText = "you need AT LEAST " + num + " troop";
                     }
                 }
@@ -265,6 +318,9 @@ export class EventUI extends PopUpUI {
                     temple.satisfy = false;
                     const itemConf = ItemMgr.Instance.getItemConf(itemId);
                     if (itemConf != null) {
+
+                        // useLanMgr
+                        // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num, LanMgr.Instance.getLanById(itemConf.itemName)]);
                         temple.tipText = "you need AT LEAST " + num + " " + itemConf.itemName;
                     }
                 }
@@ -278,6 +334,9 @@ export class EventUI extends PopUpUI {
                             temple.satisfy = true;
                         } else {
                             temple.satisfy = false;
+
+                            // useLanMgr
+                            // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num+1]);
                             temple.tipText = "you need AT LEAST " + (num + 1) + " HP";
                         }
 
@@ -287,6 +346,9 @@ export class EventUI extends PopUpUI {
                             temple.satisfy = true;
                         } else {
                             temple.satisfy = false;
+
+                            // useLanMgr
+                            // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
                             temple.tipText = "you need AT LEAST " + num + " Attack";
                         }
                     }
