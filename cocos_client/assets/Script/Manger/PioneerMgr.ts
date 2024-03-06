@@ -4,9 +4,10 @@ import CommonTools from "../Tool/CommonTools";
 import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
 import MapBuildingModel, { BuildingFactionType, MapBuildingType, MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
-import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel, MapPlayerPioneerModel, MapPioneerType, MapNpcPioneerModel, MapPioneerLogicType } from "../Game/Outer/Model/MapPioneerModel";
+import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel, MapPlayerPioneerModel, MapPioneerType, MapNpcPioneerModel, MapPioneerLogicType, MapPioneerEventStatus } from "../Game/Outer/Model/MapPioneerModel";
 import BuildingMgr from "./BuildingMgr";
 import CountMgr, { CountType } from "./CountMgr";
+import BranchEventMgr from "./BranchEventMgr";
 
 export interface PioneerMgrEvent {
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void;
@@ -129,7 +130,7 @@ export default class PioneerMgr {
         let busy: boolean = false;
         const findPioneer = this._pioneers.filter(pioneer => pioneer.id === this._currentActionPioneerId);
         if (findPioneer.length > 0) {
-            busy = (findPioneer[0].actionType != MapPioneerActionType.idle && findPioneer[0].actionType != MapPioneerActionType.defend);
+            busy = (findPioneer[0].actionType != MapPioneerActionType.idle && findPioneer[0].actionType != MapPioneerActionType.defend && findPioneer[0].actionType != MapPioneerActionType.eventing);
         }
         return busy;
     }
@@ -315,6 +316,9 @@ export default class PioneerMgr {
     public hidePioneer(pioneerId: string) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
+            if (!findPioneer.show) {
+                return;
+            }
             findPioneer.show = false;
             for (const observe of this._observers) {
                 observe.pioneerDidHide(findPioneer.id);
@@ -325,6 +329,9 @@ export default class PioneerMgr {
     public showPioneer(pioneerId: string) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
+            if (findPioneer.show) {
+                return;
+            }
             if (pioneerId == "pioneer_3") {
                 let serectGuardShow: boolean = false;
                 for (const player of this.getPlayerPioneer()) {
@@ -349,6 +356,7 @@ export default class PioneerMgr {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
             findPioneer.actionType = MapPioneerActionType.idle;
+            findPioneer.eventStatus = MapPioneerEventStatus.None;
             findPioneer.actionEndTimeStamp = 0;
             for (const observer of this._observers) {
                 observer.pioneerActionTypeChanged(findPioneer.id, findPioneer.actionType, findPioneer.actionEndTimeStamp);
@@ -360,6 +368,58 @@ export default class PioneerMgr {
                 }
             }
             this._savePioneerData();
+        }
+    }
+    public pioneerDealWithEvent(pioneerId: string, buildingId: string, currentEvent: any) {
+        const pioneer = this.getPioneerById(pioneerId);
+        if (pioneer == null) {
+            return;
+        }
+        if (currentEvent == null) {
+            return;
+        }
+        const currentTimeStamp = new Date().getTime();
+        pioneer.actionType = MapPioneerActionType.eventing;
+        pioneer.actionEventId = currentEvent.id;
+        for (const observer of this._observers) {
+            observer.pioneerActionTypeChanged(pioneer.id, pioneer.actionType, pioneer.actionEndTimeStamp);
+        }
+        let canShowDialog: boolean = false;
+        if (pioneer.eventStatus == MapPioneerEventStatus.Waited) {
+            canShowDialog = true;
+
+        } else if (pioneer.eventStatus == MapPioneerEventStatus.Waiting) {
+
+        } else if (pioneer.eventStatus == MapPioneerEventStatus.None) {
+            if (currentEvent.wait_time != null &&
+                currentEvent.wait_time > 0) {
+                pioneer.actionBeginTimeStamp = currentTimeStamp;
+                pioneer.actionEndTimeStamp = currentTimeStamp + currentEvent.wait_time * 1000;
+                pioneer.eventStatus = MapPioneerEventStatus.Waiting;
+                for (const observer of this._observers) {
+                    observer.pioneerActionTypeChanged(pioneer.id, pioneer.actionType, pioneer.actionEndTimeStamp);
+                }
+                setTimeout(() => {
+                    pioneer.actionEndTimeStamp = 0;
+                    pioneer.eventStatus = MapPioneerEventStatus.Waited;
+                    for (const observer of this._observers) {
+                        observer.pioneerActionTypeChanged(pioneer.id, pioneer.actionType, pioneer.actionEndTimeStamp);
+                    }
+                    this._savePioneerData();
+                }, currentEvent.wait_time * 1000);
+            } else {
+                canShowDialog = true;
+            }
+        }
+        if (canShowDialog) {
+            pioneer.eventStatus = MapPioneerEventStatus.None;
+            this._savePioneerData();
+            for (const observer of this._observers) {
+                observer.pioneerActionTypeChanged(pioneer.id, pioneer.actionType, pioneer.actionEndTimeStamp);
+            }
+            for (const observe of this._observers) {
+                observe.eventBuilding(pioneer.id, buildingId, currentEvent.id);
+            }
         }
     }
 
@@ -753,6 +813,8 @@ export default class PioneerMgr {
                                     let rebirthHp: number = Math.max(1, Math.min(UserInfo.Instance.troop, pioneer.hpMax));
                                     UserInfo.Instance.troop -= rebirthHp;
                                     pioneer.rebirth(rebirthHp, rebirthMapPos);
+                                    pioneer.eventStatus = MapPioneerEventStatus.None;
+                                    pioneer.actionType = MapPioneerActionType.idle;
                                     for (const observe of this._observers) {
                                         observe.pioneerRebirth(pioneer.id);
                                     }
@@ -921,6 +983,7 @@ export default class PioneerMgr {
                 } else {
                     newModel.actionType = temple._actionType;
                 }
+                newModel.actionEventId = temple._actionEventId;
                 // movepath
                 const tempMovePath = [];
                 for (const tempTiled of temple._movePaths) {
@@ -1243,15 +1306,12 @@ export default class PioneerMgr {
                 }
             } else if (stayBuilding.type == MapBuildingType.event) {
                 if (pioneer.type == MapPioneerType.player) {
-                    pioneer.actionType = MapPioneerActionType.idle;
-                    pioneer.actionEndTimeStamp = 0;
-                    for (const observer of this._observers) {
-                        observer.pioneerActionTypeChanged(pioneer.id, pioneer.actionType, pioneer.actionEndTimeStamp);
+                    let currentEvent = null;
+                    const findEvents = BranchEventMgr.Instance.getEventById(stayBuilding.eventId);
+                    if (findEvents.length > 0) {
+                        currentEvent = findEvents[0];
                     }
-                    for (const observe of this._observers) {
-                        observe.eventBuilding(pioneer.id, stayBuilding.id, stayBuilding.eventId);
-                    }
-                    this._savePioneerData();
+                    this.pioneerDealWithEvent(pioneer.id, stayBuilding.id, currentEvent);
                 } else {
                     if (isStay) {
                         pioneer.actionType = MapPioneerActionType.idle;

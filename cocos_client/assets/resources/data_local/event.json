@@ -84,7 +84,7 @@
     "id": "910104",
     "NOTES": "spider/ fight small spiders/ lose-end",
     "type": 1,
-    "result": "-1",
+    "result": "-2",
     "text": "You are killed by the spiders!",
     "select": null,
     "select_txt": null,
@@ -96,7 +96,6 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
     "map_pioneer_unlock": [
       "pioneer_2"
     ],
@@ -267,7 +266,7 @@
     "id": "910111",
     "NOTES": "spider/ egg egg/ fight small spiders/ lose - end",
     "type": 1,
-    "result": "-1",
+    "result": "-2",
     "text": "You are killed by the spiders!",
     "select": null,
     "select_txt": null,

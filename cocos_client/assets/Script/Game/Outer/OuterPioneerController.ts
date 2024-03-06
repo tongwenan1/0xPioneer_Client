@@ -579,6 +579,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         if (event.length > 0) {
             GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => {
                 PioneerMgr.instance.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
+            }, (nextEvent: any)=> {
+                PioneerMgr.instance.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
             });
             GameMain.inst.UI.eventUI.show(true);
         }
