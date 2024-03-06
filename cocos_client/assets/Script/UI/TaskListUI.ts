@@ -5,6 +5,7 @@ import BuildingMgr from '../Manger/BuildingMgr';
 import PioneerMgr from '../Manger/PioneerMgr';
 import CommonTools from '../Tool/CommonTools';
 import UserInfoMgr from '../Manger/UserInfoMgr';
+import MapHelper from "db://assets/Script/Utils/MapHelper";
 
 const { ccclass, property } = _decorator;
 
@@ -283,13 +284,7 @@ export class TaskListUI extends PopUpUI {
                 }
             }
             if (currentMapPos != null) {
-                const currentWorldPos = GameMain.inst.MainCamera.node.worldPosition;
-                const goWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(currentMapPos.x, currentMapPos.y);
-                const distance = Vec3.distance(currentWorldPos, goWorldPos);
-                tween()
-                    .target(GameMain.inst.MainCamera.node)
-                    .to(Math.min(0.8, distance / 1800), { worldPosition: goWorldPos })
-                    .start();
+                MapHelper.highlightPosOnOuterMap(currentMapPos);
             }
         }
     }

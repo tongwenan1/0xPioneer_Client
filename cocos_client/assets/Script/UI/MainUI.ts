@@ -25,12 +25,15 @@ import { MainBuildUI } from './Inner/MainBuildUI';
 import { DialogueUI } from './Outer/DialogueUI';
 import { RecruitUI } from './Inner/RecruitUI';
 import { EventName } from '../Const/ConstDefine';
+import {BattleReportsUI} from "db://assets/Script/UI/BattleReportsUI";
 import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
+import {LootsPopup} from "db://assets/Script/UI/LootsPopup";
+import BattleReportsMgr, {BattleReportsEvent} from "db://assets/Script/Manger/BattleReportsMgr";
 
 const { ccclass, property } = _decorator;
 
 @ccclass('MainUI')
-export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
+export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, BattleReportsEvent {
 
     @property(Node)
     UIRoot: Node;
@@ -64,7 +67,13 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
     
     @property(Prefab)
     ItemInfoUIPfb: Prefab;
-    
+
+    @property(Prefab)
+    BattleReportsUIPfb: Prefab;
+
+    @property(Prefab)
+    LootsPopupPfb: Prefab;
+
     @property([SpriteFrame])
     ResourceIconSpriteFrame: SpriteFrame[] = [];
 
@@ -81,6 +90,8 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
 
     public backpackUI: BackpackUI;
     public itemInfoUI: ItemInfoUI;
+    public battleReportsUI: BattleReportsUI;
+    public lootsPopupUI: LootsPopup;
 
     private _claimRewardUI: ClaimRewardUI;
 
@@ -92,7 +103,10 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
 
     @property(Button)
     backpackBtn:Button = null;
-    
+
+    @property(Button)
+    public battleReportsBtn: Button = null;
+
     private _gangsterComingTipView: Node = null;
 
     onLoad(): void {
@@ -103,6 +117,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
 
         PioneerMgr.instance.addObserver(this);
         UserInfo.Instance.addObserver(this);
+        BattleReportsMgr.Instance.addObserver(this);
     }
 
     async start() {
@@ -148,6 +163,12 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
         this.itemInfoUI = instantiate(this.ItemInfoUIPfb).getComponent(ItemInfoUI);
         this.itemInfoUI.node.setParent(this.UIRoot);
         this.itemInfoUI.node.active = false;
+        this.battleReportsUI = instantiate(this.BattleReportsUIPfb).getComponent(BattleReportsUI);
+        this.battleReportsUI.node.setParent(this.UIRoot);
+        this.battleReportsUI.node.active = false;
+        this.lootsPopupUI = instantiate(this.LootsPopupPfb).getComponent(LootsPopup);
+        this.lootsPopupUI.node.setParent(this.UIRoot);
+        this.lootsPopupUI.node.active = false;
 
         this._claimRewardUI = this.node.getChildByName("reward_ui").getComponent(ClaimRewardUI);
 
@@ -167,6 +188,24 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
         this.backpackBtn.node.on(Button.EventType.CLICK, ()=>{
             GameMain.inst.UI.backpackUI.show(true);
         }, this);
+        this.battleReportsBtn.node.on(Button.EventType.CLICK, () => {
+            GameMain.inst.UI.battleReportsUI.show(true);
+        }, this);
+        this.updateBattleReportsUnreadCount();
+    }
+
+    private updateBattleReportsUnreadCount() {
+        const node = this.battleReportsBtn.node.getChildByName('unreadCountLabel');
+        if (node) {
+            const count = BattleReportsMgr.Instance.unreadCount;
+            const label = node.getComponent(Label);
+            if (count != 0) {
+                label.string = count.toString();
+                node.active = true;
+            } else {
+                node.active = false;
+            }
+        }
     }
 
     update(deltaTime: number) {
@@ -176,6 +215,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
     onDestroy(): void {
         PioneerMgr.instance.removeObserver(this);
         UserInfo.Instance.removeObserver(this);
+        BattleReportsMgr.Instance.removeObserver(this);
     }
 
     onSceneChange() {
@@ -439,6 +479,10 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
     }
     generateTroopTimeCountChanged(leftTime: number): void {
         
+    }
+
+    onBattleReportListChanged() {
+        this.updateBattleReportsUnreadCount();
     }
 }
 

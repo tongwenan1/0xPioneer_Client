@@ -37,5 +37,25 @@ export default class CommonTools {
     
         return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
     }
+
+    /**
+     * format: (12, 34)
+     * @param p
+     */
+    public static formatMapPosition(p: { x: number, y: number }): string {
+        return `(${p.x}, ${p.y})`;
+    }
+
+    /**
+     * format: 2024/1/17/01:18:30
+     */
+    public static formatDateTime(timestamp: number): string {
+        const date = new Date(timestamp);
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const day = date.getDate();
+
+        return `${year}/${month}/${day} ${this.formatTimestamp(timestamp)}`;
+    }
 }
 

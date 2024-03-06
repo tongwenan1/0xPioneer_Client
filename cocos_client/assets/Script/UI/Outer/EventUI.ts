@@ -352,7 +352,14 @@ export class EventUI extends PopUpUI {
     //------------------------------------------------ action
     private onTapNext(actionEvent: Event, customEventData: string) {
         const eventId = customEventData;
-        if (eventId == "-1") {
+
+        const hasNextStep = eventId != "-1";
+        // console.log(`eventStepEnd, source: onTapNext, eventId: ${this._event.id}`);
+        BranchEventMgr.Instance.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
+        BranchEventMgr.Instance.latestActiveEventState.prevEventId = this._event.id;
+        BranchEventMgr.Instance.latestActiveEventState.eventId = eventId;
+
+        if (!hasNextStep) {
             if (this._eventBuildingId != null) {
                 BuildingMgr.instance.hideBuilding(this._eventBuildingId);
             }
@@ -375,7 +382,14 @@ export class EventUI extends PopUpUI {
                     this._event.enemy_result != null && this._event.enemy_result.length == 2) {
                     eventId = succeed ? this._event.enemy_result[0] : this._event.enemy_result[1];
                 }
-                if (eventId != null) {
+                const hasNextStep = eventId != null;
+                if (this._event) {
+                    // console.log(`eventStepEnd, source: onTapFight, eventId: ${this._event.id}`);
+                    BranchEventMgr.Instance.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
+                    BranchEventMgr.Instance.latestActiveEventState.prevEventId = this._event.id;
+                    BranchEventMgr.Instance.latestActiveEventState.eventId = eventId;
+                }
+                if (hasNextStep) {
                     const event = BranchEventMgr.Instance.getEventById(eventId);
                     if (event.length > 0) {
                         this._contentView.active = true;
@@ -394,7 +408,14 @@ export class EventUI extends PopUpUI {
     private onTapSelect(actionEvent: Event, customEventData: string) {
         const eventId = customEventData;
         const event = BranchEventMgr.Instance.getEventById(eventId);
-        if (event.length > 0) {
+        let hasNextStep = event.length > 0;
+
+        // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}`);
+        BranchEventMgr.Instance.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
+        BranchEventMgr.Instance.latestActiveEventState.prevEventId = this._event.id;
+        BranchEventMgr.Instance.latestActiveEventState.eventId = eventId;
+
+        if (hasNextStep) {
             this._refreshUI(event[0]);
         }
     }

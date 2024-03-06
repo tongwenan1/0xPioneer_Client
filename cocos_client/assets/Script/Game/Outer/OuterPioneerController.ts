@@ -15,6 +15,7 @@ import { OuterOtherPioneerView } from './View/OuterOtherPioneerView';
 import { MapItemMonster } from './View/MapItemMonster';
 import { MapPioneer } from './View/MapPioneer';
 import { MapBG } from '../../Scene/MapBG';
+import {EventName} from "db://assets/Script/Const/ConstDefine";
 import LvlupMgr from '../../Manger/LvlupMgr';
 
 
@@ -569,6 +570,13 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                         }
                     });
                 }
+
+                EventMgr.emit(EventName.MINING_FINISHED, {
+                    buildingId: buildingId,
+                    pioneerId: actionPioneerId,
+                    duration: 3000, //todo see assets/Script/Manger/PioneerMgr.ts:1225
+                    rewards: [], // no item loots by now
+                });
             }
         }
     }
@@ -579,6 +587,15 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 PioneerMgr.instance.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
             });
             GameMain.inst.UI.eventUI.show(true);
+        }
+
+        BranchEventMgr.Instance.latestActiveEventState = {
+            pioneerId: actionPioneerId,
+            buildingId: buildingId,
+            entryEventId: eventId,
+            chainTrackingId: Date.now().toString() + Math.random().toString().substring(2),
+            eventId: eventId,
+            prevEventId: null,
         }
     }
 
