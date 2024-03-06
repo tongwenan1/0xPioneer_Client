@@ -15,11 +15,12 @@ const { ccclass, property } = _decorator;
 @ccclass('EventUI')
 export class EventUI extends PopUpUI {
 
-    public eventUIShow(triggerPioneerId: string, eventBuildingId: string, event: any, fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => void) {
+    public eventUIShow(triggerPioneerId: string, eventBuildingId: string, event: any, fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => void, dealWithNextEvent: (event: any) => void) {
         this._triggerPioneerId = triggerPioneerId;
         this._eventBuildingId = eventBuildingId;
         this._temporaryAttributes = new Map();
         this._fightCallback = fightCallback;
+        this._dealWithNextEvent = dealWithNextEvent;
 
         this._refreshUI(event);
     }
@@ -29,9 +30,10 @@ export class EventUI extends PopUpUI {
     }
 
     private _triggerPioneerId: string = null;
-    private _eventBuildingId: string = null;  
+    private _eventBuildingId: string = null;
     private _temporaryAttributes: Map<string, number> = null;
     private _fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => void = null;
+    private _dealWithNextEvent: (event: any) => void = null;
 
     private _event: any = null;
 
@@ -89,6 +91,9 @@ export class EventUI extends PopUpUI {
         this._dialogNextButton.active = false;
         this._dialogFightButton.active = false;
         this._dialogSelectView.active = false;
+
+        this._contentView.active = true;
+
         if (event.type == 2) {
             // select_cond wait todo
             if (event.select != null &&
@@ -184,6 +189,17 @@ export class EventUI extends PopUpUI {
                 eventId: event.id
             }
         });
+
+        if (event.map_building_refresh != null) {
+            for (const buildingId of event.map_building_refresh) {
+                BuildingMgr.instance.showBuilding(buildingId);
+            }
+        }
+        if (event.map_pioneer_unlock != null) {
+            for (const pioneerId of event.map_pioneer_unlock) {
+                PioneerMgr.instance.showPioneer(pioneerId);
+            }
+        }
     }
 
     private _checkIsSatisfiedCondition(condition: any[]): { satisfy: boolean, tipText: string } {
@@ -292,7 +308,7 @@ export class EventUI extends PopUpUI {
                             if (item.itemConfigId == id) {
                                 const itemConf = ItemMgr.Instance.getItemConf(id as number);
                                 ItemMgr.Instance.subItem(item.itemConfigId, num);
-                                
+
                                 // useLanMgr
                                 // showTip += LanMgr.Instance.replaceLanById("107549", [num, LanMgr.Instance.getLanById(itemConf.itemName)]) + "\n";
                                 showTip += ("You lost" + num + " " + itemConf.itemName + "\n");
@@ -386,32 +402,55 @@ export class EventUI extends PopUpUI {
                 items.push(new ItemData(temple.itemConfig.configId, temple.count));
             }
             ItemMgr.Instance.addItem(items);
-            GameMain.inst.UI.itemInfoUI.showItem(itemInfoShows, true, ()=> {
+            GameMain.inst.UI.itemInfoUI.showItem(itemInfoShows, true, () => {
                 this._contentView.active = true;
             });
         }
         return showTip;
     }
 
-    //------------------------------------------------ action
-    private onTapNext(actionEvent: Event, customEventData: string) {
-        const eventId = customEventData;
-        if (eventId == "-1") {
+    private _nextEvent(eventId: string) {
+        if (eventId == "-1" ||
+            eventId == "-2") {
             if (this._eventBuildingId != null) {
-                BuildingMgr.instance.hideBuilding(this._eventBuildingId);
+                if (eventId == "-1") {
+                    BuildingMgr.instance.changeBuildingEventId(this._eventBuildingId, null);
+                    BuildingMgr.instance.hideBuilding(this._eventBuildingId);
+
+                } else if (eventId == "-2") {
+                    console.log('exce step3: ');
+                    const building = BuildingMgr.instance.getBuildingById(this._eventBuildingId);
+
+                    if (building != null) {
+                        console.log('exce step4: ' + building.originalEventId);
+                        BuildingMgr.instance.changeBuildingEventId(this._eventBuildingId, building.originalEventId);
+                    }
+                }
             }
 
+            if (this._triggerPioneerId != null) {
+                PioneerMgr.instance.pioneerToIdle(this._triggerPioneerId);
+            }
             // useLanMgr
             // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.ShowTip("Event Ended");
-            
             this.show(false);
         } else {
             const event = BranchEventMgr.Instance.getEventById(eventId);
             if (event.length > 0) {
-                this._refreshUI(event[0]);
+                BuildingMgr.instance.changeBuildingEventId(this._eventBuildingId, event[0].id);
+                this.show(false);
+                if (this._dealWithNextEvent != null) {
+                    this._dealWithNextEvent(event[0]);
+                }
             }
         }
+    }
+
+    //------------------------------------------------ action
+    private onTapNext(actionEvent: Event, customEventData: string) {
+        const eventId = customEventData;
+        this._nextEvent(eventId);
     }
     private onTapFight(event: Event, customEventData: string) {
         const pioneerId = customEventData;
@@ -423,14 +462,17 @@ export class EventUI extends PopUpUI {
                     this._event.enemy_result != null && this._event.enemy_result.length == 2) {
                     eventId = succeed ? this._event.enemy_result[0] : this._event.enemy_result[1];
                 }
-                if (eventId != null) {
+
+                if (succeed) {
+                    
+                } else {
                     const event = BranchEventMgr.Instance.getEventById(eventId);
                     if (event.length > 0) {
-                        this._contentView.active = true;
-                        this._refreshUI(event[0]);
-                    } else {
-                        this._contentView.active = true;
+                        eventId = event[0].result;
                     }
+                }
+                if (eventId != null) {
+                    this._nextEvent(eventId);
                 } else {
                     this._contentView.active = true;
                 }
@@ -441,10 +483,7 @@ export class EventUI extends PopUpUI {
     }
     private onTapSelect(actionEvent: Event, customEventData: string) {
         const eventId = customEventData;
-        const event = BranchEventMgr.Instance.getEventById(eventId);
-        if (event.length > 0) {
-            this._refreshUI(event[0]);
-        }
+        this._nextEvent(eventId);
     }
 }
 

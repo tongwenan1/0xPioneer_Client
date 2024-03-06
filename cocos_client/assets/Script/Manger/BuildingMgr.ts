@@ -104,9 +104,26 @@ export default class BuildingMgr {
             this.hideBuilding(actionTargetBuilding.id);
         }
     }
+    public showBuilding(buildingId: string) {
+        const actionTargetBuilding = this.getBuildingById(buildingId);
+        if (actionTargetBuilding == null) {
+            return;
+        }
+        if (actionTargetBuilding.show) {
+            return;
+        }
+        actionTargetBuilding.show = true;
+        this._savePioneerData();
+        for (const observer of this._observers) {
+            observer.buildingDidShow(actionTargetBuilding.id);
+        }
+    }
     public hideBuilding(buildingId: string, beacusePioneerId: string = null) {
         const actionTargetBuilding = this.getBuildingById(buildingId);
         if (actionTargetBuilding == null) {
+            return;
+        }
+        if (!actionTargetBuilding.show) {
             return;
         }
         actionTargetBuilding.show = false;
@@ -125,6 +142,14 @@ export default class BuildingMgr {
                     observer.buildingFacitonChanged(buildingId, faction);
                 }
             }
+        }
+    }
+    public changeBuildingEventId(buidingId: string, eventId: string) {
+        const findBuilding = this.getBuildingById(buidingId);
+        if (findBuilding != null) {
+            findBuilding.eventId = eventId;
+            console.log('exce o: ' + eventId);
+            this._savePioneerData();
         }
     }
     public insertDefendPioneer(buildingId: string, pioneerId: string) {
@@ -196,11 +221,7 @@ export default class BuildingMgr {
                 break;
 
             case "buildingshow": {
-                actionTargetBuilding.show = true;
-                this._savePioneerData();
-                for (const observer of this._observers) {
-                    observer.buildingDidShow(actionTargetBuilding.id);
-                }
+                this.showBuilding(actionTargetBuilding.id);
             }
                 break;
 
@@ -295,6 +316,7 @@ export default class BuildingMgr {
                         newModel.winprogress = temple.winprogress;
                     }
                     if (temple.event != null) {
+                        newModel.originalEventId = temple.event;
                         newModel.eventId = temple.event;
                     }
                     if (temple.exp != null) {
@@ -364,6 +386,8 @@ export default class BuildingMgr {
                 newModel.progress = temple._progress;
                 newModel.winprogress = temple._winprogress;
                 newModel.eventId = temple._eventId;
+                newModel.originalEventId = temple._originalEventId;
+                newModel.eventWaited = temple._eventWaited;
                 newModel.exp = temple._exp;
                 this._buildings.push(newModel);
             }

@@ -1,5 +1,5 @@
 import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, instantiate, Sprite, Quat, UITransform, misc, Label, ProgressBar, log, v3, color } from 'cc';
-import MapPioneerModel, { MapPioneerActionType, MapPioneerMoveDirection } from '../Model/MapPioneerModel';
+import MapPioneerModel, { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection } from '../Model/MapPioneerModel';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapPioneer')
@@ -13,11 +13,14 @@ export class MapPioneer extends Component {
 
     private _model: MapPioneerModel = null;
     private _lastStatus: MapPioneerActionType = null;
+    private _lastEventStatus: MapPioneerEventStatus = null;
     private _actionTimeStamp: number = 0;
     private _actionTotalTime: number = 0;
 
     private _addingtroopsView: Node = null;
     private _exploringView: Node = null;
+    private _eventingView: Node = null;
+    private _eventWaitedView: Node = null;
     private _timeCountProgress: ProgressBar = null;
     private _timeCountLabel: Label = null;
 
@@ -64,14 +67,18 @@ export class MapPioneer extends Component {
         topWalkView.active = false;
         bottomWalkView.active = false;
 
-        if (this._lastStatus != this._model.actionType) {
+        if (this._lastStatus != this._model.actionType ||
+            this._lastEventStatus != this._model.eventStatus) {
             this._lastStatus = this._model.actionType;
+            this._lastEventStatus = this._model.eventStatus;
 
             idleView.active = false;
             collectView.active = false;
 
             this._addingtroopsView.active = false;
             this._exploringView.active = false;
+            this._eventingView.active = false;
+            this._eventWaitedView.active = false;
 
             switch (this._model.actionType) {
                 case MapPioneerActionType.defend: {
@@ -109,6 +116,19 @@ export class MapPioneer extends Component {
                     this.node.active = true;
                     idleView.active = true;
                     this._exploringView.active = true;
+                }
+                    break;
+
+                case MapPioneerActionType.eventing: {
+                    this.node.active = true;
+                    idleView.active = true;
+                    if (this._model.eventStatus == MapPioneerEventStatus.None) {
+                        
+                    } else if (this._model.eventStatus == MapPioneerEventStatus.Waiting) {
+                        this._eventingView.active = true;
+                    } else if (this._model.eventStatus == MapPioneerEventStatus.Waited) {
+                        this._eventWaitedView.active = true;
+                    }
                 }
                     break;
 
@@ -183,6 +203,12 @@ export class MapPioneer extends Component {
 
         this._exploringView = this.node.getChildByName("Exploring");
         this._exploringView.active = false;
+
+        this._eventingView = this.node.getChildByName("Eventing");
+        this._eventingView.active = false;
+
+        this._eventWaitedView = this.node.getChildByName("EventWaited");
+        this._eventWaitedView.active = false;
 
         this._timeCountProgress = this.node.getChildByPath("lastTIme/progressBar").getComponent(ProgressBar);
         this._timeCountLabel = this.node.getChildByPath("lastTIme/time").getComponent(Label);

@@ -92,11 +92,11 @@ export class OuterBuildingView extends Component {
             }
         } else if (building.type == MapBuildingType.event) {
             this._neturalView.active = true;
-            if (building.eventId == "910101") {
+            if (building.eventId.indexOf("9101") != -1) {
                 spiderCave.active = true;
-            } else if (building.eventId == "910201") {
+            } else if (building.eventId.indexOf("9102") != -1) {
                 ancientRuins.active = true;
-            } else if (building.eventId == "910301") {
+            } else if (building.eventId.indexOf("9103") != -1) {
                 laboratory.active = true;
             }
         }

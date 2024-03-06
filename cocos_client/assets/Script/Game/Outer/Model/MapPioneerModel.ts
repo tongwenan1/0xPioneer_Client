@@ -1,6 +1,7 @@
 import { Vec2, Vec3, log, v2 } from "cc";
 import { FinishedEvent } from "../../../Manger/UserInfoMgr";
 import { TilePos } from "../../TiledMap/TileTool";
+import * as exp from "constants";
 
 export enum MapPioneerActionType {
     idle = "idle",
@@ -9,6 +10,7 @@ export enum MapPioneerActionType {
     mining = "mining",
     fighting = "fighting",
     exploring = "exploring",
+    eventing = "eventing",
     addingtroops = "addingtroops"
 }
 
@@ -32,6 +34,12 @@ export enum MapPioneerMoveDirection {
     right = "right",
     top = "top",
     bottom = "bottom",
+}
+
+export enum MapPioneerEventStatus {
+    None,
+    Waiting,
+    Waited
 }
 
 export default class MapPioneerModel {
@@ -101,6 +109,12 @@ export default class MapPioneerModel {
     public set actionType(value: MapPioneerActionType) {
         this._actionType = value;
     }
+    public set actionEventId(value: string | null) {
+        this._actionEventId = value;
+    }
+    public set eventStatus(value: MapPioneerEventStatus) {
+        this._eventStatus = value;
+    }
     public set moveDirection(value: MapPioneerMoveDirection) {
         this._moveDirection = value;
     }
@@ -169,6 +183,12 @@ export default class MapPioneerModel {
     public get actionType(): MapPioneerActionType {
         return this._actionType;
     }
+    public get actionEventId(): string | null {
+        return this._actionEventId;
+    }
+    public get eventStatus(): MapPioneerEventStatus {
+        return this._eventStatus;
+    }
     public get actionEndTimeStamp(): number {
         return this._actionEndTimeStamp;
     }
@@ -205,6 +225,8 @@ export default class MapPioneerModel {
         this._attack = attack;
         this._movePaths = [];
         this._actionType = MapPioneerActionType.idle;
+        this._actionEventId = null;
+        this._eventStatus = MapPioneerEventStatus.None;
         this._actionEndTimeStamp = 0;
         this._actionBeginTimeStamp = 0;
         this._logics = [];
@@ -227,6 +249,8 @@ export default class MapPioneerModel {
     private _stayPos: Vec2;
     private _movePaths: TilePos[];
     private _actionType: MapPioneerActionType;
+    private _actionEventId: string;
+    private _eventStatus: MapPioneerEventStatus;
     private _actionEndTimeStamp: number;
     private _actionBeginTimeStamp: number;
     private _logics: MapPioneerLogicModel[];

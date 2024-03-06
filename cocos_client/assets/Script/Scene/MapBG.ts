@@ -7,7 +7,7 @@ import ConfigMgr from '../Manger/ConfigMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { TilePos, TileMapHelper, TileHexDirection } from '../Game/TiledMap/TileTool';
 import { MapBuildingType, BuildingFactionType } from '../Game/Outer/Model/MapBuildingModel';
-import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel, MapPioneerLogicType, MapPioneerActionType } from '../Game/Outer/Model/MapPioneerModel';
+import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel, MapPioneerLogicType, MapPioneerActionType, MapPioneerEventStatus } from '../Game/Outer/Model/MapPioneerModel';
 import EventMgr from '../Manger/EventMgr';
 import { EventName } from '../Const/ConstDefine';
 import { OuterFogMask } from '../Game/Outer/View/OuterFogMask';
@@ -468,7 +468,7 @@ export class MapBG extends Component {
         }
         const isBlock = this._tiledhelper.Path_IsBlock(tiledPos.x, tiledPos.y);
         if (isBlock) {
-            
+
             // useLanMgr
             // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.ShowTip("cann't move to block");
@@ -510,8 +510,17 @@ export class MapBG extends Component {
                 // useLanMgr
                 // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
                 GameMain.inst.UI.ShowTip("pioneer is defending");
-                
+
             }
+        } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing &&
+            (currentActionPioneer.eventStatus == MapPioneerEventStatus.Waiting ||
+                stayBuilding == null ||
+                (stayBuilding != null &&
+                    stayBuilding.eventId != currentActionPioneer.actionEventId))) {
+            actionType = -2;
+            // useLanMgr
+            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
+            GameMain.inst.UI.ShowTip("pioneer is processing event");
         } else {
             if (stayBuilding != null) {
                 if (stayBuilding.type == MapBuildingType.city) {
