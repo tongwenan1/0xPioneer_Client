@@ -2,6 +2,7 @@
   "1": {
     "id": "1",
     "itemType": 1,
+    "icon": "item_1",
     "itemName": "Celestial Aura",
     "itemDesc": "A gem with a heavenly glow.",
     "grade": 5,
@@ -11,6 +12,7 @@
   "2": {
     "id": "2",
     "itemType": 1,
+    "icon": "item_1",
     "itemName": "Jade Journey",
     "itemDesc": "Ancient jade for wisdom's path.",
     "grade": 4,
@@ -20,6 +22,7 @@
   "3": {
     "id": "3",
     "itemType": 1,
+    "icon": "item_1",
     "itemName": "Last Whisper",
     "itemDesc": "Artifact of whispered secrets.",
     "grade": 4,
@@ -29,6 +32,7 @@
   "4": {
     "id": "4",
     "itemType": 1,
+    "icon": "item_1",
     "itemName": "Topaz Twilight",
     "itemDesc": "Gem of the setting sun's warmth.",
     "grade": 4,
@@ -38,6 +42,7 @@
   "5": {
     "id": "5",
     "itemType": 1,
+    "icon": "item_1",
     "itemName": "Dawn's Tear",
     "itemDesc": "Pure diamond of a new day's hope.",
     "grade": 5,
@@ -47,6 +52,7 @@
   "6": {
     "id": "6",
     "itemType": 1,
+    "icon": "item_1",
     "itemName": "Void Iron",
     "itemDesc": "Cosmic strength in metal form.",
     "grade": 5,
@@ -56,6 +62,7 @@
   "7": {
     "id": "7",
     "itemType": 1,
+    "icon": "item_1",
     "itemName": "Opferritual",
     "itemDesc": "Tool for divine rituals.",
     "grade": 4,
@@ -65,6 +72,7 @@
   "8": {
     "id": "8",
     "itemType": 1,
+    "icon": "item_1",
     "itemName": "Lord Proof",
     "itemDesc": "Maybe you should show this to someone.",
     "grade": 4,
@@ -74,6 +82,7 @@
   "9": {
     "id": "9",
     "itemType": 1,
+    "icon": "item_1",
     "itemName": "Key of Trust",
     "itemDesc": "Now you are the lord.",
     "grade": 4,
@@ -83,6 +92,7 @@
   "10": {
     "id": "10",
     "itemType": 1,
+    "icon": "item_1",
     "itemName": "Krass Letter",
     "itemDesc": "",
     "grade": 3,
@@ -92,6 +102,7 @@
   "11": {
     "id": "11",
     "itemType": 1,
+    "icon": "item_1",
     "itemName": "Krass Badge",
     "itemDesc": "",
     "grade": 3,
@@ -101,6 +112,7 @@
   "12": {
     "id": "12",
     "itemType": 2,
+    "icon": "item_1",
     "itemName": "A few foods",
     "itemDesc": "Gain 30 foods after use it.",
     "grade": 1,
@@ -110,6 +122,7 @@
   "13": {
     "id": "13",
     "itemType": 2,
+    "icon": "item_1",
     "itemName": "Many foods",
     "itemDesc": "Gain 100 foods after use it.",
     "grade": 2,
@@ -119,6 +132,7 @@
   "14": {
     "id": "14",
     "itemType": 2,
+    "icon": "item_1",
     "itemName": "A few woods",
     "itemDesc": "Gain 30 woods after use it.",
     "grade": 1,
@@ -128,6 +142,7 @@
   "15": {
     "id": "15",
     "itemType": 2,
+    "icon": "item_1",
     "itemName": "Many woods",
     "itemDesc": "Gain 100 woods after use it.",
     "grade": 2,
@@ -137,6 +152,7 @@
   "16": {
     "id": "16",
     "itemType": 2,
+    "icon": "item_1",
     "itemName": "A few stones",
     "itemDesc": "Gain 30 stones after use it.",
     "grade": 1,
@@ -146,6 +162,7 @@
   "17": {
     "id": "17",
     "itemType": 2,
+    "icon": "item_1",
     "itemName": "Many stones",
     "itemDesc": "Gain 100 stones after use it.",
     "grade": 2,
@@ -155,9 +172,70 @@
   "18": {
     "id": "18",
     "itemType": 1,
+    "icon": "item_1",
     "itemName": "Special token",
     "itemDesc": "Token of an ancient.",
     "grade": 4,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "8001": {
+    "id": "8001",
+    "itemType": 0,
+    "icon": "item_1",
+    "itemName": "food",
+    "itemDesc": null,
+    "grade": 1,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "8002": {
+    "id": "8002",
+    "itemType": 0,
+    "icon": "item_1",
+    "itemName": "wood",
+    "itemDesc": null,
+    "grade": 1,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "8003": {
+    "id": "8003",
+    "itemType": 0,
+    "icon": "item_1",
+    "itemName": "stone",
+    "itemDesc": null,
+    "grade": 1,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "8004": {
+    "id": "8004",
+    "itemType": 0,
+    "icon": "item_1",
+    "itemName": "troop",
+    "itemDesc": null,
+    "grade": 1,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "8005": {
+    "id": "8005",
+    "itemType": 0,
+    "icon": "item_1",
+    "itemName": "energy",
+    "itemDesc": null,
+    "grade": 4,
+    "gainPropName": null,
+    "gainPropCount": null
+  },
+  "8006": {
+    "id": "8006",
+    "itemType": 0,
+    "icon": "item_1",
+    "itemName": "gold",
+    "itemDesc": null,
+    "grade": 1,
     "gainPropName": null,
     "gainPropCount": null
   }
