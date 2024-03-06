@@ -1,7 +1,22 @@
 {
+  "107001": {
+    "id": "107001",
+    "**NOTES**": null,
+    "eng": "Texas Chainsaw"
+  },
   "107549": {
     "id": "107549",
     "**NOTES**": null,
     "eng": "text for English version"
+  },
+  "1070011": {
+    "id": "1070011",
+    "**NOTES**": null,
+    "eng": "Chainsaw"
+  },
+  "1070012": {
+    "id": "1070012",
+    "**NOTES**": null,
+    "eng": "TestEffect"
   }
 }
