@@ -17,9 +17,11 @@ import { MapPioneer } from './View/MapPioneer';
 import { MapBG } from '../../Scene/MapBG';
 import LvlupMgr from '../../Manger/LvlupMgr';
 import { OuterMapCursorView } from './View/OuterMapCursorView';
-import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import { EventName, ItemGetType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemMgr from '../../Manger/ItemMgr';
-import ItemData from '../../Model/ItemData';
+import ItemData, { ItemType } from '../../Model/ItemData';
+import DropMgr from '../../Manger/DropMgr';
+import CommonTools from '../../Tool/CommonTools';
 
 
 const { ccclass, property } = _decorator;
@@ -513,19 +515,76 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             const deadPioneer = PioneerMgr.instance.getPioneerById(deadId);
             if (deadPioneer != null && !deadPioneer.friendly) {
                 UserInfoMgr.Instance.explorationValue += deadPioneer.winprogress;
-            }
+                if (deadPioneer.drop != null) {
+                    const items = [];
+                    const showData = [];
+                    for (const data of deadPioneer.drop) {
+                        if (data.length == 3) {
+                            const type = data[0];
+                            const id = data[1];
+                            const num = data[2];
+                            
+                            let templeItem: ItemData = null;
+                            if (type == ItemGetType.Item) {
+                                templeItem = new ItemData(id, num);
+                            } else if (type == 3) {
+                                // wait artifact
+                            } else if (type == 4) {
+                                let resultReward = null;
+                                const drop = DropMgr.Instance.getDropById(id.toString());
+                                if (drop.length > 0) {
+                                    const useDrop = drop[0];
+                                    const items = [];
+                                    const weights = [];
+                                    // drop type index 0
+                                    // drop num index 1
+                                    // drop weight index 2
+                                    // drop id index 3
+                                    for (const temple of useDrop.drop_group) {
+                                        items.push({
+                                            type: temple[0],
+                                            num: temple[1],
+                                            itemConfigId: temple.length > 3 ? temple[3] : 0
+                                        });
+                                        weights.push(temple[2]);
+                                    }
+                                    resultReward = CommonTools.weightedRandomValue(items, weights);
+                                }
+                                if (resultReward != null && resultReward.type == ItemGetType.Item) {
+                                    templeItem = new ItemData(resultReward.itemConfigId, resultReward.num);
+                                }
+                            }
+                            if (templeItem != null) {
+                                items.push(templeItem);
+                                const config = ItemMgr.Instance.getItemConf(templeItem.itemConfigId);
+                                if (config != null && config.itemType != ItemType.Resource) {
+                                    showData.push({
+                                        count: templeItem.count,
+                                        itemConfig: config
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    if (items.length > 0) {
+                        ItemMgr.Instance.addItem(items);
+                    }
+                    if (showData.length > 0) {
+                        GameMain.inst.UI.itemInfoUI.showItem(showData, true);
+                    }
+                }
 
-        } else {
-            //building
-            UserInfoMgr.Instance.checkCanFinishedTask("destroybuilding", deadId);
+            } else {
+                //building
+                UserInfoMgr.Instance.checkCanFinishedTask("destroybuilding", deadId);
 
-            const deadBuilding = BuildingMgr.instance.getBuildingById(deadId);
-            if (deadBuilding != null && deadBuilding.faction == BuildingFactionType.enemy) {
-                UserInfoMgr.Instance.explorationValue += deadBuilding.winprogress;
+                const deadBuilding = BuildingMgr.instance.getBuildingById(deadId);
+                if (deadBuilding != null && deadBuilding.faction == BuildingFactionType.enemy) {
+                    UserInfoMgr.Instance.explorationValue += deadBuilding.winprogress;
+                }
             }
         }
     }
-
     exploredPioneer(pioneerId: string): void {
         const pioneer = PioneerMgr.instance.getPioneerById(pioneerId);
         if (pioneer != null && pioneer.type == MapPioneerType.gangster) {
@@ -575,7 +634,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         if (event.length > 0) {
             GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => {
                 PioneerMgr.instance.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
-            }, (nextEvent: any)=> {
+            }, (nextEvent: any) => {
                 PioneerMgr.instance.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
             });
             GameMain.inst.UI.eventUI.show(true);
@@ -686,7 +745,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         // useLanMgr
         // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
         GameMain.inst.UI.ShowTip("Boot ends");
-        
+
     }
     generateTroopTimeCountChanged(leftTime: number): void {
 

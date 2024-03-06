@@ -37,5 +37,21 @@ export default class CommonTools {
     
         return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
     }
+
+    public static weightedRandomValue<T>(values: T[], weights: number[]): T {
+
+        const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
+        const random = Math.random() * totalWeight;
+
+        let cumulativeWeight = 0;
+        for (let i = 0; i < values.length; i++) {
+            cumulativeWeight += weights[i];
+            if (random < cumulativeWeight) {
+                return values[i];
+            }
+        }
+
+        return values[values.length - 1];
+    }
 }
 

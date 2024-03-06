@@ -7,6 +7,7 @@ import ItemMgr from '../Manger/ItemMgr';
 import UserInfoMgr from '../Manger/UserInfoMgr';
 import { BackpackItem } from './BackpackItem';
 import { ItemGetType } from '../Const/ConstDefine';
+import CommonTools from '../Tool/CommonTools';
 
 
 const { ccclass, property } = _decorator;
@@ -61,7 +62,7 @@ export class TreasureGettedUI extends PopUpUI {
                 });
                 weights.push(temple[2]);
             }
-            resultReward = this._weightedRandomValue(items, weights);
+            resultReward = CommonTools.weightedRandomValue(items, weights);
 
             if (resultReward) {
                 let iconspr = itemShowNode.getChildByPath("icon").getComponent(Sprite);
@@ -143,21 +144,7 @@ export class TreasureGettedUI extends PopUpUI {
 
     }
 
-    private _weightedRandomValue<T>(values: T[], weights: number[]): T {
-
-        const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
-        const random = Math.random() * totalWeight;
-
-        let cumulativeWeight = 0;
-        for (let i = 0; i < values.length; i++) {
-            cumulativeWeight += weights[i];
-            if (random < cumulativeWeight) {
-                return values[i];
-            }
-        }
-
-        return values[values.length - 1];
-    }
+    
 
 }
 

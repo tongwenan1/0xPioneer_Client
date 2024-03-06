@@ -924,6 +924,9 @@ export default class PioneerMgr {
                     if (temple.winprogress != null) {
                         pioneer.winprogress = temple.winprogress;
                     }
+                    if (temple.drop != null) {
+                        pioneer.drop = temple.drop;
+                    }
                     if (temple.animType != null) {
                         pioneer.animType = temple.animType;
                     }
@@ -1019,6 +1022,7 @@ export default class PioneerMgr {
                 }
                 newModel.logics = logics;
                 newModel.winprogress = temple._winprogress;
+                newModel.drop = temple._drop;
                 newModel.animType = temple._animType;
                 this._pioneers.push(newModel);
             }

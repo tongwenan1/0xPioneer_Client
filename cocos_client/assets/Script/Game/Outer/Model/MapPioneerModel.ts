@@ -139,6 +139,9 @@ export default class MapPioneerModel {
     public set winprogress(value: number) {
         this._winprogress = value;
     }
+    public set drop(value: any[]) {
+        this._drop = value;
+    }
 
 
     public get show(): boolean {
@@ -210,6 +213,9 @@ export default class MapPioneerModel {
     public get winprogress(): number {
         return this._winprogress;
     }
+    public get drop(): any[] {
+        return this._drop;
+    }
 
 
     public constructor(show: boolean, showCountTime: number, id: string, friendly: boolean, type: MapPioneerType, name: string, hpMax: number, hp: number, attack: number, stayPos: Vec2) {
@@ -233,6 +239,7 @@ export default class MapPioneerModel {
         this._moveSpeed = -1;
         this._purchaseMovingPioneerId = null;
         this._winprogress = 0;
+        this._drop = [];
     }
 
     private _show: boolean;
@@ -258,6 +265,7 @@ export default class MapPioneerModel {
     private _purchaseMovingPioneerId: string | null;
     private _purchaseMovingBuildingId: string | null;
     private _winprogress: number;
+    private _drop: any[];
 }
 
 export class MapPlayerPioneerModel extends MapPioneerModel {
