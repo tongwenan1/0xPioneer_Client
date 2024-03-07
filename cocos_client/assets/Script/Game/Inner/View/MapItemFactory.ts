@@ -10,6 +10,8 @@ import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import CountMgr, { CountType } from '../../../Manger/CountMgr';
 import LanMgr from '../../../Manger/LanMgr';
 import ItemMgr from '../../../Manger/ItemMgr';
+import ArtifactMgr from '../../../Manger/ArtifactMgr';
+import { ArtifactEffectType } from '../../../Model/ArtifactData';
 
 const { ccclass, property } = _decorator;
 
@@ -128,10 +130,26 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
         let canUpgrade: boolean = true;
         const buildingInfo = InnerBuildingMgr.Instance.getInfoById(this.buildData.buildID);
         if (this.buildData.buildLevel < buildingInfo.maxLevel) {
+
+            // artifact effect
+            const artifactPropEff = ArtifactMgr.Instance.getPropEffValue();
+            let artifactTime = 0;
+            if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME]) {
+                artifactTime = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME];
+            }
+            let artifactResource = 0;
+            if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVLUP_RESOURCE]) {
+                artifactResource = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVLUP_RESOURCE];
+            }
+
             // resource save waiting changed
             const nextLevelInfo = buildingInfo.up[this.buildData.buildLevel + 1];
             for (const resource of nextLevelInfo.cost) {
-                if (ItemMgr.Instance.getOwnItemCount(parseInt(resource.type)) < resource.num) {
+                let needNum = resource.num;
+                // total num
+                needNum = Math.floor(needNum - (needNum * artifactResource));
+
+                if (ItemMgr.Instance.getOwnItemCount(parseInt(resource.type)) < needNum) {
                     canUpgrade = false;
                     break;
                 }
@@ -146,18 +164,27 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
             }
             this._upgradeIng = true;
             for (const resource of nextLevelInfo.cost) {
-                ItemMgr.Instance.subItem(parseInt(resource.type), resource.num);
+                let needNum = resource.num;
+                // total num
+                needNum = Math.floor(needNum - (needNum * artifactResource));
+                ItemMgr.Instance.subItem(parseInt(resource.type), needNum);
             }
             UserInfoMgr.Instance.upgradeBuild(this.buildID);
             UserInfoMgr.Instance.explorationValue += nextLevelInfo.progress;
             // exp
             if (nextLevelInfo.exp) UserInfoMgr.Instance.exp += nextLevelInfo.exp;
 
-            GameMain.inst.innerSceneMap.playBuildAnim(this.node, 5, () => {
+
+            let up_time = 5;
+            // total time
+            up_time = Math.floor(up_time - (up_time * artifactTime));
+            if (up_time < 0) up_time = 1;
+
+            GameMain.inst.innerSceneMap.playBuildAnim(this.node, up_time, () => {
                 this.refresh();
                 this._upgradeIng = false;
             });
-            this.buildInfoUI.setProgressTime(5);
+            this.buildInfoUI.setProgressTime(up_time);
         }
     }
 

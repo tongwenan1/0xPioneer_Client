@@ -10,6 +10,8 @@ import CountMgr, { CountType } from "./CountMgr";
 import BranchEventMgr from "./BranchEventMgr";
 import ItemMgr from "./ItemMgr";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
+import ArtifactMgr from "./ArtifactMgr";
+import { ArtifactEffectType } from "../Model/ArtifactData";
 
 export interface PioneerMgrEvent {
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void;
@@ -1281,7 +1283,19 @@ export default class PioneerMgr {
 
             } else if (stayBuilding.type == MapBuildingType.resource) {
                 if (pioneer.type == MapPioneerType.player && pioneer.friendly) {
-                    const acionTime: number = 3000;
+
+                    // artifact
+                    const artifactEff = ArtifactMgr.Instance.getPropEffValue();
+                    let artifactGather = 0;
+                    if (artifactEff.eff[ArtifactEffectType.GATHER_TIME]) {
+                        artifactGather = artifactEff.eff[ArtifactEffectType.GATHER_TIME];
+                    }
+
+                    let acionTime: number = 3000;
+                    // artifact eff
+                    acionTime = Math.floor(acionTime - (acionTime * artifactGather));
+                    if (acionTime < 0) acionTime = 1;
+
                     pioneer.actionType = MapPioneerActionType.mining;
                     pioneer.actionEndTimeStamp = currentTimeStamp + acionTime;
                     pioneer.actionBeginTimeStamp = currentTimeStamp;

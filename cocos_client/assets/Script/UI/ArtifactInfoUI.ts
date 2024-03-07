@@ -17,7 +17,13 @@ import {
     randomRangeInt,
     Color,
 } from "cc";
-import ArtifactData, { ArtifactConfigData, ArtifactEffectRankColor, ArtifactEffectType, ArtifactProp, ArtifactPropValueType } from "../Model/ArtifactData";
+import ArtifactData, {
+    ArtifactConfigData,
+    ArtifactEffectRankColor,
+    ArtifactEffectType,
+    ArtifactProp,
+    ArtifactPropValueType,
+} from "../Model/ArtifactData";
 import { GameMain } from "../GameMain";
 import UserInfo from "../Manger/UserInfoMgr";
 import { PopUpUI } from "../BasicView/PopUpUI";
@@ -75,14 +81,14 @@ export class ArtifactInfoUI extends PopUpUI {
                     } else {
                         propValueType = "-";
                     }
-                    propValue = prop_value[0].toString();
+                    propValue = prop_value[1].toString();
                 } else if (prop_value[0] == ArtifactPropValueType.MUL) {
                     if (prop_value[1] > 1) {
                         propValueType = "+";
-                        propValue = (prop_value[1] - 1) * 100 + "%";
+                        propValue = Math.floor(prop_value[1] * 100 - 100) + "%";
                     } else {
                         propValueType = "-";
-                        propValue = (1 - prop_value[1]) * 100 + "%";
+                        propValue = Math.floor(100 - prop_value[1] * 100) + "%";
                     }
                 }
 
@@ -107,8 +113,7 @@ export class ArtifactInfoUI extends PopUpUI {
                     if (i == 0) {
                         effectTxt = this.effectTxt1;
                         effectDes = this.effectDes1;
-                    }
-                    else if (i == 1) {
+                    } else if (i == 1) {
                         effectTxt = this.effectTxt2;
                         effectDes = this.effectDes2;
                     }
@@ -117,7 +122,7 @@ export class ArtifactInfoUI extends PopUpUI {
                         // useLanMgr
                         effectTxt.string = LanMgr.Instance.getLanById(effectConfig.name);
                         // effectLable.string = effectConfig.name;
-                        
+
                         // --- effectDes
                         // useLanMgr
                         let pct = effectConfig.para[0] * 100 + "%";

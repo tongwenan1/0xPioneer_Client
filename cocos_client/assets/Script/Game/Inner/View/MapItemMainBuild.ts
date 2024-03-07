@@ -2,8 +2,10 @@ import { _decorator, Component, Node, Vec2, Vec3, CCString, Prefab, instantiate 
 import { MapItem } from '../../../BasicView/MapItem';
 import { EventName } from '../../../Const/ConstDefine';
 import { GameMain } from '../../../GameMain';
+import ArtifactMgr from '../../../Manger/ArtifactMgr';
 import EventMgr from '../../../Manger/EventMgr';
 import UserInfoMgr, { UserInnerBuildInfo } from '../../../Manger/UserInfoMgr';
+import { ArtifactEffectType } from '../../../Model/ArtifactData';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 
 const { ccclass, property } = _decorator;
@@ -46,6 +48,15 @@ export class MapItemMainBuild extends MapItem {
         this._buildUpgrading = true;
 
         let up_time = 5;
+        // artifact
+        let artifactTime = 0;
+        let artifactPropEff = ArtifactMgr.Instance.getPropEffValue();
+        if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME]) {
+            artifactTime = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME];
+        }
+        // total time
+        up_time = Math.floor(up_time - (up_time * artifactTime));
+
         this.buildingAnim.active = true;
         this.scheduleOnce(() => {
             UserInfoMgr.Instance.upgradeBuild('0');

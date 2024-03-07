@@ -67,7 +67,7 @@ export default class ArtifactMgr {
             // effect
             if (artifactConfig.effect.length > 0) {
                 for (let j = 0; j < artifactConfig.effect.length; j++) {
-                    const effectId = artifactConfig.effect[i];
+                    const effectId = artifactConfig.effect[j];
                     const effConfig = ArtifactMgr.Instance.getArtifactEffectConf(effectId);
                     const effectType = effConfig.type;
 
@@ -99,9 +99,15 @@ export default class ArtifactMgr {
             if (this.artifactIsFull) continue;
 
             changed = true;
-            // add timestamp
-            artifact.addTimeStamp = new Date().getTime();
-            this._localArtifactDatas.push(artifact);
+            const exsitArtifacts = this._localArtifactDatas.filter(v => v.artifactConfigId == artifact.artifactConfigId);
+            if (exsitArtifacts.length > 0) {
+                exsitArtifacts[0].count += artifact.count;
+                exsitArtifacts[0].addTimeStamp = new Date().getTime();
+            } else {
+                artifact.addTimeStamp = new Date().getTime();
+                this._localArtifactDatas.push(artifact);
+            }
+
         }
         if (changed) {
             for (const observe of this._observers) {

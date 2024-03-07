@@ -23,6 +23,8 @@ import ItemData, { ItemType } from '../../Model/ItemData';
 import DropMgr from '../../Manger/DropMgr';
 import CommonTools from '../../Tool/CommonTools';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
+import ArtifactMgr from '../../Manger/ArtifactMgr';
+import { ArtifactEffectType } from '../../Model/ArtifactData';
 
 
 const { ccclass, property } = _decorator;
@@ -315,6 +317,14 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         // default speed
         const defaultSpeed = 250;
         const allPioneers = PioneerMgr.instance.getAllPioneer();
+
+        // artifact effect
+        let artifactSpeed = 0;
+        const artifactEff = ArtifactMgr.Instance.getPropEffValue();
+        if (artifactEff.eff[ArtifactEffectType.MOVE_SPEED]) {
+            artifactSpeed = artifactEff.eff[ArtifactEffectType.MOVE_SPEED];
+        }
+
         for (var i = 0; i < allPioneers.length; i++) {
             let pioneer = allPioneers[i];
             let usedSpeed = defaultSpeed;
@@ -323,6 +333,12 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     usedSpeed = logic.moveSpeed;
                 }
             }
+
+            // artifact move speed
+            if (pioneer.type == MapPioneerType.player) {
+                usedSpeed = Math.floor(usedSpeed + usedSpeed * artifactSpeed);
+            }
+
             if (this._movingPioneerIds.indexOf(pioneer.id) != -1 && this._pioneerMap.has(pioneer.id)) {
                 let pioneermap = this._pioneerMap.get(pioneer.id);
                 this.updateMoveStep(usedSpeed, deltaTime, pioneer, pioneermap);
