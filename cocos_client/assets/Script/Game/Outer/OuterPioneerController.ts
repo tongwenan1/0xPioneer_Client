@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
+import { _decorator, Color, Component, director, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
 import { GameMain } from '../../GameMain';
 import BranchEventMgr from '../../Manger/BranchEventMgr';
 import BuildingMgr from '../../Manger/BuildingMgr';
@@ -15,8 +15,16 @@ import { OuterOtherPioneerView } from './View/OuterOtherPioneerView';
 import { MapItemMonster } from './View/MapItemMonster';
 import { MapPioneer } from './View/MapPioneer';
 import { MapBG } from '../../Scene/MapBG';
-import {EventName} from "db://assets/Script/Const/ConstDefine";
 import LvlupMgr from '../../Manger/LvlupMgr';
+import { OuterMapCursorView } from './View/OuterMapCursorView';
+import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import ItemMgr from '../../Manger/ItemMgr';
+import ItemData, { ItemType } from '../../Model/ItemData';
+import DropMgr from '../../Manger/DropMgr';
+import CommonTools from '../../Tool/CommonTools';
+import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
+import ArtifactMgr from '../../Manger/ArtifactMgr';
+import { ArtifactEffectType } from '../../Model/ArtifactData';
 
 
 const { ccclass, property } = _decorator;
@@ -24,7 +32,7 @@ const { ccclass, property } = _decorator;
 @ccclass('OuterPioneerController')
 export class OuterPioneerController extends Component implements PioneerMgrEvent, UserInfoEvent {
 
-    public showMovingPioneerAction(tilePos: TilePos, movingPioneerId: string, usedCursor: Node) {
+    public showMovingPioneerAction(tilePos: TilePos, movingPioneerId: string, usedCursor: OuterMapCursorView) {
         this._actionShowPioneerId = movingPioneerId;
         this._actionUsedCursor = usedCursor;
         if (this._actionPioneerView != null) {
@@ -108,7 +116,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     private _footPathMap: Map<string, Node[]> = new Map();
 
     private _actionPioneerView: Node = null;
-    private _actionUsedCursor: Node = null;
+    private _actionUsedCursor: OuterMapCursorView = null;
     private _actionPioneerFootStepViews: Node[] = null;
 
     private _started: boolean = false;
@@ -121,7 +129,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
         this._pioneerMap = new Map();
 
-        EventMgr.on("Event_LoadOver", this.onLocalDataLoadOver, this);
+        EventMgr.on(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
     }
 
     start() {
@@ -147,14 +155,14 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 if (actionPioneer != null && prophetess != null) {
                     const paths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(actionPioneer.stayPos, prophetess.stayPos);
                     actionPioneer.purchaseMovingPioneerId = prophetess.id;
-                    PioneerMgr.instance.pioneerBeginMove(actionPioneer.id, paths, true);
+                    PioneerMgr.instance.pioneerBeginMove(actionPioneer.id, paths);
                 }
             }
         }
     }
 
     private _refreshUI() {
-        const decorationView = this.node.getComponent(MapBG).decorationLayer();
+        const decorationView = this.node.getComponent(MapBG).mapDecorationView();
         if (decorationView == null) {
             return;
         }
@@ -267,10 +275,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         if (dist < add) //havemove 2 target
         {
             pioneermap.setWorldPosition(nextwpos);
-            if (pioneer.id == this._actionShowPioneerId && this._actionUsedCursor != null) {
-                this._actionUsedCursor.setWorldPosition(nextwpos);
-            }
             PioneerMgr.instance.pioneerDidMoveOneStep(pioneer.id);
+            if (pioneer.id == this._actionShowPioneerId && this._actionUsedCursor != null) {
+                this._actionUsedCursor.hide();
+                this._actionUsedCursor.show([pioneer.stayPos], Color.WHITE);
+            }
             return;
         }
         else {
@@ -282,7 +291,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             newpos.y += dir.y * add;
             pioneermap.setWorldPosition(newpos);
             if (pioneer.id == this._actionShowPioneerId && this._actionUsedCursor != null) {
-                this._actionUsedCursor.setWorldPosition(newpos);
+                this._actionUsedCursor.move(v2(dir.x * add * 2, dir.y * add * 2));
             }
             //pioneer move direction
             let curMoveDirection = null;
@@ -308,6 +317,14 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         // default speed
         const defaultSpeed = 250;
         const allPioneers = PioneerMgr.instance.getAllPioneer();
+
+        // artifact effect
+        let artifactSpeed = 0;
+        const artifactEff = ArtifactMgr.Instance.getPropEffValue();
+        if (artifactEff.eff[ArtifactEffectType.MOVE_SPEED]) {
+            artifactSpeed = artifactEff.eff[ArtifactEffectType.MOVE_SPEED];
+        }
+
         for (var i = 0; i < allPioneers.length; i++) {
             let pioneer = allPioneers[i];
             let usedSpeed = defaultSpeed;
@@ -316,6 +333,12 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     usedSpeed = logic.moveSpeed;
                 }
             }
+
+            // artifact move speed
+            if (pioneer.type == MapPioneerType.player) {
+                usedSpeed = Math.floor(usedSpeed + usedSpeed * artifactSpeed);
+            }
+
             if (this._movingPioneerIds.indexOf(pioneer.id) != -1 && this._pioneerMap.has(pioneer.id)) {
                 let pioneermap = this._pioneerMap.get(pioneer.id);
                 this.updateMoveStep(usedSpeed, deltaTime, pioneer, pioneermap);
@@ -356,8 +379,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     private _addFootSteps(path: TilePos[], isTargetPosShowFlag: boolean = false): Node[] {
-        const decorationView = this.node.getComponent(MapBG).decorationLayer();
-        if (decorationView == null) {
+        const mapBottomView = this.node.getComponent(MapBG).mapBottomView();
+        if (mapBottomView == null) {
             return;
         }
         const footViews = [];
@@ -366,7 +389,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 if (isTargetPosShowFlag) {
                     const footView = instantiate(this.footPathTargetPrefab);
                     footView.name = "footViewTarget";
-                    decorationView.insertChild(footView, 0);
+                    mapBottomView.insertChild(footView, 0);
                     let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(path[i].x, path[i].y);
                     footView.setWorldPosition(worldPos);
                     footViews.push(footView);
@@ -376,7 +399,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 const nextPath = path[i + 1];
                 const footView = instantiate(this.footPathPrefab);
                 footView.name = "footView";
-                decorationView.insertChild(footView, 0);
+                mapBottomView.insertChild(footView, 0);
                 let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(currentPath.x, currentPath.y);
                 footView.setWorldPosition(worldPos);
                 footViews.push(footView);
@@ -509,23 +532,25 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             const deadPioneer = PioneerMgr.instance.getPioneerById(deadId);
             if (deadPioneer != null && !deadPioneer.friendly) {
                 UserInfoMgr.Instance.explorationValue += deadPioneer.winprogress;
-            }
+                if (deadPioneer.drop != null) {
+                    ItemConfigDropTool.getItemByConfig(deadPioneer.drop);
+                }
 
-        } else {
-            //building
-            UserInfoMgr.Instance.checkCanFinishedTask("destroybuilding", deadId);
+            } else {
+                //building
+                UserInfoMgr.Instance.checkCanFinishedTask("destroybuilding", deadId);
 
-            const deadBuilding = BuildingMgr.instance.getBuildingById(deadId);
-            if (deadBuilding != null && deadBuilding.faction == BuildingFactionType.enemy) {
-                UserInfoMgr.Instance.explorationValue += deadBuilding.winprogress;
+                const deadBuilding = BuildingMgr.instance.getBuildingById(deadId);
+                if (deadBuilding != null && deadBuilding.faction == BuildingFactionType.enemy) {
+                    UserInfoMgr.Instance.explorationValue += deadBuilding.winprogress;
+                }
             }
         }
     }
-
     exploredPioneer(pioneerId: string): void {
         const pioneer = PioneerMgr.instance.getPioneerById(pioneerId);
         if (pioneer != null && pioneer.type == MapPioneerType.gangster) {
-            UserInfoMgr.Instance.troop += pioneer.hpMax;
+            ItemMgr.Instance.addItem([new ItemData(ResourceCorrespondingItem.Troop, pioneer.hpMax)]);
         }
         UserInfoMgr.Instance.checkCanFinishedTask("explorewithpioneer", pioneerId);
     }
@@ -558,16 +583,9 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     actionView = this._pioneerMap.get(actionPioneerId);
                 }
                 for (const resource of building.resources) {
-                    actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resource.num, () => {
-                        if (resource.id == "resource_01") {
-                            UserInfoMgr.Instance.wood += Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
-                        } else if (resource.id == "resource_02") {
-                            UserInfoMgr.Instance.stone += Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
-                        } else if (resource.id == "resource_03") {
-                            UserInfoMgr.Instance.food += Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
-                        } else if (resource.id == "resource_04") {
-                            UserInfoMgr.Instance.troop += resource.num;
-                        }
+                    const resultNum: number = Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
+                    actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resultNum, () => {
+                        ItemMgr.Instance.addItem([new ItemData(parseInt(resource.id), resultNum)]);
                     });
                 }
 
@@ -585,6 +603,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         if (event.length > 0) {
             GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => {
                 PioneerMgr.instance.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
+            }, (nextEvent: any) => {
+                PioneerMgr.instance.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
             });
             GameMain.inst.UI.eventUI.show(true);
         }
@@ -699,7 +719,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     gameTaskOver(): void {
+
+        // useLanMgr
+        // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
         GameMain.inst.UI.ShowTip("Boot ends");
+
     }
     generateTroopTimeCountChanged(leftTime: number): void {
 

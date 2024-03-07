@@ -4,6 +4,9 @@ import PioneerMgr from '../../Manger/PioneerMgr';
 import UserInfo from '../../Manger/UserInfoMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
 import CountMgr, { CountType } from '../../Manger/CountMgr';
+import LanMgr from '../../Manger/LanMgr';
+import EventMgr from '../../Manger/EventMgr';
+import { EventName } from '../../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -14,8 +17,6 @@ export class DialogueUI extends PopUpUI {
         this._dialogStep = 0;
         this._refreshUI();
     }
-
-
 
     public override get typeName() {
         return "DialogueUI";
@@ -35,15 +36,16 @@ export class DialogueUI extends PopUpUI {
         "secretGuard"
     ];
     onLoad(): void {
-
+        EventMgr.on(EventName.CHANGE_LANG, this._refreshUI, this);
     }
-
     start() {
 
     }
-
     update(deltaTime: number) {
 
+    }
+    onDestroy(): void {
+        EventMgr.off(EventName.CHANGE_LANG, this._refreshUI, this);
     }
 
 
@@ -52,6 +54,10 @@ export class DialogueUI extends PopUpUI {
             this._dialogStep > this._talk.messsages.length - 1) {
             return;
         }
+        
+        // useLanMgr
+        // this.node.getChildByPath("Dialog/NextButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+
         const dialogView = this.node.getChildByName("Dialog");
         const selectView = this.node.getChildByName("SelectView");
 
@@ -72,7 +78,11 @@ export class DialogueUI extends PopUpUI {
                 dialogView.getChildByName("player_name").active = true;
                 dialogView.getChildByPath("player_name/Label").getComponent(Label).string = UserInfo.Instance.playerName;
             }
+
+            // useLanMgr
+            // dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.text);
             dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = currentMesssage.text;
+
             for (const roleName of this._roleNames) {
                 dialogView.getChildByName(roleName).active = roleName == currentMesssage.name;
             }
@@ -81,7 +91,11 @@ export class DialogueUI extends PopUpUI {
                 dialogView.active = true;
                 dialogView.getChildByName("name_bg").active = false;
                 dialogView.getChildByName("player_name").active = false;
+
+                // useLanMgr
+                // dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.text);
                 dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = currentMesssage.text;
+
                 for (const roleName of this._roleNames) {
                     dialogView.getChildByName(roleName).active = false;
                 }
@@ -96,7 +110,11 @@ export class DialogueUI extends PopUpUI {
                 const button = selectView.getChildByName("Button_" + i);
                 if (i < currentMesssage.select.length) {
                     button.active = true;
+
+                    // useLanMgr
+                    // button.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.select[i]);
                     button.getChildByName("Label").getComponent(Label).string = currentMesssage.select[i];
+
                     button.getComponent(Button).clickEvents[0].customEventData = currentMesssage.select[i];
                 } else {
                     button.active = false;
@@ -131,6 +149,9 @@ export class DialogueUI extends PopUpUI {
         if (this._task.entrypoint.result.includes(customEventData)) {
             // get task
             UserInfo.Instance.getNewTask(this._task);
+
+            // useLanMgr
+            // GameMain.inst.UI.NewTaskTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.NewTaskTip("New Task Taken");
 
         } else if (this._task.exitpoint != null &&

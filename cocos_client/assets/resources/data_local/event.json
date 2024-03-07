@@ -14,7 +14,14 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": [
+      "pioneer_2"
+    ],
+    "map_building_refresh": [
+      "building_17"
+    ]
   },
   "910102": {
     "id": "910102",
@@ -34,7 +41,14 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": [
+      "pioneer_2"
+    ],
+    "map_building_refresh": [
+      "building_17"
+    ]
   },
   "910103": {
     "id": "910103",
@@ -57,13 +71,20 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": [
+      "pioneer_2"
+    ],
+    "map_building_refresh": [
+      "building_17"
+    ]
   },
   "910104": {
     "id": "910104",
     "NOTES": "spider/ fight small spiders/ lose-end",
     "type": 1,
-    "result": "-1",
+    "result": "-2",
     "text": "You are killed by the spiders!",
     "select": null,
     "select_txt": null,
@@ -74,7 +95,13 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "map_pioneer_unlock": [
+      "pioneer_2"
+    ],
+    "map_building_refresh": [
+      "building_17"
+    ]
   },
   "910105": {
     "id": "910105",
@@ -91,7 +118,14 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": [
+      "pioneer_2"
+    ],
+    "map_building_refresh": [
+      "building_17"
+    ]
   },
   "910106": {
     "id": "910106",
@@ -108,7 +142,14 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": [
+      "pioneer_2"
+    ],
+    "map_building_refresh": [
+      "building_17"
+    ]
   },
   "910107": {
     "id": "910107",
@@ -132,7 +173,14 @@
       ]
     ],
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": [
+      "pioneer_2"
+    ],
+    "map_building_refresh": [
+      "building_17"
+    ]
   },
   "910108": {
     "id": "910108",
@@ -148,14 +196,17 @@
     "cost": null,
     "reward": [
       [
-        2,
-        "resource_01",
+        1,
+        "8002",
         20
       ]
     ],
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910109": {
     "id": "910109",
@@ -175,7 +226,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910110": {
     "id": "910110",
@@ -191,25 +245,28 @@
     "cost": null,
     "reward": [
       [
-        2,
-        "resource_01",
+        1,
+        "8002",
         20
       ],
       [
-        2,
-        "resource_02",
+        1,
+        "8003",
         20
       ]
     ],
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910111": {
     "id": "910111",
     "NOTES": "spider/ egg egg/ fight small spiders/ lose - end",
     "type": 1,
-    "result": "-1",
+    "result": "-2",
     "text": "You are killed by the spiders!",
     "select": null,
     "select_txt": null,
@@ -220,7 +277,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910112": {
     "id": "910112",
@@ -240,7 +300,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910113": {
     "id": "910113",
@@ -263,7 +326,10 @@
     ],
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910114": {
     "id": "910114",
@@ -280,14 +346,17 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910201": {
     "id": "910201",
     "NOTES": "ancient/come to the ancient",
     "type": 2,
     "result": null,
-    "text": "You found an ancient looked mysterious and full of crisis.",
+    "text": "You found an ancient.",
     "select": [
       "910202",
       "910209"
@@ -303,14 +372,17 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910202": {
     "id": "910202",
     "NOTES": "ancient/ enter the ancient",
     "type": 1,
     "result": "910203",
-    "text": "You entered the ancient directly, completely unafraid of the potential dangers.",
+    "text": "You entered the ancient.",
     "select": null,
     "select_txt": null,
     "select_cond": null,
@@ -320,21 +392,24 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910203": {
     "id": "910203",
     "NOTES": "ancient/ find guard",
     "type": 2,
     "result": null,
-    "text": "You saw something that looks like the guardian of this ancient.",
+    "text": "You saw a guardian.",
     "select": [
       "910204",
       "910207"
     ],
     "select_txt": [
-      "fight with it",
-      "evade it"
+      "fight",
+      "evade"
     ],
     "select_cond": null,
     "enemy": null,
@@ -343,7 +418,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910204": {
     "id": "910204",
@@ -363,7 +441,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910205": {
     "id": "910205",
@@ -384,14 +465,17 @@
         1
       ],
       [
-        2,
-        "resource_02",
+        1,
+        "8003",
         20
       ]
     ],
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910206": {
     "id": "910206",
@@ -408,14 +492,17 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910207": {
     "id": "910207",
     "NOTES": "ancient/ find guard/ evd",
     "type": 1,
     "result": "910208",
-    "text": "You evaded the guardian carefully.",
+    "text": "You evaded.",
     "select": null,
     "select_txt": null,
     "select_cond": null,
@@ -425,7 +512,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910208": {
     "id": "910208",
@@ -442,7 +532,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910209": {
     "id": "910209",
@@ -461,7 +554,7 @@
     "select_cond": [
       [
         1,
-        "resource_01",
+        "8002",
         50
       ],
       []
@@ -472,7 +565,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910210": {
     "id": "910210",
@@ -487,15 +583,18 @@
     "enemy_result": null,
     "cost": [
       [
-        2,
-        "resource_01",
+        1,
+        "8002",
         50
       ]
     ],
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910211": {
     "id": "910211",
@@ -519,7 +618,10 @@
       ]
     ],
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910212": {
     "id": "910212",
@@ -539,7 +641,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910213": {
     "id": "910213",
@@ -562,7 +667,10 @@
     ],
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910214": {
     "id": "910214",
@@ -579,7 +687,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910215": {
     "id": "910215",
@@ -596,7 +707,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910216": {
     "id": "910216",
@@ -614,7 +728,7 @@
     ],
     "select_cond": [
       [
-        2,
+        1,
         "18",
         1
       ],
@@ -626,7 +740,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910217": {
     "id": "910217",
@@ -639,28 +756,25 @@
     "select_cond": null,
     "enemy": null,
     "enemy_result": null,
-    "cost": [
-      [
-        1,
-        "18",
-        1
-      ]
-    ],
+    "cost": null,
     "reward": [
       [
-        2,
-        "resource_01",
+        1,
+        "8002",
         100
       ],
       [
-        2,
-        "resource_02",
+        1,
+        "8003",
         100
       ]
     ],
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910218": {
     "id": "910218",
@@ -676,14 +790,17 @@
     "cost": null,
     "reward": [
       [
-        2,
-        "resource_02",
+        1,
+        "8003",
         50
       ]
     ],
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910301": {
     "id": "910301",
@@ -703,7 +820,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910302": {
     "id": "910302",
@@ -726,7 +846,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910303": {
     "id": "910303",
@@ -743,7 +866,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910304": {
     "id": "910304",
@@ -759,14 +885,17 @@
     "cost": null,
     "reward": [
       [
-        2,
-        "resource_02",
+        1,
+        "8003",
         30
       ]
     ],
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910305": {
     "id": "910305",
@@ -785,7 +914,7 @@
     "select_cond": [
       [
         1,
-        "resource_02",
+        "8003",
         50
       ],
       []
@@ -796,7 +925,10 @@
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910306": {
     "id": "910306",
@@ -811,15 +943,18 @@
     "enemy_result": null,
     "cost": [
       [
-        2,
-        "resource_02",
+        1,
+        "8003",
         50
       ]
     ],
     "reward": null,
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910307": {
     "id": "910307",
@@ -835,14 +970,17 @@
     "cost": null,
     "reward": [
       [
-        2,
-        "resource_05",
+        1,
+        "8005",
         100
       ]
     ],
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   },
   "910308": {
     "id": "910308",
@@ -858,13 +996,16 @@
     "cost": null,
     "reward": [
       [
-        2,
-        "resource_05",
+        1,
+        "8005",
         40
       ]
     ],
     "change": null,
     "judge": null,
-    "judge_result": null
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
   }
 }

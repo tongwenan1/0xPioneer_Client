@@ -13,15 +13,18 @@ export class SecretGuardGettedUI extends PopUpUI {
             "doomsdayGangSpy",
             "rebels",
         ];
+
+
+        // useLanMgr
         const keen = [
-            "Dual Guns Jack",
-            "Dual Blades Keen",
-            "Rebels Camus"
+            "Dual Guns Jack",//LanMgr.Instance.getLanById("107549");
+            "Dual Blades Keen",//LanMgr.Instance.getLanById("107549");
+            "Rebels Camus"//LanMgr.Instance.getLanById("107549");
         ];
         const wind = [
-            "Gunman as Graceful as a Gazelle",
-            "Warrior as Wild as the Wind",
-            "Berserker as Fearless as a Beast"
+            "Gunman as Graceful as a Gazelle",//LanMgr.Instance.getLanById("107549");
+            "Warrior as Wild as the Wind",//LanMgr.Instance.getLanById("107549");
+            "Berserker as Fearless as a Beast"//LanMgr.Instance.getLanById("107549");
         ]
         for (const name of names) {
             this.node.getChildByPath("bgc/" + name).active = name == pioneerName;
@@ -29,13 +32,13 @@ export class SecretGuardGettedUI extends PopUpUI {
         let index = names.indexOf(pioneerName);
         this.node.getChildByPath("lable/Label keen").getComponent(Label).string = keen[index];
         this.node.getChildByPath("lable/Label wind").getComponent(Label).string = wind[index];
-        
+
         tween(this.node)
-        .delay(2)
-        .call(()=> {
-            GameMain.inst.UI.serectGuardGettedUI.show(false);
-        })
-        .start();
+            .delay(2)
+            .call(() => {
+                GameMain.inst.UI.serectGuardGettedUI.show(false);
+            })
+            .start();
     }
 
     start() {
@@ -43,7 +46,7 @@ export class SecretGuardGettedUI extends PopUpUI {
     }
 
     update(deltaTime: number) {
-        
+
     }
 }
 

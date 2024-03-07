@@ -1,4 +1,4 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Layout, Node } from 'cc';
 import MapBuildingModel, { MapBuildingType } from '../Model/MapBuildingModel';
 import { MapPlayerPioneerModel } from '../Model/MapPioneerModel';
 const { ccclass, property } = _decorator;
@@ -18,6 +18,8 @@ export class OuterBuildingView extends Component {
         const laboratory = this.node.getChildByName("laboratory");
         const ancientRuins = this.node.getChildByName("ancient_ruins");
 
+        const strongholdView = this.node.getChildByName("StrongholdContent");
+
         treasure.active = false;
         swamp.active = false;
         sand.active = false;
@@ -28,6 +30,8 @@ export class OuterBuildingView extends Component {
         spiderCave.active = false;
         laboratory.active = false;
         ancientRuins.active = false;
+
+        strongholdView.active = false;
 
         this._neturalView.active = false;
         this._selfView.active = false;
@@ -54,11 +58,21 @@ export class OuterBuildingView extends Component {
                     break;
                 }
             }
+            if (building.defendPioneerIds.length > 0) {
+                strongholdView.active = true;
+                strongholdView.getChildByName("pioneer_default").active = building.defendPioneerIds.indexOf("pioneer_0") != -1;
+                strongholdView.getChildByName("secretGuard").active = building.defendPioneerIds.indexOf("pioneer_1") != -1;
+                strongholdView.getChildByName("doomsdayGangSpy").active = building.defendPioneerIds.indexOf("pioneer_2") != -1;
+                strongholdView.getChildByName("rebels").active = building.defendPioneerIds.indexOf("pioneer_3") != -1;
+                strongholdView.getComponent(Layout).updateLayout();
+            }
             if (isSelf) {
                 this._selfView.active = true;
             } else {
                 this._neturalView.active = true;
             }
+
+
 
         } else if (building.type == MapBuildingType.resource) {
             this._neturalView.active = true;
@@ -78,11 +92,11 @@ export class OuterBuildingView extends Component {
             }
         } else if (building.type == MapBuildingType.event) {
             this._neturalView.active = true;
-            if (building.eventId == "910101") {
+            if (building.eventId.indexOf("9101") != -1) {
                 spiderCave.active = true;
-            } else if (building.eventId == "910201") {
+            } else if (building.eventId.indexOf("9102") != -1) {
                 ancientRuins.active = true;
-            } else if (building.eventId == "910301") {
+            } else if (building.eventId.indexOf("9103") != -1) {
                 laboratory.active = true;
             }
         }

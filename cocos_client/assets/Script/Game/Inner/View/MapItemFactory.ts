@@ -8,6 +8,10 @@ import UserInfoMgr, { UserInfoEvent, UserInnerBuildInfo, FinishedEvent } from '.
 import CommonTools from '../../../Tool/CommonTools';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import CountMgr, { CountType } from '../../../Manger/CountMgr';
+import LanMgr from '../../../Manger/LanMgr';
+import ItemMgr from '../../../Manger/ItemMgr';
+import ArtifactMgr from '../../../Manger/ArtifactMgr';
+import { ArtifactEffectType } from '../../../Model/ArtifactData';
 
 const { ccclass, property } = _decorator;
 
@@ -33,7 +37,11 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
         super._onClick();
 
         if (this._upgradeIng) {
+
+            // useLanMgr
+            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
+
             return;
         }
 
@@ -42,7 +50,11 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
         }
         if (this.buildData.buildID == "3" && this.buildData.buildLevel > 0) {
             if (UserInfoMgr.Instance.isGeneratingTroop) {
+                
+                // useLanMgr
+                // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
                 GameMain.inst.UI.ShowTip("Recruiting…Please wait…");
+
                 return;
             }
             GameMain.inst.UI.recruitUI.show(true);
@@ -108,56 +120,71 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
 
     onUpgrade() {
         if (this._upgradeIng) {
+
+            // useLanMgr
+            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
             GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
+
             return;
         }
         let canUpgrade: boolean = true;
         const buildingInfo = InnerBuildingMgr.Instance.getInfoById(this.buildData.buildID);
         if (this.buildData.buildLevel < buildingInfo.maxLevel) {
+
+            // artifact effect
+            const artifactPropEff = ArtifactMgr.Instance.getPropEffValue();
+            let artifactTime = 0;
+            if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME]) {
+                artifactTime = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME];
+            }
+            let artifactResource = 0;
+            if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVLUP_RESOURCE]) {
+                artifactResource = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVLUP_RESOURCE];
+            }
+
             // resource save waiting changed
             const nextLevelInfo = buildingInfo.up[this.buildData.buildLevel + 1];
             for (const resource of nextLevelInfo.cost) {
-                if (resource.type == "resource_01" && UserInfoMgr.Instance.wood < resource.num) {
-                    canUpgrade = false;
-                    break;
-                } else if (resource.type == "resource_02" && UserInfoMgr.Instance.stone < resource.num) {
-                    canUpgrade = false;
-                    break;
-                } else if (resource.type == "resource_03" && UserInfoMgr.Instance.food < resource.num) {
-                    canUpgrade = false;
-                    break;
-                } else if (resource.type == "resource_04" && UserInfoMgr.Instance.troop < resource.num) {
+                let needNum = resource.num;
+                // total num
+                needNum = Math.floor(needNum - (needNum * artifactResource));
+
+                if (ItemMgr.Instance.getOwnItemCount(parseInt(resource.type)) < needNum) {
                     canUpgrade = false;
                     break;
                 }
             }
             if (!canUpgrade) {
+
+                // useLanMgr
+                // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
                 GameMain.inst.UI.ShowTip("Insufficient resources for building upgrades");
+                
                 return;
             }
             this._upgradeIng = true;
             for (const resource of nextLevelInfo.cost) {
-                // resource save waiting changed
-                if (resource.type == "resource_01") {
-                    UserInfoMgr.Instance.wood -= resource.num;
-                } else if (resource.type == "resource_02") {
-                    UserInfoMgr.Instance.stone -= resource.num;
-                } else if (resource.type == "resource_03") {
-                    UserInfoMgr.Instance.food -= resource.num;
-                } else if (resource.type == "resource_04") {
-                    UserInfoMgr.Instance.troop -= resource.num;
-                }
+                let needNum = resource.num;
+                // total num
+                needNum = Math.floor(needNum - (needNum * artifactResource));
+                ItemMgr.Instance.subItem(parseInt(resource.type), needNum);
             }
             UserInfoMgr.Instance.upgradeBuild(this.buildID);
             UserInfoMgr.Instance.explorationValue += nextLevelInfo.progress;
             // exp
             if (nextLevelInfo.exp) UserInfoMgr.Instance.exp += nextLevelInfo.exp;
 
-            GameMain.inst.innerSceneMap.playBuildAnim(this.node, 5, () => {
+
+            let up_time = 5;
+            // total time
+            up_time = Math.floor(up_time - (up_time * artifactTime));
+            if (up_time < 0) up_time = 1;
+
+            GameMain.inst.innerSceneMap.playBuildAnim(this.node, up_time, () => {
                 this.refresh();
                 this._upgradeIng = false;
             });
-            this.buildInfoUI.setProgressTime(5);
+            this.buildInfoUI.setProgressTime(up_time);
         }
     }
 
@@ -165,24 +192,6 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
     //---------------------------------------------------
     // UserInfoEvent
     playerNameChanged(value: string): void {
-
-    }
-    playerEnergyChanged?(value: number): void {
-
-    }
-    playerMoneyChanged?(value: number): void {
-
-    }
-    playerFoodChanged?(value: number): void {
-
-    }
-    playerWoodChanged?(value: number): void {
-
-    }
-    playerStoneChanged?(value: number): void {
-
-    }
-    playerTroopChanged?(value: number): void {
 
     }
     playerExplorationValueChanged?(value: number): void {

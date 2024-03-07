@@ -27,6 +27,10 @@ import { RecruitUI } from './Inner/RecruitUI';
 import { EventName } from '../Const/ConstDefine';
 import {BattleReportsUI} from "db://assets/Script/UI/BattleReportsUI";
 import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
+import LanMgr from '../Manger/LanMgr';
+import { ArtifactUI } from './ArtifactUI';
+import { ArtifactInfoUI } from './ArtifactInfoUI';
+import { PlayerInfoUI } from './PlayerInfoUI';
 import {LootsPopup} from "db://assets/Script/UI/LootsPopup";
 import BattleReportsMgr, {BattleReportsEvent} from "db://assets/Script/Manger/BattleReportsMgr";
 
@@ -61,10 +65,11 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     private eventPrefab: Prefab;
     @property(Prefab)
     private civilizationLevelUpPrefab: Prefab;
+    @property(Prefab)
+    private playerInfoPrefab: Prefab;
 
     @property(Prefab)
     BackpackUIPfb: Prefab;
-    
     @property(Prefab)
     ItemInfoUIPfb: Prefab;
 
@@ -73,6 +78,13 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
     @property(Prefab)
     LootsPopupPfb: Prefab;
+
+
+    @property(Prefab)
+    ArtifactUIPfb: Prefab;
+    @property(Prefab)
+    ArtifactInfoUIPfb: Prefab;
+
 
     @property([SpriteFrame])
     ResourceIconSpriteFrame: SpriteFrame[] = [];
@@ -87,11 +99,15 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     public recruitUI: RecruitUI;
     public eventUI: EventUI;
     public civilizationLevelUpUI: CivilizationLevelUpUI;
+    public playerInfoUI: PlayerInfoUI;
 
     public backpackUI: BackpackUI;
     public itemInfoUI: ItemInfoUI;
     public battleReportsUI: BattleReportsUI;
     public lootsPopupUI: LootsPopup;
+
+    public artifactUI: ArtifactUI;
+    public artifactInfoUI: ArtifactInfoUI;
 
     private _claimRewardUI: ClaimRewardUI;
 
@@ -107,6 +123,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     @property(Button)
     public battleReportsBtn: Button = null;
 
+    @property(Button)
+    artifactBtn:Button = null;
+
     private _gangsterComingTipView: Node = null;
 
     onLoad(): void {
@@ -118,6 +137,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         PioneerMgr.instance.addObserver(this);
         UserInfo.Instance.addObserver(this);
         BattleReportsMgr.Instance.addObserver(this);
+
+        EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
+
     }
 
     async start() {
@@ -127,6 +149,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
         let factoryInfoUINode = instantiate(this.factoryInfoUIPfb);
         factoryInfoUINode.setParent(this.UIRoot);
+        factoryInfoUINode.active = false;
+
+        this.factoryInfoUI = factoryInfoUINode.getComponent(FactoryInfoUI);
 
         this.dialogueUI = instantiate(this.dialoguePrefab).getComponent(DialogueUI);
         this.dialogueUI.node.setParent(this.UIRoot);
@@ -157,6 +182,10 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         this.civilizationLevelUpUI.node.setParent(this.UIRoot);
         this.civilizationLevelUpUI.node.active = false;
 
+        this.playerInfoUI = instantiate(this.playerInfoPrefab).getComponent(PlayerInfoUI);
+        this.playerInfoUI.node.setParent(this.UIRoot);
+        this.playerInfoUI.node.active = false;
+
         this.backpackUI = instantiate(this.BackpackUIPfb).getComponent(BackpackUI);
         this.backpackUI.node.setParent(this.UIRoot);
         this.backpackUI.node.active = false;
@@ -170,6 +199,14 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         this.lootsPopupUI.node.setParent(this.UIRoot);
         this.lootsPopupUI.node.active = false;
 
+
+        this.artifactUI = instantiate(this.ArtifactUIPfb).getComponent(ArtifactUI);
+        this.artifactUI.node.setParent(this.UIRoot);
+        this.artifactUI.node.active = false;
+        this.artifactInfoUI = instantiate(this.ArtifactInfoUIPfb).getComponent(ArtifactInfoUI);
+        this.artifactInfoUI.node.setParent(this.UIRoot);
+        this.artifactInfoUI.node.active = false;
+
         this._claimRewardUI = this.node.getChildByName("reward_ui").getComponent(ClaimRewardUI);
 
         EventMgr.on(EventName.SCENE_CHANGE, this.onSceneChange, this);
@@ -177,7 +214,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         if (LocalDataLoader.instance.loadStatus == 0) {
             await LocalDataLoader.instance.loadLocalDatas();
         }
-        EventMgr.emit("Event_LoadOver");
+        EventMgr.emit(EventName.LOADING_FINISH);
+
+        this.changeLang();
         
         const bigGanster = PioneerMgr.instance.getPioneerById("gangster_3");
         if (bigGanster != null && bigGanster.show) {
@@ -187,6 +226,10 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         
         this.backpackBtn.node.on(Button.EventType.CLICK, ()=>{
             GameMain.inst.UI.backpackUI.show(true);
+        }, this);
+
+        this.artifactBtn.node.on(Button.EventType.CLICK, ()=>{
+            GameMain.inst.UI.artifactUI.show(true);
         }, this);
         this.battleReportsBtn.node.on(Button.EventType.CLICK, () => {
             GameMain.inst.UI.battleReportsUI.show(true);
@@ -216,6 +259,15 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         PioneerMgr.instance.removeObserver(this);
         UserInfo.Instance.removeObserver(this);
         BattleReportsMgr.Instance.removeObserver(this);
+
+        EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
+    }
+
+    changeLang(): void {
+        // useLanMgr
+        // this.node.getChildByPath("LeftNode/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("icon_treasure_box/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("icon_artifact/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
     }
 
     onSceneChange() {
@@ -423,7 +475,11 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
             this._gangsterComingTipView.active = true;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = false;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
+
+            // useLanMgr
+            // this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.Instance.replaceLanById("107549", [this.secondsToTime(count)]);
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = "Big Team Coming: " + this.secondsToTime(count);
+
         }
     }
     playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {
@@ -433,24 +489,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     //-----------------------------------------------------------------
     //userInfoEvent
     playerNameChanged(value: string): void {
-
-    }
-    playerEnergyChanged?(value: number): void {
-
-    }
-    playerMoneyChanged?(value: number): void {
-
-    }
-    playerFoodChanged?(value: number): void {
-
-    }
-    playerWoodChanged?(value: number): void {
-
-    }
-    playerStoneChanged?(value: number): void {
-
-    }
-    playerTroopChanged?(value: number): void {
 
     }
     playerExplorationValueChanged?(value: number): void {

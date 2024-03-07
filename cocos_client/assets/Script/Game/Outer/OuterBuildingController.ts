@@ -10,6 +10,7 @@ import { MapBuildingType, BuildingFactionType } from './Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel } from './Model/MapPioneerModel';
 import { OuterBuildingView } from './View/OuterBuildingView';
 import { MapBG } from '../../Scene/MapBG';
+import { EventName } from '../../Const/ConstDefine';
 
 
 const { ccclass, property } = _decorator;
@@ -25,7 +26,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     private _started: boolean = false;
     private _dataLoaded: boolean = false;
     protected onLoad() {
-        EventMgr.on("Event_LoadOver", this.onLocalDataLoadOver, this);
+        EventMgr.on(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
         UserInfoMgr.Instance.addObserver(this);
         BuildingMgr.instance.addObserver(this);
         PioneerMgr.instance.addObserver(this);
@@ -58,7 +59,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     }
 
     private _refreshUI() {
-        const decorationView = this.node.getComponent(MapBG).decorationLayer();
+        const decorationView = this.node.getComponent(MapBG).mapDecorationView();
         if (decorationView == null) {
             return;
         }

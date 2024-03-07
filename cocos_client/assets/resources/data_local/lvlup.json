@@ -4,18 +4,18 @@
     "exp": 50,
     "extra_res": 0,
     "hp_max": 0,
-    "city_vision": 1,
+    "city_vision": 0,
     "city_feature": 1,
     "event_building": null,
     "reward": [
       [
-        2,
-        "resource_01",
+        1,
+        "8002",
         20
       ],
       [
-        2,
-        "resource_02",
+        1,
+        "8003",
         20
       ]
     ]
@@ -54,8 +54,8 @@
         1
       ],
       [
-        2,
-        "resource_02",
+        1,
+        "8003",
         20
       ]
     ]

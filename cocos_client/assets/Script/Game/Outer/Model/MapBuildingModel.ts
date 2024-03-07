@@ -36,6 +36,9 @@ export default class MapBuildingModel {
     public set eventId(value: string) {
         this._eventId = value;
     }
+    public set originalEventId(value: string) {
+        this._originalEventId = value;
+    }
     public set exp(value: number) {
         this._exp = value;
     }
@@ -74,6 +77,9 @@ export default class MapBuildingModel {
     public get eventId(): string {
         return this._eventId;
     }
+    public get originalEventId(): string {
+        return this._originalEventId;
+    }
     public get exp(): number {
         return this._exp;
     }
@@ -102,6 +108,7 @@ export default class MapBuildingModel {
     private _stayMapPositions: Vec2[];
     private _progress: number;
     private _winprogress: number;
+    private _originalEventId: string;
     private _eventId: string;
     private _exp: number;
 

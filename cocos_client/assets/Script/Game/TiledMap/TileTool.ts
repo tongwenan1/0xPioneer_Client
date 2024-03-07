@@ -199,6 +199,23 @@ export class TileMapHelper {
         }
 
     }
+    getExtAround(pos: TilePos, extlen: number): TilePos[] {
+        const postions = [];
+        for (var y = pos.calc_y - extlen; y <= pos.calc_y + extlen; y++) {
+            for (var x = pos.calc_x - extlen; x <= pos.calc_x + extlen; x++) {
+                var z = 0 - x - y;
+                if (z < pos.calc_z - extlen || z > pos.calc_z + extlen)
+                    continue;
+                var gpos = this.getPosByCalcPos(x, y, z);
+                //console.log("calcpos=" + x + "," + y + "," + z + "->" + gpos.x + "," + gpos.y);
+                if (gpos != null) {
+                    postions.push(gpos);
+
+                }
+            }
+        }
+        return postions;
+    }
     private InitPos() {
         this._pos = [];//TilePos[this.width * this.height];
         for (var y = 0; y < this.height; y++) {

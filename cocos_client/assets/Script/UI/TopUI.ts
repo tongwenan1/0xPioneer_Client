@@ -1,13 +1,17 @@
 import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt, UIOpacity, instantiate, tween } from 'cc';
+import { EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import EventMgr from '../Manger/EventMgr';
 import LvlupMgr from '../Manger/LvlupMgr';
 import UserInfo, { FinishedEvent, UserInfoEvent } from '../Manger/UserInfoMgr';
+import ItemMgr, { ItemMgrEvent } from '../Manger/ItemMgr';
+import { AudioMgr } from '../Basic/AudioMgr';
 const { ccclass, property } = _decorator;
 
 
 @ccclass('TopUI')
-export default class TopUI extends Component implements UserInfoEvent {
+export default class TopUI extends Component implements UserInfoEvent, ItemMgrEvent {
+    
 
     @property(Label)
     txtPlayerName: Label = null;
@@ -40,8 +44,10 @@ export default class TopUI extends Component implements UserInfoEvent {
         this._expAnimLabel.node.active = false;
 
         UserInfo.Instance.addObserver(this);
+        ItemMgr.Instance.addObserver(this);
 
-        EventMgr.on("Event_LoadOver", this.loadOver, this);
+
+        EventMgr.on(EventName.LOADING_FINISH, this.loadOver, this);
     }
 
     start() {
@@ -51,6 +57,7 @@ export default class TopUI extends Component implements UserInfoEvent {
 
     protected onDestroy(): void {
         UserInfo.Instance.removeObserver(this);
+        ItemMgr.Instance.removeObserver(this);
     }
 
     private loadOver() {
@@ -69,8 +76,8 @@ export default class TopUI extends Component implements UserInfoEvent {
         this.txtPlayerName.string = info.playerName;
         this.txtPlayerLV.string = "LV" + info.level;
         this.txtLvProgress.string = `${info.exp}/${1000}`;
-        this.txtMoney.string = "" + info.money;
-        this.txtEnergy.string = "" + info.energy;
+        this.txtMoney.string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Gold).toString();
+        this.txtEnergy.string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Energy).toString();
 
         const lvlupConfig = LvlupMgr.Instance.getConfigByLvl(info.level);
         const maxExp = lvlupConfig[0].exp;
@@ -78,46 +85,10 @@ export default class TopUI extends Component implements UserInfoEvent {
         this.node.getChildByPath("progressLv/txtLvProgress").getComponent(Label).string = info.exp + "/" + maxExp;
         
         const resourceView = this.node.getChildByName("Resource");
-        resourceView.getChildByPath("Food/Label").getComponent(Label).string = info.food.toString();
-        resourceView.getChildByPath("Wood/Label").getComponent(Label).string = info.wood.toString();
-        resourceView.getChildByPath("Stone/Label").getComponent(Label).string = info.stone.toString();
-        resourceView.getChildByPath("Troops/Label").getComponent(Label).string = info.troop.toString();
-    }
-
-    /**
-     * 
-     * @param type 0-energy 1-money 2-food 3-wood 4-stone 5-troop
-     * @param changedNum 
-     * @param showNumLabel 
-     */
-    private playNumChangedAnim(type: number, changedNum: number, showNumLabel: Label) {
-        let node = new Node();
-        let lbl = node.addComponent(Label);
-        lbl.string = (changedNum > 0) ? ("+" + changedNum) : ("" + changedNum);
-        node.parent = showNumLabel.node;
-        node.position = v3(0, showNumLabel.node.position.y - 30);
-
-        let seq = new Tween(node);
-        seq.to(0.4, { position: v3(node.position.x, node.position.y + 30) }, null);
-        seq.call(() => {
-            node.destroy();
-            let resultNum = 0;
-            if (type == 0) {
-                resultNum = UserInfo.Instance.energy;
-            } else if (type == 1) {
-                resultNum = UserInfo.Instance.money;
-            } else if (type == 2) {
-                resultNum = UserInfo.Instance.food;
-            } else if (type == 3) {
-                resultNum = UserInfo.Instance.wood;
-            } else if (type == 4) {
-                resultNum = UserInfo.Instance.stone;
-            } else if (type == 5) {
-                resultNum = UserInfo.Instance.troop;
-            }
-            showNumLabel.string = resultNum.toString();
-        });
-        seq.start();
+        resourceView.getChildByPath("Food/Label").getComponent(Label).string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Food).toString();
+        resourceView.getChildByPath("Wood/Label").getComponent(Label).string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Wood).toString();
+        resourceView.getChildByPath("Stone/Label").getComponent(Label).string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Stone).toString();
+        resourceView.getChildByPath("Troops/Label").getComponent(Label).string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Troop).toString();
     }
 
     private _playExpGettedAnim(getExpValue: number, playOver: ()=> void = null) {
@@ -149,27 +120,12 @@ export default class TopUI extends Component implements UserInfoEvent {
         GameMain.inst.UI.taskListUI.refreshUI();
         GameMain.inst.UI.taskListUI.show(true);
     }
+    private onTapPlayerInfo() {
+        GameMain.inst.UI.playerInfoUI.show(true);
+    }
     //-----------------------------------------------
     // userinfoevent
     playerNameChanged(value: string): void {
-        this.refreshTopUI();
-    }
-    playerEnergyChanged(value: number): void {
-        this.refreshTopUI();
-    }
-    playerMoneyChanged(value: number): void {
-        this.refreshTopUI();
-    }
-    playerFoodChanged(value: number): void {
-        this.refreshTopUI();
-    }
-    playerWoodChanged(value: number): void {
-        this.refreshTopUI();
-    }
-    playerStoneChanged(value: number): void {
-        this.refreshTopUI();
-    }
-    playerTroopChanged(value: number): void {
         this.refreshTopUI();
     }
     playerExpChanged(value: number): void {
@@ -208,5 +164,11 @@ export default class TopUI extends Component implements UserInfoEvent {
     }
     generateTroopTimeCountChanged(leftTime: number): void {
 
+    }
+
+    //-----------------------------------------------
+    // ItemMgrEvent
+    itemChanged(): void {
+        this.refreshTopUI();
     }
 }

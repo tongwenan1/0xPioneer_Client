@@ -6,11 +6,11 @@
       "1": {
         "cost": [
           {
-            "type": "resource_02",
+            "type": "8003",
             "num": 100
           },
           {
-            "type": "resource_01",
+            "type": "8002",
             "num": 100
           }
         ],
@@ -20,11 +20,11 @@
       "2": {
         "cost": [
           {
-            "type": "resource_02",
+            "type": "8003",
             "num": 200
           },
           {
-            "type": "resource_01",
+            "type": "8002",
             "num": 200
           }
         ],
@@ -40,11 +40,11 @@
       "1": {
         "cost": [
           {
-            "type": "resource_02",
+            "type": "8003",
             "num": 100
           },
           {
-            "type": "resource_01",
+            "type": "8002",
             "num": 100
           }
         ],
@@ -54,11 +54,11 @@
       "2": {
         "cost": [
           {
-            "type": "resource_02",
+            "type": "8003",
             "num": 200
           },
           {
-            "type": "resource_01",
+            "type": "8002",
             "num": 200
           }
         ],
@@ -74,11 +74,11 @@
       "1": {
         "cost": [
           {
-            "type": "resource_02",
+            "type": "8003",
             "num": 100
           },
           {
-            "type": "resource_01",
+            "type": "8002",
             "num": 100
           }
         ],
@@ -88,11 +88,11 @@
       "2": {
         "cost": [
           {
-            "type": "resource_02",
+            "type": "8003",
             "num": 200
           },
           {
-            "type": "resource_01",
+            "type": "8002",
             "num": 200
           }
         ],

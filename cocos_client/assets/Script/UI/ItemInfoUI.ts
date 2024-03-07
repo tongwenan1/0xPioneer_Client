@@ -6,6 +6,7 @@ import UserInfo from '../Manger/UserInfoMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import ItemMgr from '../Manger/ItemMgr';
 import CountMgr, { CountType } from '../Manger/CountMgr';
+import LanMgr from '../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 
@@ -22,22 +23,33 @@ export class ItemInfoUI extends PopUpUI {
         this._items = items;
         this._closeCallback = closeCallback;
         if (this._items.length > 0) {
-            let frame = await BackpackItem.getItemIcon(this._items[0].itemConfig.configId);
+            let frame = await BackpackItem.getItemIcon(this._items[0].itemConfig.icon);
             this.icon.spriteFrame = frame;
     
             this.typeLabel.string = this._items[0].itemConfig.itemType.toString();
-            this.nameLabel.string = this._items[0].itemConfig.itemName;
-            this.descTxt.string = this._items[0].itemConfig.itemDesc;
+
+            // useLanMgr
+            // this.nameLabel.string = LanMgr.Instance.getLanById(this._items[0].itemConfig.itemName);
+            // this.descTxt.string = LanMgr.Instance.getLanById(this._items[0].itemConfig.itemDesc);
+            this.nameLabel.string = this._items[0].itemConfig.itemName == null ? "" : this._items[0].itemConfig.itemName;
+            this.descTxt.string = this._items[0].itemConfig.itemDesc == null ? "" : this._items[0].itemConfig.itemDesc;
     
             this._isGet = isGet;
 
             this.useButton.node.active = false;
             if (this._isGet) {
                 this.useButton.node.active = true;
+
+                // useLanMgr
+                // this.useButtonLabel.string = LanMgr.Instance.getLanById("107549");
                 this.useButtonLabel.string = "Get";
+
             } else {
                 if (this._items[0].itemConfig.itemType == ItemType.AddProp) {
                     this.useButton.node.active = true;
+
+                    // useLanMgr
+                    // this.useButtonLabel.string = LanMgr.Instance.getLanById("107549");
                     this.useButtonLabel.string = "Use";
                 } 
             }
