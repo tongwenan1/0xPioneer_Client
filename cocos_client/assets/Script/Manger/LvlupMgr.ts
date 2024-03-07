@@ -15,6 +15,10 @@ export default class LvlupMgr {
         const lvlStr = lvl.toString();
         return this._hpmaxs[lvlStr] != undefined ? this._hpmaxs[lvlStr] : 0;
     }
+    public getTotalVisionByLvl(lvl: number) {
+        const lvlStr = lvl.toString();
+        return this._visions[lvlStr] != undefined ? this._visions[lvlStr] : 0;
+    }
 
     public static get Instance() {
         if (!this._instance) {
@@ -34,6 +38,7 @@ export default class LvlupMgr {
     private _configs: any = [];
     private _extras: any = {};
     private _hpmaxs: any = {};
+    private _visions: any = {};
 
     private async _initData() {
         const obj: any = await new Promise((resolve) => {
@@ -54,6 +59,7 @@ export default class LvlupMgr {
         
         this._extras = {};
         this._hpmaxs = {};
+        this._visions = {};
         const keys = Object.keys(obj);
         keys.sort((a, b) => {
             let na = Number(a);
@@ -68,14 +74,17 @@ export default class LvlupMgr {
             
             const extra = obj[lvlStr].extra_res;
             const hpmax = obj[lvlStr].hp_max;
+            const vision = obj[lvlStr].city_vision;
 
             this._extras[lvlStr] = extra;
             this._hpmaxs[lvlStr] = hpmax;
+            this._visions[lvlStr] = vision;
 
             if (Number(lvlStr) > 1) {
                 let preLvlStr = (Number(lvlStr) - 1).toString();
                 this._extras[lvlStr] += this._extras[preLvlStr];
                 this._hpmaxs[lvlStr] += this._hpmaxs[preLvlStr];
+                this._visions[lvlStr] += this._visions[preLvlStr];
             }
         }
 

@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3, Mask, tween, CCString, SpriteFrame, instantiate, Sprite, EventMouse, Color, TiledMap, size, RenderRoot2D, Widget, CCInteger } from 'cc';
+import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3, Mask, tween, CCString, SpriteFrame, instantiate, Sprite, EventMouse, Color, TiledMap, size, RenderRoot2D, Widget, CCInteger, Animation } from 'cc';
 import { GameMain } from '../GameMain';
 import PioneerInfo from '../Manger/PioneerMgr';
 import PioneerMgr from '../Manger/PioneerMgr';
@@ -17,6 +17,7 @@ import { OuterFogAnimShapMask } from '../Game/Outer/View/OuterFogAnimShapMask';
 import { OuterMapCursorView } from '../Game/Outer/View/OuterMapCursorView';
 import UserInfoMgr from '../Manger/UserInfoMgr';
 import LanMgr from '../Manger/LanMgr';
+import { copyFileSync } from 'fs';
 const { ccclass, property } = _decorator;
 
 @ccclass('CPrefabInfo')
@@ -767,7 +768,6 @@ export class MapBG extends Component {
             });
             this._playFogAnim();
         }
-        return;
         // bound fog
         for (const pos of getAllBoundPos) {
             if (this._boundItemMap.has(pos.x + "|" + pos.y)) {
@@ -813,7 +813,6 @@ export class MapBG extends Component {
         if (data.allClearedTilePosions != null && data.allClearedTilePosions.length > 0) {
             this._fogView.draw(data.allClearedTilePosions);
         }
-
         if (data.animTilePostions != null && data.animTilePostions.length > 0) {
             this._fogAnimPlaying = true;
             this._fogAnimView.node.active = true;
@@ -859,7 +858,6 @@ export class MapBG extends Component {
                         0
                     )
                 );
-                console.log("exce d: " + data.direciton);
                 let dissolveImage = null;
                 if (data.direciton == TileHexDirection.Left) {
                     dissolveImage = this.fogAnimDissolveImages[0];

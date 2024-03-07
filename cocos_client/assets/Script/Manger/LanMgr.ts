@@ -26,8 +26,12 @@ export default class LanMgr {
         return lan;
     }
 
+    public getLang(): string {
+        return this._language;
+    }
     public changeLang(lang: string) {
         this._language = lang;
+        localStorage.setItem(this._localLanKey, lang);
         EventMgr.emit(EventName.CHANGE_LANG);
     }
 
@@ -47,6 +51,7 @@ export default class LanMgr {
 
     private static _instance: LanMgr = null;
     private _configs: any = {};
+    private _localLanKey: string = "local_lan";
     private async _initData() {
         const obj: any = await new Promise((resolve) => {
             resources.load("data_local/lan", (err: Error, data: any) => {
@@ -58,5 +63,7 @@ export default class LanMgr {
             });
         })
         this._configs = obj;
+        
+        this._language = localStorage.getItem(this._localLanKey) == null ? "eng" : localStorage.getItem(this._localLanKey);
     }
 }

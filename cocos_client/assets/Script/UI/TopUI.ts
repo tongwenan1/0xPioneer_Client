@@ -5,6 +5,7 @@ import EventMgr from '../Manger/EventMgr';
 import LvlupMgr from '../Manger/LvlupMgr';
 import UserInfo, { FinishedEvent, UserInfoEvent } from '../Manger/UserInfoMgr';
 import ItemMgr, { ItemMgrEvent } from '../Manger/ItemMgr';
+import { AudioMgr } from '../Basic/AudioMgr';
 const { ccclass, property } = _decorator;
 
 
@@ -118,6 +119,9 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
     private onTapTaskList() {
         GameMain.inst.UI.taskListUI.refreshUI();
         GameMain.inst.UI.taskListUI.show(true);
+    }
+    private onTapPlayerInfo() {
+        GameMain.inst.UI.playerInfoUI.show(true);
     }
     //-----------------------------------------------
     // userinfoevent

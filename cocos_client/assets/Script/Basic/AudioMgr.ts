@@ -17,63 +17,72 @@ export class AudioMgr {
             if (err) {
                 return;
             }
-            this._audioSource.stop();
-            this._audioSource.clip = clip;
-            this._audioSource.loop = loop;
-            this._audioSource.play();
+            this._musicSource.stop();
+            this._musicSource.clip = clip;
+            this._musicSource.loop = loop;
+            this._musicSource.play();
         });
     }
     public changeMusicVolume(volume: number) {
         this._musicVolume = volume;
-        this._audioSource.volume = volume;
-        this._effectVolumeBase = 1 / this._musicVolume;
+        this._musicSource.volume = volume;
         localStorage.setItem("localMusicVolume", volume.toString());
     }
 
-    public playEffect(path: string, uniqueId: string = null) {
+    public playEffect(path: string) {
         if (path == null || path.length <= 0) {
             return;
-        }
-        if (uniqueId == null) {
-            uniqueId = path + new Date().getTime();
         }
         resources.load(path, (err, clip: AudioClip) => {
             if (err) {
                 return;
             }
-            this._audioSource.playOneShot(clip, this._effectVolume * this._effectVolumeBase);
+            this._effectSource.playOneShot(clip);
         });
     }
     public changeEffectVolume(volume: number) {
         this._effectVolume = volume;
+        this._effectSource.volume = volume;
         localStorage.setItem("localEffectVolume", volume.toString());
+    }
+
+    public get musicVolume(): number {    
+        return this._musicVolume
+    }
+    public get effectVolume(): number {
+        return this._effectVolume;
     }
 
     private static _instance: AudioMgr = null;
 
     private _currentScene: Scene = null;
-    private _audioSource: AudioSource = null;
+    private _musicSource: AudioSource = null;
+    private _effectSource: AudioSource = null;
     private _musicVolume: number = 1.0;
-    private _effectVolumeBase: number = 1.0;
     private _effectVolume: number = 1.0;
     constructor() {
         this._currentScene = director.getScene();
-        const node = new Node();
-        node.name = "__audioMgr";
-        this._audioSource = node.addComponent(AudioSource);
-        this._audioSource.volume = this._musicVolume;
-        this._currentScene.addChild(node);
+        const musicNode = new Node();
+        musicNode.name = "__audioMgr_music";
+        this._musicSource = musicNode.addComponent(AudioSource);
+        this._currentScene.addChild(musicNode);
+
+        const effectNode = new Node();
+        effectNode.name = "__audioMgr_effect";
+        this._effectSource = effectNode.addComponent(AudioSource);
+        this._currentScene.addChild(effectNode);
 
         const localMusicVolume = localStorage.getItem("localMusicVolume");
         if (localMusicVolume != null) {
             this._musicVolume = parseFloat(localMusicVolume);
-            this._effectVolumeBase = 1 / this._musicVolume;
         }
+        this._musicSource.volume = this._musicVolume;
 
         const localEffectVolume = localStorage.getItem("localEffectVolume");
         if (localEffectVolume != null) {
             this._effectVolume = parseFloat(localEffectVolume);
         }
+        this._effectSource.volume = this._effectVolume;
     }
 }
 
