@@ -24,7 +24,7 @@ export enum ResourceCorrespondingItem {
     Gold = 8006
 }
 
-export enum ItemGetType {
+export enum ItemConfigType {
     Item = 1,
     Artifact = 3,
     Drop = 4

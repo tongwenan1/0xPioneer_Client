@@ -6,8 +6,9 @@ import DropMgr from '../Manger/DropMgr';
 import ItemMgr from '../Manger/ItemMgr';
 import UserInfoMgr from '../Manger/UserInfoMgr';
 import { BackpackItem } from './BackpackItem';
-import { ItemGetType } from '../Const/ConstDefine';
 import CommonTools from '../Tool/CommonTools';
+import ItemConfigDropTool from '../Tool/ItemConfigDropTool';
+import { ItemConfigType } from '../Const/ConstDefine';
 
 
 const { ccclass, property } = _decorator;
@@ -68,7 +69,7 @@ export class TreasureGettedUI extends PopUpUI {
                 let iconspr = itemShowNode.getChildByPath("icon").getComponent(Sprite);
                 let framespr = itemShowNode.getChildByPath("Item_frame").getComponent(Sprite);
                 framespr.color = Color.WHITE;
-                if (resultReward.type == ItemGetType.Item) {
+                if (resultReward.type == ItemConfigType.Item) {
                     iconspr.spriteFrame = await BackpackItem.getItemIcon(resultReward.itemConfigId);
                     let itemConf = ItemMgr.Instance.getItemConf(resultReward.itemConfigId);
                     if (itemConf) {
@@ -77,19 +78,9 @@ export class TreasureGettedUI extends PopUpUI {
                     else {
                         // error
                     }
+                } else if (resultReward.type == ItemConfigType.Artifact) {
+                    // wait artifact
                 }
-                // wait xx changed
-                // if (resultReward.type == "resource_01") {
-                //     iconspr.spriteFrame = GameMain.inst.UI.ResourceIconSpriteFrame[0];
-                // } else if (resultReward.type == "resource_02") {
-                //     iconspr.spriteFrame = GameMain.inst.UI.ResourceIconSpriteFrame[1];
-                // } else if (resultReward.type == "resource_03") {
-                //     iconspr.spriteFrame = GameMain.inst.UI.ResourceIconSpriteFrame[2];
-                // } else if (resultReward.type == "resource_04") {
-                //     iconspr.spriteFrame = GameMain.inst.UI.ResourceIconSpriteFrame[3];
-                // } else if (resultReward.type == "backpack_item") {
-                    
-                // }
             }
         }
 
@@ -112,20 +103,14 @@ export class TreasureGettedUI extends PopUpUI {
             .delay(0.5)
             .call(() => {
                 if (resultReward) {
-                    if (resultReward.type == ItemGetType.Item) {
-                        let itemConf = ItemMgr.Instance.getItemConf(resultReward.itemConfigId);
-                        if (itemConf) {
-                            ItemMgr.Instance.addItem([new ItemData(itemConf.configId, resultReward.num)]);
-                            if (itemConf.itemType != ItemType.Resource) {
-                                GameMain.inst.UI.itemInfoUI.showItem([{
-                                    itemConfig: itemConf,
-                                    count: resultReward.num,
-                                }], true);
-                            }
-                        } else {
-                            // TO DO : config error
-                        }
-                    }
+                    const configItemDatas = [
+                        [
+                            resultReward.type,
+                            resultReward.itemConfigId,
+                            resultReward.num
+                        ]
+                    ];
+                    ItemConfigDropTool.getItemByConfig(configItemDatas);
                 }
                 UserInfoMgr.Instance.getExplorationReward(box.id);
                 thisptr.show(false);

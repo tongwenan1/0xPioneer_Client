@@ -11,7 +11,7 @@ import BuildingMgr from '../../Manger/BuildingMgr';
 import CountMgr, { CountType } from '../../Manger/CountMgr';
 import LanMgr from '../../Manger/LanMgr';
 import EventMgr from '../../Manger/EventMgr';
-import { EventName, ItemGetType } from '../../Const/ConstDefine';
+import { EventName, ItemConfigType } from '../../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -99,7 +99,6 @@ export class EventUI extends PopUpUI {
         this._contentView.active = true;
 
         if (event.type == 2) {
-            // select_cond wait todo
             if (event.select != null &&
                 event.select_txt != null &&
                 event.select.length == event.select_txt.length) {
@@ -254,7 +253,7 @@ export class EventUI extends PopUpUI {
             const id: number = parseInt(condition[1]);
             const num: number = condition[2];
 
-            if (type == ItemGetType.Item) {
+            if (type == ItemConfigType.Item) {
                 const currentNum = ItemMgr.Instance.getOwnItemCount(id);
                 if (currentNum >= num) {
                     temple.satisfy = true;
@@ -267,6 +266,8 @@ export class EventUI extends PopUpUI {
                         temple.tipText = "you need AT LEAST " + num + " " + itemConf.itemName;
                     }
                 }
+            } else if (type == ItemConfigType.Artifact) {
+                // xx wait artifact
             }
             // reserved for later
             // } else if (type == 3) {
@@ -312,7 +313,7 @@ export class EventUI extends PopUpUI {
                 const type: number = temple[0];
                 const id: number | string = temple[1];
                 const num = temple[2];
-                if (type == ItemGetType.Item) {
+                if (type == ItemConfigType.Item) {
                     // item
                     if (cost) {
                         for (const item of ItemMgr.Instance.localItemDatas) {
@@ -340,6 +341,8 @@ export class EventUI extends PopUpUI {
                         // showTip += LanMgr.Instance.replaceLanById("107549", [num, LanMgr.Instance.getLanById(itemConf.itemName)]) + "\n";
                         showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
                     }
+                } else if (type == ItemConfigType.Artifact) {
+                    // wait artifact
                 }
             }
         }

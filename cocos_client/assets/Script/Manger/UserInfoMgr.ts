@@ -7,8 +7,9 @@ import { ItemInfoShowModel } from "../UI/ItemInfoUI";
 import CountMgr, { CountType } from "./CountMgr";
 import LvlupMgr from "./LvlupMgr";
 import PioneerMgr from "./PioneerMgr";
-import { ItemGetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import BuildingMgr from "./BuildingMgr";
+import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 
 export interface UserInnerBuildInfo {
     buildID: string,
@@ -380,20 +381,7 @@ export default class UserInfoMgr {
 
             // reward
             if (nextLvConfig[0].reward != null) {
-                const items = [];
-                for (const reward of nextLvConfig[0].reward) {
-                    if (reward.length == 3) {
-                        if (reward[0] == ItemGetType.Item) {
-                            items.push(new ItemData(
-                                parseInt(reward[1]),
-                                reward[2]
-                            ));
-                        }
-                    }
-                }
-                if (items.length > 0) {
-                    ItemMgr.Instance.addItem(items);
-                }
+                ItemConfigDropTool.getItemByConfig(nextLvConfig[0].reward, false);
             }
         }
     }

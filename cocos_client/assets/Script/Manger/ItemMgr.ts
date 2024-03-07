@@ -1,6 +1,8 @@
 import { resources, sys } from "cc";
 import ItemData, { ItemConfigData, ItemType } from "../Model/ItemData";
 import UserInfoMgr, { FinishedEvent } from "./UserInfoMgr";
+import { ItemConfigType } from "../Const/ConstDefine";
+import { ItemInfoShowModel } from "../UI/ItemInfoUI";
 
 export enum ItemArrangeType {
     Recently = "Recently",
@@ -13,6 +15,28 @@ export interface ItemMgrEvent {
 }
 
 export default class ItemMgr {
+
+    public static prepare(datas: any[]) {
+        const items: ItemData[] = [];
+        const showItemDialogDatas: ItemInfoShowModel[] = [];
+        const artifact: any[] = [];
+        for (const data of datas) {
+            if (data.length == 3) {
+                const type: ItemConfigType = parseInt(data[0] + "");
+                const id: number = parseInt(data[1] + "");
+                const num: number = parseInt(data[2] + "");
+                let tempItem: ItemData = null;
+                let tempArtifact: any = null; 
+                if (type == ItemConfigType.Item) {
+                    tempItem = new ItemData(id, num);
+                } else if (type == ItemConfigType.Artifact) {
+                    // reserve
+                } else if (type == ItemConfigType.Drop) {
+                    
+                }
+            }
+        }
+    }
 
     public getItemConf(itemConfigId: number): ItemConfigData {
         let key = itemConfigId.toString();
