@@ -119,6 +119,9 @@ export class MapBG extends Component {
     @property([CCString])
     private tiledMapTogetherBlock: string[] = [];
 
+    @property([SpriteFrame])
+    private fogAnimDissolveImages: SpriteFrame[] = [];
+
     @property([PrefabInfo])
     PrefabInfo: PrefabInfo[] = [];
 
@@ -141,7 +144,7 @@ export class MapBG extends Component {
     private _fogAnimOriginalPos: Vec3 = null;
 
     private _fogAnimPlaying: boolean = false;
-    private _fogAnimDatas: { allClearedTilePosions: { startPos: Vec2, endPos: Vec2 }[], animTilePostions: TilePos[] }[] = [];
+    private _fogAnimDatas: { allClearedTilePosions: { startPos: Vec2, endPos: Vec2 }[], animTilePostions: TilePos[], direciton: TileHexDirection }[] = [];
 
     private _togetherBlockPositons: Vec2[][] = [];
 
@@ -420,6 +423,7 @@ export class MapBG extends Component {
         }
     }
 
+    private _lastPioneerStayPos: Map<string, Vec2> = new Map();
     private async _updateTiledmap(delta: number) {
 
         if (this._tiledhelper == null)
@@ -444,8 +448,26 @@ export class MapBG extends Component {
                 if (!isExsit) {
                     this._localEraseShadowWorldPos.push(pioneer.stayPos);
                     localStorage.setItem(this._localEraseDataKey, JSON.stringify(this._localEraseShadowWorldPos));
-                    // has new, deal with fog
-                    this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons(), newCleardPositons);
+                }
+                // has new, deal with fog
+                if (!this._lastPioneerStayPos.has(pioneer.id)) {
+                    this._lastPioneerStayPos.set(pioneer.id, pioneer.stayPos);
+                }
+                const lastStayPos = this._lastPioneerStayPos.get(pioneer.id);
+                if (lastStayPos.x != pioneer.stayPos.x ||
+                    lastStayPos.y != pioneer.stayPos.y) {
+                    let currentMoveDirection = null;
+                    const direction = [TileHexDirection.Left, TileHexDirection.LeftBottom, TileHexDirection.LeftTop, TileHexDirection.Right, TileHexDirection.RightBottom, TileHexDirection.RightTop];
+                    for (const d of direction) {
+                        const around = this._tiledhelper.Path_GetAroundByDirection(this._tiledhelper.getPos(lastStayPos.x, lastStayPos.y), d);
+                        if (around.x == pioneer.stayPos.x &&
+                            around.y == pioneer.stayPos.y) {
+                            currentMoveDirection = d;
+                            break;
+                        }
+                    }
+                    this._lastPioneerStayPos.set(pioneer.id, pioneer.stayPos);
+                    this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons(), newCleardPositons, currentMoveDirection);
                 }
             }
         }
@@ -656,7 +678,7 @@ export class MapBG extends Component {
         GameMain.inst.MainCamera.node.setPosition(pos);
     }
 
-    private _refreshFog(allClearedShadowPositions: TilePos[], newCleardPositons: TilePos[] = null) {
+    private _refreshFog(allClearedShadowPositions: TilePos[], newCleardPositons: TilePos[] = null, direction: TileHexDirection = null) {
         const getAllBoundLines: { startPos: Vec2, endPos: Vec2 }[] = [];
         const getAllBoundPos: Vec3[] = [];
 
@@ -740,7 +762,8 @@ export class MapBG extends Component {
         if (newCleardPositons != null) {
             this._fogAnimDatas.push({
                 allClearedTilePosions: getAllBoundLines,
-                animTilePostions: newCleardPositons
+                animTilePostions: newCleardPositons,
+                direciton: direction
             });
             this._playFogAnim();
         }
@@ -836,12 +859,31 @@ export class MapBG extends Component {
                         0
                     )
                 );
+                console.log("exce d: " + data.direciton);
+                let dissolveImage = null;
+                if (data.direciton == TileHexDirection.Left) {
+                    dissolveImage = this.fogAnimDissolveImages[0];
+                } else if (data.direciton == TileHexDirection.LeftBottom) {
+                    dissolveImage = this.fogAnimDissolveImages[1];
+                } else if (data.direciton == TileHexDirection.LeftTop) {
+                    dissolveImage = this.fogAnimDissolveImages[2];
+                } else if (data.direciton == TileHexDirection.Right) {
+                    dissolveImage = this.fogAnimDissolveImages[3];
+                } else if (data.direciton == TileHexDirection.RightBottom) {
+                    dissolveImage = this.fogAnimDissolveImages[4];
+                } else if (data.direciton == TileHexDirection.RightTop) {
+                    dissolveImage = this.fogAnimDissolveImages[5];
+                } 
+                if (dissolveImage == null) {
+                    dissolveImage = this.fogAnimDissolveImages[0];
+                }
+                this._fogAnimView.node.getComponent(Sprite).spriteFrame = dissolveImage;
                 // sharp pos
                 const sub = this._fogAnimView.node.position.clone().subtract(this._fogAnimOriginalPos);
                 this._fogAnimShapView.node.position = v3(-sub.x, -sub.y, 0);
                 tween(this._fogAnimView)
                     .set({ alphaThreshold: 0.01 })
-                    .to(0.35, { alphaThreshold: 1 })
+                    .to(0.4, { alphaThreshold: 1 })
                     .call(() => {
                         this._fogAnimPlaying = false;
                         this._playFogAnim();

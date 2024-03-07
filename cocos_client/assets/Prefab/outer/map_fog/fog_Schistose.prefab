@@ -167,9 +167,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 8,
-      "g": 8,
-      "b": 8,
+      "r": 172,
+      "g": 172,
+      "b": 172,
       "a": 255
     },
     "_spriteFrame": {
@@ -306,9 +306,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 46,
-      "g": 44,
-      "b": 44,
+      "r": 0,
+      "g": 0,
+      "b": 0,
       "a": 255
     },
     "_spriteFrame": {
@@ -552,7 +552,6 @@
       "__id__": 0
     },
     "fileId": "c46/YsCPVOJYA4mWEpNYRx",
-    "instance": null,
     "targetOverrides": null
   }
 ]
