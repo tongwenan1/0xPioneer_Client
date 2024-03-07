@@ -1,21 +1,20 @@
-import { _decorator, Component, Sprite, SpriteFrame, Node } from 'cc';
+import { _decorator, Component, Sprite, SpriteFrame, Node } from "cc";
 import * as cc from "cc";
-import ItemData, { ItemConfigData } from '../Model/ItemData';
-import { GameMain } from '../GameMain';
-import ItemMgr from '../Manger/ItemMgr';
+import { GameMain } from "../GameMain";
+import ArtifactMgr from "../Manger/ArtifactMgr";
+import ArtifactData, { ArtifactConfigData } from "../Model/ArtifactData";
 const { ccclass, property } = _decorator;
 
-@ccclass('ArtifactItem')
+@ccclass("ArtifactItem")
 export class ArtifactItem extends Component {
-
     private static __itemIconSpriteFrames = {};
-    static async getItemIcon(iconName: string):Promise<SpriteFrame> {
-        if(iconName in ArtifactItem.__itemIconSpriteFrames) {
+    static async getItemIcon(iconName: string): Promise<SpriteFrame> {
+        if (iconName in ArtifactItem.__itemIconSpriteFrames) {
             return ArtifactItem.__itemIconSpriteFrames[iconName];
         }
 
         const frame = await new Promise((resolve) => {
-            cc.resources.load("ui/icon/" + iconName +"/spriteFrame", SpriteFrame, (err: Error, icon) => {
+            cc.resources.load("ui/icon/artifact/" + iconName + "/spriteFrame", SpriteFrame, (err: Error, icon) => {
                 if (err) {
                     resolve(null);
                     return;
@@ -24,46 +23,42 @@ export class ArtifactItem extends Component {
             });
         });
         if (frame != null) {
-
             ArtifactItem.__itemIconSpriteFrames[iconName] = frame;
         }
 
         return ArtifactItem.__itemIconSpriteFrames[iconName];
     }
-    
+
     @property(Sprite)
     BgSprite: Sprite;
-    
+
     @property(Sprite)
     IconSprite: Sprite;
-    
+
     @property(cc.Label)
     CountLabel: cc.Label;
 
     @property([SpriteFrame])
     BgSpriteFrames: SpriteFrame[] = [];
 
-    protected _itemData:ItemData;
-    protected _itemConf:ItemConfigData;
-    
-    start() {
-       
-    }
+    protected _artifactData: ArtifactData;
+    protected _artifactConf: ArtifactConfigData;
 
-    public async initItem(itemdata:ItemData) {
-        this._itemData = itemdata;
-        this._itemConf = ItemMgr.Instance.getItemConf(this._itemData.itemConfigId);
+    start() {}
 
-        let frame = await ArtifactItem.getItemIcon(this._itemConf.icon);
+    public async initArtifact(artifactdata: ArtifactData) {
+        this._artifactData = artifactdata;
+        this._artifactConf = ArtifactMgr.Instance.getArtifactConf(this._artifactData.artifactConfigId);
+
+        let frame = await ArtifactItem.getItemIcon(this._artifactConf.icon);
         this.IconSprite.spriteFrame = frame;
 
-        
-        this.BgSprite.spriteFrame = this.BgSpriteFrames[this._itemConf.grade - 1];
+        this.BgSprite.spriteFrame = this.BgSpriteFrames[this._artifactConf.rank - 1];
 
-        this.CountLabel.string = itemdata.count.toString();
+        this.CountLabel.string = artifactdata.count.toString();
     }
 
     private onTapItem() {
-        GameMain.inst.UI.itemInfoUI.showItem([{ itemConfig: this._itemConf, count: this._itemData.count }]);
+        GameMain.inst.UI.artifactInfoUI.showItem([{ artifactConfig: this._artifactConf, count: this._artifactData.count }]);
     }
 }

@@ -12,6 +12,7 @@ import UserInfo from "./UserInfoMgr";
 import BranchEventMgr from "./BranchEventMgr";
 import LvlupMgr from "./LvlupMgr";
 import LanMgr from "./LanMgr";
+import ArtifactMgr from "./ArtifactMgr";
 
 export default class LocalDataLoader {
 
@@ -37,6 +38,7 @@ export default class LocalDataLoader {
         await ItemMgr.Instance.initData();
         await ConfigMgr.Instance.initData();
         await LvlupMgr.Instance.initData();
+        await ArtifactMgr.Instance.initData();
         this._loadStatus = 2;
     }
 

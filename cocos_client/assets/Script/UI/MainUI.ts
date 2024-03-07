@@ -226,6 +226,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
         // useLanMgr
         // this.node.getChildByPath("LeftNode/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this.node.getChildByPath("icon_treasure_box/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("icon_artifact/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
     }
 
     onSceneChange() {
