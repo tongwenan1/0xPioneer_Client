@@ -246,7 +246,14 @@
             "x": 39,
             "y": 15
         },
-        "winprogress": 3
+        "winprogress": 3,
+        "drop": [
+            [
+                3,
+                7001,
+                1
+            ]
+        ]
     },
     {
         "id": "hred_4",
