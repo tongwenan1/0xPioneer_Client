@@ -55,12 +55,14 @@ export class BackpackItem extends Component {
         this._itemConf = ItemMgr.Instance.getItemConf(this._itemData.itemConfigId);
 
         let frame = await BackpackItem.getItemIcon(this._itemConf.icon);
-        this.IconSprite.spriteFrame = frame;
+        if (this.isValid) { // node valid state may change during async operation
+            this.IconSprite.spriteFrame = frame;
 
-        
-        this.BgSprite.spriteFrame = this.BgSpriteFrames[this._itemConf.grade - 1];
 
-        this.CountLabel.string = itemdata.count.toString();
+            this.BgSprite.spriteFrame = this.BgSpriteFrames[this._itemConf.grade - 1];
+
+            this.CountLabel.string = itemdata.count.toString();
+        }
     }
 
     private onTapItem() {

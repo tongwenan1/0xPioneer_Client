@@ -23,5 +23,19 @@
     "para": [
       "Outside_Player_Base_A"
     ]
+  },
+  "110000": {
+    "id": "110000",
+    "NOTES": "battle report max keep days",
+    "para": [
+      14
+    ]
+  },
+  "110002": {
+    "id": "110002",
+    "NOTES": "battle report max keep records",
+    "para": [
+      200
+    ]
   }
 }

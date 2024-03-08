@@ -598,6 +598,13 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                         exploredEvents: 0,
                     });
                 }
+
+                EventMgr.emit(EventName.MINING_FINISHED, {
+                    buildingId: buildingId,
+                    pioneerId: actionPioneerId,
+                    duration: 3000, //todo see assets/Script/Manger/PioneerMgr.ts:1225
+                    rewards: [], // no item loots by now
+                });
             }
         }
         if (building != null) {
@@ -606,6 +613,13 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         }
     }
     eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
+        BranchEventMgr.Instance.latestActiveEventState = {
+            pioneerId: actionPioneerId,
+            buildingId: buildingId,
+            eventId: eventId,
+            prevEventId: null,
+        }
+
         const event = BranchEventMgr.Instance.getEventById(eventId);
         if (event.length > 0) {
             GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {

@@ -8,6 +8,7 @@ import UserInfoMgr from '../Manger/UserInfoMgr';
 import LanMgr from '../Manger/LanMgr';
 import EventMgr from '../Manger/EventMgr';
 import { EventName } from '../Const/ConstDefine';
+import MapHelper from "db://assets/Script/Utils/MapHelper";
 
 const { ccclass, property } = _decorator;
 
@@ -64,7 +65,7 @@ export class TaskListUI extends PopUpUI {
             const curStepCondIndex = curStep.condwinStep == null ? 0 : curStep.condwinStep;
             const action = instantiate(this._actionItem);
             action.active = true;
-            
+
             // useLanMgr
             // action.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(toDoTasks[i].name);
             // action.getChildByName("SubTitle").getComponent(Label).string = LanMgr.Instance.getLanById(curStep.name);
@@ -262,7 +263,7 @@ export class TaskListUI extends PopUpUI {
         this._completedButton = this.node.getChildByPath("TaskDetailView/CompletedButton");
 
         EventMgr.on(EventName.CHANGE_LANG, this.refreshUI, this);
-        
+
     }
 
     start() {
@@ -323,13 +324,7 @@ export class TaskListUI extends PopUpUI {
                 }
             }
             if (currentMapPos != null) {
-                const currentWorldPos = GameMain.inst.MainCamera.node.worldPosition;
-                const goWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(currentMapPos.x, currentMapPos.y);
-                const distance = Vec3.distance(currentWorldPos, goWorldPos);
-                tween()
-                    .target(GameMain.inst.MainCamera.node)
-                    .to(Math.min(0.8, distance / 1800), { worldPosition: goWorldPos })
-                    .start();
+                MapHelper.highlightPosOnOuterMap(currentMapPos);
             }
         }
     }

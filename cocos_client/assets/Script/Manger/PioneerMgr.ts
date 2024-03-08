@@ -14,6 +14,8 @@ import ArtifactMgr from "./ArtifactMgr";
 import { ArtifactEffectType } from "../Model/ArtifactData";
 import SettlementMgr from "./SettlementMgr";
 import UserInfoMgr from "./UserInfoMgr";
+import EventMgr from "db://assets/Script/Manger/EventMgr";
+import {EventName} from "db://assets/Script/Const/ConstDefine";
 
 export interface PioneerMgrEvent {
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void;
@@ -538,6 +540,27 @@ export default class PioneerMgr {
                     for (const observer of this._observers) {
                         observer.endFight(fightId, true, deadPioneer instanceof MapPioneerModel, deadPioneer.id);
                     }
+
+                    EventMgr.emit(EventName.FIGHT_FINISHED, {
+                        attacker: {
+                            name: attacker.name,
+                            avatarIcon: "icon_player_avatar", // todo
+                            hp: attacker.hp,
+                            hpMax: attacker.hpMax,
+                        },
+                        defender: {
+                            name: enemy.name,
+                            avatarIcon: "icon_player_avatar",
+                            hp: enemyHp,
+                            hpMax: enemyHpMax,
+                        },
+                        attackerIsSelf: attacker.friendly,
+                        buildingId: null,
+                        position: attacker.stayPos,
+                        fightResult: attacker.hp != 0 ? "win" : "lose",
+                        rewards: [],
+                    });
+
                     // status changed
                     attacker.actionType = MapPioneerActionType.idle;
                     for (const observer of this._observers) {
@@ -1545,6 +1568,27 @@ export default class PioneerMgr {
                 for (const observer of this._observers) {
                     observer.endFight(fightId, false, deadPioneer instanceof MapPioneerModel, deadPioneer.id);
                 }
+
+                EventMgr.emit(EventName.FIGHT_FINISHED, {
+                    attacker: {
+                        name: attacker.name,
+                        avatarIcon: "icon_player_avatar", // todo
+                        hp: attacker.hp,
+                        hpMax:attacker.hpMax,
+                    },
+                    defender: {
+                        name: defender.name,
+                        avatarIcon: "icon_player_avatar",
+                        hp: defenderHp,
+                        hpMax:defenderHpMax,
+                    },
+                    attackerIsSelf: attacker.friendly,
+                    buildingId: defender instanceof MapBuildingModel ?? (defender as MapBuildingModel).id,
+                    position: defenderCenterPositions[0],
+                    fightResult: attacker.hp != 0 ? "win" : "lose",
+                    rewards: [],
+                });
+
                 // status changed
                 attacker.actionType = MapPioneerActionType.idle;
                 for (const observer of this._observers) {

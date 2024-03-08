@@ -1,5 +1,6 @@
 import { Vec2 } from "cc";
 import { ResourceModel } from "../../../Manger/UserInfoMgr";
+import CommonTools from "db://assets/Script/Tool/CommonTools";
 
 export enum MapBuildingType {
     resource = "resource",
@@ -110,6 +111,13 @@ export default class MapBuildingModel {
     private _originalEventId: string;
     private _eventId: string;
     private _exp: number;
+
+    /**
+     * format: Abandoned Mine (198, 120)
+     */
+    public locationString() {
+        return `${this.name} ${CommonTools.formatMapPosition(this.stayMapPositions[0])}`
+    }
 }
 
 export class MapMainCityBuildingModel extends MapBuildingModel {

@@ -344,6 +344,10 @@ export class EventUI extends PopUpUI {
     }
 
     private _nextEvent(eventId: string) {
+        // console.log(`_nextEvent, current: ${this._event.id}, next: ${eventId}`);
+        BranchEventMgr.Instance.latestActiveEventState.prevEventId = this._event.id;
+        BranchEventMgr.Instance.latestActiveEventState.eventId = eventId;
+
         if (eventId == "-1" ||
             eventId == "-2") {
             // clear temp attributes
@@ -392,6 +396,10 @@ export class EventUI extends PopUpUI {
     //------------------------------------------------ action
     private onTapNext(actionEvent: Event, customEventData: string) {
         const eventId = customEventData;
+        const hasNextStep = eventId != "-1";
+        // console.log(`eventStepEnd, source: onTapNext, eventId: ${this._event.id}`);
+        BranchEventMgr.Instance.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
+
         this._nextEvent(eventId);
     }
     private onTapFight(event: Event, customEventData: string) {
@@ -413,7 +421,12 @@ export class EventUI extends PopUpUI {
                         eventId = event[0].result;
                     }
                 }
-                if (eventId != null) {
+                const hasNextStep = eventId != null;
+                if (this._event) {
+                    // console.log(`eventStepEnd, source: onTapFight, eventId: ${this._event.id}`);
+                    BranchEventMgr.Instance.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
+                }
+                if (hasNextStep) {
                     this._nextEvent(eventId);
                 } else {
                     this._contentView.active = true;
@@ -425,6 +438,12 @@ export class EventUI extends PopUpUI {
     }
     private onTapSelect(actionEvent: Event, customEventData: string) {
         const eventId = customEventData;
+        const event = BranchEventMgr.Instance.getEventById(eventId);
+        let hasNextStep = event.length > 0;
+
+        // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}`);
+        BranchEventMgr.Instance.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
+
         this._nextEvent(eventId);
     }
 }
