@@ -612,6 +612,13 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         }
     }
     eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
+        BranchEventMgr.Instance.latestActiveEventState = {
+            pioneerId: actionPioneerId,
+            buildingId: buildingId,
+            eventId: eventId,
+            prevEventId: null,
+        }
+
         const event = BranchEventMgr.Instance.getEventById(eventId);
         if (event.length > 0) {
             GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
@@ -620,15 +627,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 PioneerMgr.instance.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
             });
             GameMain.inst.UI.eventUI.show(true);
-        }
-
-        BranchEventMgr.Instance.latestActiveEventState = {
-            pioneerId: actionPioneerId,
-            buildingId: buildingId,
-            entryEventId: eventId,
-            chainTrackingId: Date.now().toString() + Math.random().toString().substring(2),
-            eventId: eventId,
-            prevEventId: null,
         }
     }
 

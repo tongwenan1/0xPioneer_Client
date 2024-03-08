@@ -5,6 +5,7 @@ import BuildingMgr from "db://assets/Script/Manger/BuildingMgr";
 import PioneerMgr from "db://assets/Script/Manger/PioneerMgr";
 import MapHelper from "db://assets/Script/Utils/MapHelper";
 import {GameMain} from "db://assets/Script/GameMain";
+import BranchEventMgr from "db://assets/Script/Manger/BranchEventMgr";
 
 const {ccclass, property} = _decorator;
 
@@ -177,9 +178,7 @@ export class BattleReportListItemUI extends Component {
         if (report.data.hasNextStep && !report.data.nextStepFinished) {
             this.eventResultLabel.node.active = false;
             this.branchSelectionButton.node.active = true;
-            this.branchSelectionButton.node.on(Button.EventType.CLICK, () => {
-                GameMain.inst.UI.ShowTip("Under construction");
-            }, this);
+            this.branchSelectionButton.node.on(Button.EventType.CLICK, this.onClickBranchSelection, this);
         } else {
             this.eventResultLabel.node.active = true;
             this.branchSelectionButton.node.active = false;
@@ -220,5 +219,19 @@ export class BattleReportListItemUI extends Component {
         }
 
         GameMain.inst.UI.lootsPopupUI.showItems(this._loots);
+    }
+
+    onClickBranchSelection() {
+        const reportData = this.report.data;
+        const building = BuildingMgr.instance.getBuildingById(reportData.buildingId);
+        const findEvents = BranchEventMgr.Instance.getEventById(building.eventId);
+        if (findEvents.length == 0) {
+            GameMain.inst.UI.ShowTip("Error");
+            return;
+        }
+
+        GameMain.inst.UI.battleReportsUI.show(false);
+        const currentEvent = findEvents[0];
+        PioneerMgr.instance.pioneerDealWithEvent(reportData.pioneerId, reportData.buildingId, currentEvent);
     }
 }

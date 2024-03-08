@@ -133,31 +133,27 @@ export default class BattleReportsMgr implements PioneerMgrEvent, BranchEventMgr
     }
 
     onBranchEventStepEnd(currentEventId: string, hasNextStep: boolean): void {
+        // console.log(`onBranchEventStepEnd. eventId: ${currentEventId}, hasNext: ${hasNextStep}`);
+
+        // change state of prev report.
+        // not very strict association check it's ok cause we don't have parallel events for now.
+        let prevReport = this._storage.find(item => {
+            return item.type == BattleReportType.Exploring
+                && item.data.hasNextStep && !item.data.nextStepFinished;
+        });
+        if (prevReport) {
+            prevReport.data.nextStepFinished = true;
+        }
+
         const activeEventState = BranchEventMgr.Instance.latestActiveEventState;
         this._pushReport(BattleReportType.Exploring, {
             pioneerId: activeEventState.pioneerId,
             eventId: currentEventId,
-            entryEventId: activeEventState.entryEventId,
             buildingId: activeEventState.buildingId,
-            chainTrackingId: activeEventState.chainTrackingId,
             hasNextStep: hasNextStep,
             nextStepFinished: false,
             rewards: BranchEventMgr.Instance.getEventItemRewards(currentEventId),
         });
-
-        // change state of prev report
-        if (activeEventState.prevEventId !== null) {
-            let prevReport = this._storage.find(item => {
-                return item.type == BattleReportType.Exploring
-                    && item.data.chainTrackingId == activeEventState.chainTrackingId
-                    && item.data.eventId == activeEventState.prevEventId;
-            });
-            if (prevReport) {
-                prevReport.data.nextStepFinished = true;
-            }
-        }
-
-        this.saveData();
     }
     //#endregion
 

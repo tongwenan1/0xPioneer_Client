@@ -5,12 +5,6 @@ export interface BranchEventMgrEvent {
 }
 
 export class ActiveEventState {
-    /** unique id to track same event chain */
-    chainTrackingId: string = null;
-
-    /** entry event of event chain */
-    entryEventId: string = null;
-
     /** current event id */
     eventId: string = null;
 
