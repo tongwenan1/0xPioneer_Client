@@ -39,8 +39,8 @@ export class OuterOtherPioneerView extends Component {
                 this._timeCountLabel.node.active = true;
                 
                 // useLanMgr
-                // this._timeCountLabel.string =  LanMgr.Instance.replaceLanById("107549", [pioneer.taskHideTime]);
-                this._timeCountLabel.string = "task hide:" + pioneer.taskHideTime + "s";
+                this._timeCountLabel.string =  LanMgr.Instance.replaceLanById("202001", [pioneer.taskHideTime]);
+                // this._timeCountLabel.string = "task hide:" + pioneer.taskHideTime + "s";
                 
             } else {
                 this._timeCountLabel.node.active = false;
@@ -55,8 +55,8 @@ export class OuterOtherPioneerView extends Component {
                     this._taskPreparingView.active = true;
 
                     // useLanMgr
-                    // this._taskPreparingView.getComponent(Label).string =  LanMgr.Instance.replaceLanById("107549", [pioneer.taskCdEndTime]);
-                    this._taskPreparingView.getComponent(Label).string = "prepare task..." + pioneer.taskCdEndTime + "s";
+                    this._taskPreparingView.getComponent(Label).string =  LanMgr.Instance.replaceLanById("202002", [pioneer.taskCdEndTime]);
+                    // this._taskPreparingView.getComponent(Label).string = "prepare task..." + pioneer.taskCdEndTime + "s";
 
                 } else {
                     this._hasTaskView.active = true;

@@ -123,11 +123,6 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
     clsoelick() {
 
     }
-
-    private onTapPioneerDestroy(event: Event, customEventData: string) {
-        PioneerInfo.instance.destroyOne(customEventData);
-    }
-
     private async onTapForceStop() {
         const selfPioneer = await PioneerInfo.instance.getPlayerPioneer();
         for (const pioneer of selfPioneer) {
@@ -136,19 +131,15 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
             }
         }
     }
-    private onTapAddNewOne() {
-        PioneerInfo.instance.addNewOne();
-    }
-
     //------------------------------------
     //PioneerMgrEvent
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void {
         this.refreshPlayerList();
     }
-    pioneerDidGainHpMax(pioneerId: string, value: number): void {
+    pioneerHpMaxChanged(pioneerId: string): void {
         this.refreshPlayerList();
     }
-    pioneerDidGainAttack(pioneerId: string, value: number): void {
+    pioneerAttackChanged(pioneerId: string): void {
         this.refreshPlayerList();
     }
 

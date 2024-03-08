@@ -12,15 +12,17 @@ import CountMgr, { CountType } from '../../Manger/CountMgr';
 import LanMgr from '../../Manger/LanMgr';
 import EventMgr from '../../Manger/EventMgr';
 import { EventName, ItemConfigType } from '../../Const/ConstDefine';
+import SettlementMgr from '../../Manger/SettlementMgr';
+import UserInfoMgr from '../../Manger/UserInfoMgr';
+import { MapPioneerAttributesChangeModel } from '../../Game/Outer/Model/MapPioneerModel';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
 export class EventUI extends PopUpUI {
 
-    public eventUIShow(triggerPioneerId: string, eventBuildingId: string, event: any, fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => void, dealWithNextEvent: (event: any) => void) {
+    public eventUIShow(triggerPioneerId: string, eventBuildingId: string, event: any, fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => void, dealWithNextEvent: (event: any) => void) {
         this._triggerPioneerId = triggerPioneerId;
         this._eventBuildingId = eventBuildingId;
-        this._temporaryAttributes = new Map();
         this._fightCallback = fightCallback;
         this._dealWithNextEvent = dealWithNextEvent;
 
@@ -33,8 +35,8 @@ export class EventUI extends PopUpUI {
 
     private _triggerPioneerId: string = null;
     private _eventBuildingId: string = null;
-    private _temporaryAttributes: Map<string, number> = null;
-    private _fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => void = null;
+    private _temporaryAttributes: Map<string, MapPioneerAttributesChangeModel> = new Map();
+    private _fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => void = null;
     private _dealWithNextEvent: (event: any) => void = null;
 
     private _event: any = null;
@@ -155,31 +157,11 @@ export class EventUI extends PopUpUI {
                         const changeMethod: number = tempChange[2];
                         const changedValue: number = tempChange[3];
 
-                        let useChangedValue: number = 0;
-                        const pioneerInfo = PioneerMgr.instance.getPioneerById(pioneerId);
-                        if (pioneerInfo != null) {
-                            if (changeMethod == 1) {
-                                useChangedValue = changedValue;
-
-                            } else if (changeMethod == 2) {
-                                if (changedValue > 0) {
-                                    // only use positive multi
-                                    if (changedType == 1) {
-                                        useChangedValue = pioneerInfo.hpMax * (changedValue - 1);
-                                    } else {
-                                        useChangedValue = pioneerInfo.attack * (changedValue - 1);
-                                    }
-                                }
-                            }
-                        }
                         if (isPlayer && changedType == 1) {
-                            // player hp is used forever
-                            PioneerMgr.instance.pioneerChangeHpMax(pioneerId, useChangedValue);
+                            PioneerMgr.instance.pioneerChangeHpMax(pioneerId, { type: changeMethod, value: changedValue });
                         } else {
-                            // other is temporary
-                            this._temporaryAttributes.set(pioneerId + "|" + changedType, useChangedValue);
+                            this._temporaryAttributes.set(pioneerId + "|" + changedType, { type: changeMethod, value: changedValue });
                         }
-
                         if (isPlayer) {
                             if (changedType == 1) {
 
@@ -194,6 +176,7 @@ export class EventUI extends PopUpUI {
                             }
                         }
                         else {
+                            const pioneerInfo = PioneerMgr.instance.getPioneerById(pioneerId);
                             if (pioneerInfo == null) {
                                 if (changedType == 1) {
                                     // useLanMgr
@@ -367,6 +350,9 @@ export class EventUI extends PopUpUI {
 
         if (eventId == "-1" ||
             eventId == "-2") {
+            // clear temp attributes
+            this._temporaryAttributes = new Map();
+
             if (this._eventBuildingId != null) {
                 if (eventId == "-1") {
                     BuildingMgr.instance.changeBuildingEventId(this._eventBuildingId, null);
@@ -380,6 +366,13 @@ export class EventUI extends PopUpUI {
                     }
                 }
             }
+            SettlementMgr.instance.insertSettlement({
+                level: UserInfoMgr.Instance.level,
+                newPioneerIds: [],
+                killEnemies: 0,
+                gainResources: 0,
+                exploredEvents: 1,
+            });
 
             if (this._triggerPioneerId != null) {
                 PioneerMgr.instance.pioneerToIdle(this._triggerPioneerId);

@@ -780,8 +780,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -62,
-      "y": 73.395,
+      "x": 0,
+      "y": 45.93,
       "z": 0
     },
     "_lrot": {
@@ -821,7 +821,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 78.388671875,
+      "width": 200,
       "height": 25.2
     },
     "_anchorPoint": {
@@ -860,11 +860,11 @@
     "_string": "HP +100",
     "_horizontalAlign": 0,
     "_verticalAlign": 1,
-    "_actualFontSize": 20,
+    "_actualFontSize": 21,
     "_fontSize": 20,
     "_fontFamily": "Arial",
     "_lineHeight": 20,
-    "_overflow": 0,
+    "_overflow": 2,
     "_enableWrapText": true,
     "_font": null,
     "_isSystemFontUsed": true,
@@ -916,8 +916,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -56,
-      "y": 48.689,
+      "x": 0,
+      "y": 21.224,
       "z": 0
     },
     "_lrot": {
@@ -957,7 +957,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 90.224609375,
+      "width": 200,
       "height": 25.2
     },
     "_anchorPoint": {
@@ -996,11 +996,11 @@
     "_string": "ATK +100",
     "_horizontalAlign": 0,
     "_verticalAlign": 1,
-    "_actualFontSize": 20,
+    "_actualFontSize": 21,
     "_fontSize": 20,
     "_fontFamily": "Arial",
     "_lineHeight": 20,
-    "_overflow": 0,
+    "_overflow": 2,
     "_enableWrapText": true,
     "_font": null,
     "_isSystemFontUsed": true,
@@ -1052,8 +1052,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -56.937,
-      "y": 19.511,
+      "x": 0,
+      "y": -7.954,
       "z": 0
     },
     "_lrot": {
@@ -1093,7 +1093,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 96.689453125,
+      "width": 200,
       "height": 25.2
     },
     "_anchorPoint": {
@@ -1132,11 +1132,11 @@
     "_string": "EffectTxt1",
     "_horizontalAlign": 0,
     "_verticalAlign": 1,
-    "_actualFontSize": 20,
+    "_actualFontSize": 21,
     "_fontSize": 20,
     "_fontFamily": "Arial",
     "_lineHeight": 20,
-    "_overflow": 0,
+    "_overflow": 2,
     "_enableWrapText": true,
     "_font": null,
     "_isSystemFontUsed": true,
@@ -1188,8 +1188,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -47.853,
-      "y": -9.556,
+      "x": 12,
+      "y": -37.021,
       "z": 0
     },
     "_lrot": {
@@ -1229,7 +1229,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 103.37890625,
+      "width": 200,
       "height": 25.2
     },
     "_anchorPoint": {
@@ -1268,11 +1268,11 @@
     "_string": "EffectDes1",
     "_horizontalAlign": 0,
     "_verticalAlign": 1,
-    "_actualFontSize": 20,
+    "_actualFontSize": 21,
     "_fontSize": 20,
     "_fontFamily": "Arial",
     "_lineHeight": 20,
-    "_overflow": 0,
+    "_overflow": 2,
     "_enableWrapText": true,
     "_font": null,
     "_isSystemFontUsed": true,
@@ -1324,8 +1324,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -57.294,
-      "y": -36.509,
+      "x": 0,
+      "y": -63.974,
       "z": 0
     },
     "_lrot": {
@@ -1365,7 +1365,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 96.689453125,
+      "width": 200,
       "height": 25.2
     },
     "_anchorPoint": {
@@ -1402,13 +1402,13 @@
       "a": 255
     },
     "_string": "EffectTxt2",
-    "_horizontalAlign": 1,
+    "_horizontalAlign": 0,
     "_verticalAlign": 1,
-    "_actualFontSize": 20,
+    "_actualFontSize": 21,
     "_fontSize": 20,
     "_fontFamily": "Arial",
     "_lineHeight": 20,
-    "_overflow": 0,
+    "_overflow": 2,
     "_enableWrapText": true,
     "_font": null,
     "_isSystemFontUsed": true,
@@ -1460,8 +1460,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -48.506,
-      "y": -61.52,
+      "x": 12,
+      "y": -88.985,
       "z": 0
     },
     "_lrot": {
@@ -1501,7 +1501,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 103.37890625,
+      "width": 200,
       "height": 25.2
     },
     "_anchorPoint": {
@@ -1538,13 +1538,13 @@
       "a": 255
     },
     "_string": "EffectDes2",
-    "_horizontalAlign": 1,
+    "_horizontalAlign": 0,
     "_verticalAlign": 1,
-    "_actualFontSize": 20,
+    "_actualFontSize": 21,
     "_fontSize": 20,
     "_fontFamily": "Arial",
     "_lineHeight": 20,
-    "_overflow": 0,
+    "_overflow": 2,
     "_enableWrapText": true,
     "_font": null,
     "_isSystemFontUsed": true,
@@ -1597,7 +1597,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -121.595,
+      "y": -149.06,
       "z": 0
     },
     "_lrot": {
@@ -2075,7 +2075,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 2.383,
+      "x": 0,
       "y": 94.737,
       "z": 0
     },

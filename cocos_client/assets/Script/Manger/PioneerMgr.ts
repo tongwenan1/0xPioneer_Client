@@ -4,7 +4,7 @@ import CommonTools from "../Tool/CommonTools";
 import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
 import MapBuildingModel, { BuildingFactionType, MapBuildingType, MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
-import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel, MapPlayerPioneerModel, MapPioneerType, MapNpcPioneerModel, MapPioneerLogicType, MapPioneerEventStatus } from "../Game/Outer/Model/MapPioneerModel";
+import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel, MapPlayerPioneerModel, MapPioneerType, MapNpcPioneerModel, MapPioneerLogicType, MapPioneerEventStatus, MapPioneerAttributesChangeModel, MapPioneerAttributesChangeType } from "../Game/Outer/Model/MapPioneerModel";
 import BuildingMgr from "./BuildingMgr";
 import CountMgr, { CountType } from "./CountMgr";
 import BranchEventMgr from "./BranchEventMgr";
@@ -12,14 +12,16 @@ import ItemMgr from "./ItemMgr";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ArtifactMgr from "./ArtifactMgr";
 import { ArtifactEffectType } from "../Model/ArtifactData";
+import SettlementMgr from "./SettlementMgr";
+import UserInfoMgr from "./UserInfoMgr";
 import EventMgr from "db://assets/Script/Manger/EventMgr";
 import {EventName} from "db://assets/Script/Const/ConstDefine";
 
 export interface PioneerMgrEvent {
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void;
 
-    pioneerDidGainHpMax(pioneerId: string, value: number): void;
-    pioneerDidGainAttack(pioneerId: string, value: number): void;
+    pioneerHpMaxChanged(pioneerId: string): void;
+    pioneerAttackChanged(pioneerId: string): void;
     pioneerLoseHp(pioneerId: string, value: number): void;
     pionerrRebirthCount(pioneerId: string, count: number): void;
     pioneerRebirth(pioneerId: string): void;
@@ -166,46 +168,54 @@ export default class PioneerMgr {
             return false;
         });
     }
-    public pioneerChangeHpMax(pioneerId: string, value: number, forceChangeHp: boolean = true) {
+
+    public pioneerChangeOriginalHpMax(pioneerId: string, value: number) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
-            if (findPioneer.hp > 0) {
-                // alive
-                findPioneer.changeHpMax(value, forceChangeHp);
-                this._savePioneerData();
-                for (const observer of this._observers) {
-                    observer.pioneerDidGainHpMax(pioneerId, value);
-                }
+            findPioneer.gainOriginalHpMax(value);
+            this._savePioneerData();
+            for (const observe of this._observers) {
+                observe.pioneerHpMaxChanged(pioneerId);
             }
         }
     }
-    public changeAllMyPioneerHpMax(value: number) {
-        const pioneers = this.getPlayerPioneer();
-        for (let i = 0; i < pioneers.length; i++) {
-            let hpmax = pioneers[i].hpMax + value;
-            this.pioneerChangeHpMax(pioneers[i].id, hpmax, false);
+    public pioneerChangeHpMax(pioneerId: string, change: MapPioneerAttributesChangeModel) {
+        const findPioneer = this.getPioneerById(pioneerId);
+        if (findPioneer != null) {
+            findPioneer.changeHpMax(change);
+            this._savePioneerData();
+            for (const observe of this._observers) {
+                observe.pioneerHpMaxChanged(pioneerId);
+            }
         }
     }
-    public addNewOne() {
-        const id: string = "pioneer_" + Math.floor(10000000 + Math.random() * 90000000);
-        const newPioneer = new MapPioneerModel(
-            true,
-            0,
-            id,
-            true,
-            MapPioneerType.player,
-            id,
-            100,
-            100,
-            50,
-            v2(37, 32)
-        );
-        this._pioneers.push(newPioneer);
-        for (const observer of this._observers) {
-            observer.addNewOnePioneer(newPioneer);
+    public pioneerChangeAttack(pioneerId: string, change: MapPioneerAttributesChangeModel) {
+        const findPioneer = this.getPioneerById(pioneerId);
+        if (findPioneer != null) {
+            findPioneer.changeAttack(change);
+            this._savePioneerData();
+            for (const observe of this._observers) {
+                observe.pioneerAttackChanged(pioneerId);
+            }
         }
-        this._savePioneerData();
     }
+
+    public pioneerChangeAllPlayerOriginalHpMax(value: number) {
+        for (const pioneer of this.getPlayerPioneer()) {
+            this.pioneerChangeOriginalHpMax(pioneer.id, value);
+        }
+    }
+    public pioneerChangeAllPlayerHpMax(change: MapPioneerAttributesChangeModel) {
+        for (const pioneer of this.getPlayerPioneer()) {
+            this.pioneerChangeHpMax(pioneer.id, change);
+        }
+    }
+    public pioneerChangeAllPlayerAttack(change: MapPioneerAttributesChangeModel) {
+        for (const pioneer of this.getPlayerPioneer()) {
+            this.pioneerChangeAttack(pioneer.id, change);
+        }
+    }
+    
     public destroyOne(pioneerId: string) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
@@ -338,6 +348,16 @@ export default class PioneerMgr {
             if (findPioneer.show) {
                 return;
             }
+            if (findPioneer.type == MapPioneerType.player) {
+                // get new pioneer
+                SettlementMgr.instance.insertSettlement({
+                    level: UserInfoMgr.Instance.level,
+                    newPioneerIds: [pioneerId],
+                    killEnemies: 0,
+                    gainResources: 0,
+                    exploredEvents: 0,
+                });
+            }
             if (pioneerId == "pioneer_3") {
                 let serectGuardShow: boolean = false;
                 for (const player of this.getPlayerPioneer()) {
@@ -429,7 +449,7 @@ export default class PioneerMgr {
         }
     }
 
-    public eventFight(attackerId: string, enemyId: string, temporaryAttributes: Map<string, number>, fightOverCallback: (succeed: boolean) => void) {
+    public eventFight(attackerId: string, enemyId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOverCallback: (succeed: boolean) => void) {
         const attacker = this.getPioneerById(attackerId);
         const enemy = this.getPioneerById(enemyId);
         if (attacker != null && enemy != null) {
@@ -439,26 +459,43 @@ export default class PioneerMgr {
             }
             const fightId: string = new Date().getTime().toString();
             let attackerAttack = attacker.attack;
+            let attackerDefend = attacker.defend;
 
             let enemyName = enemy.name;
             let enemyHp = enemy.hp;
             let enemyHpMax = enemy.hpMax;
             let enemyAttack = enemy.attack;
+            let enemyDefend = enemy.defend;
 
             // gain temporaryAttributes
-            temporaryAttributes.forEach((value: number, key: string) => {
+            temporaryAttributes.forEach((model: MapPioneerAttributesChangeModel, key: string) => {
                 const id = key.split("|")[0];
                 const type = parseInt(key.split("|")[1]);
                 if (id == enemyId) {
                     if (type == 1) {
-                        enemyHp += value;
-                        enemyHpMax += value;
+                        // hp
+                        if (model.type == MapPioneerAttributesChangeType.ADD) {
+                            enemyHpMax += model.value;
+                        } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+                            enemyHpMax += enemy.originalHpMax * model.value;
+                        }
+                        enemyHpMax = Math.max(1, enemyHpMax);
+                        enemyHp = enemyHpMax;
                     } else if (type == 2) {
-                        enemyAttack += value;
+                        // attack
+                        if (model.type == MapPioneerAttributesChangeType.ADD) {
+                            enemyAttack += model.value;
+                        } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+                            enemyAttack += enemy.originalAttack * model.value;
+                        }
                     }
                 } else if (id == attackerId) {
                     if (type == 2) {
-                        attackerAttack += value;
+                        if (model.type == MapPioneerAttributesChangeType.ADD) {
+                            attackerAttack += model.value;
+                        } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+                            attackerAttack += attacker.originalAttack * model.value;
+                        }
                     }
                 }
             });
@@ -476,20 +513,26 @@ export default class PioneerMgr {
                 let fightOver: boolean = false;
                 let deadPioneer = null;
                 if (selfAttack) {
-                    enemyHp = Math.max(0, enemyHp - attackerAttack);
-                    if (enemyHp <= 0) {
-                        fightOver = true;
-                        deadPioneer = enemy;
+                    const damage = Math.max(0, attackerAttack - enemyDefend);
+                    if (damage > 0) {
+                        enemyHp = Math.max(0, enemyHp - damage);
+                        if (enemyHp <= 0) {
+                            fightOver = true;
+                            deadPioneer = enemy;
+                        }
                     }
                 } else {
-                    attacker.loseHp(enemyAttack);
-                    for (const observe of this._observers) {
-                        observe.pioneerLoseHp(attacker.id, enemyAttack);
-                    }
-                    if (attacker.hp <= 0) {
-                        this.hidePioneer(attacker.id);
-                        fightOver = true;
-                        deadPioneer = attacker;
+                    const damage = Math.max(0, enemyAttack - attackerDefend);
+                    if (damage > 0) {
+                        attacker.loseHp(damage);
+                        for (const observe of this._observers) {
+                            observe.pioneerLoseHp(attacker.id, damage);
+                        }
+                        if (attacker.hp <= 0) {
+                            this.hidePioneer(attacker.id);
+                            fightOver = true;
+                            deadPioneer = attacker;
+                        }
                     }
                 }
                 selfAttack = !selfAttack;
@@ -891,7 +934,11 @@ export default class PioneerMgr {
                             temple.name,
                             temple.hp,
                             temple.hp,
+                            temple.hp,
                             temple.attack,
+                            temple.attack,
+                            temple.def,
+                            temple.def,
                             v2(temple.pos.x, temple.pos.y)
                         );
                     } else if (temple.type == MapPioneerType.player) {
@@ -904,7 +951,11 @@ export default class PioneerMgr {
                             temple.name,
                             temple.hp,
                             temple.hp,
+                            temple.hp,
                             temple.attack,
+                            temple.attack,
+                            temple.def,
+                            temple.def,
                             v2(temple.pos.x, temple.pos.y)
                         );
                     } else {
@@ -917,7 +968,11 @@ export default class PioneerMgr {
                             temple.name,
                             temple.hp,
                             temple.hp,
+                            temple.hp,
                             temple.attack,
+                            temple.attack,
+                            temple.def,
+                            temple.def,
                             v2(temple.pos.x, temple.pos.y)
                         );
                     }
@@ -970,9 +1025,13 @@ export default class PioneerMgr {
                         temple._friendly,
                         temple._type,
                         temple._name,
+                        temple._originalHpMax,
                         temple._hpMax,
                         temple._hp,
+                        temple._originalAttack,
                         temple._attack,
+                        temple._originalDefend,
+                        temple._defend,
                         v2(temple._stayPos.x, temple._stayPos.y)
                     );
                     (newModel as MapNpcPioneerModel).taskObj = temple._taskObj;
@@ -987,9 +1046,13 @@ export default class PioneerMgr {
                         temple._friendly,
                         temple._type,
                         temple._name,
+                        temple._originalHpMax,
                         temple._hpMax,
                         temple._hp,
+                        temple._originalAttack,
                         temple._attack,
+                        temple._originalDefend,
+                        temple._defend,
                         v2(temple._stayPos.x, temple._stayPos.y)
                     );
                     (newModel as MapPlayerPioneerModel).rebirthCountTime = temple._rebirthCountTime;
@@ -1001,9 +1064,13 @@ export default class PioneerMgr {
                         temple._friendly,
                         temple._type,
                         temple._name,
+                        temple._originalHpMax,
                         temple._hpMax,
                         temple._hp,
+                        temple._originalAttack,
                         temple._attack,
+                        temple._originalDefend,
+                        temple._defend,
                         v2(temple._stayPos.x, temple._stayPos.y)
                     );
                 }
@@ -1277,7 +1344,10 @@ export default class PioneerMgr {
                             BuildingMgr.instance.hideBuilding(stayBuilding.id, pioneer.id);
                         } else {
                             pioneer.loseHp(Math.floor(pioneer.hp / 2));
-                            pioneer.loseAttack(Math.floor(pioneer.attack / 2));
+                            pioneer.changeAttack({
+                                type: MapPioneerAttributesChangeType.MUL,
+                                value: -0.5
+                            });
                             tempAction = 1;
                         }
                     } else {
@@ -1387,6 +1457,7 @@ export default class PioneerMgr {
         let defenderHp: number = 0;
         let defenderHpMax: number = 0;
         let defenderAttack: number = 0;
+        let defenderDefned: number = 0;
         let defenderCenterPositions: Vec2[] = [];
         if (defender instanceof MapPioneerModel) {
             defenderName = defender.name;
@@ -1394,6 +1465,7 @@ export default class PioneerMgr {
             defenderHpMax = defender.hpMax;
             defenderAttack = defender.attack;
             defenderCenterPositions = [defender.stayPos];
+            defenderDefned = defender.defend;
 
         } else if (defender instanceof MapBuildingModel) {
             defenderName = defender.name;
@@ -1428,56 +1500,63 @@ export default class PioneerMgr {
             let fightOver: boolean = false;
             let deadPioneer = null;
             if (selfAttack) {
-                defenderHp = Math.max(0, defenderHp - attacker.attack);
-
-                if (defender instanceof MapPioneerModel) {
-                    defender.loseHp(attacker.attack);
-                    for (const observe of this._observers) {
-                        observe.pioneerLoseHp(defender.id, attacker.attack);
-                    }
-                    if (defender.hp <= 0) {
-                        this.hidePioneer(defender.id);
-                        fightOver = true;
-                        deadPioneer = defender;
-                    }
-
-                } else if (defender instanceof MapBuildingModel) {
-                    if (defender.type == MapBuildingType.city) {
-                        (defender as MapMainCityBuildingModel).loseHp(attacker.attack);
-                        if ((defender as MapMainCityBuildingModel).hp <= 0) {
+                const damage: number = Math.max(0, attacker.attack - defenderDefned);
+                console.log("exce attack: " + damage);
+                if (damage > 0) {
+                    defenderHp = Math.max(0, defenderHp - damage);
+                    if (defender instanceof MapPioneerModel) {
+                        defender.loseHp(damage);
+                        for (const observe of this._observers) {
+                            observe.pioneerLoseHp(defender.id, damage);
+                        }
+                        if (defender.hp <= 0) {
+                            this.hidePioneer(defender.id);
                             fightOver = true;
                             deadPioneer = defender;
                         }
-                    } else if (defender.type == MapBuildingType.stronghold) {
-                        for (const pioneerId of defender.defendPioneerIds) {
-                            const findPioneer = this.getPioneerById(pioneerId);
-                            if (findPioneer && findPioneer.hp > 0) {
-                                findPioneer.loseHp(attacker.attack);
-                                for (const observe of this._observers) {
-                                    observe.pioneerLoseHp(defender.id, attacker.attack);
-                                }
-                                if (findPioneer.hp <= 0) {
-                                    this.hidePioneer(findPioneer.id);
-                                }
-                                break;
+    
+                    } else if (defender instanceof MapBuildingModel) {
+                        if (defender.type == MapBuildingType.city) {
+                            (defender as MapMainCityBuildingModel).loseHp(damage);
+                            if ((defender as MapMainCityBuildingModel).hp <= 0) {
+                                fightOver = true;
+                                deadPioneer = defender;
                             }
-                        }
-                        if (defenderHp <= 0) {
-                            BuildingMgr.instance.hideBuilding(defender.id, attacker.id);
-                            fightOver = true;
-                            deadPioneer = defender;
+                        } else if (defender.type == MapBuildingType.stronghold) {
+                            for (const pioneerId of defender.defendPioneerIds) {
+                                const findPioneer = this.getPioneerById(pioneerId);
+                                if (findPioneer && findPioneer.hp > 0) {
+                                    findPioneer.loseHp(damage);
+                                    for (const observe of this._observers) {
+                                        observe.pioneerLoseHp(defender.id, damage);
+                                    }
+                                    if (findPioneer.hp <= 0) {
+                                        this.hidePioneer(findPioneer.id);
+                                    }
+                                    break;
+                                }
+                            }
+                            if (defenderHp <= 0) {
+                                BuildingMgr.instance.hideBuilding(defender.id, attacker.id);
+                                fightOver = true;
+                                deadPioneer = defender;
+                            }
                         }
                     }
                 }
             } else {
-                attacker.loseHp(defenderAttack);
-                for (const observe of this._observers) {
-                    observe.pioneerLoseHp(attacker.id, defenderAttack);
-                }
-                if (attacker.hp <= 0) {
-                    this.hidePioneer(attacker.id);
-                    fightOver = true;
-                    deadPioneer = attacker;
+                const damage: number = Math.max(0, defenderAttack - attacker.defend);
+                console.log("exce d: " + damage);
+                if (damage > 0) {
+                    attacker.loseHp(damage);
+                    for (const observe of this._observers) {
+                        observe.pioneerLoseHp(attacker.id, damage);
+                    }
+                    if (attacker.hp <= 0) {
+                        this.hidePioneer(attacker.id);
+                        fightOver = true;
+                        deadPioneer = attacker;
+                    }
                 }
             }
             selfAttack = !selfAttack;

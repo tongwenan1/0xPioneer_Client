@@ -90,15 +90,15 @@ export class FactoryInfoUI extends PopUpUI {
             if (data.buildLevel == 0) {
                 
                 // useLanMgr
-                // this.btnUpgradeTxt.string = LanMgr.Instance.getLanById("107549");
-                this.btnUpgradeTxt.string = "Unlock";
+                this.btnUpgradeTxt.string = LanMgr.Instance.getLanById("201005");
+                // this.btnUpgradeTxt.string = "Unlock";
 
                 this.progressNode.active = false;
             } else {
 
                 // useLanMgr
-                // this.btnUpgradeTxt.string = LanMgr.Instance.getLanById("107549");
-                this.btnUpgradeTxt.string = "Upgrade";
+                this.btnUpgradeTxt.string = LanMgr.Instance.getLanById("201006");
+                // this.btnUpgradeTxt.string = "Upgrade";
 
                 this.progressNode.active = true;
             }

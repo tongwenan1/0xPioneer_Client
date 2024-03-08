@@ -151,8 +151,8 @@ export class DialogueUI extends PopUpUI {
             UserInfo.Instance.getNewTask(this._task);
 
             // useLanMgr
-            // GameMain.inst.UI.NewTaskTip(LanMgr.Instance.getLanById("107549"));
-            GameMain.inst.UI.NewTaskTip("New Task Taken");
+            GameMain.inst.UI.NewTaskTip(LanMgr.Instance.getLanById("202004"));
+            // GameMain.inst.UI.NewTaskTip("New Task Taken");
 
         } else if (this._task.exitpoint != null &&
             this._task.exitpoint.result.includes(customEventData)) {

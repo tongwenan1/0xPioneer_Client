@@ -39,8 +39,8 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
         if (this._upgradeIng) {
 
             // useLanMgr
-            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
-            GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
+            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201001"));
+            // GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
 
             return;
         }
@@ -52,8 +52,8 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
             if (UserInfoMgr.Instance.isGeneratingTroop) {
                 
                 // useLanMgr
-                // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
-                GameMain.inst.UI.ShowTip("Recruiting…Please wait…");
+                GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201002"));
+                // GameMain.inst.UI.ShowTip("Recruiting…Please wait…");
 
                 return;
             }
@@ -122,8 +122,8 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
         if (this._upgradeIng) {
 
             // useLanMgr
-            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
-            GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
+            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201003"));
+            // GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
 
             return;
         }
@@ -157,8 +157,8 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
             if (!canUpgrade) {
 
                 // useLanMgr
-                // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
-                GameMain.inst.UI.ShowTip("Insufficient resources for building upgrades");
+                GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201004"));
+                // GameMain.inst.UI.ShowTip("Insufficient resources for building upgrades");
                 
                 return;
             }

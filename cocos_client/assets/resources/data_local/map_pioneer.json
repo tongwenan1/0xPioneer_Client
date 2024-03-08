@@ -7,6 +7,7 @@
         "show": true,
         "hp": 100,
         "attack": 15,
+        "def": 5,
         "pos": {
             "x": 22,
             "y": 43
@@ -20,6 +21,7 @@
         "show": false,
         "hp": 80,
         "attack": 15,
+        "def": 10,
         "pos": {
             "x": 31,
             "y": 29
@@ -42,6 +44,7 @@
         "show": false,
         "hp": 50,
         "attack": 10,
+        "def": 10,
         "pos": {
             "x": 31,
             "y": 29
@@ -55,6 +58,7 @@
         "show": false,
         "hp": 30,
         "attack": 6,
+        "def": 10,
         "pos": {
             "x": 30,
             "y": 26
@@ -68,6 +72,7 @@
         "show": true,
         "hp": 50,
         "attack": 8,
+        "def": 10,
         "pos": {
             "x": 26,
             "y": 34
@@ -82,6 +87,7 @@
         "show": false,
         "hp": 50,
         "attack": 5,
+        "def": 10,
         "pos": {
             "x": 37,
             "y": 27
@@ -96,6 +102,7 @@
         "show": false,
         "hp": 80,
         "attack": 15,
+        "def": 10,
         "pos": {
             "x": 34,
             "y": 32
@@ -110,6 +117,7 @@
         "show": false,
         "hp": 50,
         "attack": 10,
+        "def": 10,
         "pos": {
             "x": 30,
             "y": 26
@@ -124,6 +132,7 @@
         "show": true,
         "hp": 50,
         "attack": 12,
+        "def": 10,
         "pos": {
             "x": 43,
             "y": 33
@@ -138,6 +147,7 @@
         "show": false,
         "hp": 30,
         "attack": 6,
+        "def": 10,
         "pos": {
             "x": 30,
             "y": 18
@@ -152,6 +162,7 @@
         "show": false,
         "hp": 30,
         "attack": 6,
+        "def": 10,
         "pos": {
             "x": 30,
             "y": 26
@@ -166,6 +177,7 @@
         "show": false,
         "hp": 180,
         "attack": 24,
+        "def": 10,
         "pos": {
             "x": 20,
             "y": 11
@@ -191,6 +203,7 @@
         "show": false,
         "hp": 60,
         "attack": 15,
+        "def": 10,
         "pos": {
             "x": 49,
             "y": 17
@@ -218,6 +231,7 @@
         "show": true,
         "hp": 40,
         "attack": 10,
+        "def": 10,
         "pos": {
             "x": 50,
             "y": 28
@@ -242,11 +256,19 @@
         "show": true,
         "hp": 40,
         "attack": 10,
+        "def": 10,
         "pos": {
             "x": 39,
             "y": 15
         },
-        "winprogress": 3
+        "winprogress": 3,
+        "drop": [
+            [
+                3,
+                7001,
+                1
+            ]
+        ]
     },
     {
         "id": "hred_4",
@@ -257,6 +279,7 @@
         "show": true,
         "hp": 40,
         "attack": 10,
+        "def": 10,
         "pos": {
             "x": 17,
             "y": 23
@@ -272,6 +295,7 @@
         "show": true,
         "hp": 40,
         "attack": 10,
+        "def": 10,
         "pos": {
             "x": 40,
             "y": 43
@@ -287,6 +311,7 @@
         "show": true,
         "hp": 40,
         "attack": 10,
+        "def": 10,
         "pos": {
             "x": 38,
             "y": 5
@@ -311,6 +336,7 @@
         "show": true,
         "hp": 40,
         "attack": 10,
+        "def": 10,
         "pos": {
             "x": 24,
             "y": 7
@@ -335,6 +361,7 @@
         "show": true,
         "hp": 40,
         "attack": 10,
+        "def": 10,
         "pos": {
             "x": 8,
             "y": 16
@@ -359,6 +386,7 @@
         "show": true,
         "hp": 40,
         "attack": 10,
+        "def": 10,
         "pos": {
             "x": 39,
             "y": 52
@@ -383,6 +411,7 @@
         "show": true,
         "hp": 40,
         "attack": 10,
+        "def": 10,
         "pos": {
             "x": 53,
             "y": 9
