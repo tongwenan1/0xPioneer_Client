@@ -465,9 +465,8 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent {
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
 
             // useLanMgr
-            // this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.Instance.replaceLanById("107549", [this.secondsToTime(count)]);
-            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = "Big Team Coming: " + this.secondsToTime(count);
-
+            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.Instance.replaceLanById("200003", [this.secondsToTime(count)]);
+            // this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = "Big Team Coming: " + this.secondsToTime(count);
         }
     }
     playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {
