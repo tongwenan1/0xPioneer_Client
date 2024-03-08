@@ -12,10 +12,10 @@ export default class LanMgr {
                 return this._configs[id][this._language];    
             }
             console.log(`lan config error: id[${id}], lan[${this._language}]`);
-            return id;
+            return "LanguageErr: language or text is missing =>" + id;
         }
         console.log(`lan config not exist: id[${id}], lan[${this._language}]`);
-        return "";
+        return "LanguageErr: id does not exist =>" + id;
     }
 
     public replaceLanById(id: string, args: any[]) {

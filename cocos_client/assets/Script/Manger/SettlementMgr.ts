@@ -18,7 +18,7 @@ export default class SettlementMgr {
         const index = this._settlements.findIndex(s => s.level == newSettlement.level);
         if (index >= 0) {
             const temple = this._settlements[index];
-            temple.newPioneerIds.concat(newSettlement.newPioneerIds);
+            temple.newPioneerIds = temple.newPioneerIds.concat(newSettlement.newPioneerIds);
             temple.killEnemies += newSettlement.killEnemies;
             temple.gainResources += newSettlement.gainResources;
             temple.exploredEvents += newSettlement.exploredEvents;
@@ -37,7 +37,7 @@ export default class SettlementMgr {
         };
         for (const temple of this._settlements) {
             if (temple.level >= beginLevel && temple.level <= endLevel) {
-                newSettlement.newPioneerIds.concat(temple.newPioneerIds);
+                newSettlement.newPioneerIds = newSettlement.newPioneerIds.concat(temple.newPioneerIds);
                 newSettlement.killEnemies += temple.killEnemies;
                 newSettlement.gainResources += temple.gainResources;
                 newSettlement.exploredEvents += temple.exploredEvents;

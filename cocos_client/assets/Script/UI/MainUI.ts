@@ -31,6 +31,8 @@ import LanMgr from '../Manger/LanMgr';
 import { ArtifactUI } from './ArtifactUI';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
 import { PlayerInfoUI } from './PlayerInfoUI';
+import { NewSettlementUI } from './NewSettlementUI';
+import SettlementMgr from '../Manger/SettlementMgr';
 import {LootsPopup} from "db://assets/Script/UI/LootsPopup";
 import BattleReportsMgr, {BattleReportsEvent} from "db://assets/Script/Manger/BattleReportsMgr";
 
@@ -41,9 +43,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
     @property(Node)
     UIRoot: Node;
-    
+
     @property([ImageAsset])
-    cursorImages : ImageAsset[] = [];
+    cursorImages: ImageAsset[] = [];
 
     @property(Prefab)
     mainBuildUIPfb: Prefab;
@@ -67,6 +69,8 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     private civilizationLevelUpPrefab: Prefab;
     @property(Prefab)
     private playerInfoPrefab: Prefab;
+    @property(Prefab)
+    private newSettlementPrfab: Prefab;
 
     @property(Prefab)
     BackpackUIPfb: Prefab;
@@ -100,6 +104,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     public eventUI: EventUI;
     public civilizationLevelUpUI: CivilizationLevelUpUI;
     public playerInfoUI: PlayerInfoUI;
+    public newSettlementUI: NewSettlementUI;
 
     public backpackUI: BackpackUI;
     public itemInfoUI: ItemInfoUI;
@@ -118,13 +123,13 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     public btnBuild: Node = null;
 
     @property(Button)
-    backpackBtn:Button = null;
+    backpackBtn: Button = null;
 
     @property(Button)
     public battleReportsBtn: Button = null;
 
     @property(Button)
-    artifactBtn:Button = null;
+    artifactBtn: Button = null;
 
     private _gangsterComingTipView: Node = null;
 
@@ -134,6 +139,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         this._gangsterComingTipView = this.node.getChildByName("GangsterTipView");
         this._gangsterComingTipView.active = false;
 
+        this._refreshSettlememntTip();
         PioneerMgr.instance.addObserver(this);
         UserInfo.Instance.addObserver(this);
         BattleReportsMgr.Instance.addObserver(this);
@@ -186,6 +192,10 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         this.playerInfoUI.node.setParent(this.UIRoot);
         this.playerInfoUI.node.active = false;
 
+        this.newSettlementUI = instantiate(this.newSettlementPrfab).getComponent(NewSettlementUI);
+        this.newSettlementUI.node.setParent(this.UIRoot);
+        this.newSettlementUI.node.active = false;
+
         this.backpackUI = instantiate(this.BackpackUIPfb).getComponent(BackpackUI);
         this.backpackUI.node.setParent(this.UIRoot);
         this.backpackUI.node.active = false;
@@ -217,20 +227,21 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         EventMgr.emit(EventName.LOADING_FINISH);
 
         this.changeLang();
-        
+
         const bigGanster = PioneerMgr.instance.getPioneerById("gangster_3");
         if (bigGanster != null && bigGanster.show) {
             this.checkCanShowGansterComingTip(bigGanster.id);
         }
 
-        
-        this.backpackBtn.node.on(Button.EventType.CLICK, ()=>{
+
+        this.backpackBtn.node.on(Button.EventType.CLICK, () => {
             GameMain.inst.UI.backpackUI.show(true);
         }, this);
 
-        this.artifactBtn.node.on(Button.EventType.CLICK, ()=>{
+        this.artifactBtn.node.on(Button.EventType.CLICK, () => {
             GameMain.inst.UI.artifactUI.show(true);
         }, this);
+
         this.battleReportsBtn.node.on(Button.EventType.CLICK, () => {
             GameMain.inst.UI.battleReportsUI.show(true);
         }, this);
@@ -268,6 +279,12 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         // this.node.getChildByPath("LeftNode/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this.node.getChildByPath("icon_treasure_box/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this.node.getChildByPath("icon_artifact/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+    }
+
+    private _refreshSettlememntTip() {
+        const newSettle = localStorage.getItem("local_newSettle");
+        const view = this.node.getChildByName("NewSettlementTipView");
+        view.active = newSettle != null;
     }
 
     onSceneChange() {
@@ -310,12 +327,24 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
     }
 
+    private onTapNewSettlementTip() {
+        const currentData = localStorage.getItem("local_newSettle");
+        if (currentData != null) {
+            const beginLevel = parseInt(currentData.split("|")[0]);
+            const endLevel = parseInt(currentData.split("|")[1]);
+            this.newSettlementUI.refreshUI(beginLevel, endLevel);
+            this.newSettlementUI.show(true);
+            localStorage.removeItem("local_newSettle");
+            this._refreshSettlememntTip();
+        }
+    }
+
     // index : 0:normal, 1:gear, 2:forbiden
-    public ChangeCursor(index:number) {
-        if(index >= this.cursorImages.length) {
+    public ChangeCursor(index: number) {
+        if (index >= this.cursorImages.length) {
             index = 0;
         }
-        
+
         MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[index].nativeUrl);
         //MouseCursor.SetCursorStyle(ECursorStyle.crosshair);
     }
@@ -395,10 +424,10 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
     }
     pioneerHpMaxChanged(pioneerId: string): void {
-        
+
     }
     pioneerAttackChanged(pioneerId: string): void {
-        
+
     }
     pioneerLoseHp(pioneerId: string, value: number): void {
 
@@ -441,7 +470,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
     }
     endFight(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string): void {
-        
+
     }
     exploredPioneer(pioneerId: string): void {
 
@@ -453,7 +482,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
     }
     eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
-        
+
     }
     pioneerTaskHideTimeCountChanged(pioneerId: string, timeCount: number): void {
 
@@ -468,7 +497,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
     }
     pioneerLogicMovePathPrepared(pioneer: MapPioneerModel) {
-        
+
     }
     pioneerShowCount(pioneerId: string, count: number): void {
         if (pioneerId == "gangster_3" && count > 0) {
@@ -477,9 +506,8 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
 
             // useLanMgr
-            // this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.Instance.replaceLanById("107549", [this.secondsToTime(count)]);
-            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = "Big Team Coming: " + this.secondsToTime(count);
-
+            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.Instance.replaceLanById("200003", [this.secondsToTime(count)]);
+            // this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = "Big Team Coming: " + this.secondsToTime(count);
         }
     }
     playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {
@@ -490,6 +518,16 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     //userInfoEvent
     playerNameChanged(value: string): void {
 
+    }
+    playerLvlupChanged(value: number): void {
+        const gap: number = 10;
+        if (value % gap == 0) {
+            const currentSettle: number = value / gap - 1;
+            const beginLevel: number = currentSettle * gap + 1;
+            const endLevel: number = (currentSettle + 1) * gap;
+            localStorage.setItem("local_newSettle", beginLevel + "|" + endLevel);
+            this._refreshSettlememntTip();
+        }
     }
     playerExplorationValueChanged?(value: number): void {
         this._claimRewardUI.refreshUI();
@@ -510,13 +548,13 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         this._gangsterComingTipView.active = false;
     }
     taskProgressChanged(taskId: string): void {
-        
+
     }
     taskFailed(taskId: string): void {
-        
+
     }
     generateTroopTimeCountChanged(leftTime: number): void {
-        
+
     }
 
     onBattleReportListChanged() {

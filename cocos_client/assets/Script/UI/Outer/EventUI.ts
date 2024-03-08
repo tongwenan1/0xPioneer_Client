@@ -166,13 +166,13 @@ export class EventUI extends PopUpUI {
                             if (changedType == 1) {
 
                                 // useLanMgr
-                                // showTip += LanMgr.Instance.getLanById("107549") + "\n";
-                                showTip += "Your HP has changed\n";
+                                showTip += LanMgr.Instance.getLanById("207001") + "\n";
+                                // showTip += "Your HP has changed\n";
                             }
                             else {
                                 // useLanMgr
-                                // showTip += LanMgr.Instance.getLanById("107549") + "\n";
-                                showTip += "Your Attack has changed\n";
+                                showTip += LanMgr.Instance.getLanById("207002") + "\n";
+                                // showTip += "Your Attack has changed\n";
                             }
                         }
                         else {
@@ -180,25 +180,25 @@ export class EventUI extends PopUpUI {
                             if (pioneerInfo == null) {
                                 if (changedType == 1) {
                                     // useLanMgr
-                                    // showTip += LanMgr.Instance.getLanById("107549") + "\n";
-                                    showTip += "Enemy's HP has changed\n";
+                                    showTip += LanMgr.Instance.getLanById("207003") + "\n";
+                                    // showTip += "Enemy's HP has changed\n";
                                 }
                                 else {
                                     // useLanMgr
-                                    // showTip += LanMgr.Instance.getLanById("107549") + "\n";
-                                    showTip += "Enemy's Attack has changed\n";
+                                    showTip += LanMgr.Instance.getLanById("207004") + "\n";
+                                    // showTip += "Enemy's Attack has changed\n";
                                 }
                             }
                             else {
                                 if (changedType == 1) {
                                     // useLanMgr
-                                    // showTip += LanMgr.Instance.replaceLanById("107549", [pioneerInfo.name]) + "\n";
-                                    showTip += pioneerInfo.name + " HP has changed\n";
+                                    showTip += LanMgr.Instance.replaceLanById("207005", [pioneerInfo.name]) + "\n";
+                                    // showTip += pioneerInfo.name + " HP has changed\n";
                                 }
                                 else {
                                     // useLanMgr
-                                    // showTip += LanMgr.Instance.replaceLanById("107549", [pioneerInfo.name]) + "\n";
-                                    showTip += pioneerInfo.name + " Attack has changed\n";
+                                    showTip += LanMgr.Instance.replaceLanById("207006", [pioneerInfo.name]) + "\n";
+                                    // showTip += pioneerInfo.name + " Attack has changed\n";
                                 }
                             }
                         }
@@ -245,8 +245,8 @@ export class EventUI extends PopUpUI {
                     const itemConf = ItemMgr.Instance.getItemConf(id);
                     if (itemConf != null) {
                         // useLanMgr
-                        // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
-                        temple.tipText = "you need AT LEAST " + num + " " + itemConf.itemName;
+                        temple.tipText = LanMgr.Instance.replaceLanById("207007", [num]) + LanMgr.Instance.getLanById(itemConf.itemName);
+                        // temple.tipText = "you need AT LEAST " + num + " " + itemConf.itemName;
                     }
                 }
             } else if (type == ItemConfigType.Artifact) {
@@ -305,8 +305,8 @@ export class EventUI extends PopUpUI {
                                 ItemMgr.Instance.subItem(item.itemConfigId, num);
 
                                 // useLanMgr
-                                // showTip += LanMgr.Instance.replaceLanById("107549", [num, LanMgr.Instance.getLanById(itemConf.itemName)]) + "\n";
-                                showTip += ("You lost" + num + " " + itemConf.itemName + "\n");
+                                showTip += LanMgr.Instance.replaceLanById("207008", [num, LanMgr.Instance.getLanById(itemConf.itemName)]) + "\n";
+                                // showTip += ("You lost" + num + " " + itemConf.itemName + "\n");
 
                                 break;
                             }
@@ -321,8 +321,8 @@ export class EventUI extends PopUpUI {
                         }
 
                         // useLanMgr
-                        // showTip += LanMgr.Instance.replaceLanById("107549", [num, LanMgr.Instance.getLanById(itemConf.itemName)]) + "\n";
-                        showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
+                        showTip += LanMgr.Instance.replaceLanById("207009", [num, LanMgr.Instance.getLanById(itemConf.itemName)]) + "\n";
+                        // showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
                     }
                 } else if (type == ItemConfigType.Artifact) {
                     // wait artifact
@@ -378,8 +378,8 @@ export class EventUI extends PopUpUI {
                 PioneerMgr.instance.pioneerToIdle(this._triggerPioneerId);
             }
             // useLanMgr
-            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
-            GameMain.inst.UI.ShowTip("Event Ended");
+            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("207010"));
+            // GameMain.inst.UI.ShowTip("Event Ended");
             this.show(false);
         } else {
             const event = BranchEventMgr.Instance.getEventById(eventId);

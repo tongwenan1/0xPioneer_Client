@@ -24,6 +24,7 @@ import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 import ArtifactMgr from '../../Manger/ArtifactMgr';
 import { ArtifactEffectType } from '../../Model/ArtifactData';
 import SettlementMgr from '../../Manger/SettlementMgr';
+import LanMgr from '../../Manger/LanMgr';
 
 
 const { ccclass, property } = _decorator;
@@ -732,13 +733,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     gameTaskOver(): void {
 
         // useLanMgr
-        // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
-        GameMain.inst.UI.ShowTip("Boot ends");
+        GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("200001"));
+        // GameMain.inst.UI.ShowTip("Boot ends");
 
     }
     generateTroopTimeCountChanged(leftTime: number): void {
 
     }
 }
-
-

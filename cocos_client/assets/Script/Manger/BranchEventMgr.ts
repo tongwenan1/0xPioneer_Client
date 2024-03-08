@@ -1,4 +1,4 @@
-import {resources} from "cc";
+import { resources } from "cc";
 
 export interface BranchEventMgrEvent {
     onBranchEventStepEnd?(currentEventId: string, hasNextStep: boolean): void;
