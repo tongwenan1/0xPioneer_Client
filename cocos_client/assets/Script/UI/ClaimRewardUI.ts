@@ -133,8 +133,8 @@ export class ClaimRewardUI extends Component {
         } else if (getStatus == 0) {
 
             // useLanMgr
-            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
-            GameMain.inst.UI.ShowTip("Please explore more to get it");
+            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("200002"));
+            // GameMain.inst.UI.ShowTip("Please explore more to get it");
         }
     }
 }

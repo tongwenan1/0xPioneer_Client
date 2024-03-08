@@ -493,16 +493,16 @@ export class MapBG extends Component {
         if (isBlock) {
 
             // useLanMgr
-            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
-            GameMain.inst.UI.ShowTip("cann't move to block");
+            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203001"));
+            // GameMain.inst.UI.ShowTip("cann't move to block");
 
             return;
         }
         if (PioneerInfo.instance.currentActionPioneerIsBusy()) {
 
             // useLanMgr
-            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
-            GameMain.inst.UI.ShowTip("pioneer is busy");
+            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203002"));
+            // GameMain.inst.UI.ShowTip("pioneer is busy");
 
             return;
         }
@@ -510,8 +510,8 @@ export class MapBG extends Component {
         if (!currentActionPioneer.show && currentActionPioneer.rebirthCountTime > 0) {
 
             // useLanMgr
-            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
-            GameMain.inst.UI.ShowTip("pioneer is dead");
+            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203003"));
+            // GameMain.inst.UI.ShowTip("pioneer is dead");
 
             return;
         }
@@ -531,8 +531,8 @@ export class MapBG extends Component {
                 actionType = -2;
 
                 // useLanMgr
-                // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
-                GameMain.inst.UI.ShowTip("pioneer is defending");
+                GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203004"));
+                // GameMain.inst.UI.ShowTip("pioneer is defending");
 
             }
         } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing &&
@@ -542,8 +542,8 @@ export class MapBG extends Component {
                     stayBuilding.eventId != currentActionPioneer.actionEventId))) {
             actionType = -2;
             // useLanMgr
-            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("107549"));
-            GameMain.inst.UI.ShowTip("pioneer is processing event");
+            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203005"));
+            // GameMain.inst.UI.ShowTip("pioneer is processing event");
         } else {
             if (stayBuilding != null) {
                 if (stayBuilding.type == MapBuildingType.city) {

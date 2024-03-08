@@ -9,6 +9,206 @@
     "**NOTES**": null,
     "eng": "text for English version"
   },
+  "200001": {
+    "id": "200001",
+    "**NOTES**": "end new user task phase",
+    "eng": "Boot ends"
+  },
+  "200002": {
+    "id": "200002",
+    "**NOTES**": "claim reward",
+    "eng": "Please explore more to get it"
+  },
+  "200003": {
+    "id": "200003",
+    "**NOTES**": "big team coming count",
+    "eng": "Big Team Coming: %s"
+  },
+  "201001": {
+    "id": "201001",
+    "**NOTES**": "inner-building sys",
+    "eng": "The building is being upgraded, please wait."
+  },
+  "201002": {
+    "id": "201002",
+    "**NOTES**": "inner-building sys",
+    "eng": "Recruiting…Please wait…"
+  },
+  "201003": {
+    "id": "201003",
+    "**NOTES**": "inner-building sys",
+    "eng": "The building is being upgraded, please wait."
+  },
+  "201004": {
+    "id": "201004",
+    "**NOTES**": "inner-building sys",
+    "eng": "Insufficient resources for building upgrades"
+  },
+  "201005": {
+    "id": "201005",
+    "**NOTES**": "inner-building sys",
+    "eng": "Unlock"
+  },
+  "201006": {
+    "id": "201006",
+    "**NOTES**": "inner-building sys",
+    "eng": "Upgrade"
+  },
+  "202001": {
+    "id": "202001",
+    "**NOTES**": "task sys",
+    "eng": "task hide: %s s"
+  },
+  "202002": {
+    "id": "202002",
+    "**NOTES**": "task sys",
+    "eng": "prepare task... %s s"
+  },
+  "202003": {
+    "id": "202003",
+    "**NOTES**": "task sys",
+    "eng": "All %s Tasks"
+  },
+  "202004": {
+    "id": "202004",
+    "**NOTES**": "task sys",
+    "eng": "New Task Taken"
+  },
+  "203001": {
+    "id": "203001",
+    "**NOTES**": "pioneer action",
+    "eng": "cann't move to block"
+  },
+  "203002": {
+    "id": "203002",
+    "**NOTES**": "pioneer action",
+    "eng": "pioneer is busy"
+  },
+  "203003": {
+    "id": "203003",
+    "**NOTES**": "pioneer action",
+    "eng": "pioneer is dead"
+  },
+  "203004": {
+    "id": "203004",
+    "**NOTES**": "pioneer action",
+    "eng": "pioneer is defending"
+  },
+  "203005": {
+    "id": "203005",
+    "**NOTES**": "pioneer action",
+    "eng": "pioneer is processing an event"
+  },
+  "204001": {
+    "id": "204001",
+    "**NOTES**": "artifact sys",
+    "eng": "HP"
+  },
+  "204002": {
+    "id": "204002",
+    "**NOTES**": "artifact sys",
+    "eng": "ATK"
+  },
+  "204003": {
+    "id": "204003",
+    "**NOTES**": "artifact sys",
+    "eng": "Get"
+  },
+  "204004": {
+    "id": "204004",
+    "**NOTES**": "artifact sys",
+    "eng": "Get"
+  },
+  "205001": {
+    "id": "205001",
+    "**NOTES**": "bag and item sys",
+    "eng": "Get"
+  },
+  "205002": {
+    "id": "205002",
+    "**NOTES**": "bag and item sys",
+    "eng": "Use"
+  },
+  "206001": {
+    "id": "206001",
+    "**NOTES**": "pioneer get",
+    "eng": "Dual Guns Jack"
+  },
+  "206002": {
+    "id": "206002",
+    "**NOTES**": "pioneer get",
+    "eng": "Dual Blades Keen"
+  },
+  "206003": {
+    "id": "206003",
+    "**NOTES**": "pioneer get",
+    "eng": "Rebels Camus"
+  },
+  "206004": {
+    "id": "206004",
+    "**NOTES**": "pioneer get",
+    "eng": "Gunman as Graceful as a Gazelle"
+  },
+  "206005": {
+    "id": "206005",
+    "**NOTES**": "pioneer get",
+    "eng": "Warrior as Wild as the Wind"
+  },
+  "206006": {
+    "id": "206006",
+    "**NOTES**": "pioneer get",
+    "eng": "Berserker as Fearless as a Beast"
+  },
+  "207001": {
+    "id": "207001",
+    "**NOTES**": "event sys",
+    "eng": "Your HP has changed"
+  },
+  "207002": {
+    "id": "207002",
+    "**NOTES**": "event sys",
+    "eng": "Your Attack has changed"
+  },
+  "207003": {
+    "id": "207003",
+    "**NOTES**": "event sys",
+    "eng": "Enemy's HP has changed"
+  },
+  "207004": {
+    "id": "207004",
+    "**NOTES**": "event sys",
+    "eng": "Enemy's Attack has changed"
+  },
+  "207005": {
+    "id": "207005",
+    "**NOTES**": "event sys",
+    "eng": "%s's HP has changed"
+  },
+  "207006": {
+    "id": "207006",
+    "**NOTES**": "event sys",
+    "eng": "%s's Attack has changed"
+  },
+  "207007": {
+    "id": "207007",
+    "**NOTES**": "event sys",
+    "eng": "you need AT LEAST %s "
+  },
+  "207008": {
+    "id": "207008",
+    "**NOTES**": "event sys",
+    "eng": "You lost %s "
+  },
+  "207009": {
+    "id": "207009",
+    "**NOTES**": "event sys",
+    "eng": "You obtained %s "
+  },
+  "207010": {
+    "id": "207010",
+    "**NOTES**": "event sys",
+    "eng": "Event Ended"
+  },
   "1070011": {
     "id": "1070011",
     "**NOTES**": null,

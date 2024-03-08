@@ -67,12 +67,12 @@ export class ArtifactInfoUI extends PopUpUI {
 
                 if (propId == ArtifactProp.HP) {
                     // useLanMgr
-                    // propName += LanMgr.Instance.getLanById("107549");
-                    propName += "HP";
+                    propName += LanMgr.Instance.getLanById("204001");
+                    // propName += "HP";
                 } else if (propId == ArtifactProp.ATTACK) {
                     // useLanMgr
-                    // propName += LanMgr.Instance.getLanById("107549");
-                    propName += "ATK";
+                    propName += LanMgr.Instance.getLanById("204002");
+                    // propName += "ATK";
                 }
 
                 if (prop_value[0] == ArtifactPropValueType.ADD) {
@@ -156,14 +156,14 @@ export class ArtifactInfoUI extends PopUpUI {
                 this.useButton.node.active = true;
 
                 // useLanMgr
-                // this.useButtonLabel.string = LanMgr.Instance.getLanById("107549");
-                this.useButtonLabel.string = "Get";
+                this.useButtonLabel.string = LanMgr.Instance.getLanById("204003");
+                // this.useButtonLabel.string = "Get";
             } else {
                 // TODO: use?
 
                 // useLanMgr
-                // this.useButtonLabel.string = LanMgr.Instance.getLanById("107549");
-                this.useButtonLabel.string = "Get";
+                this.useButtonLabel.string = LanMgr.Instance.getLanById("204004");
+                // this.useButtonLabel.string = "Get";
             }
             this.show(true);
         }

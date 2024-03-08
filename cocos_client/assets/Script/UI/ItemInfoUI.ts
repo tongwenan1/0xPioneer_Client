@@ -41,16 +41,16 @@ export class ItemInfoUI extends PopUpUI {
                 this.useButton.node.active = true;
 
                 // useLanMgr
-                // this.useButtonLabel.string = LanMgr.Instance.getLanById("107549");
-                this.useButtonLabel.string = "Get";
+                this.useButtonLabel.string = LanMgr.Instance.getLanById("205001");
+                // this.useButtonLabel.string = "Get";
 
             } else {
                 if (this._items[0].itemConfig.itemType == ItemType.AddProp) {
                     this.useButton.node.active = true;
 
                     // useLanMgr
-                    // this.useButtonLabel.string = LanMgr.Instance.getLanById("107549");
-                    this.useButtonLabel.string = "Use";
+                    this.useButtonLabel.string = LanMgr.Instance.getLanById("205002");
+                    // this.useButtonLabel.string = "Use";
                 } 
             }
             this.show(true);
