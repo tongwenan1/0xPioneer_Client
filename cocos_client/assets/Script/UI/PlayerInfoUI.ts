@@ -1,4 +1,4 @@
-import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, ScrollView, Slider, Sprite, UITransform, Vec3 } from 'cc';
+import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import UserInfoMgr from '../Manger/UserInfoMgr';
 import LvlupMgr from '../Manger/LvlupMgr';
@@ -9,35 +9,39 @@ import { AudioMgr } from '../Basic/AudioMgr';
 import LanMgr from '../Manger/LanMgr';
 import EventMgr from '../Manger/EventMgr';
 import { EventName } from '../Const/ConstDefine';
+import SettlementMgr from '../Manger/SettlementMgr';
+import { SettlementView } from './View/SettlementView';
 const { ccclass, property } = _decorator;
-
-class SettlementStage {
-    level: number;
-    stats: string;
-    evaluation: string;
-
-    constructor(level: number, stats: string, evaluation: string) {
-        this.level = level;
-        this.stats = stats;
-        this.evaluation = evaluation;
-    }
-}
 
 @ccclass('PlayerInfoUI')
 export class PlayerInfoUI extends PopUpUI {
     
+
+    @property(Prefab)
+    private settlementPrefab: Prefab = null;
+
+
     private _selectIndex: number = 0;
+    private _selectSettleIndex: number = 0;
+    private _selectSettleViewOffsetHeight: number[] = [];
     private _selectLang: string = "eng";
 
     private _tabViews: Node[] = [];
     private _tabButtons: Node[] = [];
+
     private _changeNameView: Node = null;
     private _nextLevelView: Node = null;
-    private _langSelectView: Node = null;
     private _rewardItem: Node = null;
     private _showRewardItems: Node[] = [];
 
+    private _settleSelectItem: Node = null;
+    private _settleUseSelectItems: Node[] = [];
+
+    private _langSelectView: Node = null;
+    
+
     onLoad(): void {
+
         this._selectIndex = 0;
 
         const infoView = this.node.getChildByPath("Content/tabContents/InfoContent");
@@ -67,37 +71,30 @@ export class PlayerInfoUI extends PopUpUI {
         this._rewardItem = this._nextLevelView.getChildByPath("NextLevelInfo/RewardContent/Rewards/Content/Item")
         this._rewardItem.active = false;
         this._nextLevelView.active = false;
-    
+
+        this._settleSelectItem = summaryView.getChildByPath("SettlementList/view/content/Item");
+        this._settleSelectItem.active = false;
+
         this._langSelectView = this.node.getChildByName("OptionContainer");
         this._langSelectView.active = false;
+
 
         EventMgr.on(EventName.LOADING_FINISH, this._loadOver, this);
     }
 
     start() {
-        // this.settlementStages = [
-        //     new SettlementStage(1, "Stats1", "Good"),
-        //     new SettlementStage(2, "Stats2", "Excellent"),
-        // ];
-
-        // this.populateList();
-        // this.populateContent(0);
-
-        // this.musicVolumeSlider?.node.on('slide', this.onMusicVolumeChange, this);
-        // this.sfxVolumeSlider?.node.on('slide', this.onSfxVolumeChange, this);
-
-        // this.LanguageBtn.node.on(Node.EventType.TOUCH_END, this.toggleDropdown, this);
-        // this.optionBtns.forEach((button, index) => {
-        //     button.node.on(Node.EventType.TOUCH_END, () => {
-        //         this.onOptionSelected(index);
-        //     }, this);
-        // });
+        
     }
 
     update(deltaTime: number) {
 
     }
 
+    onDestroy() {
+       
+    }
+
+    //-------------------------------- function
     private _loadOver() {
         this._selectLang = LanMgr.Instance.getLang();
         this._refreshUI();
@@ -112,8 +109,7 @@ export class PlayerInfoUI extends PopUpUI {
         const currentShowView = this._tabViews[this._selectIndex];
         if (this._selectIndex == 0) {
             // info
-            const currentLevel = UserInfoMgr.Instance.level;
-
+            let currentLevel = UserInfoMgr.Instance.level;
             currentShowView.getChildByName("UserID").getComponent(Label).string = "ID:" + UserInfoMgr.Instance.playerID;
             currentShowView.getChildByName("UserName").getComponent(Label).string = "Name:" + UserInfoMgr.Instance.playerName;
             currentShowView.getChildByName("UserLCivilizationLv").getComponent(Label).string = "Civilization Level  " + currentLevel;
@@ -124,6 +120,55 @@ export class PlayerInfoUI extends PopUpUI {
 
         } else if (this._selectIndex == 1) {
             // summary
+            const settleViewContent = currentShowView.getChildByPath("PeriodicSettlement/view/content");
+            settleViewContent.destroyAllChildren();
+
+            const selectItemContent = currentShowView.getChildByPath("SettlementList/view/content");
+            for (const item of this._settleUseSelectItems) {
+                item.destroy();
+            }
+            this._settleUseSelectItems = [];
+
+            const currentLevel: number = UserInfoMgr.Instance.level;
+            const gap: number = 10;
+            const settleCount: number = Math.floor(currentLevel / gap);
+            if (settleCount <= 0) {
+                currentShowView.getChildByName("PeriodicSettlement").active = false;
+                currentShowView.getChildByName("SettlementList").active = false;
+                currentShowView.getChildByName("EmptyTip").active = true;
+
+            } else {
+                this._selectSettleViewOffsetHeight = [];
+                currentShowView.getChildByName("PeriodicSettlement").active = true;
+                currentShowView.getChildByName("SettlementList").active = true;
+                currentShowView.getChildByName("EmptyTip").active = false;
+                for (let i = 0; i < settleCount; i++) {
+                    const beginLevel: number = i * gap + 1;
+                    const endLevel: number = (i + 1) * gap;
+                    //view
+                    const view = instantiate(this.settlementPrefab);
+                    view.active = true;
+                    settleViewContent.addChild(view);
+                    view.getComponent(SettlementView).refreshUI(beginLevel, endLevel);
+                    let lastViewOffsetHeight: number = 0;
+                    if (this._selectSettleViewOffsetHeight.length > 0) {
+                        lastViewOffsetHeight = this._selectSettleViewOffsetHeight[this._selectSettleViewOffsetHeight.length - 1];
+                    } 
+                    this._selectSettleViewOffsetHeight.push(lastViewOffsetHeight + view.getComponent(UITransform).height);
+    
+                    // button
+                    const select = instantiate(this._settleSelectItem);
+                    select.active = true;
+                    selectItemContent.addChild(select);
+                    select.getComponent(Button).clickEvents[0].customEventData = i.toString();
+                    select.getChildByName("Label").getComponent(Label).string = "C.Lv" + beginLevel + " - " + endLevel; 
+                    this._settleUseSelectItems.push(select);
+                };
+                settleViewContent.getComponent(Layout).updateLayout();
+                selectItemContent.getComponent(Layout).updateLayout();
+                this._refreshSettleButtons();
+            }
+            
 
         } else if (this._selectIndex == 2) {
             // setting
@@ -188,6 +233,7 @@ export class PlayerInfoUI extends PopUpUI {
                         view.getChildByName("Icon").getComponent(Sprite).spriteFrame = await BackpackItem.getItemIcon(ItemMgr.Instance.getItemConf(id).icon);
                         view.getChildByName("Num").getComponent(Label).string = "x" + num;
                         view.setParent(content.getChildByPath("Rewards/Content"));
+                        this._showRewardItems.push(view);   
                     }
                 }
                 content.getChildByPath("Rewards/Content").getComponent(Layout).updateLayout();
@@ -202,72 +248,15 @@ export class PlayerInfoUI extends PopUpUI {
         }
     }
 
+    private _refreshSettleButtons() {
+        for (let i = 0; i < this._settleUseSelectItems.length; i++) {
+            const item = this._settleUseSelectItems[i];
+            item.getComponent(Sprite).grayscale = i != this._selectSettleIndex;
+        } 
+    }
    
-
-    onDestroy() {
-       
-    }
-
-    getLevelInfo(level: number) {
-    }
-
-    populateContent(index: number) {
-        // if (index < 0 || index >= this.settlementStages.length) {
-        //     console.warn("Index out of bounds");
-        //     return;
-        // }
-
-        // this.contentScrollView.content.removeAllChildren();
-
-        // let stage = this.settlementStages[index];
-        // let dataPoints = stage.stats.split(",");
-
-        // let startPositionY = 0;
-        // const gap = 40;
-        // dataPoints.forEach(dataPoint => {
-        //     let detailItem = new Node("DetailItem");
-        //     detailItem.setPosition(0, -20, 0);
-        //     let label = detailItem.addComponent(Label);
-        //     label.string = `Data: ${dataPoint}`;
-        //     label.color = new Color(0, 0, 0);
-
-        //     let uiTransform = detailItem.addComponent(UITransform);
-        //     uiTransform.setContentSize(100, 30);
-        //     uiTransform.setAnchorPoint(1, 1);
-
-        //     detailItem.setPosition(new Vec3(0, startPositionY, 0));
-
-        //     this.contentScrollView.content.addChild(detailItem);
-
-        //     startPositionY -= gap;
-        // });
-    }
-
-    populateList() {
-        let startPositionY = 0;
-        const gap = 40;
-        // this.settlementStages.forEach((stage, index) => {
-        //     let listItem = new Node("ListItem");
-        //     let label = listItem.addComponent(Label);
-        //     label.string = `Level: ${stage.level}`;
-        //     label.color = new Color(0, 0, 0);
-
-        //     let uiTransform = listItem.addComponent(UITransform);
-        //     uiTransform.setContentSize(80, 30);
-        //     uiTransform.setAnchorPoint(1, 1);
-
-        //     listItem.on(Node.EventType.TOUCH_END, () => {
-        //         this.populateContent(index);
-        //     }, this);
-
-        //     listItem.setPosition(new Vec3(0, startPositionY, 0));
-
-        //     this.listScrollView.content.addChild(listItem);
-        //     startPositionY -= gap;
-        // });
-    }
-
-
+    //----------------------------------------------------------------------
+    // action
     private onTapTab(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
         if (this._selectIndex == index) {
@@ -276,8 +265,7 @@ export class PlayerInfoUI extends PopUpUI {
         this._selectIndex = index;
         this._refreshUI();
     }
-    //-----------------------------------
-    // info
+    //----------------------------------- info
     private onTapChangeNameShow() {
         this._changeNameView.active = true;
         this._changeNameView.getChildByPath("Content/UserName").getComponent(EditBox).string = "";
@@ -302,8 +290,29 @@ export class PlayerInfoUI extends PopUpUI {
     private onTapNextLevelClose() {
         this._nextLevelView.active = false;
     }
-    //-----------------------------------
-    // setting
+    //-----------------------------------settlement
+    private onTapSettleSelect(event: Event, customEventData: string) {
+        const index = parseInt(customEventData);
+        const scrollView = this.node.getChildByPath("Content/tabContents/SummaryContent/PeriodicSettlement").getComponent(ScrollView);
+        let offsetY: number = 0;
+        if (index > 0) {
+            offsetY = this._selectSettleViewOffsetHeight[index - 1] + 5;
+        }
+        scrollView.scrollToOffset(v2(0, offsetY), 0.3);
+    }
+    private onSettleViewScrolled(event: Event) {
+        const scrollView = this.node.getChildByPath("Content/tabContents/SummaryContent/PeriodicSettlement").getComponent(ScrollView);
+        for (let i = 0; i < this._selectSettleViewOffsetHeight.length; i++) {
+            const offset = this._selectSettleViewOffsetHeight[i];
+            if (offset >= 0 && scrollView.getScrollOffset().y <= offset) {
+                this._selectSettleIndex = i;
+                this._refreshSettleButtons();
+                break;
+            }
+        }
+    }
+
+    //----------------------------------- setting
     private onBgmVolumeChanged() {
         const bgmSlider = this.node.getChildByPath("Content/tabContents/SettingsContent/musicVolumeSlider").getComponent(Slider);
         AudioMgr.instance.changeMusicVolume(bgmSlider.progress);
@@ -323,6 +332,7 @@ export class PlayerInfoUI extends PopUpUI {
         this._refreshUI();
         this._langSelectView.active = false;
     }
+
     private onTapLangSelectClose() {
         this._langSelectView.active = false;
     }

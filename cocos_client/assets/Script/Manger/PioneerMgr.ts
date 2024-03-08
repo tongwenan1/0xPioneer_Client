@@ -1478,7 +1478,6 @@ export default class PioneerMgr {
             let deadPioneer = null;
             if (selfAttack) {
                 const damage: number = Math.max(0, attacker.attack - defenderDefned);
-                console.log("exce attack: " + damage);
                 if (damage > 0) {
                     defenderHp = Math.max(0, defenderHp - damage);
                     if (defender instanceof MapPioneerModel) {
@@ -1523,7 +1522,6 @@ export default class PioneerMgr {
                 }
             } else {
                 const damage: number = Math.max(0, defenderAttack - attacker.defend);
-                console.log("exce d: " + damage);
                 if (damage > 0) {
                     attacker.loseHp(damage);
                     for (const observe of this._observers) {
