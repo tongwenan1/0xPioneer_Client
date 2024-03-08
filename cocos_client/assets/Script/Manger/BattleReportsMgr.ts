@@ -1,9 +1,5 @@
-import {Vec2} from "cc";
 import EventMgr from "db://assets/Script/Manger/EventMgr";
 import {EventName} from "db://assets/Script/Const/ConstDefine";
-import {PioneerMgrEvent} from "db://assets/Script/Manger/PioneerMgr";
-import MapPioneerModel, {MapPioneerActionType, MapPioneerLogicModel} from "db://assets/Script/Game/Outer/Model/MapPioneerModel";
-import {TilePos} from "db://assets/Script/Game/TiledMap/TileTool";
 import BranchEventMgr, {BranchEventMgrEvent} from "db://assets/Script/Manger/BranchEventMgr";
 import ConfigMgr from "db://assets/Script/Manger/ConfigMgr";
 
@@ -24,7 +20,7 @@ export interface BattleReportsEvent {
     onBattleReportListChanged?(): void;
 }
 
-export default class BattleReportsMgr implements PioneerMgrEvent, BranchEventMgrEvent {
+export default class BattleReportsMgr implements BranchEventMgrEvent {
     private static _instance: BattleReportsMgr = null;
     private _storage: BattleReportRecord[];
     private readonly LOCAL_STORAGE_KEY: string = 'local_battle_reports';
@@ -155,49 +151,6 @@ export default class BattleReportsMgr implements PioneerMgrEvent, BranchEventMgr
             rewards: BranchEventMgr.Instance.getEventItemRewards(currentEventId),
         });
     }
-    //#endregion
-
-
-    //#region PioneerMgrEvent
-    pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void {}
-
-    pioneerDidGainHpMax(pioneerId: string, value: number): void {}
-    pioneerDidGainAttack(pioneerId: string, value: number): void {}
-    pioneerLoseHp(pioneerId: string, value: number): void {}
-    pionerrRebirthCount(pioneerId: string, count: number): void {}
-    pioneerRebirth(pioneerId: string): void {}
-
-    pioneerDidShow(pioneerId: string): void {}
-    pioneerDidHide(pioneerId: string): void {}
-
-    pioneerDidNonFriendly(pioneerId: string): void {}
-    pioneerDidFriendly(pioneerId: string): void {}
-
-    addNewOnePioneer(newPioneer: MapPioneerModel): void {}
-    destroyOnePioneer(pioneerId: string): void {}
-
-    pioneerTaskBeenGetted(pioneerId: string, taskId: string): void {}
-    showGetTaskDialog(task: any): void {}
-
-    beginFight(fightId: string, attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void {}
-    fightDidAttack(fightId: string, attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void {}
-    endFight(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string): void {}
-
-    exploredPioneer(pioneerId: string): void {}
-    exploredBuilding(buildingId: string): void {}
-
-    miningBuilding(actionPioneerId: string, buildingId: string): void {}
-    eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {}
-
-    pioneerTaskHideTimeCountChanged(pioneerId: string, timeCount: number): void {}
-    pioneerTaskCdTimeCountChanged(pioneerId: string, timeCount: number): void {}
-    pioneerLogicMovePathPrepared(pioneer: MapPioneerModel): void {}
-    pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void {}
-    pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void {}
-
-    pioneerShowCount(pioneerId: string, count: number): void {}
-
-    playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {}
     //#endregion
 
     //#region BattleReportsEvent stub
