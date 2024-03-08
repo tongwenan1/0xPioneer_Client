@@ -148,7 +148,6 @@ export default class BuildingMgr {
         const findBuilding = this.getBuildingById(buidingId);
         if (findBuilding != null) {
             findBuilding.eventId = eventId;
-            console.log('exce o: ' + eventId);
             this._savePioneerData();
         }
     }

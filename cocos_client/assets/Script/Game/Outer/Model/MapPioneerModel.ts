@@ -36,36 +36,102 @@ export enum MapPioneerMoveDirection {
     bottom = "bottom",
 }
 
+export enum MapPioneerAttributesChangeType {
+    ADD = 1,
+    MUL = 2,
+}
+
 export enum MapPioneerEventStatus {
     None,
     Waiting,
     Waited
 }
 
+export interface MapPioneerAttributesChangeModel {
+    type: MapPioneerAttributesChangeType;
+    value: number;
+}
+
 export default class MapPioneerModel {
+    // hp
+    public gainOriginalHpMax(value: number) {
+        this._originalHpMax += value;
 
-    public loseHpMax(value: number) {
-        this._hpMax = Math.max(1, this.hpMax - value);
-        this._hp = this._hpMax;
+        this._hpMax = this._originalHpMax;
+        for (const model of this._hpMaxChanges) {
+            if (model.type == MapPioneerAttributesChangeType.ADD) {
+                this._hpMax += model.value;
+            } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+                this._hpMax += (model.value * this._originalHpMax);
+            }
+        }
+        this._hpMax = Math.max(1, this._hpMax);
+        if (this._hp > this._hpMax) {
+            this._hp = this._hpMax;
+        }
     }
-    public loseAttack(value: number) {
-        this._attack = Math.max(0, this._attack - value);
-    }
-
-    public loseHp(value: number) {
-        this._hp = Math.max(0, this._hp - value);
+    public changeHpMax(model: MapPioneerAttributesChangeModel) {
+        this._hpMaxChanges.push(model);
+        if (model.type == MapPioneerAttributesChangeType.ADD) {
+            this._hpMax += model.value;
+        } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+            this._hpMax += (model.value * this._originalHpMax);
+        }
+        this._hpMax = Math.max(1, this._hpMax);
+        if (this._hp > this._hpMax) {
+            this._hp = this._hpMax;
+        }
     }
     public gainHp(value: number) {
         this._hp = Math.min(this._hpMax, this._hp + value);
     }
-    public changeHpMax(value: number, forceChangeHp: boolean = false) {
-        this._hpMax = Math.max(1, this._hpMax + value);
-        if (forceChangeHp) {
-            this._hp = this._hpMax;
-        }
+    public loseHp(value: number) {
+        this._hp = Math.max(0, this._hp - value);
     }
-    public gainAttack(value: number) {
-        this._attack += value;
+    // attack
+    public gainOriginalAttack(value: number) {
+        this._originalAttack += value;
+        this._attack = this._originalAttack;
+        for (const model of this._attackChanges) {
+            if (model.type == MapPioneerAttributesChangeType.ADD) {
+                this._attack += model.value;
+            } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+                this._attack += (model.value * this._originalAttack);
+            }
+        }
+        this._attack = Math.max(0, this._attack);
+    }
+    
+    public changeAttack(model: MapPioneerAttributesChangeModel) {
+        this._attackChanges.push(model);
+        if (model.type == MapPioneerAttributesChangeType.ADD) {
+            this._attack += model.value;
+        } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+            this._attack += (model.value * this._originalAttack);
+        }
+        this._attack = Math.max(0, this._attack);
+    }
+    // defend
+    public gainOriginalDefend(value: number) {
+        this._originalDefend += value;
+        this._defend = this._originalDefend;
+        for (const model of this._defendChanges) {
+            if (model.type == MapPioneerAttributesChangeType.ADD) {
+                this._defend += model.value;
+            } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+                this._defend += (model.value * this._originalDefend);
+            }
+        }
+        this._defend = Math.max(0, this._defend);
+    }
+    public changeDefend(model: MapPioneerAttributesChangeModel) {
+        this._defendChanges.push(model);
+        if (model.type == MapPioneerAttributesChangeType.ADD) {
+            this._defend += model.value;
+        } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+            this._defend += (model.value * this._originalDefend);
+        }
+        this._defend = Math.max(0, this._defend);
     }
 
     public isMoving() {
@@ -168,15 +234,39 @@ export default class MapPioneerModel {
     public get name(): string {
         return this._name;
     }
+    public get originalHpMax(): number {
+        return this._originalHpMax;
+    }
     public get hpMax(): number {
         return this._hpMax;
     }
     public get hp(): number {
         return this._hp;
     }
+    public get hpMaxChange(): MapPioneerAttributesChangeModel[] {
+        return this._hpMaxChanges;
+    }
+
+    public get originalAttack(): number {
+        return this._originalAttack;
+    }
     public get attack(): number {
         return this._attack;
     }
+    public get attackChange(): MapPioneerAttributesChangeModel[] {
+        return this._attackChanges;
+    }
+
+    public get originalDefend(): number {
+        return this._originalDefend;
+    }
+    public get defend(): number {
+        return this._defend;
+    }
+    public get defendChange(): MapPioneerAttributesChangeModel[] {
+        return this._defendChanges;
+    }
+
     public get stayPos(): Vec2 {
         return this._stayPos;
     }
@@ -218,7 +308,7 @@ export default class MapPioneerModel {
     }
 
 
-    public constructor(show: boolean, showCountTime: number, id: string, friendly: boolean, type: MapPioneerType, name: string, hpMax: number, hp: number, attack: number, stayPos: Vec2) {
+    public constructor(show: boolean, showCountTime: number, id: string, friendly: boolean, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
         this._show = show;
         this._showCountTime = showCountTime;
         this._id = id;
@@ -226,9 +316,20 @@ export default class MapPioneerModel {
         this._type = type;
         this._name = name;
         this._stayPos = stayPos;
+
+        this._originalHpMax = originalHpMax;
         this._hpMax = hpMax;
         this._hp = hp;
+        this._hpMaxChanges = [];
+
+        this._originalAttack = originalAttack;
         this._attack = attack;
+        this._attackChanges = [];
+
+        this._originalDefend = originalDefend,
+        this._defend = defend;
+        this._defendChanges = [];
+
         this._movePaths = [];
         this._actionType = MapPioneerActionType.idle;
         this._actionEventId = null;
@@ -250,9 +351,20 @@ export default class MapPioneerModel {
     private _animType: string;
     private _moveDirection: MapPioneerMoveDirection;
     private _name: string;
+
+    private _originalHpMax: number;
     private _hpMax: number;
     private _hp: number;
+    private _hpMaxChanges: MapPioneerAttributesChangeModel[];
+
+    private _originalAttack: number;
     private _attack: number;
+    private _attackChanges: MapPioneerAttributesChangeModel[];
+
+    private _originalDefend: number;
+    private _defend: number;
+    private _defendChanges: MapPioneerAttributesChangeModel[];
+
     private _stayPos: Vec2;
     private _movePaths: TilePos[];
     private _actionType: MapPioneerActionType;
@@ -288,8 +400,8 @@ export class MapPlayerPioneerModel extends MapPioneerModel {
         this._rebirthCountTime = value;
     }
 
-    public constructor(show: boolean, showCountTime: number, id: string, friendly: boolean, type: MapPioneerType, name: string, hpMax: number, hp: number, attack: number, stayPos: Vec2) {
-        super(show, showCountTime, id, friendly, type, name, hpMax, hp, attack, stayPos);
+    public constructor(show: boolean, showCountTime: number, id: string, friendly: boolean, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
+        super(show, showCountTime, id, friendly, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
         this._rebirthCountTime = 0;
     }
 
@@ -324,8 +436,8 @@ export class MapNpcPioneerModel extends MapPioneerModel {
         return this._taskCdEndTime;
     }
 
-    public constructor(show: boolean, showCountTime: number, id: string, friendly: boolean, type: MapPioneerType, name: string, hpMax: number, hp: number, attack: number, stayPos: Vec2) {
-        super(show, showCountTime, id, friendly, type, name, hpMax, hp, attack, stayPos);
+    public constructor(show: boolean, showCountTime: number, id: string, friendly: boolean, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
+        super(show, showCountTime, id, friendly, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
         this._taskObj = null;
         this._hideTaskIds = [];
         this._taskHideTime = -1;

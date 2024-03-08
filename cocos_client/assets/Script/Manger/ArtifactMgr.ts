@@ -1,6 +1,9 @@
 import { resources, sys } from "cc";
 import ArtifactData, { ArtifactConfigData, ArtifactEffectConfigData, ArtifactProp, ArtifactPropValueType } from "../Model/ArtifactData";
 import UserInfoMgr, { FinishedEvent } from "./UserInfoMgr";
+import PioneerMgr from "./PioneerMgr";
+import { MapPioneerAttributesChangeModel } from "../Game/Outer/Model/MapPioneerModel";
+import { json } from "node:stream/consumers";
 
 export enum ArtifactArrangeType {
     Recently = "Recently",
@@ -108,6 +111,29 @@ export default class ArtifactMgr {
                 this._localArtifactDatas.push(artifact);
             }
 
+            if (artifactConfig.effect != null) {
+                for (const temple of artifactConfig.effect) {
+                    const effectData = this.getArtifactEffectConf(temple);
+
+                }
+            }
+            if (artifactConfig.prop != null) {
+                for (let j = 0; j < artifactConfig.prop.length; j++) {
+                    const propType: ArtifactProp = artifactConfig.prop[j];
+                    const propValue = artifactConfig.prop_value[j];
+                    if (propType == ArtifactProp.HP) {
+                        PioneerMgr.instance.pioneerChangeAllPlayerHpMax({
+                            type: propValue[0],
+                            value: propValue[1] * artifact.count,
+                        });
+                    } else if (propType == ArtifactProp.ATTACK) {
+                        PioneerMgr.instance.pioneerChangeAllPlayerAttack({
+                            type: propValue[0],
+                            value: propValue[1] * artifact.count,
+                        });
+                    }
+                }
+            }
         }
         if (changed) {
             for (const observe of this._observers) {

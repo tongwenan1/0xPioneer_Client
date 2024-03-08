@@ -368,8 +368,9 @@ export default class UserInfoMgr {
                 }
             }
 
+            // hpmax
             if (nextLvConfig[0].hp_max > 0) {
-                PioneerMgr.instance.changeAllMyPioneerHpMax(nextLvConfig[0].hp_max);
+                PioneerMgr.instance.pioneerChangeAllPlayerOriginalHpMax(nextLvConfig[0].hp_max);
             }
 
             // event_building

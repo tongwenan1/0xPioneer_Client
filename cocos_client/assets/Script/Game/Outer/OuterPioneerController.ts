@@ -9,7 +9,7 @@ import TaskMgr from '../../Manger/TaskMgr';
 import UserInfoMgr, { UserInfoEvent, FinishedEvent } from '../../Manger/UserInfoMgr';
 import { TilePos } from '../TiledMap/TileTool';
 import { BuildingFactionType, MapResourceBuildingModel } from './Model/MapBuildingModel';
-import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel, MapPioneerMoveDirection, MapPioneerActionType, MapPioneerLogicModel, MapPioneerLogicType } from './Model/MapPioneerModel';
+import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel, MapPioneerMoveDirection, MapPioneerActionType, MapPioneerLogicModel, MapPioneerLogicType, MapPioneerAttributesChangeModel } from './Model/MapPioneerModel';
 import { OuterFightView } from './View/OuterFightView';
 import { OuterOtherPioneerView } from './View/OuterOtherPioneerView';
 import { MapItemMonster } from './View/MapItemMonster';
@@ -20,11 +20,10 @@ import { OuterMapCursorView } from './View/OuterMapCursorView';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemMgr from '../../Manger/ItemMgr';
 import ItemData, { ItemType } from '../../Model/ItemData';
-import DropMgr from '../../Manger/DropMgr';
-import CommonTools from '../../Tool/CommonTools';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 import ArtifactMgr from '../../Manger/ArtifactMgr';
 import { ArtifactEffectType } from '../../Model/ArtifactData';
+import SettlementMgr from '../../Manger/SettlementMgr';
 
 
 const { ccclass, property } = _decorator;
@@ -454,12 +453,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         this._refreshUI();
     }
 
-    pioneerDidGainHpMax(pioneerId: string, value: number): void {
+    pioneerHpMaxChanged(pioneerId: string): void {
         this._refreshUI();
-
     }
-    pioneerDidGainAttack(pioneerId: string, value: number): void {
-        this._refreshUI();
+    pioneerAttackChanged(pioneerId: string): void {
+        this._refreshUI();   
     }
     pioneerLoseHp(pioneerId: string, value: number): void {
 
@@ -528,6 +526,14 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         }
         // find task to finish
         if (isDeadPionner) {
+            SettlementMgr.instance.insertSettlement({
+                level: UserInfoMgr.Instance.level,
+                newPioneerIds: [],
+                killEnemies: 1,
+                gainResources: 0,
+                exploredEvents: 0,
+            });
+
             UserInfoMgr.Instance.checkCanFinishedTask("killpioneer", deadId);
             const deadPioneer = PioneerMgr.instance.getPioneerById(deadId);
             if (deadPioneer != null && !deadPioneer.friendly) {
@@ -535,15 +541,15 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 if (deadPioneer.drop != null) {
                     ItemConfigDropTool.getItemByConfig(deadPioneer.drop);
                 }
+                
+            }
+        } else {
+            //building
+            UserInfoMgr.Instance.checkCanFinishedTask("destroybuilding", deadId);
 
-            } else {
-                //building
-                UserInfoMgr.Instance.checkCanFinishedTask("destroybuilding", deadId);
-
-                const deadBuilding = BuildingMgr.instance.getBuildingById(deadId);
-                if (deadBuilding != null && deadBuilding.faction == BuildingFactionType.enemy) {
-                    UserInfoMgr.Instance.explorationValue += deadBuilding.winprogress;
-                }
+            const deadBuilding = BuildingMgr.instance.getBuildingById(deadId);
+            if (deadBuilding != null && deadBuilding.faction == BuildingFactionType.enemy) {
+                UserInfoMgr.Instance.explorationValue += deadBuilding.winprogress;
             }
         }
     }
@@ -565,10 +571,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     miningBuilding(actionPioneerId: string, buildingId: string): void {
         UserInfoMgr.Instance.checkCanFinishedTask("getresourcereached", buildingId);
         const building = BuildingMgr.instance.getBuildingById(buildingId);
-        if (building != null) {
-            if (building.progress > 0) UserInfoMgr.Instance.explorationValue += building.progress;
-            if (building.exp > 0) UserInfoMgr.Instance.exp += building.exp;
-        }
         if (building != null && building instanceof MapResourceBuildingModel) {
             if (building.resources != null && building.resources.length > 0) {
                 let isPlayer: boolean = false;
@@ -587,14 +589,25 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resultNum, () => {
                         ItemMgr.Instance.addItem([new ItemData(parseInt(resource.id), resultNum)]);
                     });
+                    SettlementMgr.instance.insertSettlement({
+                        level: UserInfoMgr.Instance.level,
+                        newPioneerIds: [],
+                        killEnemies: 0,
+                        gainResources: resultNum,
+                        exploredEvents: 0,
+                    });
                 }
             }
+        }
+        if (building != null) {
+            if (building.progress > 0) UserInfoMgr.Instance.explorationValue += building.progress;
+            if (building.exp > 0) UserInfoMgr.Instance.exp += building.exp;
         }
     }
     eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
         const event = BranchEventMgr.Instance.getEventById(eventId);
         if (event.length > 0) {
-            GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, number>, fightOver: (succeed: boolean) => void) => {
+            GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
                 PioneerMgr.instance.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
             }, (nextEvent: any) => {
                 PioneerMgr.instance.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);

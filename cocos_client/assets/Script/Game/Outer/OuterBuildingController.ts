@@ -210,10 +210,10 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void {
         
     }
-    pioneerDidGainHpMax(pioneerId: string, value: number): void {
+    pioneerHpMaxChanged(pioneerId: string): void {
         
     }
-    pioneerDidGainAttack(pioneerId: string, value: number): void {
+    pioneerAttackChanged(pioneerId: string): void {
         
     }
     pioneerLoseHp(pioneerId: string, value: number): void {
