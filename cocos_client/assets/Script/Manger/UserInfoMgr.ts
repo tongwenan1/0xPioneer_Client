@@ -18,6 +18,12 @@ export interface UserInnerBuildInfo {
     buildName: string,
 }
 
+export enum InnerBuildingType {
+    MainCity = "0",
+    Barrack = "3",
+    House = "4" 
+}
+
 export interface ResourceModel {
     id: string;
     num: number
@@ -216,7 +222,7 @@ export default class UserInfoMgr {
             }
         }
     }
-    public upgradeBuild(buildID: string) {
+    public upgradeBuild(buildID: InnerBuildingType) {
         const buildInfo = this._innerBuilds.get(buildID);
         if (buildInfo != null) {
             buildInfo.buildLevel += 1;

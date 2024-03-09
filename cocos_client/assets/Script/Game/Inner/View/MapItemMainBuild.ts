@@ -4,7 +4,7 @@ import { EventName } from '../../../Const/ConstDefine';
 import { GameMain } from '../../../GameMain';
 import ArtifactMgr from '../../../Manger/ArtifactMgr';
 import EventMgr from '../../../Manger/EventMgr';
-import UserInfoMgr, { UserInnerBuildInfo } from '../../../Manger/UserInfoMgr';
+import UserInfoMgr, { InnerBuildingType, UserInnerBuildInfo } from '../../../Manger/UserInfoMgr';
 import { ArtifactEffectType } from '../../../Model/ArtifactData';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 
@@ -30,13 +30,8 @@ export class MapItemMainBuild extends MapItem {
     override _onClick() {
         super._onClick();
 
-        if (GameMain.inst.UI.mainBuildUI.isShow) {
-            GameMain.inst.UI.mainBuildUI.show(false);
-        }
-        else {
-
-            GameMain.inst.UI.mainBuildUI.show(true);
-        }
+        GameMain.inst.UI.buildingUpgradeUI.refreshUI();
+        GameMain.inst.UI.buildingUpgradeUI.show(true);
     }
 
     public upgradeBuild() {
@@ -59,7 +54,7 @@ export class MapItemMainBuild extends MapItem {
 
         this.buildingAnim.active = true;
         this.scheduleOnce(() => {
-            UserInfoMgr.Instance.upgradeBuild('0');
+            UserInfoMgr.Instance.upgradeBuild(InnerBuildingType.MainCity);
 
             this.refresh();
             this._buildUpgrading = false;
@@ -69,8 +64,6 @@ export class MapItemMainBuild extends MapItem {
 
     async start() {
         super.start();
-
-        EventMgr.on(EventName.MAIN_BUILD_LEVEL_UP, this.upgradeBuild, this)
 
         this.buildInfoUI = this.node.getChildByName('innerBuildUI')?.getComponent(InnerBuildUI);
         const innerBuildData = await UserInfoMgr.Instance.innerBuilds;

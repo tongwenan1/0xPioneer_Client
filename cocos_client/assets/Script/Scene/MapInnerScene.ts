@@ -1,38 +1,38 @@
-import { _decorator, Vec3,Node, Animation, Prefab, instantiate, log, Component } from 'cc';
+import { _decorator, Vec3, Node, Animation, Prefab, instantiate, log, Component } from 'cc';
+import { InnerBuildingType } from '../Manger/UserInfoMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapInnerScene')
 export class MapInnerScene extends Component {
 
     @property(Prefab)
-    private buildAnimPfb:Prefab;
+    private buildAnimPfb: Prefab;
 
-    public buildAnimNode:Node;
-
+    private _buidingAnimMap: Map<InnerBuildingType, Node> = null;
     start() {
-        let node = instantiate(this.buildAnimPfb);
-        node.setParent(this.node);
-        node.active = false;
-        node.layer = this.node.layer;
-
-        this.buildAnimNode = node;
-        // this.buildAnimNode = node.getComponent(Animation);
+        this._buidingAnimMap = new Map();
     }
 
-
-    playBuildAnim(parent: Node,time:number,callback:Function = null) {
-        this.buildAnimNode.setParent(parent);
-        this.buildAnimNode.active = true;
-        this.buildAnimNode.setPosition(new Vec3(0,0,0));
-
-        this.scheduleOnce(()=>{
-            this.buildAnimNode.active = false;
-            callback &&callback();
-        },time);
+    isUpgrading(buildingType: InnerBuildingType) {
+        return this._buidingAnimMap.has(buildingType);
+    }
+    playBuildAnim(buildingType: InnerBuildingType, parent: Node, time: number, callback: () => void = null) {
+        const anim = instantiate(this.buildAnimPfb);
+        anim.setParent(parent);
+        anim.active = true;
+        anim.setPosition(new Vec3(0, 0, 0));
+        this._buidingAnimMap.set(buildingType, anim);
+        this.scheduleOnce(() => {
+            anim.destroy();
+            this._buidingAnimMap.delete(buildingType);
+            if (callback != null) {
+                callback();
+            }
+        }, time);
     }
 
     update(deltaTime: number) {
-        
+
     }
 }
 

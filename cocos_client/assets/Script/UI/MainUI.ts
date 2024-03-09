@@ -20,8 +20,6 @@ import { TreasureGettedUI } from './TreasureGettedUI';
 import { TaskListUI } from './TaskListUI';
 import { BackpackUI } from './BackpackUI';
 import { ItemInfoUI } from './ItemInfoUI';
-import { FactoryInfoUI } from './Inner/FactoryInfoUI';
-import { MainBuildUI } from './Inner/MainBuildUI';
 import { DialogueUI } from './Outer/DialogueUI';
 import { RecruitUI } from './Inner/RecruitUI';
 import { EventName } from '../Const/ConstDefine';
@@ -35,6 +33,7 @@ import { NewSettlementUI } from './NewSettlementUI';
 import SettlementMgr from '../Manger/SettlementMgr';
 import {LootsPopup} from "db://assets/Script/UI/LootsPopup";
 import BattleReportsMgr, {BattleReportsEvent} from "db://assets/Script/Manger/BattleReportsMgr";
+import { BuildingUpgradeUI } from './Inner/BuildingUpgradeUI';
 
 const { ccclass, property } = _decorator;
 
@@ -46,12 +45,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
     @property([ImageAsset])
     cursorImages: ImageAsset[] = [];
-
-    @property(Prefab)
-    mainBuildUIPfb: Prefab;
-
-    @property(Prefab)
-    factoryInfoUIPfb: Prefab;
 
     @property(Prefab)
     private dialoguePrefab: Prefab;
@@ -71,6 +64,8 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     private playerInfoPrefab: Prefab;
     @property(Prefab)
     private newSettlementPrfab: Prefab;
+    @property(Prefab)
+    private buildingUpgradePrefab: Prefab;
 
     @property(Prefab)
     BackpackUIPfb: Prefab;
@@ -93,8 +88,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     @property([SpriteFrame])
     ResourceIconSpriteFrame: SpriteFrame[] = [];
 
-    public mainBuildUI: MainBuildUI;
-    public factoryInfoUI: FactoryInfoUI;
 
     public dialogueUI: DialogueUI;
     public serectGuardGettedUI: SecretGuardGettedUI;
@@ -105,6 +98,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     public civilizationLevelUpUI: CivilizationLevelUpUI;
     public playerInfoUI: PlayerInfoUI;
     public newSettlementUI: NewSettlementUI;
+    public buildingUpgradeUI: BuildingUpgradeUI;
 
     public backpackUI: BackpackUI;
     public itemInfoUI: ItemInfoUI;
@@ -149,16 +143,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     }
 
     async start() {
-
-        let mainBuildUINode = instantiate(this.mainBuildUIPfb);
-        mainBuildUINode.setParent(this.UIRoot);
-
-        let factoryInfoUINode = instantiate(this.factoryInfoUIPfb);
-        factoryInfoUINode.setParent(this.UIRoot);
-        factoryInfoUINode.active = false;
-
-        this.factoryInfoUI = factoryInfoUINode.getComponent(FactoryInfoUI);
-
         this.dialogueUI = instantiate(this.dialoguePrefab).getComponent(DialogueUI);
         this.dialogueUI.node.setParent(this.UIRoot);
         this.dialogueUI.node.active = false;
@@ -195,6 +179,10 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         this.newSettlementUI = instantiate(this.newSettlementPrfab).getComponent(NewSettlementUI);
         this.newSettlementUI.node.setParent(this.UIRoot);
         this.newSettlementUI.node.active = false;
+
+        this.buildingUpgradeUI = instantiate(this.buildingUpgradePrefab).getComponent(BuildingUpgradeUI);
+        this.buildingUpgradeUI.node.setParent(this.UIRoot);
+        this.buildingUpgradeUI.node.active = false;
 
         this.backpackUI = instantiate(this.BackpackUIPfb).getComponent(BackpackUI);
         this.backpackUI.node.setParent(this.UIRoot);

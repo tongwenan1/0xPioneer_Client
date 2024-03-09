@@ -10,9 +10,8 @@ export enum EventName {
     /**
      * MainBuildUpgrade
      */
+    BUILD_BEGIN_UPGRADE = "BUILD_BEGIN_UPGRADE",
     MAIN_BUILD_LEVEL_UP = "MAIN_BUILD_LEVEL_UP",
-
-    BUILD_LEVEL_UP = "BUILD_LEVEL_UP",
 
     FIGHT_FINISHED = "FIGHT_FINISHED",
     MINING_FINISHED = "MINING_FINISHED",

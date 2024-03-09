@@ -1,8 +1,6 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt } from 'cc';
 import ItemData, { ItemConfigData, ItemType } from '../Model/ItemData';
 import { BackpackItem } from './BackpackItem';
-import { GameMain } from '../GameMain';
-import UserInfo from '../Manger/UserInfoMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import ItemMgr from '../Manger/ItemMgr';
 import CountMgr, { CountType } from '../Manger/CountMgr';

@@ -4,7 +4,7 @@ import { EventName } from '../../../Const/ConstDefine';
 import { GameMain } from '../../../GameMain';
 import EventMgr from '../../../Manger/EventMgr';
 import InnerBuildingMgr from '../../../Manger/InnerBuildingMgr';
-import UserInfoMgr, { UserInfoEvent, UserInnerBuildInfo, FinishedEvent } from '../../../Manger/UserInfoMgr';
+import UserInfoMgr, { UserInfoEvent, UserInnerBuildInfo, FinishedEvent, InnerBuildingType } from '../../../Manger/UserInfoMgr';
 import CommonTools from '../../../Tool/CommonTools';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import CountMgr, { CountType } from '../../../Manger/CountMgr';
@@ -35,33 +35,25 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
     private _recruitCountTime: Label = null;
     override _onClick() {
         super._onClick();
-
-        if (this._upgradeIng) {
-
+        if (GameMain.inst.innerSceneMap.isUpgrading(this.buildID as InnerBuildingType)) {
             // useLanMgr
             GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201001"));
             // GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
-
             return;
         }
-
         if (this.buildData == null) {
             return;
         }
-        if (this.buildData.buildID == "3" && this.buildData.buildLevel > 0) {
+        if (this.buildData.buildID == InnerBuildingType.Barrack &&
+            this.buildData.buildLevel > 0) {
             if (UserInfoMgr.Instance.isGeneratingTroop) {
-                
                 // useLanMgr
                 GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201002"));
                 // GameMain.inst.UI.ShowTip("Recruiting…Please wait…");
-
                 return;
             }
             GameMain.inst.UI.recruitUI.show(true);
             GameMain.inst.UI.recruitUI.refreshUI(true);
-        } else {
-            GameMain.inst.UI.factoryInfoUI.refreshUI(this.buildData);
-            GameMain.inst.UI.factoryInfoUI.show(true);
         }
     }
 
@@ -70,6 +62,7 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
             this._recruitCountTime = this.node.getChildByName("RecruitTime").getComponent(Label);
             this._recruitCountTime.node.active = false;
         }
+        EventMgr.on(EventName.BUILD_BEGIN_UPGRADE, this._onBeginUpgrade, this);
     }
 
     start() {
@@ -77,8 +70,6 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
         const innerBuildData = UserInfoMgr.Instance.innerBuilds;
         this.buildData = innerBuildData.get(this.buildID);
         this.refresh();
-
-        EventMgr.on(EventName.BUILD_LEVEL_UP, this.onLevelUP, this);
         UserInfoMgr.Instance.addObserver(this);
     }
 
@@ -111,83 +102,16 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
         this.buildInfoUI.node.setSiblingIndex(999);
     }
 
-    onLevelUP(buildId) {
-        if (buildId != this.buildID) {
+    private _onBeginUpgrade(data: { buildingType: InnerBuildingType, time: number }) {
+        if (data.buildingType != this.buildID) {
             return;
         }
-        this.onUpgrade();
+        GameMain.inst.innerSceneMap.playBuildAnim(data.buildingType, this.node, data.time, () => {
+            this.refresh();
+            this._upgradeIng = false;
+        });
+        this.buildInfoUI.setProgressTime(data.time);
     }
-
-    onUpgrade() {
-        if (this._upgradeIng) {
-
-            // useLanMgr
-            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201003"));
-            // GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
-
-            return;
-        }
-        let canUpgrade: boolean = true;
-        const buildingInfo = InnerBuildingMgr.Instance.getInfoById(this.buildData.buildID);
-        if (this.buildData.buildLevel < buildingInfo.maxLevel) {
-
-            // artifact effect
-            const artifactPropEff = ArtifactMgr.Instance.getPropEffValue();
-            let artifactTime = 0;
-            if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME]) {
-                artifactTime = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME];
-            }
-            let artifactResource = 0;
-            if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVLUP_RESOURCE]) {
-                artifactResource = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVLUP_RESOURCE];
-            }
-
-            // resource save waiting changed
-            const nextLevelInfo = buildingInfo.up[this.buildData.buildLevel + 1];
-            for (const resource of nextLevelInfo.cost) {
-                let needNum = resource.num;
-                // total num
-                needNum = Math.floor(needNum - (needNum * artifactResource));
-
-                if (ItemMgr.Instance.getOwnItemCount(parseInt(resource.type)) < needNum) {
-                    canUpgrade = false;
-                    break;
-                }
-            }
-            if (!canUpgrade) {
-
-                // useLanMgr
-                GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201004"));
-                // GameMain.inst.UI.ShowTip("Insufficient resources for building upgrades");
-                
-                return;
-            }
-            this._upgradeIng = true;
-            for (const resource of nextLevelInfo.cost) {
-                let needNum = resource.num;
-                // total num
-                needNum = Math.floor(needNum - (needNum * artifactResource));
-                ItemMgr.Instance.subItem(parseInt(resource.type), needNum);
-            }
-            UserInfoMgr.Instance.upgradeBuild(this.buildID);
-            UserInfoMgr.Instance.explorationValue += nextLevelInfo.progress;
-            // exp
-            if (nextLevelInfo.exp) UserInfoMgr.Instance.exp += nextLevelInfo.exp;
-
-
-            let up_time = 5;
-            // total time
-            up_time = Math.floor(up_time - (up_time * artifactTime));
-            if (up_time < 0) up_time = 1;
-
-            GameMain.inst.innerSceneMap.playBuildAnim(this.node, up_time, () => {
-                this.refresh();
-                this._upgradeIng = false;
-            });
-            this.buildInfoUI.setProgressTime(up_time);
-        }
-    }
-
 
     //---------------------------------------------------
     // UserInfoEvent

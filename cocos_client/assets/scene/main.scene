@@ -26,7 +26,7 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 1178
+      "__id__": 1181
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -57,7 +57,7 @@
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 1197
+      "__id__": 1203
     },
     "_id": "eb512d0d-3a1c-47e3-8de9-3f5eea38ba93"
   },
@@ -21864,8 +21864,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 23.81300000000001,
-      "y": 485.6310000000001,
+      "x": 23.814,
+      "y": -133.254,
       "z": 0
     },
     "_lrot": {
@@ -21904,12 +21904,12 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 846.082,
-      "height": 1168.847
+      "height": 400
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0.5,
-      "y": 0.5
+      "y": 0
     },
     "_id": "a0k+X7oTBAdawKpcJCvdXG"
   },
@@ -25595,16 +25595,16 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 1174
-      },
-      {
-        "__id__": 1175
-      },
-      {
-        "__id__": 1176
-      },
-      {
         "__id__": 1177
+      },
+      {
+        "__id__": 1178
+      },
+      {
+        "__id__": 1179
+      },
+      {
+        "__id__": 1180
       }
     ],
     "_prefab": null,
@@ -25653,10 +25653,10 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 1172
+        "__id__": 1175
       },
       {
-        "__id__": 1173
+        "__id__": 1176
       }
     ],
     "_prefab": null,
@@ -25715,7 +25715,10 @@
     },
     "targetOverrides": [
       {
-        "__id__": 1170
+        "__id__": 1171
+      },
+      {
+        "__id__": 1173
       }
     ]
   },
@@ -25752,6 +25755,9 @@
       },
       {
         "__id__": 1169
+      },
+      {
+        "__id__": 1170
       }
     ],
     "removedComponents": []
@@ -25904,6 +25910,19 @@
     }
   },
   {
+    "__type__": "CCPropertyOverrideInfo",
+    "targetInfo": {
+      "__id__": 1163
+    },
+    "propertyPath": [
+      "buildingUpgradePrefab"
+    ],
+    "value": {
+      "__uuid__": "56c2b44c-4cfe-4faf-85a7-46a68150be1e",
+      "__expectedType__": "cc.Prefab"
+    }
+  },
+  {
     "__type__": "cc.TargetOverrideInfo",
     "source": null,
     "sourceInfo": null,
@@ -25912,13 +25931,31 @@
     ],
     "target": null,
     "targetInfo": {
-      "__id__": 1171
+      "__id__": 1172
     }
   },
   {
     "__type__": "cc.TargetInfo",
     "localID": [
       "0eNXysEstHqbbU3HV8GmF1"
+    ]
+  },
+  {
+    "__type__": "cc.TargetOverrideInfo",
+    "source": null,
+    "sourceInfo": null,
+    "propertyPath": [
+      "battleReportsBtn"
+    ],
+    "target": null,
+    "targetInfo": {
+      "__id__": 1174
+    }
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "32WjICoxlEu4/ozfm5/TM0"
     ]
   },
   {
@@ -26063,16 +26100,13 @@
     "instance": null,
     "targetOverrides": [
       {
-        "__id__": 1179
+        "__id__": 1182
       },
       {
-        "__id__": 1181
+        "__id__": 1184
       },
       {
-        "__id__": 1183
-      },
-      {
-        "__id__": 1185
+        "__id__": 1186
       },
       {
         "__id__": 1188
@@ -26082,6 +26116,12 @@
       },
       {
         "__id__": 1194
+      },
+      {
+        "__id__": 1197
+      },
+      {
+        "__id__": 1200
       }
     ],
     "nestedPrefabInstanceRoots": [
@@ -26172,7 +26212,7 @@
       "__id__": 1154
     },
     "targetInfo": {
-      "__id__": 1180
+      "__id__": 1183
     }
   },
   {
@@ -26194,7 +26234,7 @@
       "__id__": 963
     },
     "targetInfo": {
-      "__id__": 1182
+      "__id__": 1185
     }
   },
   {
@@ -26216,7 +26256,7 @@
       "__id__": 1002
     },
     "targetInfo": {
-      "__id__": 1184
+      "__id__": 1187
     }
   },
   {
@@ -26231,7 +26271,7 @@
       "__id__": 1154
     },
     "sourceInfo": {
-      "__id__": 1186
+      "__id__": 1189
     },
     "propertyPath": [
       "leftUI"
@@ -26240,7 +26280,7 @@
       "__id__": 1154
     },
     "targetInfo": {
-      "__id__": 1187
+      "__id__": 1190
     }
   },
   {
@@ -26262,7 +26302,7 @@
       "__id__": 1154
     },
     "sourceInfo": {
-      "__id__": 1189
+      "__id__": 1192
     },
     "propertyPath": [
       "btnBuild"
@@ -26271,7 +26311,7 @@
       "__id__": 1154
     },
     "targetInfo": {
-      "__id__": 1190
+      "__id__": 1193
     }
   },
   {
@@ -26292,7 +26332,7 @@
       "__id__": 1154
     },
     "sourceInfo": {
-      "__id__": 1192
+      "__id__": 1195
     },
     "propertyPath": [
       "backpackBtn"
@@ -26301,7 +26341,7 @@
       "__id__": 1154
     },
     "targetInfo": {
-      "__id__": 1193
+      "__id__": 1196
     }
   },
   {
@@ -26322,7 +26362,7 @@
       "__id__": 1154
     },
     "sourceInfo": {
-      "__id__": 1195
+      "__id__": 1198
     },
     "propertyPath": [
       "artifactBtn"
@@ -26331,7 +26371,7 @@
       "__id__": 1154
     },
     "targetInfo": {
-      "__id__": 1196
+      "__id__": 1199
     }
   },
   {
@@ -26347,30 +26387,60 @@
     ]
   },
   {
-    "__type__": "cc.SceneGlobals",
-    "ambient": {
-      "__id__": 1198
+    "__type__": "cc.TargetOverrideInfo",
+    "source": {
+      "__id__": 1154
     },
-    "shadows": {
-      "__id__": 1199
-    },
-    "_skybox": {
-      "__id__": 1200
-    },
-    "fog": {
+    "sourceInfo": {
       "__id__": 1201
     },
-    "octree": {
+    "propertyPath": [
+      "battleReportsBtn"
+    ],
+    "target": {
+      "__id__": 1154
+    },
+    "targetInfo": {
       "__id__": 1202
-    },
-    "skin": {
-      "__id__": 1203
-    },
-    "lightProbeInfo": {
+    }
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "92ql88ShNJv6ynA4ZkCijk"
+    ]
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "3cCfU1XNRHSKvCa9LQv9dK"
+    ]
+  },
+  {
+    "__type__": "cc.SceneGlobals",
+    "ambient": {
       "__id__": 1204
     },
-    "postSettings": {
+    "shadows": {
       "__id__": 1205
+    },
+    "_skybox": {
+      "__id__": 1206
+    },
+    "fog": {
+      "__id__": 1207
+    },
+    "octree": {
+      "__id__": 1208
+    },
+    "skin": {
+      "__id__": 1209
+    },
+    "lightProbeInfo": {
+      "__id__": 1210
+    },
+    "postSettings": {
+      "__id__": 1211
     },
     "bakedWithStationaryMainLight": false,
     "bakedWithHighpLightmap": false
