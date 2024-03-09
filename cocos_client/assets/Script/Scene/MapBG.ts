@@ -17,7 +17,6 @@ import { OuterFogAnimShapMask } from '../Game/Outer/View/OuterFogAnimShapMask';
 import { OuterMapCursorView } from '../Game/Outer/View/OuterMapCursorView';
 import UserInfoMgr from '../Manger/UserInfoMgr';
 import LanMgr from '../Manger/LanMgr';
-import { copyFileSync } from 'fs';
 const { ccclass, property } = _decorator;
 
 @ccclass('CPrefabInfo')
@@ -108,6 +107,9 @@ export class MapBG extends Component {
     }
     public isBlock(mapPos: Vec2): boolean {
         return this._tiledhelper.Path_IsBlock(mapPos.x, mapPos.y);
+    }
+    public shadowErase(mapPos: Vec2) {
+        this._tiledhelper.Shadow_Earse(this._tiledhelper.getPos(mapPos.x, mapPos.y), 0, 6, false);
     }
 
 
@@ -871,7 +873,7 @@ export class MapBG extends Component {
                     dissolveImage = this.fogAnimDissolveImages[4];
                 } else if (data.direciton == TileHexDirection.RightTop) {
                     dissolveImage = this.fogAnimDissolveImages[5];
-                } 
+                }
                 if (dissolveImage == null) {
                     dissolveImage = this.fogAnimDissolveImages[0];
                 }

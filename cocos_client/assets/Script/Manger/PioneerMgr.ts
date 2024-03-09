@@ -513,7 +513,7 @@ export default class PioneerMgr {
                 let fightOver: boolean = false;
                 let deadPioneer = null;
                 if (selfAttack) {
-                    const damage = Math.max(0, attackerAttack - enemyDefend);
+                    const damage = Math.max(1, attackerAttack - enemyDefend);
                     if (damage > 0) {
                         enemyHp = Math.max(0, enemyHp - damage);
                         if (enemyHp <= 0) {
@@ -522,7 +522,7 @@ export default class PioneerMgr {
                         }
                     }
                 } else {
-                    const damage = Math.max(0, enemyAttack - attackerDefend);
+                    const damage = Math.max(1, enemyAttack - attackerDefend);
                     if (damage > 0) {
                         attacker.loseHp(damage);
                         for (const observe of this._observers) {
@@ -1500,7 +1500,7 @@ export default class PioneerMgr {
             let fightOver: boolean = false;
             let deadPioneer = null;
             if (selfAttack) {
-                const damage: number = Math.max(0, attacker.attack - defenderDefned);
+                const damage: number = Math.max(1, attacker.attack - defenderDefned);
                 if (damage > 0) {
                     defenderHp = Math.max(0, defenderHp - damage);
                     if (defender instanceof MapPioneerModel) {
@@ -1544,7 +1544,7 @@ export default class PioneerMgr {
                     }
                 }
             } else {
-                const damage: number = Math.max(0, defenderAttack - attacker.defend);
+                const damage: number = Math.max(1, defenderAttack - attacker.defend);
                 if (damage > 0) {
                     attacker.loseHp(damage);
                     for (const observe of this._observers) {

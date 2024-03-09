@@ -151,12 +151,22 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             // checkRookie
             if (!UserInfoMgr.Instance.isFinishRookie) {
                 const actionPioneer = PioneerMgr.instance.getCurrentPlayerPioneer();
-                const prophetess = PioneerMgr.instance.getPioneerByName("prophetess");
-                if (actionPioneer != null && prophetess != null) {
-                    const paths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(actionPioneer.stayPos, prophetess.stayPos);
-                    actionPioneer.purchaseMovingPioneerId = prophetess.id;
-                    PioneerMgr.instance.pioneerBeginMove(actionPioneer.id, paths);
+                if (actionPioneer != null) {
+                    const currentWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(actionPioneer.stayPos.x, actionPioneer.stayPos.y);
+                    GameMain.inst.MainCamera.node.worldPosition = currentWorldPos;
                 }
+                const currentWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(actionPioneer.stayPos.x, actionPioneer.stayPos.y);
+                GameMain.inst.MainCamera.node.worldPosition = currentWorldPos;
+
+                GameMain.inst.outSceneMap.mapBG.shadowErase(actionPioneer.stayPos);
+              
+                GameMain.inst.MainCamera.orthoHeight = 0.5 * GameMain.inst.MainCamera.orthoHeight;
+                // const prophetess = PioneerMgr.instance.getPioneerByName("prophetess");
+                // if (actionPioneer != null && prophetess != null) {
+                //     const paths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(actionPioneer.stayPos, prophetess.stayPos);
+                //     actionPioneer.purchaseMovingPioneerId = prophetess.id;
+                //     PioneerMgr.instance.pioneerBeginMove(actionPioneer.id, paths);
+                // }
             }
         }
     }
@@ -458,7 +468,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         this._refreshUI();
     }
     pioneerAttackChanged(pioneerId: string): void {
-        this._refreshUI();   
+        this._refreshUI();
     }
     pioneerLoseHp(pioneerId: string, value: number): void {
 
@@ -542,7 +552,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 if (deadPioneer.drop != null) {
                     ItemConfigDropTool.getItemByConfig(deadPioneer.drop);
                 }
-                
+
             }
         } else {
             //building
