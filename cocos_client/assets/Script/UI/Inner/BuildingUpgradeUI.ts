@@ -57,6 +57,8 @@ export class BuildingUpgradeUI extends PopUpUI {
         this._levelInfoView.active = false;
         this._levelInfoCostItem = this._levelInfoView.getChildByPath("Bg/UpgradeContent/Resource/Item");
         this._levelInfoCostItem.active = false;
+
+        EventMgr.on(EventName.CHANGE_LANG, this._onLangChang, this);
     }
 
     start() {
@@ -67,10 +69,12 @@ export class BuildingUpgradeUI extends PopUpUI {
     }
 
     onDestroy() {
-
+        EventMgr.off(EventName.CHANGE_LANG, this._onLangChang, this);
     }
 
-
+    private _onLangChang() {
+        this.refreshUI();
+    }
     
     private _refreshUpgradeUI(buildingType: InnerBuildingType) {
         const userInnerData = UserInfoMgr.Instance.innerBuilds.get(buildingType);

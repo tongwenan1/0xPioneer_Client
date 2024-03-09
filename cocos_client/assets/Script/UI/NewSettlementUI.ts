@@ -17,11 +17,18 @@ const { ccclass, property } = _decorator;
 export class NewSettlementUI extends PopUpUI {
     
     public refreshUI(beginLevel: number, endLevel: number) {
+        this._beginLevel = beginLevel;
+        this._endLevel = endLevel;
+        // useLanMgr 
+        // this.node.getChildByPath("SummaryContent/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("SummaryContent/BottomTitle").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         this.node.getChildByPath("SummaryContent/PeriodicSettlement/SettlementView").getComponent(SettlementView).refreshUI(beginLevel, endLevel);
     }
 
+    private _beginLevel: number;
+    private _endLevel: number;
     onLoad(): void {
-
+        EventMgr.on(EventName.CHANGE_LANG, this._onLangChanged, this);
     }
 
     start() {
@@ -33,7 +40,13 @@ export class NewSettlementUI extends PopUpUI {
     }
 
     onDestroy() {
-       
+        EventMgr.off(EventName.CHANGE_LANG, this._onLangChanged, this);
+    }
+
+    private _onLangChanged() {
+        if (this._beginLevel != null && this._endLevel != null) {
+            this.refreshUI(this._beginLevel, this._endLevel);
+        }
     }
 
     //----------------------------------------------------------------------

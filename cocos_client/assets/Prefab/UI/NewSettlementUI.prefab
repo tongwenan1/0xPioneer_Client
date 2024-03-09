@@ -506,6 +506,8 @@
       "__id__": 0
     },
     "fileId": "d3Jvqe1AlPMbGvyOr7d7Ki",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -842,7 +844,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Title-001",
+    "_name": "BottomTitle",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1364,6 +1366,8 @@
       "__id__": 0
     },
     "fileId": "270Kicmc5A5Ye91mMA6mDA",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {

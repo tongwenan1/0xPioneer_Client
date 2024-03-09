@@ -15,7 +15,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfoUI')
 export class PlayerInfoUI extends PopUpUI {
-    
+
 
     @property(Prefab)
     private settlementPrefab: Prefab = null;
@@ -38,7 +38,7 @@ export class PlayerInfoUI extends PopUpUI {
     private _settleUseSelectItems: Node[] = [];
 
     private _langSelectView: Node = null;
-    
+
 
     onLoad(): void {
 
@@ -78,12 +78,12 @@ export class PlayerInfoUI extends PopUpUI {
         this._langSelectView = this.node.getChildByName("OptionContainer");
         this._langSelectView.active = false;
 
-
         EventMgr.on(EventName.LOADING_FINISH, this._loadOver, this);
+        EventMgr.on(EventName.CHANGE_LANG, this._onChangeLang, this);
     }
 
     start() {
-        
+
     }
 
     update(deltaTime: number) {
@@ -91,7 +91,8 @@ export class PlayerInfoUI extends PopUpUI {
     }
 
     onDestroy() {
-       
+        EventMgr.off(EventName.LOADING_FINISH, this._loadOver, this);
+        EventMgr.off(EventName.CHANGE_LANG, this._onChangeLang, this);
     }
 
     //-------------------------------- function
@@ -100,7 +101,49 @@ export class PlayerInfoUI extends PopUpUI {
         this._refreshUI();
     }
 
+    private _onChangeLang() {
+        this._refreshUI();
+    }
+
     private _refreshUI() {
+        const infoView = this.node.getChildByPath("Content/tabContents/InfoContent");
+        const summaryView = this.node.getChildByPath("Content/tabContents/SummaryContent");
+        const achievementView = this.node.getChildByPath("Content/tabContents/AchievementContent");
+        const settingView = this.node.getChildByPath("Content/tabContents/SettingsContent");
+        const infoBtn = this.node.getChildByPath("Content/tabButtons/InfoBtn");
+        const summaryBtn = this.node.getChildByPath("Content/tabButtons/SummaryBtn");
+        const achievementBtn = this.node.getChildByPath("Content/tabButtons/AchievementsBtn");
+        const settingBtn = this.node.getChildByPath("Content/tabButtons/SettingsBtn");
+
+        const lang = new Map();
+        // useLanMgr 
+        // lang.set("eng", LanMgr.Instance.getLanById("107549"));
+        // lang.set("cn", LanMgr.Instance.getLanById("107549"));
+        lang.set("eng", "English");
+        lang.set("cn", "Chinese");
+
+        // useLanMgr
+        // infoBtn.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // summaryBtn.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // achievementBtn.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // settingBtn.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+
+        // infoView.getChildByPath("NextLevel/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549"); 
+
+        //  summaryView.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549"); 
+        //  summaryView.getChildByName("EmptyTip").getComponent(Label).string = LanMgr.Instance.getLanById("107549"); 
+
+        // settingView.getChildByName("Music").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // settingView.getChildByName("SFX").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // settingView.getChildByName("Language").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+
+        // this._changeNameView.getChildByPath("Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._changeNameView.getChildByPath("Content/UserName").getComponent(EditBox).placeholder = LanMgr.Instance.getLanById("107549");
+        // this._changeNameView.getChildByPath("Content/ConfirmButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+
+        this._langSelectView.getChildByPath("Content/English/Label").getComponent(Label).string = lang.get("eng");
+        this._langSelectView.getChildByPath("Content/Chinese/Label").getComponent(Label).string = lang.get("cn");
+
         for (let i = 0; i < this._tabViews.length; i++) {
             this._tabViews[i].active = i == this._selectIndex;
             this._tabButtons[i].getComponent(Sprite).grayscale = (i != this._selectIndex);
@@ -111,11 +154,24 @@ export class PlayerInfoUI extends PopUpUI {
             // info
             let currentLevel = UserInfoMgr.Instance.level;
             currentShowView.getChildByName("UserID").getComponent(Label).string = "ID:" + UserInfoMgr.Instance.playerID;
+            // useLanMgr 
+            // currentShowView.getChildByName("UserName").getComponent(Label).string = LanMgr.Instance.getLanById("107549") + ":" + UserInfoMgr.Instance.playerName;
             currentShowView.getChildByName("UserName").getComponent(Label).string = "Name:" + UserInfoMgr.Instance.playerName;
+
+            // useLanMgr 
+            // currentShowView.getChildByName("UserLCivilizationLv").getComponent(Label).string = LanMgr.Instance.getLanById("107549") + "  " + currentLevel;
             currentShowView.getChildByName("UserLCivilizationLv").getComponent(Label).string = "Civilization Level  " + currentLevel;
 
+            // useLanMgr 
+            // currentShowView.getChildByPath("RewardContent/CityVersion").getComponent(Label).string = ">" + LanMgr.Instance.getLanById("107549") + LvlupMgr.Instance.getTotalVisionByLvl(currentLevel);
             currentShowView.getChildByPath("RewardContent/CityVersion").getComponent(Label).string = "> City Vision Expand + " + LvlupMgr.Instance.getTotalVisionByLvl(currentLevel);
+
+            // useLanMgr 
+            // currentShowView.getChildByPath("RewardContent/ResGetRateUp").getComponent(Label).string = ">" + LanMgr.Instance.getLanById("107549") + LvlupMgr.Instance.getTotalExtraRateByLvl(currentLevel) * 100 + "%";
             currentShowView.getChildByPath("RewardContent/ResGetRateUp").getComponent(Label).string = "> Resources Gained + " + LvlupMgr.Instance.getTotalExtraRateByLvl(currentLevel) * 100 + "%";
+
+            // useLanMgr 
+            // currentShowView.getChildByPath("RewardContent/GetHpMax").getComponent(Label).string = ">" + LanMgr.Instance.getLanById("107549") + LvlupMgr.Instance.getTotalHpMaxByLvl(currentLevel);
             currentShowView.getChildByPath("RewardContent/GetHpMax").getComponent(Label).string = "> HP Max + " + LvlupMgr.Instance.getTotalHpMaxByLvl(currentLevel);
 
         } else if (this._selectIndex == 1) {
@@ -153,22 +209,22 @@ export class PlayerInfoUI extends PopUpUI {
                     let lastViewOffsetHeight: number = 0;
                     if (this._selectSettleViewOffsetHeight.length > 0) {
                         lastViewOffsetHeight = this._selectSettleViewOffsetHeight[this._selectSettleViewOffsetHeight.length - 1];
-                    } 
+                    }
                     this._selectSettleViewOffsetHeight.push(lastViewOffsetHeight + view.getComponent(UITransform).height);
-    
+
                     // button
                     const select = instantiate(this._settleSelectItem);
                     select.active = true;
                     selectItemContent.addChild(select);
                     select.getComponent(Button).clickEvents[0].customEventData = i.toString();
-                    select.getChildByName("Label").getComponent(Label).string = "C.Lv" + beginLevel + " - " + endLevel; 
+                    select.getChildByName("Label").getComponent(Label).string = "C.Lv" + beginLevel + " - " + endLevel;
                     this._settleUseSelectItems.push(select);
                 };
                 settleViewContent.getComponent(Layout).updateLayout();
                 selectItemContent.getComponent(Layout).updateLayout();
                 this._refreshSettleButtons();
             }
-            
+
 
         } else if (this._selectIndex == 2) {
             // setting
@@ -178,9 +234,7 @@ export class PlayerInfoUI extends PopUpUI {
             const effectSlider = currentShowView.getChildByName("sfxVolumeSlider").getComponent(Slider);
             effectSlider.progress = AudioMgr.instance.effectVolume;
 
-            const lang = new Map();
-            lang.set("eng", "English");
-            lang.set("cn", "Chinese");
+
             currentShowView.getChildByPath("LanguageMenu/LanguageBtn/Label").getComponent(Label).string = lang.get(this._selectLang);
 
         } else if (this._selectIndex == 3) {
@@ -190,6 +244,8 @@ export class PlayerInfoUI extends PopUpUI {
 
     private async _refreshNextLevelView() {
         const nextLevel = UserInfoMgr.Instance.level + 1;
+        // useLanMgr 
+        // this._nextLevelView.getChildByPath("NextLevelInfo/NextLevel").getComponent(Label).string = LanMgr.Instance.getLanById("107549") + "  " + nextLevel;
         this._nextLevelView.getChildByPath("NextLevelInfo/NextLevel").getComponent(Label).string = "Civilization Level  " + nextLevel;
 
         const rewardView = this._nextLevelView.getChildByPath("NextLevelInfo/RewardContent");
@@ -201,10 +257,14 @@ export class PlayerInfoUI extends PopUpUI {
             rewardView.active = true;
             const content = rewardView;
             content.getChildByName("CityVersion").active = levelConfig.city_vision != null && levelConfig.city_vision > 0;
+            // useLanMgr 
+            // content.getChildByName("CityVersion").getComponent(Label).string = "> "+ LanMgr.Instance.getLanById("107549") + " + " + levelConfig.city_vision;
             content.getChildByName("CityVersion").getComponent(Label).string = "> City Vision Expand + " + levelConfig.city_vision;
 
             if (levelConfig.extra_res != null && levelConfig.extra_res > 0) {
                 content.getChildByName("ResGetRateUp").active = true;
+                // useLanMgr 
+                // content.getChildByName("ResGetRateUp").getComponent(Label).string = "> " + LanMgr.Instance.getLanById("107549") + " + " + levelConfig.extra_res * 100 + "%!";
                 content.getChildByName("ResGetRateUp").getComponent(Label).string = "> Resources Gained + " + levelConfig.extra_res * 100 + "%!";
             } else {
                 content.getChildByName("ResGetRateUp").active = false;
@@ -212,6 +272,8 @@ export class PlayerInfoUI extends PopUpUI {
 
             if (levelConfig.hp_max != null && levelConfig.hp_max > 0) {
                 content.getChildByName("GetHpMax").active = true;
+                // useLanMgr 
+                // content.getChildByName("GetHpMax").getComponent(Label).string = "> " + LanMgr.Instance.getLanById("107549") + " + " + levelConfig.hp_max + "!";
                 content.getChildByName("GetHpMax").getComponent(Label).string = "> HP Max + " + levelConfig.hp_max + "!";
             } else {
                 content.getChildByName("GetHpMax").active = false;
@@ -233,7 +295,7 @@ export class PlayerInfoUI extends PopUpUI {
                         view.getChildByName("Icon").getComponent(Sprite).spriteFrame = await BackpackItem.getItemIcon(ItemMgr.Instance.getItemConf(id).icon);
                         view.getChildByName("Num").getComponent(Label).string = "x" + num;
                         view.setParent(content.getChildByPath("Rewards/Content"));
-                        this._showRewardItems.push(view);   
+                        this._showRewardItems.push(view);
                     }
                 }
                 content.getChildByPath("Rewards/Content").getComponent(Layout).updateLayout();
@@ -252,9 +314,9 @@ export class PlayerInfoUI extends PopUpUI {
         for (let i = 0; i < this._settleUseSelectItems.length; i++) {
             const item = this._settleUseSelectItems[i];
             item.getComponent(Sprite).grayscale = i != this._selectSettleIndex;
-        } 
+        }
     }
-   
+
     //----------------------------------------------------------------------
     // action
     private onTapTab(event: Event, customEventData: string) {
@@ -276,6 +338,8 @@ export class PlayerInfoUI extends PopUpUI {
     private onTapChangeNameConfirm() {
         const changedName: string = this._changeNameView.getChildByPath("Content/UserName").getComponent(EditBox).string;
         if (changedName.length <= 0) {
+            // useLanMgr
+            // LanMgr.Instance.getLanById("107549")
             GameMain.inst.UI.ShowTip("Name cannot be empty");
             return;
         }
