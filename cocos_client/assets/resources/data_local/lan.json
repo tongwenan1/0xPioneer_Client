@@ -1,222 +1,502 @@
 {
   "107001": {
     "id": "107001",
-    "**NOTES**": null,
     "eng": "Texas Chainsaw"
   },
   "107549": {
     "id": "107549",
-    "**NOTES**": null,
     "eng": "text for English version"
   },
   "200001": {
     "id": "200001",
-    "**NOTES**": "end new user task phase",
     "eng": "Boot ends"
   },
   "200002": {
     "id": "200002",
-    "**NOTES**": "claim reward",
     "eng": "Please explore more to get it"
   },
   "200003": {
     "id": "200003",
-    "**NOTES**": "big team coming count",
     "eng": "Big Team Coming: %s"
   },
   "201001": {
     "id": "201001",
-    "**NOTES**": "inner-building sys",
     "eng": "The building is being upgraded, please wait."
   },
   "201002": {
     "id": "201002",
-    "**NOTES**": "inner-building sys",
     "eng": "Recruiting…Please wait…"
   },
   "201003": {
     "id": "201003",
-    "**NOTES**": "inner-building sys",
     "eng": "The building is being upgraded, please wait."
   },
   "201004": {
     "id": "201004",
-    "**NOTES**": "inner-building sys",
     "eng": "Insufficient resources for building upgrades"
   },
   "201005": {
     "id": "201005",
-    "**NOTES**": "inner-building sys",
     "eng": "Unlock"
   },
   "201006": {
     "id": "201006",
-    "**NOTES**": "inner-building sys",
     "eng": "Upgrade"
   },
   "202001": {
     "id": "202001",
-    "**NOTES**": "task sys",
     "eng": "task hide: %s s"
   },
   "202002": {
     "id": "202002",
-    "**NOTES**": "task sys",
     "eng": "prepare task... %s s"
   },
   "202003": {
     "id": "202003",
-    "**NOTES**": "task sys",
     "eng": "All %s Tasks"
   },
   "202004": {
     "id": "202004",
-    "**NOTES**": "task sys",
     "eng": "New Task Taken"
   },
   "203001": {
     "id": "203001",
-    "**NOTES**": "pioneer action",
     "eng": "cann't move to block"
   },
   "203002": {
     "id": "203002",
-    "**NOTES**": "pioneer action",
     "eng": "pioneer is busy"
   },
   "203003": {
     "id": "203003",
-    "**NOTES**": "pioneer action",
     "eng": "pioneer is dead"
   },
   "203004": {
     "id": "203004",
-    "**NOTES**": "pioneer action",
     "eng": "pioneer is defending"
   },
   "203005": {
     "id": "203005",
-    "**NOTES**": "pioneer action",
     "eng": "pioneer is processing an event"
   },
   "204001": {
     "id": "204001",
-    "**NOTES**": "artifact sys",
     "eng": "HP"
   },
   "204002": {
     "id": "204002",
-    "**NOTES**": "artifact sys",
     "eng": "ATK"
   },
   "204003": {
     "id": "204003",
-    "**NOTES**": "artifact sys",
     "eng": "Get"
   },
   "204004": {
     "id": "204004",
-    "**NOTES**": "artifact sys",
     "eng": "Get"
   },
   "205001": {
     "id": "205001",
-    "**NOTES**": "bag and item sys",
     "eng": "Get"
   },
   "205002": {
     "id": "205002",
-    "**NOTES**": "bag and item sys",
     "eng": "Use"
   },
   "206001": {
     "id": "206001",
-    "**NOTES**": "pioneer get",
     "eng": "Dual Guns Jack"
   },
   "206002": {
     "id": "206002",
-    "**NOTES**": "pioneer get",
     "eng": "Dual Blades Keen"
   },
   "206003": {
     "id": "206003",
-    "**NOTES**": "pioneer get",
     "eng": "Rebels Camus"
   },
   "206004": {
     "id": "206004",
-    "**NOTES**": "pioneer get",
     "eng": "Gunman as Graceful as a Gazelle"
   },
   "206005": {
     "id": "206005",
-    "**NOTES**": "pioneer get",
     "eng": "Warrior as Wild as the Wind"
   },
   "206006": {
     "id": "206006",
-    "**NOTES**": "pioneer get",
     "eng": "Berserker as Fearless as a Beast"
   },
   "207001": {
     "id": "207001",
-    "**NOTES**": "event sys",
     "eng": "Your HP has changed"
   },
   "207002": {
     "id": "207002",
-    "**NOTES**": "event sys",
     "eng": "Your Attack has changed"
   },
   "207003": {
     "id": "207003",
-    "**NOTES**": "event sys",
     "eng": "Enemy's HP has changed"
   },
   "207004": {
     "id": "207004",
-    "**NOTES**": "event sys",
     "eng": "Enemy's Attack has changed"
   },
   "207005": {
     "id": "207005",
-    "**NOTES**": "event sys",
     "eng": "%s's HP has changed"
   },
   "207006": {
     "id": "207006",
-    "**NOTES**": "event sys",
     "eng": "%s's Attack has changed"
   },
   "207007": {
     "id": "207007",
-    "**NOTES**": "event sys",
     "eng": "you need AT LEAST %s "
   },
   "207008": {
     "id": "207008",
-    "**NOTES**": "event sys",
-    "eng": "You lost %s "
+    "eng": "You lost %s %s"
   },
   "207009": {
     "id": "207009",
-    "**NOTES**": "event sys",
-    "eng": "You obtained %s "
+    "eng": "You obtained %s %s"
   },
   "207010": {
     "id": "207010",
-    "**NOTES**": "event sys",
     "eng": "Event Ended"
+  },
+  "310101": {
+    "id": "310101",
+    "eng": "You found and entered a cave."
+  },
+  "310102": {
+    "id": "310102",
+    "eng": "You encounter a small swarm of sand spiders and fight them."
+  },
+  "310103": {
+    "id": "310103",
+    "eng": "You killed the spiders, and found some spider cocoons with different shapes."
+  },
+  "310104": {
+    "id": "310104",
+    "eng": "You are killed by the spiders!"
+  },
+  "310105": {
+    "id": "310105",
+    "eng": "You opened the human-shaped cocoons and you found some humans who are not dead yet."
+  },
+  "310106": {
+    "id": "310106",
+    "eng": "You opened the egg-shaped cocoons and..."
+  },
+  "310107": {
+    "id": "310107",
+    "eng": "Those who were saved by you decided to join you!"
+  },
+  "310108": {
+    "id": "310108",
+    "eng": "And they also gave you some resources."
+  },
+  "310109": {
+    "id": "310109",
+    "eng": "Surprise! Another swarm of sand spiders!"
+  },
+  "310110": {
+    "id": "310110",
+    "eng": "You killed the spiders, and found some resources."
+  },
+  "310111": {
+    "id": "310111",
+    "eng": "You are killed by the spiders!"
+  },
+  "310112": {
+    "id": "310112",
+    "eng": "You continued deeper into the cave and eventually discovered the spider queen."
+  },
+  "310113": {
+    "id": "310113",
+    "eng": "You killed the spider queen and obtained her treasure."
+  },
+  "310114": {
+    "id": "310114",
+    "eng": "You are killed by the spider queen!"
+  },
+  "310201": {
+    "id": "310201",
+    "eng": "You found an ancient."
+  },
+  "310202": {
+    "id": "310202",
+    "eng": "You entered the ancient."
+  },
+  "310203": {
+    "id": "310203",
+    "eng": "You saw a guardian."
+  },
+  "310204": {
+    "id": "310204",
+    "eng": "You fight with the guardian."
+  },
+  "310205": {
+    "id": "310205",
+    "eng": "You killed the guardian and got a special token."
+  },
+  "310206": {
+    "id": "310206",
+    "eng": "You are killed by the guardian."
+  },
+  "310207": {
+    "id": "310207",
+    "eng": "You evaded."
+  },
+  "310208": {
+    "id": "310208",
+    "eng": "You reached the door to the last room."
+  },
+  "310209": {
+    "id": "310209",
+    "eng": "You found a secret entry and you are considering how to get into it."
+  },
+  "310210": {
+    "id": "310210",
+    "eng": "You made a rope and used it to get into the ancient."
+  },
+  "310211": {
+    "id": "310211",
+    "eng": "You jumped into the ancient and lost a little HP."
+  },
+  "310212": {
+    "id": "310212",
+    "eng": "You got into the ancient and found a mecha-mon waiting for you."
+  },
+  "310213": {
+    "id": "310213",
+    "eng": "You destroyed the mecha-mon and got a special token."
+  },
+  "310214": {
+    "id": "310214",
+    "eng": "You are killed."
+  },
+  "310215": {
+    "id": "310215",
+    "eng": "You entered the last room."
+  },
+  "310216": {
+    "id": "310216",
+    "eng": "Do you want to use the token to open the big box?"
+  },
+  "310217": {
+    "id": "310217",
+    "eng": "You opened the big treasure box and gain a lot!"
+  },
+  "310218": {
+    "id": "310218",
+    "eng": "You could not obtain the big reward, so you took away a few resources."
+  },
+  "310301": {
+    "id": "310301",
+    "eng": "You entered a deserted lab and encountered a dangerous guardian."
+  },
+  "310302": {
+    "id": "310302",
+    "eng": "You killed the guardian and now you are considering which way to go."
+  },
+  "310303": {
+    "id": "310303",
+    "eng": "You are killed."
+  },
+  "310304": {
+    "id": "310304",
+    "eng": "You found a few resources in the warehouse."
+  },
+  "310305": {
+    "id": "310305",
+    "eng": "You found a broken tube in the energy room."
+  },
+  "310306": {
+    "id": "310306",
+    "eng": "You repaired the tube."
+  },
+  "310307": {
+    "id": "310307",
+    "eng": "You got a lot of energy."
+  },
+  "310308": {
+    "id": "310308",
+    "eng": "You got a little energy."
+  },
+  "401001": {
+    "id": "401001",
+    "eng": "Celestial Aura"
+  },
+  "401002": {
+    "id": "401002",
+    "eng": "Jade Journey"
+  },
+  "401003": {
+    "id": "401003",
+    "eng": "Last Whisper"
+  },
+  "401004": {
+    "id": "401004",
+    "eng": "Topaz Twilight"
+  },
+  "401005": {
+    "id": "401005",
+    "eng": "Dawn's Tear"
+  },
+  "401006": {
+    "id": "401006",
+    "eng": "Void Iron"
+  },
+  "401007": {
+    "id": "401007",
+    "eng": "Opferritual"
+  },
+  "401008": {
+    "id": "401008",
+    "eng": "Lord Proof"
+  },
+  "401009": {
+    "id": "401009",
+    "eng": "Key of Trust"
+  },
+  "401010": {
+    "id": "401010",
+    "eng": "Krass Letter"
+  },
+  "401011": {
+    "id": "401011",
+    "eng": "Krass Badge"
+  },
+  "401012": {
+    "id": "401012",
+    "eng": "A few foods"
+  },
+  "401013": {
+    "id": "401013",
+    "eng": "Many foods"
+  },
+  "401014": {
+    "id": "401014",
+    "eng": "A few woods"
+  },
+  "401015": {
+    "id": "401015",
+    "eng": "Many woods"
+  },
+  "401016": {
+    "id": "401016",
+    "eng": "A few stones"
+  },
+  "401017": {
+    "id": "401017",
+    "eng": "Many stones"
+  },
+  "401018": {
+    "id": "401018",
+    "eng": "Speical token"
+  },
+  "401019": {
+    "id": "401019",
+    "eng": "food"
+  },
+  "401020": {
+    "id": "401020",
+    "eng": "wood"
+  },
+  "401021": {
+    "id": "401021",
+    "eng": "stone"
+  },
+  "401022": {
+    "id": "401022",
+    "eng": "troop"
+  },
+  "401023": {
+    "id": "401023",
+    "eng": "energy"
+  },
+  "401024": {
+    "id": "401024",
+    "eng": "gold"
+  },
+  "402001": {
+    "id": "402001",
+    "eng": "A gem with a heavenly glow."
+  },
+  "402002": {
+    "id": "402002",
+    "eng": "Ancient jade for wisdom's path."
+  },
+  "402003": {
+    "id": "402003",
+    "eng": "Artifact of whispered secrets."
+  },
+  "402004": {
+    "id": "402004",
+    "eng": "Gem of the setting sun's warmth."
+  },
+  "402005": {
+    "id": "402005",
+    "eng": "Pure diamond of a new day's hope."
+  },
+  "402006": {
+    "id": "402006",
+    "eng": "Cosmic strength in metal form."
+  },
+  "402007": {
+    "id": "402007",
+    "eng": "Tool for divine rituals."
+  },
+  "402008": {
+    "id": "402008",
+    "eng": "Maybe you should show this to someone."
+  },
+  "402009": {
+    "id": "402009",
+    "eng": "Now you are the lord."
+  },
+  "402012": {
+    "id": "402012",
+    "eng": "Gain 30 foods after use it."
+  },
+  "402013": {
+    "id": "402013",
+    "eng": "Gain 100 foods after use it."
+  },
+  "402014": {
+    "id": "402014",
+    "eng": "Gain 30 woods after use it."
+  },
+  "402015": {
+    "id": "402015",
+    "eng": "Gain 100 woods after use it."
+  },
+  "402016": {
+    "id": "402016",
+    "eng": "Gain 30 stones after use it."
+  },
+  "402017": {
+    "id": "402017",
+    "eng": "Gain 100 stones after use it."
+  },
+  "402018": {
+    "id": "402018",
+    "eng": "Token of an ancient."
   },
   "1070011": {
     "id": "1070011",
-    "**NOTES**": null,
     "eng": "Chainsaw"
   },
   "1070012": {
     "id": "1070012",
-    "**NOTES**": null,
     "eng": "TestEffect"
+  },
+  "null": {
+    "id": null,
+    "eng": ""
   }
 }

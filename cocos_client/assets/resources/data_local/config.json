@@ -1,15 +1,15 @@
 {
   "10001": {
     "id": "10001",
-    "NOTES": "max and min scale of camera zoom",
+    "**NOTES**": "max and min scale of camera zoom",
     "para": [
-      0.6,
+      0.3,
       1.5
     ]
   },
   "10002": {
     "id": "10002",
-    "NOTES": "white list passcode",
+    "**NOTES**": "white list passcode",
     "para": [
       "22473FAA53FE050486E20AF3186CA589",
       "A8E830FF327D5D803C2470FC33C08525",
@@ -19,21 +19,21 @@
   },
   "10003": {
     "id": "10003",
-    "NOTES": "city feature names",
+    "**NOTES**": "city feature names",
     "para": [
       "Outside_Player_Base_A"
     ]
   },
   "110000": {
     "id": "110000",
-    "NOTES": "battle report max keep days",
+    "**NOTES**": "battle report max keep days",
     "para": [
       14
     ]
   },
   "110002": {
     "id": "110002",
-    "NOTES": "battle report max keep records",
+    "**NOTES**": "battle report max keep records",
     "para": [
       200
     ]

@@ -4,7 +4,7 @@
     "exp": 50,
     "extra_res": 0,
     "hp_max": 0,
-    "city_vision": 0,
+    "city_vision": 1,
     "city_feature": 1,
     "event_building": null,
     "reward": [
