@@ -11,9 +11,10 @@ const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
 export class DialogueUI extends PopUpUI {
-    public dialogShow(talk: any, task: any) {
+    public dialogShow(talk: any, task: any, talkOverCallback: ()=> void = null) {
         this._talk = talk;
         this._task = task;
+        this._talkOverCallback = talkOverCallback;
         this._dialogStep = 0;
         this._refreshUI();
     }
@@ -24,6 +25,7 @@ export class DialogueUI extends PopUpUI {
 
     private _talk: any = null;
     private _task: any = null;
+    private _talkOverCallback: ()=> void;
     private _dialogStep: number = 0;
     private _roleNames: string[] = [
         "artisan",
@@ -106,7 +108,7 @@ export class DialogueUI extends PopUpUI {
             selectView.active = true;
             dialogView.getChildByName("NextButton").active = false;
             
-            for (let i = 0; i < 2; i++) {
+            for (let i = 0; i < 3; i++) {
                 const button = selectView.getChildByName("Button_" + i);
                 if (i < currentMesssage.select.length) {
                     button.active = true;
@@ -129,6 +131,9 @@ export class DialogueUI extends PopUpUI {
             GameMain.inst.UI.itemInfoUI.showItem(UserInfo.Instance.afterTalkItemGetData.get(this._talk.id), true);
             UserInfo.Instance.afterTalkItemGetData.delete(this._talk.id);
         }
+        if (this._talkOverCallback != null) {
+            this._talkOverCallback();
+        }
     }
 
     //------------------------------------------------ action
@@ -146,19 +151,21 @@ export class DialogueUI extends PopUpUI {
         if (this._talk == null) {
             return;
         }
-        if (this._task.entrypoint.result.includes(customEventData)) {
-            // get task
-            UserInfo.Instance.getNewTask(this._task);
-
-            // useLanMgr
-            GameMain.inst.UI.NewTaskTip(LanMgr.Instance.getLanById("202004"));
-            // GameMain.inst.UI.NewTaskTip("New Task Taken");
-
-        } else if (this._task.exitpoint != null &&
-            this._task.exitpoint.result.includes(customEventData)) {
-            // reject task action
-            for (const temp of this._task.exitpoint.action) {
-                PioneerMgr.instance.dealWithTaskAction(temp.type, 0);
+        if (this._task != null) {
+            if (this._task.entrypoint.result.includes(customEventData)) {
+                // get task
+                UserInfo.Instance.getNewTask(this._task);
+    
+                // useLanMgr
+                GameMain.inst.UI.NewTaskTip(LanMgr.Instance.getLanById("202004"));
+                // GameMain.inst.UI.NewTaskTip("New Task Taken");
+    
+            } else if (this._task.exitpoint != null &&
+                this._task.exitpoint.result.includes(customEventData)) {
+                // reject task action
+                for (const temp of this._task.exitpoint.action) {
+                    PioneerMgr.instance.dealWithTaskAction(temp.type, 0);
+                }
             }
         }
 

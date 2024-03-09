@@ -1,4 +1,7 @@
 import { _decorator, Animation, Button, Component, Label, Node } from 'cc';
+import EventMgr from '../../Manger/EventMgr';
+import { EventName } from '../../Const/ConstDefine';
+import UserInfoMgr from '../../Manger/UserInfoMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('RookieGuide')
@@ -18,11 +21,15 @@ export class RookieGuide extends Component {
         // this._videoView.getChildByPath("SkipButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
     }
     start() {
-
+        this.node.active = !UserInfoMgr.Instance.isFinishRookie;
     }
 
     update(deltaTime: number) {
 
+    }
+    
+    protected onDestroy(): void {
+        
     }
 
     //---------------------------------------
@@ -45,8 +52,8 @@ export class RookieGuide extends Component {
                 const openEyesView = this._guideView.getChildByName("OpenEyes");
                 openEyesView.active = true;
                 openEyesView.getComponent(Animation).play();
+                EventMgr.emit(EventName.ROOKIE_GUIDE_BEGIN_EYES, { node: this.node });
                 openEyesView.getComponent(Animation).on(Animation.EventType.FINISHED, ()=> {
-                    this.node.active = false;
                 });
                 this._guideView.getChildByName("Bg").active = false;
                 this._guideView.getChildByName("Dialog").active = false;

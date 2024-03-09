@@ -130,6 +130,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         this._pioneerMap = new Map();
 
         EventMgr.on(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
+        EventMgr.on(EventName.ROOKIE_GUIDE_BEGIN_EYES, this.onRookieGuideBeginEyes, this);
     }
 
     start() {
@@ -143,24 +144,29 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         UserInfoMgr.Instance.removeObserver(this);
     }
 
+    private _cameraBeginOrthoHeight: number = 0;
     private _startAction() {
         if (this._started && this._dataLoaded) {
             this._refreshUI();
             // recover, set, task, getTaskDialogShow, etc
             PioneerMgr.instance.recoverLocalState();
             // checkRookie
+            this._cameraBeginOrthoHeight = GameMain.inst.MainCamera.orthoHeight;
             if (!UserInfoMgr.Instance.isFinishRookie) {
                 const actionPioneer = PioneerMgr.instance.getCurrentPlayerPioneer();
                 if (actionPioneer != null) {
                     const currentWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(actionPioneer.stayPos.x, actionPioneer.stayPos.y);
                     GameMain.inst.MainCamera.node.worldPosition = currentWorldPos;
+                    this.scheduleOnce(()=> {
+                        GameMain.inst.outSceneMap.mapBG.shadowErase(actionPioneer.stayPos);
+                    }, 0.2);
+                    GameMain.inst.MainCamera.orthoHeight = 0.5 * this._cameraBeginOrthoHeight;
+                    actionPioneer.actionType = MapPioneerActionType.dead;
+                    if (this._pioneerMap.has(actionPioneer.id)) {
+                        this._pioneerMap.get(actionPioneer.id).getComponent(MapPioneer).refreshUI(actionPioneer);
+                    }
                 }
-                const currentWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(actionPioneer.stayPos.x, actionPioneer.stayPos.y);
-                GameMain.inst.MainCamera.node.worldPosition = currentWorldPos;
 
-                GameMain.inst.outSceneMap.mapBG.shadowErase(actionPioneer.stayPos);
-              
-                GameMain.inst.MainCamera.orthoHeight = 0.5 * GameMain.inst.MainCamera.orthoHeight;
                 // const prophetess = PioneerMgr.instance.getPioneerByName("prophetess");
                 // if (actionPioneer != null && prophetess != null) {
                 //     const paths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(actionPioneer.stayPos, prophetess.stayPos);
@@ -359,6 +365,32 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     private onLocalDataLoadOver() {
         this._dataLoaded = true;
         this._startAction();
+    }
+
+    private onRookieGuideBeginEyes(data: { node: Node }) {
+        const actionPioneer = PioneerMgr.instance.getCurrentPlayerPioneer();
+        if (actionPioneer != null) {
+            actionPioneer.actionType = MapPioneerActionType.wakeup;
+            let view: MapPioneer = null;
+            if (this._pioneerMap.has(actionPioneer.id)) {
+                view = this._pioneerMap.get(actionPioneer.id).getComponent(MapPioneer);
+            }
+            view.refreshUI(actionPioneer);
+            this.scheduleOnce(() => {
+                actionPioneer.actionType = MapPioneerActionType.idle;
+                view.refreshUI(actionPioneer);
+                GameMain.inst.UI.dialogueUI.dialogShow(TalkMgr.Instance.getTalk("talk14"), null, () => {
+                    tween(GameMain.inst.MainCamera)
+                        .to(0.5, { orthoHeight: this._cameraBeginOrthoHeight })
+                        .call(() => {
+                            UserInfoMgr.Instance.isFinishRookie = true;
+                            data.node.active = false;
+                        })
+                        .start();
+                });
+                GameMain.inst.UI.dialogueUI.show(true);
+            }, 10);
+        }
     }
 
     private _refreshFightView(fightId: string, attacker: { name: string; hp: number; hpMax: number; }, defender: { name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositons: Vec2[]) {

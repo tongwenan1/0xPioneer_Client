@@ -109,7 +109,9 @@ export class MapBG extends Component {
         return this._tiledhelper.Path_IsBlock(mapPos.x, mapPos.y);
     }
     public shadowErase(mapPos: Vec2) {
+        console.log('exce d: ', mapPos)
         this._tiledhelper.Shadow_Earse(this._tiledhelper.getPos(mapPos.x, mapPos.y), 0, 6, false);
+        this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons());
     }
 
 

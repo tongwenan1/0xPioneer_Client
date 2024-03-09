@@ -1,5 +1,7 @@
 import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, instantiate, Sprite, Quat, UITransform, misc, Label, ProgressBar, log, v3, color } from 'cc';
 import MapPioneerModel, { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection } from '../Model/MapPioneerModel';
+import EventMgr from '../../../Manger/EventMgr';
+import { EventName } from '../../../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapPioneer')
@@ -36,6 +38,8 @@ export class MapPioneer extends Component {
         let topWalkView = null;
         let bottomWalkView = null;
         let collectView = null;
+        let deadView = null;
+        let wakeUpView = null;
 
         let roleView = null;
         if (model.id == "pioneer_0") {
@@ -62,10 +66,14 @@ export class MapPioneer extends Component {
         bottomWalkView = roleView.getChildByName("walk_bottom");
         collectView = roleView.getChildByName("collect") == null ? null : roleView.getChildByName("collect");
 
+        deadView = roleView.getChildByName("Dead") == null ? null : roleView.getChildByName("Dead");
+        wakeUpView = roleView.getChildByName("WakeUp") == null ? null : roleView.getChildByName("WakeUp");
+
         leftWalkView.active = false;
         rightWalkView.active = false;
         topWalkView.active = false;
         bottomWalkView.active = false;
+        
 
         if (this._lastStatus != this._model.actionType ||
             this._lastEventStatus != this._model.eventStatus) {
@@ -74,13 +82,33 @@ export class MapPioneer extends Component {
 
             idleView.active = false;
             collectView.active = false;
+            if (deadView != null) {
+                deadView.active = false;
+            }
+            if (wakeUpView != null) {
+                wakeUpView.active = false;
+            }
 
             this._addingtroopsView.active = false;
             this._exploringView.active = false;
             this._eventingView.active = false;
             this._eventWaitedView.active = false;
 
+
             switch (this._model.actionType) {
+                case MapPioneerActionType.dead: {
+                    this.node.active = true;
+                    deadView.active = true;
+                }
+                break;
+
+                case MapPioneerActionType.wakeup: {
+                    this.node.active = true;
+                    wakeUpView.active = true;
+                    wakeUpView.getComponent(Animation).play();
+                }
+                break;
+
                 case MapPioneerActionType.defend: {
                     this.node.active = false; // not show
                 }

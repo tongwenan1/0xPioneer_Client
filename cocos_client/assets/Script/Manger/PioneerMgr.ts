@@ -138,7 +138,12 @@ export default class PioneerMgr {
         let busy: boolean = false;
         const findPioneer = this._pioneers.filter(pioneer => pioneer.id === this._currentActionPioneerId);
         if (findPioneer.length > 0) {
-            busy = (findPioneer[0].actionType != MapPioneerActionType.idle && findPioneer[0].actionType != MapPioneerActionType.defend && findPioneer[0].actionType != MapPioneerActionType.eventing);
+            busy = (
+                findPioneer[0].actionType != MapPioneerActionType.dead && 
+                findPioneer[0].actionType != MapPioneerActionType.wakeup && 
+                findPioneer[0].actionType != MapPioneerActionType.idle && 
+                findPioneer[0].actionType != MapPioneerActionType.defend && 
+                findPioneer[0].actionType != MapPioneerActionType.eventing);
         }
         return busy;
     }

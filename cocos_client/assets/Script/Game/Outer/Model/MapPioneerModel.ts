@@ -1,9 +1,10 @@
 import { Vec2, Vec3, log, v2 } from "cc";
 import { FinishedEvent } from "../../../Manger/UserInfoMgr";
 import { TilePos } from "../../TiledMap/TileTool";
-import * as exp from "constants";
 
 export enum MapPioneerActionType {
+    dead = "dead",
+    wakeup = "wakeup",
     idle = "idle",
     defend = "defend",
     moving = "moving",

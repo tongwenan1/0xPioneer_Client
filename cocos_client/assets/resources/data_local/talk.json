@@ -413,5 +413,41 @@
                 "text": "Now we need to BUILD UP THE HOUSE in the town. Can you give us a hand?"
             }
         ]
+    },
+    {
+        "id": "talk14",
+        "messsages": [
+            {
+                "text": "Who am l? Where am !?"
+            },
+            {
+                "text": "select 1",
+                "type": "action",
+               
+                "select": [
+                    "1!",
+                    "2!",
+                    "3!"
+                ]
+            },
+            {
+                "type": "action",
+                "text": "select 2",
+                "select": [
+                    "1!",
+                    "2!",
+                    "3!"
+                ]
+            },
+            {
+                "type": "action",
+                "text": "select 3",
+                "select": [
+                    "1!",
+                    "2!",
+                    "3!"
+                ]
+            }
+        ]
     }
 ]

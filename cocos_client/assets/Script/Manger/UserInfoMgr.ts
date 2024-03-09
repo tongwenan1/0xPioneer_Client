@@ -82,10 +82,6 @@ export default class UserInfoMgr {
     }
 
     public getNewTask(task: any) {
-        if (task.id == "task01") {
-            this.isFinishRookie = true;
-            this.finishEvent(FinishedEvent.FirstTalkToProphetess);
-        }
         task.currentStep = 0;
         const step = task.steps[task.currentStep];
         for (const templeWinAction of step.startaction) {
@@ -327,8 +323,11 @@ export default class UserInfoMgr {
 
 
     public set isFinishRookie(value: boolean) {
-        this._isFinishRookie = true;
+        this._isFinishRookie = value;
         this._localJsonData.playerData.isFinishRookie = value;
+        if (value) {
+            this.finishEvent(FinishedEvent.FirstTalkToProphetess);
+        } 
         this._localDataChanged(this._localJsonData);
     }
     public set playerName(value: string) {
