@@ -109,7 +109,7 @@ export class BuildingUpgradeUI extends PopUpUI {
                 const item = instantiate(this._levelInfoCostItem);
                 item.active = true;
                 item.setParent(this._levelInfoCostItem.parent);
-                const type = parseInt(cost.type);
+                const type = cost.type;
                 item.getChildByPath("Icon/8001").active = type == ResourceCorrespondingItem.Food;
                 item.getChildByPath("Icon/8002").active = type == ResourceCorrespondingItem.Wood;
                 item.getChildByPath("Icon/8003").active = type == ResourceCorrespondingItem.Stone;
@@ -183,7 +183,7 @@ export class BuildingUpgradeUI extends PopUpUI {
                 // total num
                 needNum = Math.floor(needNum - (needNum * artifactResource));
 
-                if (ItemMgr.Instance.getOwnItemCount(parseInt(resource.type)) < needNum) {
+                if (ItemMgr.Instance.getOwnItemCount(resource.type) < needNum) {
                     canUpgrade = false;
                     break;
                 }
@@ -198,7 +198,7 @@ export class BuildingUpgradeUI extends PopUpUI {
                 let needNum = resource.num;
                 // total num
                 needNum = Math.floor(needNum - (needNum * artifactResource));
-                ItemMgr.Instance.subItem(parseInt(resource.type), needNum);
+                ItemMgr.Instance.subItem(resource.type, needNum);
             }
             UserInfoMgr.Instance.upgradeBuild(buildingType);
             UserInfoMgr.Instance.explorationValue += upgradeData.progress;

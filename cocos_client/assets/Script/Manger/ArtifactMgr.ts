@@ -15,23 +15,23 @@ export interface ArtifactMgrEvent {
 }
 
 export default class ArtifactMgr {
-    public getArtifactConf(artifactConfigId: number): ArtifactConfigData {
-        let key = artifactConfigId.toString();
+    public getArtifactConf(artifactConfigId: string): ArtifactConfigData {
+        let key = artifactConfigId;
         if (key in this._artifactConfs) {
             return this._artifactConfs[key];
         }
         console.error(`getArtifactConf error, artifact config[${key}] not exist`);
         return null;
     }
-    public getArtifactEffectConf(effectConfigId: number): ArtifactEffectConfigData {
-        let key = effectConfigId.toString();
+    public getArtifactEffectConf(effectConfigId: string): ArtifactEffectConfigData {
+        let key = effectConfigId;
         if (key in this._artifactEffectConfs) {
             return this._artifactEffectConfs[key];
         }
         return null;
     }
 
-    public getOwnArtifactCount(artifactConfigId: number): number {
+    public getOwnArtifactCount(artifactConfigId: string): number {
         let count: number = 0;
         for (const artifact of this._localArtifactDatas) {
             if (artifact.artifactConfigId == artifactConfigId) {
@@ -142,7 +142,7 @@ export default class ArtifactMgr {
             sys.localStorage.setItem(this._localStorageKey, JSON.stringify(this._localArtifactDatas));
         }
     }
-    public subArtifact(artifactConfigId: number, count: number): boolean {
+    public subArtifact(artifactConfigId: string, count: number): boolean {
         let idx = this._localArtifactDatas.findIndex((v) => {
             return v.artifactConfigId == artifactConfigId;
         });
@@ -242,7 +242,7 @@ export default class ArtifactMgr {
                     }
                     d[key] = jd[key];
                 }
-                d.configId = parseInt(jd.id);
+                d.configId = jd.id;
                 this._artifactConfs[id] = d;
             }
         }
@@ -270,7 +270,7 @@ export default class ArtifactMgr {
                     }
                     d[key] = jd[key];
                 }
-                d.effectId = parseInt(jd.id);
+                d.effectId = jd.id;
                 this._artifactEffectConfs[id] = d;
             }
         }

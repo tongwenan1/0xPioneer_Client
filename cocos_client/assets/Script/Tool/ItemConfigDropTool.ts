@@ -24,7 +24,7 @@ export default class ItemConfigDropTool {
         for (const data of datas) {
             if (data.length == 3) {
                 const type: ItemConfigType = parseInt(data[0] + "");
-                const id: number = parseInt(data[1] + "");
+                const id: string = data[1];
                 const num: number = parseInt(data[2] + "");
                 let tempItem: ItemData = null;
                 let tempArtifact: ArtifactData = null;
@@ -36,11 +36,11 @@ export default class ItemConfigDropTool {
                     tempArtifact = new ArtifactData(id, num);
 
                 } else if (type == ItemConfigType.Drop) {
-                    let resultReward: { type: number, num: number, itemConfigId: number } = null;
-                    const drop = DropMgr.Instance.getDropById(id.toString());
+                    let resultReward: { type: number, num: number, itemConfigId: string } = null;
+                    const drop = DropMgr.Instance.getDropById(id);
                     if (drop.length > 0) {
                         const useDrop = drop[0];
-                        const items: { type: number, num: number, itemConfigId: number }[] = [];
+                        const items: { type: number, num: number, itemConfigId: string }[] = [];
                         const weights = [];
                         // drop type index 0
                         // drop num index 1

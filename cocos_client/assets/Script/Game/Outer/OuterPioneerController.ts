@@ -588,7 +588,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 for (const resource of building.resources) {
                     const resultNum: number = Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
                     actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resultNum, () => {
-                        ItemMgr.Instance.addItem([new ItemData(parseInt(resource.id), resultNum)]);
+                        ItemMgr.Instance.addItem([new ItemData(resource.id, resultNum)]);
                     });
                     SettlementMgr.instance.insertSettlement({
                         level: UserInfoMgr.Instance.level,

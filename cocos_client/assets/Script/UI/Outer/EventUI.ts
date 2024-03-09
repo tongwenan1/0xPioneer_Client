@@ -233,7 +233,7 @@ export class EventUI extends PopUpUI {
         const temple: { satisfy: boolean, tipText: string } = { satisfy: true, tipText: "" };
         if (condition.length == 3) {
             const type: number = condition[0];
-            const id: number = parseInt(condition[1]);
+            const id: string = condition[1];
             const num: number = condition[2];
 
             if (type == ItemConfigType.Item) {
@@ -294,14 +294,14 @@ export class EventUI extends PopUpUI {
         for (const temple of datas) {
             if (temple.length == 3) {
                 const type: number = temple[0];
-                const id: number | string = temple[1];
+                const id: string = temple[1];
                 const num = temple[2];
                 if (type == ItemConfigType.Item) {
                     // item
                     if (cost) {
                         for (const item of ItemMgr.Instance.localItemDatas) {
                             if (item.itemConfigId == id) {
-                                const itemConf = ItemMgr.Instance.getItemConf(id as number);
+                                const itemConf = ItemMgr.Instance.getItemConf(id);
                                 ItemMgr.Instance.subItem(item.itemConfigId, num);
 
                                 // useLanMgr
@@ -312,7 +312,7 @@ export class EventUI extends PopUpUI {
                             }
                         }
                     } else {
-                        const itemConf = ItemMgr.Instance.getItemConf(id as number);
+                        const itemConf = ItemMgr.Instance.getItemConf(id);
                         if (itemConf != null) {
                             itemInfoShows.push({
                                 itemConfig: itemConf,

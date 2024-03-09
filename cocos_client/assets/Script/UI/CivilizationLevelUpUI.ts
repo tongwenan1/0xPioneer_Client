@@ -71,7 +71,7 @@ export class CivilizationLevelUpUI extends PopUpUI {
             for (const data of levelConfig.reward) {
                 if (data.length == 3) {
                     const type = data[0];
-                    const id = parseInt(data[1]);
+                    const id = data[1];
                     const num = data[2];
                     const view = instantiate(this._rewardItem);
                     view.active = true;

@@ -18,12 +18,12 @@ export enum EventName {
 }
 
 export enum ResourceCorrespondingItem {
-    Food = 8001,
-    Wood = 8002,
-    Stone = 8003,
-    Troop = 8004,
-    Energy = 8005,
-    Gold = 8006
+    Food = "8001",
+    Wood = "8002",
+    Stone = "8003",
+    Troop = "8004",
+    Energy = "8005",
+    Gold = "8006"
 }
 
 export enum ItemConfigType {

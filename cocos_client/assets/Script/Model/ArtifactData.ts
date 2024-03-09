@@ -21,11 +21,11 @@ export enum ArtifactEffectType {
 }
 
 export default class ArtifactData {
-    public artifactConfigId: number; // artifact config id
+    public artifactConfigId: string; // artifact config id
     public count: number; // count
     public addTimeStamp: number;
 
-    public constructor(artifactConfigId: number, count: number) {
+    public constructor(artifactConfigId: string, count: number) {
         this.artifactConfigId = artifactConfigId;
         this.count = count;
         this.addTimeStamp = 0;
@@ -33,18 +33,18 @@ export default class ArtifactData {
 }
 
 export class ArtifactConfigData {
-    configId: number;
+    configId: string;
     name: string;
     rank: number; // rank 1-5
     icon: string;
     prop: number[];
     prop_value: number[][];
-    effect: number[];
+    effect: string[];
     des: string;
 }
 
 export class ArtifactEffectConfigData {
-    effectId: number;
+    effectId: string;
     name: string;
     rank: number; // rank 1-5
     type: number;

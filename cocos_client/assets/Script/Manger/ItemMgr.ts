@@ -16,36 +16,14 @@ export interface ItemMgrEvent {
 
 export default class ItemMgr {
 
-    public static prepare(datas: any[]) {
-        const items: ItemData[] = [];
-        const showItemDialogDatas: ItemInfoShowModel[] = [];
-        const artifact: any[] = [];
-        for (const data of datas) {
-            if (data.length == 3) {
-                const type: ItemConfigType = parseInt(data[0] + "");
-                const id: number = parseInt(data[1] + "");
-                const num: number = parseInt(data[2] + "");
-                let tempItem: ItemData = null;
-                let tempArtifact: any = null; 
-                if (type == ItemConfigType.Item) {
-                    tempItem = new ItemData(id, num);
-                } else if (type == ItemConfigType.Artifact) {
-                    // reserve
-                } else if (type == ItemConfigType.Drop) {
-                    
-                }
-            }
-        }
-    }
-
-    public getItemConf(itemConfigId: number): ItemConfigData {
-        let key = itemConfigId.toString();
+    public getItemConf(itemConfigId: string): ItemConfigData {
+        let key = itemConfigId;
         if (key in this._itemConfs) {
             return this._itemConfs[key];
         }
         return null;
     }
-    public getOwnItemCount(itemConfigId: number): number {
+    public getOwnItemCount(itemConfigId: string): number {
         let count: number = 0;
         for (const item of this._localItemDatas) {
             if (item.itemConfigId == itemConfigId) {
@@ -84,7 +62,7 @@ export default class ItemMgr {
                     continue;
                 }
                 changed = true;
-                if (item.itemConfigId == 9) {
+                if (item.itemConfigId == "9") {
                     //get master key
                     UserInfoMgr.Instance.finishEvent(FinishedEvent.BecomeCityMaster);
                 }
@@ -112,7 +90,7 @@ export default class ItemMgr {
             sys.localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
         }
     }
-    public subItem(itemConfigId: number, count: number): boolean {
+    public subItem(itemConfigId: string, count: number): boolean {
         let idx = this._localItemDatas.findIndex((v) => {
             return v.itemConfigId == itemConfigId;
         });
@@ -135,7 +113,7 @@ export default class ItemMgr {
                     exsitItems[0].count += itemConfig.gainPropCount;
                     exsitItems[0].addTimeStamp = new Date().getTime();
                 } else {
-                    const newItem = new ItemData(parseInt(itemConfig.gainPropId), itemConfig.gainPropCount);
+                    const newItem = new ItemData(itemConfig.gainPropId, itemConfig.gainPropCount);
                     newItem.addTimeStamp = new Date().getTime();
                     this._localItemDatas.push(newItem);
                 }
@@ -234,7 +212,7 @@ export default class ItemMgr {
                     }
                     d[key] = jd[key];
                 }
-                d.configId = parseInt(jd.id);
+                d.configId = jd.id;
                 this._itemConfs[id] = d;
             }
         }
