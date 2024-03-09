@@ -1,0 +1,33 @@
+{
+    "package_version": 2,
+    "version": "1.0.0",
+    "name": "p_export",
+    "description": "i18n:p_export.description",
+    "main": "./dist/main.js",
+    "devDependencies": {
+        "@types/node": "^16.0.1",
+        "typescript": "^4.3.4"
+    },
+    "author": "Cocos Creator",
+    "editor": ">=3.8.1",
+    "scripts": {
+        "build": "tsc -b",
+        "watch": "tsc -w"
+    },
+
+    "contributions": {
+        "menu": [{
+            "path": "扩展功能",
+            "label": "Export MapInfo",
+            "message": "msg_export"
+        }],
+        "messages": {
+            "msg_export": {
+                "methods": ["menu_export"]
+            }
+        },
+        "scene":{
+            "script":"./dist/scene.js"
+        }
+    }
+}

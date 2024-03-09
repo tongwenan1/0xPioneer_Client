@@ -1,9 +1,9 @@
 {
   "__version__": "3.0.7",
   "game": {
-    "app_id": "686669952",
-    "c_id": "0",
-    "name": "Pioneer"
+    "name": "UNKNOW GAME",
+    "app_id": "UNKNOW",
+    "c_id": "0"
   },
   "appConfigMaps": [
     {
