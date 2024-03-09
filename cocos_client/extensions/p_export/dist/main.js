@@ -10,7 +10,9 @@ exports.methods = {
 /**
  * @en Hooks triggered after extension loading is complete
  */
-function load() { }
+function load() {
+    console.warn("[ExportInfo]Export Function Ver=0.01");
+}
 exports.load = load;
 /**
  * @en Hooks triggered after extension uninstallation is complete

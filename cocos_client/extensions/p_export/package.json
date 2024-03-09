@@ -17,7 +17,7 @@
 
     "contributions": {
         "menu": [{
-            "path": "扩展功能",
+            "path": "ExportFunc",
             "label": "Export MapInfo",
             "message": "msg_export"
         }],

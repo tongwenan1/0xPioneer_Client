@@ -66,23 +66,61 @@ function GetPickedNode() {
         return GetNode(uuid, null);
     }
 }
-function Func_Export() {
-    var child = GetPickedNode();
-    console.log("child=" + (child === null || child === void 0 ? void 0 : child.name));
-    var outjson = {};
-    for (var i = 0; i < child.components.length; i++) {
-        var c = child.components[i];
-        console.log("child comp =" + c.name);
-        var out = {};
-        if (c.name.indexOf("<testcomp>") >= 0) {
-            var tag = c.tag;
-            console.log("tag=" + tag);
-            out["tag"] = tag;
+class Pos2 {
+}
+class JsonItem {
+}
+function GetWorldPosArray(node) {
+    var pos = new Pos2();
+    pos.x = node.worldPosition.x;
+    pos.y = node.worldPosition.y;
+    var outpos = [];
+    //test multi pos
+    node.children.forEach((child) => {
+        if (child.name.indexOf("Node") == 0) {
+            var cpos = new Pos2();
+            cpos.x = child.worldPosition.x;
+            cpos.y = child.worldPosition.y;
+            outpos.push(cpos);
         }
-        outjson[c.name] = out;
+    });
+    if (outpos.length == 0) {
+        outpos.push(pos);
+    }
+    return outpos;
+}
+//Export,need comp MapTag,orelse block=false;
+//need child with name "Node" for multi pos
+function Func_Export() {
+    var pick = GetPickedNode();
+    if (pick == null) {
+        console.warn("[ExportInfo]Should pick export node first.");
+        return;
+    }
+    var outjson = [];
+    console.log("[ExportInfo]Pick=" + (pick === null || pick === void 0 ? void 0 : pick.name) + "  childcount=" + pick.children.length);
+    for (var i = 0; i < pick.children.length; i++) {
+        var node = pick.children[i];
+        var ctag = node.getComponent("MapTag");
+        var block = false;
+        if (ctag != null) {
+            block = ctag.block;
+        }
+        //export to json
+        var item = new JsonItem();
+        item.id = "decorate_" + (i + 1).toString();
+        item.name = node.name;
+        item.type = "decorate";
+        item.show = true;
+        item.block = block;
+        item.posmode = "world";
+        item.positions = GetWorldPosArray(node);
+        outjson.push(item);
     }
     //save
-    console.warn("proj path = " + Editor.Project.path);
-    var path = (0, path_1.join)(Editor.Project.path, "outinfo.json");
-    fs.writeFileSync(path, JSON.stringify(outjson, null, 4));
+    {
+        var outpath = (0, path_1.join)(Editor.Project.path, "outinfo.json");
+        console.warn("[ExportInfo]output path = " + outpath);
+        fs.writeFileSync(outpath, JSON.stringify(outjson, null, 4));
+    }
 }
