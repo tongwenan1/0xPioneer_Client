@@ -487,6 +487,494 @@
     "id": "402018",
     "eng": "Token of an ancient."
   },
+  "501001": {
+    "id": "501001",
+    "eng": "ganster router"
+  },
+  "501002": {
+    "id": "501002",
+    "eng": "become city master"
+  },
+  "501003": {
+    "id": "501003",
+    "eng": "Cultivating health and recuperating"
+  },
+  "501004": {
+    "id": "501004",
+    "eng": "ambush doomsdayGangBigTeam"
+  },
+  "501005": {
+    "id": "501005",
+    "eng": "defeat the gangster squad"
+  },
+  "501006": {
+    "id": "501006",
+    "eng": "kill prophetess"
+  },
+  "501007": {
+    "id": "501007",
+    "eng": "kill hred"
+  },
+  "501008": {
+    "id": "501008",
+    "eng": "help you kill doomsDayGangTeam"
+  },
+  "501009": {
+    "id": "501009",
+    "eng": "goahead doomsdayGangBigTeam"
+  },
+  "501010": {
+    "id": "501010",
+    "eng": "become doomsdayGang spy"
+  },
+  "501011": {
+    "id": "501011",
+    "eng": "explore ganster team"
+  },
+  "501012": {
+    "id": "501012",
+    "eng": "defeat the rebels"
+  },
+  "501013": {
+    "id": "501013",
+    "eng": "explore big ganster team"
+  },
+  "501014": {
+    "id": "501014",
+    "eng": "defeat the main city"
+  },
+  "501015": {
+    "id": "501015",
+    "eng": "explore ruins"
+  },
+  "501016": {
+    "id": "501016",
+    "eng": "explore treasure"
+  },
+  "501017": {
+    "id": "501017",
+    "eng": "talk with prophetess, become city master"
+  },
+  "501018": {
+    "id": "501018",
+    "eng": "search resource 3 times"
+  },
+  "501019": {
+    "id": "501019",
+    "eng": "talk to artisan"
+  },
+  "501020": {
+    "id": "501020",
+    "eng": "fix wall and build house"
+  },
+  "501021": {
+    "id": "501021",
+    "eng": "go to ambush point"
+  },
+  "501022": {
+    "id": "501022",
+    "eng": "wait doomsdayGangBigTeam come and win fight"
+  },
+  "501023": {
+    "id": "501023",
+    "eng": "defeat the gangster squa"
+  },
+  "501024": {
+    "id": "501024",
+    "eng": "kill the prophetess"
+  },
+  "501025": {
+    "id": "501025",
+    "eng": "kill herd"
+  },
+  "501026": {
+    "id": "501026",
+    "eng": "kill doomsDayGangTeam"
+  },
+  "501027": {
+    "id": "501027",
+    "eng": "goahead the doomsdayGangBigTeam"
+  },
+  "501028": {
+    "id": "501028",
+    "eng": "become spy"
+  },
+  "502001": {
+    "id": "502001",
+    "eng": "prophetess"
+  },
+  "502002": {
+    "id": "502002",
+    "eng": "default_player"
+  },
+  "502003": {
+    "id": "502003",
+    "eng": "doomsdayGangSpy"
+  },
+  "502004": {
+    "id": "502004",
+    "eng": "hunter"
+  },
+  "502005": {
+    "id": "502005",
+    "eng": "secretGuard"
+  },
+  "502006": {
+    "id": "502006",
+    "eng": "doomsdayGangBigTeam"
+  },
+  "502007": {
+    "id": "502007",
+    "eng": "artisan"
+  },
+  "503001": {
+    "id": "503001",
+    "eng": "Finally you are here."
+  },
+  "503002": {
+    "id": "503002",
+    "eng": "Who the hell are you?"
+  },
+  "503003": {
+    "id": "503003",
+    "eng": "Tinuvel, a prophetess. I've seen the vision of you leading this city to a prosperous future."
+  },
+  "503004": {
+    "id": "503004",
+    "eng": "What the hell? I'm just a passerby. I'm not even sure if I can get a place to stay in this town tonight!"
+  },
+  "503005": {
+    "id": "503005",
+    "eng": "The lord here was just killed by gangsters, and now the town is in complete chaos."
+  },
+  "503006": {
+    "id": "503006",
+    "eng": "I will provide for your basic needs, but in exchange, you are required to take up the mantle of responsibility. I will guide you as you need."
+  },
+  "503007": {
+    "id": "503007",
+    "eng": "Well, sounds not bad. So what should I do now?"
+  },
+  "503008": {
+    "id": "503008",
+    "eng": "See the gangsters over there? GET RID OF THE GANGSTERS!"
+  },
+  "503009": {
+    "id": "503009",
+    "eng": "You need to GET RID OF THE GANGSTERS!"
+  },
+  "503010": {
+    "id": "503010",
+    "eng": "Wow! A new face!"
+  },
+  "503011": {
+    "id": "503011",
+    "eng": "And who the hell are you?"
+  },
+  "503012": {
+    "id": "503012",
+    "eng": "Just a survivor in this disaster. And you?"
+  },
+  "503013": {
+    "id": "503013",
+    "eng": "I made a deal with a prophetess and am going to repel the gangsters over there. You wanna help me? You'll get your share of rewards."
+  },
+  "503014": {
+    "id": "503014",
+    "eng": "Hahaha, the prophetess? Called Tinuvel?"
+  },
+  "503015": {
+    "id": "503015",
+    "eng": "...You know her?"
+  },
+  "503016": {
+    "id": "503016",
+    "eng": "A prophetess alone without even one follower? Come on! She's just a selfish priestess."
+  },
+  "503017": {
+    "id": "503017",
+    "eng": "So...I was tricked by her?"
+  },
+  "503018": {
+    "id": "503018",
+    "eng": "Of Course, dude. But you are not the only one. we are also pawns in her plan."
+  },
+  "503019": {
+    "id": "503019",
+    "eng": "It's not too late to wake up now. As long as you can KILL THAT PROPHETESS... I think our cooperation will be much more trustworthy."
+  },
+  "503020": {
+    "id": "503020",
+    "eng": "KILL THE PROPHETES and cooperate with doomsdayGang?"
+  },
+  "503021": {
+    "id": "503021",
+    "eng": "Nice scenery, isn't it?"
+  },
+  "503022": {
+    "id": "503022",
+    "eng": "Maybe. But it will be even better when the herd runs by."
+  },
+  "503023": {
+    "id": "503023",
+    "eng": "Sounds like you are experienced. Do you need help?"
+  },
+  "503024": {
+    "id": "503024",
+    "eng": "If you want...Come on then!"
+  },
+  "503025": {
+    "id": "503025",
+    "eng": "HUNT THE HERD before they run away. Confident?"
+  },
+  "503026": {
+    "id": "503026",
+    "eng": "Are you confident to HUNT THE HERD before they run away?"
+  },
+  "503027": {
+    "id": "503027",
+    "eng": "Tinuvel, honestly, I don't know whether I can trust you."
+  },
+  "503028": {
+    "id": "503028",
+    "eng": "I expect that. You don't need my guidance. You can rely on yourself."
+  },
+  "503029": {
+    "id": "503029",
+    "eng": "But how?"
+  },
+  "503030": {
+    "id": "503030",
+    "eng": "See that ruin? It was left by last lord."
+  },
+  "503031": {
+    "id": "503031",
+    "eng": "EXPLORE THE RUIN and show us that you are the chosen one."
+  },
+  "503032": {
+    "id": "503032",
+    "eng": "EXPLORE THE RUIN and show something to the prophetess"
+  },
+  "503033": {
+    "id": "503033",
+    "eng": "Who are you...(Saw the token of the lord)"
+  },
+  "503034": {
+    "id": "503034",
+    "eng": "Well...You must be the new lord. Please command me if you need!"
+  },
+  "503035": {
+    "id": "503035",
+    "eng": "REPEL THE GANGSTERS outside the town!"
+  },
+  "503036": {
+    "id": "503036",
+    "eng": "Yes, sir!"
+  },
+  "503037": {
+    "id": "503037",
+    "eng": "The secretGuard is going to REPEL THE GANGSTERS outside the town!"
+  },
+  "503038": {
+    "id": "503038",
+    "eng": "Tinuvel, the big one is coming. Any idea?"
+  },
+  "503039": {
+    "id": "503039",
+    "eng": "I've already prepared for it."
+  },
+  "503040": {
+    "id": "503040",
+    "eng": "There is a stronghold there, where you can AMBUSH THEM."
+  },
+  "503041": {
+    "id": "503041",
+    "eng": "You are going to AMBUSH THE BIG TEAM."
+  },
+  "503042": {
+    "id": "503042",
+    "eng": "Lucky guy, we're not going to kill you."
+  },
+  "503043": {
+    "id": "503043",
+    "eng": "But you will act as our agent and TAKE OVER THE TOWN."
+  },
+  "503044": {
+    "id": "503044",
+    "eng": "OK?"
+  },
+  "503045": {
+    "id": "503045",
+    "eng": "Are you going to cooperate with the gang or fight with them?"
+  },
+  "503046": {
+    "id": "503046",
+    "eng": "The town was ransacked by those bastards."
+  },
+  "503047": {
+    "id": "503047",
+    "eng": "You may be the one to save us and recuperate the town."
+  },
+  "503048": {
+    "id": "503048",
+    "eng": "We need some material reserves. Try to EXPLORE RESOURCES FOR 3 TIMES and BRING THEM BACK TO ME."
+  },
+  "503049": {
+    "id": "503049",
+    "eng": "Will you help them EXPLORE RESOURCES FOR 3 TIMES?"
+  },
+  "503050": {
+    "id": "503050",
+    "eng": "The right token."
+  },
+  "503051": {
+    "id": "503051",
+    "eng": "All right. You are indeed qualified TO BE THE LORD."
+  },
+  "503052": {
+    "id": "503052",
+    "eng": "Go ahead, there's a lot of things waiting for you."
+  },
+  "503053": {
+    "id": "503053",
+    "eng": "You've been a great help. Thank you very much."
+  },
+  "503054": {
+    "id": "503054",
+    "eng": "Now we need to BUILD UP THE HOUSE in the town. Can you give us a hand?"
+  },
+  "503055": {
+    "id": "503055",
+    "eng": "Lucky guy, we're not going to kill you."
+  },
+  "503056": {
+    "id": "503056",
+    "eng": "But you will act as our agent and TAKE OVER THE TOWN."
+  },
+  "503057": {
+    "id": "503057",
+    "eng": "You've been a great help. Thank you very much.2222222"
+  },
+  "503058": {
+    "id": "503058",
+    "eng": "Now we need to BUILD UP THE HOUSE in the town. Can you give us a hand?"
+  },
+  "503059": {
+    "id": "503059",
+    "eng": "You've been a great help. Thank you very much.3333333"
+  },
+  "503060": {
+    "id": "503060",
+    "eng": "Now we need to BUILD UP THE HOUSE in the town. Can you give us a hand?"
+  },
+  "503061": {
+    "id": "503061",
+    "eng": "Who am l? Where am !?"
+  },
+  "503062": {
+    "id": "503062",
+    "eng": "select 1"
+  },
+  "503063": {
+    "id": "503063",
+    "eng": "select 2"
+  },
+  "503064": {
+    "id": "503064",
+    "eng": "select 3"
+  },
+  "504001": {
+    "id": "504001",
+    "eng": "Easy job"
+  },
+  "504002": {
+    "id": "504002",
+    "eng": "Deal!"
+  },
+  "504003": {
+    "id": "504003",
+    "eng": "Refuse"
+  },
+  "504004": {
+    "id": "504004",
+    "eng": "Of course!"
+  },
+  "504005": {
+    "id": "504005",
+    "eng": "Nope"
+  },
+  "504006": {
+    "id": "504006",
+    "eng": "I'm on it"
+  },
+  "504007": {
+    "id": "504007",
+    "eng": "Seriously?"
+  },
+  "504008": {
+    "id": "504008",
+    "eng": "Nice!"
+  },
+  "504009": {
+    "id": "504009",
+    "eng": "Take care"
+  },
+  "504010": {
+    "id": "504010",
+    "eng": "Good job"
+  },
+  "504011": {
+    "id": "504011",
+    "eng": "I'll try"
+  },
+  "504012": {
+    "id": "504012",
+    "eng": "Deal!"
+  },
+  "504013": {
+    "id": "504013",
+    "eng": "Fight!"
+  },
+  "504014": {
+    "id": "504014",
+    "eng": "All right"
+  },
+  "504015": {
+    "id": "504015",
+    "eng": "I'm busy"
+  },
+  "504016": {
+    "id": "504016",
+    "eng": "1!"
+  },
+  "504017": {
+    "id": "504017",
+    "eng": "!2222"
+  },
+  "504018": {
+    "id": "504018",
+    "eng": "333!"
+  },
+  "601001": {
+    "id": "601001",
+    "eng": "test evaluation rank 1"
+  },
+  "601002": {
+    "id": "601002",
+    "eng": "test evaluation rank 11"
+  },
+  "601003": {
+    "id": "601003",
+    "eng": "test evaluation rank 2"
+  },
+  "601004": {
+    "id": "601004",
+    "eng": "test evaluation rank 22"
+  },
+  "601005": {
+    "id": "601005",
+    "eng": "test evaluation rank 3"
+  },
   "1070011": {
     "id": "1070011",
     "eng": "Chainsaw"

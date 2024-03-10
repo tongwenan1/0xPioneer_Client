@@ -1,7 +1,7 @@
 [
     {
         "id": "task01",
-        "name": "defeat the gangster squad",
+        "name": "501005",
         "condshow": [],
         "entrypoint": {
             "type": "talkwithnpc|npc_0",
@@ -10,7 +10,7 @@
         },
         "steps": [
             {
-                "name": "defeat the gangster squad",
+                "name": "501023",
                 "startaction": [
                     {
                         "type": "pioneershow|npc_1"
@@ -43,13 +43,13 @@
                     }
                 ],
                 "progress": 5,
-                "exp": 70
+                "exp": 100
             }
         ]
     },
     {
         "id": "task02",
-        "name": "kill prophetess",
+        "name": "501006",
         "condshow": [
             "FirstTalkToProphetess"
         ],
@@ -71,7 +71,7 @@
         },
         "steps": [
             {
-                "name": "kill prophetess",
+                "name": "501024",
                 "startaction": [
                     {
                         "type": "pioneernonfriendly|npc_0"
@@ -107,17 +107,18 @@
                         "type": "pioneerfriendly|gangster_1"
                     }
                 ],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             }
         ]
     },
     {
         "id": "task03",
-        "name": "ganster router",
+        "name": "501001",
         "condshow": [],
         "steps": [
             {
-                "name": "explore ganster team",
+                "name": "501011",
                 "startaction": [],
                 "winaction": [
                     {
@@ -130,10 +131,11 @@
                     }
                 ],
                 "condfail": [],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             },
             {
-                "name": "defeat the rebels",
+                "name": "501012",
                 "startaction": [
                     {
                         "type": "pioneershow|gangster_2"
@@ -149,10 +151,11 @@
                         "type": "killpioneer|gangster_2"
                     }
                 ],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             },
             {
-                "name": "explore big ganster team",
+                "name": "501013",
                 "startaction": [
                     {
                         "type": "pioneershow|gangster_3"
@@ -171,10 +174,11 @@
                         "type": "explorewithpioneer|gangster_3"
                     }
                 ],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             },
             {
-                "name": "defeat the main city",
+                "name": "501014",
                 "startaction": [
                     {
                         "type": "buildingtoenemy|building_1"
@@ -193,13 +197,14 @@
                         "type": "destroybuilding|building_1"
                     }
                 ],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             }
         ]
     },
     {
         "id": "task04",
-        "name": "kill hred",
+        "name": "501007",
         "condshow": [
             "KillDoomsDayGangTeam"
         ],
@@ -211,7 +216,7 @@
         },
         "steps": [
             {
-                "name": "kill hred",
+                "name": "501025",
                 "startaction": [
                     {
                         "type": "pioneershow|hred_1"
@@ -235,13 +240,14 @@
                         "num": 1
                     }
                 ],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             }
         ]
     },
     {
         "id": "task05",
-        "name": "become city master",
+        "name": "501002",
         "condshow": [
             "FirstTalkToProphetess"
         ],
@@ -253,7 +259,7 @@
         },
         "steps": [
             {
-                "name": "explore ruins",
+                "name": "501015",
                 "startaction": [
                     {
                         "type": "buildingshow|building_2"
@@ -270,10 +276,11 @@
                     }
                 ],
                 "condfail": [],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             },
             {
-                "name": "explore treasure",
+                "name": "501016",
                 "startaction": [
                     {
                         "type": "buildingshow|building_3"
@@ -302,10 +309,11 @@
                         "num": 1
                     }
                 ],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             },
             {
-                "name": "talk with prophetess, become city master",
+                "name": "talk with prophetess, 501002",
                 "startaction": [],
                 "winaction": [
                     {
@@ -334,13 +342,14 @@
                         "num": 1
                     }
                 ],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             }
         ]
     },
     {
         "id": "task06",
-        "name": "help you kill doomsDayGangTeam",
+        "name": "501008",
         "condshow": [
             "BecomeCityMaster"
         ],
@@ -354,7 +363,7 @@
         },
         "steps": [
             {
-                "name": "kill doomsDayGangTeam",
+                "name": "501026",
                 "startaction": [
                     {
                         "type": "pioneerhide|npc_2"
@@ -366,13 +375,14 @@
                 "winaction": [],
                 "condwin": [],
                 "condfail": [],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             }
         ]
     },
     {
         "id": "task07",
-        "name": "ambush doomsdayGangBigTeam",
+        "name": "501004",
         "condshow": [
             "BecomeCityMaster",
             "KillDoomsDayGangTeam"
@@ -385,7 +395,7 @@
         },
         "steps": [
             {
-                "name": "go to ambush point",
+                "name": "501021",
                 "startaction": [
                     {
                         "type": "buildingshow|building_4"
@@ -398,10 +408,11 @@
                     }
                 ],
                 "condfail": [],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             },
             {
-                "name": "wait doomsdayGangBigTeam come and win fight",
+                "name": "501022",
                 "startaction": [],
                 "winaction": [
                     {
@@ -417,17 +428,18 @@
                     }
                 ],
                 "condfail": [],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             }
         ]
     },
     {
         "id": "task08",
-        "name": "goahead doomsdayGangBigTeam",
+        "name": "501009",
         "condshow": [],
         "steps": [
             {
-                "name": "goahead doomsdayGangBigTeam",
+                "name": "501027",
                 "startaction": [],
                 "winaction": [
                     {
@@ -440,13 +452,14 @@
                     }
                 ],
                 "condfail": [],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             }
         ]
     },
     {
         "id": "task09",
-        "name": "become doomsdayGang spy",
+        "name": "501010",
         "condshow": [
             "KillDoomsDayGangTeam"
         ],
@@ -466,7 +479,7 @@
         },
         "steps": [
             {
-                "name": "become spy",
+                "name": "501028",
                 "startaction": [],
                 "winaction": [
                     {
@@ -493,13 +506,14 @@
                         "num": 1
                     }
                 ],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             }
         ]
     },
     {
         "id": "task10",
-        "name": "Cultivating health and recuperating",
+        "name": "501003",
         "condshow": [
             "FirstTalkToProphetess"
         ],
@@ -513,11 +527,11 @@
         },
         "steps": [
             {
-                "name": "search resource 3 times",
-                "alias": "search resource 3 times",
+                "name": "501018",
+                "alias": "501018",
                 "startaction": [],
                 "addition": true,
-                "belong": "talk to artisan",
+                "belong": "501019",
                 "condwin": [
                     {
                         "type": "getresourcereached"
@@ -535,12 +549,13 @@
                     }
                 ],
                 "winaction": [],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             },
             {
-                "name": "talk to artisan",
-                "alias": "talk to artisan",
-                "winActionAndRewardAdditionStepAlias": "search resource 3 times",
+                "name": "501019",
+                "alias": "501019",
+                "winActionAndRewardAdditionStepAlias": "501018",
                 "startaction": [],
                 "condwin": [
                     {
@@ -598,10 +613,11 @@
                         }
                     }
                 ],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             },
             {
-                "name": "fix wall and build house",
+                "name": "501020",
                 "startaction": [],
                 "condwin": [
                     {
@@ -618,7 +634,8 @@
                         "type": "pioneerhide|npc_1"
                     }
                 ],
-                "progress": 5
+                "progress": 5,
+                "exp": 100
             }
         ]
     }
