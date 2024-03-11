@@ -132,6 +132,9 @@ export class MapBG extends Component {
     @property(Prefab)
     private shadowBorderPrefab = null;
 
+    @property(Prefab)
+    private gridFogPrefab = null;
+
     CreateDecoration(index: number): Node {
         if (this.PrefabInfo.length == 0)
             return null;
@@ -155,6 +158,9 @@ export class MapBG extends Component {
 
     private _togetherBlockPositons: Vec2[][] = [];
 
+
+    private _fogItem: Node = null;
+
     private _buildinglayer: Node = null;
     private _mapBottomView: Node = null;
     private _mapCursorView: OuterMapCursorView = null;
@@ -164,7 +170,6 @@ export class MapBG extends Component {
     private _fogAnimView: Mask = null;
     private _fogAnimShapView: OuterFogAnimShapMask = null;
     private _boundContent: Node = null;
-    private _boundItem: Node = null;
     private _boundItemMap: Map<string, Node> = new Map();
     private _boundPrefabItems: Node[] = [];
     private _actionView: ResOprView = null;
@@ -402,6 +407,11 @@ export class MapBG extends Component {
             }
         );
 
+        this._fogItem = instantiate(this.gridFogPrefab);
+        this._fogItem.layer = this.node.layer;
+        this._fogItem.scale = v3(1.8, 1.8, 1);
+        this._fogItem.active = false;
+
         this._fogView = this.node.getChildByName("Fog").getComponent(OuterFogMask);
         this._fogView.node.setSiblingIndex(99);
 
@@ -414,8 +424,7 @@ export class MapBG extends Component {
 
         this._boundContent = this.node.getChildByName("BoundContent");
         this._boundContent.setSiblingIndex(101);
-        this._boundItem = this._boundContent.getChildByName("BoundView");
-        this._boundItem.active = false;
+
 
         this._actionView = instantiate(this.resOprPrefab).getComponent(ResOprView);
         this._actionView.node.setScale(v3(2, 2, 2));
@@ -426,6 +435,7 @@ export class MapBG extends Component {
 
         this._mapCursorView.initData(this._hexViewRadius, this._hexScale);
         this._mapActionCursorView.initData(this._hexViewRadius, this._hexScale);
+
     }
     private _setObjLayer(obj: Node, layer: number) {
         obj.layer = layer;
@@ -436,13 +446,12 @@ export class MapBG extends Component {
     }
 
     private _lastPioneerStayPos: Map<string, Vec2> = new Map();
+    private _lastTime: number = 0;
     private async _updateTiledmap(delta: number) {
-
         if (this._tiledhelper == null)
             return;
 
         this._tiledhelper.Shadow_Update(delta);
-
         //clean pioneer view
         const selfPioneer = await PioneerInfo.instance.getPlayerPioneer();
         for (const pioneer of selfPioneer) {
@@ -468,18 +477,18 @@ export class MapBG extends Component {
                 const lastStayPos = this._lastPioneerStayPos.get(pioneer.id);
                 if (lastStayPos.x != pioneer.stayPos.x ||
                     lastStayPos.y != pioneer.stayPos.y) {
-                    let currentMoveDirection = null;
-                    const direction = [TileHexDirection.Left, TileHexDirection.LeftBottom, TileHexDirection.LeftTop, TileHexDirection.Right, TileHexDirection.RightBottom, TileHexDirection.RightTop];
-                    for (const d of direction) {
-                        const around = this._tiledhelper.Path_GetAroundByDirection(this._tiledhelper.getPos(lastStayPos.x, lastStayPos.y), d);
-                        if (around.x == pioneer.stayPos.x &&
-                            around.y == pioneer.stayPos.y) {
-                            currentMoveDirection = d;
-                            break;
-                        }
-                    }
+                    // let currentMoveDirection = null;
+                    // const direction = [TileHexDirection.Left, TileHexDirection.LeftBottom, TileHexDirection.LeftTop, TileHexDirection.Right, TileHexDirection.RightBottom, TileHexDirection.RightTop];
+                    // for (const d of direction) {
+                    //     const around = this._tiledhelper.Path_GetAroundByDirection(this._tiledhelper.getPos(lastStayPos.x, lastStayPos.y), d);
+                    //     if (around.x == pioneer.stayPos.x &&
+                    //         around.y == pioneer.stayPos.y) {
+                    //         currentMoveDirection = d;
+                    //         break;
+                    //     }
+                    // }
                     this._lastPioneerStayPos.set(pioneer.id, pioneer.stayPos);
-                    this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons(), newCleardPositons, currentMoveDirection);
+                    this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons(), newCleardPositons, pioneer.stayPos);
                 }
             }
         }
@@ -690,7 +699,7 @@ export class MapBG extends Component {
         GameMain.inst.MainCamera.node.setPosition(pos);
     }
 
-    private _refreshFog(allClearedShadowPositions: TilePos[], newCleardPositons: TilePos[] = null, direction: TileHexDirection = null) {
+    private _refreshFog(allClearedShadowPositions: TilePos[], newCleardPositons: TilePos[] = null, stayPos: Vec2 = null) {
         const getAllBoundLines: { startPos: Vec2, endPos: Vec2 }[] = [];
         const getAllBoundPos: Vec3[] = [];
 
@@ -772,27 +781,28 @@ export class MapBG extends Component {
             this._fogView.draw(getAllBoundLines);
         }
         if (newCleardPositons != null) {
-            this._fogAnimDatas.push({
-                allClearedTilePosions: getAllBoundLines,
-                animTilePostions: newCleardPositons,
-                direciton: direction
-            });
-            this._playFogAnim();
+            // this._fogAnimDatas.push({
+            //     allClearedTilePosions: getAllBoundLines,
+            //     animTilePostions: newCleardPositons,
+            // });
+            this._playFogAnim(getAllBoundLines, newCleardPositons, stayPos);
         }
         // bound fog
         for (const pos of getAllBoundPos) {
             if (this._boundItemMap.has(pos.x + "|" + pos.y)) {
 
             } else {
-                let item = null;
+                let item: Node = null;
                 if (this._boundPrefabItems.length > 0) {
                     item = this._boundPrefabItems.pop();
                 } else {
-                    item = instantiate(this._boundItem);
+                    item = instantiate(this._fogItem);
                 }
-                item.active = true;
                 item.setParent(this._boundContent);
                 item.setWorldPosition(pos);
+                item.active = true;
+                item.getComponent(Animation).play("fog_Schistose_A1");
+
                 this._boundItemMap.set(pos.x + "|" + pos.y, item);
             }
         }
@@ -812,96 +822,118 @@ export class MapBG extends Component {
         });
     }
 
-    private _playFogAnim() {
-        if (this._fogAnimPlaying) {
-            return;
+    private _lastpt: number = null;
+    private _playFogAnim(
+        allClearedTilePosions: { startPos: Vec2, endPos: Vec2 }[],
+        animTilePostions: TilePos[],
+        pioneerStayPos: Vec2,
+    ) {
+        const time: number = Date.now();
+        if (this._lastpt == null) {
+            this._lastpt = time;
         }
-        if (this._fogAnimDatas.length <= 0) {
-            this._fogAnimView.node.active = false;
-            return;
+        console.log("exce delay: " + (time - this._lastpt));
+        this._lastpt = time;
+        // draw bg fog
+        this._fogView.draw(allClearedTilePosions);
+        // dismiss anim
+        const stayWorldPos = this._tiledhelper.getPosWorld(pioneerStayPos.x, pioneerStayPos.y);
+        for (const tilePos of animTilePostions) {
+            const fogView = instantiate(this._fogItem);
+            const wp = this._tiledhelper.getPosWorld(tilePos.x, tilePos.y);
+            fogView.active = true;
+            fogView.setParent(this.node);
+            fogView.setWorldPosition(wp); 
+            fogView.getComponent(Animation).play("fog_Schistose_A2");
+            fogView.getComponent(Animation).on(Animation.EventType.FINISHED, () => {
+                fogView.destroy();
+            });
+            var dir = new Vec3();
+            Vec3.subtract(dir, wp, stayWorldPos);
+            dir = dir.normalize();
+            tween(fogView)
+            .delay(0.3)
+            .by(0.4, { position: v3(dir.x * 80, dir.y * 80, dir.x ) })
+            .start();
         }
-        const data = this._fogAnimDatas.shift();
-        if (data.allClearedTilePosions != null && data.allClearedTilePosions.length > 0) {
-            this._fogView.draw(data.allClearedTilePosions);
-        }
-        if (data.animTilePostions != null && data.animTilePostions.length > 0) {
-            this._fogAnimPlaying = true;
-            this._fogAnimView.node.active = true;
+        // if (data.animTilePostions != null && data.animTilePostions.length > 0) {
+        //     this._fogAnimPlaying = true;
+        //     this._fogAnimView.node.active = true;
 
-            const fogPositions = [];
-            let minWorldPosX: number = null;
-            let maxWorldPosX: number = null;
-            let minWorldPosY: number = null;
-            let maxWorldPosY: number = null;
-            for (const pos of data.animTilePostions) {
-                const temple = this._fogAnimShapView.node.getComponent(UITransform).convertToNodeSpaceAR(this._tiledhelper.getPosWorld(pos.x, pos.y));
-                fogPositions.push(v2(temple.x, temple.y));
+        //     const fogPositions = [];
+        //     let minWorldPosX: number = null;
+        //     let maxWorldPosX: number = null;
+        //     let minWorldPosY: number = null;
+        //     let maxWorldPosY: number = null;
+        //     for (const pos of data.animTilePostions) {
+        //         const temple = this._fogAnimShapView.node.getComponent(UITransform).convertToNodeSpaceAR(this._tiledhelper.getPosWorld(pos.x, pos.y));
+        //         fogPositions.push(v2(temple.x, temple.y));
 
-                minWorldPosX = minWorldPosX == null ? this._tiledhelper.getPosWorld(pos.x, pos.y).x : minWorldPosX;
-                maxWorldPosX = maxWorldPosX == null ? this._tiledhelper.getPosWorld(pos.x, pos.y).x : maxWorldPosX;
-                minWorldPosY = minWorldPosY == null ? this._tiledhelper.getPosWorld(pos.x, pos.y).y : minWorldPosY;
-                maxWorldPosY = maxWorldPosY == null ? this._tiledhelper.getPosWorld(pos.x, pos.y).y : maxWorldPosY;
+        //         minWorldPosX = minWorldPosX == null ? this._tiledhelper.getPosWorld(pos.x, pos.y).x : minWorldPosX;
+        //         maxWorldPosX = maxWorldPosX == null ? this._tiledhelper.getPosWorld(pos.x, pos.y).x : maxWorldPosX;
+        //         minWorldPosY = minWorldPosY == null ? this._tiledhelper.getPosWorld(pos.x, pos.y).y : minWorldPosY;
+        //         maxWorldPosY = maxWorldPosY == null ? this._tiledhelper.getPosWorld(pos.x, pos.y).y : maxWorldPosY;
 
-                minWorldPosX = Math.min(this._tiledhelper.getPosWorld(pos.x, pos.y).x, minWorldPosX);
-                maxWorldPosX = Math.max(this._tiledhelper.getPosWorld(pos.x, pos.y).x, maxWorldPosX);
-                minWorldPosY = Math.min(this._tiledhelper.getPosWorld(pos.x, pos.y).y, minWorldPosY);
-                maxWorldPosY = Math.max(this._tiledhelper.getPosWorld(pos.x, pos.y).y, maxWorldPosY);
-            }
+        //         minWorldPosX = Math.min(this._tiledhelper.getPosWorld(pos.x, pos.y).x, minWorldPosX);
+        //         maxWorldPosX = Math.max(this._tiledhelper.getPosWorld(pos.x, pos.y).x, maxWorldPosX);
+        //         minWorldPosY = Math.min(this._tiledhelper.getPosWorld(pos.x, pos.y).y, minWorldPosY);
+        //         maxWorldPosY = Math.max(this._tiledhelper.getPosWorld(pos.x, pos.y).y, maxWorldPosY);
+        //     }
 
-            const tileMapScale = 0.5;
-            const tileMapItemSize = size(this._tiledhelper.tilewidth * tileMapScale, this._tiledhelper.tileheight * tileMapScale);
-            // draw shapView mask
-            this._fogAnimShapView.draw(fogPositions, tileMapItemSize.width);
+        //     const tileMapScale = 0.5;
+        //     const tileMapItemSize = size(this._tiledhelper.tilewidth * tileMapScale, this._tiledhelper.tileheight * tileMapScale);
+        //     // draw shapView mask
+        //     this._fogAnimShapView.draw(fogPositions, tileMapItemSize.width);
 
-            if (minWorldPosX != null && maxWorldPosX != null &&
-                minWorldPosY != null && maxWorldPosY != null) {
-                // set fogAninView size and pos  
-                this._fogAnimView.node.getComponent(UITransform).setContentSize(
-                    size(
-                        (maxWorldPosX - minWorldPosX + tileMapItemSize.width) / tileMapScale,
-                        (maxWorldPosY - minWorldPosY + tileMapItemSize.height) / tileMapScale
-                    )
-                );
-                this._fogAnimView.node.position = this.node.getComponent(UITransform).convertToNodeSpaceAR(
-                    v3(
-                        minWorldPosX - tileMapItemSize.width / 2,
-                        maxWorldPosY + tileMapItemSize.height / 2,
-                        0
-                    )
-                );
-                let dissolveImage = null;
-                if (data.direciton == TileHexDirection.Left) {
-                    dissolveImage = this.fogAnimDissolveImages[0];
-                } else if (data.direciton == TileHexDirection.LeftBottom) {
-                    dissolveImage = this.fogAnimDissolveImages[1];
-                } else if (data.direciton == TileHexDirection.LeftTop) {
-                    dissolveImage = this.fogAnimDissolveImages[2];
-                } else if (data.direciton == TileHexDirection.Right) {
-                    dissolveImage = this.fogAnimDissolveImages[3];
-                } else if (data.direciton == TileHexDirection.RightBottom) {
-                    dissolveImage = this.fogAnimDissolveImages[4];
-                } else if (data.direciton == TileHexDirection.RightTop) {
-                    dissolveImage = this.fogAnimDissolveImages[5];
-                }
-                if (dissolveImage == null) {
-                    dissolveImage = this.fogAnimDissolveImages[0];
-                }
-                this._fogAnimView.node.getComponent(Sprite).spriteFrame = dissolveImage;
-                // sharp pos
-                const sub = this._fogAnimView.node.position.clone().subtract(this._fogAnimOriginalPos);
-                this._fogAnimShapView.node.position = v3(-sub.x, -sub.y, 0);
-                tween(this._fogAnimView)
-                    .set({ alphaThreshold: 0.01 })
-                    .to(0.4, { alphaThreshold: 1 })
-                    .call(() => {
-                        this._fogAnimPlaying = false;
-                        this._playFogAnim();
-                    })
-                    .start();
-            }
-        } else {
-            this._playFogAnim();
-        }
+        //     if (minWorldPosX != null && maxWorldPosX != null &&
+        //         minWorldPosY != null && maxWorldPosY != null) {
+        //         // set fogAninView size and pos  
+        //         this._fogAnimView.node.getComponent(UITransform).setContentSize(
+        //             size(
+        //                 (maxWorldPosX - minWorldPosX + tileMapItemSize.width) / tileMapScale,
+        //                 (maxWorldPosY - minWorldPosY + tileMapItemSize.height) / tileMapScale
+        //             )
+        //         );
+        //         this._fogAnimView.node.position = this.node.getComponent(UITransform).convertToNodeSpaceAR(
+        //             v3(
+        //                 minWorldPosX - tileMapItemSize.width / 2,
+        //                 maxWorldPosY + tileMapItemSize.height / 2,
+        //                 0
+        //             )
+        //         );
+        //         let dissolveImage = null;
+        //         if (data.direciton == TileHexDirection.Left) {
+        //             dissolveImage = this.fogAnimDissolveImages[0];
+        //         } else if (data.direciton == TileHexDirection.LeftBottom) {
+        //             dissolveImage = this.fogAnimDissolveImages[1];
+        //         } else if (data.direciton == TileHexDirection.LeftTop) {
+        //             dissolveImage = this.fogAnimDissolveImages[2];
+        //         } else if (data.direciton == TileHexDirection.Right) {
+        //             dissolveImage = this.fogAnimDissolveImages[3];
+        //         } else if (data.direciton == TileHexDirection.RightBottom) {
+        //             dissolveImage = this.fogAnimDissolveImages[4];
+        //         } else if (data.direciton == TileHexDirection.RightTop) {
+        //             dissolveImage = this.fogAnimDissolveImages[5];
+        //         }
+        //         if (dissolveImage == null) {
+        //             dissolveImage = this.fogAnimDissolveImages[0];
+        //         }
+        //         this._fogAnimView.node.getComponent(Sprite).spriteFrame = dissolveImage;
+        //         // sharp pos
+        //         const sub = this._fogAnimView.node.position.clone().subtract(this._fogAnimOriginalPos);
+        //         this._fogAnimShapView.node.position = v3(-sub.x, -sub.y, 0);
+        //         tween(this._fogAnimView)
+        //             .set({ alphaThreshold: 0.01 })
+        //             .to(0.4, { alphaThreshold: 1 })
+        //             .call(() => {
+        //                 this._fogAnimPlaying = false;
+        //                 this._playFogAnim();
+        //             })
+        //             .start();
+        //     }
+        // } else {
+        //     this._playFogAnim();
+        // }
     }
 }
 
