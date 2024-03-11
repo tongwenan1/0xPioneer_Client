@@ -67,10 +67,10 @@ export class TaskListUI extends PopUpUI {
             action.active = true;
 
             // useLanMgr
-            // action.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(toDoTasks[i].name);
-            // action.getChildByName("SubTitle").getComponent(Label).string = LanMgr.Instance.getLanById(curStep.name);
-            action.getChildByName("Title").getComponent(Label).string = toDoTasks[i].name;
-            action.getChildByName("SubTitle").getComponent(Label).string = curStep.name;
+            action.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(toDoTasks[i].name);
+            action.getChildByName("SubTitle").getComponent(Label).string = LanMgr.Instance.getLanById(curStep.name);
+            // action.getChildByName("Title").getComponent(Label).string = toDoTasks[i].name;
+            // action.getChildByName("SubTitle").getComponent(Label).string = curStep.name;
 
             action.getChildByName("Progress").getComponent(Label).string = curStepCondIndex + "/" + curStep.condwin.length;
             action.getComponent(Button).clickEvents[0].customEventData = JSON.stringify(curStep);
@@ -96,8 +96,8 @@ export class TaskListUI extends PopUpUI {
                 detail.active = true;
 
                 // useLanMgr
-                // detail.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById(showTasks[i].name);
-                detail.getChildByName("Label").getComponent(Label).string = showTasks[i].name;
+                detail.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById(showTasks[i].name);
+                // detail.getChildByName("Label").getComponent(Label).string = showTasks[i].name;
 
                 detail.getChildByName("Selected").active = i == this._detailSelectedIndex;
                 detail.getComponent(Button).clickEvents[0].customEventData = i.toString();
@@ -175,8 +175,8 @@ export class TaskListUI extends PopUpUI {
                             finish.setParent(this._detailProgressFinishItem.getParent());
 
                             // useLanMgr
-                            // finish.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(temple.stepData.name);
-                            finish.getChildByName("Title").getComponent(Label).string = temple.stepData.name;
+                            finish.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(temple.stepData.name);
+                            // finish.getChildByName("Title").getComponent(Label).string = temple.stepData.name;
 
                             finish.getChildByName("Progress").getComponent(Label).string = curStepCondIndex + "/" + temple.stepData.condwin.length;
                             this._detailProgressList.push(finish);
@@ -194,8 +194,8 @@ export class TaskListUI extends PopUpUI {
                             finish.setParent(this._detailProgressToDoItem.getParent());
 
                             // useLanMgr
-                            // finish.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(temple.stepData.name);
-                            finish.getChildByName("Title").getComponent(Label).string = temple.stepData.name;
+                            finish.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(temple.stepData.name);
+                            // finish.getChildByName("Title").getComponent(Label).string = temple.stepData.name;
 
                             finish.getChildByName("Progress").getComponent(Label).string = curStepCondIndex + "/" + temple.stepData.condwin.length;
                             this._detailProgressList.push(finish);
