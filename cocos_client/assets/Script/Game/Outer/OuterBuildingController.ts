@@ -75,12 +75,9 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                             tilePos.y
                         ));
                     }
-                    console.log("exce step1");
                     BuildingMgr.instance.changeDecorateWorldPosToTiledPos(decorate.id, tiledPositions);
-                    console.log("exce step2" + JSON.stringify(decorate));
                 }
             }
-            console.log("exce d: " + JSON.stringify(decorates));
 
             this._refreshDecorationUI();
         }

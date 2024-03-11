@@ -131,6 +131,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
         EventMgr.on(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
         EventMgr.on(EventName.ROOKIE_GUIDE_BEGIN_EYES, this.onRookieGuideBeginEyes, this);
+        EventMgr.on(EventName.ROOKIE_GUIDE_THIRD_EYES, this.onRookieGuideThirdEyes, this);
     }
 
     start() {
@@ -157,7 +158,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 if (actionPioneer != null) {
                     const currentWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(actionPioneer.stayPos.x, actionPioneer.stayPos.y);
                     GameMain.inst.MainCamera.node.worldPosition = currentWorldPos;
-                    this.scheduleOnce(()=> {
+                    this.scheduleOnce(() => {
                         GameMain.inst.outSceneMap.mapBG.shadowErase(actionPioneer.stayPos);
                     }, 0.2);
                     GameMain.inst.MainCamera.orthoHeight = 0.5 * this._cameraBeginOrthoHeight;
@@ -380,17 +381,17 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 actionPioneer.actionType = MapPioneerActionType.idle;
                 view.refreshUI(actionPioneer);
                 GameMain.inst.UI.dialogueUI.dialogShow(TalkMgr.Instance.getTalk("talk14"), null, () => {
-                    tween(GameMain.inst.MainCamera)
-                        .to(0.5, { orthoHeight: this._cameraBeginOrthoHeight })
-                        .call(() => {
-                            UserInfoMgr.Instance.isFinishRookie = true;
-                            data.node.active = false;
-                        })
-                        .start();
+                    UserInfoMgr.Instance.isFinishRookie = true;
+                    data.node.active = false;
                 });
                 GameMain.inst.UI.dialogueUI.show(true);
             }, 10);
         }
+    }
+    private onRookieGuideThirdEyes() {
+        tween(GameMain.inst.MainCamera)
+            .to(0.5, { orthoHeight: this._cameraBeginOrthoHeight })
+            .start();
     }
 
     private _refreshFightView(fightId: string, attacker: { name: string; hp: number; hpMax: number; }, defender: { name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositons: Vec2[]) {

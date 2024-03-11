@@ -187,7 +187,6 @@ export default class BuildingMgr {
         temple.show = false;
         this._savePioneerData();
         this._saveDecorateData();
-        console.log('exce temp: '+ JSON.stringify(temple));
         for (const observer of this._observers) {
             observer.buildingDidHide(temple.id, beacusePioneerId);
         }

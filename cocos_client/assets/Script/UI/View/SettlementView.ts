@@ -2,16 +2,14 @@ import { _decorator, Component, instantiate, Label, Layout, Node, UITransform, W
 import SettlementMgr, { SettlementModel } from '../../Manger/SettlementMgr';
 import EventMgr from '../../Manger/EventMgr';
 import { EventName } from '../../Const/ConstDefine';
+import EvaluationMgr from '../../Manger/EvaluationMgr';
+import LanMgr from '../../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('SettlementView')
 export class SettlementView extends Component {
 
     public refreshUI(beginLevel: number, endLevel: number) {
-
-
-
-
         const model = SettlementMgr.instance.getSettlement(beginLevel, endLevel);
 
         this.node.getChildByPath("Content/LevelTitle").getComponent(Label).string = "C.Lv " + beginLevel + "  >  C.Lv " + endLevel;
@@ -60,6 +58,14 @@ export class SettlementView extends Component {
             content.getChildByPath("ExploredEvents/Value").getComponent(Label).string = model.exploredEvents.toString();
         } else {
             content.getChildByName("ExploredEvents").active = false;
+        }
+
+        const evaluation = EvaluationMgr.Instance.getEvaluation(model.newPioneerIds.length, model.killEnemies, model.gainResources, model.exploredEvents);
+        if (evaluation != null) {
+            content.getChildByName("Evaluation").active = true;
+            content.getChildByPath("Evaluation/Value").getComponent(Label).string = LanMgr.Instance.getLanById(evaluation.title); 
+        } else {
+            content.getChildByName("Evaluation").active = false;
         }
         content.getComponent(Layout).updateLayout();
 

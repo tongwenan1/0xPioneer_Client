@@ -4068,7 +4068,7 @@
         "__id__": 187
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 195
@@ -4083,7 +4083,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -271.19999999999993,
+      "y": -261.19999999999993,
       "z": 0
     },
     "_lrot": {
@@ -4551,7 +4551,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 360,
-      "height": 221.20000000000002
+      "height": 311.20000000000005
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
