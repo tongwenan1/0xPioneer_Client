@@ -7,7 +7,8 @@ export enum MapBuildingType {
     explore = "explore",
     stronghold = "stronghold",
     city = "city",
-    event = "event"
+    event = "event",
+    decorate = "decorate"
 }
 
 export enum BuildingFactionType {

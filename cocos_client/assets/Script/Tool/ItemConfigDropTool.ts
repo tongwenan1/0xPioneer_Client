@@ -30,7 +30,7 @@ export default class ItemConfigDropTool {
                 let tempArtifact: ArtifactData = null;
 
                 if (type == ItemConfigType.Item) {
-                    tempItem = new ItemData(id, num);
+                    tempItem = new ItemData(id, num); 
 
                 } else if (type == ItemConfigType.Artifact) {
                     tempArtifact = new ArtifactData(id, num);

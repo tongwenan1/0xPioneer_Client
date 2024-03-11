@@ -504,5 +504,37 @@
         "quota": 1,
         "progress":5,
         "event": "910301"
+    },
+    {
+        "id": "decorate_1",
+        "name": "decoration-006",
+        "type": "decorate",
+        "show": true,
+        "block": true,
+        "posmode": "world",
+        "positions": [
+            {
+                "x": 3235.62,
+                "y": 316.728
+            }
+        ]
+    },
+    {
+        "id": "decorate_2",
+        "name": "decoration-006",
+        "type": "decorate",
+        "show": true,
+        "block": true,
+        "posmode": "world",
+        "positions": [
+            {
+                "x": 169.817,
+                "y": -1017.004
+            },
+            {
+                "x": 284,
+                "y": -1017
+            }
+        ]
     }
 ]

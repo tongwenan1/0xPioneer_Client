@@ -9,6 +9,7 @@ import { TilePos } from '../Game/TiledMap/TileTool';
 import MapPioneerModel, { MapPlayerPioneerModel, MapPioneerActionType, MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import LanMgr from '../Manger/LanMgr';
 import { EventName } from '../Const/ConstDefine';
+import BuildingMgr from '../Manger/BuildingMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerListUI')
@@ -107,6 +108,7 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
 
     private onTapPlayerItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
+        BuildingMgr.instance.hideBuilding("decorate_2");
         if (GameMain.inst.OutScene.active) {
             if (index < this._pioneers.length) {
                 const currentMapPos = this._pioneers[index].stayPos;

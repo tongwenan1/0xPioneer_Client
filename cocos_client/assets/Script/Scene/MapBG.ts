@@ -109,7 +109,6 @@ export class MapBG extends Component {
         return this._tiledhelper.Path_IsBlock(mapPos.x, mapPos.y);
     }
     public shadowErase(mapPos: Vec2) {
-        console.log('exce d: ', mapPos)
         this._tiledhelper.Shadow_Earse(this._tiledhelper.getPos(mapPos.x, mapPos.y), 0, 6, false);
         this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons());
     }
@@ -268,7 +267,12 @@ export class MapBG extends Component {
                                     }
                                 }
                                 if (cursorShowTilePositions == null) {
-                                    cursorShowTilePositions = [v2(tp.x, tp.y)];
+                                    const decorate = BuildingMgr.instance.getDecorateByMapPos(v2(tp.x, tp.y));
+                                    if (decorate != null) {
+                                        cursorShowTilePositions = decorate.stayMapPositions;
+                                    } else {
+                                        cursorShowTilePositions = [v2(tp.x, tp.y)];
+                                    }
                                 }
                                 this._mapCursorView.show(cursorShowTilePositions, Color.RED);
                                 GameMain.inst.UI.ChangeCursor(2);

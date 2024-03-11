@@ -1,6 +1,7 @@
 import { Vec2, math, resources, v2 } from "cc";
 import { ResourceModel } from "./UserInfoMgr";
 import MapBuildingModel, { BuildingFactionType, MapBuildingType, MapResourceBuildingModel, MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
+import MapDecorateModel, { MapDecoratePosMode } from "../Game/Outer/Model/MapDecorateModel";
 
 export interface BuildingMgrEvent {
     buildingDidHide(buildingId: string, beacusePioneerId: string): void;
@@ -33,6 +34,44 @@ export default class BuildingMgr {
             this._observers.splice(index, 1);
         }
     }
+    public getAllDecorate(): MapDecorateModel[] {
+        return this._decorates;
+    }
+    public getDecorateById(decorateId: string) {
+        const findDatas = this._decorates.filter((decorate) => {
+            return decorate.id === decorateId;
+        });
+        if (findDatas.length > 0) {
+            return findDatas[0];
+        }
+        return null;
+    }
+    public getDecorateByMapPos(pos: Vec2) {
+        const findDatas = this._decorates.filter((decorate) => {
+            let isExsit: boolean = false;
+            for (const temple of decorate.stayMapPositions) {
+                if (temple.x === pos.x && temple.y === pos.y) {
+                    isExsit = true;
+                    break;
+                }
+            }
+            return isExsit;
+        });
+        if (findDatas.length > 0) {
+            return findDatas[0];
+        }
+        return null;
+    }
+    public changeDecorateWorldPosToTiledPos(decorateId: string, tiledPositions: Vec2[]) {
+        const decorate = this.getDecorateById(decorateId);
+        if (decorate != null) {
+            decorate.posMode = MapDecoratePosMode.Tiled;
+            decorate.stayMapPositions = tiledPositions;
+            this._saveDecorateData();
+        }
+    }
+
+
 
     public getAllBuilding(): MapBuildingModel[] {
         return this._buildings;
@@ -105,31 +144,52 @@ export default class BuildingMgr {
         }
     }
     public showBuilding(buildingId: string) {
+        let temple = null;
         const actionTargetBuilding = this.getBuildingById(buildingId);
-        if (actionTargetBuilding == null) {
+        if (actionTargetBuilding != null) {
+            temple = actionTargetBuilding;
+        } else {
+            const decorateBuiling = this.getDecorateById(buildingId);
+            if (decorateBuiling != null) {
+                temple = decorateBuiling;
+            }
+        }
+        if (temple == null) {
             return;
         }
-        if (actionTargetBuilding.show) {
+        if (temple.show) {
             return;
         }
-        actionTargetBuilding.show = true;
+        temple.show = true;
         this._savePioneerData();
+        this._saveDecorateData();
         for (const observer of this._observers) {
-            observer.buildingDidShow(actionTargetBuilding.id);
+            observer.buildingDidShow(temple.id);
         }
     }
     public hideBuilding(buildingId: string, beacusePioneerId: string = null) {
+        let temple = null;
         const actionTargetBuilding = this.getBuildingById(buildingId);
-        if (actionTargetBuilding == null) {
+        if (actionTargetBuilding != null) {
+            temple = actionTargetBuilding;
+        } else {
+            const decorateBuiling = this.getDecorateById(buildingId);
+            if (decorateBuiling != null) {
+                temple = decorateBuiling;
+            }
+        }
+        if (temple == null) {
             return;
         }
-        if (!actionTargetBuilding.show) {
+        if (!temple.show) {
             return;
         }
-        actionTargetBuilding.show = false;
+        temple.show = false;
         this._savePioneerData();
+        this._saveDecorateData();
+        console.log('exce temp: '+ JSON.stringify(temple));
         for (const observer of this._observers) {
-            observer.buildingDidHide(actionTargetBuilding.id, beacusePioneerId);
+            observer.buildingDidHide(temple.id, beacusePioneerId);
         }
     }
     public changeBuildingFaction(buildingId: string, faction: BuildingFactionType) {
@@ -236,13 +296,15 @@ export default class BuildingMgr {
 
     private static _instance: BuildingMgr;
     private _localStorageKey: string = "local_buildings";
+    private _localDecorateKey: string = "local_decorate";
     private _observers: BuildingMgrEvent[] = [];
     private _buildings: MapBuildingModel[] = [];
-
+    private _decorates: MapDecorateModel[] = [];
     private async _initData() {
         this._buildings = [];
         let resultData: any = null;
         const localDatas = localStorage.getItem(this._localStorageKey);
+        const localDecorateDatas = localStorage.getItem(this._localDecorateKey);
         if (localDatas == null) {
             resultData = await new Promise((resolve, reject) => {
                 resources.load("data_local/map_building", (err: Error, data: any) => {
@@ -260,69 +322,83 @@ export default class BuildingMgr {
                     for (const pos of temple.positions) {
                         mapPositions.push(v2(pos.x, pos.y));
                     }
-                    if (temple.type == MapBuildingType.city) {
-                        newModel = new MapMainCityBuildingModel(
-                            temple.show,
+                    if (temple.type == MapBuildingType.decorate) {
+                        newModel = new MapDecorateModel(
                             temple.id,
-                            temple.type,
                             temple.name,
-                            temple.faction,
-                            temple.defendPioneerIds,
-                            temple.level,
-                            mapPositions,
-                            temple.hp,
-                            temple.hp,
-                            temple.attack
-                        );
-                    } else if (temple.type == MapBuildingType.resource) {
-                        const resources: ResourceModel[] = [];
-                        if (temple.resources != null) {
-                            for (const resourceData of temple.resources) {
-                                resources.push({
-                                    id: resourceData.id,
-                                    num: resourceData.num,
-                                });
-                            }
-                        }
-                        newModel = new MapResourceBuildingModel(
                             temple.show,
-                            temple.id,
-                            temple.type,
-                            temple.name,
-                            temple.faction,
-                            temple.defendPioneerIds,
-                            temple.level,
-                            mapPositions,
-                            resources,
-                            temple.quota ? temple.quota : 1
-                        );
-                    } else {
-                        newModel = new MapBuildingModel(
-                            temple.show,
-                            temple.id,
-                            temple.type,
-                            temple.name,
-                            temple.faction,
-                            temple.defendPioneerIds,
-                            temple.level,
+                            temple.block,
+                            temple.posmode,
                             mapPositions
                         );
+                        this._decorates.push(newModel);
+                    } else {
+                        if (temple.type == MapBuildingType.city) {
+                            newModel = new MapMainCityBuildingModel(
+                                temple.show,
+                                temple.id,
+                                temple.type,
+                                temple.name,
+                                temple.faction,
+                                temple.defendPioneerIds,
+                                temple.level,
+                                mapPositions,
+                                temple.hp,
+                                temple.hp,
+                                temple.attack
+                            );
+                        } else if (temple.type == MapBuildingType.resource) {
+                            const resources: ResourceModel[] = [];
+                            if (temple.resources != null) {
+                                for (const resourceData of temple.resources) {
+                                    resources.push({
+                                        id: resourceData.id,
+                                        num: resourceData.num,
+                                    });
+                                }
+                            }
+                            newModel = new MapResourceBuildingModel(
+                                temple.show,
+                                temple.id,
+                                temple.type,
+                                temple.name,
+                                temple.faction,
+                                temple.defendPioneerIds,
+                                temple.level,
+                                mapPositions,
+                                resources,
+                                temple.quota ? temple.quota : 1
+                            );
+                        } else {
+                            newModel = new MapBuildingModel(
+                                temple.show,
+                                temple.id,
+                                temple.type,
+                                temple.name,
+                                temple.faction,
+                                temple.defendPioneerIds,
+                                temple.level,
+                                mapPositions
+                            );
+                        }
+                        if (temple.progress != null) {
+                            newModel.progress = temple.progress;
+                        }
+                        if (temple.winprogress != null) {
+                            newModel.winprogress = temple.winprogress;
+                        }
+                        if (temple.event != null) {
+                            newModel.originalEventId = temple.event;
+                            newModel.eventId = temple.event;
+                        }
+                        if (temple.exp != null) {
+                            newModel.exp = temple.exp;
+                        }
+                        this._buildings.push(newModel);
                     }
-                    if (temple.progress != null) {
-                        newModel.progress = temple.progress;
-                    }
-                    if (temple.winprogress != null) {
-                        newModel.winprogress = temple.winprogress;
-                    }
-                    if (temple.event != null) {
-                        newModel.originalEventId = temple.event;
-                        newModel.eventId = temple.event;
-                    }
-                    if (temple.exp != null) {
-                        newModel.exp = temple.exp;
-                    }
-                    this._buildings.push(newModel);
                 }
+                this._savePioneerData();
+                this._saveDecorateData();
             }
         } else {
             resultData = JSON.parse(localDatas);
@@ -391,9 +467,32 @@ export default class BuildingMgr {
                 this._buildings.push(newModel);
             }
         }
+
+        if (localDecorateDatas != null) {
+            const resultDecorateData = JSON.parse(localDecorateDatas);
+            for (const temple of resultDecorateData) {
+                const mapPositions = [];
+                for (const pos of temple._stayMapPositions) {
+                    const tempPos = v2(pos.x, pos.y);
+                    mapPositions.push(tempPos);
+                }
+                const newModel = new MapDecorateModel(
+                    temple._id,
+                    temple._name,
+                    temple._show,
+                    temple._block,
+                    temple._posMode,
+                    mapPositions
+                );
+                this._decorates.push(newModel);
+            }
+        }
     }
 
     private _savePioneerData() {
         localStorage.setItem(this._localStorageKey, JSON.stringify(this._buildings));
+    }
+    private _saveDecorateData() {
+        localStorage.setItem(this._localDecorateKey, JSON.stringify(this._decorates));
     }
 }

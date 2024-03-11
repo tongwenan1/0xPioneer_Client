@@ -458,6 +458,9 @@ export class TileMapHelper {
         }
     }
     Path_AddDynamicBlock(block: IDynamicBlock): void {
+        if (this._dynamicblock.some(temple=> temple.TileX == block.TileX && temple.TileY == block.TileY)) {
+            return;
+        }
         this._dynamicblock.push(block);
     }
     Path_RemoveDynamicBlock(block: IDynamicBlock): void {
