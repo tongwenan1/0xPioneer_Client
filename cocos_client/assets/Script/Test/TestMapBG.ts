@@ -190,7 +190,7 @@ export class TestMapBG extends Component {
 
         //init tiledmap by a helper class
         this._tiledhelper = new TileMapHelper(_tilemap);
-        this._tiledhelper.Shadow_Init(0, 75);
+        this._tiledhelper.Shadow_Init(0, 75, null);
         this._tiledhelper._shadowhalftag = 73;
         this._tiledhelper._shadowhalf2tag = 74;
 

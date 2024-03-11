@@ -255,16 +255,42 @@ export class TileMapHelper {
     _shadowcleantag: number;
     _shadowhalftag: number;
     _shadowhalf2tag: number;
-    Shadow_Init(cleantag: number, shadowtag: number, layername: string = "shadow"): void {
+    _shadowLayer:cc.TiledLayer;
+    protected _shadowBorderPfb: cc.Prefab;
+    protected _freeShadowBorders: cc.Node[] = [];
+    protected _usedSHadowBorders: cc.Node[] = [];
+    protected _ShadowBorder_Reset() {
+        for(; this._usedSHadowBorders.length > 0; ){
+
+            let borderNode = this._usedSHadowBorders[this._usedSHadowBorders.length-1];
+            this._shadowLayer.removeUserNode(borderNode); 
+
+            this._freeShadowBorders.push(this._usedSHadowBorders.pop());
+        }
+    }
+    protected _Fetch_ShadowBorderNode():cc.Node {
+        let bn;
+        if(this._freeShadowBorders.length > 0){
+            bn = this._freeShadowBorders.pop();
+        }
+        else {
+            bn = cc.instantiate(this._shadowBorderPfb);
+        }
+
+        return bn;
+    }
+    Shadow_Init(cleantag: number, shadowtag: number, shadowborderPfb:cc.Prefab, layername: string = "shadow"): void {
         this._shadowcleantag = cleantag;
         this._shadowtag = shadowtag;
         var layer = this._tilemap.getLayer(layername);
         layer.node.active = true;
+        this._shadowLayer = layer;
+        this._shadowBorderPfb = shadowborderPfb;
+
         this._shadowtiles = [];
         for (var y = 0; y < this.height; y++) {
             for (var x = 0; x < this.width; x++) {
                 var _node = new cc.Node();
-
 
                 let t = _node.addComponent(MyTile);
                 t.fall = -1;
@@ -313,6 +339,7 @@ export class TileMapHelper {
         //console.log("pos=" + pos.x + "," + pos.y + ":" + pos.worldx + "," + pos.worldy);
         //for (var z = pos.calc_z - extlen; z <= pos.calc_z + extlen; z++) {
         const newCleardPositons = [];
+        const borderTilePostions:TilePos[] = [];
         let vx = 10000;
         let vy = 10000;
         for (var y = pos.calc_y - extlen; y <= pos.calc_y + extlen; y++) {
@@ -343,6 +370,7 @@ export class TileMapHelper {
                             var border = Math.abs(pos.calc_x - x) == extlen || Math.abs(pos.calc_y - y) == extlen || Math.abs(pos.calc_z - z) == extlen;
                             if (border) {
                                 s.grid = this._shadowhalftag;
+                                borderTilePostions.push(gpos);
                             }
                         }
                         s.owner = owner;
@@ -359,6 +387,22 @@ export class TileMapHelper {
             }
         }
         //}
+
+        // update user tile for border tiles
+        if(this._shadowBorderPfb){
+            this._ShadowBorder_Reset();
+            for(let i=0; i< borderTilePostions.length; ++i){
+                let borderPos = borderTilePostions[i];
+                let borderNode = this._Fetch_ShadowBorderNode();
+                borderNode.setWorldPosition(cc.v3(borderPos.worldx, borderPos.worldy, 0));
+                this._shadowLayer.addUserNode(borderNode);
+                this._usedSHadowBorders.push(borderNode);
+
+                let bnSpr:cc.Sprite = borderNode.getComponent(cc.Sprite);
+                bnSpr.customMaterial.setProperty("dissolveThreshold", 0.5); // TO DO : calc disolve threshold by distance from player
+            }
+        }
+
         this._tilemap.getLayer("shadow").updateViewPort(vx, vy, extlen * 2 + 1, extlen * 2 + 1);
         return newCleardPositons;
     }

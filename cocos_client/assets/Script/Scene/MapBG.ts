@@ -130,6 +130,9 @@ export class MapBG extends Component {
     @property([PrefabInfo])
     PrefabInfo: PrefabInfo[] = [];
 
+    @property(Prefab)
+    private shadowBorderPrefab = null;
+
     CreateDecoration(index: number): Node {
         if (this.PrefabInfo.length == 0)
             return null;
@@ -365,7 +368,7 @@ export class MapBG extends Component {
 
         //init tiledmap by a helper class
         this._tiledhelper = new TileMapHelper(_tilemap);
-        this._tiledhelper.Shadow_Init(0, 75);
+        this._tiledhelper.Shadow_Init(0, 75, this.shadowBorderPrefab);
         this._tiledhelper._shadowhalftag = 73;
         this._tiledhelper._shadowhalf2tag = 74;
 
