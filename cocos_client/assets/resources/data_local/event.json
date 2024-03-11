@@ -58,8 +58,8 @@
       "910106"
     ],
     "select_txt": [
-      "open human-shaped cocoons",
-      "open egg-shaped cocoons"
+      "310401",
+      "310408"
     ],
     "select_cond": null,
     "enemy": "",
@@ -348,8 +348,8 @@
       "910209"
     ],
     "select_txt": [
-      "enter the ancient",
-      "observe around"
+      "310402",
+      "310409"
     ],
     "select_cond": null,
     "enemy": "",
@@ -392,8 +392,8 @@
       "910207"
     ],
     "select_txt": [
-      "fight",
-      "evade"
+      "310403",
+      "310410"
     ],
     "select_cond": null,
     "enemy": "",
@@ -526,8 +526,8 @@
       "910211"
     ],
     "select_txt": [
-      "make a rope and use it",
-      "jump into it"
+      "310404",
+      "310411"
     ],
     "select_cond": [
       [
@@ -694,8 +694,8 @@
       "910218"
     ],
     "select_txt": [
-      "use the token",
-      "don't use the token"
+      "310405",
+      "310412"
     ],
     "select_cond": [
       [
@@ -803,8 +803,8 @@
       "910305"
     ],
     "select_txt": [
-      "to the warehouse",
-      "to the energy room"
+      "310406",
+      "310413"
     ],
     "select_cond": null,
     "enemy": "",
@@ -872,8 +872,8 @@
       "910308"
     ],
     "select_txt": [
-      "use stones to repair the tube",
-      "take away the tube"
+      "310407",
+      "310414"
     ],
     "select_cond": [
       [
