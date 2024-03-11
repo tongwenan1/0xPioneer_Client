@@ -3,10 +3,8 @@ import { resources } from "cc";
 export default class TalkMgr {
 
     public getTalk(talkId: string) {
-        for (const temple of this._talks) {
-            if (talkId === temple.id) {
-                return temple;
-            }
+        if (this._talks[talkId] != null) {
+            return this._talks[talkId];
         }
         return null;
     }
@@ -26,7 +24,7 @@ export default class TalkMgr {
     }
 
     private static _instance: TalkMgr = null;
-    private _talks: any[] = [];
+    private _talks: any = null;
     private async _initData() {
         const obj = await new Promise((resolve) => {
             resources.load("data_local/talk", (err: Error, data: any) => {
@@ -38,7 +36,7 @@ export default class TalkMgr {
             });
         })
         if (obj != null) {
-            this._talks = obj as [];
+            this._talks = obj;
         }
     }
 }
