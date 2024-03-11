@@ -66,7 +66,7 @@ export default class ArtifactMgr {
                     }
                 }
             }
-
+            
             // effect
             if (artifactConfig.effect.length > 0) {
                 for (let j = 0; j < artifactConfig.effect.length; j++) {
