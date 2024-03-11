@@ -66,7 +66,7 @@ export class DialogueUI extends PopUpUI {
         dialogView.getChildByName("NextButton").active = true;
 
         const currentMesssage = this._talk.messsages[this._dialogStep];
-        if (currentMesssage.type == null || currentMesssage.type == "chat") {
+        if (currentMesssage.type == null || currentMesssage.type == 0) {
             dialogView.active = true;
             selectView.active = false;
             if (this._roleNames.indexOf(currentMesssage.name) != -1) {
@@ -88,7 +88,7 @@ export class DialogueUI extends PopUpUI {
             for (const roleName of this._roleNames) {
                 dialogView.getChildByName(roleName).active = roleName == currentMesssage.name;
             }
-        } else if (currentMesssage.type == "action") {
+        } else if (currentMesssage.type == 1) {
             if ( currentMesssage.text != undefined) {
                 dialogView.active = true;
                 dialogView.getChildByName("name_bg").active = false;
