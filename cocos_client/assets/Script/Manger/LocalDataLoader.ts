@@ -14,6 +14,7 @@ import BattleReportsMgr from "db://assets/Script/Manger/BattleReportsMgr";
 import LvlupMgr from "./LvlupMgr";
 import LanMgr from "./LanMgr";
 import ArtifactMgr from "./ArtifactMgr";
+import EvaluationMgr from "./EvaluationMgr";
 
 export default class LocalDataLoader {
 
@@ -41,6 +42,7 @@ export default class LocalDataLoader {
         await BattleReportsMgr.Instance.initData();
         await LvlupMgr.Instance.initData();
         await ArtifactMgr.Instance.initData();
+        await EvaluationMgr.Instance.initData();
         this._loadStatus = 2;
     }
 
