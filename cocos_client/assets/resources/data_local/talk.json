@@ -3,63 +3,63 @@
     "id": "talk01",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503001",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": false,
         "name": "502002",
         "text": "503002",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503003",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": false,
         "name": "502002",
         "text": "503004",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503005",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503006",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": false,
         "name": "502002",
         "text": "503007",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503008",
         "select": null
       },
       {
-        "type": "action",
+        "type": "1",
         "leftShow": null,
         "name": "",
         "text": "503009",
@@ -73,77 +73,77 @@
     "id": "talk02",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502003",
         "text": "503010",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": false,
         "name": "502002",
         "text": "503011",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502003",
         "text": "503012",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": false,
         "name": "502002",
         "text": "503013",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502003",
         "text": "503014",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": false,
         "name": "502002",
         "text": "503015",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502003",
         "text": "503016",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": false,
         "name": "502002",
         "text": "503017",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502003",
         "text": "503018",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502003",
         "text": "503019",
         "select": null
       },
       {
-        "type": "action",
+        "type": "1",
         "leftShow": null,
         "name": "",
         "text": "503020",
@@ -158,42 +158,42 @@
     "id": "talk03",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": false,
         "name": "502002",
         "text": "503021",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502004",
         "text": "503022",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": false,
         "name": "502002",
         "text": "503023",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502004",
         "text": "503024",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502004",
         "text": "503025",
         "select": null
       },
       {
-        "type": "action",
+        "type": "1",
         "leftShow": null,
         "name": "",
         "text": "503026",
@@ -208,42 +208,42 @@
     "id": "talk04",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": false,
         "name": "502002",
         "text": "503027",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503028",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": false,
         "name": "502002",
         "text": "503029",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503030",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503031",
         "select": null
       },
       {
-        "type": "action",
+        "type": "1",
         "leftShow": null,
         "name": "",
         "text": "503032",
@@ -258,35 +258,35 @@
     "id": "talk05",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502005",
         "text": "503033",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502005",
         "text": "503034",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502002",
         "text": "503035",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502005",
         "text": "503036",
         "select": null
       },
       {
-        "type": "action",
+        "type": "1",
         "leftShow": null,
         "name": "",
         "text": "503037",
@@ -301,28 +301,28 @@
     "id": "talk06",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": false,
         "name": "502002",
         "text": "503038",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503039",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503040",
         "select": null
       },
       {
-        "type": "action",
+        "type": "1",
         "leftShow": null,
         "name": "",
         "text": "503041",
@@ -337,28 +337,28 @@
     "id": "talk07",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502006",
         "text": "503042",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502006",
         "text": "503043",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502006",
         "text": "503044",
         "select": null
       },
       {
-        "type": "action",
+        "type": "1",
         "leftShow": null,
         "name": "",
         "text": "503045",
@@ -373,28 +373,28 @@
     "id": "talk08",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502007",
         "text": "503046",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502007",
         "text": "503047",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502007",
         "text": "503048",
         "select": null
       },
       {
-        "type": "action",
+        "type": "1",
         "leftShow": null,
         "name": "",
         "text": "503049",
@@ -409,21 +409,21 @@
     "id": "talk09",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503050",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503051",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502001",
         "text": "503052",
@@ -435,14 +435,14 @@
     "id": "talk10",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502007",
         "text": "503053",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502007",
         "text": "503054",
@@ -454,14 +454,14 @@
     "id": "talk11",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502006",
         "text": "503055",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502006",
         "text": "503056",
@@ -473,14 +473,14 @@
     "id": "talk12",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502007",
         "text": "503057",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502007",
         "text": "503058",
@@ -492,14 +492,14 @@
     "id": "talk13",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502007",
         "text": "503059",
         "select": null
       },
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": true,
         "name": "502007",
         "text": "503060",
@@ -511,14 +511,14 @@
     "id": "talk14",
     "messsages": [
       {
-        "type": "chat",
+        "type": "0",
         "leftShow": null,
         "name": "",
         "text": "503061",
         "select": null
       },
       {
-        "type": "action",
+        "type": "1",
         "leftShow": null,
         "name": "",
         "text": "503062",
@@ -529,7 +529,7 @@
         ]
       },
       {
-        "type": "action",
+        "type": "1",
         "leftShow": null,
         "name": "",
         "text": "503063",
@@ -540,7 +540,7 @@
         ]
       },
       {
-        "type": "action",
+        "type": "1",
         "leftShow": null,
         "name": "",
         "text": "503064",
