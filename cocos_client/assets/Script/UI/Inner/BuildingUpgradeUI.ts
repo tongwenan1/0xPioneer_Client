@@ -37,7 +37,7 @@ export class BuildingUpgradeUI extends PopUpUI {
 
         // useLanMgr 
         // LanMgr.Instance.replaceLanById("107549", [LanMgr.Instance.getLanById(houseData.buildName), houseData.buildLevel]); // %s Lv.%s  
-        buildingInfoView.getChildByPath("Buildings/Houses/HousesLabel").getComponent(Label).string = houseData.buildName + " Lv." + houseData.buildLevel;
+        buildingInfoView.getChildByPath("Buildings/Residential/ResidentialLabel").getComponent(Label).string = houseData.buildName + " Lv." + houseData.buildLevel;
         this._housesBtn.clickEvents[0].customEventData = houseData.buildID;
     }
 
@@ -51,7 +51,7 @@ export class BuildingUpgradeUI extends PopUpUI {
 
     onLoad(): void {
         this._barracksBtn = this.node.getChildByPath("BuildingInfoView/Buildings/Barracks/Barracks").getComponent(Button);
-        this._housesBtn = this.node.getChildByPath("BuildingInfoView/Buildings/Houses/Houses").getComponent(Button);
+        this._housesBtn = this.node.getChildByPath("BuildingInfoView/Buildings/Residential/Residential").getComponent(Button);
 
         this._levelInfoView = this.node.getChildByPath("LevelInfoView");
         this._levelInfoView.active = false;

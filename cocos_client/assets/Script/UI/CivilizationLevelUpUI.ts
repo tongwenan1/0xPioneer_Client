@@ -78,6 +78,7 @@ export class CivilizationLevelUpUI extends PopUpUI {
                     view.getChildByName("Icon").getComponent(Sprite).spriteFrame = await BackpackItem.getItemIcon(ItemMgr.Instance.getItemConf(id).icon);
                     view.getChildByName("Num").getComponent(Label).string = "x" + num;
                     view.setParent(content.getChildByPath("Rewards/Content"));
+                    this._showRewardItems.push(view);
                 }
             }
             content.getChildByPath("Rewards/Content").getComponent(Layout).updateLayout();

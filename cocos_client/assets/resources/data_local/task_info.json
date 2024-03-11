@@ -59,7 +59,7 @@
         "entrypoint": {
             "type": "talkwithnpc|npc_3",
             "talk": "talk02",
-            "result": "504012"
+            "result": "504002"
         },
         "exitpoint": {
             "action": [

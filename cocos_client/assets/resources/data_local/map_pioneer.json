@@ -5,9 +5,9 @@
         "type": "player",
         "friendly": true,
         "show": true,
-        "hp": 100,
-        "attack": 15,
-        "def": 5,
+        "hp": 5,
+        "attack": 20,
+        "def": 0,
         "pos": {
             "x": 22,
             "y": 43
@@ -70,9 +70,9 @@
         "type": "npc",
         "friendly": true,
         "show": true,
-        "hp": 50,
+        "hp": 10,
         "attack": 8,
-        "def": 10,
+        "def": 0,
         "pos": {
             "x": 26,
             "y": 34

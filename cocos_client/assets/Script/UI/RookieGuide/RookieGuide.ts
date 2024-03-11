@@ -15,8 +15,8 @@ export class RookieGuide extends Component {
         this._videoView = this.node.getChildByName("VideoContent");
         this._guideView = this.node.getChildByName("GuideContent");
 
-        this._videoView.active = true;
-        this._guideView.active = false;
+        this._videoView.active = false;
+        this._guideView.active = true;
         // useLanMgr 
         // this._videoView.getChildByPath("SkipButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
     }
