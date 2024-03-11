@@ -59,7 +59,7 @@
         "entrypoint": {
             "type": "talkwithnpc|npc_3",
             "talk": "talk02",
-            "result": "Deal!"
+            "result": "504012"
         },
         "exitpoint": {
             "action": [
@@ -67,7 +67,7 @@
                     "type": "fightwithpioneer|npc_3"
                 }
             ],
-            "result": "Refuse"
+            "result": "504003"
         },
         "steps": [
             {
@@ -211,7 +211,7 @@
         "entrypoint": {
             "type": "talkwithnpc|npc_4",
             "talk": "talk03",
-            "result": "Of course!",
+            "result": "504004",
             "timecount": "600"
         },
         "steps": [
@@ -254,7 +254,7 @@
         "entrypoint": {
             "type": "talkwithnpc|npc_0",
             "talk": "talk04",
-            "result": "I'm on it;Seriously?",
+            "result": "504006;504007?",
             "cdtimecount": "5"
         },
         "steps": [
@@ -359,7 +359,7 @@
         "entrypoint": {
             "type": "talkwithnpc|npc_2",
             "talk": "talk05",
-            "result": "Nice!;Take care"
+            "result": "504008;504009"
         },
         "steps": [
             {
@@ -390,7 +390,7 @@
         "entrypoint": {
             "type": "talkwithnpc|npc_0",
             "talk": "talk06",
-            "result": "Good job;I'll try",
+            "result": "504010;504011",
             "cdtimecount": "5"
         },
         "steps": [
@@ -467,7 +467,7 @@
             "type": "talkwithbuilding|building_1",
             "triggerpioneerId": "gangster_3",
             "talk": "talk07",
-            "result": "Deal!"
+            "result": "504012"
         },
         "exitpoint": {
             "action": [
@@ -475,7 +475,7 @@
                     "type": "maincityfightwithpioneer|gangster_3"
                 }
             ],
-            "result": "Fight!"
+            "result": "504013"
         },
         "steps": [
             {
@@ -523,7 +523,7 @@
         "entrypoint": {
             "type": "talkwithnpc|npc_1",
             "talk": "talk08",
-            "result": "All right"
+            "result": "504014"
         },
         "steps": [
             {
