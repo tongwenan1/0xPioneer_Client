@@ -358,50 +358,67 @@ export default class UserInfoMgr {
         this._exp = value;
 
         let isLvlup: boolean = false;
-        const lvlConfig = LvlupMgr.Instance.getConfigByLvl(this._level);
-        const nextLvConfig = LvlupMgr.Instance.getConfigByLvl(this._level + 1);
-        if (nextLvConfig != null) {
-            if (this._exp > lvlConfig[0].exp) {
-                isLvlup = true;
-                this._level += 1;
-                this._exp -= lvlConfig[0].exp;
-                this.cityVision += nextLvConfig[0].city_vision;
+        let parseLv: boolean = true;
+        const nextLvConfigs = [];
+        do {
+            const lvlConfig = LvlupMgr.Instance.getConfigByLvl(this._level);
+            const nextLvConfig = LvlupMgr.Instance.getConfigByLvl(this._level + 1);
+            if (nextLvConfig != null) {
+                if (this._exp >= lvlConfig[0].exp) {
+                    isLvlup = true;
+                    this._level += 1;
+                    this._exp -= lvlConfig[0].exp;
+                    this.cityVision += nextLvConfig[0].city_vision;
+
+                    nextLvConfigs.push(nextLvConfig);
+                }
+                else {
+                    parseLv = false;
+                }
+            }
+            else {
+                parseLv = false;
             }
         }
+        while (parseLv);
 
         this._localJsonData.playerData.exp = value;
         this._localDataChanged(this._localJsonData);
 
-        if (this._exp != original) {
+        if (value != original) {
             for (const observe of this._observers) {
                 if (observe.playerExpChanged != null) {
-                    observe.playerExpChanged(this._exp - original);
+                    observe.playerExpChanged(value - original);
                 }
             }
         }
 
         if (isLvlup) {
-            for (const observe of this._observers) {
-                if (observe.playerLvlupChanged != null) {
-                    observe.playerLvlupChanged(this._level);
+            for (let i = 0; i < nextLvConfigs.length; i++) {
+                const nextLvConfig = nextLvConfigs[i];
+
+                for (const observe of this._observers) {
+                    if (observe.playerLvlupChanged != null) {
+                        observe.playerLvlupChanged(this._level);
+                    }
                 }
-            }
-
-            // hpmax
-            if (nextLvConfig[0].hp_max > 0) {
-                PioneerMgr.instance.pioneerChangeAllPlayerOriginalHpMax(nextLvConfig[0].hp_max);
-            }
-
-            // event_building
-            if (nextLvConfig[0].event_building != null) {
-                for (const buidingId of nextLvConfig[0].event_building) {
-                    BuildingMgr.instance.showBuilding(buidingId);
+                
+                // hpmax
+                if (nextLvConfig[0].hp_max > 0) {
+                    PioneerMgr.instance.pioneerChangeAllPlayerOriginalHpMax(nextLvConfig[0].hp_max);
                 }
-            }
 
-            // reward
-            if (nextLvConfig[0].reward != null) {
-                ItemConfigDropTool.getItemByConfig(nextLvConfig[0].reward, false);
+                // event_building
+                if (nextLvConfig[0].event_building != null) {
+                    for (const buidingId of nextLvConfig[0].event_building) {
+                        BuildingMgr.instance.showBuilding(buidingId);
+                    }
+                }
+
+                // reward
+                if (nextLvConfig[0].reward != null) {
+                    ItemConfigDropTool.getItemByConfig(nextLvConfig[0].reward, false);
+                }
             }
         }
     }
@@ -703,5 +720,9 @@ export default class UserInfoMgr {
         if (jsonObject != null) {
             sys.localStorage.setItem(this._localStorageKey, JSON.stringify(jsonObject));
         }
+    }
+
+    private _levelup() {
+
     }
 }
