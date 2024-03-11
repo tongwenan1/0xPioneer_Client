@@ -1,5 +1,5 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
-import ItemData from '../Model/ItemData';
+import ItemData, { ItemType } from '../Model/ItemData';
 import { BackpackItem } from './BackpackItem';
 import ItemMgr, { ItemMgrEvent, ItemArrangeType } from '../Manger/ItemMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
@@ -91,6 +91,11 @@ export class BackpackUI extends PopUpUI implements ItemMgrEvent {
 
         this.itemCount = 0;
         for (let i = 0; i < items.length; ++i) {
+
+            const itemConf = ItemMgr.Instance.getItemConf(items[i].itemConfigId);
+            if (itemConf == null) continue;
+            if (itemConf.itemType == ItemType.Resource) continue;
+
             let itemTile: BackpackItem;
             if (this.freeItemTile.length > 0) {
                 itemTile = this.freeItemTile.pop();

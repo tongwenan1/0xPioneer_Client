@@ -15,7 +15,7 @@ export default class ItemConfigDropTool {
      * @param datas config
      * @param showDialog showGettedUI
      */
-    public static getItemByConfig(datas: any[], showDialog: boolean = true) {
+    public static getItemByConfig(datas: [number, string, number][], showDialog: boolean = true) {
         const items: ItemData[] = [];
         const showItemDialogDatas: ItemInfoShowModel[] = [];
 

@@ -24,6 +24,7 @@ export class ItemConfigData {
     itemDesc: string;
     grade: number; // grade 1-5
     // gain prop config, itemType = ItemType.GainProp
-    gainPropId: string;
-    gainPropCount: number;
+    // gainPropId: string;
+    // gainPropCount: number;
+    gain_item: null | [number, string, number];
 }

@@ -27,10 +27,10 @@ export class ItemInfoUI extends PopUpUI {
             this.typeLabel.string = this._items[0].itemConfig.itemType.toString();
 
             // useLanMgr
-            // this.nameLabel.string = LanMgr.Instance.getLanById(this._items[0].itemConfig.itemName);
-            // this.descTxt.string = LanMgr.Instance.getLanById(this._items[0].itemConfig.itemDesc);
-            this.nameLabel.string = this._items[0].itemConfig.itemName == null ? "" : this._items[0].itemConfig.itemName;
-            this.descTxt.string = this._items[0].itemConfig.itemDesc == null ? "" : this._items[0].itemConfig.itemDesc;
+            this.nameLabel.string = LanMgr.Instance.getLanById(this._items[0].itemConfig.itemName);
+            this.descTxt.string = LanMgr.Instance.getLanById(this._items[0].itemConfig.itemDesc);
+            // this.nameLabel.string = this._items[0].itemConfig.itemName == null ? "" : this._items[0].itemConfig.itemName;
+            // this.descTxt.string = this._items[0].itemConfig.itemDesc == null ? "" : this._items[0].itemConfig.itemDesc;
     
             this._isGet = isGet;
 

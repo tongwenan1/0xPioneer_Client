@@ -3,6 +3,7 @@ import ItemData, { ItemConfigData, ItemType } from "../Model/ItemData";
 import UserInfoMgr, { FinishedEvent } from "./UserInfoMgr";
 import { ItemConfigType } from "../Const/ConstDefine";
 import { ItemInfoShowModel } from "../UI/ItemInfoUI";
+import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 
 export enum ItemArrangeType {
     Recently = "Recently",
@@ -107,16 +108,19 @@ export default class ItemMgr {
 
         const itemConfig = this.getItemConf(itemConfigId);
         if (itemConfig != null) {
-            if (itemConfig.itemType == ItemType.AddProp) {
-                const exsitItems = this._localItemDatas.filter(v => v.itemConfigId.toString() == itemConfig.gainPropId);
-                if (exsitItems.length > 0) {
-                    exsitItems[0].count += itemConfig.gainPropCount;
-                    exsitItems[0].addTimeStamp = new Date().getTime();
-                } else {
-                    const newItem = new ItemData(itemConfig.gainPropId, itemConfig.gainPropCount);
-                    newItem.addTimeStamp = new Date().getTime();
-                    this._localItemDatas.push(newItem);
-                }
+            // if (itemConfig.itemType == ItemType.AddProp) {
+            //     const exsitItems = this._localItemDatas.filter(v => v.itemConfigId.toString() == itemConfig.gainPropId);
+            //     if (exsitItems.length > 0) {
+            //         exsitItems[0].count += itemConfig.gainPropCount;
+            //         exsitItems[0].addTimeStamp = new Date().getTime();
+            //     } else {
+            //         const newItem = new ItemData(itemConfig.gainPropId, itemConfig.gainPropCount);
+            //         newItem.addTimeStamp = new Date().getTime();
+            //         this._localItemDatas.push(newItem);
+            //     }
+            // }
+            if (itemConfig.gain_item != null) {
+                ItemConfigDropTool.getItemByConfig([itemConfig.gain_item]);
             }
         }
 
