@@ -6,7 +6,7 @@ import { PopUpUI } from '../../BasicView/PopUpUI';
 import CountMgr, { CountType } from '../../Manger/CountMgr';
 import LanMgr from '../../Manger/LanMgr';
 import EventMgr from '../../Manger/EventMgr';
-import { EventName } from '../../Const/ConstDefine';
+import { EventName, NPCNameLangType } from '../../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -37,8 +37,16 @@ export class DialogueUI extends PopUpUI {
         "rebels",
         "secretGuard"
     ];
+    private _roleViewNameMap: Map<NPCNameLangType, string> = new Map();
     onLoad(): void {
         EventMgr.on(EventName.CHANGE_LANG, this._refreshUI, this);
+
+        this._roleViewNameMap.set(NPCNameLangType.Artisan, "artisan");
+        this._roleViewNameMap.set(NPCNameLangType.DoomsdayGangBigTeam, "doomsdayGangBigTeam");
+        this._roleViewNameMap.set(NPCNameLangType.DoomsdayGangSpy, "doomsdayGangSpy");
+        this._roleViewNameMap.set(NPCNameLangType.Hunter, "hunter");
+        this._roleViewNameMap.set(NPCNameLangType.Prophetess, "prophetess");
+        this._roleViewNameMap.set(NPCNameLangType.SecretGuard, "secretGuard");
     }
     start() {
 
@@ -69,24 +77,23 @@ export class DialogueUI extends PopUpUI {
         if (currentMesssage.type == null || currentMesssage.type == 0) {
             dialogView.active = true;
             selectView.active = false;
-            if (this._roleNames.indexOf(currentMesssage.name) != -1) {
+            dialogView.getChildByName("name_bg").active = false;
+            dialogView.getChildByName("player_name").active = false;
+            if (this._roleViewNameMap.has(currentMesssage.name)) {
                 dialogView.getChildByName("name_bg").active = true;
-                dialogView.getChildByPath("name_bg/Label").getComponent(Label).string = currentMesssage.name;
+                dialogView.getChildByPath("name_bg/Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.name);
 
-                dialogView.getChildByName("player_name").active = false;
-            } else {
-                dialogView.getChildByName("name_bg").active = false;
+            } else if (currentMesssage.name == NPCNameLangType.DefaultPlayer) {
 
                 dialogView.getChildByName("player_name").active = true;
                 dialogView.getChildByPath("player_name/Label").getComponent(Label).string = UserInfo.Instance.playerName;
             }
 
-            // useLanMgr
-            // dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.text);
-            dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = currentMesssage.text;
+            dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.text);
 
             for (const roleName of this._roleNames) {
-                dialogView.getChildByName(roleName).active = roleName == currentMesssage.name;
+                if (this._roleViewNameMap)
+                dialogView.getChildByName(roleName).active = roleName == this._roleViewNameMap.get(currentMesssage.name);
             }
         } else if (currentMesssage.type == 1) {
             if ( currentMesssage.text != undefined) {
@@ -94,9 +101,7 @@ export class DialogueUI extends PopUpUI {
                 dialogView.getChildByName("name_bg").active = false;
                 dialogView.getChildByName("player_name").active = false;
 
-                // useLanMgr
-                // dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.text);
-                dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = currentMesssage.text;
+                dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.text);
 
                 for (const roleName of this._roleNames) {
                     dialogView.getChildByName(roleName).active = false;
@@ -104,7 +109,7 @@ export class DialogueUI extends PopUpUI {
             }
             else {
                 dialogView.active = false;
-            } 
+            }
             selectView.active = true;
             dialogView.getChildByName("NextButton").active = false;
             
@@ -113,9 +118,7 @@ export class DialogueUI extends PopUpUI {
                 if (i < currentMesssage.select.length) {
                     button.active = true;
 
-                    // useLanMgr
-                    // button.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.select[i]);
-                    button.getChildByName("Label").getComponent(Label).string = currentMesssage.select[i];
+                    button.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.select[i]);
 
                     button.getComponent(Button).clickEvents[0].customEventData = currentMesssage.select[i];
                 } else {

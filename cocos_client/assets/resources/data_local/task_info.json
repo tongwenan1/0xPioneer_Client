@@ -6,7 +6,7 @@
         "entrypoint": {
             "type": "talkwithnpc|npc_0",
             "talk": "talk01",
-            "result": "Easy job"
+            "result": "504001"
         },
         "steps": [
             {

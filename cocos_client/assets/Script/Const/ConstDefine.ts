@@ -35,3 +35,13 @@ export enum ItemConfigType {
     Artifact = 3,
     Drop = 4
 }
+
+export enum NPCNameLangType {
+    Prophetess = "502001",
+    DefaultPlayer = "502002",
+    DoomsdayGangSpy = "502003",
+    Hunter = "502004",
+    SecretGuard = "502005",
+    DoomsdayGangBigTeam = "502006",
+    Artisan = "502007"
+}

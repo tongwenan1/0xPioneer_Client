@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox } from 'cc';
+import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, resources, Prefab, AssetManager } from 'cc';
 import LocalDataLoader from '../../Manger/LocalDataLoader';
 import UserInfoMgr from '../../Manger/UserInfoMgr';
 import { Web3Helper } from '../../Game/MetaMask/EthHelper';
@@ -15,29 +15,24 @@ export class FakeLoading extends Component {
         this._loadingView = this.node.getChildByName("LoadingUI");
     }
     async start() {
-        //prepare main scene.
         this._loadingView.active = true;
-        this.node.getChildByName("label-info").getComponent(Label).string = "loading is done. can go next.";
+        if (LocalDataLoader.instance.loadStatus == 0) {
+            await LocalDataLoader.instance.loadLocalDatas();
+        }
+        // load prefab
         let loadRate: number = 0;
-        director.preloadScene(
-            "main",
-            (completedCount: number, totalCount: number, item: any) => {
-                const currentRate = completedCount / totalCount;
-                if (currentRate > loadRate) {
-                    loadRate = currentRate;
-                    this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
-                }
-            },
-            async (error: null | Error, sceneAsset?: SceneAsset) => {
-                if (error == null) {
-                    if (LocalDataLoader.instance.loadStatus == 0) {
-                        await LocalDataLoader.instance.loadLocalDatas();
-                    }
-                    this._loaded = true;
-                    director.loadScene("main");
-                }
+        resources.loadDir("decoration", Prefab, (finished: number, total: number, item: AssetManager.RequestItem) => {
+           const currentRate = finished / total;
+           if (currentRate > loadRate) {
+               loadRate = currentRate;
+               this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
+           }
+        }, (err: Error, data: Prefab[]) => {
+            if (err != null) {
+                return;
             }
-        );
+            director.loadScene("main");
+        });
 
         {
             //Find and Reg recall method.
