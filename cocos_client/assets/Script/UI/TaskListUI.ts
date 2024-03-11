@@ -207,9 +207,13 @@ export class TaskListUI extends PopUpUI {
             } else {
                 this._detailTaskView.getChildByName("ProgressList").active = false;
             }
+            this._toDoButton.getChildByName("Focus").active = this._isDetailToDoShow;
+            this._toDoButton.getChildByName("Common").active = !this._isDetailToDoShow;
+            this._toDoButton.getChildByName("Label").getComponent(Label).color = this._isDetailToDoShow ? new Color(66, 53, 36, 255) : new Color(123, 115, 112, 255);
 
-            this._toDoButton.getComponent(Sprite).color = this._isDetailToDoShow ? new Color(255, 255, 255, 255) : new Color(151, 151, 151, 255);
-            this._completedButton.getComponent(Sprite).color = !this._isDetailToDoShow ? new Color(255, 255, 255, 255) : new Color(151, 151, 151, 255);
+            this._completedButton.getChildByName("Focus").active = !this._isDetailToDoShow;
+            this._completedButton.getChildByName("Common").active = this._isDetailToDoShow;
+            this._completedButton.getChildByName("Label").getComponent(Label).color = !this._isDetailToDoShow ? new Color(66, 53, 36, 255) : new Color(123, 115, 112, 255);
         }
     }
 
@@ -351,6 +355,7 @@ export class TaskListUI extends PopUpUI {
         }
         this._isDetailToDoShow = false;
         this._detailSelectedIndex = 0;
+
         this.refreshUI();
     }
     private onTapDetailTaskItem(event: Event, customEventData: string) {
