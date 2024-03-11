@@ -1,6 +1,6 @@
 import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
-import UserInfoMgr from '../Manger/UserInfoMgr';
+import UserInfoMgr, { UserInfoEvent } from '../Manger/UserInfoMgr';
 import LvlupMgr from '../Manger/LvlupMgr';
 import { GameMain } from '../GameMain';
 import { BackpackItem } from './BackpackItem';
@@ -14,7 +14,7 @@ import { SettlementView } from './View/SettlementView';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfoUI')
-export class PlayerInfoUI extends PopUpUI {
+export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
 
 
     @property(Prefab)
@@ -80,6 +80,9 @@ export class PlayerInfoUI extends PopUpUI {
 
         EventMgr.on(EventName.LOADING_FINISH, this._loadOver, this);
         EventMgr.on(EventName.CHANGE_LANG, this._onChangeLang, this);
+
+        UserInfoMgr.Instance.addObserver(this);
+
     }
 
     start() {
@@ -93,6 +96,13 @@ export class PlayerInfoUI extends PopUpUI {
     onDestroy() {
         EventMgr.off(EventName.LOADING_FINISH, this._loadOver, this);
         EventMgr.off(EventName.CHANGE_LANG, this._onChangeLang, this);
+
+        UserInfoMgr.Instance.removeObserver(this);
+    }
+
+    // ---------------- UserInfoEvent
+    public playerLvlupChanged() {
+        this._refreshUI();
     }
 
     //-------------------------------- function

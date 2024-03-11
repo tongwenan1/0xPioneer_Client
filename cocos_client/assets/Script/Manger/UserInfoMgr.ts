@@ -42,21 +42,21 @@ export enum FinishedEvent {
 }
 
 export interface UserInfoEvent {
-    playerNameChanged(value: string): void;
+    playerNameChanged?(value: string): void;
     playerExpChanged?(value: number): void;
     playerLvlupChanged?(value: number): void;
 
     playerExplorationValueChanged?(value: number): void;
 
-    getNewTask(taskId: string): void;
-    triggerTaskStepAction(action: string, delayTime: number): void;
-    finishEvent(event: FinishedEvent): void;
-    taskProgressChanged(taskId: string): void;
-    taskFailed(taskId: string): void;
+    getNewTask?(taskId: string): void;
+    triggerTaskStepAction?(action: string, delayTime: number): void;
+    finishEvent?(event: FinishedEvent): void;
+    taskProgressChanged?(taskId: string): void;
+    taskFailed?(taskId: string): void;
 
-    gameTaskOver(): void;
+    gameTaskOver?(): void;
 
-    generateTroopTimeCountChanged(leftTime: number): void;
+    generateTroopTimeCountChanged?(leftTime: number): void;
 }
 
 export default class UserInfoMgr {
@@ -86,14 +86,18 @@ export default class UserInfoMgr {
         const step = task.steps[task.currentStep];
         for (const templeWinAction of step.startaction) {
             for (const observe of this._observers) {
-                observe.triggerTaskStepAction(templeWinAction.type, templeWinAction.delaytime != null ? templeWinAction.delaytime : 0);
+                if (observe.triggerTaskStepAction) {
+                    observe.triggerTaskStepAction(templeWinAction.type, templeWinAction.delaytime != null ? templeWinAction.delaytime : 0);
+                }
             }
         }
         this._currentTasks.push(task);
         this._localJsonData.playerData.currentTasks = this._currentTasks;
         this._localDataChanged(this._localJsonData);
         for (const observer of this._observers) {
-            observer.getNewTask(task);
+            if (observer.getNewTask) {
+                observer.getNewTask(task);
+            }
         }
         if (task.steps[task.currentStep].condwin.length <= 0) {
             this.checkCanFinishedTask("", "");
@@ -144,7 +148,9 @@ export default class UserInfoMgr {
                     // next step startaction
                     for (const templeStartAction of task.steps[task.currentStep].startaction) {
                         for (const observe of this._observers) {
-                            observe.triggerTaskStepAction(templeStartAction.type, templeStartAction.delaytime != null ? templeStartAction.delaytime : 0);
+                            if (observe.triggerTaskStepAction) {
+                                observe.triggerTaskStepAction(templeStartAction.type, templeStartAction.delaytime != null ? templeStartAction.delaytime : 0);
+                            }
                         }
                     }
                 }
@@ -173,7 +179,9 @@ export default class UserInfoMgr {
                     temple.buildingid == buildingid) {
                     task.fail = true;
                     for (const observe of this._observers) {
-                        observe.taskFailed(task.id);
+                        if (observe.taskFailed) {
+                            observe.taskFailed(task.id);
+                        }
                     }
                     break;
                 }
@@ -200,7 +208,9 @@ export default class UserInfoMgr {
                     temple.pioneerid == pioneerid) {
                     task.fail = true;
                     for (const observe of this._observers) {
-                        observe.taskFailed(task.id);
+                        if (observe.taskFailed) {
+                            observe.taskFailed(task.id);
+                        }
                     }
                     break;
                 }
@@ -214,7 +224,9 @@ export default class UserInfoMgr {
             this._localJsonData.playerData.finishedEvents = this._finishedEvents;
             this._localDataChanged(this._localJsonData);
             for (const observer of this._observers) {
-                observer.finishEvent(step);
+                if (observer.finishEvent) {
+                    observer.finishEvent(step);
+                }
             }
         }
     }
@@ -336,7 +348,9 @@ export default class UserInfoMgr {
         this._localDataChanged(this._localJsonData);
 
         for (const observe of this._observers) {
-            observe.playerNameChanged(value);
+            if (observe.playerNameChanged) {
+                observe.playerNameChanged(value);
+            }
         }
     }
     public set exp(value: number) {
@@ -424,7 +438,9 @@ export default class UserInfoMgr {
                     this._generateTroopInfo = null;
                 }
                 for (const observe of this._observers) {
-                    observe.generateTroopTimeCountChanged(this._generateTroopInfo == null ? 0 : this._generateTroopInfo.countTime);
+                    if (observe.generateTroopTimeCountChanged) {
+                        observe.generateTroopTimeCountChanged(this._generateTroopInfo == null ? 0 : this._generateTroopInfo.countTime);
+                    }
                 }
                 this._localJsonData.playerData.generateTroopInfo = this._generateTroopInfo;
                 this._localDataChanged(this._localJsonData);
@@ -533,7 +549,9 @@ export default class UserInfoMgr {
                 }
             }
             for (const observe of this._observers) {
-                observe.taskProgressChanged(task.id);
+                if (observe.taskProgressChanged) {
+                    observe.taskProgressChanged(task.id);
+                }
             }
         }
         if (taskForceOver ||
@@ -574,11 +592,15 @@ export default class UserInfoMgr {
 
                 } else if (splitDatas[0] == "gameover") {
                     for (const observe of this._observers) {
-                        observe.gameTaskOver();
+                        if (observe.gameTaskOver) {
+                            observe.gameTaskOver();
+                        }
                     }
                 } else {
                     for (const observe of this._observers) {
-                        observe.triggerTaskStepAction(templeWinAction.type, templeWinAction.delaytime != null ? templeWinAction.delaytime : 0);
+                        if (observe.triggerTaskStepAction) {
+                            observe.triggerTaskStepAction(templeWinAction.type, templeWinAction.delaytime != null ? templeWinAction.delaytime : 0);
+                        }
                     }
                 }
             }
