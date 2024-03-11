@@ -91,8 +91,10 @@ export class EventUI extends PopUpUI {
         // useLanMgr
         // this._dialogView.getChildByPath("nextButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this._dialogView.getChildByPath("fightButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._dialogView.getChildByPath("content/label").getComponent(Label).string = LanMgr.Instance.getLanById(event.text);
-        this._dialogView.getChildByPath("content/label").getComponent(Label).string = event.text;
+
+        // useLanMgr
+        this._dialogView.getChildByPath("content/label").getComponent(Label).string = LanMgr.Instance.getLanById(event.text);
+        // this._dialogView.getChildByPath("content/label").getComponent(Label).string = event.text;
 
         this._dialogNextButton.active = false;
         this._dialogFightButton.active = false;
@@ -120,8 +122,8 @@ export class EventUI extends PopUpUI {
                     }
 
                     // useLanMgr
-                    // item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? LanMgr.Instance.getLanById(event.select_txt[i]) : conditionResult.tipText) : LanMgr.Instance.getLanById(event.select_txt[i]);
-                    item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? event.select_txt[i] : conditionResult.tipText) : event.select_txt[i];
+                    item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? LanMgr.Instance.getLanById(event.select_txt[i]) : conditionResult.tipText) : LanMgr.Instance.getLanById(event.select_txt[i]);
+                    // item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? event.select_txt[i] : conditionResult.tipText) : event.select_txt[i];
 
                     item.getComponent(Sprite).grayscale = conditionResult != null ? !conditionResult.satisfy : false;
                     item.getComponent(Button).interactable = conditionResult != null ? conditionResult.satisfy : true;
