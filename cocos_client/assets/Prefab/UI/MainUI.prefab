@@ -1200,7 +1200,7 @@
     "_target": null,
     "_left": 0,
     "_right": 0,
-    "_top": 0,
+    "_top": -10,
     "_bottom": 0,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
@@ -1247,7 +1247,7 @@
     "value": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 490,
+      "y": 500,
       "z": 0
     }
   },

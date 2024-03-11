@@ -34,11 +34,13 @@ export class BuildingUpgradeUI extends PopUpUI {
         // LanMgr.Instance.replaceLanById("107549", [LanMgr.Instance.getLanById(barracksData.buildName), barracksData.buildLevel]); // %s Lv.%s  
         buildingInfoView.getChildByPath("Buildings/Barracks/BarracksLabel").getComponent(Label).string = barracksData.buildName + " Lv." + barracksData.buildLevel;
         this._barracksBtn.clickEvents[0].customEventData = barracksData.buildID;
-
+        console.log("exce bbb: " + barracksData.buildID)
         // useLanMgr 
         // LanMgr.Instance.replaceLanById("107549", [LanMgr.Instance.getLanById(houseData.buildName), houseData.buildLevel]); // %s Lv.%s  
         buildingInfoView.getChildByPath("Buildings/Residential/ResidentialLabel").getComponent(Label).string = houseData.buildName + " Lv." + houseData.buildLevel;
         this._housesBtn.clickEvents[0].customEventData = houseData.buildID;
+
+        console.log("exce buid: " + houseData.buildID)
     }
 
     public mainCityBtn: Button = null;
@@ -50,12 +52,12 @@ export class BuildingUpgradeUI extends PopUpUI {
     private _levelInfoShowCostItems: Node[] = [];
 
     onLoad(): void {
-        this._barracksBtn = this.node.getChildByPath("BuildingInfoView/Buildings/Barracks/Barracks").getComponent(Button);
-        this._housesBtn = this.node.getChildByPath("BuildingInfoView/Buildings/Residential/Residential").getComponent(Button);
+        this._barracksBtn = this.node.getChildByPath("BuildingInfoView/Buildings/Barracks").getComponent(Button);
+        this._housesBtn = this.node.getChildByPath("BuildingInfoView/Buildings/Residential").getComponent(Button);
 
         this._levelInfoView = this.node.getChildByPath("LevelInfoView");
         this._levelInfoView.active = false;
-        this._levelInfoCostItem = this._levelInfoView.getChildByPath("Bg/UpgradeContent/Resource/Item");
+        this._levelInfoCostItem = this._levelInfoView.getChildByPath("UpgradeContent/Resource/Item");
         this._levelInfoCostItem.active = false;
 
         EventMgr.on(EventName.CHANGE_LANG, this._onLangChang, this);
@@ -81,8 +83,11 @@ export class BuildingUpgradeUI extends PopUpUI {
         const innerBuildData = InnerBuildingMgr.Instance.getInfoById(buildingType);
         const upgradeData = innerBuildData.up[(userInnerData.buildLevel + 1).toString()];
 
-        const upgradeView = this._levelInfoView.getChildByPath("Bg/UpgradeContent");
-        const maxTipView = this._levelInfoView.getChildByPath("Bg/LevelMaxContent");
+        this._levelInfoView.getChildByName("Barracks").active = buildingType == InnerBuildingType.Barrack;
+        this._levelInfoView.getChildByName("Residential").active = buildingType == InnerBuildingType.House;
+
+        const upgradeView = this._levelInfoView.getChildByPath("UpgradeContent");
+        const maxTipView = this._levelInfoView.getChildByPath("LevelMaxContent");
         if (userInnerData.buildLevel >= innerBuildData.maxLevel ||
             upgradeData == null) {
             upgradeView.active = false;
@@ -142,17 +147,12 @@ export class BuildingUpgradeUI extends PopUpUI {
     }
     private _closeBuildingUpgradeUI() {
         this._levelInfoView.active = false;
-        this._barracksBtn.node.getComponent(Sprite).color = Color.WHITE;
-        this._housesBtn.node.getComponent(Sprite).color = Color.WHITE;
     }
 
 
     //----------------------------- action
     private onTapBuildingUpgradeShow(event: Event, customEventData: string) {
         const buildingType: InnerBuildingType = customEventData as InnerBuildingType;
-        this._barracksBtn.node.getComponent(Sprite).color = buildingType == InnerBuildingType.Barrack ? Color.RED : Color.WHITE;
-        this._housesBtn.node.getComponent(Sprite).color = buildingType == InnerBuildingType.House ? Color.RED : Color.WHITE;
-
         this._levelInfoView.active = true;
         this._refreshUpgradeUI(buildingType);
     }

@@ -2,7 +2,7 @@
   "ver": "1.0.26",
   "importer": "image",
   "imported": true,
-  "uuid": "9bb24f22-ade9-4d05-8155-0c7bf34fb5dc",
+  "uuid": "ee0bc535-68a2-497a-9941-1f26c9b95856",
   "files": [
     ".json",
     ".png"
@@ -10,14 +10,14 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "9bb24f22-ade9-4d05-8155-0c7bf34fb5dc@6c48a",
+      "uuid": "ee0bc535-68a2-497a-9941-1f26c9b95856@6c48a",
       "displayName": "treasurebox_icon_blue_lighting",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "9bb24f22-ade9-4d05-8155-0c7bf34fb5dc",
+        "imageUuidOrDatabaseUri": "ee0bc535-68a2-497a-9941-1f26c9b95856",
         "isUuid": true,
         "visible": false,
         "minfilter": "linear",
@@ -34,7 +34,7 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "9bb24f22-ade9-4d05-8155-0c7bf34fb5dc@f9941",
+      "uuid": "ee0bc535-68a2-497a-9941-1f26c9b95856@f9941",
       "displayName": "treasurebox_icon_blue_lighting",
       "id": "f9941",
       "name": "spriteFrame",
@@ -42,14 +42,14 @@
         "trimType": "auto",
         "trimThreshold": 1,
         "rotated": false,
-        "offsetX": 5.5,
-        "offsetY": 0.5,
-        "trimX": 22,
-        "trimY": 5,
-        "width": 256,
-        "height": 213,
-        "rawWidth": 289,
-        "rawHeight": 224,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 0,
+        "trimY": 0,
+        "width": 90,
+        "height": 76,
+        "rawWidth": 90,
+        "rawHeight": 76,
         "borderTop": 0,
         "borderBottom": 0,
         "borderLeft": 0,
@@ -61,17 +61,17 @@
         "meshType": 0,
         "vertices": {
           "rawPosition": [
-            -128,
-            -106.5,
+            -45,
+            -38,
             0,
-            128,
-            -106.5,
+            45,
+            -38,
             0,
-            -128,
-            106.5,
+            -45,
+            38,
             0,
-            128,
-            106.5,
+            45,
+            38,
             0
           ],
           "indexes": [
@@ -83,38 +83,38 @@
             3
           ],
           "uv": [
-            22,
-            219,
-            278,
-            219,
-            22,
-            6,
-            278,
-            6
+            0,
+            76,
+            90,
+            76,
+            0,
+            0,
+            90,
+            0
           ],
           "nuv": [
-            0.07612456747404844,
-            0.026785714285714284,
-            0.9619377162629758,
-            0.026785714285714284,
-            0.07612456747404844,
-            0.9776785714285714,
-            0.9619377162629758,
-            0.9776785714285714
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1
           ],
           "minPos": [
-            -128,
-            -106.5,
+            -45,
+            -38,
             0
           ],
           "maxPos": [
-            128,
-            106.5,
+            45,
+            38,
             0
           ]
         },
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "9bb24f22-ade9-4d05-8155-0c7bf34fb5dc@6c48a",
+        "imageUuidOrDatabaseUri": "ee0bc535-68a2-497a-9941-1f26c9b95856@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.12",
@@ -129,6 +129,6 @@
     "type": "sprite-frame",
     "hasAlpha": true,
     "fixAlphaTransparencyArtifacts": false,
-    "redirect": "9bb24f22-ade9-4d05-8155-0c7bf34fb5dc@f9941"
+    "redirect": "ee0bc535-68a2-497a-9941-1f26c9b95856@f9941"
   }
 }

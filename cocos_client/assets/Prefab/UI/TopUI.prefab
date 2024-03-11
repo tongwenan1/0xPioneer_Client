@@ -164,7 +164,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 1920,
-      "height": 100
+      "height": 80
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -238,8 +238,8 @@
     "_target": null,
     "_left": -1.1368683772161603e-13,
     "_right": -1.1368683772161603e-13,
-    "_top": 0,
-    "_bottom": 0,
+    "_top": 10,
+    "_bottom": 10,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
@@ -294,8 +294,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -833,
-      "y": -28,
+      "x": -839.209,
+      "y": -26.443,
       "z": 0
     },
     "_lrot": {
@@ -403,8 +403,6 @@
       "__id__": 0
     },
     "fileId": "4a+SFDnEhIDbeei0dighmW",
-    "instance": null,
-    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -430,8 +428,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -832,
-      "y": -66,
+      "x": -838.209,
+      "y": -64.443,
       "z": 0
     },
     "_lrot": {
@@ -539,8 +537,6 @@
       "__id__": 0
     },
     "fileId": "30Cc7aaJlPkI5tqyRFd8qX",
-    "instance": null,
-    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -566,8 +562,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -830.638,
-      "y": -23,
+      "x": -839.209,
+      "y": -26.443,
       "z": 0
     },
     "_lrot": {
@@ -675,8 +671,6 @@
       "__id__": 0
     },
     "fileId": "5c67rMlLNDRLGH7D1vTkGG",
-    "instance": null,
-    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -703,7 +697,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": -776.768,
-      "y": 23.367,
+      "y": 17.918,
       "z": 0
     },
     "_lrot": {
@@ -841,8 +835,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -839.851,
-      "y": -65.485,
+      "x": -792.551,
+      "y": -63.928,
       "z": 0
     },
     "_lrot": {
@@ -882,12 +876,12 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 63.77996826171875,
+      "width": 55.275970458984375,
       "height": 50.4
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0,
+      "x": 1,
       "y": 0.5
     },
     "_id": ""
@@ -919,10 +913,10 @@
       "a": 255
     },
     "_string": "Lv98",
-    "_horizontalAlign": 0,
+    "_horizontalAlign": 2,
     "_verticalAlign": 1,
-    "_actualFontSize": 30,
-    "_fontSize": 30,
+    "_actualFontSize": 26,
+    "_fontSize": 26,
     "_fontFamily": "Arial",
     "_lineHeight": 40,
     "_overflow": 0,
