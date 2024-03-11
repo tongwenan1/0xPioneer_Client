@@ -4,63 +4,54 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503001",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": false,
         "name": "502002",
         "text": "503002",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503003",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": false,
         "name": "502002",
         "text": "503004",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503005",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503006",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": false,
         "name": "502002",
         "text": "503007",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503008",
         "select": null
       },
       {
         "type": "1",
-        "leftShow": null,
         "name": "",
         "text": "503009",
         "select": [
@@ -74,77 +65,66 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": true,
         "name": "502003",
         "text": "503010",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": false,
         "name": "502002",
         "text": "503011",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502003",
         "text": "503012",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": false,
         "name": "502002",
         "text": "503013",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502003",
         "text": "503014",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": false,
         "name": "502002",
         "text": "503015",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502003",
         "text": "503016",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": false,
         "name": "502002",
         "text": "503017",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502003",
         "text": "503018",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502003",
         "text": "503019",
         "select": null
       },
       {
         "type": "1",
-        "leftShow": null,
         "name": "",
         "text": "503020",
         "select": [
@@ -159,42 +139,36 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": false,
         "name": "502002",
         "text": "503021",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502004",
         "text": "503022",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": false,
         "name": "502002",
         "text": "503023",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502004",
         "text": "503024",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502004",
         "text": "503025",
         "select": null
       },
       {
         "type": "1",
-        "leftShow": null,
         "name": "",
         "text": "503026",
         "select": [
@@ -209,42 +183,36 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": false,
         "name": "502002",
         "text": "503027",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503028",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": false,
         "name": "502002",
         "text": "503029",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503030",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503031",
         "select": null
       },
       {
         "type": "1",
-        "leftShow": null,
         "name": "",
         "text": "503032",
         "select": [
@@ -259,35 +227,30 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": true,
         "name": "502005",
         "text": "503033",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502005",
         "text": "503034",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502002",
         "text": "503035",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502005",
         "text": "503036",
         "select": null
       },
       {
         "type": "1",
-        "leftShow": null,
         "name": "",
         "text": "503037",
         "select": [
@@ -302,28 +265,24 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": false,
         "name": "502002",
         "text": "503038",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503039",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503040",
         "select": null
       },
       {
         "type": "1",
-        "leftShow": null,
         "name": "",
         "text": "503041",
         "select": [
@@ -338,28 +297,24 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": true,
         "name": "502006",
         "text": "503042",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502006",
         "text": "503043",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502006",
         "text": "503044",
         "select": null
       },
       {
         "type": "1",
-        "leftShow": null,
         "name": "",
         "text": "503045",
         "select": [
@@ -374,28 +329,24 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": true,
         "name": "502007",
         "text": "503046",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502007",
         "text": "503047",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502007",
         "text": "503048",
         "select": null
       },
       {
         "type": "1",
-        "leftShow": null,
         "name": "",
         "text": "503049",
         "select": [
@@ -410,21 +361,18 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503050",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503051",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502001",
         "text": "503052",
         "select": null
@@ -436,14 +384,12 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": true,
         "name": "502007",
         "text": "503053",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502007",
         "text": "503054",
         "select": null
@@ -455,14 +401,12 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": true,
         "name": "502006",
         "text": "503055",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502006",
         "text": "503056",
         "select": null
@@ -474,14 +418,12 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": true,
         "name": "502007",
         "text": "503057",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502007",
         "text": "503058",
         "select": null
@@ -493,14 +435,12 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": true,
         "name": "502007",
         "text": "503059",
         "select": null
       },
       {
         "type": "0",
-        "leftShow": true,
         "name": "502007",
         "text": "503060",
         "select": null
@@ -512,14 +452,12 @@
     "messsages": [
       {
         "type": "0",
-        "leftShow": null,
         "name": "",
         "text": "503061",
         "select": null
       },
       {
         "type": "1",
-        "leftShow": null,
         "name": "",
         "text": "503062",
         "select": [
@@ -530,7 +468,6 @@
       },
       {
         "type": "1",
-        "leftShow": null,
         "name": "",
         "text": "503063",
         "select": [
@@ -541,7 +478,6 @@
       },
       {
         "type": "1",
-        "leftShow": null,
         "name": "",
         "text": "503064",
         "select": [
