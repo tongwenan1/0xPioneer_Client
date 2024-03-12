@@ -339,7 +339,12 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
             this._refreshSettlememntTip();
         }
     }
+    private onTapTaskList() {
+        GameMain.inst.UI.taskListUI.refreshUI();
+        GameMain.inst.UI.taskListUI.show(true);
+    }
 
+    
     // index : 0:normal, 1:gear, 2:forbiden
     public ChangeCursor(index: number) {
         if (index >= this.cursorImages.length) {

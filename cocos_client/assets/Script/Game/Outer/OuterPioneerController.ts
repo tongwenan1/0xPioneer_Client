@@ -332,7 +332,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
     async update(deltaTime: number) {
         // default speed
-        const defaultSpeed = 250;
+        const defaultSpeed = 190;
         const allPioneers = PioneerMgr.instance.getAllPioneer();
 
         // artifact effect

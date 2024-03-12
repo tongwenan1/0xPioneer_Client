@@ -853,10 +853,10 @@ export class MapBG extends Component {
             var dir = new Vec3();
             Vec3.subtract(dir, wp, stayWorldPos);
             dir = dir.normalize();
-            tween(fogView)
-            .delay(0.3)
-            .by(0.4, { position: v3(dir.x * 80, dir.y * 80, dir.x ) })
-            .start();
+            // tween(fogView)
+            // .delay(0.3)
+            // .by(0.4, { position: v3(dir.x * 80, dir.y * 80, dir.x ) })
+            // .start();
         }
         // if (data.animTilePostions != null && data.animTilePostions.length > 0) {
         //     this._fogAnimPlaying = true;

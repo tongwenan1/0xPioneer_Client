@@ -79,7 +79,7 @@ export class TaskListUI extends PopUpUI {
         }
 
         // useLanMgr
-        this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = LanMgr.Instance.replaceLanById("202003", [taskInfo.length]);
+        this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = LanMgr.Instance.replaceLanById("202003", [taskInfo.length]) + " >>";
         // this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = "All " + taskInfo.length + " Tasks";
 
         this._detailTaskView.active = this._isDetailShow;

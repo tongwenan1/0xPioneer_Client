@@ -116,10 +116,6 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
     }
 
     //------------------------------------------------ action
-    private onTapTaskList() {
-        GameMain.inst.UI.taskListUI.refreshUI();
-        GameMain.inst.UI.taskListUI.show(true);
-    }
     private onTapPlayerInfo() {
         GameMain.inst.UI.playerInfoUI.show(true);
     }
