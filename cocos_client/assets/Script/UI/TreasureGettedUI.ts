@@ -49,7 +49,6 @@ export class TreasureGettedUI extends PopUpUI {
         itemShowNode.scale = v3(0.01, 0.01, 0.01);
         itemShowNode.active = false;
 
-        box.drop = "20005";
         const drop = DropMgr.Instance.getDropById(box.drop);
         if (drop.length > 0) {
             const useDrop = drop[0];
@@ -87,7 +86,7 @@ export class TreasureGettedUI extends PopUpUI {
                     framespr.color = Color.WHITE;
                     if (resultReward.type == ItemConfigType.Item) {
                         //item
-                        iconspr.spriteFrame = await BackpackItem.getItemIcon(resultReward.itemConfigId);
+                        iconspr.spriteFrame = await ItemMgr.Instance.getItemIcon(resultReward.itemConfigId);
                         let itemConf = ItemMgr.Instance.getItemConf(resultReward.itemConfigId);
                         if (itemConf) {
                             framespr.color = this.frameGradeColors[itemConf.grade - 1];

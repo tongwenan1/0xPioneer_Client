@@ -6,6 +6,8 @@ import LanMgr from '../../Manger/LanMgr';
 import EventMgr from '../../Manger/EventMgr';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemMgr from '../../Manger/ItemMgr';
+import { GameMain } from '../../GameMain';
+import { channel } from 'diagnostics_channel';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
@@ -13,7 +15,12 @@ export class RecruitUI extends PopUpUI {
 
     public refreshUI(initSelectGenerate: boolean = false) {
         if (initSelectGenerate) {
-            this._selectGenerateNum = 0;
+            const maxTroop: number = Math.min(
+                ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
+                ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
+                this._maxRecruitTroop
+            );
+            this._selectGenerateNum = Math.min(maxTroop, 1);
         }
 
         // useLanMgr
@@ -87,10 +94,10 @@ export class RecruitUI extends PopUpUI {
 
 
         this._generateTime = this.node.getChildByPath("Bg/footer/time/txt-001").getComponent(Label);
-        this._usedWood = this.node.getChildByPath("Bg/footer/material/wood/num/left").getComponent(Label);
-        this._maxWood = this.node.getChildByPath("Bg/footer/material/wood/num/right").getComponent(Label);
-        this._usedStone = this.node.getChildByPath("Bg/footer/material/stone/num/left").getComponent(Label);
-        this._maxStone = this.node.getChildByPath("Bg/footer/material/stone/num/right").getComponent(Label);
+        this._usedWood = this.node.getChildByPath("Bg/footer/material/wood_bg/wood/num/left").getComponent(Label);
+        this._maxWood = this.node.getChildByPath("Bg/footer/material/wood_bg/wood/num/right").getComponent(Label);
+        this._usedStone = this.node.getChildByPath("Bg/footer/material/stone_bg/stone/num/left").getComponent(Label);
+        this._maxStone = this.node.getChildByPath("Bg/footer/material/stone_bg/stone/num/right").getComponent(Label);
 
         EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
     }
@@ -130,7 +137,13 @@ export class RecruitUI extends PopUpUI {
         }
     }
     private onTapGenerateSub() {
-        const changedNum = Math.max(1, this._selectGenerateNum - 100);
+        const maxTroop: number = Math.min(
+            ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
+            ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
+            this._maxRecruitTroop
+        );
+        const minNum: number = Math.min(1, maxTroop);
+        let changedNum = Math.max(minNum, this._selectGenerateNum - 100);
         if (changedNum != this._selectGenerateNum) {
             this._selectGenerateNum = changedNum;
             this.refreshUI();
@@ -164,6 +177,12 @@ export class RecruitUI extends PopUpUI {
     }
     
     private onTapGenerate() {
+        if (this._generateTimeNum <= 0) {
+            // useLanMgr
+            // LanMgr.Instance.getLanById("107549")
+            GameMain.inst.UI.ShowTip("Unable to produce");
+            return;
+        }
         ItemMgr.Instance.subItem(ResourceCorrespondingItem.Wood, parseInt(this._usedWood.string));
         ItemMgr.Instance.subItem(ResourceCorrespondingItem.Stone, parseInt(this._usedStone.string));
         UserInfo.Instance.beginGenerateTroop(this._generateTimeNum, this._selectGenerateNum);

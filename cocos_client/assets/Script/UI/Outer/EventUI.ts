@@ -1,12 +1,10 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import { GameMain } from '../../GameMain';
 import PioneerMgr from '../../Manger/PioneerMgr';
-import UserInfo from '../../Manger/UserInfoMgr';
 import ItemMgr from '../../Manger/ItemMgr';
 import ItemData, { ItemConfigData } from '../../Model/ItemData';
 import BranchEventMgr from '../../Manger/BranchEventMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
-import { ItemInfoShowModel } from '../ItemInfoUI';
 import BuildingMgr from '../../Manger/BuildingMgr';
 import CountMgr, { CountType } from '../../Manger/CountMgr';
 import LanMgr from '../../Manger/LanMgr';
@@ -291,8 +289,7 @@ export class EventUI extends PopUpUI {
 
     private _loseOrGainItemAndResource(datas: any[], cost: boolean): string {
         let showTip: string = "";
-        const itemInfoShows: ItemInfoShowModel[] = [];
-
+        const itemDatas: ItemData[] = [];
         for (const temple of datas) {
             if (temple.length == 3) {
                 const type: number = temple[0];
@@ -314,14 +311,8 @@ export class EventUI extends PopUpUI {
                             }
                         }
                     } else {
+                        itemDatas.push(new ItemData(id, num));
                         const itemConf = ItemMgr.Instance.getItemConf(id);
-                        if (itemConf != null) {
-                            itemInfoShows.push({
-                                itemConfig: itemConf,
-                                count: num
-                            });
-                        }
-
                         // useLanMgr
                         showTip += LanMgr.Instance.replaceLanById("207009", [num, LanMgr.Instance.getLanById(itemConf.itemName)]) + "\n";
                         // showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
@@ -331,14 +322,10 @@ export class EventUI extends PopUpUI {
                 }
             }
         }
-        if (itemInfoShows.length > 0) {
+        if (itemDatas.length > 0) {
             this._contentView.active = false;
-            const items = [];
-            for (const temple of itemInfoShows) {
-                items.push(new ItemData(temple.itemConfig.configId, temple.count));
-            }
-            ItemMgr.Instance.addItem(items);
-            GameMain.inst.UI.itemInfoUI.showItem(itemInfoShows, true, () => {
+            ItemMgr.Instance.addItem(itemDatas);
+            GameMain.inst.UI.itemInfoUI.showItem(itemDatas, true, () => {
                 this._contentView.active = true;
             });
         }

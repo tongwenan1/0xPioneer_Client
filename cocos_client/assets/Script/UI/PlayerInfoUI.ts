@@ -3,7 +3,6 @@ import { PopUpUI } from '../BasicView/PopUpUI';
 import UserInfoMgr, { UserInfoEvent } from '../Manger/UserInfoMgr';
 import LvlupMgr from '../Manger/LvlupMgr';
 import { GameMain } from '../GameMain';
-import { BackpackItem } from './BackpackItem';
 import ItemMgr from '../Manger/ItemMgr';
 import { AudioMgr } from '../Basic/AudioMgr';
 import LanMgr from '../Manger/LanMgr';
@@ -302,7 +301,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
                         const num = data[2];
                         const view = instantiate(this._rewardItem);
                         view.active = true;
-                        view.getChildByName("Icon").getComponent(Sprite).spriteFrame = await BackpackItem.getItemIcon(ItemMgr.Instance.getItemConf(id).icon);
+                        view.getChildByName("Icon").getComponent(Sprite).spriteFrame = await ItemMgr.Instance.getItemIcon(ItemMgr.Instance.getItemConf(id).icon);
                         view.getChildByName("Num").getComponent(Label).string = "x" + num;
                         view.setParent(content.getChildByPath("Rewards/Content"));
                         this._showRewardItems.push(view);

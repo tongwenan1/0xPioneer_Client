@@ -3,7 +3,6 @@ import TaskMgr from "./TaskMgr";
 import ItemMgr from "./ItemMgr";
 import ItemData, { ItemType } from "../Model/ItemData";
 import { GameMain } from "../GameMain";
-import { ItemInfoShowModel } from "../UI/ItemInfoUI";
 import CountMgr, { CountType } from "./CountMgr";
 import LvlupMgr from "./LvlupMgr";
 import PioneerMgr from "./PioneerMgr";
@@ -21,7 +20,7 @@ export interface UserInnerBuildInfo {
 export enum InnerBuildingType {
     MainCity = "0",
     Barrack = "3",
-    House = "4" 
+    House = "4"
 }
 
 export interface ResourceModel {
@@ -339,7 +338,7 @@ export default class UserInfoMgr {
         this._localJsonData.playerData.isFinishRookie = value;
         if (value) {
             this.finishEvent(FinishedEvent.FirstTalkToProphetess);
-        } 
+        }
         this._localDataChanged(this._localJsonData);
     }
     public set playerName(value: string) {
@@ -402,7 +401,7 @@ export default class UserInfoMgr {
                         observe.playerLvlupChanged(this._level);
                     }
                 }
-                
+
                 // hpmax
                 if (nextLvConfig[0].hp_max > 0) {
                     PioneerMgr.instance.pioneerChangeAllPlayerOriginalHpMax(nextLvConfig[0].hp_max);
@@ -467,7 +466,7 @@ export default class UserInfoMgr {
 
     private static _instance: UserInfoMgr = null;
 
-    private _afterTalkItemGetData: Map<string, ItemInfoShowModel[]> = new Map();
+    private _afterTalkItemGetData: Map<string, ItemData[]> = new Map();
 
     private _currentTasks: any[] = [];
     private _finishedEvents: FinishedEvent[] = [];
@@ -624,7 +623,6 @@ export default class UserInfoMgr {
 
             // reward backpack item
             if (step.rewardBackpackItem != null) {
-                const showDatas: ItemInfoShowModel[] = [];
                 const addItems: ItemData[] = [];
                 for (const r of step.rewardBackpackItem) {
                     let itemConf = ItemMgr.Instance.getItemConf(r.itemConfigId);
@@ -648,25 +646,14 @@ export default class UserInfoMgr {
                     if (!canUseAction) {
                         continue;
                     }
-
-                    if (itemConf.itemType != ItemType.Resource) {
-                        showDatas.push({
-                            itemConfig: itemConf,
-                            count: r.num
-                        });
-                    }
-
                     addItems.push(new ItemData(r.itemConfigId, r.num));
                 }
                 ItemMgr.Instance.addItem(addItems);
-                if (showDatas.length > 0) {
-                    GameMain.inst.UI.itemInfoUI.showItem(showDatas, true);
-                }
+                GameMain.inst.UI.itemInfoUI.showItem(addItems, true);
             }
 
             if (step.afterTalkRewardItem != null) {
                 let talkId: string = null;
-                const showDatas: ItemInfoShowModel[] = [];
                 const addItems: ItemData[] = [];
                 for (const r of step.afterTalkRewardItem) {
                     let itemConf = ItemMgr.Instance.getItemConf(r.itemConfigId);
@@ -691,15 +678,11 @@ export default class UserInfoMgr {
                         continue;
                     }
                     talkId = r.talkId;
-                    showDatas.push({
-                        itemConfig: itemConf,
-                        count: r.num
-                    });
                     addItems.push(new ItemData(r.itemConfigId, r.num));
                 }
                 ItemMgr.Instance.addItem(addItems);
                 if (talkId != null) {
-                    this._afterTalkItemGetData.set(talkId, showDatas);
+                    this._afterTalkItemGetData.set(talkId, addItems);
                 }
             }
         }

@@ -28,19 +28,16 @@ export class BuildingUpgradeUI extends PopUpUI {
         const houseData = innerData.get(InnerBuildingType.House);
         // useLanMgr 
         // LanMgr.Instance.replaceLanById("107549", [LanMgr.Instance.getLanById(mainData.buildName), mainData.buildLevel]); // %s Lv.%s  
-        buildingInfoView.getChildByPath("MainCity/MainCityLabel").getComponent(Label).string = mainData.buildName + " Lv." + mainData.buildLevel;
+        buildingInfoView.getChildByPath("MainCityBg/MainCity/MainCityLabel").getComponent(Label).string = mainData.buildName + " Lv." + mainData.buildLevel;
 
         // useLanMgr 
         // LanMgr.Instance.replaceLanById("107549", [LanMgr.Instance.getLanById(barracksData.buildName), barracksData.buildLevel]); // %s Lv.%s  
-        buildingInfoView.getChildByPath("Buildings/Barracks/BarracksLabel").getComponent(Label).string = barracksData.buildName + " Lv." + barracksData.buildLevel;
+        buildingInfoView.getChildByPath("Buildings/BarracksBg/Barracks/BarracksLabel").getComponent(Label).string = barracksData.buildName + " Lv." + barracksData.buildLevel;
         this._barracksBtn.clickEvents[0].customEventData = barracksData.buildID;
-        console.log("exce bbb: " + barracksData.buildID)
         // useLanMgr 
         // LanMgr.Instance.replaceLanById("107549", [LanMgr.Instance.getLanById(houseData.buildName), houseData.buildLevel]); // %s Lv.%s  
-        buildingInfoView.getChildByPath("Buildings/Residential/ResidentialLabel").getComponent(Label).string = houseData.buildName + " Lv." + houseData.buildLevel;
+        buildingInfoView.getChildByPath("Buildings/ResidentialBg/Residential/ResidentialLabel").getComponent(Label).string = houseData.buildName + " Lv." + houseData.buildLevel;
         this._housesBtn.clickEvents[0].customEventData = houseData.buildID;
-
-        console.log("exce buid: " + houseData.buildID)
     }
 
     public mainCityBtn: Button = null;
@@ -52,8 +49,8 @@ export class BuildingUpgradeUI extends PopUpUI {
     private _levelInfoShowCostItems: Node[] = [];
 
     onLoad(): void {
-        this._barracksBtn = this.node.getChildByPath("BuildingInfoView/Buildings/Barracks").getComponent(Button);
-        this._housesBtn = this.node.getChildByPath("BuildingInfoView/Buildings/Residential").getComponent(Button);
+        this._barracksBtn = this.node.getChildByPath("BuildingInfoView/Buildings/BarracksBg/Barracks").getComponent(Button);
+        this._housesBtn = this.node.getChildByPath("BuildingInfoView/Buildings/ResidentialBg/Residential").getComponent(Button);
 
         this._levelInfoView = this.node.getChildByPath("LevelInfoView");
         this._levelInfoView.active = false;
@@ -106,7 +103,7 @@ export class BuildingUpgradeUI extends PopUpUI {
             // useTime
             // useLanMgr
             // LanMgr.Instance.getLanById("107549");
-            upgradeView.getChildByName("Time").getComponent(Label).string = "Time Required: " + CommonTools.formatSeconds(upgradeData.time);
+            upgradeView.getChildByPath("Time/Label-001").getComponent(Label).string = CommonTools.formatSeconds(upgradeData.time);
 
             // cost
             // upgradeView.getChildByName("CostTitle").getComponent(Label).string = LanMgr.Instance.getLanById("107549"); 
@@ -124,7 +121,8 @@ export class BuildingUpgradeUI extends PopUpUI {
                 item.getChildByPath("Icon/8003").active = type == ResourceCorrespondingItem.Stone;
                 item.getChildByPath("Icon/8004").active = type == ResourceCorrespondingItem.Troop;
 
-                item.getChildByName("Num").getComponent(Label).string = "x" + cost.num;
+                item.getChildByPath("num/left").getComponent(Label).string = cost.num;
+                item.getChildByPath("num/right").getComponent(Label).string = ItemMgr.Instance.getOwnItemCount(type).toString();
 
                 this._levelInfoShowCostItems.push(item);
             }

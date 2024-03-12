@@ -42,7 +42,7 @@ export class LootsPopup extends PopUpUI {
             const itemData = new ItemData(items[i].id, items[i].num);
 
             let itemTile = instantiate(this.BackpackItemPfb).getComponent(BackpackItem);
-            itemTile.initItem(itemData);
+            itemTile.refreshUI(itemData);
             itemTile.node.parent = this.itemsParentNode;
         }
     }

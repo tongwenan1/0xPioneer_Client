@@ -3,7 +3,6 @@ import { PopUpUI } from '../BasicView/PopUpUI';
 import { EventName } from '../Const/ConstDefine';
 import EventMgr from '../Manger/EventMgr';
 import LanMgr from '../Manger/LanMgr';
-import { BackpackItem } from './BackpackItem';
 import ItemMgr from '../Manger/ItemMgr';
 const { ccclass, property } = _decorator;
 
@@ -75,7 +74,7 @@ export class CivilizationLevelUpUI extends PopUpUI {
                     const num = data[2];
                     const view = instantiate(this._rewardItem);
                     view.active = true;
-                    view.getChildByName("Icon").getComponent(Sprite).spriteFrame = await BackpackItem.getItemIcon(ItemMgr.Instance.getItemConf(id).icon);
+                    view.getChildByName("Icon").getComponent(Sprite).spriteFrame = await ItemMgr.Instance.getItemIcon(ItemMgr.Instance.getItemConf(id).icon);
                     view.getChildByName("Num").getComponent(Label).string = "x" + num;
                     view.setParent(content.getChildByPath("Rewards/Content"));
                     this._showRewardItems.push(view);

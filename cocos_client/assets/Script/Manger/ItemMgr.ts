@@ -1,8 +1,6 @@
-import { resources, sys } from "cc";
+import { SpriteFrame, resources, sys } from "cc";
 import ItemData, { ItemConfigData, ItemType } from "../Model/ItemData";
 import UserInfoMgr, { FinishedEvent } from "./UserInfoMgr";
-import { ItemConfigType } from "../Const/ConstDefine";
-import { ItemInfoShowModel } from "../UI/ItemInfoUI";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 
 export enum ItemArrangeType {
@@ -16,6 +14,26 @@ export interface ItemMgrEvent {
 }
 
 export default class ItemMgr {
+
+    public async getItemIcon(iconName: string): Promise<SpriteFrame> {
+        if (iconName in this._itemIconSpriteFrames) {
+            return this._itemIconSpriteFrames[iconName];
+        }
+        const frame = await new Promise((resolve) => {
+            resources.load("ui/icon/" + iconName + "/spriteFrame", SpriteFrame, (err: Error, icon) => {
+                if (err) {
+                    resolve(null);
+                    return;
+                }
+                resolve(icon);
+            });
+        });
+        if (frame != null) {
+
+            this._itemIconSpriteFrames[iconName] = frame;
+        }
+        return this._itemIconSpriteFrames[iconName];
+    }
 
     public getItemConf(itemConfigId: string): ItemConfigData {
         let key = itemConfigId;
@@ -34,6 +52,9 @@ export default class ItemMgr {
         return count;
     }
 
+    public get maxItemLength(): number {
+        return this._maxItemLength;
+    }
     public get itemIsFull(): boolean {
         let count: number = 0;
         for (const temple of this._localItemDatas) {
@@ -42,6 +63,15 @@ export default class ItemMgr {
             }
         }
         return count >= this._maxItemLength;
+    }
+    public get localBackpackItemDatas(): ItemData[] {
+        return this._localItemDatas.filter((item)=> {
+            const config = this.getItemConf(item.itemConfigId);
+            if (config == null) {
+                return false;
+            }
+            return config.itemType != ItemType.Resource;
+        });
     }
     public get localItemDatas(): ItemData[] {
         return this._localItemDatas;
@@ -88,7 +118,7 @@ export default class ItemMgr {
             for (const observe of this._observers) {
                 observe.itemChanged();
             }
-            sys.localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+            localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
         }
     }
     public subItem(itemConfigId: string, count: number): boolean {
@@ -130,11 +160,29 @@ export default class ItemMgr {
         for (const observe of this._observers) {
             observe.itemChanged();
         }
-        sys.localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+        localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
 
         return true;
     }
     public arrange(sortType: ItemArrangeType): void {
+        // merge same item
+        const singleItems: Map<string, ItemData> = new Map();
+        for (let i = 0; i < this._localItemDatas.length; i++) {
+            const item = this._localItemDatas[i];
+            if (singleItems.has(item.itemConfigId)) {
+                const savedItem = singleItems.get(item.itemConfigId);
+                savedItem.count += item.count;
+                savedItem.addTimeStamp = Math.max(savedItem.addTimeStamp, item.addTimeStamp);
+                this._localItemDatas.splice(i, 1);
+                i--;
+            } else {
+                singleItems.set(item.itemConfigId, item);
+            }
+        }
+
+        localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+
+        // sort
         if (sortType == ItemArrangeType.Recently) {
             this._localItemDatas.sort((a, b) => {
                 return b.addTimeStamp - a.addTimeStamp;
@@ -190,6 +238,7 @@ export default class ItemMgr {
     private _localStorageKey: string = "item_data";
     private _localItemDatas: ItemData[] = [];
 
+    private _itemIconSpriteFrames = {};
     private static _instance: ItemMgr = null;
     private _itemConfs = {};
     private async _initData() {
@@ -222,7 +271,7 @@ export default class ItemMgr {
         }
 
         // load local item data
-        let jsonStr = sys.localStorage.getItem(this._localStorageKey);
+        let jsonStr = localStorage.getItem(this._localStorageKey);
         if (!jsonStr) {
             this._localItemDatas = [];
         }

@@ -7,110 +7,79 @@ import CountMgr, { CountType } from '../Manger/CountMgr';
 import LanMgr from '../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
-
-
-export interface ItemInfoShowModel {
-    itemConfig: ItemConfigData,
-    count: number
-}
-
 @ccclass('ItemInfoUI')
 export class ItemInfoUI extends PopUpUI {
 
-    public async showItem(items: ItemInfoShowModel[], isGet: Boolean = false, closeCallback:()=> void = null) {
+    public async showItem(items: ItemData[], isGet: boolean = false, closeCallback:()=> void = null) {
         this._items = items;
+        this._isGet = isGet;
         this._closeCallback = closeCallback;
+
         if (this._items.length > 0) {
-            let frame = await BackpackItem.getItemIcon(this._items[0].itemConfig.icon);
-            this.icon.spriteFrame = frame;
-    
-            this.typeLabel.string = this._items[0].itemConfig.itemType.toString();
-
-            // useLanMgr
-            this.nameLabel.string = LanMgr.Instance.getLanById(this._items[0].itemConfig.itemName);
-            this.descTxt.string = LanMgr.Instance.getLanById(this._items[0].itemConfig.itemDesc);
-            // this.nameLabel.string = this._items[0].itemConfig.itemName == null ? "" : this._items[0].itemConfig.itemName;
-            // this.descTxt.string = this._items[0].itemConfig.itemDesc == null ? "" : this._items[0].itemConfig.itemDesc;
-    
-            this._isGet = isGet;
-
-            this.useButton.node.active = false;
+            // only show one
+            let currentItem = null;
+            let currentConfig = null;
+            for (const temple of this._items) {
+                const templeConfig = ItemMgr.Instance.getItemConf(temple.itemConfigId);
+                if (templeConfig != null && templeConfig.itemType != ItemType.Resource) {
+                    currentItem = temple;
+                    currentConfig = templeConfig;
+                    break;
+                }
+            }
+            if (currentItem != null && currentConfig == null) {
+                return;
+            }
+            const contentView = this.node.getChildByName("DialogBg");
+            // name 
+            contentView.getChildByName("Name").getComponent(Label).string = LanMgr.Instance.getLanById(currentConfig.itemName);
+            // icon
+            contentView.getChildByName("BackpackItem").getComponent(BackpackItem).refreshUI(currentItem);
+            // desc
+            contentView.getChildByName("DescTxt").getComponent(RichText).string = LanMgr.Instance.getLanById(currentConfig.itemDesc);
+            // actionbutton
+            const button = contentView.getChildByName("btnUse");
+            button.active = false;
             if (this._isGet) {
-                this.useButton.node.active = true;
-
-                // useLanMgr
-                this.useButtonLabel.string = LanMgr.Instance.getLanById("205001");
-                // this.useButtonLabel.string = "Get";
+                button.active = true;
+                button.getChildByName("name").getComponent(Label).string = LanMgr.Instance.getLanById("205001");
 
             } else {
-                if (this._items[0].itemConfig.itemType == ItemType.AddProp) {
-                    this.useButton.node.active = true;
-
-                    // useLanMgr
-                    this.useButtonLabel.string = LanMgr.Instance.getLanById("205002");
-                    // this.useButtonLabel.string = "Use";
+                if (currentConfig.itemType == ItemType.AddProp) {
+                    button.active = true;
+                    button.getChildByName("name").getComponent(Label).string = LanMgr.Instance.getLanById("205002");
                 } 
             }
             this.show(true);
         }
     }
 
-    @property(Sprite)
-    icon: Sprite;
 
-    @property(Label)
-    nameLabel: Label;
-
-    @property(Label)
-    typeLabel: Label;
-
-    @property(RichText)
-    descTxt: RichText;
-
-    @property(Button)
-    closeButton: Button;
-
-    @property(Button)
-    useButton: Button;
-
-    @property(Label)
-    useButtonLabel: Label;
-
+    private _items: ItemData[];
+    private _isGet: boolean;
     private _closeCallback: ()=> void;
 
-    private _isGet: Boolean;
-    private _items: ItemInfoShowModel[];
-
     start() {
-
-        this.closeButton.node.on(Button.EventType.CLICK, () => {
-            this._onTapClose();
-        }, this);
-
-        this.useButton.node.on(Button.EventType.CLICK, () => {
-            this._clickUseBtn();
-        }, this);
     }
 
     //---------------------------------------------------- action
-    private _onTapClose() {
+    private onTapClose() {
         this.show(false);
         if (this._closeCallback != null) {
             this._closeCallback();
         }
     }
-
-    private _clickUseBtn() {
+    private onTapUse() {
         if (this._isGet) {
            
         } else {
             for (const temple of this._items) {
-                ItemMgr.Instance.subItem(temple.itemConfig.configId, 1);
+                ItemMgr.Instance.subItem(temple.itemConfigId, 1);
                 CountMgr.instance.addNewCount({
                     type: CountType.useItem,
                     timeStamp: new Date().getTime(),
                     data: {
-                        itemId: temple.itemConfig.configId,
+                        itemId: temple.itemConfigId,
                         num: 1
                     }
                 });
@@ -122,3 +91,4 @@ export class ItemInfoUI extends PopUpUI {
         }
     }
 }
+  
