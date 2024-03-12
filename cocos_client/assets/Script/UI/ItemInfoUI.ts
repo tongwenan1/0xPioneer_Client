@@ -27,7 +27,7 @@ export class ItemInfoUI extends PopUpUI {
                     break;
                 }
             }
-            if (currentItem != null && currentConfig == null) {
+            if (currentItem == null || currentConfig == null) {
                 return;
             }
             const contentView = this.node.getChildByName("DialogBg");
