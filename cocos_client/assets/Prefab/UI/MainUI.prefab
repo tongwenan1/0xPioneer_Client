@@ -3953,15 +3953,28 @@
       "__uuid__": "d1e10f73-42a4-4a7a-9725-5527d161e110",
       "__expectedType__": "cc.Prefab"
     },
-    "playerInfoPrefab": null,
-    "newSettlementPrfab": null,
-    "buildingUpgradePrefab": null,
+    "playerInfoPrefab": {
+      "__uuid__": "b11a08c2-9951-4b49-b00c-74f89cf6fe6c",
+      "__expectedType__": "cc.Prefab"
+    },
+    "newSettlementPrfab": {
+      "__uuid__": "51dacaf7-4e46-4bbc-9904-c45ce75fbacd",
+      "__expectedType__": "cc.Prefab"
+    },
+    "buildingUpgradePrefab": {
+      "__uuid__": "56c2b44c-4cfe-4faf-85a7-46a68150be1e",
+      "__expectedType__": "cc.Prefab"
+    },
     "BackpackUIPfb": {
       "__uuid__": "4734c1c4-cb94-4e0a-b74e-9333eb187ce5",
       "__expectedType__": "cc.Prefab"
     },
     "ItemInfoUIPfb": {
       "__uuid__": "d31a0c9e-f961-4e71-90dd-079ff9a8d0f2",
+      "__expectedType__": "cc.Prefab"
+    },
+    "ItemSelectFromThreePrb": {
+      "__uuid__": "825c2f89-b833-4e8a-b347-89fba10ae783",
       "__expectedType__": "cc.Prefab"
     },
     "BattleReportsUIPfb": {

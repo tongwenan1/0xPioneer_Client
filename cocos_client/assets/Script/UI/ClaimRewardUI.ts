@@ -5,6 +5,7 @@ import BoxMgr from "../Manger/BoxMgr";
 import EventMgr from "../Manger/EventMgr"; 
 import LanMgr from "../Manger/LanMgr";
 import { EventName } from "../Const/ConstDefine";
+import DropMgr from "../Manger/DropMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("ClaimRewardUI")

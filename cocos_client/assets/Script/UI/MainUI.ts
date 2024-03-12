@@ -23,7 +23,7 @@ import { ItemInfoUI } from './ItemInfoUI';
 import { DialogueUI } from './Outer/DialogueUI';
 import { RecruitUI } from './Inner/RecruitUI';
 import { EventName } from '../Const/ConstDefine';
-import {BattleReportsUI} from "db://assets/Script/UI/BattleReportsUI";
+import { BattleReportsUI } from "db://assets/Script/UI/BattleReportsUI";
 import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
 import LanMgr from '../Manger/LanMgr';
 import { ArtifactUI } from './ArtifactUI';
@@ -31,9 +31,10 @@ import { ArtifactInfoUI } from './ArtifactInfoUI';
 import { PlayerInfoUI } from './PlayerInfoUI';
 import { NewSettlementUI } from './NewSettlementUI';
 import SettlementMgr from '../Manger/SettlementMgr';
-import {LootsPopup} from "db://assets/Script/UI/LootsPopup";
-import BattleReportsMgr, {BattleReportsEvent} from "db://assets/Script/Manger/BattleReportsMgr";
+import { LootsPopup } from "db://assets/Script/UI/LootsPopup";
+import BattleReportsMgr, { BattleReportsEvent } from "db://assets/Script/Manger/BattleReportsMgr";
 import { BuildingUpgradeUI } from './Inner/BuildingUpgradeUI';
+import { ItemSelectFromThreeUI } from './ItemSelectFromThreeUI';
 
 const { ccclass, property } = _decorator;
 
@@ -71,6 +72,8 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     BackpackUIPfb: Prefab;
     @property(Prefab)
     ItemInfoUIPfb: Prefab;
+    @property(Prefab)
+    ItemSelectFromThreePrb: Prefab;
 
     @property(Prefab)
     BattleReportsUIPfb: Prefab;
@@ -102,6 +105,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
     public backpackUI: BackpackUI;
     public itemInfoUI: ItemInfoUI;
+    public itemSelectFromThreeUI: ItemSelectFromThreeUI;
     public battleReportsUI: BattleReportsUI;
     public lootsPopupUI: LootsPopup;
 
@@ -187,15 +191,24 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         this.backpackUI = instantiate(this.BackpackUIPfb).getComponent(BackpackUI);
         this.backpackUI.node.setParent(this.UIRoot);
         this.backpackUI.node.active = false;
+
         this.itemInfoUI = instantiate(this.ItemInfoUIPfb).getComponent(ItemInfoUI);
         this.itemInfoUI.node.setParent(this.UIRoot);
         this.itemInfoUI.node.active = false;
+        // select reward from three
+        this.itemSelectFromThreeUI = instantiate(this.ItemSelectFromThreePrb).getComponent(ItemSelectFromThreeUI);
+        this.itemSelectFromThreeUI.node.setParent(this.UIRoot);
+        this.itemSelectFromThreeUI.node.active = false;
+
+
         this.battleReportsUI = instantiate(this.BattleReportsUIPfb).getComponent(BattleReportsUI);
         this.battleReportsUI.node.setParent(this.UIRoot);
         this.battleReportsUI.node.active = false;
         this.lootsPopupUI = instantiate(this.LootsPopupPfb).getComponent(LootsPopup);
         this.lootsPopupUI.node.setParent(this.UIRoot);
         this.lootsPopupUI.node.active = false;
+
+
 
 
         this.artifactUI = instantiate(this.ArtifactUIPfb).getComponent(ArtifactUI);

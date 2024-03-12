@@ -230,10 +230,10 @@ export class MapBG extends Component {
             let useConf = config[0];
 
             if (event.getScrollY() > 0) {
-                sc += 0.05;
+                sc -= 0.05;
             }
             else {
-                sc -= 0.05;
+                sc += 0.05;
             }
             if (sc > useConf.para[1]) {
                 sc = useConf.para[1];
@@ -409,7 +409,7 @@ export class MapBG extends Component {
 
         this._fogItem = instantiate(this.gridFogPrefab);
         this._fogItem.layer = this.node.layer;
-        this._fogItem.scale = v3(1.8, 1.8, 1);
+        // this._fogItem.scale = v3(1.8, 1.8, 1);
         this._fogItem.active = false;
 
         this._fogView = this.node.getChildByName("Fog").getComponent(OuterFogMask);
@@ -778,7 +778,7 @@ export class MapBG extends Component {
             !this._fogAnimPlaying &&
             newCleardPositons == null) {
             // no anim
-            this._fogView.draw(getAllBoundLines);
+            // this._fogView.draw(getAllBoundLines);
         }
         if (newCleardPositons != null) {
             // this._fogAnimDatas.push({
@@ -787,6 +787,7 @@ export class MapBG extends Component {
             // });
             this._playFogAnim(getAllBoundLines, newCleardPositons, stayPos);
         }
+        return;
         // bound fog
         for (const pos of getAllBoundPos) {
             if (this._boundItemMap.has(pos.x + "|" + pos.y)) {
@@ -835,7 +836,7 @@ export class MapBG extends Component {
         console.log("exce delay: " + (time - this._lastpt));
         this._lastpt = time;
         // draw bg fog
-        this._fogView.draw(allClearedTilePosions);
+        // this._fogView.draw(allClearedTilePosions);
         // dismiss anim
         const stayWorldPos = this._tiledhelper.getPosWorld(pioneerStayPos.x, pioneerStayPos.y);
         for (const tilePos of animTilePostions) {
@@ -844,7 +845,8 @@ export class MapBG extends Component {
             fogView.active = true;
             fogView.setParent(this.node);
             fogView.setWorldPosition(wp); 
-            fogView.getComponent(Animation).play("fog_Schistose_A2");
+            // fogView.getComponent(Animation).play("fog_Schistose_A2");
+            fogView.getComponent(Animation).play();
             fogView.getComponent(Animation).on(Animation.EventType.FINISHED, () => {
                 fogView.destroy();
             });

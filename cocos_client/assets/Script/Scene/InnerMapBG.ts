@@ -55,10 +55,10 @@ export class InnerMapBG extends Component {
             let useConf = config[0];
 
             if (event.getScrollY() > 0) {
-                sc += 0.05;
+                sc -= 0.05;
             }
             else {
-                sc -= 0.05;
+                sc += 0.05;
             }
             if (sc > useConf.para[1]) {
                 sc = useConf.para[1];
