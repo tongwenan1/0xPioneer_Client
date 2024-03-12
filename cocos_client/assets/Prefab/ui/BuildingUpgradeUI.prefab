@@ -4483,7 +4483,7 @@
     "node": {
       "__id__": 170
     },
-    "_enabled": true,
+    "_enabled": false,
     "__prefab": {
       "__id__": 190
     },
@@ -5420,7 +5420,7 @@
     "node": {
       "__id__": 211
     },
-    "_enabled": true,
+    "_enabled": false,
     "__prefab": {
       "__id__": 231
     },
@@ -6359,7 +6359,7 @@
     "node": {
       "__id__": 252
     },
-    "_enabled": true,
+    "_enabled": false,
     "__prefab": {
       "__id__": 272
     },
@@ -7296,7 +7296,7 @@
     "node": {
       "__id__": 293
     },
-    "_enabled": true,
+    "_enabled": false,
     "__prefab": {
       "__id__": 313
     },
@@ -7877,8 +7877,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 31,
-      "height": 31
+      "width": 62,
+      "height": 65
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -7919,7 +7919,7 @@
     },
     "_type": 0,
     "_fillType": 0,
-    "_sizeMode": 0,
+    "_sizeMode": 2,
     "_fillCenter": {
       "__type__": "cc.Vec2",
       "x": 0,

@@ -790,7 +790,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 350,
-      "height": 201.6
+      "height": 201.474
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -815,8 +815,8 @@
     "__prefab": {
       "__id__": 36
     },
-    "_lineHeight": 160,
-    "_string": "<color=#00ff00>Item</color><color=#0fffff>Text</color>",
+    "_lineHeight": 26,
+    "_string": "<color=#00ff00>Item</color><color=#0fffff>Text</color><color=#0fffff>Text</color><color=#0fffff>Text</color><color=#0fffff>Text</color><color=#0fffff>Text</color><color=#0fffff>Text</color><color=#0fffff>Text</color>",
     "_horizontalAlign": 0,
     "_verticalAlign": 0,
     "_fontSize": 24,
@@ -858,7 +858,7 @@
     "_left": 20,
     "_right": 20,
     "_top": 239.526,
-    "_bottom": 89.874,
+    "_bottom": 90,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
