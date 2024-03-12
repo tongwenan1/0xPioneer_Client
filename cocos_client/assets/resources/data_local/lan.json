@@ -1,11 +1,87 @@
 {
   "107001": {
     "id": "107001",
-    "eng": "Texas Chainsaw"
+    "eng": "Eye of Pharaoh"
+  },
+  "107002": {
+    "id": "107002",
+    "eng": "Bane of Behemoth"
+  },
+  "107003": {
+    "id": "107003",
+    "eng": "Tooth of Megalodon"
+  },
+  "107004": {
+    "id": "107004",
+    "eng": "Crystal Skull"
+  },
+  "107005": {
+    "id": "107005",
+    "eng": "Stinger of Sand King"
+  },
+  "107006": {
+    "id": "107006",
+    "eng": "Golden Spear"
+  },
+  "107007": {
+    "id": "107007",
+    "eng": "Antiquity Rune"
+  },
+  "107008": {
+    "id": "107008",
+    "eng": "Iridescent Crystal"
+  },
+  "107009": {
+    "id": "107009",
+    "eng": "Dull Gemstone"
+  },
+  "107010": {
+    "id": "107010",
+    "eng": "Ancient Axe"
   },
   "107549": {
     "id": "107549",
     "eng": "text for English version"
+  },
+  "117001": {
+    "id": "117001",
+    "eng": "Also known as Eye of Ramesses, it symbolizes Egypt's prosperity and peace, blessed by divine power"
+  },
+  "117002": {
+    "id": "117002",
+    "eng": "test text"
+  },
+  "117003": {
+    "id": "117003",
+    "eng": "test text"
+  },
+  "117004": {
+    "id": "117004",
+    "eng": "test text"
+  },
+  "117005": {
+    "id": "117005",
+    "eng": "test text"
+  },
+  "117006": {
+    "id": "117006",
+    "eng": "test text"
+  },
+  "117007": {
+    "id": "117007",
+    "eng": "test text"
+  },
+  "117008": {
+    "id": "117008",
+    "eng": "test text"
+  },
+  "117009": {
+    "id": "117009",
+    "eng": "test text"
+  },
+  "117010": {
+    "id": "117010",
+    "eng": "test text"
   },
   "200001": {
     "id": "200001",
@@ -1033,7 +1109,7 @@
   },
   "1070011": {
     "id": "1070011",
-    "eng": "Chainsaw"
+    "eng": "Effect"
   },
   "1070012": {
     "id": "1070012",
