@@ -43,6 +43,94 @@
     "id": "107549",
     "eng": "text for English version"
   },
+  "109001": {
+    "id": "109001",
+    "eng": "default_player"
+  },
+  "109002": {
+    "id": "109002",
+    "eng": "secretGuard"
+  },
+  "109003": {
+    "id": "109003",
+    "eng": "doomsdayGangSpy"
+  },
+  "109004": {
+    "id": "109004",
+    "eng": "rebels"
+  },
+  "109005": {
+    "id": "109005",
+    "eng": "prophetess"
+  },
+  "109006": {
+    "id": "109006",
+    "eng": "artisan"
+  },
+  "109007": {
+    "id": "109007",
+    "eng": "secretGuard"
+  },
+  "109008": {
+    "id": "109008",
+    "eng": "doomsdayGangSpy"
+  },
+  "109009": {
+    "id": "109009",
+    "eng": "hunter"
+  },
+  "109010": {
+    "id": "109010",
+    "eng": "doomsdayGangTeam"
+  },
+  "109011": {
+    "id": "109011",
+    "eng": "rebels"
+  },
+  "109012": {
+    "id": "109012",
+    "eng": "doomsdayGangBigTeam"
+  },
+  "109013": {
+    "id": "109013",
+    "eng": "hunter_hred"
+  },
+  "109014": {
+    "id": "109014",
+    "eng": "hred_2"
+  },
+  "109015": {
+    "id": "109015",
+    "eng": "hred_3"
+  },
+  "109016": {
+    "id": "109016",
+    "eng": "hred_4"
+  },
+  "109017": {
+    "id": "109017",
+    "eng": "hred_5"
+  },
+  "109018": {
+    "id": "109018",
+    "eng": "hred_6"
+  },
+  "109019": {
+    "id": "109019",
+    "eng": "hred_7"
+  },
+  "109020": {
+    "id": "109020",
+    "eng": "hred_8"
+  },
+  "109021": {
+    "id": "109021",
+    "eng": "hred_9"
+  },
+  "109022": {
+    "id": "109022",
+    "eng": "hred_10"
+  },
   "117001": {
     "id": "117001",
     "eng": "Also known as Eye of Ramesses, it symbolizes Egypt's prosperity and peace, blessed by divine power"
@@ -1005,15 +1093,23 @@
   },
   "503062": {
     "id": "503062",
-    "eng": "select 1"
+    "eng": "You are…"
   },
   "503063": {
     "id": "503063",
-    "eng": "select 2"
+    "eng": "How could I continue to survive in this world?"
   },
   "503064": {
     "id": "503064",
-    "eng": "select 3"
+    "eng": "You can…"
+  },
+  "503065": {
+    "id": "503065",
+    "eng": "So what should I do now?"
+  },
+  "503066": {
+    "id": "503066",
+    "eng": "…"
   },
   "504001": {
     "id": "504001",
@@ -1077,15 +1173,39 @@
   },
   "504016": {
     "id": "504016",
-    "eng": "1!"
+    "eng": "The fortunate one chosen by me."
   },
   "504017": {
     "id": "504017",
-    "eng": "!2222"
+    "eng": "A survivor who has narrowly escaped the disaster."
   },
   "504018": {
     "id": "504018",
-    "eng": "333!"
+    "eng": "A surviving ant of a vanished civilization."
+  },
+  "504019": {
+    "id": "504019",
+    "eng": "Become the executor of my will."
+  },
+  "504020": {
+    "id": "504020",
+    "eng": "Act as my eyes and hands."
+  },
+  "504021": {
+    "id": "504021",
+    "eng": "Just follow my guide."
+  },
+  "504022": {
+    "id": "504022",
+    "eng": "Head to the city in the northeast and gather a team."
+  },
+  "504023": {
+    "id": "504023",
+    "eng": "First, locate our base."
+  },
+  "504024": {
+    "id": "504024",
+    "eng": "Just wait…Because soon I will reshape this world."
   },
   "601001": {
     "id": "601001",

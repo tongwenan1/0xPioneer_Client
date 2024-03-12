@@ -1,442 +1,625 @@
-[
-    {
-        "id": "pioneer_0",
-        "name": "default_player",
-        "type": "player",
-        "friendly": true,
-        "show": true,
-        "hp": 5,
-        "attack": 20,
-        "def": 0,
-        "pos": {
-            "x": 22,
-            "y": 43
-        }
-    },
-    {
-        "id": "pioneer_1",
-        "name": "secretGuard",
-        "type": "player",
-        "friendly": true,
-        "show": false,
-        "hp": 80,
-        "attack": 15,
-        "def": 10,
-        "pos": {
-            "x": 31,
-            "y": 29
-        },
-        "logics": [
-            {
-                "type": "targetmove",
-                "pos": {
-                    "x": 30,
-                    "y": 18
-                }
-            }
-        ]
-    },
-    {
-        "id": "pioneer_2",
-        "name": "doomsdayGangSpy",
-        "type": "player",
-        "friendly": true,
-        "show": false,
-        "hp": 50,
-        "attack": 10,
-        "def": 10,
-        "pos": {
-            "x": 31,
-            "y": 29
-        }
-    },
-    {
-        "id": "pioneer_3",
-        "name": "rebels",
-        "type": "player",
-        "friendly": true,
-        "show": false,
-        "hp": 30,
-        "attack": 6,
-        "def": 10,
-        "pos": {
-            "x": 30,
-            "y": 26
-        }
-    },
-    {
-        "id": "npc_0",
-        "name": "prophetess",
-        "type": "npc",
-        "friendly": true,
-        "show": true,
-        "hp": 10,
-        "attack": 8,
-        "def": 0,
-        "pos": {
-            "x": 26,
-            "y": 34
-        },
-        "winprogress": 4
-    },
-    {
-        "id": "npc_1",
-        "name": "artisan",
-        "type": "npc",
-        "friendly": true,
-        "show": false,
-        "hp": 50,
-        "attack": 5,
-        "def": 10,
-        "pos": {
-            "x": 37,
-            "y": 27
-        },
-        "winprogress": 5
-    },
-    {
-        "id": "npc_2",
-        "name": "secretGuard",
-        "type": "npc",
-        "friendly": true,
-        "show": false,
-        "hp": 80,
-        "attack": 15,
-        "def": 10,
-        "pos": {
-            "x": 34,
-            "y": 32
-        },
-        "winprogress": 6
-    },
-    {
-        "id": "npc_3",
-        "name": "doomsdayGangSpy",
-        "type": "npc",
-        "friendly": true,
-        "show": false,
-        "hp": 50,
-        "attack": 10,
-        "def": 10,
-        "pos": {
-            "x": 30,
-            "y": 26
-        },
-        "winprogress": 7
-    },
-    {
-        "id": "npc_4",
-        "name": "hunter",
-        "type": "npc",
-        "friendly": true,
-        "show": true,
-        "hp": 50,
-        "attack": 12,
-        "def": 10,
-        "pos": {
-            "x": 43,
-            "y": 33
-        },
-        "winprogress": 8
-    },
-    {
-        "id": "gangster_1",
-        "name": "doomsdayGangTeam",
-        "type": "gangster",
-        "friendly": false,
-        "show": false,
-        "hp": 30,
-        "attack": 6,
-        "def": 10,
-        "pos": {
-            "x": 30,
-            "y": 18
-        },
-        "winprogress": 2
-    },
-    {
-        "id": "gangster_2",
-        "name": "rebels",
-        "type": "gangster",
-        "friendly": false,
-        "show": false,
-        "hp": 30,
-        "attack": 6,
-        "def": 10,
-        "pos": {
-            "x": 30,
-            "y": 26
-        },
-        "winprogress": 3
-    },
-    {
-        "id": "gangster_3",
-        "name": "doomsdayGangBigTeam",
-        "type": "gangster",
-        "friendly": false,
-        "show": false,
-        "hp": 180,
-        "attack": 24,
-        "def": 10,
-        "pos": {
-            "x": 20,
-            "y": 11
-        },
-        "logics": [
-            {
-                "cond": "KillDoomsDayGangTeam",
-                "type": "stepmove",
-                "step": 1,
-                "cd": 2,
-                "direction": 5,
-                "repeat": -1
-            }
+{
+  "pioneer_0": {
+    "id": "pioneer_0",
+    "name": "109001",
+    "type": "1",
+    "friendly": 1,
+    "show": 1,
+    "hp": 120,
+    "attack": 25,
+    "def": 0,
+    "winprogress": null,
+    "exp": 5,
+    "animType": "",
+    "drop": null,
+    "pos": [
+      {
+        "x": 22,
+        "y": 43
+      }
+    ]
+  },
+  "pioneer_1": {
+    "id": "pioneer_1",
+    "name": "109002",
+    "type": "1",
+    "friendly": 1,
+    "show": 0,
+    "hp": 80,
+    "attack": 15,
+    "def": 10,
+    "winprogress": null,
+    "exp": 5,
+    "animType": "",
+    "drop": null,
+    "pos": [
+      {
+        "x": 31,
+        "y": 29
+      }
+    ],
+    "logic": [
+      {
+        "type": 1,
+        "posx": 30,
+        "posy": 18,
+        "cond": "",
+        "step": null,
+        "cd": null,
+        "direction": null,
+        "repeat": null,
+        "interval": null,
+        "range": null,
+        "speed": null
+      }
+    ]
+  },
+  "pioneer_2": {
+    "id": "pioneer_2",
+    "name": "109003",
+    "type": "1",
+    "friendly": 1,
+    "show": 0,
+    "hp": 50,
+    "attack": 10,
+    "def": 10,
+    "winprogress": null,
+    "exp": 5,
+    "animType": "",
+    "drop": null,
+    "pos": [
+      {
+        "x": 31,
+        "y": 29
+      }
+    ]
+  },
+  "pioneer_3": {
+    "id": "pioneer_3",
+    "name": "109004",
+    "type": "1",
+    "friendly": 1,
+    "show": 0,
+    "hp": 30,
+    "attack": 6,
+    "def": 10,
+    "winprogress": null,
+    "exp": 5,
+    "animType": "",
+    "drop": null,
+    "pos": [
+      {
+        "x": 30,
+        "y": 26
+      }
+    ]
+  },
+  "npc_0": {
+    "id": "npc_0",
+    "name": "109005",
+    "type": "2",
+    "friendly": 1,
+    "show": 1,
+    "hp": 10,
+    "attack": 8,
+    "def": 0,
+    "winprogress": 4,
+    "exp": 5,
+    "animType": "",
+    "drop": null,
+    "pos": [
+      {
+        "x": 26,
+        "y": 34
+      }
+    ]
+  },
+  "npc_1": {
+    "id": "npc_1",
+    "name": "109006",
+    "type": "2",
+    "friendly": 1,
+    "show": 0,
+    "hp": 50,
+    "attack": 5,
+    "def": 10,
+    "winprogress": 5,
+    "exp": 5,
+    "animType": "",
+    "drop": null,
+    "pos": [
+      {
+        "x": 37,
+        "y": 27
+      }
+    ]
+  },
+  "npc_2": {
+    "id": "npc_2",
+    "name": "109007",
+    "type": "2",
+    "friendly": 1,
+    "show": 0,
+    "hp": 80,
+    "attack": 15,
+    "def": 10,
+    "winprogress": 6,
+    "exp": 5,
+    "animType": "",
+    "drop": null,
+    "pos": [
+      {
+        "x": 34,
+        "y": 32
+      }
+    ]
+  },
+  "npc_3": {
+    "id": "npc_3",
+    "name": "109008",
+    "type": "2",
+    "friendly": 1,
+    "show": 0,
+    "hp": 50,
+    "attack": 10,
+    "def": 10,
+    "winprogress": 7,
+    "exp": 5,
+    "animType": "",
+    "drop": null,
+    "pos": [
+      {
+        "x": 30,
+        "y": 26
+      }
+    ]
+  },
+  "npc_4": {
+    "id": "npc_4",
+    "name": "109009",
+    "type": "2",
+    "friendly": 1,
+    "show": 1,
+    "hp": 50,
+    "attack": 12,
+    "def": 10,
+    "winprogress": 8,
+    "exp": 5,
+    "animType": "",
+    "drop": null,
+    "pos": [
+      {
+        "x": 43,
+        "y": 33
+      }
+    ]
+  },
+  "gangster_1": {
+    "id": "gangster_1",
+    "name": "109010",
+    "type": "3",
+    "friendly": 0,
+    "show": 0,
+    "hp": 30,
+    "attack": 6,
+    "def": 10,
+    "winprogress": 2,
+    "exp": 5,
+    "animType": "",
+    "drop": null,
+    "pos": [
+      {
+        "x": 30,
+        "y": 18
+      }
+    ]
+  },
+  "gangster_2": {
+    "id": "gangster_2",
+    "name": "109011",
+    "type": "3",
+    "friendly": 0,
+    "show": 0,
+    "hp": 30,
+    "attack": 6,
+    "def": 10,
+    "winprogress": 3,
+    "exp": 5,
+    "animType": "",
+    "drop": null,
+    "pos": [
+      {
+        "x": 30,
+        "y": 26
+      }
+    ]
+  },
+  "gangster_3": {
+    "id": "gangster_3",
+    "name": "109012",
+    "type": "3",
+    "friendly": 0,
+    "show": 0,
+    "hp": 180,
+    "attack": 24,
+    "def": 10,
+    "winprogress": 10,
+    "exp": 5,
+    "animType": "",
+    "drop": null,
+    "pos": [
+      {
+        "x": 20,
+        "y": 11
+      }
+    ],
+    "logic": [
+      {
+        "type": 2,
+        "posx": null,
+        "posy": null,
+        "cond": "KillDoomsDayGangTeam",
+        "step": 1,
+        "cd": 2,
+        "direction": 5,
+        "repeat": -1,
+        "interval": null,
+        "range": null,
+        "speed": null
+      }
+    ]
+  },
+  "hred_1": {
+    "id": "hred_1",
+    "name": "109013",
+    "type": "4",
+    "friendly": 0,
+    "show": 0,
+    "hp": 60,
+    "attack": 15,
+    "def": 10,
+    "winprogress": 3,
+    "exp": 5,
+    "animType": "monster_a_1",
+    "drop": null,
+    "pos": [
+      {
+        "x": 49,
+        "y": 17
+      }
+    ],
+    "logic": [
+      {
+        "type": 2,
+        "posx": null,
+        "posy": null,
+        "cond": "",
+        "step": 1,
+        "cd": 2,
+        "direction": 2,
+        "repeat": 10,
+        "interval": null,
+        "range": null,
+        "speed": null
+      },
+      {
+        "type": 3,
+        "posx": null,
+        "posy": null,
+        "cond": "",
+        "step": null,
+        "cd": null,
+        "direction": null,
+        "repeat": null,
+        "interval": null,
+        "range": null,
+        "speed": null
+      }
+    ]
+  },
+  "hred_2": {
+    "id": "hred_2",
+    "name": "109014",
+    "type": "4",
+    "friendly": 0,
+    "show": 1,
+    "hp": 40,
+    "attack": 10,
+    "def": 10,
+    "winprogress": 3,
+    "exp": 5,
+    "animType": "monster_b_2",
+    "drop": null,
+    "pos": [
+      {
+        "x": 50,
+        "y": 28
+      }
+    ],
+    "logic": [
+      {
+        "type": 4,
+        "posx": null,
+        "posy": null,
+        "cond": "",
+        "step": null,
+        "cd": null,
+        "direction": null,
+        "repeat": -1,
+        "interval": [
+          2,
+          3
         ],
-        "winprogress": 10
-    },
-    {
-        "id": "hred_1",
-        "name": "hunter_hred",
-        "type": "hred",
-        "animType": "monster_a_1",
-        "friendly": false,
-        "show": false,
-        "hp": 60,
-        "attack": 15,
-        "def": 10,
-        "pos": {
-            "x": 49,
-            "y": 17
-        },
-        "logics": [
-            {
-                "type": "stepmove",
-                "step": 1,
-                "cd": 2,
-                "direction": 2,
-                "repeat": 10
-            },
-            {
-                "type": "hide"
-            }
+        "range": 3,
+        "speed": 200
+      }
+    ]
+  },
+  "hred_3": {
+    "id": "hred_3",
+    "name": "109015",
+    "type": "4",
+    "friendly": 0,
+    "show": 1,
+    "hp": 40,
+    "attack": 10,
+    "def": 10,
+    "winprogress": 3,
+    "exp": 5,
+    "animType": "monster_c_3",
+    "drop": [
+      [
+        3,
+        "7001",
+        1
+      ]
+    ],
+    "pos": [
+      {
+        "x": 39,
+        "y": 15
+      }
+    ]
+  },
+  "hred_4": {
+    "id": "hred_4",
+    "name": "109016",
+    "type": "4",
+    "friendly": 0,
+    "show": 1,
+    "hp": 40,
+    "attack": 10,
+    "def": 10,
+    "winprogress": 3,
+    "exp": 5,
+    "animType": "monster_c_1",
+    "drop": null,
+    "pos": [
+      {
+        "x": 17,
+        "y": 23
+      }
+    ]
+  },
+  "hred_5": {
+    "id": "hred_5",
+    "name": "109017",
+    "type": "4",
+    "friendly": 0,
+    "show": 1,
+    "hp": 40,
+    "attack": 10,
+    "def": 10,
+    "winprogress": 3,
+    "exp": 5,
+    "animType": "monster_a_1",
+    "drop": null,
+    "pos": [
+      {
+        "x": 40,
+        "y": 43
+      }
+    ]
+  },
+  "hred_6": {
+    "id": "hred_6",
+    "name": "109018",
+    "type": "4",
+    "friendly": 0,
+    "show": 1,
+    "hp": 40,
+    "attack": 10,
+    "def": 10,
+    "winprogress": 3,
+    "exp": 5,
+    "animType": "monster_b_2",
+    "drop": null,
+    "pos": [
+      {
+        "x": 38,
+        "y": 5
+      }
+    ],
+    "logic": [
+      {
+        "type": 4,
+        "posx": null,
+        "posy": null,
+        "cond": "",
+        "step": null,
+        "cd": null,
+        "direction": null,
+        "repeat": -1,
+        "interval": [
+          2,
+          5
         ],
-        "winprogress": 3
-    },
-    {
-        "id": "hred_2",
-        "name": "hred_2",
-        "type": "hred",
-        "animType": "monster_b_2",
-        "friendly": false,
-        "show": true,
-        "hp": 40,
-        "attack": 10,
-        "def": 10,
-        "pos": {
-            "x": 50,
-            "y": 28
-        },
-        "logics": [
-            {
-                "type": "patrol",
-                "interval": [2, 3],
-                "range": 3,
-                "speed": 200,
-                "repeat": -1
-            }
+        "range": 2,
+        "speed": 180
+      }
+    ]
+  },
+  "hred_7": {
+    "id": "hred_7",
+    "name": "109019",
+    "type": "4",
+    "friendly": 0,
+    "show": 1,
+    "hp": 40,
+    "attack": 10,
+    "def": 10,
+    "winprogress": 3,
+    "exp": 5,
+    "animType": "monster_b_2",
+    "drop": null,
+    "pos": [
+      {
+        "x": 24,
+        "y": 7
+      }
+    ],
+    "logic": [
+      {
+        "type": 4,
+        "posx": null,
+        "posy": null,
+        "cond": "",
+        "step": null,
+        "cd": null,
+        "direction": null,
+        "repeat": -1,
+        "interval": [
+          4,
+          6
         ],
-        "winprogress": 3
-    },
-    {
-        "id": "hred_3",
-        "name": "hred_3",
-        "type": "hred",
-        "animType": "monster_c_3",
-        "friendly": false,
-        "show": true,
-        "hp": 40,
-        "attack": 10,
-        "def": 10,
-        "pos": {
-            "x": 39,
-            "y": 15
-        },
-        "winprogress": 3,
-        "drop": [
-            [
-                3,
-                7001,
-                1
-            ]
-        ]
-    },
-    {
-        "id": "hred_4",
-        "name": "hred_4",
-        "type": "hred",
-        "animType": "monster_c_1",
-        "friendly": false,
-        "show": true,
-        "hp": 40,
-        "attack": 10,
-        "def": 10,
-        "pos": {
-            "x": 17,
-            "y": 23
-        },
-        "winprogress": 3
-    },
-    {
-        "id": "hred_5",
-        "name": "hred_5",
-        "type": "hred",
-        "animType": "monster_a_1",
-        "friendly": false,
-        "show": true,
-        "hp": 40,
-        "attack": 10,
-        "def": 10,
-        "pos": {
-            "x": 40,
-            "y": 43
-        },
-        "winprogress": 3
-    },
-    {
-        "id": "hred_6",
-        "name": "hred_6",
-        "type": "hred",
-        "animType": "monster_b_2",
-        "friendly": false,
-        "show": true,
-        "hp": 40,
-        "attack": 10,
-        "def": 10,
-        "pos": {
-            "x": 38,
-            "y": 5
-        },
-        "logics": [
-            {
-                "type": "patrol",
-                "interval": [2, 5],
-                "range": 2,
-                "speed": 180,
-                "repeat": -1
-            }
+        "range": 3,
+        "speed": 100
+      }
+    ]
+  },
+  "hred_8": {
+    "id": "hred_8",
+    "name": "109020",
+    "type": "4",
+    "friendly": 0,
+    "show": 1,
+    "hp": 40,
+    "attack": 10,
+    "def": 10,
+    "winprogress": 3,
+    "exp": 5,
+    "animType": "monster_b_2",
+    "drop": null,
+    "pos": [
+      {
+        "x": 8,
+        "y": 16
+      }
+    ],
+    "logic": [
+      {
+        "type": 4,
+        "posx": null,
+        "posy": null,
+        "cond": "",
+        "step": null,
+        "cd": null,
+        "direction": null,
+        "repeat": -1,
+        "interval": [
+          2,
+          3
         ],
-        "winprogress": 3
-    },
-    {
-        "id": "hred_7",
-        "name": "hred_7",
-        "type": "hred",
-        "animType": "monster_b_2",
-        "friendly": false,
-        "show": true,
-        "hp": 40,
-        "attack": 10,
-        "def": 10,
-        "pos": {
-            "x": 24,
-            "y": 7
-        },
-        "logics": [
-            {
-                "type": "patrol",
-                "interval": [4, 6],
-                "range": 3,
-                "speed": 100,
-                "repeat": -1
-            }
+        "range": 2,
+        "speed": 150
+      }
+    ]
+  },
+  "hred_9": {
+    "id": "hred_9",
+    "name": "109021",
+    "type": "4",
+    "friendly": 0,
+    "show": 1,
+    "hp": 40,
+    "attack": 10,
+    "def": 10,
+    "winprogress": 3,
+    "exp": 5,
+    "animType": "monster_a_1",
+    "drop": null,
+    "pos": [
+      {
+        "x": 39,
+        "y": 52
+      }
+    ],
+    "logic": [
+      {
+        "type": 4,
+        "posx": null,
+        "posy": null,
+        "cond": "",
+        "step": null,
+        "cd": null,
+        "direction": null,
+        "repeat": -1,
+        "interval": [
+          2,
+          3
         ],
-        "winprogress": 3
-    },
-    {
-        "id": "hred_8",
-        "name": "hred_8",
-        "type": "hred",
-        "animType": "monster_b_2",
-        "friendly": false,
-        "show": true,
-        "hp": 40,
-        "attack": 10,
-        "def": 10,
-        "pos": {
-            "x": 8,
-            "y": 16
-        },
-        "logics": [
-            {
-                "type": "patrol",
-                "interval": [2, 3],
-                "range": 2,
-                "speed": 150,
-                "repeat": -1
-            }
+        "range": 6,
+        "speed": 200
+      }
+    ]
+  },
+  "hred_10": {
+    "id": "hred_10",
+    "name": "109022",
+    "type": "4",
+    "friendly": 0,
+    "show": 1,
+    "hp": 40,
+    "attack": 10,
+    "def": 10,
+    "winprogress": 3,
+    "exp": 5,
+    "animType": "monster_a_1",
+    "drop": [
+      [
+        3,
+        "7001",
+        1
+      ],
+      [
+        4,
+        "20001",
+        1
+      ]
+    ],
+    "pos": [
+      {
+        "x": 53,
+        "y": 9
+      }
+    ],
+    "logic": [
+      {
+        "type": 4,
+        "posx": null,
+        "posy": null,
+        "cond": "",
+        "step": null,
+        "cd": null,
+        "direction": null,
+        "repeat": -1,
+        "interval": [
+          4,
+          7
         ],
-        "winprogress": 3
-    },
-    {
-        "id": "hred_9",
-        "name": "hred_9",
-        "type": "hred",
-        "animType": "monster_a_1",
-        "friendly": false,
-        "show": true,
-        "hp": 40,
-        "attack": 10,
-        "def": 10,
-        "pos": {
-            "x": 39,
-            "y": 52
-        },
-        "logics": [
-            {
-                "type": "patrol",
-                "interval": [2, 3],
-                "range": 6,
-                "speed": 200,
-                "repeat": -1
-            }
-        ],
-        "winprogress": 3
-    },
-    {
-        "id": "hred_10",
-        "name": "hred_10",
-        "type": "hred",
-        "animType": "monster_a_1",
-        "friendly": false,
-        "show": true,
-        "hp": 40,
-        "attack": 10,
-        "def": 10,
-        "pos": {
-            "x": 53,
-            "y": 9
-        },
-        "logics": [
-            {
-                "type": "patrol",
-                "interval": [4, 7],
-                "range": 2,
-                "speed": 100,
-                "repeat": -1
-            }
-        ],
-        "winprogress": 3,
-        "drop": [
-            [
-                3,
-                7001,
-                1
-            ],
-            [
-                4,
-                20001,
-                1
-            ]
-        ]
-    }
-]
+        "range": 2,
+        "speed": 100
+      }
+    ]
+  }
+}
