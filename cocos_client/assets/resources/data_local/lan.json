@@ -491,6 +491,186 @@
     "id": "310308",
     "eng": "You got a little energy."
   },
+  "310309": {
+    "id": "310309",
+    "eng": "You came to the cave in the village and found a colony of bats"
+  },
+  "310310": {
+    "id": "310310",
+    "eng": "You shooed away the bats and entered the cave."
+  },
+  "310311": {
+    "id": "310311",
+    "eng": "You trash killed by the bats??? Are you kidding me???"
+  },
+  "310312": {
+    "id": "310312",
+    "eng": "In the depths of the cave, you saw a guard standing in front of a door. You need to show it something."
+  },
+  "310313": {
+    "id": "310313",
+    "eng": "You showed it the Elder's Staff and the guard took you into the room behind the door."
+  },
+  "310314": {
+    "id": "310314",
+    "eng": "In the room, you saw the Energy Gemstone which is sustaining the entire base of the village. You can feel the immense power contained within this stone, and now you are faced with a choice."
+  },
+  "310315": {
+    "id": "310315",
+    "eng": "You followed your heart and took the Energy Gemstone directly."
+  },
+  "310316": {
+    "id": "310316",
+    "eng": "You resisted the temptation and decided to help the village by recharging the stone."
+  },
+  "310317": {
+    "id": "310317",
+    "eng": "After removing the Energy Gemstone from its base, it instantly lost its luster and became dim. Before you had time to ponder, the entire cavern began to shake, emitting a tremendous noise. You hastily grabbed the stone and fled from the area."
+  },
+  "310318": {
+    "id": "310318",
+    "eng": "With your help, the village regained its vitality."
+  },
+  "310319": {
+    "id": "310319",
+    "eng": "You had nothing to show it."
+  },
+  "310320": {
+    "id": "310320",
+    "eng": "You are killed by the guard."
+  },
+  "310321": {
+    "id": "310321",
+    "eng": "After defeating the guard, you entered the room behind the door and there, you discovered a gemstone imbued with immense power."
+  },
+  "310322": {
+    "id": "310322",
+    "eng": "You took the gemstone without hesitation."
+  },
+  "310323": {
+    "id": "310323",
+    "eng": "After removing the gemstone from its base, it instantly lost its luster and became dim. Before you had time to ponder, the entire cavern began to shake, emitting a tremendous noise. You hastily grabbed the stone and fled from the area."
+  },
+  "310324": {
+    "id": "310324",
+    "eng": "At the entrance of a waterside ruin, you encountered a group of land sharks and engaged them in combat."
+  },
+  "310325": {
+    "id": "310325",
+    "eng": "You killed the sharks and now you should decide which way to go."
+  },
+  "310326": {
+    "id": "310326",
+    "eng": "You entered the storage room of the ruin."
+  },
+  "310327": {
+    "id": "310327",
+    "eng": "You came across an old robot and engaged it in battle."
+  },
+  "310328": {
+    "id": "310328",
+    "eng": "You defeated the robot and gained some energy from it."
+  },
+  "310329": {
+    "id": "310329",
+    "eng": "You are killed by the robot!"
+  },
+  "310330": {
+    "id": "310330",
+    "eng": "You arrived at the waterside dock where boats are moored."
+  },
+  "310331": {
+    "id": "310331",
+    "eng": "You found some supplies and a good place for fishing."
+  },
+  "310332": {
+    "id": "310332",
+    "eng": "Maybe you want to fish here?"
+  },
+  "310333": {
+    "id": "310333",
+    "eng": "You don’t want to waste your food."
+  },
+  "310334": {
+    "id": "310334",
+    "eng": "You used some food as bait and caught a lot of fish."
+  },
+  "310335": {
+    "id": "310335",
+    "eng": "You used a significant amount of food as bait and…"
+  },
+  "310336": {
+    "id": "310336",
+    "eng": "You killed the big land shark and gained the Tooth of Megalodon!"
+  },
+  "310337": {
+    "id": "310337",
+    "eng": "You are killed by the big land shark!"
+  },
+  "310338": {
+    "id": "310338",
+    "eng": "You are killed by the land sharks!"
+  },
+  "310339": {
+    "id": "310339",
+    "eng": "A big land shark!"
+  },
+  "310340": {
+    "id": "310340",
+    "eng": "It is said that within this pyramid lies a supreme treasure, yet most people are lost in the labyrinth of the pyramid before they can find it."
+  },
+  "310341": {
+    "id": "310341",
+    "eng": "You entered the pyramid. Soon, you encountered a fork in the road."
+  },
+  "310342": {
+    "id": "310342",
+    "eng": "You turned left. Soon, you encountered another fork."
+  },
+  "310343": {
+    "id": "310343",
+    "eng": "You turned right. Soon, you encountered another fork."
+  },
+  "310344": {
+    "id": "310344",
+    "eng": "You turned right and you found that you backed to the entry."
+  },
+  "310345": {
+    "id": "310345",
+    "eng": "You turned left again. Soon, you encountered another fork."
+  },
+  "310346": {
+    "id": "310346",
+    "eng": "You turned right again. Soon, you encountered another fork."
+  },
+  "310347": {
+    "id": "310347",
+    "eng": "You turned right and you found that you backed to the entry."
+  },
+  "310348": {
+    "id": "310348",
+    "eng": "You turned left and you found a mechanical pharaoh."
+  },
+  "310349": {
+    "id": "310349",
+    "eng": "You defeated the mechanical pharaoh and got the artifact from it!"
+  },
+  "310350": {
+    "id": "310350",
+    "eng": "You are killed by the pharaoh!"
+  },
+  "310351": {
+    "id": "310351",
+    "eng": "You turned left and you found that you backed to the entry."
+  },
+  "310352": {
+    "id": "310352",
+    "eng": "You turned left and you found that you backed to the entry."
+  },
+  "310353": {
+    "id": "310353",
+    "eng": "You turned right and you found a mechanical pharaoh."
+  },
   "310401": {
     "id": "310401",
     "eng": "open human-shaped cocoons"
@@ -546,6 +726,50 @@
   "310414": {
     "id": "310414",
     "eng": "take away the tube"
+  },
+  "310415": {
+    "id": "310415",
+    "eng": "Show the Elder's Staff"
+  },
+  "310416": {
+    "id": "310416",
+    "eng": "Take the Energy Gemstone"
+  },
+  "310417": {
+    "id": "310417",
+    "eng": "To the storage of the ruin"
+  },
+  "310418": {
+    "id": "310418",
+    "eng": "I don't want to waste my food"
+  },
+  "310419": {
+    "id": "310419",
+    "eng": "Left"
+  },
+  "310420": {
+    "id": "310420",
+    "eng": "Nothing to show"
+  },
+  "310421": {
+    "id": "310421",
+    "eng": "Use your energy to charge the Energy Gemstone"
+  },
+  "310422": {
+    "id": "310422",
+    "eng": "To the waterside"
+  },
+  "310423": {
+    "id": "310423",
+    "eng": "Maybe use 50 food for fun?"
+  },
+  "310424": {
+    "id": "310424",
+    "eng": "Right"
+  },
+  "310425": {
+    "id": "310425",
+    "eng": "I want to spend 100 food for a big one!"
   },
   "401001": {
     "id": "401001",
@@ -642,6 +866,10 @@
   "401024": {
     "id": "401024",
     "eng": "gold"
+  },
+  "401025": {
+    "id": "401025",
+    "eng": "Elder's Staff"
   },
   "402001": {
     "id": "402001",

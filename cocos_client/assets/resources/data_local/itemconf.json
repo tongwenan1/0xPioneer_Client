@@ -185,6 +185,15 @@
     "grade": 4,
     "gain_item": null
   },
+  "19": {
+    "id": "19",
+    "itemType": 1,
+    "icon": "item_18",
+    "itemName": "401019",
+    "itemDesc": "401025",
+    "grade": 4,
+    "gain_item": null
+  },
   "8001": {
     "id": "8001",
     "itemType": 0,
