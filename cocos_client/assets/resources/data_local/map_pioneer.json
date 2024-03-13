@@ -24,7 +24,7 @@
     "name": "109002",
     "type": "1",
     "friendly": 1,
-    "show": 0,
+    "show": 1,
     "hp": 80,
     "attack": 15,
     "def": 10,

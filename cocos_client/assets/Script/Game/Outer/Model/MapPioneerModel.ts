@@ -16,18 +16,18 @@ export enum MapPioneerActionType {
 }
 
 export enum MapPioneerType {
-    player = "player",
-    npc = "npc",
-    hred = "hred",
-    gangster = "gangster",
+    player = "1",
+    npc = "2",
+    hred = "4",
+    gangster = "3",
 }
 
 export enum MapPioneerLogicType {
-    stepmove = "stepmove",
-    targetmove = "targetmove",
-    hide = "hide",
-    patrol = "patrol",
-    commonmove = "commonmove",
+    stepmove = 2,
+    targetmove = 1,
+    hide = 3,
+    patrol = 4,
+    commonmove = -1,
 }
 
 export enum MapPioneerMoveDirection {

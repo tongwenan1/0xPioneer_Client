@@ -927,14 +927,24 @@ export default class PioneerMgr {
                 });
             });
             if (resultData != null) {
-                for (const temple of resultData) {
+                for (const key in resultData) {
+                    const temple = resultData[key];
+                    console.log("exce te: ", temple.type);
                     let pioneer: MapPioneerModel = null;
+                    let templePos = null;
+                    if (temple.pos.length > 0) {
+                        templePos = v2(temple.pos[0].x, temple.pos[0].y);
+                    }
+                    if (templePos == null) {
+                        continue;
+                    }
                     if (temple.type == MapPioneerType.npc) {
+                        console.log("exce npc: ", temple.type);
                         pioneer = new MapNpcPioneerModel(
-                            temple.show,
+                            temple.show == 1,
                             0,
                             temple.id,
-                            temple.friendly,
+                            temple.friendly == 1,
                             temple.type,
                             temple.name,
                             temple.hp,
@@ -944,14 +954,15 @@ export default class PioneerMgr {
                             temple.attack,
                             temple.def,
                             temple.def,
-                            v2(temple.pos.x, temple.pos.y)
+                            templePos
                         );
                     } else if (temple.type == MapPioneerType.player) {
+                        console.log("exce player: ", MapPioneerType.player);
                         pioneer = new MapPlayerPioneerModel(
-                            temple.show,
+                            temple.show == 1,
                             0,
                             temple.id,
-                            temple.friendly,
+                            temple.friendly == 1,
                             temple.type,
                             temple.name,
                             temple.hp,
@@ -961,14 +972,14 @@ export default class PioneerMgr {
                             temple.attack,
                             temple.def,
                             temple.def,
-                            v2(temple.pos.x, temple.pos.y)
+                            templePos
                         );
                     } else {
                         pioneer = new MapPioneerModel(
-                            temple.show,
+                            temple.show == 1,
                             0,
                             temple.id,
-                            temple.friendly,
+                            temple.friendly == 1,
                             temple.type,
                             temple.name,
                             temple.hp,
@@ -978,7 +989,7 @@ export default class PioneerMgr {
                             temple.attack,
                             temple.def,
                             temple.def,
-                            v2(temple.pos.x, temple.pos.y)
+                            templePos
                         );
                     }
                     // logic
@@ -991,7 +1002,9 @@ export default class PioneerMgr {
                                 model.setStepMoveData(logic.step, logic.cd, logic.cd, logic.direction, logic.repeat);
 
                             } else if (logic.type == MapPioneerLogicType.targetmove) {
-                                model.targetPos = v2(logic.pos.x, logic.pos.y);
+                                if (logic.posx != null && logic.posy != null) {
+                                    model.targetPos = v2(logic.posx, logic.posy);
+                                }
 
                             } else if (logic.type == MapPioneerLogicType.patrol) {
                                 model.setPatrolData(pioneer.stayPos, logic.interval, logic.range, logic.repeat, -1, null);
@@ -1124,6 +1137,7 @@ export default class PioneerMgr {
                 this._pioneers.push(newModel);
             }
         }
+        console.log("exce p: ", this._pioneers)
         // default player id is "0"
         this._currentActionPioneerId = "pioneer_0";
         this._originalActionPioneerId = "pioneer_0";
