@@ -381,7 +381,8 @@ export default class UserInfoMgr {
         }
         while (parseLv);
 
-        this._localJsonData.playerData.exp = value;
+        this._localJsonData.playerData.exp = this._exp;
+        this._localJsonData.playerData.level = this._level;
         this._localDataChanged(this._localJsonData);
 
         if (value != original) {
@@ -578,7 +579,7 @@ export default class UserInfoMgr {
             if (step.progress != null) {
                 this.explorationValue += step.progress;
             }
-            // exp
+            // task exp
             if (step.exp != null) {
                 this.exp += step.exp;
             }
