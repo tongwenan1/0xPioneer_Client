@@ -29,7 +29,6 @@ export default class ItemMgr {
             });
         });
         if (frame != null) {
-
             this._itemIconSpriteFrames[iconName] = frame;
         }
         return this._itemIconSpriteFrames[iconName];
@@ -238,9 +237,9 @@ export default class ItemMgr {
     private _localStorageKey: string = "item_data";
     private _localItemDatas: ItemData[] = [];
 
-    private _itemIconSpriteFrames = {};
     private static _instance: ItemMgr = null;
     private _itemConfs = {};
+    private _itemIconSpriteFrames = {};
     private async _initData() {
         // read item config
         const obj = await new Promise((resolve) => {

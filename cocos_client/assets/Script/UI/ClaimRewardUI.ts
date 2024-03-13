@@ -44,7 +44,7 @@ export class ClaimRewardUI extends Component {
                                             tween().by(0.1, { position: v3(0, -20, 0) }),
                                             tween().by(0.1, { position: v3(0, 20, 0) }),
                                             tween().by(0.05, { position: v3(0, -10, 0) }),
-                                            tween().delay(3)
+                                            tween().delay(1)
                                         )
                                     ).start();
                                 }

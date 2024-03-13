@@ -353,6 +353,9 @@ export default class UserInfoMgr {
         }
     }
     public set exp(value: number) {
+
+        value = 100;
+
         const original = this._exp;
         this._exp = value;
 

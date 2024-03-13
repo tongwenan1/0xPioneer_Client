@@ -33,17 +33,15 @@ import LanMgr from "../Manger/LanMgr";
 import { ArtifactItem } from "./ArtifactItem";
 const { ccclass, property } = _decorator;
 
-export interface ArtifactInfoShowModel {
-    artifactConfig: ArtifactConfigData;
-    count: number;
-}
-
 @ccclass("ArtifactInfoUI")
 export class ArtifactInfoUI extends PopUpUI {
-    public async showItem(artifacts: ArtifactInfoShowModel[], isGet: Boolean = false, closeCallback: () => void = null) {
+    public async showItem(artifacts: ArtifactData[], closeCallback: () => void = null) {
         this._artifacts = artifacts;
         this._closeCallback = closeCallback;
+
+        return;
         if (this._artifacts.length > 0) {
+            // show only one
             let frame = await ArtifactItem.getItemIcon(this._artifacts[0].artifactConfig.icon);
             this.icon.spriteFrame = frame;
 
@@ -169,89 +167,18 @@ export class ArtifactInfoUI extends PopUpUI {
         }
     }
 
-    @property(Sprite)
-    icon: Sprite;
-
-    @property(Label)
-    nameLabel: Label;
-
-    @property(Label)
-    propTxt1: Label;
-
-    @property(Label)
-    propTxt2: Label;
-
-    @property(Label)
-    effectTxt1: Label;
-
-    @property(Label)
-    effectDes1: Label;
-
-    @property(Label)
-    effectTxt2: Label;
-
-    @property(Label)
-    effectDes2: Label;
-
-    @property(RichText)
-    descTxt: RichText;
-
-    @property(Button)
-    closeButton: Button;
-
-    @property(Button)
-    useButton: Button;
-
-    @property(Label)
-    useButtonLabel: Label;
-
+    private _artifacts: ArtifactData[];
     private _closeCallback: () => void;
+    onLoad(): void {
 
-    private _isGet: Boolean;
-    private _artifacts: ArtifactInfoShowModel[];
+    }
 
     start() {
-        this.closeButton.node.on(
-            Button.EventType.CLICK,
-            () => {
-                this._onTapClose();
-            },
-            this
-        );
 
-        this.useButton.node.on(
-            Button.EventType.CLICK,
-            () => {
-                this._clickUseBtn();
-            },
-            this
-        );
     }
 
     //---------------------------------------------------- action
     private _onTapClose() {
-        this.show(false);
-        if (this._closeCallback != null) {
-            this._closeCallback();
-        }
-    }
-
-    private _clickUseBtn() {
-        if (this._isGet) {
-        } else {
-            // TODO: use?
-            for (const temple of this._artifacts) {
-                ArtifactMgr.Instance.subArtifact(temple.artifactConfig.configId, 1);
-                CountMgr.instance.addNewCount({
-                    type: CountType.useItem,
-                    timeStamp: new Date().getTime(),
-                    data: {
-                        itemId: temple.artifactConfig.configId,
-                        num: 1,
-                    },
-                });
-            }
-        }
         this.show(false);
         if (this._closeCallback != null) {
             this._closeCallback();

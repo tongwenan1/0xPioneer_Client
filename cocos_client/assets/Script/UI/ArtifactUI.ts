@@ -1,44 +1,29 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
-import ArtifactData from '../Model/ArtifactData';
-import { ArtifactItem } from './ArtifactItem';
-import ArtifactMgr, { ArtifactMgrEvent, ArtifactArrangeType } from '../Manger/ArtifactMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import LanMgr from '../Manger/LanMgr';
 import EventMgr from '../Manger/EventMgr';
 import { EventName } from '../Const/ConstDefine';
+import { GameMain } from '../GameMain';
+import ArtifactMgr, { ArtifactArrangeType, ArtifactMgrEvent } from '../Manger/ArtifactMgr';
+import ArtifactData from '../Model/ArtifactData';
+import { ArtifactItem } from './ArtifactItem';
 const { ccclass, property } = _decorator;
 
 
 @ccclass('ArtifactUI')
 export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
+    
 
 
     @property(Prefab)
-    ArtifactItemPfb: Prefab;
-
-    @property(Slider)
-    ContentSlider: Slider;
-
-    @property(Node)
-    Content: Node;
-
-    @property(Label)
-    QuantityNum: Label;
-
-    @property(Button)
-    closeButton: Button;
-
-    @property(Button)
-    ArrangeButton: Button;
-
-    private maxArtifactCount: number = 100;
-    private artifactCount: number;
-
-    private freeItemTile: ArtifactItem[] = [];
+    private itemPrb: Prefab = null;
 
     private _selectSortMenuShow: boolean = false;
     private _currentArrangeType: ArtifactArrangeType = null;
+    private _itemDatas: ArtifactData[] = null;
 
+    private _itemContent: Node = null;
+    private _allItemViews: Node[] = null;
     private _sortMenu: Node = null;
     private _menuArrow: Node = null;
     onLoad(): void {
@@ -47,33 +32,48 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
 
         this._menuArrow = this.node.getChildByPath("Bg/SortView/Menu/Arrow");
 
-        EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
+        this._currentArrangeType = ArtifactArrangeType.Recently;
 
-        // setTimeout(() => {
-        //     let artifact = new ArtifactData(7001, 1);
-        //     ArtifactMgr.Instance.addArtifact([artifact]);
-        // }, 3000);
+        this._itemContent = this.node.getChildByPath("Bg/ScrollView/View/Content");
+
+        EventMgr.on(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
     }
 
     start() {
         ArtifactMgr.Instance.addObserver(this);
 
+        this._allItemViews = [];
+        for (let i = 0; i < ArtifactMgr.Instance.maxItemLength; i++) {
+            let itemView = instantiate(this.itemPrb);
+            itemView.active = true;
+
+            const button = itemView.addComponent(Button);
+            let evthandler = new EventHandler();
+            evthandler._componentName = "ArtifactUI";
+            evthandler.target = this.node;
+            evthandler.handler = "onTapItem";
+            button.clickEvents.push(evthandler);
+
+            itemView.parent = this._itemContent;
+            this._allItemViews.push(itemView);
+        }
+        this._itemContent.getComponent(Layout).updateLayout();
+
         this._refreshArtifactUI();
+        
+        ArtifactMgr.Instance.addArtifact([new ArtifactData("7001", 1)])
     }
 
     onDestroy(): void {
         ArtifactMgr.Instance.removeObserver(this);
 
-        EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
+        EventMgr.off(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
     }
 
-    changeLang(): void {
-        if (this.node.active === false) return;
-        this._refreshArtifactUI();
-    }
-
-    private _refreshArtifactUI() {
-
+    private async _refreshArtifactUI() {
+        if (this._allItemViews == null) {
+            return;
+        }
         // useLanMgr
         // this.node.getChildByPath("Bg/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this.node.getChildByPath("Bg/QuantityLabel").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
@@ -83,46 +83,22 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
         // this._sortMenu.getChildByPath("Content/Recently").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
 
-        const artifacts = ArtifactMgr.Instance.localArtifactDatas;
+        const items = ArtifactMgr.Instance.localArtifactDatas;
+        this._itemDatas = items;
 
-        let cAry: ArtifactItem[] = [];
-        this.Content.children.forEach((node) => {
-            let bi = node.getComponent(ArtifactItem);
-            if (bi) {
-                cAry.push(bi);
-            }
-        });
-
-        for (let i = 0; i < cAry.length; ++i) {
-            cAry[i].node.parent = null;
-            this.freeItemTile.push(cAry[i]);
+        for (let i = 0; i < this._allItemViews.length; i++) {
+            const itemView = this._allItemViews[i];
+            itemView.getComponent(ArtifactItem).refreshUI(i < items.length ? items[i] : null);
+            itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
         }
-
-        this.artifactCount = 0;
-        for (let i = 0; i < artifacts.length; ++i) {
-            let itemTile: ArtifactItem;
-            if (this.freeItemTile.length > 0) {
-                itemTile = this.freeItemTile.pop();
-            }
-            else {
-                let itemTileNode = instantiate(this.ArtifactItemPfb);
-                itemTile = itemTileNode.getComponent(ArtifactItem);
-            }
-
-            itemTile.initArtifact(artifacts[i]);
-            itemTile.node.parent = this.Content;
-
-            this.artifactCount += artifacts[i].count;
-        }
-
-        this.QuantityNum.string = "" + this.artifactCount + "/" + this.maxArtifactCount;
-
-        this.Content.getComponent(Layout).updateLayout();
+        this.node.getChildByPath("Bg/QuantityNum").getComponent(Label).string = items.length + "/" + ArtifactMgr.Instance.maxItemLength;
     }
 
     private _refreshMenu() {
         this._sortMenu.active = this._selectSortMenuShow;
         this._menuArrow.angle = this._selectSortMenuShow ? 180 : 0;
+        this._sortMenu.getChildByPath("Content/Recently/ImgScreenSelect").active = this._currentArrangeType == ArtifactArrangeType.Recently;
+        this._sortMenu.getChildByPath("Content/Rarity/ImgScreenSelect").active = this._currentArrangeType == ArtifactArrangeType.Rarity;
     }
 
     //------------------------------------------------------------ action
@@ -131,8 +107,15 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
         this._refreshMenu();
         this.show(false);
     }
+    private onTapItem(event: Event, customEventData: string) {
+        const index = parseInt(customEventData);
+        if (index < this._itemDatas.length) {
+            const itemData = this._itemDatas[index];
+            GameMain.inst.UI.artifactInfoUI.showItem([itemData]);
+        }
+    }
     private onTapArrange() {
-        ArtifactMgr.Instance.arrange(this._currentArrangeType)
+        ArtifactMgr.Instance.arrange(this._currentArrangeType);
     }
 
     private onTapSortMenuAction() {
@@ -145,7 +128,7 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
             return;
         }
         this._currentArrangeType = customEventData as ArtifactArrangeType;
-        
+
         switch (this._currentArrangeType) {
             case ArtifactArrangeType.Rarity:
                 this.node.getChildByPath("Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string;

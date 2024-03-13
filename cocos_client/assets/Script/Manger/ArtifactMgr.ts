@@ -1,9 +1,9 @@
-import { resources, sys } from "cc";
+import { SpriteFrame, resources, sys } from "cc";
 import ArtifactData, { ArtifactConfigData, ArtifactEffectConfigData, ArtifactProp, ArtifactPropValueType } from "../Model/ArtifactData";
 import UserInfoMgr, { FinishedEvent } from "./UserInfoMgr";
 import PioneerMgr from "./PioneerMgr";
-import { MapPioneerAttributesChangeModel } from "../Game/Outer/Model/MapPioneerModel";
-import { json } from "node:stream/consumers";
+import { ArtifactItem } from "../UI/ArtifactItem";
+
 
 export enum ArtifactArrangeType {
     Recently = "Recently",
@@ -15,6 +15,25 @@ export interface ArtifactMgrEvent {
 }
 
 export default class ArtifactMgr {
+    public async getItemIcon(iconName: string): Promise<SpriteFrame> {
+        if (iconName in this._itemIconSpriteFrames) {
+            return this._itemIconSpriteFrames[iconName];
+        }
+        const frame = await new Promise((resolve) => {
+            resources.load("ui/icon/artifact/" + iconName + "/spriteFrame", SpriteFrame, (err: Error, icon) => {
+                if (err) {
+                    resolve(null);
+                    return;
+                }
+                resolve(icon);
+            });
+        });
+        if (frame != null) {
+            this._itemIconSpriteFrames[iconName] = frame;
+        }
+        return this._itemIconSpriteFrames[iconName];
+    }
+
     public getArtifactConf(artifactConfigId: string): ArtifactConfigData {
         let key = artifactConfigId;
         if (key in this._artifactConfs) {
@@ -66,7 +85,7 @@ export default class ArtifactMgr {
                     }
                 }
             }
-            
+
             // effect
             if (artifactConfig.effect.length > 0) {
                 for (let j = 0; j < artifactConfig.effect.length; j++) {
@@ -86,6 +105,9 @@ export default class ArtifactMgr {
 
     public get artifactIsFull(): boolean {
         return this._localArtifactDatas.length >= this._maxArtifactLength;
+    }
+    public get maxItemLength(): number {
+        return this._maxArtifactLength;
     }
     public get localArtifactDatas(): ArtifactData[] {
         return this._localArtifactDatas;
@@ -173,6 +195,22 @@ export default class ArtifactMgr {
         return true;
     }
     public arrange(sortType: ArtifactArrangeType): void {
+        // merge same item
+        const singleItems: Map<string, ArtifactData> = new Map();
+        for (let i = 0; i < this._localArtifactDatas.length; i++) {
+            const item = this._localArtifactDatas[i];
+            if (singleItems.has(item.artifactConfigId)) {
+                const savedItem = singleItems.get(item.artifactConfigId);
+                savedItem.count += item.count;
+                savedItem.addTimeStamp = Math.max(savedItem.addTimeStamp, item.addTimeStamp);
+                this._localArtifactDatas.splice(i, 1);
+                i--;
+            } else {
+                singleItems.set(item.artifactConfigId, item);
+            }
+        }
+        localStorage.setItem(this._localStorageKey, JSON.stringify(this._localArtifactDatas));
+
         if (sortType == ArtifactArrangeType.Recently) {
             this._localArtifactDatas.sort((a, b) => {
                 return b.addTimeStamp - a.addTimeStamp;
@@ -209,7 +247,7 @@ export default class ArtifactMgr {
     }
 
     private _observers: ArtifactMgrEvent[] = [];
-    public constructor() {}
+    public constructor() { }
 
     private _maxArtifactLength: number = 100;
     private _localStorageKey: string = "artifact_data";
@@ -218,6 +256,7 @@ export default class ArtifactMgr {
     private static _instance: ArtifactMgr = null;
     private _artifactConfs = {};
     private _artifactEffectConfs = {};
+    private _itemIconSpriteFrames = {};
     private async _initData() {
         // read artifact config
         const obj = await new Promise((resolve) => {

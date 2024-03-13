@@ -1,4 +1,4 @@
-import { _decorator, Animation, Button, Component, Label, Node } from 'cc';
+import { _decorator, Animation, Button, Component, Label, Node, tween, v3 } from 'cc';
 import EventMgr from '../../Manger/EventMgr';
 import { EventName } from '../../Const/ConstDefine';
 import UserInfoMgr from '../../Manger/UserInfoMgr';
@@ -21,15 +21,15 @@ export class RookieGuide extends Component {
         // this._videoView.getChildByPath("SkipButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
     }
     start() {
-        
+
     }
 
     update(deltaTime: number) {
 
     }
-    
+
     protected onDestroy(): void {
-        
+
     }
 
     //---------------------------------------
@@ -47,20 +47,28 @@ export class RookieGuide extends Component {
         if (this._animing) {
             return;
         }
+        tween()
+            .target(this.node)
+            .sequence(
+                tween().by(0.05, { position: v3(0, 20, 0) }),
+                tween().by(0.1, { position: v3(0, -40, 0) }),
+                tween().by(0.1, { position: v3(0, 40, 0) }),
+                tween().by(0.05, { position: v3(0, -20, 0) }),
+            ).start();
         this._wakeUpTimes += 1;
         const wakeUpTipView = this._guideView.getChildByPath("WakeupButton/WakeUpTip");
         wakeUpTipView.getChildByName("Exclamation_" + this._wakeUpTimes).active = true;
         if (this._wakeUpTimes == 1) {
             this._guideView.getChildByName("Wake_Up_01_Group").active = true;
             this._animing = true;
-            this.scheduleOnce(()=> {
+            this.scheduleOnce(() => {
                 this._animing = false;
                 this._guideView.getChildByName("Wake_Up_01_Group").active = false;
             }, 1);
         } else if (this._wakeUpTimes == 2) {
             this._guideView.getChildByName("Wake_Up_02_Group").active = true;
             this._animing = true;
-            this.scheduleOnce(()=> {
+            this.scheduleOnce(() => {
                 this._animing = false;
                 this._guideView.getChildByName("Wake_Up_02_Group").active = false;
             }, 1);
@@ -72,10 +80,10 @@ export class RookieGuide extends Component {
                 openEyesView.active = true;
                 openEyesView.getComponent(Animation).play();
                 EventMgr.emit(EventName.ROOKIE_GUIDE_BEGIN_EYES, { node: this.node });
-                this.scheduleOnce(()=> {
+                this.scheduleOnce(() => {
                     EventMgr.emit(EventName.ROOKIE_GUIDE_THIRD_EYES);
                 }, 3);
-                openEyesView.getComponent(Animation).on(Animation.EventType.FINISHED, ()=> {
+                openEyesView.getComponent(Animation).on(Animation.EventType.FINISHED, () => {
                 });
                 this._guideView.getChildByName("Bg").active = false;
                 this._guideView.getChildByName("WakeupButton").active = false;

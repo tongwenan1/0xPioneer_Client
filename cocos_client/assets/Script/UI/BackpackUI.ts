@@ -68,7 +68,9 @@ export class BackpackUI extends PopUpUI implements ItemMgrEvent {
     }
 
     private async _refreshBackpackUI() {
-
+        if (this._allItemViews == null) {
+            return;
+        }
         // useLanMgr
         // this.node.getChildByPath("Bg/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this.node.getChildByPath("Bg/QuantityLabel").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
