@@ -15,7 +15,7 @@ import { ArtifactEffectType } from "../Model/ArtifactData";
 import SettlementMgr from "./SettlementMgr";
 import UserInfoMgr from "./UserInfoMgr";
 import EventMgr from "db://assets/Script/Manger/EventMgr";
-import {EventName} from "db://assets/Script/Const/ConstDefine";
+import { EventName } from "db://assets/Script/Const/ConstDefine";
 
 export interface PioneerMgrEvent {
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void;
@@ -139,10 +139,10 @@ export default class PioneerMgr {
         const findPioneer = this._pioneers.filter(pioneer => pioneer.id === this._currentActionPioneerId);
         if (findPioneer.length > 0) {
             busy = (
-                findPioneer[0].actionType != MapPioneerActionType.dead && 
-                findPioneer[0].actionType != MapPioneerActionType.wakeup && 
-                findPioneer[0].actionType != MapPioneerActionType.idle && 
-                findPioneer[0].actionType != MapPioneerActionType.defend && 
+                findPioneer[0].actionType != MapPioneerActionType.dead &&
+                findPioneer[0].actionType != MapPioneerActionType.wakeup &&
+                findPioneer[0].actionType != MapPioneerActionType.idle &&
+                findPioneer[0].actionType != MapPioneerActionType.defend &&
                 findPioneer[0].actionType != MapPioneerActionType.eventing);
         }
         return busy;
@@ -220,7 +220,7 @@ export default class PioneerMgr {
             this.pioneerChangeAttack(pioneer.id, change);
         }
     }
-    
+
     public destroyOne(pioneerId: string) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
@@ -542,6 +542,11 @@ export default class PioneerMgr {
                 }
                 selfAttack = !selfAttack;
                 if (fightOver) {
+                    if (deadPioneer == enemy &&
+                        deadPioneer.winexp > 0) {
+                        // win fight, add exp
+                        UserInfoMgr.Instance.exp += enemy.winexp;
+                    }
                     for (const observer of this._observers) {
                         observer.endFight(fightId, true, deadPioneer instanceof MapPioneerModel, deadPioneer.id);
                     }
@@ -1019,6 +1024,9 @@ export default class PioneerMgr {
                     if (temple.winprogress != null) {
                         pioneer.winprogress = temple.winprogress;
                     }
+                    if (temple.exp != null) {
+                        pioneer.winexp = temple.exp;
+                    }
                     if (temple.drop != null) {
                         pioneer.drop = temple.drop;
                     }
@@ -1129,12 +1137,12 @@ export default class PioneerMgr {
                 }
                 newModel.logics = logics;
                 newModel.winprogress = temple._winprogress;
+                newModel.winexp = temple._winexp;
                 newModel.drop = temple._drop;
                 newModel.animType = temple._animType;
                 this._pioneers.push(newModel);
             }
         }
-        console.log("exce p: ", this._pioneers)
         // default player id is "0"
         this._currentActionPioneerId = "pioneer_0";
         this._originalActionPioneerId = "pioneer_0";
@@ -1529,7 +1537,7 @@ export default class PioneerMgr {
                             fightOver = true;
                             deadPioneer = defender;
                         }
-    
+
                     } else if (defender instanceof MapBuildingModel) {
                         if (defender.type == MapBuildingType.city) {
                             (defender as MapMainCityBuildingModel).loseHp(damage);
@@ -1581,6 +1589,12 @@ export default class PioneerMgr {
                     BuildingMgr.instance.changeBuildingFaction("building_1", BuildingFactionType.enemy);
                 }
 
+                if (deadPioneer instanceof MapPioneerModel &&
+                    deadPioneer.type != MapPioneerType.player &&
+                    deadPioneer.winexp > 0) {
+                    UserInfoMgr.Instance.exp += deadPioneer.winexp;
+                }
+
                 for (const observer of this._observers) {
                     observer.endFight(fightId, false, deadPioneer instanceof MapPioneerModel, deadPioneer.id);
                 }
@@ -1590,13 +1604,13 @@ export default class PioneerMgr {
                         name: attacker.name,
                         avatarIcon: "icon_player_avatar", // todo
                         hp: attacker.hp,
-                        hpMax:attacker.hpMax,
+                        hpMax: attacker.hpMax,
                     },
                     defender: {
                         name: defender.name,
                         avatarIcon: "icon_player_avatar",
                         hp: defenderHp,
-                        hpMax:defenderHpMax,
+                        hpMax: defenderHpMax,
                     },
                     attackerIsSelf: attacker.friendly,
                     buildingId: defender instanceof MapBuildingModel ?? (defender as MapBuildingModel).id,

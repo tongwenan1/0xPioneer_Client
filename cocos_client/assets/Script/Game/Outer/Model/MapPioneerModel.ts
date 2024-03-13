@@ -206,6 +206,9 @@ export default class MapPioneerModel {
     public set winprogress(value: number) {
         this._winprogress = value;
     }
+    public set winexp(value: number) {
+        this._winexp = value;
+    }
     public set drop(value: any[]) {
         this._drop = value;
     }
@@ -304,6 +307,9 @@ export default class MapPioneerModel {
     public get winprogress(): number {
         return this._winprogress;
     }
+    public get winexp(): number {
+        return this._winexp;
+    }
     public get drop(): any[] {
         return this._drop;
     }
@@ -341,6 +347,7 @@ export default class MapPioneerModel {
         this._moveSpeed = -1;
         this._purchaseMovingPioneerId = null;
         this._winprogress = 0;
+        this._winexp = 0;
         this._drop = [];
     }
 
@@ -378,6 +385,7 @@ export default class MapPioneerModel {
     private _purchaseMovingPioneerId: string | null;
     private _purchaseMovingBuildingId: string | null;
     private _winprogress: number;
+    private _winexp: number;
     private _drop: any[];
 }
 

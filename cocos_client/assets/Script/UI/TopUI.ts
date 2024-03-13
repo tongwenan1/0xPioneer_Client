@@ -74,7 +74,7 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
     refreshTopUI() {
         const info = UserInfo.Instance;
         this.txtPlayerName.string = info.playerName;
-        this.txtPlayerLV.string = "LV" + info.level;
+        this.txtPlayerLV.string = "C.LV" + info.level;
         this.txtLvProgress.string = `${info.exp}/${1000}`;
         this.txtMoney.string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Gold).toString();
         this.txtEnergy.string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Energy).toString();

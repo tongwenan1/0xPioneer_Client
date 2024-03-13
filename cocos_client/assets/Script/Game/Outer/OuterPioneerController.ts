@@ -565,6 +565,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             this._fightViewMap.get(fightId).node.destroy();
             this._fightViewMap.delete(fightId);
         }
+        
         if (isEventFight) {
             return;
         }
@@ -577,7 +578,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 gainResources: 0,
                 exploredEvents: 0,
             });
-
             UserInfoMgr.Instance.checkCanFinishedTask("killpioneer", deadId);
             const deadPioneer = PioneerMgr.instance.getPioneerById(deadId);
             if (deadPioneer != null && !deadPioneer.friendly) {
@@ -585,8 +585,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 if (deadPioneer.drop != null) {
                     ItemConfigDropTool.getItemByConfig(deadPioneer.drop);
                 }
-
             }
+
         } else {
             //building
             UserInfoMgr.Instance.checkCanFinishedTask("destroybuilding", deadId);
