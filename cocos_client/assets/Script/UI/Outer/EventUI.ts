@@ -2,7 +2,7 @@ import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout
 import { GameMain } from '../../GameMain';
 import PioneerMgr from '../../Manger/PioneerMgr';
 import ItemMgr from '../../Manger/ItemMgr';
-import ItemData, { ItemConfigData } from '../../Model/ItemData';
+import ItemData, { ItemConfigData, ItemType } from '../../Model/ItemData';
 import BranchEventMgr from '../../Manger/BranchEventMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
 import BuildingMgr from '../../Manger/BuildingMgr';
@@ -331,11 +331,22 @@ export class EventUI extends PopUpUI {
             }
         }
         if (itemDatas.length > 0) {
-            this._contentView.active = false;
             ItemMgr.Instance.addItem(itemDatas);
-            GameMain.inst.UI.itemInfoUI.showItem(itemDatas, true, () => {
-                this._contentView.active = true;
-            });
+
+            let hasItem: boolean = false;
+            for (const item of itemDatas) {
+                const config = ItemMgr.Instance.getItemConf(item.itemConfigId);
+                if (config != null && config.itemType != ItemType.Resource) {
+                    hasItem = true;
+                    break;
+                }
+            }
+            if (hasItem) {
+                this._contentView.active = false;
+                GameMain.inst.UI.itemInfoUI.showItem(itemDatas, true, () => {
+                    this._contentView.active = true;
+                });
+            }
         }
         return showTip;
     }

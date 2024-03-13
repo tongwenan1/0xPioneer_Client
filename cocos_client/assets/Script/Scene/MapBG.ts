@@ -834,7 +834,7 @@ export class MapBG extends Component {
         if (this._lastpt == null) {
             this._lastpt = time;
         }
-        console.log("exce delay: " + (time - this._lastpt));
+        // console.log("exce delay: " + (time - this._lastpt));
         this._lastpt = time;
         // draw bg fog
         // this._fogView.draw(allClearedTilePosions);
