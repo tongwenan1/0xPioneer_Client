@@ -1306,7 +1306,7 @@
     "_alignFlags": 36,
     "_target": null,
     "_left": 0,
-    "_right": 62.5,
+    "_right": 34,
     "_top": 277.5,
     "_bottom": 250,
     "_horizontalCenter": 0,
@@ -1354,7 +1354,7 @@
     "value": {
       "__type__": "cc.Vec3",
       "x": 836,
-      "y": -27.5,
+      "y": -24.5,
       "z": 0
     }
   },

@@ -72,6 +72,7 @@ export class DialogueUI extends PopUpUI {
         const selectView = this.node.getChildByName("SelectView");
 
         dialogView.getChildByName("NextButton").active = true;
+        dialogView.getChildByName("dialog_bg").getComponent(Button).interactable = true;
 
         const currentMesssage = this._talk.messsages[this._dialogStep];
         if (currentMesssage.type == null || currentMesssage.type == 0) {
@@ -112,6 +113,7 @@ export class DialogueUI extends PopUpUI {
             }
             selectView.active = true;
             dialogView.getChildByName("NextButton").active = false;
+            dialogView.getChildByName("dialog_bg").getComponent(Button).interactable = false;
             
             for (let i = 0; i < 3; i++) {
                 const button = selectView.getChildByName("Button_" + i);

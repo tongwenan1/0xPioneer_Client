@@ -146,9 +146,10 @@ export class MapBG extends Component {
         return null;
     }
 
+    public cameraOriginalOrthoHeight: number = 0;
+
     private _mouseDown: boolean = false;
     private _tiledhelper: TileMapHelper = null;
-    private _cameraOriginalOrthoHeight: number = 0;
     private _localEraseShadowWorldPos: Vec2[] = [];
     private _localEraseDataKey: string = "erase_shadow";
     private _fogAnimOriginalPos: Vec3 = null;
@@ -177,6 +178,7 @@ export class MapBG extends Component {
     private _hexScale: number = 0.5;
     private _hexViewRadius: number = 0;
     protected onLoad(): void {
+        this.cameraOriginalOrthoHeight = GameMain.inst.MainCamera.orthoHeight;
         // local shadow erase
         this._initTileMap();
 
@@ -195,7 +197,6 @@ export class MapBG extends Component {
     start() {
         this._mouseDown = false;
         let thisptr = this;
-        this._cameraOriginalOrthoHeight = GameMain.inst.MainCamera.orthoHeight;
         let downx = 0;
         let downy = 0;
         this.node.on(Node.EventType.MOUSE_DOWN, (event: EventMouse) => {
@@ -224,7 +225,7 @@ export class MapBG extends Component {
         }, this);
 
         this.node.on(Node.EventType.MOUSE_WHEEL, (event: EventMouse) => {
-            let sc = GameMain.inst.MainCamera.orthoHeight / this._cameraOriginalOrthoHeight;
+            let sc = GameMain.inst.MainCamera.orthoHeight / this.cameraOriginalOrthoHeight;
             let config = ConfigMgr.Instance.getConfigById("10001");
             if (config.length <= 0) return;
             let useConf = config[0];
@@ -241,7 +242,7 @@ export class MapBG extends Component {
             else if (sc < useConf.para[0]) {
                 sc = useConf.para[0];
             }
-            GameMain.inst.MainCamera.orthoHeight = sc * this._cameraOriginalOrthoHeight;
+            GameMain.inst.MainCamera.orthoHeight = sc * this.cameraOriginalOrthoHeight;
 
             this._fixCameraPos(GameMain.inst.MainCamera.node.position);
 
@@ -684,7 +685,7 @@ export class MapBG extends Component {
     }
 
     private _fixCameraPos(pos: Vec3) {
-        let sc = GameMain.inst.MainCamera.orthoHeight / this._cameraOriginalOrthoHeight;
+        let sc = GameMain.inst.MainCamera.orthoHeight / this.cameraOriginalOrthoHeight;
 
         const cameraSize = size(GameMain.inst.MainCamera.camera.width, GameMain.inst.MainCamera.camera.height);
         const contentSize = this.node.parent.getComponent(UITransform).contentSize;
