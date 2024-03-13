@@ -218,8 +218,13 @@ export class EventUI extends PopUpUI {
         });
 
         if (event.map_building_refresh != null) {
-            for (const buildingId of event.map_building_refresh) {
-                BuildingMgr.instance.showBuilding(buildingId);
+            console.log("exce bu: ", event.map_building_refresh);
+            for (const [buidingId, type] of event.map_building_refresh) {
+                if (type == 1) {
+                    BuildingMgr.instance.showBuilding(buidingId);
+                } else {
+                    BuildingMgr.instance.hideBuilding(buidingId);
+                }
             }
         }
         if (event.map_pioneer_unlock != null) {
