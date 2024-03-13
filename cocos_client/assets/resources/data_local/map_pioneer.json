@@ -1,7 +1,7 @@
 {
   "104001": {
     "id": "104001",
-    "name": "",
+    "name": "109023",
     "type": "4",
     "friendly": 0,
     "show": 0,
@@ -11,11 +11,17 @@
     "winprogress": 5,
     "exp": 5,
     "animType": "",
-    "drop": null
+    "drop": null,
+    "pos": [
+      {
+        "x": 22,
+        "y": 43
+      }
+    ]
   },
   "104002": {
     "id": "104002",
-    "name": "",
+    "name": "109024",
     "type": "4",
     "friendly": 0,
     "show": 0,
@@ -25,11 +31,17 @@
     "winprogress": 5,
     "exp": 5,
     "animType": "",
-    "drop": null
+    "drop": null,
+    "pos": [
+      {
+        "x": 22,
+        "y": 43
+      }
+    ]
   },
   "104003": {
     "id": "104003",
-    "name": "",
+    "name": "109025",
     "type": "4",
     "friendly": 0,
     "show": 0,
@@ -39,11 +51,17 @@
     "winprogress": 10,
     "exp": 20,
     "animType": "",
-    "drop": null
+    "drop": null,
+    "pos": [
+      {
+        "x": 22,
+        "y": 43
+      }
+    ]
   },
   "104004": {
     "id": "104004",
-    "name": "",
+    "name": "109026",
     "type": "4",
     "friendly": 0,
     "show": 0,
@@ -53,11 +71,17 @@
     "winprogress": 5,
     "exp": 5,
     "animType": "",
-    "drop": null
+    "drop": null,
+    "pos": [
+      {
+        "x": 22,
+        "y": 43
+      }
+    ]
   },
   "104005": {
     "id": "104005",
-    "name": "",
+    "name": "109027",
     "type": "4",
     "friendly": 0,
     "show": 0,
@@ -67,11 +91,17 @@
     "winprogress": 5,
     "exp": 5,
     "animType": "",
-    "drop": null
+    "drop": null,
+    "pos": [
+      {
+        "x": 22,
+        "y": 43
+      }
+    ]
   },
   "104006": {
     "id": "104006",
-    "name": "",
+    "name": "109028",
     "type": "4",
     "friendly": 0,
     "show": 0,
@@ -81,11 +111,17 @@
     "winprogress": 10,
     "exp": 20,
     "animType": "",
-    "drop": null
+    "drop": null,
+    "pos": [
+      {
+        "x": 22,
+        "y": 43
+      }
+    ]
   },
   "104007": {
     "id": "104007",
-    "name": "",
+    "name": "109029",
     "type": "4",
     "friendly": 0,
     "show": 0,
@@ -95,7 +131,13 @@
     "winprogress": 10,
     "exp": 25,
     "animType": "",
-    "drop": null
+    "drop": null,
+    "pos": [
+      {
+        "x": 22,
+        "y": 43
+      }
+    ]
   },
   "pioneer_0": {
     "id": "pioneer_0",
