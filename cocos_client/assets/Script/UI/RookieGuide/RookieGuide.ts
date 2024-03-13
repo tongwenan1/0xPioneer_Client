@@ -47,14 +47,17 @@ export class RookieGuide extends Component {
         if (this._animing) {
             return;
         }
+
+        let rate = 1 + 2 * this._wakeUpTimes;
         tween()
             .target(this.node)
             .sequence(
-                tween().by(0.05, { position: v3(0, 20, 0) }),
-                tween().by(0.1, { position: v3(0, -40, 0) }),
-                tween().by(0.1, { position: v3(0, 40, 0) }),
-                tween().by(0.05, { position: v3(0, -20, 0) }),
+                tween().by(0.05, { position: v3(20*rate, 20*rate, 0) }),
+                tween().by(0.1, { position: v3(-40*rate, -40*rate, 0) }),
+                tween().by(0.1, { position: v3(40*rate, 40*rate, 0) }),
+                tween().by(0.05, { position: v3(-20*rate, -20*rate, 0) }),
             ).start();
+            
         this._wakeUpTimes += 1;
         const wakeUpTipView = this._guideView.getChildByPath("WakeupButton/WakeUpTip");
         wakeUpTipView.getChildByName("Exclamation_" + this._wakeUpTimes).active = true;
