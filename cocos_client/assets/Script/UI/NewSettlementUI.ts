@@ -22,7 +22,7 @@ export class NewSettlementUI extends PopUpUI {
         // useLanMgr 
         // this.node.getChildByPath("SummaryContent/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this.node.getChildByPath("SummaryContent/BottomTitle").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        this.node.getChildByPath("SummaryContent/PeriodicSettlement/SettlementView").getComponent(SettlementView).refreshUI(beginLevel, endLevel);
+        this.node.getChildByPath("SummaryContent/Content").getComponent(SettlementView).refreshUI(beginLevel, endLevel);
     }
 
     private _beginLevel: number;
@@ -32,7 +32,7 @@ export class NewSettlementUI extends PopUpUI {
     }
 
     start() {
-        
+           
     }
 
     update(deltaTime: number) {

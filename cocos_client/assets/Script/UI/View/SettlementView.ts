@@ -1,7 +1,5 @@
 import { _decorator, Component, instantiate, Label, Layout, Node, UITransform, Widget } from 'cc';
 import SettlementMgr, { SettlementModel } from '../../Manger/SettlementMgr';
-import EventMgr from '../../Manger/EventMgr';
-import { EventName } from '../../Const/ConstDefine';
 import EvaluationMgr from '../../Manger/EvaluationMgr';
 import LanMgr from '../../Manger/LanMgr';
 const { ccclass, property } = _decorator;
@@ -12,69 +10,69 @@ export class SettlementView extends Component {
     public refreshUI(beginLevel: number, endLevel: number) {
         const model = SettlementMgr.instance.getSettlement(beginLevel, endLevel);
 
-        this.node.getChildByPath("Content/LevelTitle").getComponent(Label).string = "C.Lv " + beginLevel + "  >  C.Lv " + endLevel;
+        this.node.getChildByPath("Level/Before").getComponent(Label).string = "C.Lv " + beginLevel;
+        this.node.getChildByPath("Level/After").getComponent(Label).string = "C.Lv " + endLevel;
 
-        const content = this.node.getChildByPath("Content/SettlementContent");
-
+        const leftContent = this.node.getChildByPath("LeftContent/SettlementContent");
+        const rightContent = this.node.getChildByPath("RightContent/SettlementContent");
         if (model.newPioneerIds.length > 0) {
             // useLanMgr
-            // content.getChildByPath("NewPioneer/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-            content.getChildByName("NewPioneer").active = true;
+            // leftContent.getChildByPath("NewPioneer/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            leftContent.getChildByName("NewPioneer").active = true;
             for (const pioneerId of model.newPioneerIds) {
                 const item = instantiate(this._pioneerItem);
                 item.active = true;
                 item.setParent(this._pioneerItem.parent);
-                item.getChildByName("Secret").active = pioneerId == "pioneer_1";
-                item.getChildByName("Rebel").active = pioneerId == "pioneer_3";
-                item.getChildByName("Spy").active = pioneerId == "pioneer_2";
+                item.getChildByName("secretGuard").active = pioneerId == "pioneer_1";
+                item.getChildByName("rebels").active = pioneerId == "pioneer_3";
+                item.getChildByName("doomsdayGangSpy").active = pioneerId == "pioneer_2";
             }
             this._pioneerItem.parent.getComponent(Layout).updateLayout();
         } else {
-            content.getChildByName("NewPioneer").active = false;
+            leftContent.getChildByName("NewPioneer").active = false;
         }
 
         if (model.killEnemies > 0) {
             // useLanMgr
-            // content.getChildByPath("KilledEnemies/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-            content.getChildByName("KilledEnemies").active = true;
-            content.getChildByPath("KilledEnemies/Value").getComponent(Label).string = model.killEnemies.toString();
+            // leftContent.getChildByPath("KilledEnemies/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            leftContent.getChildByName("KilledEnemies").active = true;
+            leftContent.getChildByPath("KilledEnemies/Value").getComponent(Label).string = model.killEnemies.toString();
         } else {
-            content.getChildByName("KilledEnemies").active = false;
+            leftContent.getChildByName("KilledEnemies").active = false;
         }
 
         if (model.gainResources > 0) {
             // useLanMgr
-            // content.getChildByPath("GainedResources/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-            content.getChildByName("GainedResources").active = true;
-            content.getChildByPath("GainedResources/Value").getComponent(Label).string = model.gainResources.toString();
+            // leftContent.getChildByPath("GainedResources/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            leftContent.getChildByName("GainedResources").active = true;
+            leftContent.getChildByPath("GainedResources/Value").getComponent(Label).string = model.gainResources.toString();
         } else {
-            content.getChildByName("GainedResources").active = false;
+            leftContent.getChildByName("GainedResources").active = false;
         }
 
         if (model.exploredEvents > 0) {
             // useLanMgr
-            // content.getChildByPath("ExploredEvents/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-            content.getChildByName("ExploredEvents").active = true;
-            content.getChildByPath("ExploredEvents/Value").getComponent(Label).string = model.exploredEvents.toString();
+            // leftContent.getChildByPath("ExploredEvents/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            leftContent.getChildByName("ExploredEvents").active = true;
+            leftContent.getChildByPath("ExploredEvents/Value").getComponent(Label).string = model.exploredEvents.toString();
         } else {
-            content.getChildByName("ExploredEvents").active = false;
+            leftContent.getChildByName("ExploredEvents").active = false;
         }
 
         const evaluation = EvaluationMgr.Instance.getEvaluation(model.newPioneerIds.length, model.killEnemies, model.gainResources, model.exploredEvents);
         if (evaluation != null) {
-            content.getChildByName("Evaluation").active = true;
-            content.getChildByPath("Evaluation/Value").getComponent(Label).string = LanMgr.Instance.getLanById(evaluation.title); 
+            // useLanMgr
+            // rightContent.getChildByPath("Evaluation/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            rightContent.getChildByName("Evaluation").active = true;
+            rightContent.getChildByPath("Evaluation/Value").getComponent(Label).string = LanMgr.Instance.getLanById(evaluation.title); 
         } else {
-            content.getChildByName("Evaluation").active = false;
+            rightContent.getChildByName("Evaluation").active = false;
         }
-        content.getComponent(Layout).updateLayout();
-
-        this.node.getComponent(UITransform).height = content.getComponent(UITransform).height + content.getComponent(Widget).top + 20;
     }
 
     private _pioneerItem: Node = null;
     protected onLoad(): void {
-        this._pioneerItem = this.node.getChildByPath("Content/SettlementContent/NewPioneer/Content/Item");
+        this._pioneerItem = this.node.getChildByPath("LeftContent/SettlementContent/NewPioneer/Content/Item");
         this._pioneerItem.active = false;
     }
 

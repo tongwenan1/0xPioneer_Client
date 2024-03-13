@@ -15,11 +15,6 @@ const { ccclass, property } = _decorator;
 @ccclass('PlayerInfoUI')
 export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
 
-
-    @property(Prefab)
-    private settlementPrefab: Prefab = null;
-
-
     private _selectIndex: number = 0;
     private _selectSettleIndex: number = 0;
     private _selectSettleViewOffsetHeight: number[] = [];
@@ -28,6 +23,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
     private _tabViews: Node[] = [];
     private _tabButtons: Node[] = [];
 
+    private _settlementItem: Node = null;
     private _changeNameView: Node = null;
     private _nextLevelView: Node = null;
     private _rewardItem: Node = null;
@@ -42,6 +38,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
     onLoad(): void {
 
         this._selectIndex = 0;
+
 
         const infoView = this.node.getChildByPath("Content/tabContents/InfoContent");
         const summaryView = this.node.getChildByPath("Content/tabContents/SummaryContent");
@@ -62,6 +59,9 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
         for (let i = 0; i < this._tabButtons.length; i++) {
             this._tabButtons[i].getComponent(Button).clickEvents[0].customEventData = i.toString();
         }
+
+        this._settlementItem = summaryView.getChildByPath("PeriodicSettlement/view/content/Item");
+        this._settlementItem.active = false;
 
         this._changeNameView = this.node.getChildByName("ChangeNameContent");
         this._changeNameView.active = false;
@@ -201,7 +201,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
             }
             this._settleUseSelectItems = [];
 
-            const currentLevel: number = UserInfoMgr.Instance.level;
+            let currentLevel: number = UserInfoMgr.Instance.level;
             const gap: number = 10;
             const settleCount: number = Math.floor(currentLevel / gap);
             if (settleCount <= 0) {
@@ -218,7 +218,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
                     const beginLevel: number = i * gap + 1;
                     const endLevel: number = (i + 1) * gap;
                     //view
-                    const view = instantiate(this.settlementPrefab);
+                    const view = instantiate(this._settlementItem);
                     view.active = true;
                     settleViewContent.addChild(view);
                     view.getComponent(SettlementView).refreshUI(beginLevel, endLevel);
@@ -330,7 +330,8 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
     private _refreshSettleButtons() {
         for (let i = 0; i < this._settleUseSelectItems.length; i++) {
             const item = this._settleUseSelectItems[i];
-            item.getComponent(Sprite).grayscale = i != this._selectSettleIndex;
+            item.getChildByName("ImgScreenSelect").active = i == this._selectSettleIndex;
+            item.getChildByName("Label").getComponent(Label).color = i == this._selectSettleIndex ? new Color(243, 228, 177) : new Color(255, 255, 255);
         }
     }
 
