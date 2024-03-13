@@ -16,6 +16,7 @@ import SettlementMgr from "./SettlementMgr";
 import UserInfoMgr from "./UserInfoMgr";
 import EventMgr from "db://assets/Script/Manger/EventMgr";
 import { EventName } from "db://assets/Script/Const/ConstDefine";
+import LanMgr from "./LanMgr";
 
 export interface PioneerMgrEvent {
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void;
@@ -583,6 +584,12 @@ export default class PioneerMgr {
                         // player dead
                         deadPioneer.rebirthCountTime = 10;
                         this._savePioneerData();
+
+                        // useLanMgr
+                        let tips = LanMgr.Instance.replaceLanById("107549", [LanMgr.Instance.getLanById(deadPioneer.name)]);
+                        // let tips = LanMgr.Instance.getLanById(deadPioneer.name) + " is dead, please wait for the resurrection";
+
+                        GameMain.inst.UI.ShowTip(tips);
                     }
                     if (fightOverCallback != null) {
                         fightOverCallback(enemyHp <= 0);
@@ -1637,6 +1644,12 @@ export default class PioneerMgr {
                     // player dead
                     deadPioneer.rebirthCountTime = 10;
                     this._savePioneerData();
+
+                    // useLanMgr
+                    let tips = LanMgr.Instance.replaceLanById("107549", [LanMgr.Instance.getLanById(deadPioneer.name)]);
+                    // let tips = LanMgr.Instance.getLanById(deadPioneer.name) + " is dead, please wait for the resurrection";
+
+                    GameMain.inst.UI.ShowTip(tips);
                 }
 
             } else {
