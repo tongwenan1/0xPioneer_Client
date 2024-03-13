@@ -114,6 +114,11 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
     }
 
     //-------------------------------- function
+    private clearReset(): void {
+        localStorage.clear();
+        window.location.reload();
+    }
+    
     private _loadOver() {
         this._selectLang = LanMgr.Instance.getLang();
         this._refreshUI();
