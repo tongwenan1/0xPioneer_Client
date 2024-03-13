@@ -10,7 +10,7 @@
     "def": 0,
     "winprogress": null,
     "exp": 5,
-    "animType": "",
+    "animType": "self",
     "drop": null,
     "pos": [
       {
@@ -24,13 +24,13 @@
     "name": "109002",
     "type": "1",
     "friendly": 1,
-    "show": 1,
+    "show": 0,
     "hp": 80,
     "attack": 15,
     "def": 10,
     "winprogress": null,
     "exp": 5,
-    "animType": "",
+    "animType": "secretGuard",
     "drop": null,
     "pos": [
       {
@@ -65,7 +65,7 @@
     "def": 10,
     "winprogress": null,
     "exp": 5,
-    "animType": "",
+    "animType": "doomsdayGangSpy",
     "drop": null,
     "pos": [
       {
@@ -85,7 +85,7 @@
     "def": 10,
     "winprogress": null,
     "exp": 5,
-    "animType": "",
+    "animType": "rebels",
     "drop": null,
     "pos": [
       {
@@ -105,7 +105,7 @@
     "def": 0,
     "winprogress": 4,
     "exp": 5,
-    "animType": "",
+    "animType": "prophetess",
     "drop": null,
     "pos": [
       {
@@ -125,7 +125,7 @@
     "def": 10,
     "winprogress": 5,
     "exp": 5,
-    "animType": "",
+    "animType": "artisan",
     "drop": null,
     "pos": [
       {
@@ -145,7 +145,7 @@
     "def": 10,
     "winprogress": 6,
     "exp": 5,
-    "animType": "",
+    "animType": "secretGuard",
     "drop": null,
     "pos": [
       {
@@ -165,7 +165,7 @@
     "def": 10,
     "winprogress": 7,
     "exp": 5,
-    "animType": "",
+    "animType": "doomsdayGangSpy",
     "drop": null,
     "pos": [
       {
@@ -185,7 +185,7 @@
     "def": 10,
     "winprogress": 8,
     "exp": 5,
-    "animType": "",
+    "animType": "hunter",
     "drop": null,
     "pos": [
       {
@@ -205,7 +205,7 @@
     "def": 10,
     "winprogress": 2,
     "exp": 5,
-    "animType": "",
+    "animType": "doomsdayGangTeam",
     "drop": null,
     "pos": [
       {
@@ -225,7 +225,7 @@
     "def": 10,
     "winprogress": 3,
     "exp": 5,
-    "animType": "",
+    "animType": "rebels",
     "drop": null,
     "pos": [
       {
@@ -245,7 +245,7 @@
     "def": 10,
     "winprogress": 10,
     "exp": 5,
-    "animType": "",
+    "animType": "doomsdayGangBigTeam",
     "drop": null,
     "pos": [
       {

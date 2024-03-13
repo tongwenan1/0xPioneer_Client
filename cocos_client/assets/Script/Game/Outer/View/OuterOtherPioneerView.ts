@@ -9,11 +9,11 @@ export class OuterOtherPioneerView extends Component {
 
     public refreshUI(pioneer: MapPioneerModel) {
         // name
-        this.node.getChildByName("name").getComponent(Label).string = pioneer.name;
+        this.node.getChildByName("name").getComponent(Label).string = LanMgr.Instance.getLanById(pioneer.name);
         // role
         for (const name of this._roleNames) {
             const view = this.node.getChildByPath("role/" + name);
-            view.active = name === pioneer.name;
+            view.active = name === pioneer.animType;
             if (view.active) {
                 if (pioneer.actionType == MapPioneerActionType.idle) {
                     view.getChildByName("idle").active = true;

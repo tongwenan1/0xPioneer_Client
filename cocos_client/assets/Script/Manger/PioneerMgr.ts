@@ -929,7 +929,6 @@ export default class PioneerMgr {
             if (resultData != null) {
                 for (const key in resultData) {
                     const temple = resultData[key];
-                    console.log("exce te: ", temple.type);
                     let pioneer: MapPioneerModel = null;
                     let templePos = null;
                     if (temple.pos.length > 0) {
@@ -939,7 +938,6 @@ export default class PioneerMgr {
                         continue;
                     }
                     if (temple.type == MapPioneerType.npc) {
-                        console.log("exce npc: ", temple.type);
                         pioneer = new MapNpcPioneerModel(
                             temple.show == 1,
                             0,
@@ -957,7 +955,6 @@ export default class PioneerMgr {
                             templePos
                         );
                     } else if (temple.type == MapPioneerType.player) {
-                        console.log("exce player: ", MapPioneerType.player);
                         pioneer = new MapPlayerPioneerModel(
                             temple.show == 1,
                             0,

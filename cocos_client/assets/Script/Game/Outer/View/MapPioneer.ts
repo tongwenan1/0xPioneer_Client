@@ -2,6 +2,7 @@ import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat,
 import MapPioneerModel, { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection } from '../Model/MapPioneerModel';
 import EventMgr from '../../../Manger/EventMgr';
 import { EventName } from '../../../Const/ConstDefine';
+import LanMgr from '../../../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapPioneer')
@@ -28,7 +29,7 @@ export class MapPioneer extends Component {
 
     public refreshUI(model: MapPioneerModel) {
         this._model = model;
-        this.nameLabel.string = this._model.name;
+        this.nameLabel.string = LanMgr.Instance.getLanById(this._model.name);
         this._actionTimeStamp = this._model.actionEndTimeStamp;
         this._actionTotalTime = this._actionTimeStamp - model.actionBeginTimeStamp;
 
@@ -42,21 +43,15 @@ export class MapPioneer extends Component {
         let wakeUpView = null;
 
         let roleView = null;
-        if (model.id == "pioneer_0") {
-            roleView = this.node.getChildByPath("role/self");
-            for (const name of this._roleNames) {
-                const templeView = this.node.getChildByPath("role/" + name);
-                templeView.active = false;
+        for (const name of this._roleNames) {
+            const templeView = this.node.getChildByPath("role/" + name);
+            templeView.active = name == model.animType;
+            if (templeView.active) {
+                roleView = templeView;
             }
-        } else {
-            this.node.getChildByPath("role/self").active = false;
-            for (const name of this._roleNames) {
-                const templeView = this.node.getChildByPath("role/" + name);
-                templeView.active = name == model.name;
-                if (templeView.active) {
-                    roleView = templeView;
-                }
-            }
+        }
+        if (roleView == null) {
+            return;
         }
         roleView.active = true;
         idleView = roleView.getChildByName("idle");
@@ -212,6 +207,7 @@ export class MapPioneer extends Component {
     private _resourceAnimView: Node = null;
 
     private _roleNames: string[] = [
+        "self",
         "artisan",
         "doomsdayGangBigTeam",
         "doomsdayGangSpy",
