@@ -94,7 +94,7 @@ export class TreasureGettedUI extends PopUpUI {
 
                     } else if (resultReward.type == ItemConfigType.Artifact) {
                         // artifact
-                        iconspr.spriteFrame = await ArtifactItem.getItemIcon(resultReward.itemConfigId);
+                        iconspr.spriteFrame = await ArtifactMgr.Instance.getItemIcon(resultReward.itemConfigId);
 
                         const artifactConf = ArtifactMgr.Instance.getArtifactConf(resultReward.itemConfigId);
                         if (artifactConf) {

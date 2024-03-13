@@ -178,10 +178,10 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
         if (this._selectIndex == 0) {
             // info
             let currentLevel = UserInfoMgr.Instance.level;
-            currentShowView.getChildByPath("UserID/UserID").getComponent(Label).string = "ID:" + UserInfoMgr.Instance.playerID;
+            currentShowView.getChildByPath("UserID/UserID").getComponent(Label).string = "ID: " + UserInfoMgr.Instance.playerID;
             // useLanMgr 
             // currentShowView.getChildByPath("UserName/UserName").getComponent(Label).string = LanMgr.Instance.getLanById("107549") + ":" + UserInfoMgr.Instance.playerName;
-            currentShowView.getChildByPath("UserName/UserName").getComponent(Label).string = "Name:" + UserInfoMgr.Instance.playerName;
+            currentShowView.getChildByPath("UserName/UserName").getComponent(Label).string = "Name: " + UserInfoMgr.Instance.playerName;
 
             // useLanMgr 
             // currentShowView.getChildByPath("UserLCivilizationLv/UserLCivilizationLv").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
