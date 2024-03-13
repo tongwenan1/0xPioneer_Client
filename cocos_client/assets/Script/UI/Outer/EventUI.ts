@@ -218,7 +218,6 @@ export class EventUI extends PopUpUI {
         });
 
         if (event.map_building_refresh != null) {
-            console.log("exce bu: ", event.map_building_refresh);
             for (const [buidingId, type] of event.map_building_refresh) {
                 if (type == 1) {
                     BuildingMgr.instance.showBuilding(buidingId);
@@ -228,8 +227,12 @@ export class EventUI extends PopUpUI {
             }
         }
         if (event.map_pioneer_unlock != null) {
-            for (const pioneerId of event.map_pioneer_unlock) {
-                PioneerMgr.instance.showPioneer(pioneerId);
+            for (const [pioneerId, type] of event.map_pioneer_unlock) {
+                if (type == 1) {
+                    PioneerMgr.instance.showPioneer(pioneerId);
+                } else {
+                    PioneerMgr.instance.hidePioneer(pioneerId);
+                }
             }
         }
     }
