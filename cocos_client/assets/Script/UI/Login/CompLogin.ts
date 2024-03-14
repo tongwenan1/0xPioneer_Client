@@ -41,7 +41,7 @@ export class CompLogin extends Component {
 
         {
             //Find and Reg recall method.
-            let b1 = this.node.getChildByName("btn-recall").getComponent(Button);
+            let b1 = this.node.getChildByPath("LoginView/btn-recall").getComponent(Button);
             let evthandler = new EventHandler();
             evthandler._componentName = "CompLogin";
             evthandler.target = this.node;
@@ -57,16 +57,16 @@ export class CompLogin extends Component {
         //     evthandler.handler = "OnEventNext";
         //     b1.clickEvents.push(evthandler);
         // }
-        // {
-        //     //Find and Reg next method.
-        //     let b1 = this.node.getChildByName("btn-next-guest").getComponent(Button);
-        //     let evthandler = new EventHandler();
-        //     evthandler._componentName = "CompLogin";
-        //     evthandler.target = this.node;
-        //     evthandler.handler = "OnEventNext";
-        //     evthandler.customEventData = "guest";
-        //     b1.clickEvents.push(evthandler);
-        // }
+        {
+            //Find and Reg next method.
+            let b1 = this.node.getChildByPath("LoginView/GuestButton").getComponent(Button);
+            let evthandler = new EventHandler();
+            evthandler._componentName = "CompLogin";
+            evthandler.target = this.node;
+            evthandler.handler = "OnEventNext";
+            evthandler.customEventData = "guest";
+            b1.clickEvents.push(evthandler);
+        }
 
         let l = this.node.getChildByName("Label").getComponent(Label);
         l.string = "prepare metamask ing";
@@ -107,7 +107,7 @@ export class CompLogin extends Component {
     }
 
     private onTapLogin() {
-        const codeEditBox = this.node.getChildByName("CodeInput").getComponent(EditBox);
+        const codeEditBox = this.node.getChildByPath("LoginView/CodeInput").getComponent(EditBox);
         if (codeEditBox.string.length <= 0) {
             return;
         }
@@ -126,6 +126,11 @@ export class CompLogin extends Component {
         if (canEnter) {
             director.loadScene("main");
         }
+    }
+
+    private onTapStart() {
+        this.node.getChildByName("StartView").active = false;
+        this.node.getChildByName("LoginView").active = true;
     }
 }
 
