@@ -796,7 +796,6 @@ export default class PioneerMgr {
 
                                 } else if (logic.type == MapPioneerLogicType.patrol) {
                                     if (logic.repeat > 0 || logic.repeat == -1) {
-                                        console.log('exce pme: ' + pioneer.id);
                                         if (logic.currentCd == -1) {
                                             // randomNextPos
                                             let getNextPos: boolean = false;
@@ -838,9 +837,6 @@ export default class PioneerMgr {
                                                     }
                                                 }
                                             } while (getNextPos);
-                                            if (pioneer.id == "hred_7") {
-                                                console.log("exce p: ",logic)
-                                            }
                                             logic.currentCd = 0;
                                             if (logic.interval.length == 2) {
                                                 logic.currentCd = CommonTools.getRandomInt(logic.interval[0], logic.interval[1]);
@@ -1166,7 +1162,6 @@ export default class PioneerMgr {
                         logics.push(model);
                     }
                 }
-                console.log('exce logic: ', logics);
                 newModel.logics = logics;
                 newModel.winprogress = temple._winprogress;
                 newModel.winexp = temple._winexp;

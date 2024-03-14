@@ -53,6 +53,7 @@ export class OuterOtherPioneerView extends Component {
         }
         // friendly
         this._nonFriendlyView.active = !pioneer.friendly;
+        this._nonFriendlyView.active = false;
         this._canSearchView.active = pioneer.type == MapPioneerType.gangster && pioneer.friendly;
         // taskhide
         if (pioneer instanceof MapNpcPioneerModel) {
