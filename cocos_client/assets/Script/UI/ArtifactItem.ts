@@ -16,9 +16,12 @@ export class ArtifactItem extends Component {
             // levelBg
             for (let i = 1; i <= 5; i++) {
                 propView.getChildByName("Level" + i).active = i == config.rank;
+                propView.getChildByName("Level" + i).active = false;
             }
+            propView.getChildByName("Level1").active = true;
             // icon
             propView.getChildByName("Icon").getComponent(Sprite).spriteFrame = await ArtifactMgr.Instance.getItemIcon(config.icon);
+
             // num
             propView.getChildByName("Count").getComponent(cc.Label).string = "x" + item.count;
         }

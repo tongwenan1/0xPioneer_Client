@@ -16,7 +16,9 @@ export class BackpackItem extends Component {
             // levelBg
             for (let i = 1; i <= 5; i++) {
                 propView.getChildByName("Level" + i).active = i == config.grade;
+                propView.getChildByName("Level" + i).active = false;
             }
+            propView.getChildByName("Level1").active = true;
             // icon
             propView.getChildByName("Icon").getComponent(Sprite).spriteFrame = await ItemMgr.Instance.getItemIcon(config.icon);
             // num
