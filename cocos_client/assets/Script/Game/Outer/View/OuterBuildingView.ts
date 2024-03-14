@@ -20,6 +20,10 @@ export class OuterBuildingView extends Component {
 
         const strongholdView = this.node.getChildByName("StrongholdContent");
 
+        const pyramid = this.node.getChildByName("Pyramid_Group");
+        const villageCave = this.node.getChildByName("Tree_Group");
+        const aquatic = this.node.getChildByName("Aquatic_Relics_Group");
+
         treasure.active = false;
         swamp.active = false;
         sand.active = false;
@@ -32,6 +36,9 @@ export class OuterBuildingView extends Component {
         ancientRuins.active = false;
 
         strongholdView.active = false;
+        pyramid.active = false;
+        villageCave.active = false;
+        aquatic.active = false;
 
         this._neturalView.active = false;
         this._selfView.active = false;
@@ -98,6 +105,12 @@ export class OuterBuildingView extends Component {
                 ancientRuins.active = true;
             } else if (building.eventId.indexOf("9103") != -1) {
                 laboratory.active = true;
+            } else if (building.eventId.indexOf("9104") != -1) {
+                villageCave.active = true;
+            } else if (building.eventId.indexOf("9105") != -1) {
+                aquatic.active = true;
+            } else if (building.eventId.indexOf("9106") != -1) {
+                pyramid.active = true;
             }
         }
     }
