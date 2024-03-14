@@ -60,8 +60,8 @@ export class CivilizationLevelUpUI extends PopUpUI {
         // this.node.getChildByPath("Content/RewardContent/ResGetRateUp").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this.node.getChildByPath("Content/RewardContent/GetHpMax").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this.node.getChildByPath("Content/RewardContent/Rewards/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        
-        
+
+
         // anim
         if (this._showBuildAnimView != null) {
             this._showBuildAnimView.destroy();
@@ -77,32 +77,36 @@ export class CivilizationLevelUpUI extends PopUpUI {
         this._showBuildAnimView.position = v3(0, -166, 0);
         this._showBuildAnimView.parent = this._buildAnimView.parent;
         tween()
-        .target(this._showBuildAnimView)
-        .delay(1.0)
-        .to(0.8, { position: v3(this._showBuildAnimView.position.x, -2400, this._showBuildAnimView.position.z) })
-        .delay(2.0)
-        .call(()=> {
-            this._showBuildAnimView.active = false;
+            .target(this._showBuildAnimView)
+            .delay(1.0)
+            .to(0.8, { position: v3(this._showBuildAnimView.position.x, -2400, this._showBuildAnimView.position.z) })
+            .delay(2.0)
+            .call(() => {
+                this._showBuildAnimView.active = false;
 
-            this._showFinishAnimView = instantiate(this._finishAnimView);
-            this._showFinishAnimView.active = true;
-            this._showFinishAnimView.parent = this._showBuildAnimView.parent;
-            this._showFinishAnimView.position = v3(0, -166, 0);
+                this._showFinishAnimView = instantiate(this._finishAnimView);
+                this._showFinishAnimView.active = true;
+                this._showFinishAnimView.parent = this._showBuildAnimView.parent;
+                this._showFinishAnimView.position = v3(0, -166, 0);
 
-            this._finishLightAnimView.active = true;
-            this._finishLightAnimView.setSiblingIndex(99);
-            this._finishLightAnimView.getChildByName("Particle_Ui_Building").getComponent(Animation).play();
+                this._finishLightAnimView.active = true;
+                this._finishLightAnimView.setSiblingIndex(99);
+                this._finishLightAnimView.getChildByName("Particle_Ui_Building").getComponent(Animation).play();
+                tween()
+                    .target(this._finishLightAnimView)
+                    .delay(1.2)
+                    .call(() => {
+                        this._finishLightAnimView.active = false;
+                        this.node.getChildByName("Content").getComponent(Button).interactable = true;
+                    })
+                    .start();
 
-            tween()
-            .target(this._showFinishAnimView)
-            .to(0.8, { position: v3(this._showFinishAnimView.position.x, -2400, this._showFinishAnimView.position.z) })
-            .delay(0.6)
-            .call(()=> {
-                this.node.getChildByName("Content").getComponent(Button).interactable = true;
+                tween()
+                    .target(this._showFinishAnimView)
+                    .to(0.8, { position: v3(this._showFinishAnimView.position.x, -2400, this._showFinishAnimView.position.z) })
+                    .start();
             })
             .start();
-        })
-        .start();
 
         // level 
         contentView.getChildByPath("Level/Before").getComponent(Label).string = "C.LV" + (levelConfig.id - 1);
