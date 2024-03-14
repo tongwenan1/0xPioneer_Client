@@ -394,8 +394,8 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     fightDidAttack(fightId: string, attacker: { name: string; hp: number; hpMax: number; }, defender: { name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositions: Vec2[]): void {
 
     }
-    endFight(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string): void {
-
+    endFight(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean): void {
+        
     }
     exploredPioneer(pioneerId: string): void {
 

@@ -177,7 +177,7 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
     fightDidAttack(fightId: string, attacker: { name: string; hp: number; hpMax: number; }, defender: { name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositions: math.Vec2[]): void {
 
     }
-    endFight(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string): void {
+    endFight(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean): void {
         
     }
     exploredPioneer(pioneerId: string): void {

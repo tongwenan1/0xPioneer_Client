@@ -569,10 +569,13 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         this._refreshFightView(fightId, attacker, defender, attackerIsSelf, fightPositons);
     }
 
-    endFight(fightId: string, isEventFight: boolean, isDeadPionner: boolean, deadId: string): void {
+    endFight(fightId: string, isEventFight: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean): void {
         //fightview destroy
         if (this._fightViewMap.has(fightId)) {
-            this._fightViewMap.get(fightId).node.destroy();
+            const currentFightView = this._fightViewMap.get(fightId);
+            currentFightView.showResult(isPlayerWin, ()=> {
+                currentFightView.node.destroy();
+            });
             this._fightViewMap.delete(fightId);
         }
         

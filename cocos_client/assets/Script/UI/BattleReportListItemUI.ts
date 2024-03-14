@@ -144,8 +144,8 @@ export class BattleReportListItemUI extends Component {
         this.fightResultSprite.spriteFrame = selfWin ? this.fightResultVictory : this.fightResultDefeat;
         this.eventTimeLabel.string = CommonTools.formatDateTime(report.timestamp);
 
-        this.eventLocationLabel.string = `Location: <u>World Map ${CommonTools.formatMapPosition(data.position)}</u>`;
         this._locationInfo = {type: "pos", pos: data.position};
+        this.eventLocationLabel.string = this._locationString(this._locationInfo);
 
         this._loots = data.rewards;
         this.lootsButton.node.active = data.rewards.length != 0;
@@ -156,20 +156,18 @@ export class BattleReportListItemUI extends Component {
         let pioneerInfo = PioneerMgr.instance.getPioneerById(report.data.pioneerId);
 
         const roleName = LanMgr.Instance.getLanById(pioneerInfo.name);
-        const location = buildingInfo.locationString();
         const duration = report.data.duration; // in milliseconds
         const rewards = report.data.rewards;
-        let miningResult = `Collection progress:\n<color=#ffcc49><size=36>100 %</size></color>`;
 
         this.leftNameLabel.string = roleName;
 
-        this.eventLocationLabel.string = `Location: <u>${location}</u>`;
         this._locationInfo = {type: "building", buildingId: buildingInfo.id};
+        this.eventLocationLabel.string = this._locationString(this._locationInfo);
 
-        this.timeElapsedLabel.string = `Duration: ${CommonTools.formatSeconds(Math.floor(duration / 1000))}`;
+        this.timeElapsedLabel.string = LanMgr.Instance.replaceLanById("701003", [CommonTools.formatSeconds(Math.floor(duration / 1000))]);
 
         this.eventTimeLabel.string = CommonTools.formatDateTime(report.timestamp);
-        this.miningResultLabel.string = miningResult;
+        this.miningResultLabel.string = LanMgr.Instance.replaceLanById("701001", ["100"]);
 
         this._loots = rewards;
         this.lootsButton.node.active = rewards.length != 0;
@@ -180,12 +178,11 @@ export class BattleReportListItemUI extends Component {
         let pioneerInfo = PioneerMgr.instance.getPioneerById(report.data.pioneerId);
 
         const roleName = LanMgr.Instance.getLanById(pioneerInfo.name);
-        const location = buildingInfo.locationString();
         const rewards = report.data.rewards;
 
         this.leftNameLabel.string = roleName;
-        this.eventLocationLabel.string = `Location: <u>${location}</u>`;
         this._locationInfo = {type: "building", buildingId: buildingInfo.id};
+        this.eventLocationLabel.string = this._locationString(this._locationInfo);
 
         this.eventTimeLabel.string = CommonTools.formatDateTime(report.timestamp);
 
@@ -247,5 +244,13 @@ export class BattleReportListItemUI extends Component {
         GameMain.inst.UI.battleReportsUI.show(false);
         const currentEvent = findEvents[0];
         PioneerMgr.instance.pioneerDealWithEvent(reportData.pioneerId, reportData.buildingId, currentEvent);
+    }
+
+    private _locationString(locationInfo: LocationInfo): string {
+        if (locationInfo.type === "building") {
+            return BuildingMgr.instance.getBuildingById(locationInfo.buildingId).locationString();
+        } else {
+            return `${LanMgr.Instance.getLanById("701002")} ${CommonTools.formatMapPosition(locationInfo.pos)}`;
+        }
     }
 }

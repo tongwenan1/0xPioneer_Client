@@ -60,6 +60,8 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
         this._itemContent.getComponent(Layout).updateLayout();
 
         this._refreshArtifactUI();    
+        
+        ArtifactMgr.Instance.addArtifact([new ArtifactData("7001", 1)])
     }
 
     onDestroy(): void {

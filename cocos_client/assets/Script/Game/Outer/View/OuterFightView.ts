@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Node, ProgressBar } from 'cc';
+import { _decorator, Component, Label, Node, ProgressBar, tween, v3 } from 'cc';
 import LanMgr from '../../../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
@@ -26,6 +26,25 @@ export class OuterFightView extends Component {
         defenderView.getChildByName("name").getComponent(Label).string = LanMgr.Instance.getLanById(selfInfo.name);
         defenderView.getChildByPath("Hp/progressBar").getComponent(ProgressBar).progress = selfInfo.hp / selfInfo.hpMax;
         defenderView.getChildByPath("Hp/Value").getComponent(Label).string = selfInfo.hp.toString();
+    }
+
+    public showResult(isWin: boolean, callback: ()=> void = null) {
+        const winView = this.node.getChildByName("FightWin");
+        const failView = this.node.getChildByName("FightFail");
+
+        const animView = isWin ? winView : failView;
+        animView.active = true;
+        animView.setPosition(v3(0, 100, 0));
+        tween()
+            .target(animView)
+            .to(0.4, { position: v3(0, 160, 0) })
+            .delay(0.1)
+            .call(() => {
+                if (callback != null) {
+                    callback();
+                }
+            })
+            .start();
     }
 
     start() {

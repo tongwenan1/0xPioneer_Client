@@ -31,12 +31,6 @@ export class InnerOutChangeBtn extends Component {
     }
 
     start() {
-        
-
-
-        this.node.on(Node.EventType.MOUSE_DOWN, (event) => {
-            GameMain.inst.changeScene();
-        }, this)
     }
 
     onDestroy(): void {
@@ -63,6 +57,9 @@ export class InnerOutChangeBtn extends Component {
     }
 
 
+    private onTapChange() {
+        GameMain.inst.changeScene();
+    }
 }
 
 
