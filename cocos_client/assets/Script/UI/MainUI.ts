@@ -526,7 +526,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
     }
     playerLvlupChanged(value: number): void {
-        const gap: number = 10;
+        const gap: number = 4;
         if (value % gap == 0) {
             const currentSettle: number = value / gap - 1;
             const beginLevel: number = currentSettle * gap + 1;
