@@ -333,11 +333,13 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     async update(deltaTime: number) {
         // default speed
         let defaultSpeed = 130;
+
+        // defaultSpeed = 600
         const allPioneers = PioneerMgr.instance.getAllPioneer();
 
         // artifact effect
         let artifactSpeed = 0;
-        const artifactEff = ArtifactMgr.Instance.getPropEffValue();
+        const artifactEff = ArtifactMgr.Instance.getPropEffValue(UserInfoMgr.Instance.level);
         if (artifactEff.eff[ArtifactEffectType.MOVE_SPEED]) {
             artifactSpeed = artifactEff.eff[ArtifactEffectType.MOVE_SPEED];
         }

@@ -719,6 +719,7 @@ export default class PioneerMgr {
             if (GameMain.inst == null) {
                 return;
             }
+
             const currentTimeStamp = new Date().getTime();
             if (this._lastTimeStamp == null) {
                 this._lastTimeStamp = currentTimeStamp;
@@ -795,6 +796,7 @@ export default class PioneerMgr {
 
                                 } else if (logic.type == MapPioneerLogicType.patrol) {
                                     if (logic.repeat > 0 || logic.repeat == -1) {
+                                        console.log('exce pme: ' + pioneer.id);
                                         if (logic.currentCd == -1) {
                                             // randomNextPos
                                             let getNextPos: boolean = false;
@@ -815,8 +817,30 @@ export default class PioneerMgr {
                                                     nextPos.y += yChangeNum;
                                                 }
                                                 logic.patrolTargetPos = nextPos;
-                                                getNextPos = GameMain.inst.outSceneMap.mapBG.isBlock(nextPos);
+
+                                                getNextPos = false;
+                                                if (GameMain.inst.outSceneMap.mapBG.isBlock(nextPos)) {
+                                                    getNextPos = true;
+                                                } else {
+                                                    const pioneers = this.getShowPioneersByMapPos(nextPos);
+                                                    if (pioneers.length > 0) {
+                                                        for (const temple of pioneers) {
+                                                            if (temple.type != MapPioneerType.player) {
+                                                                getNextPos = true;
+                                                                break;
+                                                            }
+                                                        }
+                                                    } else {
+                                                        const buildings = BuildingMgr.instance.getShowBuildingByMapPos(nextPos);
+                                                        if (buildings != null) {
+                                                            getNextPos = true;
+                                                        }
+                                                    }
+                                                }
                                             } while (getNextPos);
+                                            if (pioneer.id == "hred_7") {
+                                                console.log("exce p: ",logic)
+                                            }
                                             logic.currentCd = 0;
                                             if (logic.interval.length == 2) {
                                                 logic.currentCd = CommonTools.getRandomInt(logic.interval[0], logic.interval[1]);
@@ -1142,6 +1166,7 @@ export default class PioneerMgr {
                         logics.push(model);
                     }
                 }
+                console.log('exce logic: ', logics);
                 newModel.logics = logics;
                 newModel.winprogress = temple._winprogress;
                 newModel.winexp = temple._winexp;
@@ -1409,7 +1434,7 @@ export default class PioneerMgr {
                 if (pioneer.type == MapPioneerType.player && pioneer.friendly) {
 
                     // artifact
-                    const artifactEff = ArtifactMgr.Instance.getPropEffValue();
+                    const artifactEff = ArtifactMgr.Instance.getPropEffValue(UserInfo.Instance.level);
                     let artifactGather = 0;
                     if (artifactEff.eff[ArtifactEffectType.GATHER_TIME]) {
                         artifactGather = artifactEff.eff[ArtifactEffectType.GATHER_TIME];

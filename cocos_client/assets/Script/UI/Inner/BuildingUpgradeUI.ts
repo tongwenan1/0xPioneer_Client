@@ -8,13 +8,13 @@ import CommonTools from '../../Tool/CommonTools';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ArtifactMgr from '../../Manger/ArtifactMgr';
 import { ArtifactEffectType } from '../../Model/ArtifactData';
-import ItemMgr from '../../Manger/ItemMgr';
+import ItemMgr, { ItemMgrEvent } from '../../Manger/ItemMgr';
 import EventMgr from '../../Manger/EventMgr';
 const { ccclass } = _decorator;
 
 @ccclass('BuildingUpgradeUI')
-export class BuildingUpgradeUI extends PopUpUI {
-
+export class BuildingUpgradeUI extends PopUpUI implements ItemMgrEvent {
+    
     public refreshUI() {
         const buildingInfoView = this.node.getChildByName("BuildingInfoView");
 
@@ -48,6 +48,7 @@ export class BuildingUpgradeUI extends PopUpUI {
     private _levelInfoCostItem: Node = null;
     private _levelInfoShowCostItems: Node[] = [];
 
+    private _curBuildingType: InnerBuildingType = null;
     onLoad(): void {
         this._barracksBtn = this.node.getChildByPath("BuildingInfoView/Buildings/BarracksBg/Barracks").getComponent(Button);
         this._housesBtn = this.node.getChildByPath("BuildingInfoView/Buildings/ResidentialBg/Residential").getComponent(Button);
@@ -58,6 +59,7 @@ export class BuildingUpgradeUI extends PopUpUI {
         this._levelInfoCostItem.active = false;
 
         EventMgr.on(EventName.CHANGE_LANG, this._onLangChang, this);
+        ItemMgr.Instance.addObserver(this);
     }
 
     start() {
@@ -69,6 +71,7 @@ export class BuildingUpgradeUI extends PopUpUI {
 
     onDestroy() {
         EventMgr.off(EventName.CHANGE_LANG, this._onLangChang, this);
+        ItemMgr.Instance.removeObserver(this);
     }
 
     private _onLangChang() {
@@ -76,6 +79,9 @@ export class BuildingUpgradeUI extends PopUpUI {
     }
     
     private _refreshUpgradeUI(buildingType: InnerBuildingType) {
+        if (buildingType == null) {
+            return;
+        }
         const userInnerData = UserInfoMgr.Instance.innerBuilds.get(buildingType);
         const innerBuildData = InnerBuildingMgr.Instance.getInfoById(buildingType);
         const upgradeData = innerBuildData.up[(userInnerData.buildLevel + 1).toString()];
@@ -121,8 +127,11 @@ export class BuildingUpgradeUI extends PopUpUI {
                 item.getChildByPath("Icon/8003").active = type == ResourceCorrespondingItem.Stone;
                 item.getChildByPath("Icon/8004").active = type == ResourceCorrespondingItem.Troop;
 
-                item.getChildByPath("num/left").getComponent(Label).string = cost.num;
+                const ownNum: number = ItemMgr.Instance.getOwnItemCount(type);
+
+                item.getChildByPath("num/left").getComponent(Label).string = cost.num + "";
                 item.getChildByPath("num/right").getComponent(Label).string = ItemMgr.Instance.getOwnItemCount(type).toString();
+                item.getChildByPath("num/right").getComponent(Label).color = ownNum > cost.num ? new Color(142, 218, 97) : Color.RED;
 
                 this._levelInfoShowCostItems.push(item);
             }
@@ -152,6 +161,7 @@ export class BuildingUpgradeUI extends PopUpUI {
     private onTapBuildingUpgradeShow(event: Event, customEventData: string) {
         const buildingType: InnerBuildingType = customEventData as InnerBuildingType;
         this._levelInfoView.active = true;
+        this._curBuildingType = buildingType;
         this._refreshUpgradeUI(buildingType);
     }
     private onTapBuildingUpgradeHide() {
@@ -170,7 +180,7 @@ export class BuildingUpgradeUI extends PopUpUI {
                 return;
             }
             // artifact effect
-            const artifactPropEff = ArtifactMgr.Instance.getPropEffValue();
+            const artifactPropEff = ArtifactMgr.Instance.getPropEffValue(UserInfoMgr.Instance.level);
             let artifactTime = 0;
             if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME]) {
                 artifactTime = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME];
@@ -220,6 +230,11 @@ export class BuildingUpgradeUI extends PopUpUI {
 
     private onTapClose() {
         this.show(false);
+    }
+
+    //------------------- ItemMgrEvent
+    itemChanged(): void {
+        this._refreshUpgradeUI(this._curBuildingType);
     }
 }
 

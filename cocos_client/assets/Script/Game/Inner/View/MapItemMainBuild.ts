@@ -45,7 +45,7 @@ export class MapItemMainBuild extends MapItem {
         let up_time = 5;
         // artifact
         let artifactTime = 0;
-        let artifactPropEff = ArtifactMgr.Instance.getPropEffValue();
+        let artifactPropEff = ArtifactMgr.Instance.getPropEffValue(UserInfoMgr.Instance.level);
         if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME]) {
             artifactTime = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME];
         }
