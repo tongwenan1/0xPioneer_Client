@@ -185,39 +185,39 @@
   },
   "117002": {
     "id": "117002",
-    "eng": "test text"
+    "eng": "With this weapon, people brought an end to the era of the giant beasts' rule."
   },
   "117003": {
     "id": "117003",
-    "eng": "test text"
+    "eng": "The terrifying teeth of the giant land shark, with their sharp serrated edges, can easily slice through the flesh and skin of their prey."
   },
   "117004": {
     "id": "117004",
-    "eng": "test text"
+    "eng": "The crystal skull imbued with mysterious powers, said to allow communication with the spirits."
   },
   "117005": {
     "id": "117005",
-    "eng": "test text"
+    "eng": "The stinger of the desert giant scorpion, capable of killing its prey by piercing through them, even without the venom."
   },
   "117006": {
     "id": "117006",
-    "eng": "test text"
+    "eng": "The divine spear that once pierced the body of a saint, also known as the Spear of Destiny."
   },
   "117007": {
     "id": "117007",
-    "eng": "test text"
+    "eng": "The stone inscribed with mystical writings, containing unknown forces within."
   },
   "117008": {
     "id": "117008",
-    "eng": "test text"
+    "eng": "The crystal cluster that emits a dazzling light, rejuvenating the wearer's energy."
   },
   "117009": {
     "id": "117009",
-    "eng": "test text"
+    "eng": "The energy gemstone that has lost its original power."
   },
   "117010": {
     "id": "117010",
-    "eng": "test text"
+    "eng": "An old axe, used to belong to someone."
   },
   "200001": {
     "id": "200001",
@@ -1505,11 +1505,183 @@
   },
   "1070011": {
     "id": "1070011",
-    "eng": "Effect"
+    "eng": "Treaty of Kadesh:\\nCity Vision +1\\nTroop Vision +1"
   },
   "1070012": {
     "id": "1070012",
-    "eng": "TestEffect"
+    "eng": "Troop Attack +20"
+  },
+  "1070013": {
+    "id": "1070013",
+    "eng": ""
+  },
+  "1070014": {
+    "id": "1070014",
+    "eng": ""
+  },
+  "1070015": {
+    "id": "1070015",
+    "eng": ""
+  },
+  "1070016": {
+    "id": "1070016",
+    "eng": "Troop Speed + 5%"
+  },
+  "1070017": {
+    "id": "1070017",
+    "eng": ""
+  },
+  "1070018": {
+    "id": "1070018",
+    "eng": ""
+  },
+  "1070019": {
+    "id": "1070019",
+    "eng": ""
+  },
+  "1070020": {
+    "id": "1070020",
+    "eng": ""
+  },
+  "1070021": {
+    "id": "1070021",
+    "eng": ""
+  },
+  "1070022": {
+    "id": "1070022",
+    "eng": ""
+  },
+  "1070023": {
+    "id": "1070023",
+    "eng": ""
+  },
+  "1070024": {
+    "id": "1070024",
+    "eng": ""
+  },
+  "1070025": {
+    "id": "1070025",
+    "eng": ""
+  },
+  "1070026": {
+    "id": "1070026",
+    "eng": ""
+  },
+  "1070027": {
+    "id": "1070027",
+    "eng": ""
+  },
+  "1070028": {
+    "id": "1070028",
+    "eng": ""
+  },
+  "1070029": {
+    "id": "1070029",
+    "eng": ""
+  },
+  "1070030": {
+    "id": "1070030",
+    "eng": ""
+  },
+  "1070031": {
+    "id": "1070031",
+    "eng": ""
+  },
+  "1070032": {
+    "id": "1070032",
+    "eng": ""
+  },
+  "1070033": {
+    "id": "1070033",
+    "eng": ""
+  },
+  "1070034": {
+    "id": "1070034",
+    "eng": ""
+  },
+  "1070035": {
+    "id": "1070035",
+    "eng": ""
+  },
+  "1070036": {
+    "id": "1070036",
+    "eng": ""
+  },
+  "1070037": {
+    "id": "1070037",
+    "eng": ""
+  },
+  "1070038": {
+    "id": "1070038",
+    "eng": ""
+  },
+  "1070039": {
+    "id": "1070039",
+    "eng": ""
+  },
+  "1070040": {
+    "id": "1070040",
+    "eng": ""
+  },
+  "1070041": {
+    "id": "1070041",
+    "eng": ""
+  },
+  "1070042": {
+    "id": "1070042",
+    "eng": ""
+  },
+  "1070043": {
+    "id": "1070043",
+    "eng": ""
+  },
+  "1070044": {
+    "id": "1070044",
+    "eng": ""
+  },
+  "1070045": {
+    "id": "1070045",
+    "eng": ""
+  },
+  "1070046": {
+    "id": "1070046",
+    "eng": ""
+  },
+  "1070047": {
+    "id": "1070047",
+    "eng": ""
+  },
+  "1070048": {
+    "id": "1070048",
+    "eng": ""
+  },
+  "1070049": {
+    "id": "1070049",
+    "eng": ""
+  },
+  "1070050": {
+    "id": "1070050",
+    "eng": ""
+  },
+  "1070051": {
+    "id": "1070051",
+    "eng": ""
+  },
+  "1070052": {
+    "id": "1070052",
+    "eng": ""
+  },
+  "1070053": {
+    "id": "1070053",
+    "eng": ""
+  },
+  "1070054": {
+    "id": "1070054",
+    "eng": ""
+  },
+  "1070055": {
+    "id": "1070055",
+    "eng": ""
   },
   "null": {
     "id": null,

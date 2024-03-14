@@ -345,7 +345,7 @@
     "def": 1,
     "winprogress": null,
     "exp": null,
-    "animType": "",
+    "animType": "chief",
     "drop": null,
     "pos": [
       {
@@ -365,7 +365,7 @@
     "def": 1,
     "winprogress": null,
     "exp": null,
-    "animType": "",
+    "animType": "rabbit",
     "drop": null,
     "pos": [
       {
@@ -385,7 +385,7 @@
     "def": 1,
     "winprogress": null,
     "exp": null,
-    "animType": "",
+    "animType": "doc",
     "drop": null,
     "pos": [
       {
@@ -405,7 +405,7 @@
     "def": 1,
     "winprogress": null,
     "exp": null,
-    "animType": "",
+    "animType": "marauder",
     "drop": null,
     "pos": [
       {
