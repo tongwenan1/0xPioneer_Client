@@ -384,6 +384,14 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 view.refreshUI(actionPioneer);
                 GameMain.inst.UI.dialogueUI.dialogShow(TalkMgr.Instance.getTalk("talk14"), null, () => {
                     UserInfoMgr.Instance.isFinishRookie = true;
+                    // init resource
+                    ItemMgr.Instance.addItem([
+                        new ItemData(ResourceCorrespondingItem.Energy, 100),
+                        new ItemData(ResourceCorrespondingItem.Food, 100),
+                        new ItemData(ResourceCorrespondingItem.Stone, 100),
+                        new ItemData(ResourceCorrespondingItem.Wood, 100),
+                        new ItemData(ResourceCorrespondingItem.Troop, 500),
+                    ]);
                     data.node.active = false;
                 });
                 GameMain.inst.UI.dialogueUI.show(true);
