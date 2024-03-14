@@ -415,7 +415,7 @@ export class EventUI extends PopUpUI {
     private onTapNext(actionEvent: Event, customEventData: string) {
         const eventId = customEventData;
         const hasNextStep = eventId != "-1";
-        // console.log(`eventStepEnd, source: onTapNext, eventId: ${this._event.id}`);
+        // console.log(`eventStepEnd, source: onTapNext, eventId: ${this._event.id}, next: ${eventId}`);
         BranchEventMgr.Instance.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
 
         this._nextEvent(eventId);
@@ -439,12 +439,12 @@ export class EventUI extends PopUpUI {
                         eventId = event[0].result;
                     }
                 }
-                const hasNextStep = eventId != null;
                 if (this._event) {
-                    // console.log(`eventStepEnd, source: onTapFight, eventId: ${this._event.id}`);
+                    const hasNextStep = eventId != null && eventId != -1 && eventId != -2;
+                    // console.log(`eventStepEnd, source: onTapFight, eventId: ${this._event.id}, next: ${eventId}`);
                     BranchEventMgr.Instance.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
                 }
-                if (hasNextStep) {
+                if (eventId != null) {
                     this._nextEvent(eventId);
                 } else {
                     this._contentView.active = true;
@@ -464,7 +464,7 @@ export class EventUI extends PopUpUI {
         } 
         let hasNextStep = event.length > 0;
 
-        // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}`);
+        // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}, next: ${eventId}`);
         BranchEventMgr.Instance.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
 
         this._nextEvent(eventId);

@@ -133,10 +133,15 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
 
         // change state of prev report.
         // not very strict association check it's ok cause we don't have parallel events for now.
-        let prevReport = this._storage.find(item => {
-            return item.type == BattleReportType.Exploring
-                && item.data.hasNextStep && !item.data.nextStepFinished;
-        });
+        let prevReport: BattleReportRecord = null;
+        for (let i = this._storage.length - 1; i >= 0; i--) { // reverse find
+            const item = this._storage[i];
+            if (item.type == BattleReportType.Exploring
+                && item.data.hasNextStep && !item.data.nextStepFinished) {
+                prevReport = item;
+                break;
+            }
+        }
         if (prevReport) {
             prevReport.data.nextStepFinished = true;
         }
