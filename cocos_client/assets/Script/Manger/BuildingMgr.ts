@@ -322,6 +322,10 @@ export default class BuildingMgr {
                         mapPositions.push(v2(pos.x, pos.y));
                     }
                     if (temple.type == MapBuildingType.decorate) {
+                        for (const templePos of mapPositions) {
+                            templePos.x -= 960;
+                            templePos.y -= 540;
+                        }
                         newModel = new MapDecorateModel(
                             temple.id,
                             temple.name,

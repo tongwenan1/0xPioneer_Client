@@ -64,7 +64,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                 if (decorate.posMode == MapDecoratePosMode.World) {
                     const tiledPositions: Vec2[] = [];
                     for (const worldPos of decorate.stayMapPositions) {
-                        const tempwp = this.node.getComponent(UITransform).convertToWorldSpaceAR(v3(
+                        let tempwp = this.node.getComponent(UITransform).convertToWorldSpaceAR(v3(
                             worldPos.x,
                             worldPos.y,
                             0
@@ -218,7 +218,9 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                             if (wp.y < yminwp.y) {
                                 yMinTilePos = mapPos;
                             }
-                            mapBg.addDynamicBlock(mapPos);
+                            if (decorate.block) {
+                                mapBg.addDynamicBlock(mapPos);
+                            }
                         }
                         // get Accurate worldPos
                         const xMaxAccurateWorldPos = mapBg.getPosWorld(xMaxTilePos.x, xMaxTilePos.y).x;
