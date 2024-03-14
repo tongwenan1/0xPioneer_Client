@@ -6,6 +6,7 @@ import PioneerMgr from "db://assets/Script/Manger/PioneerMgr";
 import MapHelper from "db://assets/Script/Utils/MapHelper";
 import {GameMain} from "db://assets/Script/GameMain";
 import BranchEventMgr from "db://assets/Script/Manger/BranchEventMgr";
+import LanMgr from "db://assets/Script/Manger/LanMgr";
 
 const {ccclass, property} = _decorator;
 
@@ -59,11 +60,24 @@ export class BattleReportListItemUI extends Component {
     @property({type: Label, group: 'Common'})
     public eventResultLabel: Label = null;
 
+    @property({type: Sprite, group: 'Fight'})
+    public fightResultSprite: Sprite = null;
+
+    @property({type: SpriteFrame, group: 'Fight'})
+    public fightResultVictory: SpriteFrame = null;
+
+    @property({type: SpriteFrame, group: 'Fight'})
+    public fightResultDefeat: SpriteFrame = null;
+
     @property({type: RichText, group: 'Common'})
     public eventLocationLabel: RichText = null;
 
-    @property({type: Label, group: 'Mining'})
-    public timeElapsedLabel: Label = null;
+    @property({type: RichText, group: 'Mining'})
+    public timeElapsedLabel: RichText = null;
+
+    @property({type: RichText, group: 'Mining'})
+    public miningResultLabel: RichText = null;
+
 
     @property({type: Node, group: 'Common'})
     public pendingMark: Node = null;
@@ -115,19 +129,19 @@ export class BattleReportListItemUI extends Component {
     private _initWithFightReport(report: BattleReportRecord): void {
         const data = report.data;
         const selfRoleInfo = data.attackerIsSelf ? data.attacker : data.defender;
-        this.leftNameLabel.string = selfRoleInfo.name;
+        this.leftNameLabel.string = LanMgr.Instance.getLanById(selfRoleInfo.name);
         this.leftHpBar.progress = selfRoleInfo.hp / selfRoleInfo.hpMax;
         this.leftHpText.string = `${selfRoleInfo.hp} / ${selfRoleInfo.hpMax}`;
         this.leftAttackerOrDefenderSign.spriteFrame = data.attackerIsSelf ? this.attackerSign : this.defenderSign;
 
         const enemyRoleInfo = !data.attackerIsSelf ? data.attacker : data.defender;
-        this.rightNameLabel.string = enemyRoleInfo.name;
+        this.rightNameLabel.string = LanMgr.Instance.getLanById(enemyRoleInfo.name);
         this.rightHpBar.progress = enemyRoleInfo.hp / enemyRoleInfo.hpMax;
         this.rightHpText.string = `${enemyRoleInfo.hp} / ${enemyRoleInfo.hpMax}`;
         this.rightAttackerOrDefenderSign.spriteFrame = !data.attackerIsSelf ? this.attackerSign : this.defenderSign;
 
         const selfWin = selfRoleInfo.hp != 0;
-        this.eventResultLabel.string = selfWin ? 'Victory' : 'Defeat';
+        this.fightResultSprite.spriteFrame = selfWin ? this.fightResultVictory : this.fightResultDefeat;
         this.eventTimeLabel.string = CommonTools.formatDateTime(report.timestamp);
 
         this.eventLocationLabel.string = `Location: <u>World Map ${CommonTools.formatMapPosition(data.position)}</u>`;
@@ -141,11 +155,11 @@ export class BattleReportListItemUI extends Component {
         let buildingInfo = BuildingMgr.instance.getBuildingById(report.data.buildingId);
         let pioneerInfo = PioneerMgr.instance.getPioneerById(report.data.pioneerId);
 
-        const roleName = pioneerInfo.name;
+        const roleName = LanMgr.Instance.getLanById(pioneerInfo.name);
         const location = buildingInfo.locationString();
         const duration = report.data.duration; // in milliseconds
         const rewards = report.data.rewards;
-        let miningResult = `Mining progress:\n100%`;
+        let miningResult = `Collection progress:\n100%`;
 
         this.leftNameLabel.string = roleName;
 
@@ -155,7 +169,7 @@ export class BattleReportListItemUI extends Component {
         this.timeElapsedLabel.string = `Duration: ${CommonTools.formatSeconds(Math.floor(duration / 1000))}`;
 
         this.eventTimeLabel.string = CommonTools.formatDateTime(report.timestamp);
-        this.eventResultLabel.string = miningResult;
+        this.miningResultLabel.string = miningResult;
 
         this._loots = rewards;
         this.lootsButton.node.active = rewards.length != 0;
@@ -165,7 +179,7 @@ export class BattleReportListItemUI extends Component {
         let buildingInfo = BuildingMgr.instance.getBuildingById(report.data.buildingId);
         let pioneerInfo = PioneerMgr.instance.getPioneerById(report.data.pioneerId);
 
-        const roleName = pioneerInfo.name;
+        const roleName = LanMgr.Instance.getLanById(pioneerInfo.name);
         const location = buildingInfo.locationString();
         const rewards = report.data.rewards;
 

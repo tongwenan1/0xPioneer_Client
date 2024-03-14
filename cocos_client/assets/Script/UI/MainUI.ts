@@ -250,10 +250,10 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     }
 
     private updateBattleReportsUnreadCount() {
-        const node = this.battleReportsBtn.node.getChildByName('unreadCountLabel');
+        const node = this.battleReportsBtn.node.getChildByName('unreadCount');
+        const label = node.getChildByName('unreadCountLabel').getComponent(Label);
         if (node) {
             const count = BattleReportsMgr.Instance.unreadCount;
-            const label = node.getComponent(Label);
             if (count != 0) {
                 label.string = count.toString();
                 node.active = true;

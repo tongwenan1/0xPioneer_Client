@@ -1,4 +1,4 @@
-import {_decorator, Button, instantiate, Mask, Node, ScrollView, UITransform} from 'cc';
+import {_decorator, Button, Color, instantiate, Label, Mask, Node, ScrollView, UITransform} from 'cc';
 import {PopUpUI} from "db://assets/Script/BasicView/PopUpUI";
 import {BattleReportListItemUI} from "./BattleReportListItemUI";
 import BattleReportsMgr, {BattleReportType} from "db://assets/Script/Manger/BattleReportsMgr";
@@ -32,6 +32,9 @@ export class BattleReportsUI extends PopUpUI {
 
     private _filterState: ReportFilterState = new ReportFilterState();
     private _autoMarkReadSkipFrames = 0;
+
+    private readonly buttonLabelActiveColor: Color = new Color("433824");
+    private readonly buttonLabelGrayColor: Color = new Color("817674");
 
     public override get typeName(): string {
         return "BattleReportsUI";
@@ -85,12 +88,12 @@ export class BattleReportsUI extends PopUpUI {
 
         const filterGroupRoot = this.node.getChildByPath('frame/navbar/reportTypeFilterGroup');
         this._typeFilterButtons = filterGroupRoot.children.map(node => node.getComponent(Button));
-        this._pendingButton = this.node.getChildByPath('frame/navbar/right/pendingButton').getComponent(Button);
+        this._pendingButton = this.node.getChildByPath('frame/pendingButton').getComponent(Button);
         this._initFilterGroup();
 
-        this._deleteReadReportsButton = this.node.getChildByPath('frame/navbar/right/deleteReadButton').getComponent(Button);
+        this._deleteReadReportsButton = this.node.getChildByPath('frame/deleteReadButton').getComponent(Button);
         this._deleteReadReportsButton.node.on(Button.EventType.CLICK, this._onClickDeleteReadReports, this);
-        this._markAllAsReadButton = this.node.getChildByPath('frame/navbar/right/markAllAsReadButton').getComponent(Button);
+        this._markAllAsReadButton = this.node.getChildByPath('frame/markAllAsReadButton').getComponent(Button);
         this._markAllAsReadButton.node.on(Button.EventType.CLICK, this._onClickMarkAllAsRead, this);
 
         this._reportListScrollView = this.node.getChildByPath('frame/ScrollView').getComponent(ScrollView);
@@ -175,14 +178,20 @@ export class BattleReportsUI extends PopUpUI {
     private _refreshFilterGroup() {
         const filterType = this._filterState.filterType;
 
-        this._typeFilterButtons[0].interactable = filterType != ReportsFilterType.None;
+        const filterAllActive = filterType == ReportsFilterType.None;
+        this._typeFilterButtons[0].interactable = !filterAllActive;
+        this._typeFilterButtons[0].getComponentInChildren(Label).color = filterAllActive ? this.buttonLabelActiveColor : this.buttonLabelGrayColor;
 
         const typeFilterCurrentIndex = filterType == ReportsFilterType.ReportType ? this._filterState.reportType : -1;
         for (let i = 1; i < this._typeFilterButtons.length; i++) {
-            this._typeFilterButtons[i].interactable = i != typeFilterCurrentIndex;
+            const active = i == typeFilterCurrentIndex;
+            this._typeFilterButtons[i].interactable = !active;
+            this._typeFilterButtons[i].getComponentInChildren(Label).color = active ? this.buttonLabelActiveColor : this.buttonLabelGrayColor;
         }
 
-        this._pendingButton.interactable = filterType != ReportsFilterType.Pending;
+        const filterPendingActive = filterType == ReportsFilterType.Pending;
+        this._pendingButton.interactable = !filterPendingActive;
+        this._pendingButton.getComponentInChildren(Label).color = filterPendingActive ? this.buttonLabelActiveColor : this.buttonLabelGrayColor;
     }
 
     private _getReportsFiltered() {
