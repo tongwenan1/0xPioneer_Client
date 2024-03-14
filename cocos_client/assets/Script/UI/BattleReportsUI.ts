@@ -78,6 +78,12 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
         }
     }
 
+    public refreshUIAndResetScroll() {
+        this.refreshUI();
+        this._reportListScrollView.stopAutoScroll();
+        this._reportListScrollView.scrollToTop();
+    }
+
     public refreshUIWithKeepScrollPosition(){
         // save scroll state
         const scrollOffsetBefore = this._reportListScrollView.getScrollOffset();
@@ -153,7 +159,7 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
 
     private _onClickDeleteReadReports() {
         BattleReportsMgr.Instance.deleteReadReports();
-        this.refreshUI();
+        this.refreshUIAndResetScroll();
     }
 
     protected onEnable() {
@@ -161,7 +167,7 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
 
         // Select filter tab "All" every time enter the reports UI.
         this._filterState.filterType = ReportsFilterType.None;
-        this.refreshUI();
+        this.refreshUIAndResetScroll();
 
         this._autoMarkReadSkipFrames = 1;
     }
@@ -177,7 +183,7 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
         // button: All
         this._typeFilterButtons[0].node.on(Button.EventType.CLICK, () => {
             this._filterState.filterType = ReportsFilterType.None;
-            this.refreshUI();
+            this.refreshUIAndResetScroll();
         }, this);
 
         // button: Fight/Mining/...
@@ -187,14 +193,14 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
             this._typeFilterButtons[i].node.on(Button.EventType.CLICK, () => {
                 this._filterState.filterType = ReportsFilterType.ReportType;
                 this._filterState.reportType = iCopy;
-                this.refreshUI();
+                this.refreshUIAndResetScroll();
             }, this);
         }
 
         // button: Pending
         this._pendingButton.node.on(Button.EventType.CLICK, () => {
             this._filterState.filterType = ReportsFilterType.Pending;
-            this.refreshUI();
+            this.refreshUIAndResetScroll();
         }, this);
     }
 
