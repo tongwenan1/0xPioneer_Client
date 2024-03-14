@@ -14,15 +14,15 @@
                 "y": 45
             },
             {
-                "x": 9,
-                "y": 46
-            },
-            {
                 "x": 10,
                 "y": 46
             },
             {
                 "x": 11,
+                "y": 46
+            },
+            {
+                "x": 12,
                 "y": 46
             },
             {
@@ -462,7 +462,7 @@
         ],
         "faction": "netural",
         "defendPioneerIds": [],
-        "level": 1,
+        "level": 2,
         "resources": [
             {
                 "id": "8003",
@@ -494,7 +494,7 @@
         ],
         "faction": "netural",
         "defendPioneerIds": [],
-        "level": 1,
+        "level": 2,
         "resources": [
             {
                 "id": "8003",
@@ -526,7 +526,7 @@
         ],
         "faction": "netural",
         "defendPioneerIds": [],
-        "level": 1,
+        "level": 2,
         "resources": [
             {
                 "id": "8003",

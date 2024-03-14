@@ -586,7 +586,7 @@ export default class PioneerMgr {
                         this._savePioneerData();
 
                         // useLanMgr
-                        let tips = LanMgr.Instance.replaceLanById("107549", [LanMgr.Instance.getLanById(deadPioneer.name)]);
+                        let tips = LanMgr.Instance.replaceLanById("106001", [LanMgr.Instance.getLanById(deadPioneer.name)]);
                         // let tips = LanMgr.Instance.getLanById(deadPioneer.name) + " is dead, please wait for the resurrection";
 
                         GameMain.inst.UI.ShowTip(tips);
@@ -1671,7 +1671,7 @@ export default class PioneerMgr {
                     this._savePioneerData();
 
                     // useLanMgr
-                    let tips = LanMgr.Instance.replaceLanById("107549", [LanMgr.Instance.getLanById(deadPioneer.name)]);
+                    let tips = LanMgr.Instance.replaceLanById("106001", [LanMgr.Instance.getLanById(deadPioneer.name)]);
                     // let tips = LanMgr.Instance.getLanById(deadPioneer.name) + " is dead, please wait for the resurrection";
 
                     GameMain.inst.UI.ShowTip(tips);

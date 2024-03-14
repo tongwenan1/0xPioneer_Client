@@ -60,8 +60,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 790.621,
-      "y": -150.749,
+      "x": 0,
+      "y": -185,
       "z": 0
     },
     "_lrot": {
@@ -1627,7 +1627,7 @@
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0.5,
-      "y": 0.5
+      "y": -0.2
     },
     "_id": ""
   },
@@ -1643,8 +1643,6 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "2a6VjrcnxEv7MNq0gIiP6N",
-    "instance": null,
-    "targetOverrides": null
+    "fileId": "2a6VjrcnxEv7MNq0gIiP6N"
   }
 ]

@@ -1,4 +1,8 @@
 {
+  "106001": {
+    "id": "106001",
+    "eng": "%s is dead, please wait for the rebirth…"
+  },
   "107001": {
     "id": "107001",
     "eng": "Eye of Pharaoh"
@@ -49,51 +53,51 @@
   },
   "109002": {
     "id": "109002",
-    "eng": "secretGuard"
+    "eng": "Dual Blades Keen"
   },
   "109003": {
     "id": "109003",
-    "eng": "doomsdayGangSpy"
+    "eng": "Dual Guns Jack"
   },
   "109004": {
     "id": "109004",
-    "eng": "rebels"
+    "eng": "Rebels Camus"
   },
   "109005": {
     "id": "109005",
-    "eng": "prophetess"
+    "eng": "Tinuvel the Prophetess"
   },
   "109006": {
     "id": "109006",
-    "eng": "artisan"
+    "eng": "Artisan Tom"
   },
   "109007": {
     "id": "109007",
-    "eng": "secretGuard"
+    "eng": "Guard Keen"
   },
   "109008": {
     "id": "109008",
-    "eng": "doomsdayGangSpy"
+    "eng": "Spy Jack"
   },
   "109009": {
     "id": "109009",
-    "eng": "hunter"
+    "eng": "Hunter John"
   },
   "109010": {
     "id": "109010",
-    "eng": "doomsdayGangTeam"
+    "eng": "Gang Team"
   },
   "109011": {
     "id": "109011",
-    "eng": "rebels"
+    "eng": "Rebels Camus"
   },
   "109012": {
     "id": "109012",
-    "eng": "doomsdayGangBigTeam"
+    "eng": "DoomsDay Gang Team"
   },
   "109013": {
     "id": "109013",
-    "eng": "hunter_hred"
+    "eng": "Alpacas"
   },
   "109014": {
     "id": "109014",
@@ -157,7 +161,23 @@
   },
   "109029": {
     "id": "109029",
-    "eng": "pharaoh"
+    "eng": "Pharaoh"
+  },
+  "109030": {
+    "id": "109030",
+    "eng": "Village Chief"
+  },
+  "109031": {
+    "id": "109031",
+    "eng": "Rabbit Mad"
+  },
+  "109032": {
+    "id": "109032",
+    "eng": "Doc Nervall"
+  },
+  "109033": {
+    "id": "109033",
+    "eng": "Scavenger"
   },
   "117001": {
     "id": "117001",
