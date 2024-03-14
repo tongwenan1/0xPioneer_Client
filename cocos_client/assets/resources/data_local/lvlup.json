@@ -10,6 +10,11 @@
     "reward": [
       [
         1,
+        "8001",
+        20
+      ],
+      [
+        1,
         "8002",
         20
       ],
@@ -27,15 +32,22 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event_building": [
-      "building_16",
-      "building_17"
-    ],
+    "event_building": null,
     "reward": [
       [
         1,
-        "5",
-        1
+        "8001",
+        20
+      ],
+      [
+        1,
+        "8002",
+        20
+      ],
+      [
+        1,
+        "8003",
+        20
       ]
     ]
   },
@@ -50,8 +62,13 @@
     "reward": [
       [
         1,
-        "18",
-        1
+        "8001",
+        20
+      ],
+      [
+        1,
+        "8002",
+        20
       ],
       [
         1,
@@ -68,7 +85,23 @@
     "city_vision": 0,
     "city_feature": 0,
     "event_building": null,
-    "reward": null
+    "reward": [
+      [
+        1,
+        "8001",
+        20
+      ],
+      [
+        1,
+        "8002",
+        20
+      ],
+      [
+        1,
+        "8003",
+        20
+      ]
+    ]
   },
   "5": {
     "id": "5",
@@ -78,82 +111,210 @@
     "city_vision": 1,
     "city_feature": 0,
     "event_building": null,
-    "reward": null
+    "reward": [
+      [
+        1,
+        "8001",
+        20
+      ],
+      [
+        1,
+        "8002",
+        20
+      ],
+      [
+        1,
+        "8003",
+        20
+      ]
+    ]
   },
   "6": {
     "id": "6",
     "exp": 175,
     "extra_res": 0,
-    "hp_max": 0,
+    "hp_max": 20,
     "city_vision": 0,
     "city_feature": 0,
     "event_building": null,
-    "reward": null
+    "reward": [
+      [
+        1,
+        "8001",
+        20
+      ],
+      [
+        1,
+        "8002",
+        20
+      ],
+      [
+        1,
+        "8003",
+        20
+      ]
+    ]
   },
   "7": {
     "id": "7",
     "exp": 200,
     "extra_res": 0,
-    "hp_max": 0,
+    "hp_max": 20,
     "city_vision": 0,
     "city_feature": 0,
     "event_building": null,
-    "reward": null
+    "reward": [
+      [
+        1,
+        "8001",
+        50
+      ],
+      [
+        1,
+        "8002",
+        50
+      ],
+      [
+        1,
+        "8003",
+        50
+      ]
+    ]
   },
   "8": {
     "id": "8",
     "exp": 225,
-    "extra_res": 0,
-    "hp_max": 0,
+    "extra_res": 0.01,
+    "hp_max": 20,
     "city_vision": 0,
     "city_feature": 0,
     "event_building": null,
-    "reward": null
+    "reward": [
+      [
+        1,
+        "8001",
+        50
+      ],
+      [
+        1,
+        "8002",
+        50
+      ],
+      [
+        1,
+        "8003",
+        50
+      ]
+    ]
   },
   "9": {
     "id": "9",
     "exp": 250,
-    "extra_res": 0,
-    "hp_max": 0,
+    "extra_res": 0.01,
+    "hp_max": 20,
     "city_vision": 0,
     "city_feature": 0,
     "event_building": null,
-    "reward": null
+    "reward": [
+      [
+        1,
+        "8001",
+        50
+      ],
+      [
+        1,
+        "8002",
+        50
+      ],
+      [
+        1,
+        "8003",
+        50
+      ]
+    ]
   },
   "10": {
     "id": "10",
     "exp": 275,
-    "extra_res": 0,
-    "hp_max": 0,
+    "extra_res": 0.01,
+    "hp_max": 20,
     "city_vision": 0,
     "city_feature": 0,
     "event_building": null,
-    "reward": null
+    "reward": [
+      [
+        1,
+        "8001",
+        50
+      ],
+      [
+        1,
+        "8002",
+        50
+      ],
+      [
+        1,
+        "8003",
+        50
+      ]
+    ]
   },
   "11": {
     "id": "11",
     "exp": 300,
-    "extra_res": 0,
+    "extra_res": 0.0125,
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
     "event_building": null,
-    "reward": null
+    "reward": [
+      [
+        1,
+        "8001",
+        50
+      ],
+      [
+        1,
+        "8002",
+        50
+      ],
+      [
+        1,
+        "8003",
+        50
+      ]
+    ]
   },
   "12": {
     "id": "12",
     "exp": 325,
-    "extra_res": 0,
+    "extra_res": 0.0125,
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
     "event_building": null,
-    "reward": null
+    "reward": [
+      [
+        1,
+        "8001",
+        50
+      ],
+      [
+        1,
+        "8002",
+        50
+      ],
+      [
+        1,
+        "8003",
+        50
+      ]
+    ]
   },
   "13": {
     "id": "13",
     "exp": 350,
-    "extra_res": 0,
+    "extra_res": 0.0125,
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
@@ -164,7 +325,7 @@
     "id": "14",
     "exp": 375,
     "extra_res": 0,
-    "hp_max": 0,
+    "hp_max": 25,
     "city_vision": 0,
     "city_feature": 0,
     "event_building": null,
@@ -174,7 +335,7 @@
     "id": "15",
     "exp": 400,
     "extra_res": 0,
-    "hp_max": 0,
+    "hp_max": 25,
     "city_vision": 0,
     "city_feature": 0,
     "event_building": null,
@@ -184,7 +345,7 @@
     "id": "16",
     "exp": 425,
     "extra_res": 0,
-    "hp_max": 0,
+    "hp_max": 25,
     "city_vision": 0,
     "city_feature": 0,
     "event_building": null,

@@ -216,7 +216,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
             this._settleUseSelectItems = [];
 
             let currentLevel: number = UserInfoMgr.Instance.level;
-            const gap: number = 10;
+            const gap: number = 4;
             const settleCount: number = Math.floor(currentLevel / gap);
             if (settleCount <= 0) {
                 currentShowView.getChildByName("PeriodicSettlement").active = false;
