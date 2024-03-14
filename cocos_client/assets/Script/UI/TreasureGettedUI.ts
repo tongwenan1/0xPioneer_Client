@@ -85,18 +85,17 @@ export class TreasureGettedUI extends PopUpUI {
                     framespr.color = Color.WHITE;
                     if (resultReward.type == ItemConfigType.Item) {
                         //item
-                        iconspr.spriteFrame = await ItemMgr.Instance.getItemIcon(resultReward.itemConfigId);
                         let itemConf = ItemMgr.Instance.getItemConf(resultReward.itemConfigId);
                         if (itemConf) {
+                            iconspr.spriteFrame = await ItemMgr.Instance.getItemIcon(itemConf.icon);
                             framespr.color = this.frameGradeColors[itemConf.grade - 1];
                         }
 
                     } else if (resultReward.type == ItemConfigType.Artifact) {
                         // artifact
-                        iconspr.spriteFrame = await ArtifactMgr.Instance.getItemIcon(resultReward.itemConfigId);
-
                         const artifactConf = ArtifactMgr.Instance.getArtifactConf(resultReward.itemConfigId);
                         if (artifactConf) {
+                            iconspr.spriteFrame = await ArtifactMgr.Instance.getItemIcon(artifactConf.icon);
                             framespr.color = this.frameGradeColors[artifactConf.rank - 1];
                         }
                     }

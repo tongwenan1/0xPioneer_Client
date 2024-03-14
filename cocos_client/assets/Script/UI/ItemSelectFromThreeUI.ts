@@ -17,7 +17,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
         this._selectedCallback = selectedCallback;
         const drops: any[] = DropMgr.Instance.getDropById(dropId);
         // useLanMgr
-        // this.node.getChildByName("Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
 
         if (drops.length > 0) {
             const drop = drops[0];
@@ -41,7 +41,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
                 }
                 this._showItemViews = [];
 
-                const content = this.node.getChildByName("Content/ImgTextBg/SelectContent").getComponent(Layout);
+                const content = this.node.getChildByPath("Content/ImgTextBg/SelectContent").getComponent(Layout);
                 for (let i = 0; i < this._items.length; i++) {
                     const config = ArtifactMgr.Instance.getArtifactConf(this._items[i].artifactConfigId);
                     if (config == null) {
