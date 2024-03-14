@@ -81,7 +81,11 @@ export class OuterOtherPioneerView extends Component {
         "hunter",
         "prophetess",
         "rebels",
-        "secretGuard"
+        "secretGuard",
+        "chief",
+        "rabbit",
+        "doc",
+        "marauder"
     ];
     onLoad() {
         this._hasTaskView = this.node.getChildByPath("task_status/talkbubble");
