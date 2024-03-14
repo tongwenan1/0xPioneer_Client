@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox } from 'cc';
+import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, resources } from 'cc';
 import LocalDataLoader from '../../Manger/LocalDataLoader';
 import UserInfoMgr from '../../Manger/UserInfoMgr';
 import { Web3Helper } from '../../Game/MetaMask/EthHelper';
@@ -19,11 +19,14 @@ export class CompLogin extends Component {
         this._loadingView.active = true;
         this.node.getChildByName("label-info").getComponent(Label).string = "loading is done. can go next.";
         let loadRate: number = 0;
+        const sceneTotalRate: number = 0.7;
+        const prefabFirstRate: number = 0.27;
         director.preloadScene(
             "main",
             (completedCount: number, totalCount: number, item: any) => {
-                const currentRate = completedCount / totalCount;
+                const currentRate = completedCount / totalCount * sceneTotalRate;
                 if (currentRate > loadRate) {
+                    console.log("exce sence: " + currentRate);
                     loadRate = currentRate;
                     this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
                 }
@@ -33,8 +36,21 @@ export class CompLogin extends Component {
                     if (LocalDataLoader.instance.loadStatus == 0) {
                         await LocalDataLoader.instance.loadLocalDatas();
                     }
-                    this._loaded = true;
-                    this._loadingView.active = false;
+                    resources.loadDir("prefab", (finished: number, total: number, item: any) => {
+                        let currentRate = sceneTotalRate + finished / total * (1 - sceneTotalRate);
+                        if (currentRate >= 1) {
+                            this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = currentRate;
+                        } else {
+                            currentRate = sceneTotalRate + finished / total * (1 - sceneTotalRate - prefabFirstRate);
+                            if (currentRate > loadRate) {
+                                loadRate = currentRate;
+                                this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
+                            }
+                        }                        
+                    }, ()=> {
+                        this._loaded = true;
+                        this._loadingView.active = false;
+                    });
                 }
             }
         );
