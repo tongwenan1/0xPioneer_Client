@@ -79,6 +79,8 @@ export class EventUI extends PopUpUI {
             return;
         }
         this._event = event;
+
+
         // type = 1：text 
         // type = 2：select
         // type = 3：fight
@@ -93,6 +95,11 @@ export class EventUI extends PopUpUI {
         // useLanMgr
         this._dialogView.getChildByPath("content/bg/label").getComponent(Label).string = LanMgr.Instance.getLanById(event.text);
         // this._dialogView.getChildByPath("content/bg/label").getComponent(Label).string = event.text;
+        let localLastTip = null;
+        if (this._triggerPioneerId != null) {
+            localLastTip = localStorage.getItem("local_event_last_title_" + this._triggerPioneerId);
+        }
+        this._dialogView.getChildByPath("content/title").getComponent(Label).string = localLastTip == null ? "" : LanMgr.Instance.getLanById(localLastTip);
 
         this._dialogNextButton.active = false;
         this._dialogFightButton.active = false;
@@ -125,7 +132,7 @@ export class EventUI extends PopUpUI {
 
                     item.getComponent(Sprite).grayscale = conditionResult != null ? !conditionResult.satisfy : false;
                     item.getComponent(Button).interactable = conditionResult != null ? conditionResult.satisfy : true;
-                    item.getComponent(Button).clickEvents[0].customEventData = event.select[i];
+                    item.getComponent(Button).clickEvents[0].customEventData = event.select[i] + "|" + event.select_txt[i];
                     this._dialogSelectItems.push(item);
                 }
                 this._dialogSelectView.getComponent(Layout).updateLayout();
@@ -361,6 +368,9 @@ export class EventUI extends PopUpUI {
             // clear temp attributes
             this._temporaryAttributes = new Map();
 
+            if (this._triggerPioneerId != null) {
+                localStorage.removeItem("local_event_last_title_" + this._triggerPioneerId);
+            }
             if (this._eventBuildingId != null) {
                 if (eventId == "-1") {
                     BuildingMgr.instance.changeBuildingEventId(this._eventBuildingId, null);
@@ -444,9 +454,14 @@ export class EventUI extends PopUpUI {
             this._contentView.active = true;
         }
     }
-    private onTapSelect(actionEvent: Event, customEventData: string) {
-        const eventId = customEventData;
+    private onTapSelect(actionEvent: Event, customEventData: string, use: string) {
+        const datas = customEventData.split("|");
+        const eventId = datas[0];
         const event = BranchEventMgr.Instance.getEventById(eventId);
+
+        if (this._triggerPioneerId != null) {
+            localStorage.setItem("local_event_last_title_" + this._triggerPioneerId, datas[1]);
+        } 
         let hasNextStep = event.length > 0;
 
         // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}`);
