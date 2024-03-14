@@ -60,7 +60,7 @@ export default class ArtifactMgr {
         return count;
     }
 
-    public getPropEffValue() {
+    public getPropEffValue(cLv: number) {
         const r = {
             prop: {}, // propType => { add: 0, mul: 0}
             eff: {}, // effectType => 0
@@ -93,8 +93,11 @@ export default class ArtifactMgr {
                     const effConfig = ArtifactMgr.Instance.getArtifactEffectConf(effectId);
                     const effectType = effConfig.type;
 
-                    if (!r.eff[effectType]) r.eff[effectType] = 0;
+                    if (effConfig.unlock && effConfig.unlock > cLv) {
+                        continue;
+                    }
 
+                    if (!r.eff[effectType]) r.eff[effectType] = 0;
                     r.eff[effectType] += effConfig.para[0] * artifact.count;
                 }
             }

@@ -50,4 +50,5 @@ export class ArtifactEffectConfigData {
     type: number;
     para: number[];
     des: string;
+    unlock: number; // require clv
 }

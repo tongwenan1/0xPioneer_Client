@@ -1409,7 +1409,7 @@ export default class PioneerMgr {
                 if (pioneer.type == MapPioneerType.player && pioneer.friendly) {
 
                     // artifact
-                    const artifactEff = ArtifactMgr.Instance.getPropEffValue();
+                    const artifactEff = ArtifactMgr.Instance.getPropEffValue(UserInfo.Instance.level);
                     let artifactGather = 0;
                     if (artifactEff.eff[ArtifactEffectType.GATHER_TIME]) {
                         artifactGather = artifactEff.eff[ArtifactEffectType.GATHER_TIME];

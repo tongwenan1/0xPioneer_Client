@@ -170,7 +170,7 @@ export class BuildingUpgradeUI extends PopUpUI {
                 return;
             }
             // artifact effect
-            const artifactPropEff = ArtifactMgr.Instance.getPropEffValue();
+            const artifactPropEff = ArtifactMgr.Instance.getPropEffValue(UserInfoMgr.Instance.level);
             let artifactTime = 0;
             if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME]) {
                 artifactTime = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME];

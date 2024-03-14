@@ -337,7 +337,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
         // artifact effect
         let artifactSpeed = 0;
-        const artifactEff = ArtifactMgr.Instance.getPropEffValue();
+        const artifactEff = ArtifactMgr.Instance.getPropEffValue(UserInfoMgr.Instance.level);
         if (artifactEff.eff[ArtifactEffectType.MOVE_SPEED]) {
             artifactSpeed = artifactEff.eff[ArtifactEffectType.MOVE_SPEED];
         }
