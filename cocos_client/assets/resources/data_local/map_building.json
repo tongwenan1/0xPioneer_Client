@@ -1,7 +1,7 @@
 [
     {
         "id": "building_1",
-        "name": "city",
+        "name": "110010",
         "type": "city",
         "show": 1,
         "positions": [
@@ -44,7 +44,7 @@
     },
     {
         "id": "building_2",
-        "name": "Ruins",
+        "name": "110013",
         "type": "explore",
         "show": 0,
         "positions": [
@@ -68,7 +68,7 @@
     },
     {
         "id": "building_3",
-        "name": "Treasure",
+        "name": "110011",
         "type": "explore",
         "show": 0,
         "positions": [
@@ -84,7 +84,7 @@
     },
     {
         "id": "building_4",
-        "name": "ambush",
+        "name": "110012",
         "type": "stronghold",
         "show": 0,
         "positions": [
@@ -99,7 +99,7 @@
     },
     {
         "id": "building_5",
-        "name": "swamp jungle 01",
+        "name": "110002",
         "type": "resource",
         "show": 1,
         "positions": [
@@ -130,7 +130,7 @@
     },
     {
         "id": "building_6",
-        "name": "swamp jungle 02",
+        "name": "110002",
         "type": "resource",
         "show": 1,
         "positions": [
@@ -161,7 +161,7 @@
     },
     {
         "id": "building_7",
-        "name": "desert oasis 01",
+        "name": "110003",
         "type": "resource",
         "show": 1,
         "positions": [
@@ -192,7 +192,7 @@
     },
     {
         "id": "building_8",
-        "name": "desert oasis 02",
+        "name": "110003",
         "type": "resource",
         "show": 1,
         "positions": [
@@ -223,7 +223,7 @@
     },
     {
         "id": "building_9",
-        "name": "desert oasis 03",
+        "name": "110003",
         "type": "resource",
         "show": 1,
         "positions": [
@@ -254,7 +254,7 @@
     },
     {
         "id": "building_10",
-        "name": "sand mineral 01",
+        "name": "110001",
         "type": "resource",
         "show": 1,
         "positions": [
@@ -285,7 +285,7 @@
     },
     {
         "id": "building_11",
-        "name": "sand mineral 02",
+        "name": "110001",
         "type": "resource",
         "show": 1,
         "positions": [
@@ -316,7 +316,7 @@
     },
     {
         "id": "building_12",
-        "name": "sand mineral 03",
+        "name": "110001",
         "type": "resource",
         "show": 1,
         "positions": [
@@ -347,7 +347,7 @@
     },
     {
         "id": "building_13",
-        "name": "sand mineral 01",
+        "name": "110004",
         "type": "event",
         "show": 1,
         "positions": [
@@ -379,7 +379,7 @@
     },
     {
         "id": "building_14",
-        "name": "sand mineral 01",
+        "name": "110005",
         "type": "event",
         "show": 1,
         "positions": [
@@ -411,7 +411,7 @@
     },
     {
         "id": "building_15",
-        "name": "sand mineral 01",
+        "name": "110006",
         "type": "event",
         "show": 1,
         "positions": [
@@ -443,7 +443,7 @@
     },
     {
         "id": "building_18",
-        "name": "village cave",
+        "name": "110008",
         "type": "event",
         "show": 1,
         "positions": [
@@ -475,7 +475,7 @@
     },
     {
         "id": "building_19",
-        "name": "pyramid",
+        "name": "110009",
         "type": "event",
         "show": 1,
         "positions": [
@@ -507,7 +507,7 @@
     },
     {
         "id": "building_20",
-        "name": "aquatic",
+        "name": "110007",
         "type": "event",
         "show": 1,
         "positions": [
