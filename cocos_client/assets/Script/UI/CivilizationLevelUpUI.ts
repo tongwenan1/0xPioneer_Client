@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Label, Layout, Node, Sprite } from 'cc';
+import { _decorator, Animation, Button, Component, instantiate, Label, Layout, Node, Sprite, tween, v3 } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { EventName, ItemConfigType } from '../Const/ConstDefine';
 import EventMgr from '../Manger/EventMgr';
@@ -17,12 +17,28 @@ export class CivilizationLevelUpUI extends PopUpUI {
     private _artifactItem: Node = null;
     private _showRewardItems: Node[] = [];
     private _showArtifactItems: Node[] = [];
+
+    private _buildAnimView: Node = null;
+    private _finishAnimView: Node = null;
+    private _finishLightAnimView: Node = null;
+
+    private _showBuildAnimView: Node = null;
+    private _showFinishAnimView: Node = null;
     onLoad(): void {
         this._rewardItem = this.node.getChildByPath("Content/RewardContent/Rewards/Content/BackpackItem");
         this._rewardItem.active = false;
 
         this._artifactItem = this.node.getChildByPath("Content/RewardContent/Rewards/Content/ArtifactItem");
         this._artifactItem.active = false;
+
+        this._buildAnimView = this.node.getChildByPath("Content/Video/Mask/Build");
+        this._buildAnimView.active = false;
+
+        this._finishAnimView = this.node.getChildByPath("Content/Video/Mask/Finish");
+        this._finishAnimView.active = false;
+
+        this._finishLightAnimView = this.node.getChildByPath("Content/Video/Mask/FinishLight");
+        this._finishLightAnimView.active = false;
 
         EventMgr.on(EventName.CHANGE_LANG, this.refreshUI, this);
     }
@@ -44,7 +60,49 @@ export class CivilizationLevelUpUI extends PopUpUI {
         // this.node.getChildByPath("Content/RewardContent/ResGetRateUp").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this.node.getChildByPath("Content/RewardContent/GetHpMax").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
         // this.node.getChildByPath("Content/RewardContent/Rewards/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        
+        
+        // anim
+        if (this._showBuildAnimView != null) {
+            this._showBuildAnimView.destroy();
+        }
+        if (this._showFinishAnimView != null) {
+            this._showFinishAnimView.destroy();
+        }
+        this._finishLightAnimView.active = false;
 
+        this.node.getChildByName("Content").getComponent(Button).interactable = false;
+        this._showBuildAnimView = instantiate(this._buildAnimView);
+        this._showBuildAnimView.active = true;
+        this._showBuildAnimView.position = v3(0, -166, 0);
+        this._showBuildAnimView.parent = this._buildAnimView.parent;
+        tween()
+        .target(this._showBuildAnimView)
+        .delay(1.0)
+        .to(0.8, { position: v3(this._showBuildAnimView.position.x, -2400, this._showBuildAnimView.position.z) })
+        .delay(2.0)
+        .call(()=> {
+            this._showBuildAnimView.active = false;
+
+            this._showFinishAnimView = instantiate(this._finishAnimView);
+            this._showFinishAnimView.active = true;
+            this._showFinishAnimView.parent = this._showBuildAnimView.parent;
+            this._showFinishAnimView.position = v3(0, -166, 0);
+
+            this._finishLightAnimView.active = true;
+            this._finishLightAnimView.setSiblingIndex(99);
+            this._finishLightAnimView.getChildByName("Particle_Ui_Building").getComponent(Animation).play();
+
+            tween()
+            .target(this._showFinishAnimView)
+            .to(0.8, { position: v3(this._showFinishAnimView.position.x, -2400, this._showFinishAnimView.position.z) })
+            .delay(0.6)
+            .call(()=> {
+                this.node.getChildByName("Content").getComponent(Button).interactable = true;
+            })
+            .start();
+        })
+        .start();
 
         // level 
         contentView.getChildByPath("Level/Before").getComponent(Label).string = "C.LV" + (levelConfig.id - 1);
