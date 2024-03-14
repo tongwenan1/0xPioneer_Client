@@ -159,7 +159,7 @@ export class BattleReportListItemUI extends Component {
         const location = buildingInfo.locationString();
         const duration = report.data.duration; // in milliseconds
         const rewards = report.data.rewards;
-        let miningResult = `Collection progress:\n100%`;
+        let miningResult = `Collection progress:\n<color=#ffcc49><size=36>100 %</size></color>`;
 
         this.leftNameLabel.string = roleName;
 
