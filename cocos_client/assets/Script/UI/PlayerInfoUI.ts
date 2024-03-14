@@ -268,6 +268,9 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
 
             currentShowView.getChildByPath("LanguageMenu/LanguageBtn/Label").getComponent(Label).string = lang.get(this._selectLang);
 
+            // useLanMgr
+            // currentShowView.getChildByName("ResetButton").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+
         } else if (this._selectIndex == 3) {
             // xx reversed   
         }
@@ -371,6 +374,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
     }
     //----------------------------------- info
     private onTapChangeNameShow() {
+        return;
         this._changeNameView.active = true;
         this._changeNameView.getChildByPath("Content/UserName").getComponent(EditBox).string = "";
     }
