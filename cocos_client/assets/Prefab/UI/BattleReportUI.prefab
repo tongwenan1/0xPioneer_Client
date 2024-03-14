@@ -139,7 +139,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1919.9999999999998,
+      "width": 1920,
       "height": 1080
     },
     "_anchorPoint": {
@@ -548,7 +548,7 @@
       }
     ],
     "_interactable": true,
-    "_transition": 0,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 255,
@@ -582,7 +582,7 @@
     "_pressedSprite": null,
     "_disabledSprite": null,
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 14
     },
@@ -1598,7 +1598,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "6b4477ed-8099-446b-977e-b92d4de2203c@f9941",
+      "__uuid__": "e9d50669-12b9-45f0-88bf-df189001cea3@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 1,
@@ -1634,7 +1634,7 @@
     },
     "clickEvents": [],
     "_interactable": false,
-    "_transition": 2,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -1676,11 +1676,11 @@
       "__expectedType__": "cc.SpriteFrame"
     },
     "_disabledSprite": {
-      "__uuid__": "6b4477ed-8099-446b-977e-b92d4de2203c@f9941",
+      "__uuid__": "e9d50669-12b9-45f0-88bf-df189001cea3@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 53
     },
@@ -1983,7 +1983,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 2,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -2029,7 +2029,7 @@
       "__expectedType__": "cc.SpriteFrame"
     },
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 67
     },
@@ -2332,7 +2332,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 2,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -2378,7 +2378,7 @@
       "__expectedType__": "cc.SpriteFrame"
     },
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 81
     },
@@ -2681,7 +2681,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 2,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -2727,7 +2727,7 @@
       "__expectedType__": "cc.SpriteFrame"
     },
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 95
     },
@@ -5358,7 +5358,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 0,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 255,
@@ -5392,7 +5392,7 @@
     "_pressedSprite": null,
     "_disabledSprite": null,
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 217
     },
@@ -6993,7 +6993,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 0,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -7027,7 +7027,7 @@
     "_pressedSprite": null,
     "_disabledSprite": null,
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 283
     },
@@ -8602,7 +8602,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 0,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 255,
@@ -8636,7 +8636,7 @@
     "_pressedSprite": null,
     "_disabledSprite": null,
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 357
     },
@@ -9741,7 +9741,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 0,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -9775,7 +9775,7 @@
     "_pressedSprite": null,
     "_disabledSprite": null,
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 401
     },
@@ -10916,7 +10916,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 0,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 255,
@@ -10950,7 +10950,7 @@
     "_pressedSprite": null,
     "_disabledSprite": null,
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 457
     },
@@ -11933,7 +11933,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 0,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -11979,7 +11979,7 @@
       "__expectedType__": "cc.SpriteFrame"
     },
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 495
     },
@@ -12282,7 +12282,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 0,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -12316,7 +12316,7 @@
     "_pressedSprite": null,
     "_disabledSprite": null,
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 509
     },
@@ -13003,7 +13003,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 0,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -13037,7 +13037,7 @@
     "_pressedSprite": null,
     "_disabledSprite": null,
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 545
     },
@@ -13340,7 +13340,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 0,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -13374,7 +13374,7 @@
     "_pressedSprite": null,
     "_disabledSprite": null,
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 559
     },
@@ -13677,7 +13677,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 2,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -13723,7 +13723,7 @@
       "__expectedType__": "cc.SpriteFrame"
     },
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": {
       "__id__": 573
     },
@@ -13904,7 +13904,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1919.9999999999998,
+      "width": 1920,
       "height": 1080
     },
     "_anchorPoint": {
