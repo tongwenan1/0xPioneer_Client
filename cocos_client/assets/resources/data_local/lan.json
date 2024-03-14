@@ -1149,31 +1149,31 @@
   },
   "502001": {
     "id": "502001",
-    "eng": "prophetess"
+    "eng": "Tinuvel the Prophetess"
   },
   "502002": {
     "id": "502002",
-    "eng": "default_player"
+    "eng": "default player"
   },
   "502003": {
     "id": "502003",
-    "eng": "doomsdayGangSpy"
+    "eng": "Spy Jack"
   },
   "502004": {
     "id": "502004",
-    "eng": "hunter"
+    "eng": "Hunter John"
   },
   "502005": {
     "id": "502005",
-    "eng": "secretGuard"
+    "eng": "Guard Keen"
   },
   "502006": {
     "id": "502006",
-    "eng": "doomsdayGangBigTeam"
+    "eng": "DoomsDay Gang Team"
   },
   "502007": {
     "id": "502007",
-    "eng": "artisan"
+    "eng": "Artisan Tom"
   },
   "503001": {
     "id": "503001",
@@ -1557,7 +1557,7 @@
   },
   "701001": {
     "id": "701001",
-    "eng": "Collection progress:\n<color=#ffcc49><size=36>%s%</size></color>"
+    "eng": "Collection progress:\r\n<color=#ffcc49><size=36>%s%</size></color>"
   },
   "701002": {
     "id": "701002",
@@ -1565,11 +1565,11 @@
   },
   "701003": {
     "id": "701003",
-    "eng": "Duration: <color=#ffffff>%s</color>"
+    "eng": "Duration: %s"
   },
   "1070011": {
     "id": "1070011",
-    "eng": "Treaty of Kadesh:\\nCity Vision +1\\nTroop Vision +1"
+    "eng": "Treaty of Kadesh:\r\nCity Vision +1\r\nTroop Vision +1"
   },
   "1070012": {
     "id": "1070012",
@@ -1593,7 +1593,7 @@
   },
   "1070017": {
     "id": "1070017",
-    "eng": "Domination:\\nDamage on herd +50%"
+    "eng": "Domination:\r\nDamage on herd +50%"
   },
   "1070018": {
     "id": "1070018",
@@ -1617,7 +1617,7 @@
   },
   "1070023": {
     "id": "1070023",
-    "eng": "Destruction:\\nDamage on human +15%"
+    "eng": "Destruction:\r\nDamage on human +15%"
   },
   "1070024": {
     "id": "1070024",
