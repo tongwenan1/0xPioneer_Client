@@ -1,7 +1,7 @@
-import {_decorator, Button, Color, instantiate, Label, Mask, Node, ScrollView, UITransform} from 'cc';
+import {_decorator, Button, Color, instantiate, Label, Layout, Mask, Node, ScrollView, UITransform} from 'cc';
 import {PopUpUI} from "db://assets/Script/BasicView/PopUpUI";
 import {BattleReportListItemUI} from "./BattleReportListItemUI";
-import BattleReportsMgr, {BattleReportType} from "db://assets/Script/Manger/BattleReportsMgr";
+import BattleReportsMgr, {BattleReportsEvent, BattleReportType} from "db://assets/Script/Manger/BattleReportsMgr";
 
 const {ccclass} = _decorator;
 
@@ -17,7 +17,7 @@ class ReportFilterState {
 }
 
 @ccclass('BattleReportListUI')
-export class BattleReportsUI extends PopUpUI {
+export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
 
     private _reportUiItems: BattleReportListItemUI[] = [];
     private _fightTypeItemTemplate: Node = null;
@@ -75,6 +75,23 @@ export class BattleReportsUI extends PopUpUI {
             uiItem.initWithReportData(report);
             uiItem.node.setParent(this._fightTypeItemTemplate.parent);
             uiItem.node.active = true;
+        }
+    }
+
+    public refreshUIWithKeepScrollPosition(){
+        // save scroll state
+        const scrollOffsetBefore = this._reportListScrollView.getScrollOffset();
+        const layoutComp = this._fightTypeItemTemplate.parent.getComponent(Layout);
+        const scrollViewContentHeightBefore = layoutComp.getComponent(UITransform).height;
+
+        this.refreshUI();
+        layoutComp.updateLayout();
+
+        // restore scroll position and keep the position of items on screen
+        const heightDiff = layoutComp.getComponent(UITransform).height - scrollViewContentHeightBefore;
+        if (heightDiff > 0) {
+            this._reportListScrollView.stopAutoScroll();
+            this._reportListScrollView.scrollToOffset(scrollOffsetBefore.add2f(0, heightDiff));
         }
     }
 
@@ -140,11 +157,17 @@ export class BattleReportsUI extends PopUpUI {
     }
 
     protected onEnable() {
+        BattleReportsMgr.Instance.addObserver(this);
+
         // Select filter tab "All" every time enter the reports UI.
         this._filterState.filterType = ReportsFilterType.None;
         this.refreshUI();
 
         this._autoMarkReadSkipFrames = 1;
+    }
+
+    protected onDisable() {
+        BattleReportsMgr.Instance.removeObserver(this);
     }
 
     //#region filter group methods
@@ -218,6 +241,10 @@ export class BattleReportsUI extends PopUpUI {
     // action
     onTapClose() {
         this.show(false);
+    }
+
+    public onBattleReportListChanged() {
+        this.scheduleOnce(this.refreshUIWithKeepScrollPosition);
     }
 }
 
