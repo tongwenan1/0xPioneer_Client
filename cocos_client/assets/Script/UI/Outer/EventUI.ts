@@ -91,8 +91,8 @@ export class EventUI extends PopUpUI {
         // this._dialogView.getChildByPath("fightButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
 
         // useLanMgr
-        this._dialogView.getChildByPath("content/label").getComponent(Label).string = LanMgr.Instance.getLanById(event.text);
-        // this._dialogView.getChildByPath("content/label").getComponent(Label).string = event.text;
+        this._dialogView.getChildByPath("content/bg/label").getComponent(Label).string = LanMgr.Instance.getLanById(event.text);
+        // this._dialogView.getChildByPath("content/bg/label").getComponent(Label).string = event.text;
 
         this._dialogNextButton.active = false;
         this._dialogFightButton.active = false;
