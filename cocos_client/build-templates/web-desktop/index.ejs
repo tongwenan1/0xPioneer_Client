@@ -36,14 +36,15 @@
   <link rel="stylesheet" type="text/css" href="<%= cssUrl %>"/>
   <link rel="stylesheet" href="./splash.css">
 </head>
-<body>
-  <div id="GameDiv" style="background-color: black;" cc_exact_fit_screen="true">
+<body style="background-color: black;">
+  <div id="GameDiv" style="width: 1920px;height: 1080px;" cc_exact_fit_screen="true">
       <div id="Cocos3dGameContainer">
         <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="99"></canvas>
       </div>
+      <div id="splash">
+      </div>
     </div>
-    <div id="splash">
-    </div>
+    
     <script>
        (function () {
          var splash = document.getElementById('splash');
