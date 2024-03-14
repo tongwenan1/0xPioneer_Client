@@ -1557,7 +1557,7 @@
   },
   "701001": {
     "id": "701001",
-    "eng": "Collection progress:\\n<color=#ffcc49><size=36>%s%</size></color>"
+    "eng": "Collection progress:\n<color=#ffcc49><size=36>%s%</size></color>"
   },
   "701002": {
     "id": "701002",
@@ -1565,7 +1565,7 @@
   },
   "701003": {
     "id": "701003",
-    "eng": "Duration: %s"
+    "eng": "Duration: <color=#ffffff>%s</color>"
   },
   "1070011": {
     "id": "1070011",
