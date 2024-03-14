@@ -59,7 +59,7 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
         }
         this._itemContent.getComponent(Layout).updateLayout();
 
-        this._refreshArtifactUI();        
+        this._refreshArtifactUI();    
     }
 
     onDestroy(): void {
