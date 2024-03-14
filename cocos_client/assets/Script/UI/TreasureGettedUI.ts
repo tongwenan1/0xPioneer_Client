@@ -26,7 +26,6 @@ export class TreasureGettedUI extends PopUpUI {
         for (let i = 0; i < 3; i++) {
             this.node.getChildByPath("Content/Treasure_box_" + i).active = i == box.icon;
         }
-        console.log('exce box: ', box);
         // prepare treasure box node
         let treasureBoxCameraNode = this.node.getChildByPath("Content/Treasure_box_" + box.icon + "/Treasure_box_camera");
         let treasureBoxNode = this.node.getChildByPath("Content/Treasure_box_" + box.icon + "/Treasure_box");

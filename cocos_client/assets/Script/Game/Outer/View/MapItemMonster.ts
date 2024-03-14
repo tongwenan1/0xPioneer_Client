@@ -11,6 +11,7 @@ export class MapItemMonster extends Component {
     public refreshUI(model: MapPioneerModel, finishEvent: FinishedEvent[]) {
         this._nameLabel.string = LanMgr.Instance.getLanById(model.name);
         this._fightView.active = !model.friendly;
+        this._fightView.active = false;
 
         let moveCounting: boolean = false;
         if (model.logics.length > 0) {

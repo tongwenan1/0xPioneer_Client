@@ -1,12 +1,16 @@
-import { _decorator, Component, Layout, Node } from 'cc';
+import { _decorator, Component, Label, Layout, Node } from 'cc';
 import MapBuildingModel, { MapBuildingType } from '../Model/MapBuildingModel';
 import { MapPlayerPioneerModel } from '../Model/MapPioneerModel';
+import LanMgr from '../../../Manger/LanMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterBuildingView')
 export class OuterBuildingView extends Component {
 
     public refreshUI(building: MapBuildingModel, players: MapPlayerPioneerModel[]) {
+
+        this.node.getChildByName("Title").getComponent(Label).string = "Lv." + building.level + "  " + LanMgr.Instance.getLanById(building.name);
+
         const treasure = this.node.getChildByName("treasure");
         const swamp = this.node.getChildByName("swamp_jungle");
         const sand = this.node.getChildByName("sand_mineral");
@@ -113,6 +117,9 @@ export class OuterBuildingView extends Component {
                 pyramid.active = true;
             }
         }
+
+        this._neturalView.active = false;
+        this._selfView.active = false;
     }
 
     private _neturalView: Node = null;
