@@ -1555,6 +1555,18 @@
     "id": "601005",
     "eng": "The Lord"
   },
+  "701001": {
+    "id": "701001",
+    "eng": "Collection progress:\\n<color=#ffcc49><size=36>%s%</size></color>"
+  },
+  "701002": {
+    "id": "701002",
+    "eng": "World Map"
+  },
+  "701003": {
+    "id": "701003",
+    "eng": "Duration: %s"
+  },
   "1070011": {
     "id": "1070011",
     "eng": "Treaty of Kadesh:\\nCity Vision +1\\nTroop Vision +1"
