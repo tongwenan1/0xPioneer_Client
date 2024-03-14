@@ -7,11 +7,11 @@ export enum ArtifactPropValueType {
     MUL = 2,
 }
 export enum ArtifactEffectRankColor {
-    RANK1 = "#FFFFFF",
-    RANK2 = "#00FF1F",
-    RANK3 = "#01F5FF",
-    RANK4 = "#CD00FF",
-    RANK5 = "#393939",
+    RANK1 = "#40ffa3",
+    RANK2 = "#409aff",
+    RANK3 = "#dd40ff",
+    RANK4 = "#ff9e40",
+    RANK5 = "#ff4040",
 }
 export enum ArtifactEffectType {
     BUILDING_LVUP_TIME = 1,

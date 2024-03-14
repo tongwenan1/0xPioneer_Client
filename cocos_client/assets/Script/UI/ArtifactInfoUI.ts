@@ -31,6 +31,7 @@ import ArtifactMgr from "../Manger/ArtifactMgr";
 import CountMgr, { CountType } from "../Manger/CountMgr";
 import LanMgr from "../Manger/LanMgr";
 import { ArtifactItem } from "./ArtifactItem";
+import UserInfoMgr from "../Manger/UserInfoMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactInfoUI")
@@ -39,129 +40,88 @@ export class ArtifactInfoUI extends PopUpUI {
         this._artifacts = artifacts;
         this._closeCallback = closeCallback;
 
-        return;
+        for (const view of this._allEffectViews) {
+            view.destroy();
+        }
+        this._allEffectViews = [];
+
         if (this._artifacts.length > 0) {
             // show only one
-            let frame = await ArtifactItem.getItemIcon(this._artifacts[0].artifactConfig.icon);
-            this.icon.spriteFrame = frame;
+            const config = ArtifactMgr.Instance.getArtifactConf(this._artifacts[0].artifactConfigId);
 
-            // ------ name & desc
-            // useLanMgr
-            this.nameLabel.string = LanMgr.Instance.getLanById(this._artifacts[0].artifactConfig.name);
-            this.descTxt.string = LanMgr.Instance.getLanById(this._artifacts[0].artifactConfig.des);
-            // this.nameLabel.string = this._artifacts[0].artifactConfig.name == null ? "" : this._artifacts[0].artifactConfig.name;
-            // this.descTxt.string = this._artifacts[0].artifactConfig.des == null ? "" : this._artifacts[0].artifactConfig.des;
-
-            const artifactConfig = this._artifacts[0].artifactConfig;
-
-            // ------ prop
-            for (let i = 0; i < artifactConfig.prop.length; i++) {
-                const propId = artifactConfig.prop[i];
-                const prop_value = artifactConfig.prop_value[i];
-
-                let propName = "";
-                let propValueType = "";
-                let propValue = "";
-
-                if (propId == ArtifactProp.HP) {
-                    // useLanMgr
-                    propName += LanMgr.Instance.getLanById("204001");
-                    // propName += "HP";
-                } else if (propId == ArtifactProp.ATTACK) {
-                    // useLanMgr
-                    propName += LanMgr.Instance.getLanById("204002");
-                    // propName += "ATK";
-                }
-
-                if (prop_value[0] == ArtifactPropValueType.ADD) {
-                    if (prop_value[1] > 0) {
-                        propValueType = "+";
-                    } else {
-                        propValueType = "-";
-                    }
-                    propValue = prop_value[1].toString();
-                } else if (prop_value[0] == ArtifactPropValueType.MUL) {
-                    if (prop_value[1] > 1) {
-                        propValueType = "+";
-                        propValue = Math.floor(prop_value[1] * 100 - 100) + "%";
-                    } else {
-                        propValueType = "-";
-                        propValue = Math.floor(100 - prop_value[1] * 100) + "%";
-                    }
-                }
-
-                let proptxt = propName + " " + propValueType + propValue;
-
-                if (i == 0) {
-                    this.propTxt1.string = proptxt;
-                } else if (i == 1) {
-                    this.propTxt2.string = proptxt;
-                }
+            let useColor: Color = null;
+            if (config.rank == 1) {
+                useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK1);
+            } else if (config.rank == 2) {
+                useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK2);
+            } else if (config.rank == 3) {
+                useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK3);
+            } else if (config.rank == 4) {
+                useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK4);
+            } else if (config.rank == 5) {
+                useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK5);
             }
 
-            // effectTxt & effectDes
-            if (artifactConfig.effect.length > 0) {
-                for (let i = 0; i < artifactConfig.effect.length; i++) {
-                    const effectId = artifactConfig.effect[i];
-                    const effectConfig = ArtifactMgr.Instance.getArtifactEffectConf(effectId);
-                    if (effectConfig == null) continue;
+            if (config != null) {
+                const content = this.node.getChildByName("DialogBg");
 
-                    let effectTxt: Label;
-                    let effectDes: Label;
-                    if (i == 0) {
-                        effectTxt = this.effectTxt1;
-                        effectDes = this.effectDes1;
-                    } else if (i == 1) {
-                        effectTxt = this.effectTxt2;
-                        effectDes = this.effectDes2;
-                    }
-                    if (effectTxt) {
-                        // --- effectTxt
-                        // useLanMgr
-                        effectTxt.string = LanMgr.Instance.getLanById(effectConfig.name);
-                        // effectLable.string = effectConfig.name;
+                // name
+                content.getChildByName("Name").getComponent(Label).string = LanMgr.Instance.getLanById(config.name);
+                content.getChildByName("Name").getComponent(Label).color = useColor;
 
-                        // --- effectDes
-                        // useLanMgr
-                        let pct = effectConfig.para[0] * 100 + "%";
-                        let desc = LanMgr.Instance.getLanById(effectConfig.des);
-                        effectDes.string = desc.replace("%p", pct);
+                // item
+                content.getChildByName("ArtifactItem").getComponent(ArtifactItem).refreshUI(this._artifacts[0]);
 
-                        // ---effecttxt color
-                        switch (effectConfig.rank) {
-                            case 1:
-                                effectTxt.color = new Color().fromHEX(ArtifactEffectRankColor.RANK1);
-                                break;
-                            case 2:
-                                effectTxt.color = new Color().fromHEX(ArtifactEffectRankColor.RANK2);
-                                break;
-                            case 3:
-                                effectTxt.color = new Color().fromHEX(ArtifactEffectRankColor.RANK3);
-                                break;
-                            case 4:
-                                effectTxt.color = new Color().fromHEX(ArtifactEffectRankColor.RANK4);
-                                break;
-                            case 5:
-                                effectTxt.color = new Color().fromHEX(ArtifactEffectRankColor.RANK5);
-                                break;
+                // title 
+                // useLanMgr
+                // content.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+                content.getChildByName("Title").getComponent(Label).color = useColor;
+
+                // effect
+                const effectContent = content.getChildByName("EffectContent");
+                effectContent
+                if (config.effect.length > 0) {
+                    const numStrings: string[] = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+                    let effectIndex: number = 0;
+                    for (let i = 0; i < config.effect.length; i++) {
+                        const effectConfig = ArtifactMgr.Instance.getArtifactEffectConf(config.effect[i]);
+                        if (effectConfig == null) continue;
+
+                        if (config.rank >= 4 && effectIndex == 0) {
+                            const stable = instantiate(this._stableEffectItem);
+                            stable.active = true;
+                            stable.parent = this._stableEffectItem.parent;
+                            stable.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(effectConfig.des);
+                            stable.getChildByName("Title").getComponent(Label).color = useColor;
+                            this._allEffectViews.push(stable);
+
+                        } else {
+                            if (effectConfig.unlock > UserInfoMgr.Instance.level) {
+                                const unlock = instantiate(this._unlockEffectItem);
+                                unlock.active = true;
+                                unlock.parent = this._unlockEffectItem.parent;
+                                unlock.getChildByPath("LockIcon/No").getComponent(Label).string = numStrings[effectIndex];
+                                unlock.getChildByPath("Title").getComponent(Label).string = LanMgr.Instance.getLanById(effectConfig.des);
+                                // useLanMgr
+                                // unlock.getChildByPath("Title/Unlock").getComponent(Label).string = "(" + LanMgr.Instance.getLanById("107549") + "C.LV " + effectConfig.unlock + ")";
+                                unlock.getChildByPath("Title/Unlock").getComponent(Label).string = "(" + "Unlocked at" + "C.LV " + effectConfig.unlock + ")";
+                                this._allEffectViews.push(unlock);
+
+                            } else {
+                                const locked = instantiate(this._lockedEffectItem);
+                                locked.active = true;
+                                locked.parent = this._lockedEffectItem.parent;
+                                locked.getChildByPath("LockIcon/No").getComponent(Label).string = numStrings[effectIndex];
+                                locked.getChildByPath("Title").getComponent(Label).string = LanMgr.Instance.getLanById(effectConfig.des);
+                                this._allEffectViews.push(locked);
+                            }
                         }
+                        effectIndex += 1;
                     }
                 }
-            }
 
-            this.useButton.node.active = false;
-            if (this._isGet) {
-                this.useButton.node.active = true;
-
-                // useLanMgr
-                this.useButtonLabel.string = LanMgr.Instance.getLanById("204003");
-                // this.useButtonLabel.string = "Get";
-            } else {
-                // TODO: use?
-
-                // useLanMgr
-                this.useButtonLabel.string = LanMgr.Instance.getLanById("204004");
-                // this.useButtonLabel.string = "Get";
+                // desc
+                content.getChildByName("DescTxt").getComponent(RichText).string = LanMgr.Instance.getLanById(config.des);
             }
             this.show(true);
         }
@@ -169,8 +129,22 @@ export class ArtifactInfoUI extends PopUpUI {
 
     private _artifacts: ArtifactData[];
     private _closeCallback: () => void;
-    onLoad(): void {
 
+    private _allEffectViews: Node[] = [];
+    private _stableEffectItem: Node = null;
+    private _lockedEffectItem: Node = null;
+    private _unlockEffectItem: Node = null;
+    onLoad(): void {
+        this._allEffectViews = [];
+
+        this._stableEffectItem = this.node.getChildByPath("DialogBg/EffectContent/StableEffect");
+        this._stableEffectItem.active = false;
+
+        this._lockedEffectItem = this.node.getChildByPath("DialogBg/EffectContent/LockedEffect");
+        this._lockedEffectItem.active = false;
+
+        this._unlockEffectItem = this.node.getChildByPath("DialogBg/EffectContent/UnLockEffect");
+        this._unlockEffectItem.active = false;
     }
 
     start() {
@@ -178,7 +152,7 @@ export class ArtifactInfoUI extends PopUpUI {
     }
 
     //---------------------------------------------------- action
-    private _onTapClose() {
+    private onTapClose() {
         this.show(false);
         if (this._closeCallback != null) {
             this._closeCallback();
