@@ -41,7 +41,7 @@ export interface PioneerMgrEvent {
 
     beginFight(fightId: string, attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void;
     fightDidAttack(fightId: string, attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void;
-    endFight(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string): void;
+    endFight(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean): void;
 
     exploredPioneer(pioneerId: string): void;
     exploredBuilding(buildingId: string): void;
@@ -549,7 +549,7 @@ export default class PioneerMgr {
                         UserInfoMgr.Instance.exp += enemy.winexp;
                     }
                     for (const observer of this._observers) {
-                        observer.endFight(fightId, true, deadPioneer instanceof MapPioneerModel, deadPioneer.id);
+                        observer.endFight(fightId, true, deadPioneer instanceof MapPioneerModel, deadPioneer.id, deadPioneer == enemy);
                     }
 
                     EventMgr.emit(EventName.FIGHT_FINISHED, {
@@ -1616,14 +1616,16 @@ export default class PioneerMgr {
                     BuildingMgr.instance.changeBuildingFaction("building_1", BuildingFactionType.enemy);
                 }
 
+                let isSelfWin: boolean = false;
                 if (deadPioneer instanceof MapPioneerModel &&
                     deadPioneer.type != MapPioneerType.player &&
                     deadPioneer.winexp > 0) {
                     UserInfoMgr.Instance.exp += deadPioneer.winexp;
+                    isSelfWin = true;
                 }
 
                 for (const observer of this._observers) {
-                    observer.endFight(fightId, false, deadPioneer instanceof MapPioneerModel, deadPioneer.id);
+                    observer.endFight(fightId, false, deadPioneer instanceof MapPioneerModel, deadPioneer.id, isSelfWin);
                 }
 
                 EventMgr.emit(EventName.FIGHT_FINISHED, {

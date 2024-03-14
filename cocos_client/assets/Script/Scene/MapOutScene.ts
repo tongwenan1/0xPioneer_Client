@@ -10,7 +10,6 @@ export class MapOutScene extends Component {
 
     protected async onLoad() {
         this.mapBG = this.node.getChildByName("Floor").getComponent(MapBG);
-        // AudioMgr.instance.playMusic("audio/SampleLong", true);
     }
 
     start() {

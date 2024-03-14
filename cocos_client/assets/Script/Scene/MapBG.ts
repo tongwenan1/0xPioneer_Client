@@ -522,7 +522,7 @@ export class MapBG extends Component {
         if (PioneerInfo.instance.currentActionPioneerIsBusy()) {
 
             // useLanMgr
-            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203002"));
+            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203002"));
             // GameMain.inst.UI.ShowTip("pioneer is busy");
 
             return;
