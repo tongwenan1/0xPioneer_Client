@@ -3,7 +3,7 @@
         "id": "building_1",
         "name": "city",
         "type": "city",
-        "show": true,
+        "show": 1,
         "positions": [
             {
                 "x": 29,
@@ -46,7 +46,7 @@
         "id": "building_2",
         "name": "Ruins",
         "type": "explore",
-        "show": false,
+        "show": 0,
         "positions": [
             {
                 "x": 26,
@@ -70,7 +70,7 @@
         "id": "building_3",
         "name": "Treasure",
         "type": "explore",
-        "show": false,
+        "show": 0,
         "positions": [
             {
                 "x": 26,
@@ -86,7 +86,7 @@
         "id": "building_4",
         "name": "ambush",
         "type": "stronghold",
-        "show": false,
+        "show": 0,
         "positions": [
             {
                 "x": 27,
@@ -101,7 +101,7 @@
         "id": "building_5",
         "name": "swamp jungle 01",
         "type": "resource",
-        "show": true,
+        "show": 1,
         "positions": [
             {
                 "x": 37,
@@ -132,7 +132,7 @@
         "id": "building_6",
         "name": "swamp jungle 02",
         "type": "resource",
-        "show": true,
+        "show": 1,
         "positions": [
             {
                 "x": 18,
@@ -163,7 +163,7 @@
         "id": "building_7",
         "name": "desert oasis 01",
         "type": "resource",
-        "show": true,
+        "show": 1,
         "positions": [
             {
                 "x": 8,
@@ -194,7 +194,7 @@
         "id": "building_8",
         "name": "desert oasis 02",
         "type": "resource",
-        "show": true,
+        "show": 1,
         "positions": [
             {
                 "x": 49,
@@ -225,7 +225,7 @@
         "id": "building_9",
         "name": "desert oasis 03",
         "type": "resource",
-        "show": true,
+        "show": 1,
         "positions": [
             {
                 "x": 33,
@@ -256,7 +256,7 @@
         "id": "building_10",
         "name": "sand mineral 01",
         "type": "resource",
-        "show": true,
+        "show": 1,
         "positions": [
             {
                 "x": 11,
@@ -287,7 +287,7 @@
         "id": "building_11",
         "name": "sand mineral 02",
         "type": "resource",
-        "show": true,
+        "show": 1,
         "positions": [
             {
                 "x": 35,
@@ -318,7 +318,7 @@
         "id": "building_12",
         "name": "sand mineral 03",
         "type": "resource",
-        "show": true,
+        "show": 1,
         "positions": [
             {
                 "x": 48,
@@ -349,7 +349,7 @@
         "id": "building_13",
         "name": "sand mineral 01",
         "type": "event",
-        "show": true,
+        "show": 1,
         "positions": [
             {
                 "x": 15,
@@ -381,7 +381,7 @@
         "id": "building_14",
         "name": "sand mineral 01",
         "type": "event",
-        "show": true,
+        "show": 1,
         "positions": [
             {
                 "x": 31,
@@ -413,7 +413,7 @@
         "id": "building_15",
         "name": "sand mineral 01",
         "type": "event",
-        "show": true,
+        "show": 1,
         "positions": [
             {
                 "x": 27,
@@ -445,7 +445,7 @@
         "id": "building_16",
         "name": "sand mineral 01",
         "type": "event",
-        "show": false,
+        "show": 0,
         "positions": [
             {
                 "x": 30,
@@ -477,7 +477,7 @@
         "id": "building_17",
         "name": "sand mineral 01",
         "type": "event",
-        "show": false,
+        "show": 0,
         "positions": [
             {
                 "x": 27,
@@ -504,19 +504,5 @@
         "quota": 1,
         "progress":5,
         "event": "910301"
-    },
-    {
-        "id": "decorate_23",
-        "name": "Roadblock",
-        "type": "decorate",
-        "show": true,
-        "block": false,
-        "posmode": "world",
-        "positions": [
-            {
-                "x": 1045,
-                "y": 780
-            }
-        ]
     }
 ]
