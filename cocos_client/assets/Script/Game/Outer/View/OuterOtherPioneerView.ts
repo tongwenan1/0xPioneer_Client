@@ -15,18 +15,39 @@ export class OuterOtherPioneerView extends Component {
             const view = this.node.getChildByPath("role/" + name);
             view.active = name === pioneer.animType;
             if (view.active) {
+                const wLeft = view.getChildByName("walk_left");
+                const wRight = view.getChildByName("walk_right");
+                const wTop = view.getChildByName("walk_top");
+                const wBottom = view.getChildByName("walk_bottom");
                 if (pioneer.actionType == MapPioneerActionType.idle) {
                     view.getChildByName("idle").active = true;
-                    view.getChildByName("walk_left").active = false;
-                    view.getChildByName("walk_right").active = false;
-                    view.getChildByName("walk_top").active = false;
-                    view.getChildByName("walk_bottom").active = false;
+
+                    if (wLeft != null) {
+                        wLeft.active = false;
+                    }
+                    if (wRight != null) {
+                        wRight.active = false;
+                    }
+                    if (wTop != null) {
+                        wTop.active = false;
+                    }
+                    if (wBottom != null) {
+                        wBottom.active = false;
+                    }
                 } else if (pioneer.actionType == MapPioneerActionType.moving) {
                     view.getChildByName("idle").active = false;
-                    view.getChildByName("walk_left").active = pioneer.moveDirection == MapPioneerMoveDirection.left;
-                    view.getChildByName("walk_right").active = pioneer.moveDirection == MapPioneerMoveDirection.right;
-                    view.getChildByName("walk_top").active = pioneer.moveDirection == MapPioneerMoveDirection.top;
-                    view.getChildByName("walk_bottom").active = pioneer.moveDirection == MapPioneerMoveDirection.bottom;
+                    if (wLeft != null) {
+                        wLeft.active = pioneer.moveDirection == MapPioneerMoveDirection.left;
+                    }
+                    if (wRight != null) {
+                        wRight.active = pioneer.moveDirection == MapPioneerMoveDirection.right;
+                    }
+                    if (wTop != null) {
+                        wTop.active = pioneer.moveDirection == MapPioneerMoveDirection.top;
+                    }
+                    if (wBottom != null) {
+                        wBottom.active = pioneer.moveDirection == MapPioneerMoveDirection.bottom;
+                    }
                 }
             }
         }
