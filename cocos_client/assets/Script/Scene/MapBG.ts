@@ -691,10 +691,10 @@ export class MapBG extends Component {
         const contentSize = this.node.parent.getComponent(UITransform).contentSize;
         const scale = this.node.parent.scale;
 
-        const minx = -contentSize.width * scale.x / 2 - contentSize.width * scale.x * 0.1 + cameraSize.width / 2 * sc;
-        const maxx = contentSize.width * scale.x / 2 + contentSize.width * scale.x * 0.1 - cameraSize.width / 2 * sc;
-        const miny = -contentSize.height * scale.y / 2 - contentSize.height * scale.y * 0.1 + cameraSize.height / 2 * sc;
-        const maxy = contentSize.height * scale.y / 2 + contentSize.height * scale.y * 0.1 - cameraSize.height / 2 * sc;
+        const minx = -contentSize.width * scale.x / 2 - contentSize.width * scale.x * 0.25 + cameraSize.width / 2 * sc;
+        const maxx = contentSize.width * scale.x / 2 + contentSize.width * scale.x * 0.25 - cameraSize.width / 2 * sc;
+        const miny = -contentSize.height * scale.y / 2 - contentSize.height * scale.y * 0.25 + cameraSize.height / 2 * sc;
+        const maxy = contentSize.height * scale.y / 2 + contentSize.height * scale.y * 0.25 - cameraSize.height / 2 * sc;
         pos.x = Math.min(Math.max(minx, pos.x), maxx);
         pos.y = Math.min(Math.max(miny, pos.y), maxy);
         GameMain.inst.MainCamera.node.setPosition(pos);
