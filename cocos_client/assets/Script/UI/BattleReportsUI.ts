@@ -23,6 +23,7 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
     private _fightTypeItemTemplate: Node = null;
     private _miningTypeItemTemplate: Node = null;
     private _exploreTypeItemTemplate: Node = null;
+    private _permanentLastItem: Node = null;
     private _reportListScrollView: ScrollView = null;
     /** all / fight / mining / ... */
     private _typeFilterButtons: Button[] = null;
@@ -76,6 +77,10 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
             uiItem.node.setParent(this._fightTypeItemTemplate.parent);
             uiItem.node.active = true;
         }
+
+        if (this._permanentLastItem) {
+            this._permanentLastItem.setSiblingIndex(-1);
+        }
     }
 
     public refreshUIAndResetScroll() {
@@ -108,6 +113,7 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
         this._miningTypeItemTemplate.active = false;
         this._exploreTypeItemTemplate = this.node.getChildByPath('frame/ScrollView/view/content/exploreTypeItemTemplate');
         this._exploreTypeItemTemplate.active = false;
+        this._permanentLastItem = this.node.getChildByPath('frame/ScrollView/view/content/permanentLastItem');
 
         const filterGroupRoot = this.node.getChildByPath('frame/navbar/reportTypeFilterGroup');
         this._typeFilterButtons = filterGroupRoot.children.map(node => node.getComponent(Button));
