@@ -333,7 +333,7 @@ export class EventUI extends PopUpUI {
                         // showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
                     }
                 } else if (type == ItemConfigType.Artifact) {
-                    // wait artifact
+                    // donn't need support wait function 
                 }
             }
         }

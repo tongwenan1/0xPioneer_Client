@@ -1,34 +1,16 @@
 import {
     _decorator,
-    Component,
     Label,
     Node,
-    Sprite,
-    SpriteFrame,
-    Vec3,
-    Button,
-    EventHandler,
-    v2,
-    Vec2,
-    Prefab,
-    Slider,
     instantiate,
     RichText,
-    randomRangeInt,
     Color,
 } from "cc";
 import ArtifactData, {
-    ArtifactConfigData,
     ArtifactEffectRankColor,
-    ArtifactEffectType,
-    ArtifactProp,
-    ArtifactPropValueType,
 } from "../Model/ArtifactData";
-import { GameMain } from "../GameMain";
-import UserInfo from "../Manger/UserInfoMgr";
 import { PopUpUI } from "../BasicView/PopUpUI";
 import ArtifactMgr from "../Manger/ArtifactMgr";
-import CountMgr, { CountType } from "../Manger/CountMgr";
 import LanMgr from "../Manger/LanMgr";
 import { ArtifactItem } from "./ArtifactItem";
 import UserInfoMgr from "../Manger/UserInfoMgr";
@@ -49,35 +31,34 @@ export class ArtifactInfoUI extends PopUpUI {
             const curArtifact: ArtifactData = this._artifacts.splice(0, 1)[0];
             // show one 
             const config = ArtifactMgr.Instance.getArtifactConf(curArtifact.artifactConfigId);
-
-            let useColor: Color = null;
-            if (config.rank == 1) {
-                useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK1);
-            } else if (config.rank == 2) {
-                useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK2);
-            } else if (config.rank == 3) {
-                useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK3);
-            } else if (config.rank == 4) {
-                useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK4);
-            } else if (config.rank == 5) {
-                useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK5);
-            }
-
             if (config != null) {
+                let useColor: Color = null;
+                if (config.rank == 1) {
+                    useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK1);
+                } else if (config.rank == 2) {
+                    useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK2);
+                } else if (config.rank == 3) {
+                    useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK3);
+                } else if (config.rank == 4) {
+                    useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK4);
+                } else if (config.rank == 5) {
+                    useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK5);
+                }
+    
                 const content = this.node.getChildByName("DialogBg");
-
+    
                 // name
                 content.getChildByName("Name").getComponent(Label).string = LanMgr.Instance.getLanById(config.name);
                 content.getChildByName("Name").getComponent(Label).color = useColor;
-
+    
                 // item
                 content.getChildByName("ArtifactItem").getComponent(ArtifactItem).refreshUI(curArtifact);
-
+    
                 // title 
                 // useLanMgr
                 // content.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
                 content.getChildByName("Title").getComponent(Label).color = useColor;
-
+    
                 // effect
                 const effectContent = content.getChildByName("EffectContent");
                 effectContent
@@ -88,7 +69,7 @@ export class ArtifactInfoUI extends PopUpUI {
                     for (let i = 0; i < config.effect.length; i++) {
                         const effectConfig = ArtifactMgr.Instance.getArtifactEffectConf(config.effect[i]);
                         if (effectConfig == null) continue;
-
+    
                         if (config.rank >= 4 && !isStableShowed) {
                             const stable = instantiate(this._stableEffectItem);
                             stable.active = true;
@@ -97,7 +78,7 @@ export class ArtifactInfoUI extends PopUpUI {
                             stable.getChildByName("Title").getComponent(Label).color = useColor;
                             this._allEffectViews.push(stable);
                             isStableShowed = true;
-
+    
                         } else {
                             effectIndex += 1;
                             if (effectConfig.unlock > UserInfoMgr.Instance.level) {
@@ -110,7 +91,7 @@ export class ArtifactInfoUI extends PopUpUI {
                                 // unlock.getChildByPath("Title/Unlock").getComponent(Label).string = "(" + LanMgr.Instance.getLanById("107549") + "C.LV " + effectConfig.unlock + ")";
                                 unlock.getChildByPath("Title/Unlock").getComponent(Label).string = "(" + "Unlocked at" + "C.LV " + effectConfig.unlock + ")";
                                 this._allEffectViews.push(unlock);
-
+    
                             } else {
                                 const locked = instantiate(this._lockedEffectItem);
                                 locked.active = true;
@@ -121,10 +102,10 @@ export class ArtifactInfoUI extends PopUpUI {
                             }
                         }
                     }
+    
+                    // desc
+                    content.getChildByName("DescTxt").getComponent(RichText).string = LanMgr.Instance.getLanById(config.des);
                 }
-
-                // desc
-                content.getChildByName("DescTxt").getComponent(RichText).string = LanMgr.Instance.getLanById(config.des);
             }
             this.show(true);
         }

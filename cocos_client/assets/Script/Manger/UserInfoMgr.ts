@@ -649,8 +649,10 @@ export default class UserInfoMgr {
                     }
                     addItems.push(new ItemData(r.itemConfigId, r.num));
                 }
-                ItemMgr.Instance.addItem(addItems);
-                GameMain.inst.UI.itemInfoUI.showItem(addItems, true);
+                if (addItems.length > 0) {
+                    ItemMgr.Instance.addItem(addItems);
+                    GameMain.inst.UI.itemInfoUI.showItem(addItems, true);
+                }
             }
 
             if (step.afterTalkRewardItem != null) {
