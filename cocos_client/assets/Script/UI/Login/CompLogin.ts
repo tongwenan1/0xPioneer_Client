@@ -26,7 +26,6 @@ export class CompLogin extends Component {
             (completedCount: number, totalCount: number, item: any) => {
                 const currentRate = completedCount / totalCount * sceneTotalRate;
                 if (currentRate > loadRate) {
-                    console.log("exce sence: " + currentRate);
                     loadRate = currentRate;
                     this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
                 }

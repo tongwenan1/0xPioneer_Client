@@ -5,7 +5,8 @@
     "designResolution": {
       "width": 1920,
       "height": 1080,
-      "fitHeight": true
+      "fitHeight": true,
+      "fitWidth": false
     }
   },
   "layer": [

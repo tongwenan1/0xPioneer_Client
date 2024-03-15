@@ -14,7 +14,6 @@ export class ClaimRewardUI extends Component {
 
     public refreshUI() {
         let value = UserInfoMgr.Instance.explorationValue;
-
         let showBox = false;
         for (let i = 0; i < this._boxViews.length; i++) {
             if (i < this._boxDatas.length) {
@@ -92,6 +91,8 @@ export class ClaimRewardUI extends Component {
             this._boxDatas = BoxMgr.Instance.getAllBox();
             let pre = this.RewardBoxArr.getChildByName("icon_treasure_box");
             pre.active = false;
+
+            let beginThresholdValue: number = 0;
             for (let i = 0; i < this._boxDatas.length; i++) {
                 let item = instantiate(pre);
                 item.active = true;
@@ -102,13 +103,13 @@ export class ClaimRewardUI extends Component {
                 item.getChildByName("Progress").getComponent(Label).string = this._boxDatas[i].threshold;
                 item.getChildByName("Button").getComponent(Button).clickEvents[0].customEventData = i.toString();
                 this._boxViews.push(item);
+                item["__fromthreshold"] = beginThresholdValue + this._boxDatas[i].threshold;
                 this._maxthreshold = Math.max(this._maxthreshold, this._boxDatas[i].threshold);
             }
-            const gap = this.RewardBoxArr.getComponent(UITransform).width / (this._boxDatas.length);
-            this.RewardBoxArr.getComponent(Layout).spacingX = gap;
-            this.RewardBoxArr.getComponent(Layout).paddingLeft = gap;
-            this.RewardBoxArr.getComponent(Layout).updateLayout();
-
+            const parentWidth = this.RewardBoxArr.getComponent(UITransform).width;
+            for (const boxItem of this._boxViews) {
+                boxItem.setPosition(v3(parentWidth * (boxItem["__fromthreshold"] / this._maxthreshold), boxItem.position.y, boxItem.position.z));
+            }
             this.refreshUI();
         }
     }
