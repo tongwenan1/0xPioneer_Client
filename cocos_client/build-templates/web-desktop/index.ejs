@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Cocos Creator | <%= projectName %></title>
+  <title>0xPioneer</title>
 
   <!--http://www.html5rocks.com/en/mobile/mobifying/-->
   <meta name="viewport"
@@ -33,16 +33,17 @@
   <!--<link rel="apple-touch-icon" href=".png" />-->
   <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
 
+  <!-- <link rel="icon" href="favicon.ico"/> -->
+
   <link rel="stylesheet" type="text/css" href="<%= cssUrl %>"/>
   <link rel="stylesheet" href="./splash.css">
 </head>
 <body style="background-color: black;">
-  <div id="GameDiv" style="width: 1920px;height: 1080px;" cc_exact_fit_screen="true">
+  <div id="GameDiv" cc_exact_fit_screen="false" style="width: 1665px; height: 937px;" >
       <div id="Cocos3dGameContainer">
-        <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="99"></canvas>
+        <canvas id="GameCanvas" width="1665px" height="937px" oncontextmenu="event.preventDefault()" tabindex="99"></canvas>
       </div>
-      <div id="splash">
-      </div>
+      <div id="splash"></div>
     </div>
     
     <script>
