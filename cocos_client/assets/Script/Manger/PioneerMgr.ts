@@ -1491,6 +1491,22 @@ export default class PioneerMgr {
     }
 
     private _fight(attacker: MapPioneerModel, defender: MapPioneerModel | MapBuildingModel) {
+        let canFight: boolean = true;
+        if (attacker.actionType != MapPioneerActionType.moving &&
+            attacker.actionType != MapPioneerActionType.idle) {
+            canFight = false;
+        } else {
+            if (defender instanceof MapPioneerModel) {
+                if (defender.actionType != MapPioneerActionType.moving &&
+                    defender.actionType != MapPioneerActionType.idle) {
+                    canFight = false;
+                }
+            }
+        }
+        if (!canFight) {
+            return;
+        }
+
         attacker.actionType = MapPioneerActionType.fighting;
         for (const observer of this._observers) {
             observer.pioneerActionTypeChanged(attacker.id, attacker.actionType, attacker.actionEndTimeStamp);

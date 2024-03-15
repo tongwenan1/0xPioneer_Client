@@ -46,8 +46,9 @@ export class ArtifactInfoUI extends PopUpUI {
         this._allEffectViews = [];
 
         if (this._artifacts.length > 0) {
-            // show only one
-            const config = ArtifactMgr.Instance.getArtifactConf(this._artifacts[0].artifactConfigId);
+            const curArtifact: ArtifactData = this._artifacts.splice(0, 1)[0];
+            // show one 
+            const config = ArtifactMgr.Instance.getArtifactConf(curArtifact.artifactConfigId);
 
             let useColor: Color = null;
             if (config.rank == 1) {
@@ -70,7 +71,7 @@ export class ArtifactInfoUI extends PopUpUI {
                 content.getChildByName("Name").getComponent(Label).color = useColor;
 
                 // item
-                content.getChildByName("ArtifactItem").getComponent(ArtifactItem).refreshUI(this._artifacts[0]);
+                content.getChildByName("ArtifactItem").getComponent(ArtifactItem).refreshUI(curArtifact);
 
                 // title 
                 // useLanMgr
@@ -83,19 +84,22 @@ export class ArtifactInfoUI extends PopUpUI {
                 if (config.effect.length > 0) {
                     const numStrings: string[] = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
                     let effectIndex: number = 0;
+                    let isStableShowed: boolean = false;
                     for (let i = 0; i < config.effect.length; i++) {
                         const effectConfig = ArtifactMgr.Instance.getArtifactEffectConf(config.effect[i]);
                         if (effectConfig == null) continue;
 
-                        if (config.rank >= 4 && effectIndex == 0) {
+                        if (config.rank >= 4 && !isStableShowed) {
                             const stable = instantiate(this._stableEffectItem);
                             stable.active = true;
                             stable.parent = this._stableEffectItem.parent;
                             stable.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(effectConfig.des);
                             stable.getChildByName("Title").getComponent(Label).color = useColor;
                             this._allEffectViews.push(stable);
+                            isStableShowed = true;
 
                         } else {
+                            effectIndex += 1;
                             if (effectConfig.unlock > UserInfoMgr.Instance.level) {
                                 const unlock = instantiate(this._unlockEffectItem);
                                 unlock.active = true;
@@ -116,7 +120,6 @@ export class ArtifactInfoUI extends PopUpUI {
                                 this._allEffectViews.push(locked);
                             }
                         }
-                        effectIndex += 1;
                     }
                 }
 
@@ -127,7 +130,7 @@ export class ArtifactInfoUI extends PopUpUI {
         }
     }
 
-    private _artifacts: ArtifactData[];
+    private _artifacts: ArtifactData[] = [];
     private _closeCallback: () => void;
 
     private _allEffectViews: Node[] = [];
@@ -153,9 +156,13 @@ export class ArtifactInfoUI extends PopUpUI {
 
     //---------------------------------------------------- action
     private onTapClose() {
-        this.show(false);
-        if (this._closeCallback != null) {
-            this._closeCallback();
+        if (this._artifacts.length <= 0) {
+            this.show(false);
+            if (this._closeCallback != null) {
+                this._closeCallback();
+            }
+        } else {
+            this.showItem(this._artifacts, this._closeCallback);
         }
     }
 }
