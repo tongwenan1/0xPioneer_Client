@@ -118,7 +118,44 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
         localStorage.clear();
         window.location.reload();
     }
-    
+
+    private async onClickExportSave() {
+        // see: LocalDataLoader._importSaveOnStartIfExists
+        const data = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            data[key] = localStorage.getItem(key);
+        }
+        await navigator.clipboard.writeText(JSON.stringify(data));
+        GameMain.inst.UI.ShowTip("Save exported to clipboard.")
+    }
+
+    private onClickImportSave() {
+        const saveText = prompt("Paste save text here");
+        if (!saveText) {
+            return;
+        }
+
+        let saveObj: {};
+        try {
+            saveObj = JSON.parse(saveText);
+        } catch (e) {
+            GameMain.inst.UI.ShowTip("Parse save text failed: not valid JSON");
+            console.error(`Parse save text failed: ${e}`);
+            return;
+        }
+
+        for (const k in saveObj) {
+            if (typeof saveObj[k] !== "string") {
+                GameMain.inst.UI.ShowTip("Import save failed: save text format error.");
+                return;
+            }
+        }
+
+        localStorage.setItem("importSaveOnStart", saveText);
+        location.reload();
+    }
+
     private _loadOver() {
         this._selectLang = LanMgr.Instance.getLang();
         this._refreshUI();

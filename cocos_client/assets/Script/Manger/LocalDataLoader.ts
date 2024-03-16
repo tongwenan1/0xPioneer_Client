@@ -27,6 +27,8 @@ export default class LocalDataLoader {
 
     public async loadLocalDatas() {
         this._loadStatus = 1;
+        this._importSaveOnStartIfExists();
+
         await LanMgr.Instance.initData();
         await BranchEventMgr.Instance.initData();
         await DropMgr.Instance.initData();
@@ -44,6 +46,19 @@ export default class LocalDataLoader {
         await ArtifactMgr.Instance.initData();
         await EvaluationMgr.Instance.initData();
         this._loadStatus = 2;
+    }
+
+    private _importSaveOnStartIfExists() {
+        const saveToImport = localStorage.getItem("importSaveOnStart");
+        if (saveToImport) {
+            localStorage.removeItem("importSaveOnStart");
+            const saveObj: {} = JSON.parse(saveToImport);
+            localStorage.clear();
+            for (const k in saveObj) {
+                localStorage.setItem(k, saveObj[k]);
+            }
+            console.log("Import save data done.");
+        }
     }
 
     /**
