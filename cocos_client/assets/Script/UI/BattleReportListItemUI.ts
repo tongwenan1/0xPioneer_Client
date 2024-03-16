@@ -97,8 +97,6 @@ export class BattleReportListItemUI extends Component {
     }
 
     protected onLoad() {
-        if (this.eventLocationLabel)
-            this.eventLocationLabel.node.on(Button.EventType.CLICK, this.onClickLocation, this);
         if (this.lootsButton)
             this.lootsButton.node.on(Button.EventType.CLICK, this.onClickLoots, this);
     }
@@ -248,9 +246,10 @@ export class BattleReportListItemUI extends Component {
 
     private _locationString(locationInfo: LocationInfo): string {
         if (locationInfo.type === "building") {
-            return BuildingMgr.instance.getBuildingById(locationInfo.buildingId).locationString();
+            const building = BuildingMgr.instance.getBuildingById(locationInfo.buildingId);
+            return `${LanMgr.Instance.getLanById(building.name)} <color=#a1cb7f>${CommonTools.formatMapPosition(building.stayMapPositions[0])}</color>`;
         } else {
-            return `${LanMgr.Instance.getLanById("701002")} ${CommonTools.formatMapPosition(locationInfo.pos)}`;
+            return `${LanMgr.Instance.getLanById("701002")} <color=#a1cb7f>${CommonTools.formatMapPosition(locationInfo.pos)}</color>`;
         }
     }
 }
