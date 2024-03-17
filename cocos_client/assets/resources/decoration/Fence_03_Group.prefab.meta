@@ -2,12 +2,12 @@
   "ver": "1.1.49",
   "importer": "prefab",
   "imported": true,
-  "uuid": "78db4cf9-e56c-435d-a9e5-2870cd52f13c",
+  "uuid": "a73f5aff-b886-4fe4-86e9-d36df92e42a8",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "Road_Corner_C_Group"
+    "syncNodeName": "Fence_03_Group"
   }
 }
