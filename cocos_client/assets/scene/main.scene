@@ -26277,7 +26277,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "canShowRookieGuide": false,
+    "canShowRookieGuide": true,
     "_id": "78JmOOAj9DWbKqkCDXib3b"
   },
   {
