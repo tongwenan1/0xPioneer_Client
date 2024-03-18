@@ -204,9 +204,6 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
     pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void {
 
     }
-    pioneerLogicMovePathPrepared(pioneer: MapPioneerModel): void {
-        
-    }
     pioneerLoseHp(pioneerId: string, value: number): void {
         this.refreshPlayerList();
     }

@@ -503,9 +503,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void {
 
     }
-    pioneerLogicMovePathPrepared(pioneer: MapPioneerModel) {
-
-    }
     pioneerShowCount(pioneerId: string, count: number): void {
         if (pioneerId == "gangster_3" && count > 0) {
             this._gangsterComingTipView.active = true;

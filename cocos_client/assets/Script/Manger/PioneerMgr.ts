@@ -50,7 +50,7 @@ export interface PioneerMgrEvent {
 
     pioneerTaskHideTimeCountChanged(pioneerId: string, timeCount: number): void;
     pioneerTaskCdTimeCountChanged(pioneerId: string, timeCount: number): void;
-    pioneerLogicMovePathPrepared(pioneer: MapPioneerModel): void;
+    pioneerLogicMovePathPrepared?(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void;
     pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void;
     pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void;
 
@@ -306,6 +306,10 @@ export default class PioneerMgr {
 
             if (findPioneer.movePaths.length > 0) {
                 findPioneer.movePaths.splice(0, 1);
+                if (findPioneer.type != MapPioneerType.player && !findPioneer.friendly) {
+                    // enemy one step over to check will fight
+                    this._pioneerActionTypeChangedByMeetTrigger(findPioneer, false);
+                }
             }
             if (findPioneer.movePaths.length == 0) {
                 //moveover savelocaldata
@@ -713,25 +717,13 @@ export default class PioneerMgr {
     }
 
 
-    private _lastTimeStamp: number = null;
     public constructor() {
         setInterval(() => {
             if (GameMain.inst == null) {
                 return;
             }
-
-            const currentTimeStamp = new Date().getTime();
-            if (this._lastTimeStamp == null) {
-                this._lastTimeStamp = currentTimeStamp;
-            }
-            const deltaTime = currentTimeStamp - this._lastTimeStamp;
-            let isOneSecond: boolean = false;
-            if (deltaTime >= 1000) {
-                isOneSecond = true;
-                this._lastTimeStamp = currentTimeStamp;
-            }
             for (const pioneer of this._pioneers) {
-                if (pioneer.showCountTime > 0 && isOneSecond) {
+                if (pioneer.showCountTime > 0) {
                     pioneer.showCountTime -= 1;
                     for (const observe of this._observers) {
                         observe.pioneerShowCount(pioneer.id, pioneer.showCountTime);
@@ -756,7 +748,7 @@ export default class PioneerMgr {
                             if (canAction) {
                                 //all move logic change to move one step by step
                                 if (logic.type == MapPioneerLogicType.stepmove) {
-                                    if ((logic.repeat > 0 || logic.repeat == -1) && isOneSecond) {
+                                    if (logic.repeat > 0 || logic.repeat == -1) {
                                         if (logic.currentCd > 0) {
                                             //move cd count
                                             logic.currentCd -= 1;
@@ -779,16 +771,10 @@ export default class PioneerMgr {
                                     }
 
                                 } else if (logic.type == MapPioneerLogicType.targetmove) {
-                                    pioneer.logics.splice(0, 1);
-                                    const movePaths: TilePos[] = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, logic.targetPos);
-                                    for (let i = movePaths.length - 1; i >= 0; i--) {
-                                        const temleLogic = new MapPioneerLogicModel(MapPioneerLogicType.commonmove);
-                                        temleLogic.commonMoveTilePos = movePaths[i];
-                                        pioneer.logics.splice(0, 0, temleLogic);
-                                    }
                                     for (const observe of this._observers) {
-                                        observe.pioneerLogicMovePathPrepared(pioneer);
+                                        observe.pioneerLogicMove(pioneer, logic);
                                     }
+                                    pioneer.logics.splice(0, 1);
 
                                 } else if (logic.type == MapPioneerLogicType.hide) {
                                     this.hidePioneer(pioneer.id);
@@ -853,17 +839,16 @@ export default class PioneerMgr {
                                             if (logic.repeat > 0) {
                                                 logic.repeat -= 1;
                                             }
+                                            for (const observe of this._observers) {
+                                                observe.pioneerLogicMove(pioneer, logic);
+                                            }
                                             if (logic.repeat == 0) {
                                                 pioneer.logics.splice(0, 1);
                                             }
-                                            const movePaths: TilePos[] = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, logic.patrolTargetPos);
-                                            for (let i = movePaths.length - 1; i >= 0; i--) {
-                                                const temleLogic = new MapPioneerLogicModel(MapPioneerLogicType.commonmove);
-                                                temleLogic.commonMoveTilePos = movePaths[i];
-                                                pioneer.logics.splice(0, 0, temleLogic);
-                                            }
                                             for (const observe of this._observers) {
-                                                observe.pioneerLogicMovePathPrepared(pioneer);
+                                                if (observe.pioneerLogicMovePathPrepared != null) {
+                                                    observe.pioneerLogicMovePathPrepared(pioneer, logic);
+                                                }
                                             }
                                         }
                                     }
@@ -881,58 +866,54 @@ export default class PioneerMgr {
                     // task time count
                     if (pioneer instanceof MapNpcPioneerModel) {
                         const npc = pioneer as MapNpcPioneerModel;
-                        if (isOneSecond) {
-                            if (npc.taskHideTime > 0) {
-                                npc.taskHideTime -= 1;
-                                if (npc.taskHideTime == 0) {
-                                    npc.hideTaskIds.push(npc.taskObj.id);
-                                    npc.taskObj = null;
-                                }
-                                this._savePioneerData();
-                                for (const observe of this._observers) {
-                                    observe.pioneerTaskHideTimeCountChanged(npc.id, npc.taskHideTime);
-                                }
+                        if (npc.taskHideTime > 0) {
+                            npc.taskHideTime -= 1;
+                            if (npc.taskHideTime == 0) {
+                                npc.hideTaskIds.push(npc.taskObj.id);
+                                npc.taskObj = null;
                             }
-                            if (npc.taskCdEndTime > 0) {
-                                npc.taskCdEndTime -= 1;
-                                this._savePioneerData();
-                                for (const observe of this._observers) {
-                                    observe.pioneerTaskCdTimeCountChanged(npc.id, npc.taskCdEndTime);
-                                }
+                            this._savePioneerData();
+                            for (const observe of this._observers) {
+                                observe.pioneerTaskHideTimeCountChanged(npc.id, npc.taskHideTime);
+                            }
+                        }
+                        if (npc.taskCdEndTime > 0) {
+                            npc.taskCdEndTime -= 1;
+                            this._savePioneerData();
+                            for (const observe of this._observers) {
+                                observe.pioneerTaskCdTimeCountChanged(npc.id, npc.taskCdEndTime);
                             }
                         }
                     }
 
                 } else {
                     if (pioneer instanceof MapPlayerPioneerModel) {
-                        if (isOneSecond) {
-                            if (pioneer.rebirthCountTime > 0) {
-                                pioneer.rebirthCountTime -= 1;
-                                for (const observe of this._observers) {
-                                    observe.pionerrRebirthCount(pioneer.id, pioneer.rebirthCountTime);
-                                }
-                                if (pioneer.rebirthCountTime == 0) {
-                                    let rebirthMapPos = null;
-                                    const mainCity = BuildingMgr.instance.getBuildingById("building_1");
-                                    if (mainCity != null && mainCity.faction != BuildingFactionType.enemy) {
-                                        rebirthMapPos = mainCity.stayMapPositions[1];
-                                    }
-                                    let rebirthHp: number = Math.max(1, Math.min(ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Troop), pioneer.hpMax));
-                                    ItemMgr.Instance.subItem(ResourceCorrespondingItem.Troop, rebirthHp);
-                                    pioneer.rebirth(rebirthHp, rebirthMapPos);
-                                    pioneer.eventStatus = MapPioneerEventStatus.None;
-                                    pioneer.actionType = MapPioneerActionType.idle;
-                                    for (const observe of this._observers) {
-                                        observe.pioneerRebirth(pioneer.id);
-                                    }
-                                }
-                                this._savePioneerData();
+                        if (pioneer.rebirthCountTime > 0) {
+                            pioneer.rebirthCountTime -= 1;
+                            for (const observe of this._observers) {
+                                observe.pionerrRebirthCount(pioneer.id, pioneer.rebirthCountTime);
                             }
+                            if (pioneer.rebirthCountTime == 0) {
+                                let rebirthMapPos = null;
+                                const mainCity = BuildingMgr.instance.getBuildingById("building_1");
+                                if (mainCity != null && mainCity.faction != BuildingFactionType.enemy) {
+                                    rebirthMapPos = mainCity.stayMapPositions[1];
+                                }
+                                let rebirthHp: number = Math.max(1, Math.min(ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Troop), pioneer.hpMax));
+                                ItemMgr.Instance.subItem(ResourceCorrespondingItem.Troop, rebirthHp);
+                                pioneer.rebirth(rebirthHp, rebirthMapPos);
+                                pioneer.eventStatus = MapPioneerEventStatus.None;
+                                pioneer.actionType = MapPioneerActionType.idle;
+                                for (const observe of this._observers) {
+                                    observe.pioneerRebirth(pioneer.id);
+                                }
+                            }
+                            this._savePioneerData();
                         }
                     }
                 }
             }
-        }, 200);
+        }, 1000);
     }
 
     private static _instance: PioneerMgr;

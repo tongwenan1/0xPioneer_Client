@@ -421,9 +421,6 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void {
 
     }
-    pioneerLogicMovePathPrepared(pioneer: MapPioneerModel) {
-
-    }
     pioneerShowCount(pioneerId: string, count: number): void {
 
     }

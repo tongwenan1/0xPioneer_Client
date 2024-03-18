@@ -705,26 +705,30 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         if (logic.type == MapPioneerLogicType.stepmove) {
             const targetTiledPos = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(pioneer.stayPos, logic.direction);
             if (targetTiledPos != null) {
-                PioneerMgr.instance.pioneerBeginMove(pioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, v2(targetTiledPos.x, targetTiledPos.y)));
+                targetMapPos = v2(targetTiledPos.x, targetTiledPos.y);
             }
-        } else if (logic.type == MapPioneerLogicType.commonmove) {
+        } else if (logic.type == MapPioneerLogicType.targetmove) {
             targetMapPos = logic.targetPos;
-            PioneerMgr.instance.pioneerBeginMove(pioneer.id, [logic.commonMoveTilePos]);
+        } else if (logic.type == MapPioneerLogicType.patrol) {
+            targetMapPos = logic.patrolTargetPos;
+        }
+        if (targetMapPos != null) {
+            PioneerMgr.instance.pioneerBeginMove(pioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, targetMapPos));
         }
     }
-    pioneerLogicMovePathPrepared(pioneer: MapPioneerModel) {
-        if (this._actionShowPioneerId == pioneer.id) {
+    pioneerLogicMovePathPrepared(pioneer: MapPioneerModel, logic: MapPioneerLogicModel) {
+        if (this._actionShowPioneerId == pioneer.id &&
+            logic.type == MapPioneerLogicType.patrol) {
             if (this._actionPioneerFootStepViews != null) {
                 for (const view of this._actionPioneerFootStepViews) {
                     view.destroy();
                 }
                 this._actionPioneerFootStepViews = null;
             }
+            const movePaths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, logic.patrolTargetPos);
             const path = [];
-            for (const logic of pioneer.logics) {
-                if (logic.type == MapPioneerLogicType.commonmove) {
-                    path.push(logic.commonMoveTilePos);
-                }
+            for (const temple of movePaths) {
+                path.push(temple);
             }
             if (path.length > 0) {
                 this._actionPioneerFootStepViews = this._addFootSteps(path, true);
