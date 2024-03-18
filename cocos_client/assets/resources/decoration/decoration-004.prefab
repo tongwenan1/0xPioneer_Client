@@ -45,8 +45,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 3687.048,
-      "y": -98.32100000000003,
+      "x": 1316.663,
+      "y": 1962.875,
       "z": 0
     },
     "_lrot": {
@@ -492,7 +492,7 @@
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0.5,
-      "y": 1
+      "y": 0.5
     },
     "_id": ""
   },
@@ -527,7 +527,6 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "c46/YsCPVOJYA4mWEpNYRx",
-    "targetOverrides": null
+    "fileId": "c46/YsCPVOJYA4mWEpNYRx"
   }
 ]
