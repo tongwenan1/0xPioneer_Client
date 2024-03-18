@@ -58,6 +58,7 @@ export class TilePos {
 export interface IDynamicBlock {
     get TileX(): number;
     get TileY(): number;
+    get canMoveTo(): boolean;
 }
 
 export class MyTile extends cc.TiledTile {
@@ -255,22 +256,22 @@ export class TileMapHelper {
     _shadowcleantag: number;
     _shadowhalftag: number;
     _shadowhalf2tag: number;
-    _shadowLayer:cc.TiledLayer;
+    _shadowLayer: cc.TiledLayer;
     protected _shadowBorderPfb: cc.Prefab;
     protected _freeShadowBorders: cc.Node[] = [];
     protected _usedSHadowBorders: cc.Node[] = [];
     protected _ShadowBorder_Reset() {
-        for(; this._usedSHadowBorders.length > 0; ){
+        for (; this._usedSHadowBorders.length > 0;) {
 
-            let borderNode = this._usedSHadowBorders[this._usedSHadowBorders.length-1];
-            this._shadowLayer.removeUserNode(borderNode); 
+            let borderNode = this._usedSHadowBorders[this._usedSHadowBorders.length - 1];
+            this._shadowLayer.removeUserNode(borderNode);
 
             this._freeShadowBorders.push(this._usedSHadowBorders.pop());
         }
     }
-    protected _Fetch_ShadowBorderNode():cc.Node {
+    protected _Fetch_ShadowBorderNode(): cc.Node {
         let bn;
-        if(this._freeShadowBorders.length > 0){
+        if (this._freeShadowBorders.length > 0) {
             bn = this._freeShadowBorders.pop();
         }
         else {
@@ -279,7 +280,7 @@ export class TileMapHelper {
 
         return bn;
     }
-    Shadow_Init(cleantag: number, shadowtag: number, shadowborderPfb:cc.Prefab, layername: string = "shadow"): void {
+    Shadow_Init(cleantag: number, shadowtag: number, shadowborderPfb: cc.Prefab, layername: string = "shadow"): void {
         this._shadowcleantag = cleantag;
         this._shadowtag = shadowtag;
         var layer = this._tilemap.getLayer(layername);
@@ -339,7 +340,7 @@ export class TileMapHelper {
         //console.log("pos=" + pos.x + "," + pos.y + ":" + pos.worldx + "," + pos.worldy);
         //for (var z = pos.calc_z - extlen; z <= pos.calc_z + extlen; z++) {
         const newCleardPositons = [];
-        const borderTilePostions:TilePos[] = [];
+        const borderTilePostions: TilePos[] = [];
         let vx = 10000;
         let vy = 10000;
         for (var y = pos.calc_y - extlen; y <= pos.calc_y + extlen; y++) {
@@ -389,16 +390,16 @@ export class TileMapHelper {
         //}
 
         // update user tile for border tiles
-        if(this._shadowBorderPfb){
+        if (this._shadowBorderPfb) {
             this._ShadowBorder_Reset();
-            for(let i=0; i< borderTilePostions.length; ++i){
+            for (let i = 0; i < borderTilePostions.length; ++i) {
                 let borderPos = borderTilePostions[i];
                 let borderNode = this._Fetch_ShadowBorderNode();
                 borderNode.setWorldPosition(cc.v3(borderPos.worldx, borderPos.worldy, 0));
                 this._shadowLayer.addUserNode(borderNode);
                 this._usedSHadowBorders.push(borderNode);
 
-                let bnSpr:cc.Sprite = borderNode.getComponent(cc.Sprite);
+                let bnSpr: cc.Sprite = borderNode.getComponent(cc.Sprite);
                 bnSpr.customMaterial.setProperty("dissolveThreshold", 0.5); // TO DO : calc disolve threshold by distance from player
             }
         }
@@ -458,7 +459,7 @@ export class TileMapHelper {
         }
     }
     Path_AddDynamicBlock(block: IDynamicBlock): void {
-        if (this._dynamicblock.some(temple=> temple.TileX == block.TileX && temple.TileY == block.TileY)) {
+        if (this._dynamicblock.some(temple => temple.TileX == block.TileX && temple.TileY == block.TileY)) {
             return;
         }
         this._dynamicblock.push(block);
@@ -552,22 +553,35 @@ export class TileMapHelper {
         }
         return false;
     }
-    Path_IsBlock(x: number, y: number): boolean {
+    Path_IsBlock(x: number, y: number, isTarget: boolean = false): boolean {
         var b = this._blocked[y * this.height + x];
         if (b) {
             return b;
         }
         for (var i = 0; i < this._dynamicblock.length; i++) {
-            if (this._dynamicblock[i].TileX == x && this._dynamicblock[i].TileY == y) {
+            if (this._dynamicblock[i].TileX == x &&
+                this._dynamicblock[i].TileY == y) {
+                if (isTarget && this._dynamicblock[i].canMoveTo) {
+                    return false;
+                }
                 return true;
             }
         }
         return false;
     }
+    /**
+     * 
+     * @param from 
+     * @param to 
+     * @param limitstep 
+     * @param forceMove force move, can ignore block 
+     * @returns 
+     */
     Path_FromTo(from: TilePos, to: TilePos, limitstep = 100): TilePos[] {
 
-        if (this.Path_IsBlock(to.x, to.y))
+        if (this.Path_IsBlock(to.x, to.y, true)) {
             return [from];
+        }
 
         var openPathTiles: TilePos[] = [];
         var closedPathTiles: TilePos[] = [];
@@ -591,7 +605,6 @@ export class TileMapHelper {
             closedPathTiles.push(currentTile);
 
             var g = currentTile.g + 1;
-
             //  if(close have target, final it.)
             if (closedPathTiles.indexOf(to) >= 0) {
                 break;
@@ -606,8 +619,7 @@ export class TileMapHelper {
 
 
                 //block skip
-
-                if (this.Path_IsBlock(adjacentTile.x, adjacentTile.y))
+                if (this.Path_IsBlock(adjacentTile.x, adjacentTile.y, to.x == adjacentTile.x && to.y == adjacentTile.y))
                     continue;
 
 

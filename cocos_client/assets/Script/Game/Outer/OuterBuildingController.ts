@@ -122,6 +122,10 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                             worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
                         }
                         temple.setWorldPosition(worldPos);
+
+                        for (const pos of building.stayMapPositions) {
+                            GameMain.inst.outSceneMap.mapBG.addDynamicBlock(pos, true);
+                        }
                     }
                 }
 
@@ -130,7 +134,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                     const data = this._buildingMap.get(building.id);
                     data.node.destroy();
                     for (const pos of data.stayPositons) {
-                        // GameMain.inst.outSceneMap.mapBG.removeDynamicBlock(pos);
+                        GameMain.inst.outSceneMap.mapBG.removeDynamicBlock(pos);
                     }
                     this._buildingMap.delete(building.id);
                 }
@@ -148,7 +152,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
             if (!isExsit) {
                 value.node.destroy();
                 for (const pos of value.stayPositons) {
-                    // GameMain.inst.outSceneMap.mapBG.removeDynamicBlock(pos);
+                    GameMain.inst.outSceneMap.mapBG.removeDynamicBlock(pos);
                 }
                 this._buildingMap.delete(key);
             }

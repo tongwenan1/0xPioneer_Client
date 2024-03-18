@@ -898,6 +898,8 @@ export default class PioneerMgr {
                                 const mainCity = BuildingMgr.instance.getBuildingById("building_1");
                                 if (mainCity != null && mainCity.faction != BuildingFactionType.enemy) {
                                     rebirthMapPos = mainCity.stayMapPositions[1];
+                                } else {
+                                    rebirthMapPos = v2(pioneer.stayPos.x - 1, pioneer.stayPos.y);
                                 }
                                 let rebirthHp: number = Math.max(1, Math.min(ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Troop), pioneer.hpMax));
                                 ItemMgr.Instance.subItem(ResourceCorrespondingItem.Troop, rebirthHp);

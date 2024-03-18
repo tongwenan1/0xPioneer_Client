@@ -55,16 +55,18 @@ export class MapBG extends Component {
         }
     }
 
-    public addDynamicBlock(mapPos: Vec2) {
+    public addDynamicBlock(mapPos: Vec2, canMoveTo: boolean = false) {
         this._tiledhelper.Path_AddDynamicBlock({
             TileX: mapPos.x,
-            TileY: mapPos.y
+            TileY: mapPos.y,
+            canMoveTo: canMoveTo
         });
     }
     public removeDynamicBlock(mapPos: Vec2) {
         this._tiledhelper.Path_RemoveDynamicBlock({
             TileX: mapPos.x,
-            TileY: mapPos.y
+            TileY: mapPos.y,
+            canMoveTo: false
         });
     }
     public getAround(mapPos: Vec2): TilePos[] {
@@ -80,16 +82,6 @@ export class MapBG extends Component {
     }
     public getTiledPos(worldPos: Vec3): TilePos {
         return this._tiledhelper.getPosByWorldPos(worldPos);
-    }
-    public getTiledMovePath(fromWorldPos: Vec3, toWorldPos: Vec3): TilePos[] {
-        const paths = this._tiledhelper.Path_FromTo(this._tiledhelper.getPosByWorldPos(fromWorldPos), this._tiledhelper.getPosByWorldPos(toWorldPos));
-        for (let i = 0; i < paths.length; i++) {
-            if (paths[i] == null || paths[i] == undefined) {
-                paths.splice(i, 1);
-                i--;
-            }
-        }
-        return paths;
     }
     public getTiledMovePathByTiledPos(fromTilePos: Vec2, toTilePos: Vec2): TilePos[] {
         const fromPos = this._tiledhelper.getPos(
@@ -263,44 +255,42 @@ export class MapBG extends Component {
                     var tp = this._tiledhelper.getPosByWorldPos(wpos);
                     if (tp != null) {
                         if (!this.isAllBlackShadow(tp.x, tp.y)) {
-                            const isBlock = this._tiledhelper.Path_IsBlock(tp.x, tp.y);
-                            if (isBlock) {
-                                let cursorShowTilePositions: Vec2[] = null;
-                                for (const positions of this._togetherBlockPositons) {
-                                    if (positions.some(temple => temple.x === tp.x && temple.y === tp.y)) {
-                                        cursorShowTilePositions = positions;
-                                        break;
+                            // check building first, because of building is block
+                            const stayBuilding = BuildingMgr.instance.getShowBuildingByMapPos(v2(tp.x, tp.y));
+                            if (stayBuilding != null && stayBuilding.show) {
+                                if (stayBuilding.type == MapBuildingType.city &&
+                                    stayBuilding.faction != BuildingFactionType.enemy) {
+                                    const centerPos = stayBuilding.stayMapPositions[3];
+                                    const visionPositions = [];
+                                    for (const temple of this._tiledhelper.getExtAround(this._tiledhelper.getPos(centerPos.x, centerPos.y), UserInfoMgr.Instance.cityVision - 1)) {
+                                        visionPositions.push(v2(temple.x, temple.y));
                                     }
+                                    this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE, visionPositions, Color.BLUE);
+                                } else {
+                                    this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE);
                                 }
-                                if (cursorShowTilePositions == null) {
-                                    const decorate = BuildingMgr.instance.getDecorateByMapPos(v2(tp.x, tp.y));
-                                    if (decorate != null) {
-                                        cursorShowTilePositions = decorate.stayMapPositions;
-                                    } else {
-                                        cursorShowTilePositions = [v2(tp.x, tp.y)];
-                                    }
-                                }
-                                this._mapCursorView.show(cursorShowTilePositions, Color.RED);
-                                GameMain.inst.UI.ChangeCursor(2);
-
+                                GameMain.inst.UI.ChangeCursor(1);
                             } else {
-                                const stayBuilding = BuildingMgr.instance.getShowBuildingByMapPos(v2(tp.x, tp.y));
-                                if (stayBuilding != null) {
-                                    if (stayBuilding.show) {
-                                        if (stayBuilding.type == MapBuildingType.city &&
-                                            stayBuilding.faction != BuildingFactionType.enemy) {
-                                            const centerPos = stayBuilding.stayMapPositions[3];
-                                            const visionPositions = [];
-                                            for (const temple of this._tiledhelper.getExtAround(this._tiledhelper.getPos(centerPos.x, centerPos.y), UserInfoMgr.Instance.cityVision - 1)) {
-                                                visionPositions.push(v2(temple.x, temple.y));
-                                            }
-                                            this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE, visionPositions, Color.BLUE);
-                                        } else {
-                                            this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE);
+                                const isBlock = this._tiledhelper.Path_IsBlock(tp.x, tp.y);
+                                if (isBlock) {
+                                    let cursorShowTilePositions: Vec2[] = null;
+                                    for (const positions of this._togetherBlockPositons) {
+                                        if (positions.some(temple => temple.x === tp.x && temple.y === tp.y)) {
+                                            cursorShowTilePositions = positions;
+                                            break;
                                         }
-
-                                        GameMain.inst.UI.ChangeCursor(1);
                                     }
+                                    if (cursorShowTilePositions == null) {
+                                        const decorate = BuildingMgr.instance.getDecorateByMapPos(v2(tp.x, tp.y));
+                                        if (decorate != null) {
+                                            cursorShowTilePositions = decorate.stayMapPositions;
+                                        } else {
+                                            cursorShowTilePositions = [v2(tp.x, tp.y)];
+                                        }
+                                    }
+                                    this._mapCursorView.show(cursorShowTilePositions, Color.RED);
+                                    GameMain.inst.UI.ChangeCursor(2);
+
                                 } else {
                                     const stayPioneers = PioneerMgr.instance.getShowPioneersByMapPos(v2(tp.x, tp.y));
                                     let existOtherPioneer: MapPioneerModel = null;
@@ -316,6 +306,7 @@ export class MapBG extends Component {
                                     this._mapCursorView.show([v2(tp.x, tp.y)], Color.WHITE);
                                 }
                             }
+
                         } else {
                             this._mapCursorView.hide();
                             GameMain.inst.UI.ChangeCursor(2);
@@ -510,33 +501,22 @@ export class MapBG extends Component {
         if (this.isAllBlackShadow(tiledPos.x, tiledPos.y)) {
             return;
         }
-        const isBlock = this._tiledhelper.Path_IsBlock(tiledPos.x, tiledPos.y);
-        if (isBlock) {
-
-            // useLanMgr
-            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203001"));
-            // GameMain.inst.UI.ShowTip("cann't move to block");
-
-            return;
-        }
+        // check is busy
         if (PioneerInfo.instance.currentActionPioneerIsBusy()) {
-
             // useLanMgr
             // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203002"));
             // GameMain.inst.UI.ShowTip("pioneer is busy");
-
             return;
         }
+        // check is dead
         const currentActionPioneer = PioneerInfo.instance.getCurrentPlayerPioneer();
         if (!currentActionPioneer.show && currentActionPioneer.rebirthCountTime > 0) {
-
             // useLanMgr
             GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203003"));
             // GameMain.inst.UI.ShowTip("pioneer is dead");
-
             return;
         }
-        const stayBuilding = BuildingMgr.instance.getShowBuildingByMapPos(v2(tiledPos.x, tiledPos.y));
+
         //0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel
         //-1 move -2 no action
         let actionType: number = -1;
@@ -544,29 +524,21 @@ export class MapBG extends Component {
         let stayPositons: Vec2[] = [];
         let purchaseMovingPioneerId = null;
         let purchaseMovingBuildingId = null;
-        if (currentActionPioneer.actionType == MapPioneerActionType.defend) {
-            if (stayBuilding != null && stayBuilding.type == MapBuildingType.stronghold) {
+        // check is building first
+        const stayBuilding = BuildingMgr.instance.getShowBuildingByMapPos(v2(tiledPos.x, tiledPos.y));
+        if (stayBuilding != null) {
+            if (currentActionPioneer.actionType == MapPioneerActionType.defend &&
+                stayBuilding.type == MapBuildingType.stronghold) {
                 actionType = 6;
                 stayPositons = stayBuilding.stayMapPositions;
-            } else {
+
+            } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing &&
+                (currentActionPioneer.eventStatus == MapPioneerEventStatus.Waiting || stayBuilding.eventId != currentActionPioneer.actionEventId)) {
                 actionType = -2;
-
                 // useLanMgr
-                GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203004"));
-                // GameMain.inst.UI.ShowTip("pioneer is defending");
-
-            }
-        } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing &&
-            (currentActionPioneer.eventStatus == MapPioneerEventStatus.Waiting ||
-                stayBuilding == null ||
-                (stayBuilding != null &&
-                    stayBuilding.eventId != currentActionPioneer.actionEventId))) {
-            actionType = -2;
-            // useLanMgr
-            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203005"));
-            // GameMain.inst.UI.ShowTip("pioneer is processing event");
-        } else {
-            if (stayBuilding != null) {
+                GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203005"));
+                // GameMain.inst.UI.ShowTip("pioneer is processing event");
+            } else {
                 if (stayBuilding.type == MapBuildingType.city) {
                     if (stayBuilding.faction != BuildingFactionType.enemy) {
                         GameMain.inst.changeScene();
@@ -587,6 +559,26 @@ export class MapBG extends Component {
                     purchaseMovingBuildingId = stayBuilding.id;
                 }
                 stayPositons = stayBuilding.stayMapPositions;
+            }
+        } else {
+            const isBlock = this._tiledhelper.Path_IsBlock(tiledPos.x, tiledPos.y);
+            if (isBlock) {
+                // useLanMgr
+                GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203001"));
+                // GameMain.inst.UI.ShowTip("cann't move to block");
+                return;
+            }
+            if (currentActionPioneer.actionType == MapPioneerActionType.defend) {
+                actionType = -2;
+                // useLanMgr
+                GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203004"));
+                // GameMain.inst.UI.ShowTip("pioneer is defending");
+
+            } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing) {
+                actionType = -2;
+                // useLanMgr
+                GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203005"));
+                // GameMain.inst.UI.ShowTip("pioneer is processing event");
             } else {
                 const stayPioneers = PioneerMgr.instance.getShowPioneersByMapPos(v2(tiledPos.x, tiledPos.y));
                 let currentPioneer: MapPioneerModel = null;
@@ -599,9 +591,7 @@ export class MapBG extends Component {
                 if (currentPioneer != null) {
                     if (currentPioneer.friendly) {
                         if (currentPioneer.type == MapPioneerType.npc) {
-                            if ((currentPioneer as MapNpcPioneerModel).taskObj != null) {
-                                actionType = 0;
-                            }
+                            actionType = 0;
                         } else if (currentPioneer.type == MapPioneerType.gangster) {
                             actionType = 1;
                         }
@@ -628,6 +618,7 @@ export class MapBG extends Component {
                 }
             }
         }
+
         if (actionType >= 0) {
             this._mapActionCursorView.show(stayPositons, Color.WHITE);
             let setWorldPosition = null;
@@ -655,6 +646,7 @@ export class MapBG extends Component {
                 } else {
                     if (useActionType == 4) {
                         // move to building
+                        currentActionPioneer.purchaseMovingBuildingId = purchaseMovingBuildingId;
                     } else {
                         // move to near building 
                         currentActionPioneer.purchaseMovingPioneerId = purchaseMovingPioneerId;
@@ -695,7 +687,7 @@ export class MapBG extends Component {
         const minx = (-contentSize.width * scale.x / 2 - contentSize.width * scale.x * range) * sc + cameraSize.width / 2 * cameraViewRate;
         const maxx = (contentSize.width * scale.x / 2 + contentSize.width * scale.x * range) * sc - cameraSize.width / 2 * cameraViewRate;
         const miny = (-contentSize.height * scale.y / 2 - contentSize.height * scale.y * range) * sc + cameraSize.height / 2 * cameraViewRate;
-        const maxy = (contentSize.height * scale.y / 2 + contentSize.height *scale.y * range) * sc - cameraSize.height / 2 * cameraViewRate;
+        const maxy = (contentSize.height * scale.y / 2 + contentSize.height * scale.y * range) * sc - cameraSize.height / 2 * cameraViewRate;
 
         pos.x = Math.min(Math.max(minx, pos.x), maxx);
         pos.y = Math.min(Math.max(miny, pos.y), maxy);
@@ -703,6 +695,7 @@ export class MapBG extends Component {
     }
 
     private _refreshFog(allClearedShadowPositions: TilePos[], newCleardPositons: TilePos[] = null, stayPos: Vec2 = null) {
+        return;
         const getAllBoundLines: { startPos: Vec2, endPos: Vec2 }[] = [];
         const getAllBoundPos: Vec3[] = [];
 
@@ -847,7 +840,7 @@ export class MapBG extends Component {
             const wp = this._tiledhelper.getPosWorld(tilePos.x, tilePos.y);
             fogView.active = true;
             fogView.setParent(this.node);
-            fogView.setWorldPosition(wp); 
+            fogView.setWorldPosition(wp);
             // fogView.getComponent(Animation).play("fog_Schistose_A2");
             fogView.getComponent(Animation).play();
             fogView.getComponent(Animation).on(Animation.EventType.FINISHED, () => {
