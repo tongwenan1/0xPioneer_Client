@@ -35,7 +35,7 @@ export class CompLogin extends Component {
                     if (LocalDataLoader.instance.loadStatus == 0) {
                         await LocalDataLoader.instance.loadLocalDatas();
                     }
-                    resources.loadDir("prefab", (finished: number, total: number, item: any) => {
+                    resources.loadDir("preload", (finished: number, total: number, item: any) => {
                         let currentRate = sceneTotalRate + finished / total * (1 - sceneTotalRate);
                         if (currentRate >= 1) {
                             this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = currentRate;
@@ -45,7 +45,7 @@ export class CompLogin extends Component {
                                 loadRate = currentRate;
                                 this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
                             }
-                        }                        
+                        }
                     }, ()=> {
                         this._loaded = true;
                         this._loadingView.active = false;

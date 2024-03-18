@@ -21,6 +21,7 @@ export class FakeLoading extends Component {
         }
         // load prefab
         let loadRate: number = 0;
+        
         resources.loadDir("decoration", Prefab, (finished: number, total: number, item: AssetManager.RequestItem) => {
            const currentRate = finished / total;
            if (currentRate > loadRate) {
@@ -31,7 +32,9 @@ export class FakeLoading extends Component {
             if (err != null) {
                 return;
             }
-            director.loadScene("main");
+            resources.preloadDir("preload/icon", ()=> {
+                director.loadScene("main");
+            });
         });
 
         {

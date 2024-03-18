@@ -31,7 +31,6 @@ export class ItemInfoUI extends PopUpUI {
                 i--;
             }
         }
-        console.log("exce item: " + this._items.length);
         if (this._items.length > 0) {
             let currentItem: ItemData = this._items.splice(0, 1)[0];
             let currentConfig = ItemMgr.Instance.getItemConf(currentItem.itemConfigId);

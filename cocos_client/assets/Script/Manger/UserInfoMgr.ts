@@ -34,6 +34,7 @@ export interface GenerateTroopInfo {
 }
 
 export enum FinishedEvent {
+    NoCondition = "",
     FirstTalkToProphetess = "FirstTalkToProphetess",
     KillDoomsDayGangTeam = "KillDoomsDayGangTeam",
     KillProphetess = "KillProphetess",

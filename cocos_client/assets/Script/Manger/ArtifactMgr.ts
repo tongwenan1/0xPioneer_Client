@@ -19,8 +19,9 @@ export default class ArtifactMgr {
         if (iconName in this._itemIconSpriteFrames) {
             return this._itemIconSpriteFrames[iconName];
         }
+        const t = Date.now();
         const frame = await new Promise((resolve) => {
-            resources.load("ui/icon/artifact/" + iconName + "/spriteFrame", SpriteFrame, (err: Error, icon) => {
+            resources.load("preload/icon/artifact/" + iconName + "/spriteFrame", SpriteFrame, (err: Error, icon) => {
                 if (err) {
                     resolve(null);
                     return;

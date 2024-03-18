@@ -20,7 +20,7 @@ export default class ItemMgr {
             return this._itemIconSpriteFrames[iconName];
         }
         const frame = await new Promise((resolve) => {
-            resources.load("ui/icon/" + iconName + "/spriteFrame", SpriteFrame, (err: Error, icon) => {
+            resources.load("preload/icon/" + iconName + "/spriteFrame", SpriteFrame, (err: Error, icon) => {
                 if (err) {
                     resolve(null);
                     return;
