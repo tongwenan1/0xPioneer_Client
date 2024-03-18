@@ -2,6 +2,7 @@ import {_decorator, Button, Color, instantiate, Label, Layout, Mask, Node, Scrol
 import {PopUpUI} from "db://assets/Script/BasicView/PopUpUI";
 import {BattleReportListItemUI} from "./BattleReportListItemUI";
 import BattleReportsMgr, {BattleReportsEvent, BattleReportType} from "db://assets/Script/Manger/BattleReportsMgr";
+import {ButtonEx, ButtonExEventType} from "db://assets/Script/UI/Common/ButtonEx";
 
 const {ccclass} = _decorator;
 
@@ -26,8 +27,8 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
     private _permanentLastItem: Node = null;
     private _reportListScrollView: ScrollView = null;
     /** all / fight / mining / ... */
-    private _typeFilterButtons: Button[] = null;
-    private _pendingButton: Button = null;
+    private _typeFilterButtons: ButtonEx[] = null;
+    private _pendingButton: ButtonEx = null;
     private _markAllAsReadButton: Button = null;
     private _deleteReadReportsButton: Button = null;
 
@@ -116,8 +117,8 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
         this._permanentLastItem = this.node.getChildByPath('frame/ScrollView/view/content/permanentLastItem');
 
         const filterGroupRoot = this.node.getChildByPath('frame/navbar/reportTypeFilterGroup');
-        this._typeFilterButtons = filterGroupRoot.children.map(node => node.getComponent(Button));
-        this._pendingButton = this.node.getChildByPath('frame/pendingButton').getComponent(Button);
+        this._typeFilterButtons = filterGroupRoot.children.map(node => node.getComponent(ButtonEx));
+        this._pendingButton = this.node.getChildByPath('frame/pendingButton').getComponent(ButtonEx);
         this._initFilterGroup();
 
         this._deleteReadReportsButton = this.node.getChildByPath('frame/deleteReadButton').getComponent(Button);
@@ -186,7 +187,17 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
     private _initFilterGroup() {
         // register events
 
+        const onButtonApplyTransition = (button: ButtonEx, state: string) => {
+            button.getComponentInChildren(Label).color = state !== "normal" ? this.buttonLabelActiveColor : this.buttonLabelGrayColor;
+        };
+
+        function initButtonStateTransition(button: ButtonEx) {
+            button.eventTarget.on(ButtonExEventType.APPLY_TRANSITION, onButtonApplyTransition);
+            onButtonApplyTransition(button, button.interactable ? "normal" : "disabled");
+        }
+
         // button: All
+        initButtonStateTransition(this._typeFilterButtons[0]);
         this._typeFilterButtons[0].node.on(Button.EventType.CLICK, () => {
             this._filterState.filterType = ReportsFilterType.None;
             this.refreshUIAndResetScroll();
@@ -196,6 +207,7 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
         // same index as enum BattleReportType
         for (let i = 1; i < this._typeFilterButtons.length; i++) {
             const iCopy = i;
+            initButtonStateTransition(this._typeFilterButtons[i]);
             this._typeFilterButtons[i].node.on(Button.EventType.CLICK, () => {
                 this._filterState.filterType = ReportsFilterType.ReportType;
                 this._filterState.reportType = iCopy;
@@ -204,6 +216,7 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
         }
 
         // button: Pending
+        initButtonStateTransition(this._pendingButton);
         this._pendingButton.node.on(Button.EventType.CLICK, () => {
             this._filterState.filterType = ReportsFilterType.Pending;
             this.refreshUIAndResetScroll();
@@ -215,18 +228,15 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
 
         const filterAllActive = filterType == ReportsFilterType.None;
         this._typeFilterButtons[0].interactable = !filterAllActive;
-        this._typeFilterButtons[0].getComponentInChildren(Label).color = filterAllActive ? this.buttonLabelActiveColor : this.buttonLabelGrayColor;
 
         const typeFilterCurrentIndex = filterType == ReportsFilterType.ReportType ? this._filterState.reportType : -1;
         for (let i = 1; i < this._typeFilterButtons.length; i++) {
             const active = i == typeFilterCurrentIndex;
             this._typeFilterButtons[i].interactable = !active;
-            this._typeFilterButtons[i].getComponentInChildren(Label).color = active ? this.buttonLabelActiveColor : this.buttonLabelGrayColor;
         }
 
         const filterPendingActive = filterType == ReportsFilterType.Pending;
         this._pendingButton.interactable = !filterPendingActive;
-        this._pendingButton.getComponentInChildren(Label).color = filterPendingActive ? this.buttonLabelActiveColor : this.buttonLabelGrayColor;
     }
 
     private _getReportsFiltered() {

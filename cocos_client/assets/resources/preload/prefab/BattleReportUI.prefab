@@ -1598,7 +1598,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "e9d50669-12b9-45f0-88bf-df189001cea3@f9941",
+      "__uuid__": "6b4477ed-8099-446b-977e-b92d4de2203c@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 1,
@@ -1621,7 +1621,7 @@
     "fileId": "df+Yc0RiJKp5zW9TIB8w5P"
   },
   {
-    "__type__": "cc.Button",
+    "__type__": "d2c27ArQHVHT7hGgu20s7lG",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -1634,7 +1634,7 @@
     },
     "clickEvents": [],
     "_interactable": false,
-    "_transition": 3,
+    "_transition": 2,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -1676,7 +1676,7 @@
       "__expectedType__": "cc.SpriteFrame"
     },
     "_disabledSprite": {
-      "__uuid__": "e9d50669-12b9-45f0-88bf-df189001cea3@f9941",
+      "__uuid__": "6b4477ed-8099-446b-977e-b92d4de2203c@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_duration": 0.1,
@@ -1970,7 +1970,7 @@
     "fileId": "ccAbDW49FCgodOMB8GtQXj"
   },
   {
-    "__type__": "cc.Button",
+    "__type__": "d2c27ArQHVHT7hGgu20s7lG",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -1983,7 +1983,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 3,
+    "_transition": 2,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -2319,7 +2319,7 @@
     "fileId": "54UAwhZepF9LguoIoC+pVr"
   },
   {
-    "__type__": "cc.Button",
+    "__type__": "d2c27ArQHVHT7hGgu20s7lG",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -2332,7 +2332,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 3,
+    "_transition": 2,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -2668,7 +2668,7 @@
     "fileId": "fbA+Bi+/dLRrYMoGLXIncK"
   },
   {
-    "__type__": "cc.Button",
+    "__type__": "d2c27ArQHVHT7hGgu20s7lG",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -2681,7 +2681,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 3,
+    "_transition": 2,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -14391,7 +14391,7 @@
     "fileId": "7ek8qRiHdBTagLu3naWPBe"
   },
   {
-    "__type__": "cc.Button",
+    "__type__": "d2c27ArQHVHT7hGgu20s7lG",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -14404,7 +14404,7 @@
     },
     "clickEvents": [],
     "_interactable": true,
-    "_transition": 3,
+    "_transition": 2,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
