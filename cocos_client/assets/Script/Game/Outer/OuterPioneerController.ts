@@ -153,11 +153,15 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             PioneerMgr.instance.recoverLocalState();
             // checkRookie
             this._cameraBeginOrthoHeight = GameMain.inst.MainCamera.orthoHeight;
+
+            const actionPioneer = PioneerMgr.instance.getCurrentPlayerPioneer();
+            if (actionPioneer != null) {
+                const currentWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(actionPioneer.stayPos.x, actionPioneer.stayPos.y);
+                GameMain.inst.MainCamera.node.worldPosition = currentWorldPos;
+            }
+
             if (!UserInfoMgr.Instance.isFinishRookie) {
-                const actionPioneer = PioneerMgr.instance.getCurrentPlayerPioneer();
                 if (actionPioneer != null) {
-                    const currentWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(actionPioneer.stayPos.x, actionPioneer.stayPos.y);
-                    GameMain.inst.MainCamera.node.worldPosition = currentWorldPos;
                     this.scheduleOnce(() => {
                         GameMain.inst.outSceneMap.mapBG.shadowErase(actionPioneer.stayPos);
                     }, 0.2);
@@ -573,12 +577,12 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         //fightview destroy
         if (this._fightViewMap.has(fightId)) {
             const currentFightView = this._fightViewMap.get(fightId);
-            currentFightView.showResult(isPlayerWin, ()=> {
+            currentFightView.showResult(isPlayerWin, () => {
                 currentFightView.node.destroy();
             });
             this._fightViewMap.delete(fightId);
         }
-        
+
         if (isEventFight) {
             return;
         }

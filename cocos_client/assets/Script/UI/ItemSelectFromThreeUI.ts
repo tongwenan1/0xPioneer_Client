@@ -4,9 +4,11 @@ import LanMgr from '../Manger/LanMgr';
 import ArtifactMgr from '../Manger/ArtifactMgr';
 import ArtifactData, { ArtifactEffectRankColor } from '../Model/ArtifactData';
 import DropMgr from '../Manger/DropMgr';
-import { ItemConfigType } from '../Const/ConstDefine';
+import { ItemConfigType, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import { ArtifactItem } from './ArtifactItem';
+import UserInfoMgr from '../Manger/UserInfoMgr';
+import ItemMgr from '../Manger/ItemMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemSelectFromThreeUI')
@@ -18,6 +20,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
         const drops: any[] = DropMgr.Instance.getDropById(dropId);
         // useLanMgr
         // this.node.getChildByPath("Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Content/GetAllBtn/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
 
         if (drops.length > 0) {
             const drop = drops[0];
@@ -134,5 +137,23 @@ export class ItemSelectFromThreeUI extends PopUpUI {
             this._selectedCallback();
         }
         this.show(false);
+    }
+
+    private onTapGetAll() {
+        const energyNum: number = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Energy);
+        const needNum: number = 200;
+        if (energyNum >= needNum) {
+            ArtifactMgr.Instance.addArtifact(this._items);
+            ItemMgr.Instance.subItem(ResourceCorrespondingItem.Energy, needNum);
+            GameMain.inst.UI.artifactInfoUI.showItem(this._items);
+            if (this._selectedCallback != null) {
+                this._selectedCallback();
+            }
+            this.show(false);
+        } else {
+            // useLanMgr
+            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201004"));
+            GameMain.inst.UI.ShowTip("Insufficient resources for get all");
+        }
     }
 }

@@ -166,6 +166,9 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
     }
 
     private _refreshUI() {
+        if (this._settlementItem == null) {
+            return;
+        }
         const infoView = this.node.getChildByPath("Content/tabContents/InfoContent");
         const summaryView = this.node.getChildByPath("Content/tabContents/SummaryContent");
         const achievementView = this.node.getChildByPath("Content/tabContents/AchievementContent");
@@ -352,33 +355,33 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
 
             if (levelConfig.reward != null && levelConfig.reward.length > 0) {
                 content.getChildByName("Rewards").active = true;
-            for (const item of [...this._showRewardItems, ...this._showArtifactItems]) {
-                item.destroy();
-            }
-            this._showRewardItems = [];
-            this._showArtifactItems = [];
-            for (const data of levelConfig.reward) {
-                if (data.length == 3) {
-                    const type = data[0];
-                    const id = data[1];
-                    const num = data[2];
-                    if (type == ItemConfigType.Item) {
-                        const view = instantiate(this._rewardItem);
-                        view.active = true;
-                        view.getComponent(BackpackItem).refreshUI(new ItemData(id, num));
-                        view.getChildByName("Count").getComponent(Label).string = num;
-                        view.setParent(content.getChildByPath("Rewards/Content"));
-                        this._showRewardItems.push(view);
-                    } else if (type == ItemConfigType.Artifact) {
-                        const view = instantiate(this._artifactItem);
-                        view.active = true;
-                        view.getComponent(ArtifactItem).refreshUI(new ArtifactData(id, num));
-                        view.getChildByName("Count").getComponent(Label).string = num;
-                        view.setParent(content.getChildByPath("Rewards/Content"));
-                        this._showArtifactItems.push(view);
+                for (const item of [...this._showRewardItems, ...this._showArtifactItems]) {
+                    item.destroy();
+                }
+                this._showRewardItems = [];
+                this._showArtifactItems = [];
+                for (const data of levelConfig.reward) {
+                    if (data.length == 3) {
+                        const type = data[0];
+                        const id = data[1];
+                        const num = data[2];
+                        if (type == ItemConfigType.Item) {
+                            const view = instantiate(this._rewardItem);
+                            view.active = true;
+                            view.getComponent(BackpackItem).refreshUI(new ItemData(id, num));
+                            view.getChildByName("Count").getComponent(Label).string = num;
+                            view.setParent(content.getChildByPath("Rewards/Content"));
+                            this._showRewardItems.push(view);
+                        } else if (type == ItemConfigType.Artifact) {
+                            const view = instantiate(this._artifactItem);
+                            view.active = true;
+                            view.getComponent(ArtifactItem).refreshUI(new ArtifactData(id, num));
+                            view.getChildByName("Count").getComponent(Label).string = num;
+                            view.setParent(content.getChildByPath("Rewards/Content"));
+                            this._showArtifactItems.push(view);
+                        }
                     }
                 }
-            }
                 content.getChildByPath("Rewards/Content").getComponent(Layout).updateLayout();
             } else {
                 content.getChildByName("Rewards").active = false;

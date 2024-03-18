@@ -35,6 +35,7 @@ import { LootsPopup } from "db://assets/Script/UI/LootsPopup";
 import BattleReportsMgr, { BattleReportsEvent } from "db://assets/Script/Manger/BattleReportsMgr";
 import { BuildingUpgradeUI } from './Inner/BuildingUpgradeUI';
 import { ItemSelectFromThreeUI } from './ItemSelectFromThreeUI';
+import DropMgr from '../Manger/DropMgr';
 
 const { ccclass, property } = _decorator;
 
@@ -344,7 +345,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         GameMain.inst.UI.taskListUI.show(true);
     }
 
-    
+
     // index : 0:normal, 1:gear, 2:forbiden
     public ChangeCursor(index: number) {
         if (index >= this.cursorImages.length) {
@@ -476,7 +477,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
     }
     endFight(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean): void {
-        
+
     }
     exploredPioneer(pioneerId: string): void {
 

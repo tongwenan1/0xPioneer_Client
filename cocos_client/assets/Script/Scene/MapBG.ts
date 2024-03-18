@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3, Mask, tween, CCString, SpriteFrame, instantiate, Sprite, EventMouse, Color, TiledMap, size, RenderRoot2D, Widget, CCInteger, Animation } from 'cc';
+import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3, Mask, tween, CCString, SpriteFrame, instantiate, Sprite, EventMouse, Color, TiledMap, size, RenderRoot2D, Widget, CCInteger, Animation, view, Canvas } from 'cc';
 import { GameMain } from '../GameMain';
 import PioneerInfo from '../Manger/PioneerMgr';
 import PioneerMgr from '../Manger/PioneerMgr';
@@ -685,16 +685,18 @@ export class MapBG extends Component {
     }
 
     private _fixCameraPos(pos: Vec3) {
-        let sc = GameMain.inst.MainCamera.orthoHeight / this.cameraOriginalOrthoHeight;
-
         const cameraSize = size(GameMain.inst.MainCamera.camera.width, GameMain.inst.MainCamera.camera.height);
         const contentSize = this.node.parent.getComponent(UITransform).contentSize;
+        const visibleSize = view.getVisibleSize();
         const scale = this.node.parent.scale;
+        const cameraViewRate = visibleSize.width / cameraSize.width;
+        const range = 0.2;
+        const sc = 1;
+        const minx = (-contentSize.width * scale.x / 2 - contentSize.width * scale.x * range) * sc + cameraSize.width / 2 * cameraViewRate;
+        const maxx = (contentSize.width * scale.x / 2 + contentSize.width * scale.x * range) * sc - cameraSize.width / 2 * cameraViewRate;
+        const miny = (-contentSize.height * scale.y / 2 - contentSize.height * scale.y * range) * sc + cameraSize.height / 2 * cameraViewRate;
+        const maxy = (contentSize.height * scale.y / 2 + contentSize.height *scale.y * range) * sc - cameraSize.height / 2 * cameraViewRate;
 
-        const minx = -contentSize.width * scale.x / 2 - contentSize.width * scale.x * 0.1 + cameraSize.width / 2 * sc;
-        const maxx = contentSize.width * scale.x / 2 + contentSize.width * scale.x * 0.1 - cameraSize.width / 2 * sc;
-        const miny = -contentSize.height * scale.y / 2 - contentSize.height * scale.y * 0.1 + cameraSize.height / 2 * sc;
-        const maxy = contentSize.height * scale.y / 2 + contentSize.height * scale.y * 0.1 - cameraSize.height / 2 * sc;
         pos.x = Math.min(Math.max(minx, pos.x), maxx);
         pos.y = Math.min(Math.max(miny, pos.y), maxy);
         GameMain.inst.MainCamera.node.setPosition(pos);

@@ -1,7 +1,5 @@
 window.onProgress = null;
 window.onGameStarted = function(cc) {
-  window._CCSettings = undefined;
-  cc.view.resizeWithBrowserSize(true);
   var launchScene = "db://assets/scene/metamask_login.scene"; 
   // load scene
   cc.director.preloadScene(launchScene,onProgress,function(){

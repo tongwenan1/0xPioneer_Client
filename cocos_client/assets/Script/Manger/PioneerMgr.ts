@@ -1,5 +1,5 @@
 import { Details, Vec2, builtinResMgr, log, math, nextPow2, pingPong, resources, v2, v3 } from "cc";
-import UserInfo from "./UserInfoMgr";
+import UserInfo, { FinishedEvent } from "./UserInfoMgr";
 import CommonTools from "../Tool/CommonTools";
 import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
@@ -746,7 +746,7 @@ export default class PioneerMgr {
                         if (pioneer.logics.length > 0) {
                             const logic = pioneer.logics[0];
                             let canAction: boolean = false;
-                            if (logic.condition != null) {
+                            if (logic.condition != null && logic.condition != FinishedEvent.NoCondition) {
                                 if (UserInfo.Instance.finishedEvents.indexOf(logic.condition) != -1) {
                                     canAction = true;
                                 }
@@ -1491,6 +1491,22 @@ export default class PioneerMgr {
     }
 
     private _fight(attacker: MapPioneerModel, defender: MapPioneerModel | MapBuildingModel) {
+        let canFight: boolean = true;
+        if (attacker.actionType != MapPioneerActionType.moving &&
+            attacker.actionType != MapPioneerActionType.idle) {
+            canFight = false;
+        } else {
+            if (defender instanceof MapPioneerModel) {
+                if (defender.actionType != MapPioneerActionType.moving &&
+                    defender.actionType != MapPioneerActionType.idle) {
+                    canFight = false;
+                }
+            }
+        }
+        if (!canFight) {
+            return;
+        }
+
         attacker.actionType = MapPioneerActionType.fighting;
         for (const observer of this._observers) {
             observer.pioneerActionTypeChanged(attacker.id, attacker.actionType, attacker.actionEndTimeStamp);

@@ -2,8 +2,9 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    overflow: hidden;
+    width: 1665px;
+    height: 937px;
     background: #171717 url(./images/Loading.jpg) no-repeat center;
-    background-size: 100%100%;
+    background-size: 100% 100%;
 }

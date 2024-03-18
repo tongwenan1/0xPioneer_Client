@@ -5,7 +5,6 @@ import DropMgr from "../Manger/DropMgr";
 import ItemMgr from "../Manger/ItemMgr";
 import ArtifactData from "../Model/ArtifactData";
 import ItemData, { ItemType } from "../Model/ItemData";
-import { ArtifactInfoShowModel } from "../UI/ArtifactInfoUI";
 import CommonTools from "./CommonTools";
 
 export default class ItemConfigDropTool {
@@ -16,9 +15,8 @@ export default class ItemConfigDropTool {
      */
     public static getItemByConfig(datas: [number, string, number][], showDialog: boolean = true) {
         const items: ItemData[] = [];
-
         const artifacts: ArtifactData[] = [];
-        const showArtifactDialogDatas: ArtifactInfoShowModel[] = [];
+
         for (const data of datas) {
             if (data.length == 3) {
                 const type: ItemConfigType = parseInt(data[0] + "");
@@ -64,17 +62,11 @@ export default class ItemConfigDropTool {
                         }
                     }
                 }
-
                 if (tempItem != null) {
                     items.push(tempItem);
                 }
                 if (tempArtifact != null) {
                     artifacts.push(tempArtifact);
-                    const artifactConfig = ArtifactMgr.Instance.getArtifactConf(tempArtifact.artifactConfigId);
-                    showArtifactDialogDatas.push({
-                        artifactConfig: artifactConfig,
-                        count: tempArtifact.count
-                    });
                 }  
             }
         }
@@ -86,10 +78,9 @@ export default class ItemConfigDropTool {
         }
         if (artifacts.length > 0) {
             ArtifactMgr.Instance.addArtifact(artifacts);
-
-        }
-        if (showDialog && showArtifactDialogDatas.length > 0) {
-            GameMain.inst.UI.artifactInfoUI.showItem(showArtifactDialogDatas)
+            if (showDialog) {
+                GameMain.inst.UI.artifactInfoUI.showItem(artifacts);
+            }
         }
     }
 }
