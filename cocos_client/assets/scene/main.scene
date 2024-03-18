@@ -187,7 +187,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 540,
+    "_orthoHeight": 667.3565804274466,
     "_near": 0,
     "_far": 1001,
     "_color": {
@@ -25323,7 +25323,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 540,
+    "_orthoHeight": 667.3565804274466,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -26277,6 +26277,7 @@
     },
     "_enabled": true,
     "__prefab": null,
+    "canShowRookieGuide": false,
     "_id": "78JmOOAj9DWbKqkCDXib3b"
   },
   {
