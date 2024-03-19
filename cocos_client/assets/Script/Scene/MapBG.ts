@@ -108,6 +108,9 @@ export class MapBG extends Component {
         this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons());
     }
 
+    public curCameraPos: Vec3 = Vec3.ZERO;
+    public curCameraZoom: number = 1;
+
 
     @property(Prefab)
     tiledmap: Prefab
@@ -238,7 +241,11 @@ export class MapBG extends Component {
                 sc = useConf.para[0];
             }
             GameMain.inst.MainCamera.orthoHeight = sc * this.cameraOriginalOrthoHeight;
-
+            localStorage.setItem("local_outer_map_scale", sc.toString());
+            if (this.node.active) {
+                console.log('exce outersc: ' + sc);
+                this.curCameraZoom = sc;
+            }
             this._fixCameraPos(GameMain.inst.MainCamera.node.position);
 
             EventMgr.emit(EventName.MAP_SCALED);
@@ -324,6 +331,12 @@ export class MapBG extends Component {
         }, this);
         // local fog
         this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons());
+    }
+
+    protected onEnable(): void {
+        console.log("exce outercur: " + JSON.stringify(this.curCameraPos));
+        // GameMain.inst.MainCamera.node.setPosition(this.curCameraPos);
+        // GameMain.inst.MainCamera.camera.orthoHeight = this.curCameraZoom * GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
     }
 
     update(deltaTime: number) {
@@ -655,13 +668,27 @@ export class MapBG extends Component {
                         currentActionPioneer.purchaseMovingPioneerId = purchaseMovingPioneerId;
                         currentActionPioneer.purchaseMovingBuildingId = purchaseMovingBuildingId;
                     }
-                    let targetTilePos: Vec2 = null;
+                    let movePaths: TilePos[] = null;
                     if (actionMovingPioneerId != null) {
-                        targetTilePos = PioneerMgr.instance.getPioneerById(actionMovingPioneerId).stayPos;
+                        movePaths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, PioneerMgr.instance.getPioneerById(actionMovingPioneerId).stayPos);
+
                     } else {
-                        targetTilePos = v2(tiledPos.x, tiledPos.y);
+                        movePaths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y));
+                        if (purchaseMovingBuildingId != null && movePaths.length == 1) {
+                            // cannot move to this building
+                            const targetBuilding = BuildingMgr.instance.getBuildingById(purchaseMovingBuildingId);
+                            if (targetBuilding != null) {
+                                for (const templePos of targetBuilding.stayMapPositions) {
+                                    const templePath = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, templePos);
+                                    if (templePath.length > 1) {
+                                        movePaths = templePath;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
-                    PioneerInfo.instance.pioneerBeginMove(currentActionPioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, targetTilePos));
+                    PioneerInfo.instance.pioneerBeginMove(currentActionPioneer.id, movePaths);
                 }
                 this._mapActionCursorView.hide();
                 this.node.getComponent(OuterPioneerController).hideMovingPioneerAction();
@@ -695,6 +722,10 @@ export class MapBG extends Component {
         pos.x = Math.min(Math.max(minx, pos.x), maxx);
         pos.y = Math.min(Math.max(miny, pos.y), maxy);
         GameMain.inst.MainCamera.node.setPosition(pos);
+        if (this.node.active) {
+            console.log("exce outermove: " + JSON.stringify(this.curCameraPos));
+            this.curCameraPos = pos;
+        }
     }
 
     private _refreshFog(allClearedShadowPositions: TilePos[], newCleardPositons: TilePos[] = null, stayPos: Vec2 = null) {

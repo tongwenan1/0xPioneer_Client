@@ -575,7 +575,7 @@ export class TileMapHelper {
      * @param to 
      * @param limitstep 
      * @param forceMove force move, can ignore block 
-     * @returns 
+     * @returns move path, if is only one pos from, cannot move to toPos
      */
     Path_FromTo(from: TilePos, to: TilePos, limitstep = 100): TilePos[] {
 
@@ -604,7 +604,12 @@ export class TileMapHelper {
             openPathTiles.splice(ic, 1);
             closedPathTiles.push(currentTile);
 
+            if (currentTile == null) {
+                return [from];
+            }
+
             var g = currentTile.g + 1;
+
             //  if(close have target, final it.)
             if (closedPathTiles.indexOf(to) >= 0) {
                 break;
