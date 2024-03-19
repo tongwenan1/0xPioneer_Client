@@ -7,6 +7,7 @@ import CountMgr, { CountType } from '../../Manger/CountMgr';
 import LanMgr from '../../Manger/LanMgr';
 import EventMgr from '../../Manger/EventMgr';
 import { EventName, NPCNameLangType } from '../../Const/ConstDefine';
+import UserInfoMgr from '../../Manger/UserInfoMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -133,7 +134,14 @@ export class DialogueUI extends PopUpUI {
     private _talkOver() {
         //talk over
         if (UserInfo.Instance.afterTalkItemGetData.has(this._talk.id)) {
-            GameMain.inst.UI.itemInfoUI.showItem(UserInfo.Instance.afterTalkItemGetData.get(this._talk.id), true);
+            setTimeout(()=> {
+                if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
+                    UserInfoMgr.Instance.afterCivilizationClosedShowItemDatas.push(...UserInfo.Instance.afterTalkItemGetData.get(this._talk.id));
+                } else {
+                    GameMain.inst.UI.itemInfoUI.showItem(UserInfo.Instance.afterTalkItemGetData.get(this._talk.id), true);
+
+                }
+            });
             UserInfo.Instance.afterTalkItemGetData.delete(this._talk.id);
         }
         if (this._talkOverCallback != null) {

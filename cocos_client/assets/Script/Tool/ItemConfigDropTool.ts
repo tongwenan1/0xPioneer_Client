@@ -3,6 +3,7 @@ import { GameMain } from "../GameMain";
 import ArtifactMgr from "../Manger/ArtifactMgr";
 import DropMgr from "../Manger/DropMgr";
 import ItemMgr from "../Manger/ItemMgr";
+import UserInfoMgr from "../Manger/UserInfoMgr";
 import ArtifactData from "../Model/ArtifactData";
 import ItemData, { ItemType } from "../Model/ItemData";
 import CommonTools from "./CommonTools";
@@ -73,13 +74,25 @@ export default class ItemConfigDropTool {
         if (items.length > 0) {
             ItemMgr.Instance.addItem(items);
             if (showDialog) {
-                GameMain.inst.UI.itemInfoUI.showItem(items, true);
+                setTimeout(()=> {
+                    if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
+                        UserInfoMgr.Instance.afterCivilizationClosedShowItemDatas.push(...items);
+                    } else {
+                        GameMain.inst.UI.itemInfoUI.showItem(items, true);
+                    }
+                });
             }
         }
         if (artifacts.length > 0) {
             ArtifactMgr.Instance.addArtifact(artifacts);
             if (showDialog) {
-                GameMain.inst.UI.artifactInfoUI.showItem(artifacts);
+                setTimeout(()=> {
+                    if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
+                        UserInfoMgr.Instance.afterCivilizationClosedShowArtifactDatas.push(...artifacts);
+                    } else {
+                        GameMain.inst.UI.artifactInfoUI.showItem(artifacts);
+                    }
+                });
             }
         }
     }

@@ -8,6 +8,8 @@ import { BackpackItem } from './BackpackItem';
 import ItemData from '../Model/ItemData';
 import { ArtifactItem } from './ArtifactItem';
 import ArtifactData from '../Model/ArtifactData';
+import UserInfoMgr from '../Manger/UserInfoMgr';
+import { GameMain } from '../GameMain';
 const { ccclass, property } = _decorator;
 
 @ccclass('CivilizationLevelUpUI')
@@ -189,6 +191,14 @@ export class CivilizationLevelUpUI extends PopUpUI {
 
     private onTapClose() {
         this.show(false);
+        if (UserInfoMgr.Instance.afterCivilizationClosedShowItemDatas.length > 0) {
+            GameMain.inst.UI.itemInfoUI.showItem(UserInfoMgr.Instance.afterCivilizationClosedShowItemDatas, true);
+            UserInfoMgr.Instance.afterCivilizationClosedShowItemDatas = [];
+        }
+        if (UserInfoMgr.Instance.afterCivilizationClosedShowArtifactDatas.length > 0) {
+            GameMain.inst.UI.artifactInfoUI.showItem(UserInfoMgr.Instance.afterCivilizationClosedShowArtifactDatas);
+            UserInfoMgr.Instance.afterCivilizationClosedShowArtifactDatas = [];
+        }
     }
 }
 

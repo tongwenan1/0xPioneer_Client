@@ -9,6 +9,7 @@ import PioneerMgr from "./PioneerMgr";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import BuildingMgr from "./BuildingMgr";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
+import ArtifactData from "../Model/ArtifactData";
 
 export interface UserInnerBuildInfo {
     buildID: string,
@@ -287,6 +288,12 @@ export default class UserInfoMgr {
     public get afterTalkItemGetData() {
         return this._afterTalkItemGetData;
     }
+    public get afterCivilizationClosedShowItemDatas() {
+        return this._afterCivilizationClosedShowItemDatas;
+    }
+    public get afterCivilizationClosedShowArtifactDatas() {
+        return this._afterCivilizationClosedShowArtifactDatas;
+    }
     public get currentTasks() {
         return this._currentTasks;
     }
@@ -443,7 +450,12 @@ export default class UserInfoMgr {
             }
         }
     }
-
+    public set afterCivilizationClosedShowItemDatas(itemDatas: ItemData[]) {
+        this._afterCivilizationClosedShowItemDatas = itemDatas;
+    }
+    public set afterCivilizationClosedShowArtifactDatas(artifactDatas: ArtifactData[]) {
+        this._afterCivilizationClosedShowArtifactDatas = artifactDatas;
+    }
 
     public constructor() {
         setInterval(() => {
@@ -469,6 +481,8 @@ export default class UserInfoMgr {
     private static _instance: UserInfoMgr = null;
 
     private _afterTalkItemGetData: Map<string, ItemData[]> = new Map();
+    private _afterCivilizationClosedShowItemDatas: ItemData[] = [];
+    private _afterCivilizationClosedShowArtifactDatas: ArtifactData[] = [];
 
     private _currentTasks: any[] = [];
     private _finishedEvents: FinishedEvent[] = [];
@@ -652,7 +666,13 @@ export default class UserInfoMgr {
                 }
                 if (addItems.length > 0) {
                     ItemMgr.Instance.addItem(addItems);
-                    GameMain.inst.UI.itemInfoUI.showItem(addItems, true);
+                    setTimeout(()=> {
+                        if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
+                            this.afterCivilizationClosedShowItemDatas.push(...addItems);
+                        } else {
+                            GameMain.inst.UI.itemInfoUI.showItem(addItems, true);
+                        }
+                    });
                 }
             }
 
