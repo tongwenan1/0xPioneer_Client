@@ -1,532 +1,440 @@
 [
-    {
-        "id": "building_1",
-        "name": "110010",
-        "type": "city",
-        "show": 1,
-        "positions": [
-            {
-                "x": 20,
-                "y": 36
-            },
-            {
-                "x": 21,
-                "y": 36
-            },
-            {
-                "x": 19,
-                "y": 37
-            },
-            {
-                "x": 20,
-                "y": 37
-            },
-            {
-                "x": 21,
-                "y": 37
-            },
-            {
-                "x": 20,
-                "y": 38
-            },
-            {
-                "x": 21,
-                "y": 38
-            }
-            
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "hp": 240,
-        "attack": 20,
-        "winprogress": 20
-    },
-    {
-        "id": "building_2",
-        "name": "110013",
-        "type": "explore",
-        "show": 0,
-        "positions": [
-            {
-                "x": 5,
-                "y": 44
-            },
-            {
-                "x": 4,
-                "y": 45
-            },
-            {
-                "x": 5,
-                "y": 45
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "progress": 5
-    },
-    {
-        "id": "building_3",
-        "name": "110011",
-        "type": "explore",
-        "show": 0,
-        "positions": [
-            {
-                "x": 10,
-                "y": 49
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "progress":5
-    },
-    {
-        "id": "building_4",
-        "name": "110012",
-        "type": "stronghold",
-        "show": 0,
-        "positions": [
-            {
-                "x": 8,
-                "y": 41
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1
-    },
-    {
-        "id": "building_5",
-        "name": "110002",
-        "type": "resource",
-        "show": 1,
-        "positions": [
-            {
-                "x": 40,
-                "y": 13
-            },
-            {
-                "x": 40,
-                "y": 14
-            },
-            {
-                "x": 41,
-                "y": 14
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "resources": [
-            {
-                "id": "8002",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5
-    },
-    {
-        "id": "building_6",
-        "name": "110002",
-        "type": "resource",
-        "show": 1,
-        "positions": [
-            {
-                "x": 18,
-                "y": 16
-            },
-            {
-                "x": 17,
-                "y": 17
-            },
-            {
-                "x": 18,
-                "y": 17
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "resources": [
-            {
-                "id": "8002",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5
-    },
-    {
-        "id": "building_7",
-        "name": "110003",
-        "type": "resource",
-        "show": 1,
-        "positions": [
-            {
-                "x": 8,
-                "y": 9
-            },
-            {
-                "x": 8,
-                "y": 10
-            },
-            {
-                "x": 9,
-                "y": 10
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "resources": [
-            {
-                "id": "8001",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5
-    },
-    {
-        "id": "building_8",
-        "name": "110003",
-        "type": "resource",
-        "show": 1,
-        "positions": [
-            {
-                "x": 49,
-                "y": 15
-            },
-            {
-                "x": 49,
-                "y": 16
-            },
-            {
-                "x": 50,
-                "y": 16
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "resources": [
-            {
-                "id": "8001",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5
-    },
-    {
-        "id": "building_9",
-        "name": "110003",
-        "type": "resource",
-        "show": 1,
-        "positions": [
-            {
-                "x": 33,
-                "y": 47
-            },
-            {
-                "x": 33,
-                "y": 48
-            },
-            {
-                "x": 34,
-                "y": 48
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "resources": [
-            {
-                "id": "8001",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5
-    },
-    {
-        "id": "building_10",
-        "name": "110001",
-        "type": "resource",
-        "show": 1,
-        "positions": [
-            {
-                "x": 20,
-                "y": 6
-            },
-            {
-                "x": 20,
-                "y": 7
-            },
-            {
-                "x": 21,
-                "y": 7
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "resources": [
-            {
-                "id": "8003",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5
-    },
-    {
-        "id": "building_11",
-        "name": "110001",
-        "type": "resource",
-        "show": 1,
-        "positions": [
-            {
-                "x": 40,
-                "y": 6
-            },
-            {
-                "x": 40,
-                "y": 7
-            },
-            {
-                "x": 41,
-                "y": 7
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "resources": [
-            {
-                "id": "8003",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5
-    },
-    {
-        "id": "building_12",
-        "name": "110001",
-        "type": "resource",
-        "show": 1,
-        "positions": [
-            {
-                "x": 48,
-                "y": 45
-            },
-            {
-                "x": 48,
-                "y": 46
-            },
-            {
-                "x": 49,
-                "y": 46
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "resources": [
-            {
-                "id": "8003",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5
-    },
-    {
-        "id": "building_13",
-        "name": "110004",
-        "type": "event",
-        "show": 1,
-        "positions": [
-            {
-                "x": 15,
-                "y": 25
-            },
-            {
-                "x": 15,
-                "y": 26
-            },
-            {
-                "x": 16,
-                "y": 26
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "resources": [
-            {
-                "id": "8003",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5,
-        "event": "910201"
-    },
-    {
-        "id": "building_14",
-        "name": "110005",
-        "type": "event",
-        "show": 1,
-        "positions": [
-            {
-                "x": 33,
-                "y": 1
-            },
-            {
-                "x": 33,
-                "y": 2
-            },
-            {
-                "x": 34,
-                "y": 2
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "resources": [
-            {
-                "id": "8003",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5,
-        "event": "910101"
-    },
-    {
-        "id": "building_15",
-        "name": "110006",
-        "type": "event",
-        "show": 1,
-        "positions": [
-            {
-                "x": 27,
-                "y": 49
-            },
-            {
-                "x": 27,
-                "y": 50
-            },
-            {
-                "x": 28,
-                "y": 50
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 1,
-        "resources": [
-            {
-                "id": "8003",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5,
-        "event": "910301"
-    },
-    {
-        "id": "building_18",
-        "name": "110008",
-        "type": "event",
-        "show": 1,
-        "positions": [
-            {
-                "x": 56,
-                "y": 3
-            },
-            {
-                "x": 56,
-                "y": 4
-            },
-            {
-                "x": 57,
-                "y": 4
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 2,
-        "resources": [
-            {
-                "id": "8003",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5,
-        "event": "910401"
-    },
-    {
-        "id": "building_19",
-        "name": "110009",
-        "type": "event",
-        "show": 1,
-        "positions": [
-            {
-                "x": 34,
-                "y": 37
-            },
-            {
-                "x": 34,
-                "y": 38
-            },
-            {
-                "x": 35,
-                "y": 38
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 2,
-        "resources": [
-            {
-                "id": "8003",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5,
-        "event": "910601"
-    },
-    {
-        "id": "building_20",
-        "name": "110007",
-        "type": "event",
-        "show": 1,
-        "positions": [
-            {
-                "x": 44,
-                "y": 58
-            }
-        ],
-        "faction": "netural",
-        "defendPioneerIds": [],
-        "level": 2,
-        "resources": [
-            {
-                "id": "8003",
-                "num": 100
-            }
-        ],
-        "quota": 1,
-        "progress":5,
-        "event": "910501"
-    }
+  {
+    "id": "building_1",
+    "name": "110010",
+    "type": 0,
+    "show": 1,
+    "pos_type": 2,
+    "positions": [
+      20,
+      37
+    ],
+    "level": 1,
+    "progress": null,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "",
+    "hp": 240,
+    "attack": 20,
+    "winprogress": 20,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_2",
+    "name": "110013",
+    "type": 1,
+    "show": 0,
+    "pos_type": 1,
+    "positions": [
+      5,
+      44
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_3",
+    "name": "110011",
+    "type": 1,
+    "show": 0,
+    "pos_type": 0,
+    "positions": [
+      10,
+      49
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_4",
+    "name": "110012",
+    "type": 2,
+    "show": 0,
+    "pos_type": 0,
+    "positions": [
+      8,
+      41
+    ],
+    "level": 1,
+    "progress": null,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_5",
+    "name": "110002",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      40,
+      13
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": [
+      "8002",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_6",
+    "name": "110002",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      18,
+      16
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": [
+      "8002",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_7",
+    "name": "110003",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      8,
+      9
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": [
+      "8001",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_8",
+    "name": "110003",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      49,
+      15
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": [
+      "8001",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_9",
+    "name": "110003",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      33,
+      47
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": [
+      "8001",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_10",
+    "name": "110001",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      20,
+      6
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": [
+      "8003",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_11",
+    "name": "110001",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      40,
+      6
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": [
+      "8003",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_12",
+    "name": "110001",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      48,
+      45
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": [
+      "8003",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_13",
+    "name": "110004",
+    "type": 4,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      15,
+      25
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": [
+      "8003",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "910201",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_14",
+    "name": "110005",
+    "type": 4,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      33,
+      1
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": [
+      "8003",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "910101",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_15",
+    "name": "110006",
+    "type": 4,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      27,
+      49
+    ],
+    "level": 1,
+    "progress": 5,
+    "resources": [
+      "8003",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "910301",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_18",
+    "name": "110008",
+    "type": 4,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      56,
+      3
+    ],
+    "level": 2,
+    "progress": 5,
+    "resources": [
+      "8003",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "910401",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_19",
+    "name": "110009",
+    "type": 4,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      34,
+      37
+    ],
+    "level": 2,
+    "progress": 5,
+    "resources": [
+      "8003",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "910601",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  },
+  {
+    "id": "building_20",
+    "name": "110007",
+    "type": 4,
+    "show": 1,
+    "pos_type": 0,
+    "positions": [
+      44,
+      58
+    ],
+    "level": 2,
+    "progress": 5,
+    "resources": [
+      "8003",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "910501",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
+  }
 ]
