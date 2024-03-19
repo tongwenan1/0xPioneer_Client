@@ -2,6 +2,8 @@ import { Vec2, math, resources, v2 } from "cc";
 import { ResourceModel } from "./UserInfoMgr";
 import MapBuildingModel, { BuildingFactionType, MapBuildingType, MapResourceBuildingModel, MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
 import MapDecorateModel, { MapDecoratePosMode } from "../Game/Outer/Model/MapDecorateModel";
+import { GameMain } from "../GameMain";
+import { TilePos } from "../Game/TiledMap/TileTool";
 
 export interface BuildingMgrEvent {
     buildingDidHide(buildingId: string, beacusePioneerId: string): void;
@@ -34,6 +36,9 @@ export default class BuildingMgr {
             this._observers.splice(index, 1);
         }
     }
+
+
+
     public getAllDecorate(): MapDecorateModel[] {
         return this._decorates;
     }
@@ -71,7 +76,21 @@ export default class BuildingMgr {
         }
     }
 
-
+    public checkMapPosIsInBuilingRange(stayPos: Vec2, buildingId: string, range: number): boolean {
+        const building = this.getBuildingById(buildingId);
+        if (building != null) {
+            let centerPos = null;
+            if (building.stayMapPositions.length == 1 ||
+                building.stayMapPositions.length == 3) {
+                centerPos = building.stayMapPositions[0];
+            } else if (building.stayMapPositions.length == 7) {
+                centerPos = building.stayMapPositions[3];
+            }
+            const visionPositions: TilePos[] = GameMain.inst.outSceneMap.mapBG.getExtAround(centerPos, range);
+            return visionPositions.some(pos => pos.x === stayPos.x && pos.y === stayPos.y);
+        }
+        return false;
+    }
 
     public getAllBuilding(): MapBuildingModel[] {
         return this._buildings;

@@ -490,6 +490,19 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         return footViews;
     }
 
+    private _checkInMainCityRangeAndHealHpToMax(pioneerId: string) {
+        const mainCityId = "building_1";
+        const pioneer = PioneerMgr.instance.getPioneerById(pioneerId);
+        const mainCity = BuildingMgr.instance.getBuildingById(mainCityId);
+        if (mainCity != null && mainCity.faction != BuildingFactionType.enemy &&
+            pioneer != null && pioneer.show) {
+            const isInCityRange: boolean = BuildingMgr.instance.checkMapPosIsInBuilingRange(pioneer.stayPos, mainCityId, UserInfoMgr.Instance.cityVision);
+            if (isInCityRange && pioneer.hp < pioneer.hpMax) {
+                PioneerMgr.instance.pioneerHealHpToMax(pioneerId);
+            }
+        }
+    }
+
     //---------------------------------------------
     //PioneerMgrEvent
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void {
@@ -519,6 +532,12 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
     pioneerLoseHp(pioneerId: string, value: number): void {
 
+    }
+    pioneerGainHp(pioneerId: string, value: number): void {
+        const actionView = this._pioneerMap.get(pioneerId);
+        if (actionView != null && actionView.getComponent(MapPioneer) != null) {
+            actionView.getComponent(MapPioneer).playGetResourceAnim(ResourceCorrespondingItem.Troop, value, null);
+        }
     }
     pionerrRebirthCount(pioneerId: string, count: number): void {
 
@@ -573,7 +592,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         this._refreshFightView(fightId, attacker, defender, attackerIsSelf, fightPositons);
     }
 
-    endFight(fightId: string, isEventFight: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean): void {
+    endFight(fightId: string, isEventFight: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean, playerPioneerId: string): void {
         //fightview destroy
         if (this._fightViewMap.has(fightId)) {
             const currentFightView = this._fightViewMap.get(fightId);
@@ -581,6 +600,10 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 currentFightView.node.destroy();
             });
             this._fightViewMap.delete(fightId);
+        }
+
+        if (playerPioneerId != null) {
+            this._checkInMainCityRangeAndHealHpToMax(playerPioneerId);
         }
 
         if (isEventFight) {
@@ -753,6 +776,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             }
         }
         this.node.getComponent(MapBG).sortMapItemSiblingIndex();
+
+        this._checkInMainCityRangeAndHealHpToMax(pioneerId);
     }
 
     //---------------------------------------------

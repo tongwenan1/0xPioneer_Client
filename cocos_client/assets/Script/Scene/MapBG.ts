@@ -77,6 +77,9 @@ export class MapBG extends Component {
         mapPos = v2(Math.min(this._tiledhelper.width - 1, mapPos.x), Math.min(this._tiledhelper.height - 1, mapPos.y));
         return this._tiledhelper.Path_GetAroundByDirection(this._tiledhelper.getPos(mapPos.x, mapPos.y), direction);
     }
+    public getExtAround(mapPos: Vec2, range: number): TilePos[] {
+        return this._tiledhelper.getExtAround(this._tiledhelper.getPos(mapPos.x, mapPos.y), range - 1);
+    }
     public getPosWorld(x: number, y: number): Vec3 {
         return this._tiledhelper.getPosWorld(x, y);
     }

@@ -23,6 +23,7 @@ export interface PioneerMgrEvent {
 
     pioneerHpMaxChanged(pioneerId: string): void;
     pioneerAttackChanged(pioneerId: string): void;
+    pioneerGainHp?(pioneerId: string, value: number): void;
     pioneerLoseHp(pioneerId: string, value: number): void;
     pionerrRebirthCount(pioneerId: string, count: number): void;
     pioneerRebirth(pioneerId: string): void;
@@ -39,9 +40,9 @@ export interface PioneerMgrEvent {
     pioneerTaskBeenGetted(pioneerId: string, taskId: string): void;
     showGetTaskDialog(task: any): void;
 
-    beginFight(fightId: string, attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void;
-    fightDidAttack(fightId: string, attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void;
-    endFight(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean): void;
+    beginFight?(fightId: string, attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void;
+    fightDidAttack?(fightId: string, attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void;
+    endFight?(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean, playerPioneerId: string): void;
 
     exploredPioneer(pioneerId: string): void;
     exploredBuilding(buildingId: string): void;
@@ -175,6 +176,22 @@ export default class PioneerMgr {
         });
     }
 
+    public pioneerHealHpToMax(pioneerId: string) {
+        const findPioneer = this.getPioneerById(pioneerId);
+        if (findPioneer != null) {
+            const healValue: number = Math.min(findPioneer.hpMax - findPioneer.hp, ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Troop));
+            if (healValue > 0) {
+                findPioneer.gainHp(healValue);
+                ItemMgr.Instance.subItem(ResourceCorrespondingItem.Troop, healValue);
+                this._savePioneerData();
+                for (const observe of this._observers) {
+                    if (observe.pioneerGainHp != null) {
+                        observe.pioneerGainHp(pioneerId, healValue);
+                    }
+                }
+            }
+        }
+    }
     public pioneerChangeOriginalHpMax(pioneerId: string, value: number) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
@@ -510,13 +527,15 @@ export default class PioneerMgr {
                 }
             });
             for (const observer of this._observers) {
-                observer.beginFight(
-                    fightId,
-                    { name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
-                    { name: enemyName, hp: enemyHp, hpMax: enemyHpMax },
-                    attacker.friendly,
-                    [attacker.stayPos]
-                );
+                if (observer.beginFight != null) {
+                    observer.beginFight(
+                        fightId,
+                        { name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
+                        { name: enemyName, hp: enemyHp, hpMax: enemyHpMax },
+                        attacker.friendly,
+                        [attacker.stayPos]
+                    );
+                }
             }
             let selfAttack: boolean = true;
             const intervalId = setInterval(() => {
@@ -553,7 +572,9 @@ export default class PioneerMgr {
                         UserInfoMgr.Instance.exp += enemy.winexp;
                     }
                     for (const observer of this._observers) {
-                        observer.endFight(fightId, true, deadPioneer instanceof MapPioneerModel, deadPioneer.id, deadPioneer == enemy);
+                        if (observer.endFight != null) {
+                            observer.endFight(fightId, true, deadPioneer instanceof MapPioneerModel, deadPioneer.id, deadPioneer == enemy, attacker.id);
+                        }
                     }
 
                     EventMgr.emit(EventName.FIGHT_FINISHED, {
@@ -600,13 +621,15 @@ export default class PioneerMgr {
                     }
                 } else {
                     for (const observer of this._observers) {
-                        observer.fightDidAttack(
-                            fightId,
-                            { name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
-                            { name: enemyName, hp: enemyHp, hpMax: enemyHpMax },
-                            attacker.friendly,
-                            [attacker.stayPos]
-                        );
+                        if (observer.fightDidAttack != null) {
+                            observer.fightDidAttack(
+                                fightId,
+                                { name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
+                                { name: enemyName, hp: enemyHp, hpMax: enemyHpMax },
+                                attacker.friendly,
+                                [attacker.stayPos]
+                            );
+                        }
                     }
                 }
             }, 250);
@@ -1537,13 +1560,15 @@ export default class PioneerMgr {
             }
         }
         for (const observer of this._observers) {
-            observer.beginFight(
-                fightId,
-                { name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
-                { name: defenderName, hp: defenderHp, hpMax: defenderHpMax },
-                attacker.friendly,
-                defenderCenterPositions
-            );
+            if (observer.beginFight != null) {
+                observer.beginFight(
+                    fightId,
+                    { name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
+                    { name: defenderName, hp: defenderHp, hpMax: defenderHpMax },
+                    attacker.friendly,
+                    defenderCenterPositions
+                );
+            }
         }
         let selfAttack: boolean = true;
         const intervalId = setInterval(() => {
@@ -1616,15 +1641,25 @@ export default class PioneerMgr {
                 }
 
                 let isSelfWin: boolean = false;
+                let playerPioneerId: string = null;
                 if (deadPioneer instanceof MapPioneerModel &&
                     deadPioneer.type != MapPioneerType.player &&
                     deadPioneer.winexp > 0) {
                     UserInfoMgr.Instance.exp += deadPioneer.winexp;
                     isSelfWin = true;
                 }
+                if (attacker.type == MapPioneerType.player) {
+                    playerPioneerId = attacker.id;
+
+                } else if (defender instanceof MapPioneerModel &&
+                    defender.type == MapPioneerType.player) {
+                    playerPioneerId = defender.id;
+                }
 
                 for (const observer of this._observers) {
-                    observer.endFight(fightId, false, deadPioneer instanceof MapPioneerModel, deadPioneer.id, isSelfWin);
+                    if (observer.endFight != null) {
+                        observer.endFight(fightId, false, deadPioneer instanceof MapPioneerModel, deadPioneer.id, isSelfWin, playerPioneerId);
+                    }
                 }
 
                 EventMgr.emit(EventName.FIGHT_FINISHED, {
@@ -1675,13 +1710,15 @@ export default class PioneerMgr {
 
             } else {
                 for (const observer of this._observers) {
-                    observer.fightDidAttack(
-                        fightId,
-                        { name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
-                        { name: defenderName, hp: defenderHp, hpMax: defenderHpMax },
-                        attacker.friendly,
-                        defenderCenterPositions
-                    );
+                    if (observer.fightDidAttack != null) {
+                        observer.fightDidAttack(
+                            fightId,
+                            { name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
+                            { name: defenderName, hp: defenderHp, hpMax: defenderHpMax },
+                            attacker.friendly,
+                            defenderCenterPositions
+                        );
+                    }
                 }
             }
         }, 250);
