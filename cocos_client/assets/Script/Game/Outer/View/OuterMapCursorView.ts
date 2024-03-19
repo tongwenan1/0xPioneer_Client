@@ -32,7 +32,6 @@ export class OuterMapCursorView extends Component {
             line.angle = tiledUsed[index].borderAngle;
         }
 
-        visionPostions = null;
         if (visionPostions != null && visionColor != null) {
             const visionUsed = this._prepareBorderPos(visionPostions);
             for (; index < visionUsed.length + tiledUsed.length; index++) {
