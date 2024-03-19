@@ -76,6 +76,14 @@ export default class BuildingMgr {
         }
     }
 
+    public fillBuildingStayPos(buildingId: string, newPosions: Vec2[]) {
+        const building = this.getBuildingById(buildingId);
+        if (building != null) {
+            building.stayMapPositions = newPosions;
+            this._savePioneerData();
+        }
+    }
+
     public checkMapPosIsInBuilingRange(stayPos: Vec2, buildingId: string, range: number): boolean {
         const building = this.getBuildingById(buildingId);
         if (building != null) {
@@ -337,8 +345,8 @@ export default class BuildingMgr {
                 for (const temple of resultData) {
                     let newModel = null;
                     const mapPositions = [];
-                    for (const pos of temple.positions) {
-                        mapPositions.push(v2(pos.x, pos.y));
+                    if (temple.positions.length == 2) {
+                        mapPositions.push(v2(temple.positions[0], temple.positions[1]));
                     }
                     if (temple.type == MapBuildingType.decorate) {
                         for (const templePos of mapPositions) {
@@ -365,6 +373,7 @@ export default class BuildingMgr {
                                 temple.defendPioneerIds,
                                 temple.level,
                                 mapPositions,
+                                temple.pos_type,
                                 temple.hp,
                                 temple.hp,
                                 temple.attack
@@ -373,10 +382,12 @@ export default class BuildingMgr {
                             const resources: ResourceModel[] = [];
                             if (temple.resources != null) {
                                 for (const resourceData of temple.resources) {
-                                    resources.push({
-                                        id: resourceData.id,
-                                        num: resourceData.num,
-                                    });
+                                    if (resourceData.length == 2) {
+                                        resources.push({
+                                            id: resourceData[0],
+                                            num: resourceData[1],
+                                        });
+                                    }
                                 }
                             }
                             newModel = new MapResourceBuildingModel(
@@ -388,6 +399,7 @@ export default class BuildingMgr {
                                 temple.defendPioneerIds,
                                 temple.level,
                                 mapPositions,
+                                temple.pos_type,
                                 resources,
                                 temple.quota ? temple.quota : 1
                             );
@@ -400,7 +412,8 @@ export default class BuildingMgr {
                                 temple.faction,
                                 temple.defendPioneerIds,
                                 temple.level,
-                                mapPositions
+                                mapPositions,
+                                temple.pos_type
                             );
                         }
                         if (temple.progress != null) {
@@ -415,6 +428,9 @@ export default class BuildingMgr {
                         }
                         if (temple.exp != null) {
                             newModel.exp = temple.exp;
+                        }
+                        if (temple.node != null) {
+                            newModel.animType = temple.node;
                         }
                         this._buildings.push(newModel);
                     }
@@ -441,6 +457,7 @@ export default class BuildingMgr {
                         temple._defendPioneerIds,
                         temple._level,
                         mapPositions,
+                        temple._posType,
                         temple._hpMax,
                         temple._hp,
                         temple._attack,
@@ -465,6 +482,7 @@ export default class BuildingMgr {
                         temple._defendPioneerIds,
                         temple._level,
                         mapPositions,
+                        temple._posType,
                         resources,
                         temple._quota
                     );
@@ -478,6 +496,7 @@ export default class BuildingMgr {
                         temple._defendPioneerIds,
                         temple._level,
                         mapPositions,
+                        temple._posType,
                     );
                 }
                 newModel.progress = temple._progress;
@@ -486,6 +505,7 @@ export default class BuildingMgr {
                 newModel.originalEventId = temple._originalEventId;
                 newModel.eventWaited = temple._eventWaited;
                 newModel.exp = temple._exp;
+                newModel.animType = temple._animType;
                 this._buildings.push(newModel);
             }
         }

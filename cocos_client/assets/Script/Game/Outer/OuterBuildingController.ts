@@ -5,8 +5,8 @@ import EventMgr from '../../Manger/EventMgr';
 import PioneerMgr, { PioneerMgrEvent } from '../../Manger/PioneerMgr';
 import TaskMgr from '../../Manger/TaskMgr';
 import UserInfoMgr, { UserInfoEvent, FinishedEvent } from '../../Manger/UserInfoMgr';
-import { TilePos } from '../TiledMap/TileTool';
-import { MapBuildingType, BuildingFactionType } from './Model/MapBuildingModel';
+import { TileHexDirection, TilePos } from '../TiledMap/TileTool';
+import { MapBuildingType, BuildingFactionType, BuildingStayPosType } from './Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel } from './Model/MapPioneerModel';
 import { OuterBuildingView } from './View/OuterBuildingView';
 import { MapBG } from '../../Scene/MapBG';
@@ -56,9 +56,35 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
 
     private _startAction() {
         if (this._started && this._dataLoaded) {
-            this._refreshUI();
 
             const mapBg = this.node.getComponent(MapBG);
+            // buildingPos
+            const allBuildings = BuildingMgr.instance.getAllBuilding();
+            for (const building of allBuildings) {
+                if (building.stayPosType == BuildingStayPosType.One) {
+                    // no action
+                } else if (building.stayMapPositions.length == 1) {
+                    const newPos = [].concat(building.stayMapPositions);
+                    const originalPos = newPos[0];
+                    if (building.stayPosType == BuildingStayPosType.Three) {
+                        newPos.push(mapBg.getAroundByDirection(originalPos, TileHexDirection.LeftBottom));
+                        newPos.push(mapBg.getAroundByDirection(originalPos, TileHexDirection.RightBottom));
+
+                    } else if (building.stayPosType == BuildingStayPosType.Seven) {
+                        newPos.splice(0, 0, mapBg.getAroundByDirection(originalPos, TileHexDirection.LeftTop));
+                        newPos.splice(0, 0, mapBg.getAroundByDirection(originalPos, TileHexDirection.RightTop));
+                        newPos.splice(0, 0, mapBg.getAroundByDirection(originalPos, TileHexDirection.Left));
+                        newPos.push(mapBg.getAroundByDirection(originalPos, TileHexDirection.Right));
+                        newPos.push(mapBg.getAroundByDirection(originalPos, TileHexDirection.LeftBottom));
+                        newPos.push(mapBg.getAroundByDirection(originalPos, TileHexDirection.RightBottom));
+                    }
+                    BuildingMgr.instance.fillBuildingStayPos(building.id, newPos);
+                }
+            }
+
+            this._refreshUI();
+
+            // decorations
             const decorates = BuildingMgr.instance.getAllDecorate();
             for (const decorate of decorates) {
                 if (decorate.posMode == MapDecoratePosMode.World) {
