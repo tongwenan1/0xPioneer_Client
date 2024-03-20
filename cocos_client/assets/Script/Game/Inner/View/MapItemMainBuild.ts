@@ -31,7 +31,7 @@ export class MapItemMainBuild extends MapItem {
         super._onClick();
 
         GameMain.inst.UI.buildingUpgradeUI.refreshUI();
-        GameMain.inst.UI.buildingUpgradeUI.show(true);
+        GameMain.inst.UI.buildingUpgradeUI.show(true, true);
     }
 
     public upgradeBuild() {

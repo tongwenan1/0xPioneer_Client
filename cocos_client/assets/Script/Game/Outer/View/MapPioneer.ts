@@ -89,7 +89,6 @@ export class MapPioneer extends Component {
             this._eventingView.active = false;
             this._eventWaitedView.active = false;
 
-
             switch (this._model.actionType) {
                 case MapPioneerActionType.dead: {
                     this.node.active = true;
@@ -167,6 +166,9 @@ export class MapPioneer extends Component {
             bottomWalkView.active = this._model.moveDirection == MapPioneerMoveDirection.bottom;
         }
     }
+    public setEventWaitedCallback(callback: () => void) {
+        this._eventWaitedCallback = callback;
+    }
 
     private _playingView: Node[] = [];
     public playGetResourceAnim(resourceId: string, num: number, callback: () => void) {
@@ -217,6 +219,7 @@ export class MapPioneer extends Component {
         "rebels",
         "secretGuard",
     ];
+    private _eventWaitedCallback: () => void = null;
     onLoad() {
         if (this.speedUpTag) {
             this.speedUpTag.active = false;
@@ -258,6 +261,12 @@ export class MapPioneer extends Component {
         }
     }
 
+    //----------------- event
+    private onTapEventWaited() {
+        if (this._eventWaitedCallback != null) {
+            this._eventWaitedCallback();
+        }
+    }
 }
 
 

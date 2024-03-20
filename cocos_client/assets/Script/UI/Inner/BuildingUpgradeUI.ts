@@ -16,7 +16,7 @@ const { ccclass } = _decorator;
 export class BuildingUpgradeUI extends PopUpUI implements ItemMgrEvent {
     
     public refreshUI() {
-        const buildingInfoView = this.node.getChildByName("BuildingInfoView");
+        const buildingInfoView = this.node.getChildByPath("__ViewContent/BuildingInfoView");
 
         // useLanMgr 
         // buildingInfoView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
@@ -50,10 +50,10 @@ export class BuildingUpgradeUI extends PopUpUI implements ItemMgrEvent {
 
     private _curBuildingType: InnerBuildingType = null;
     onLoad(): void {
-        this._barracksBtn = this.node.getChildByPath("BuildingInfoView/Buildings/BarracksBg/Barracks").getComponent(Button);
-        this._housesBtn = this.node.getChildByPath("BuildingInfoView/Buildings/ResidentialBg/Residential").getComponent(Button);
+        this._barracksBtn = this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/BarracksBg").getComponent(Button);
+        this._housesBtn = this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/ResidentialBg").getComponent(Button);
 
-        this._levelInfoView = this.node.getChildByPath("LevelInfoView");
+        this._levelInfoView = this.node.getChildByPath("__ViewContent/LevelInfoView");
         this._levelInfoView.active = false;
         this._levelInfoCostItem = this._levelInfoView.getChildByPath("UpgradeContent/Resource/Item");
         this._levelInfoCostItem.active = false;
@@ -131,7 +131,7 @@ export class BuildingUpgradeUI extends PopUpUI implements ItemMgrEvent {
 
                 item.getChildByPath("num/left").getComponent(Label).string = cost.num + "";
                 item.getChildByPath("num/right").getComponent(Label).string = ItemMgr.Instance.getOwnItemCount(type).toString();
-                item.getChildByPath("num/right").getComponent(Label).color = ownNum > cost.num ? new Color(142, 218, 97) : Color.RED;
+                item.getChildByPath("num/right").getComponent(Label).color = ownNum >= cost.num ? new Color(142, 218, 97) : Color.RED;
 
                 this._levelInfoShowCostItems.push(item);
             }
@@ -224,12 +224,12 @@ export class BuildingUpgradeUI extends PopUpUI implements ItemMgrEvent {
 
             EventMgr.emit(EventName.BUILD_BEGIN_UPGRADE, { buildingType: buildingType, time: up_time });
             this._closeBuildingUpgradeUI();
-            this.show(false);
+            this.show(false, true);
         }
     }
 
     private onTapClose() {
-        this.show(false);
+        this.show(false, true);
     }
 
     //------------------- ItemMgrEvent

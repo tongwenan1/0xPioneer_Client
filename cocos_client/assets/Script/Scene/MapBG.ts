@@ -108,10 +108,6 @@ export class MapBG extends Component {
         this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons());
     }
 
-    public curCameraPos: Vec3 = Vec3.ZERO;
-    public curCameraZoom: number = 1;
-
-
     @property(Prefab)
     tiledmap: Prefab
 
@@ -147,6 +143,9 @@ export class MapBG extends Component {
     public cameraOriginalOrthoHeight: number = 0;
 
     private _mouseDown: boolean = false;
+    private _curCameraPos: Vec3 = Vec3.ZERO;
+    private _curCameraZoom: number = 1;
+
     private _tiledhelper: TileMapHelper = null;
     private _localEraseShadowWorldPos: Vec2[] = [];
     private _localEraseDataKey: string = "erase_shadow";
@@ -242,10 +241,6 @@ export class MapBG extends Component {
             }
             GameMain.inst.MainCamera.orthoHeight = sc * this.cameraOriginalOrthoHeight;
             localStorage.setItem("local_outer_map_scale", sc.toString());
-            if (this.node.active) {
-                console.log('exce outersc: ' + sc);
-                this.curCameraZoom = sc;
-            }
             this._fixCameraPos(GameMain.inst.MainCamera.node.position);
 
             EventMgr.emit(EventName.MAP_SCALED);
@@ -333,10 +328,14 @@ export class MapBG extends Component {
         this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons());
     }
 
+    protected onDisable(): void {
+        this._curCameraPos = GameMain.inst.MainCamera.node.position.clone();
+        this._curCameraZoom = GameMain.inst.MainCamera.camera.orthoHeight / GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
+    }
+
     protected onEnable(): void {
-        console.log("exce outercur: " + JSON.stringify(this.curCameraPos));
-        // GameMain.inst.MainCamera.node.setPosition(this.curCameraPos);
-        // GameMain.inst.MainCamera.camera.orthoHeight = this.curCameraZoom * GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
+        GameMain.inst.MainCamera.node.setPosition(this._curCameraPos.clone());
+        GameMain.inst.MainCamera.camera.orthoHeight = this._curCameraZoom * GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
     }
 
     update(deltaTime: number) {
@@ -548,8 +547,7 @@ export class MapBG extends Component {
                 actionType = 6;
                 stayPositons = stayBuilding.stayMapPositions;
 
-            } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing &&
-                (currentActionPioneer.eventStatus == MapPioneerEventStatus.Waiting || stayBuilding.eventId != currentActionPioneer.actionEventId)) {
+            } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing) {
                 actionType = -2;
                 // useLanMgr
                 GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("203005"));
@@ -721,11 +719,8 @@ export class MapBG extends Component {
 
         pos.x = Math.min(Math.max(minx, pos.x), maxx);
         pos.y = Math.min(Math.max(miny, pos.y), maxy);
+
         GameMain.inst.MainCamera.node.setPosition(pos);
-        if (this.node.active) {
-            console.log("exce outermove: " + JSON.stringify(this.curCameraPos));
-            this.curCameraPos = pos;
-        }
     }
 
     private _refreshFog(allClearedShadowPositions: TilePos[], newCleardPositons: TilePos[] = null, stayPos: Vec2 = null) {

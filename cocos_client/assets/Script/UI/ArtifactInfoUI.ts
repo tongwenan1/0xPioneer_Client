@@ -45,7 +45,7 @@ export class ArtifactInfoUI extends PopUpUI {
                     useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK5);
                 }
     
-                const content = this.node.getChildByName("DialogBg");
+                const content = this.node.getChildByName("__ViewContent");
     
                 // name
                 content.getChildByName("Name").getComponent(Label).string = LanMgr.Instance.getLanById(config.name);
@@ -107,7 +107,7 @@ export class ArtifactInfoUI extends PopUpUI {
                     content.getChildByName("DescTxt").getComponent(RichText).string = LanMgr.Instance.getLanById(config.des);
                 }
             }
-            this.show(true);
+            this.show(true, true);
         }
     }
 
@@ -121,13 +121,13 @@ export class ArtifactInfoUI extends PopUpUI {
     onLoad(): void {
         this._allEffectViews = [];
 
-        this._stableEffectItem = this.node.getChildByPath("DialogBg/EffectContent/StableEffect");
+        this._stableEffectItem = this.node.getChildByPath("__ViewContent/EffectContent/StableEffect");
         this._stableEffectItem.active = false;
 
-        this._lockedEffectItem = this.node.getChildByPath("DialogBg/EffectContent/LockedEffect");
+        this._lockedEffectItem = this.node.getChildByPath("__ViewContent/EffectContent/LockedEffect");
         this._lockedEffectItem.active = false;
 
-        this._unlockEffectItem = this.node.getChildByPath("DialogBg/EffectContent/UnLockEffect");
+        this._unlockEffectItem = this.node.getChildByPath("__ViewContent/EffectContent/UnLockEffect");
         this._unlockEffectItem.active = false;
     }
 
@@ -138,7 +138,7 @@ export class ArtifactInfoUI extends PopUpUI {
     //---------------------------------------------------- action
     private onTapClose() {
         if (this._artifacts.length <= 0) {
-            this.show(false);
+            this.show(false, true);
             if (this._closeCallback != null) {
                 this._closeCallback();
             }

@@ -158,6 +158,10 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             if (actionPioneer != null) {
                 const currentWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(actionPioneer.stayPos.x, actionPioneer.stayPos.y);
                 GameMain.inst.MainCamera.node.worldPosition = currentWorldPos;
+                const localOuterMapScale = localStorage.getItem("local_outer_map_scale");
+                if (localOuterMapScale != null) {
+                    GameMain.inst.MainCamera.orthoHeight = this._cameraBeginOrthoHeight * parseFloat(localOuterMapScale);
+                }
             }
 
             if (!UserInfoMgr.Instance.isFinishRookie) {
@@ -217,6 +221,18 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 if (temple != null) {
                     if (pioneer.type == MapPioneerType.player) {
                         temple.getComponent(MapPioneer).refreshUI(pioneer);
+                        temple.getComponent(MapPioneer).setEventWaitedCallback(() => {
+                            const allBuildings = BuildingMgr.instance.getAllBuilding();
+                            for (const building of allBuildings) {
+                                if (building.eventId == pioneer.actionEventId) {
+                                    const currentEvents = BranchEventMgr.Instance.getEventById(building.eventId);
+                                    if (currentEvents.length > 0) {
+                                        PioneerMgr.instance.pioneerDealWithEvent(pioneer.id, building.id, currentEvents[0]);
+                                    }
+                                    break;
+                                }
+                            }
+                        });
 
                     } else if (pioneer.type == MapPioneerType.npc) {
                         const npcModel = pioneer as MapNpcPioneerModel;
@@ -338,7 +354,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         // default speed
         let defaultSpeed = 180;
 
-        // defaultSpeed = 600
+        // defaultSpeed = 600;
         const allPioneers = PioneerMgr.instance.getAllPioneer();
 
         // artifact effect

@@ -35,6 +35,7 @@ export class GameMain extends Component {
     protected _currentScene: Node;
 
     public changeScene() {
+        // inner and outer need hide first, then show
         if (this._currentScene == this.InnerScene) {
             this.InnerScene.active = false;
             this.OutScene.active = true;
@@ -42,8 +43,8 @@ export class GameMain extends Component {
             this._currentScene = this.OutScene;
         }
         else {
-            this.InnerScene.active = true;
             this.OutScene.active = false;
+            this.InnerScene.active = true;
 
             this._currentScene = this.InnerScene;
 

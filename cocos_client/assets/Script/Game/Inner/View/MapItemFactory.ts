@@ -52,7 +52,7 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
                 // GameMain.inst.UI.ShowTip("Recruiting…Please wait…");
                 return;
             }
-            GameMain.inst.UI.recruitUI.show(true);
+            GameMain.inst.UI.recruitUI.show(true, true);
             GameMain.inst.UI.recruitUI.refreshUI(true);
         }
     }

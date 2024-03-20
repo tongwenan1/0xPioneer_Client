@@ -19,8 +19,8 @@ export class ItemSelectFromThreeUI extends PopUpUI {
         this._selectedCallback = selectedCallback;
         const drops: any[] = DropMgr.Instance.getDropById(dropId);
         // useLanMgr
-        // this.node.getChildByPath("Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/GetAllBtn/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/GetAllBtn/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
 
         if (drops.length > 0) {
             const drop = drops[0];
@@ -44,7 +44,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
                 }
                 this._showItemViews = [];
 
-                const content = this.node.getChildByPath("Content/ImgTextBg/SelectContent").getComponent(Layout);
+                const content = this.node.getChildByPath("__ViewContent/ImgTextBg/SelectContent").getComponent(Layout);
                 for (let i = 0; i < this._items.length; i++) {
                     const config = ArtifactMgr.Instance.getArtifactConf(this._items[i].artifactConfigId);
                     if (config == null) {
@@ -100,7 +100,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
                 content.updateLayout();
 
                 // show
-                this.show(true);
+                this.show(true, true);
             }
         }
     }
@@ -111,7 +111,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
     private _itemView: Node = null;
     private _showItemViews: Node[] = null;
     onLoad(): void {
-        this._itemView = this.node.getChildByPath("Content/ImgTextBg/SelectContent/Item");
+        this._itemView = this.node.getChildByPath("__ViewContent/ImgTextBg/SelectContent/Item");
         this._itemView.active = false;
 
         this._showItemViews = [];
@@ -124,7 +124,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
 
     //---------------------------------------------------- action
     private onTapClose() {
-        this.show(false);
+        this.show(false, true);
     }
 
     private onTapGet(event: Event, customEventData: any) {
@@ -136,7 +136,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
         if (this._selectedCallback != null) {
             this._selectedCallback();
         }
-        this.show(false);
+        this.show(false, true);
     }
 
     private onTapGetAll() {
@@ -149,7 +149,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
             if (this._selectedCallback != null) {
                 this._selectedCallback();
             }
-            this.show(false);
+            this.show(false, true);
         } else {
             // useLanMgr
             // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201004"));

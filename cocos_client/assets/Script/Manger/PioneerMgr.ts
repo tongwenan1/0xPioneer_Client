@@ -1137,6 +1137,7 @@ export default class PioneerMgr {
                     newModel.actionType = temple._actionType;
                 }
                 newModel.actionEventId = temple._actionEventId;
+                newModel.eventStatus = temple._eventStatus;
                 // movepath
                 const tempMovePath = [];
                 for (const tempTiled of temple._movePaths) {

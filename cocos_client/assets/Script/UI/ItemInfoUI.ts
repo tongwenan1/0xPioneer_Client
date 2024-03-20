@@ -35,7 +35,7 @@ export class ItemInfoUI extends PopUpUI {
             let currentItem: ItemData = this._items.splice(0, 1)[0];
             let currentConfig = ItemMgr.Instance.getItemConf(currentItem.itemConfigId);
             if (currentConfig != null) {
-                const contentView = this.node.getChildByName("DialogBg");
+                const contentView = this.node.getChildByName("__ViewContent");
                 // name 
                 contentView.getChildByName("Name").getComponent(Label).string = LanMgr.Instance.getLanById(currentConfig.itemName);
                 // icon
@@ -56,7 +56,7 @@ export class ItemInfoUI extends PopUpUI {
                     }
                 }
             }
-            this.show(true);
+            this.show(true, true);
         }
     }
 
@@ -71,7 +71,7 @@ export class ItemInfoUI extends PopUpUI {
     //---------------------------------------------------- action
     private onTapClose() {
         if (this._items.length <= 0) {
-            this.show(false);
+            this.show(false, true);
             if (this._closeCallback != null) {
                 this._closeCallback();
             }
@@ -95,7 +95,7 @@ export class ItemInfoUI extends PopUpUI {
                     }
                 });
             }
-            this.show(false);
+            this.show(false, true);
             if (this._closeCallback != null) {
                 this._closeCallback();
             }

@@ -237,11 +237,11 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
 
         this.backpackBtn.node.on(Button.EventType.CLICK, () => {
-            GameMain.inst.UI.backpackUI.show(true);
+            GameMain.inst.UI.backpackUI.show(true, true);
         }, this);
 
         this.artifactBtn.node.on(Button.EventType.CLICK, () => {
-            GameMain.inst.UI.artifactUI.show(true);
+            GameMain.inst.UI.artifactUI.show(true, true);
         }, this);
 
         this.battleReportsBtn.node.on(Button.EventType.CLICK, () => {

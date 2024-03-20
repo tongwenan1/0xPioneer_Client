@@ -319,7 +319,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "DialogBg",
+    "_name": "__ViewContent",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1267,7 +1267,7 @@
       }
     ],
     "_interactable": true,
-    "_transition": 0,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 255,
@@ -1301,7 +1301,7 @@
     "_pressedSprite": null,
     "_disabledSprite": null,
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": null,
     "_id": ""
   },
@@ -1476,7 +1476,7 @@
       }
     ],
     "_interactable": true,
-    "_transition": 0,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 255,
@@ -1510,7 +1510,7 @@
     "_pressedSprite": null,
     "_disabledSprite": null,
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.9,
     "_target": null,
     "_id": ""
   },

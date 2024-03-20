@@ -7,7 +7,6 @@ import EventMgr from '../../Manger/EventMgr';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemMgr from '../../Manger/ItemMgr';
 import { GameMain } from '../../GameMain';
-import { channel } from 'diagnostics_channel';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
@@ -24,11 +23,11 @@ export class RecruitUI extends PopUpUI {
         }
 
         // useLanMgr
-        // this.node.getChildByPath("Bg/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByName("Bg/current_res/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByName("Bg/recruiting/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByName("Bg/footer/time/txt").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByName("Bg/footer/Button/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("__ViewContent/current_res/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("__ViewContent/recruiting/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("__ViewContent/footer/time/txt").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
 
         const currentTroops: number = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Troop);
 
@@ -83,21 +82,21 @@ export class RecruitUI extends PopUpUI {
     }
 
     onLoad(): void {
-        this._totalTroopProgress = this.node.getChildByPath("Bg/ProgressBar").getComponent(ProgressBar);
-        this._currentTroop = this.node.getChildByPath("Bg/current_res/num/cur").getComponent(Label);
-        this._totalTroop = this.node.getChildByPath("Bg/current_res/num/max").getComponent(Label);
+        this._totalTroopProgress = this.node.getChildByPath("__ViewContent/ProgressBar").getComponent(ProgressBar);
+        this._currentTroop = this.node.getChildByPath("__ViewContent/current_res/num/cur").getComponent(Label);
+        this._totalTroop = this.node.getChildByPath("__ViewContent/current_res/num/max").getComponent(Label);
 
-        this._generateProgress = this.node.getChildByPath("Bg/recruiting/scroll/ProgressBar").getComponent(ProgressBar);
+        this._generateProgress = this.node.getChildByPath("__ViewContent/recruiting/scroll/ProgressBar").getComponent(ProgressBar);
         this._generateSlider = this._generateProgress.node.getChildByName("Slider").getComponent(Slider);
-        this._generateMaxTroop = this.node.getChildByPath("Bg/recruiting/control/num/max").getComponent(Label);
-        this._generateSelectTroop = this.node.getChildByPath("Bg/recruiting/control/num/cur").getComponent(Label);
+        this._generateMaxTroop = this.node.getChildByPath("__ViewContent/recruiting/control/num/max").getComponent(Label);
+        this._generateSelectTroop = this.node.getChildByPath("__ViewContent/recruiting/control/num/cur").getComponent(Label);
 
 
-        this._generateTime = this.node.getChildByPath("Bg/footer/time/txt-001").getComponent(Label);
-        this._usedWood = this.node.getChildByPath("Bg/footer/material/wood_bg/wood/num/left").getComponent(Label);
-        this._maxWood = this.node.getChildByPath("Bg/footer/material/wood_bg/wood/num/right").getComponent(Label);
-        this._usedStone = this.node.getChildByPath("Bg/footer/material/stone_bg/stone/num/left").getComponent(Label);
-        this._maxStone = this.node.getChildByPath("Bg/footer/material/stone_bg/stone/num/right").getComponent(Label);
+        this._generateTime = this.node.getChildByPath("__ViewContent/footer/time/txt-001").getComponent(Label);
+        this._usedWood = this.node.getChildByPath("__ViewContent/footer/material/wood_bg/wood/num/left").getComponent(Label);
+        this._maxWood = this.node.getChildByPath("__ViewContent/footer/material/wood_bg/wood/num/right").getComponent(Label);
+        this._usedStone = this.node.getChildByPath("__ViewContent/footer/material/stone_bg/stone/num/left").getComponent(Label);
+        this._maxStone = this.node.getChildByPath("__ViewContent/footer/material/stone_bg/stone/num/right").getComponent(Label);
 
         EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
     }
@@ -122,7 +121,7 @@ export class RecruitUI extends PopUpUI {
     //---------------------------------- action
 
     private onTapClose() {
-        this.show(false);
+        this.show(false, true);
     }
 
     private onTapGenerateMax() {
@@ -186,7 +185,7 @@ export class RecruitUI extends PopUpUI {
         ItemMgr.Instance.subItem(ResourceCorrespondingItem.Wood, parseInt(this._usedWood.string));
         ItemMgr.Instance.subItem(ResourceCorrespondingItem.Stone, parseInt(this._usedStone.string));
         UserInfo.Instance.beginGenerateTroop(this._generateTimeNum, this._selectGenerateNum);
-        this.show(false);
+        this.show(false, true);
     }
 }
 

@@ -10,7 +10,9 @@ const { ccclass, property } = _decorator;
 @ccclass('InnerMapBG')
 export class InnerMapBG extends Component {
 
-    _mouseDown: boolean = false;
+    private _mouseDown: boolean = false;
+    private _curCameraPos: Vec3 = Vec3.ZERO;
+    private _curCameraZoom: number = 1;
     start() {
 
         this._mouseDown = false;
@@ -85,9 +87,19 @@ export class InnerMapBG extends Component {
                 else if (pos.y > moveDistY) {
                     pos.y = moveDistY;
                 }
-                GameMain.inst.MainCamera.node.setPosition(pos);
+                GameMain.inst.MainCamera.node.setPosition(pos);              
             }
-        }, this)
+        }, this);
+    }
+
+    protected onDisable(): void {
+        this._curCameraPos = GameMain.inst.MainCamera.node.position.clone();
+        this._curCameraZoom = GameMain.inst.MainCamera.camera.orthoHeight / GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
+    }
+
+    protected onEnable(): void {
+        GameMain.inst.MainCamera.node.setPosition(this._curCameraPos.clone());
+        GameMain.inst.MainCamera.camera.orthoHeight = this._curCameraZoom * GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
     }
 
     update(deltaTime: number) {

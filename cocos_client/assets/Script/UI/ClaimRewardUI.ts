@@ -101,7 +101,7 @@ export class ClaimRewardUI extends Component {
                     item.getChildByPath("Treasure/Treasure_box_" + j).active = j == this._boxDatas[i].icon;
                 }
                 item.getChildByName("Progress").getComponent(Label).string = this._boxDatas[i].threshold;
-                item.getChildByName("Button").getComponent(Button).clickEvents[0].customEventData = i.toString();
+                item.getChildByName("Treasure").getComponent(Button).clickEvents[0].customEventData = i.toString();
                 this._boxViews.push(item);
                 item["__fromthreshold"] = beginThresholdValue + this._boxDatas[i].threshold;
                 this._maxthreshold = Math.max(this._maxthreshold, this._boxDatas[i].threshold);
