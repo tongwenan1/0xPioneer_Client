@@ -1,16 +1,18 @@
 import { _decorator, builtinResMgr, Component, instantiate, Node, Prefab, resources, UITransform, v2, v3, Vec2, Vec3, warn } from 'cc';
 import { GameMain } from '../../GameMain';
 import { TileHexDirection, TilePos } from '../TiledMap/TileTool';
-import { MapBuildingType, BuildingFactionType, BuildingStayPosType } from './Model/MapBuildingModel';
-import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel } from './Model/MapPioneerModel';
 import { OuterBuildingView } from './View/OuterBuildingView';
 import { MapBG } from '../../Scene/MapBG';
 import { EventName } from '../../Const/ConstDefine';
-import MapDecorateModel, { MapDecoratePosMode } from './Model/MapDecorateModel';
-import { FinishedEvent, UserInfoEvent } from '../../Const/Manager/UserInfoDefine';
+import { FinishedEvent, UserInfoEvent } from '../../Const/Manager/UserInfoMgrDefine';
 import { BuildingMgrEvent } from '../../Const/Manager/BuildingMgrDefine';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
 import { BuildingMgr, EventMgr, PioneerMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
+import { BuildingStayPosType, MapBuildingType, BuildingFactionType } from '../../Const/Model/MapBuildingModelDefine';
+import { MapDecoratePosMode } from '../../Const/Model/MapDecorateModelDefine';
+import MapDecorateModel from './Model/MapDecorateModel';
+import { MapPioneerActionType } from '../../Const/Model/MapPioneerModelDefine';
+import MapPioneerModel, { MapPioneerLogicModel } from './Model/MapPioneerModel';
 
 
 const { ccclass, property } = _decorator;

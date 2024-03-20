@@ -1,11 +1,4 @@
-export interface SettlementModel {
-    level: number,
-    newPioneerIds: string[],
-    killEnemies: number,
-    gainResources: number,
-    eventAchievements?: any[],
-    exploredEvents: number
-}
+import { SettlementModel } from "../Const/Manager/SettlementMgrDefine";
 
 export default class SettlementMgr {
     public insertSettlement(newSettlement: SettlementModel) {

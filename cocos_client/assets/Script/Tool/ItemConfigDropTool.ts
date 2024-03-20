@@ -1,7 +1,7 @@
 import { ItemConfigType } from "../Const/ConstDefine";
 import { GameMain } from "../GameMain";
 import ArtifactData from "../Model/ArtifactData";
-import ItemData, { ItemType } from "../Model/ItemData";
+import ItemData from "../Model/ItemData";
 import { ArtifactMgr, DropMgr, ItemMgr, UserInfoMgr } from "../Utils/Global";
 import CommonTools from "./CommonTools";
 

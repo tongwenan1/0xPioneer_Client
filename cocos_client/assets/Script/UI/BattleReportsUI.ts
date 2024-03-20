@@ -2,21 +2,10 @@ import {_decorator, Button, Color, instantiate, Label, Layout, Mask, Node, Scrol
 import {PopUpUI} from "db://assets/Script/BasicView/PopUpUI";
 import {BattleReportListItemUI} from "./BattleReportListItemUI";
 import {ButtonEx, ButtonExEventType} from "db://assets/Script/UI/Common/ButtonEx";
-import BattleReportsMgrDefine, { BattleReportsEvent, BattleReportType } from '../Const/Manager/BattleReportsMgrDefine';
+import BattleReportsMgrDefine, { BattleReportsEvent, BattleReportType, ReportFilterState, ReportsFilterType } from '../Const/Manager/BattleReportsMgrDefine';
 import { BattleReportsMgr } from '../Utils/Global';
 
 const {ccclass} = _decorator;
-
-enum ReportsFilterType {
-    None,
-    ReportType,
-    Pending,
-}
-
-class ReportFilterState {
-    public filterType: ReportsFilterType = ReportsFilterType.None;
-    public reportType: BattleReportType = null;
-}
 
 @ccclass('BattleReportListUI')
 export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {

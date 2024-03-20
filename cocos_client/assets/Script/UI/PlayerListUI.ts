@@ -2,10 +2,11 @@ import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout
 import { GameMain } from '../GameMain';
 import { PlayerItemUI } from './PlayerItemUI';
 import { TilePos } from '../Game/TiledMap/TileTool';
-import MapPioneerModel, { MapPlayerPioneerModel, MapPioneerActionType, MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import { EventName } from '../Const/ConstDefine';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
 import { BuildingMgr, EventMgr, PioneerMgr } from '../Utils/Global';
+import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
+import MapPioneerModel, { MapPlayerPioneerModel, MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerListUI')

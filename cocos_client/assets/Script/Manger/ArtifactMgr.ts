@@ -1,7 +1,8 @@
 import { SpriteFrame, resources, sys } from "cc";
-import ArtifactData, { ArtifactConfigData, ArtifactEffectConfigData, ArtifactProp, ArtifactPropValueType } from "../Model/ArtifactData";
 import { PioneerMgr } from "../Utils/Global";
 import { ArtifactArrangeType, ArtifactMgrEvent } from "../Const/Manager/ArtifactMgrDefine";
+import { ArtifactConfigData, ArtifactEffectConfigData, ArtifactPropValueType, ArtifactProp } from "../Const/Model/ArtifactModelDefine";
+import ArtifactData from "../Model/ArtifactData";
 
 export default class ArtifactMgr {
     public async getItemIcon(iconName: string): Promise<SpriteFrame> {

@@ -2,8 +2,6 @@ import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, in
 import { GameMain } from '../GameMain';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { TilePos, TileMapHelper, TileHexDirection } from '../Game/TiledMap/TileTool';
-import { MapBuildingType, BuildingFactionType } from '../Game/Outer/Model/MapBuildingModel';
-import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel, MapPioneerLogicType, MapPioneerActionType, MapPioneerEventStatus } from '../Game/Outer/Model/MapPioneerModel';
 import { EventName } from '../Const/ConstDefine';
 import { OuterFogMask } from '../Game/Outer/View/OuterFogMask';
 import { ResOprView } from '../Game/Outer/View/ResOprView';
@@ -11,6 +9,9 @@ import { OuterPioneerController } from '../Game/Outer/OuterPioneerController';
 import { OuterFogAnimShapMask } from '../Game/Outer/View/OuterFogAnimShapMask';
 import { OuterMapCursorView } from '../Game/Outer/View/OuterMapCursorView';
 import { BuildingMgr, ConfigMgr, EventMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../Utils/Global';
+import { BuildingFactionType, MapBuildingType } from '../Const/Model/MapBuildingModelDefine';
+import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType } from '../Const/Model/MapPioneerModelDefine';
+import MapPioneerModel from '../Game/Outer/Model/MapPioneerModel';
 const { ccclass, property } = _decorator;
 
 @ccclass('CPrefabInfo')

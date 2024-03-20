@@ -1,6 +1,7 @@
 import { Vec2 } from "cc";
-import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel } from "../../Game/Outer/Model/MapPioneerModel";
 import { TilePos } from "../../Game/TiledMap/TileTool";
+import MapPioneerModel, { MapPioneerLogicModel } from "../../Game/Outer/Model/MapPioneerModel";
+import { MapPioneerActionType } from "../Model/MapPioneerModelDefine";
 
 export interface PioneerMgrEvent {
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void;

@@ -1,4 +1,4 @@
-import { ArtifactMgr, BattleReportsMgr, BoxMgr, BranchEventMgr, BuildingMgr, ConfigMgr, DropMgr, EvaluationMgr, InnerBuildingMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, TalkMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
+import { ArtifactMgr, AudioMgr, BattleReportsMgr, BoxMgr, BranchEventMgr, BuildingMgr, ConfigMgr, DropMgr, EvaluationMgr, InnerBuildingMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, TalkMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
 
 export default class LocalDataLoader {
 
@@ -22,6 +22,7 @@ export default class LocalDataLoader {
         await LvlupMgr.initData();
         await ArtifactMgr.initData();
         await EvaluationMgr.initData();
+        AudioMgr.prepareAudioSource();
         this._loadStatus = 2;
     }
 

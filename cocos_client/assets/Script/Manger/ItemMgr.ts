@@ -1,9 +1,10 @@
 import { SpriteFrame, resources, sys } from "cc";
-import ItemData, { ItemConfigData, ItemType } from "../Model/ItemData";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import { UserInfoMgr } from "../Utils/Global";
-import { FinishedEvent } from "../Const/Manager/UserInfoDefine";
+import { FinishedEvent } from "../Const/Manager/UserInfoMgrDefine";
 import { ItemArrangeType, ItemMgrEvent } from "../Const/Manager/ItemMgrDefine";
+import { ItemConfigData, ItemType } from "../Const/Model/ItemModelDefine";
+import ItemData from "../Model/ItemData";
 
 export default class ItemMgr {
 

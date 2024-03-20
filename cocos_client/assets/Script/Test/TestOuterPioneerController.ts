@@ -1,5 +1,4 @@
 import { _decorator, Component, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
-import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel, MapPioneerMoveDirection, MapPioneerActionType, MapPioneerLogicModel, MapPioneerLogicType } from '../Game/Outer/Model/MapPioneerModel';
 import { OuterFightView } from '../Game/Outer/View/OuterFightView';
 import { OuterOtherPioneerView } from '../Game/Outer/View/OuterOtherPioneerView';
 import { MapItemMonster } from '../Game/Outer/View/MapItemMonster';
@@ -7,6 +6,8 @@ import { MapPioneer } from '../Game/Outer/View/MapPioneer';
 import { TestMapBG } from './TestMapBG';
 import { EventName } from '../Const/ConstDefine';
 import { EventMgr, PioneerMgr, TaskMgr, UserInfoMgr } from '../Utils/Global';
+import { MapPioneerType } from '../Const/Model/MapPioneerModelDefine';
+import { MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
 
 
 const { ccclass, property } = _decorator;

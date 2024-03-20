@@ -1,10 +1,10 @@
 import { _decorator, Component, Node, Vec2, Vec3, CCString, Prefab, instantiate } from 'cc';
 import { MapItem } from '../../../BasicView/MapItem';
 import { GameMain } from '../../../GameMain';
-import { ArtifactEffectType } from '../../../Model/ArtifactData';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
-import { InnerBuildingType, UserInnerBuildInfo } from '../../../Const/Manager/UserInfoDefine';
+import { InnerBuildingType, UserInnerBuildInfo } from '../../../Const/Manager/UserInfoMgrDefine';
 import { ArtifactMgr, UserInfoMgr } from '../../../Utils/Global';
+import { ArtifactEffectType } from '../../../Const/Model/ArtifactModelDefine';
 
 const { ccclass, property } = _decorator;
 

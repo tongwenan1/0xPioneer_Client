@@ -1,8 +1,5 @@
 import { _decorator, Component, Node, Button, SpriteFrame, Sprite, Label, Prefab, instantiate, tiledLayerAssembler, Tween, v3, tween, math, randomRangeInt, Color, LabelOutline, ImageAsset } from 'cc';
-import { GameMain } from '../GameMain';
-import { ECursorStyle, MouseCursor } from './MouseCursor';
-import { TilePos } from '../Game/TiledMap/TileTool';
-import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
+import { GameMain } from '../GameMain';import { TilePos } from '../Game/TiledMap/TileTool';
 import { BaseUI } from '../BasicView/BaseUI';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { ClaimRewardUI } from './ClaimRewardUI';
@@ -14,7 +11,7 @@ import { BackpackUI } from './BackpackUI';
 import { ItemInfoUI } from './ItemInfoUI';
 import { DialogueUI } from './Outer/DialogueUI';
 import { RecruitUI } from './Inner/RecruitUI';
-import { EventName } from '../Const/ConstDefine';
+import { ECursorStyle, EventName } from '../Const/ConstDefine';
 import { BattleReportsUI } from "db://assets/Script/UI/BattleReportsUI";
 import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
 import { ArtifactUI } from './ArtifactUI';
@@ -25,9 +22,12 @@ import { LootsPopup } from "db://assets/Script/UI/LootsPopup";
 import { BuildingUpgradeUI } from './Inner/BuildingUpgradeUI';
 import { ItemSelectFromThreeUI } from './ItemSelectFromThreeUI';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
-import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoDefine';
+import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { BattleReportsEvent } from '../Const/Manager/BattleReportsMgrDefine';
 import { BattleReportsMgr, EventMgr, LanMgr, LocalDataLoader, PioneerMgr, UserInfoMgr } from '../Utils/Global';
+import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
+import MapPioneerModel, { MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
+import { MouseCursor } from './MouseCursor';
 
 const { ccclass, property } = _decorator;
 

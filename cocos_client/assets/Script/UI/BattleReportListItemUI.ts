@@ -2,16 +2,12 @@ import {_decorator, Button, Component, Label, Node, ProgressBar, RichText, Sprit
 import CommonTools from "db://assets/Script/Tool/CommonTools";
 import MapHelper from "db://assets/Script/Utils/MapHelper";
 import {GameMain} from "db://assets/Script/GameMain";
-import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType } from '../Const/Manager/BattleReportsMgrDefine';
+import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, LocationInfo } from '../Const/Manager/BattleReportsMgrDefine';
 import { BranchEventMgr, BuildingMgr, LanMgr, PioneerMgr } from '../Utils/Global';
 
 const {ccclass, property} = _decorator;
 
-class LocationInfo {
-    type: "pos" | "building";
-    buildingId?: string;
-    pos?: { x: number, y: number };
-}
+
 
 @ccclass('BattleReportListItemUI')
 export class BattleReportListItemUI extends Component {

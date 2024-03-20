@@ -2,15 +2,17 @@ import { Details, Vec2, builtinResMgr, log, math, nextPow2, pingPong, resources,
 import CommonTools from "../Tool/CommonTools";
 import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
-import MapBuildingModel, { BuildingFactionType, MapBuildingType, MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
-import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel, MapPlayerPioneerModel, MapPioneerType, MapNpcPioneerModel, MapPioneerLogicType, MapPioneerEventStatus, MapPioneerAttributesChangeModel, MapPioneerAttributesChangeType } from "../Game/Outer/Model/MapPioneerModel";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
-import { ArtifactEffectType } from "../Model/ArtifactData";
 import { EventName } from "db://assets/Script/Const/ConstDefine";
 import { ArtifactMgr, BranchEventMgr, BuildingMgr, CountMgr, EventMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
-import { FinishedEvent } from "../Const/Manager/UserInfoDefine";
-import { CountType } from "../Const/Manager/CountDefine";
+import { FinishedEvent } from "../Const/Manager/UserInfoMgrDefine";
+import { CountType } from "../Const/Manager/CountMgrDefine";
 import { PioneerMgrEvent } from "../Const/Manager/PioneerMgrDefine";
+import { BuildingFactionType, MapBuildingType } from "../Const/Model/MapBuildingModelDefine";
+import MapBuildingModel, { MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
+import { MapPioneerType, MapPioneerActionType, MapPioneerAttributesChangeModel, MapPioneerEventStatus, MapPioneerAttributesChangeType, MapPioneerLogicType } from "../Const/Model/MapPioneerModelDefine";
+import MapPioneerModel, { MapPlayerPioneerModel, MapNpcPioneerModel, MapPioneerLogicModel } from "../Game/Outer/Model/MapPioneerModel";
+import { ArtifactEffectType } from "../Const/Model/ArtifactModelDefine";
 
 export default class PioneerMgr {
 

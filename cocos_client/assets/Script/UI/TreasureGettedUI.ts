@@ -1,11 +1,11 @@
 import { _decorator, Color, Component, Label, Node, Sprite, tween, v3, Animation, ParticleSystem2D } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
-import ItemData, { ItemType } from '../Model/ItemData';
 import { GameMain } from '../GameMain';
 import CommonTools from '../Tool/CommonTools';
 import { ItemConfigType } from '../Const/ConstDefine';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactMgr, DropMgr, ItemMgr, UserInfoMgr } from '../Utils/Global';
+import ItemData from '../Model/ItemData';
 
 
 const { ccclass, property } = _decorator;

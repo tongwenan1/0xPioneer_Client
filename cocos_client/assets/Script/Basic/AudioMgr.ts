@@ -2,6 +2,31 @@ import { AudioClip, AudioSource, Node, Scene, director, resources } from "cc";
 
 export default class AudioMgr {
 
+    public prepareAudioSource() {
+        this._currentScene = director.getScene();
+        const musicNode = new Node();
+        musicNode.name = "__audioMgr_music";
+        this._musicSource = musicNode.addComponent(AudioSource);
+        this._currentScene.addChild(musicNode);
+
+        const effectNode = new Node();
+        effectNode.name = "__audioMgr_effect";
+        this._effectSource = effectNode.addComponent(AudioSource);
+        this._currentScene.addChild(effectNode);
+
+        const localMusicVolume = localStorage.getItem("localMusicVolume");
+        if (localMusicVolume != null) {
+            this._musicVolume = parseFloat(localMusicVolume);
+        }
+        this._musicSource.volume = this._musicVolume;
+
+        const localEffectVolume = localStorage.getItem("localEffectVolume");
+        if (localEffectVolume != null) {
+            this._effectVolume = parseFloat(localEffectVolume);
+        }
+        this._effectSource.volume = this._effectVolume;
+    }
+
     public playMusic(path: string, loop: boolean = false) {
         if (path == null || path.length <= 0) {
             return;
@@ -51,30 +76,9 @@ export default class AudioMgr {
     private _effectSource: AudioSource = null;
     private _musicVolume: number = 1.0;
     private _effectVolume: number = 1.0;
-    constructor() {
-        return;
-        this._currentScene = director.getScene();
-        const musicNode = new Node();
-        musicNode.name = "__audioMgr_music";
-        this._musicSource = musicNode.addComponent(AudioSource);
-        this._currentScene.addChild(musicNode);
 
-        const effectNode = new Node();
-        effectNode.name = "__audioMgr_effect";
-        this._effectSource = effectNode.addComponent(AudioSource);
-        this._currentScene.addChild(effectNode);
 
-        const localMusicVolume = localStorage.getItem("localMusicVolume");
-        if (localMusicVolume != null) {
-            this._musicVolume = parseFloat(localMusicVolume);
-        }
-        this._musicSource.volume = this._musicVolume;
-
-        const localEffectVolume = localStorage.getItem("localEffectVolume");
-        if (localEffectVolume != null) {
-            this._effectVolume = parseFloat(localEffectVolume);
-        }
-        this._effectSource.volume = this._effectVolume;
+    constructor() {        
     }
 }
 

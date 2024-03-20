@@ -1,4 +1,4 @@
-import { CountModel } from "../Const/Manager/CountDefine";
+import { CountModel } from "../Const/Manager/CountMgrDefine";
 
 export default class CountMgr {
 

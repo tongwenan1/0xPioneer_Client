@@ -1,7 +1,8 @@
 import { _decorator, Component, Label, Layout, Node } from 'cc';
-import MapBuildingModel, { MapBuildingType } from '../Model/MapBuildingModel';
 import { MapPlayerPioneerModel } from '../Model/MapPioneerModel';
 import { LanMgr } from '../../../Utils/Global';
+import { MapBuildingType } from '../../../Const/Model/MapBuildingModelDefine';
+import MapBuildingModel from '../Model/MapBuildingModel';
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterBuildingView')

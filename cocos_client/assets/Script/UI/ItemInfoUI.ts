@@ -1,9 +1,10 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt } from 'cc';
-import ItemData, { ItemConfigData, ItemType } from '../Model/ItemData';
 import { BackpackItem } from './BackpackItem';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { CountMgr, ItemMgr, LanMgr } from '../Utils/Global';
-import { CountType } from '../Const/Manager/CountDefine';
+import { CountType } from '../Const/Manager/CountMgrDefine';
+import { ItemType } from '../Const/Model/ItemModelDefine';
+import ItemData from '../Model/ItemData';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemInfoUI')

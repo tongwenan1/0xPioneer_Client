@@ -6,12 +6,11 @@ import {
     RichText,
     Color,
 } from "cc";
-import ArtifactData, {
-    ArtifactEffectRankColor,
-} from "../Model/ArtifactData";
 import { PopUpUI } from "../BasicView/PopUpUI";
 import { ArtifactItem } from "./ArtifactItem";
 import { ArtifactMgr, LanMgr, UserInfoMgr } from "../Utils/Global";
+import ArtifactData from "../Model/ArtifactData";
+import { ArtifactEffectRankColor } from "../Const/Model/ArtifactModelDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactInfoUI")

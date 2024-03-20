@@ -1,9 +1,7 @@
 import { Vec2 } from "cc";
+import { MapDecoratePosMode } from "../../../Const/Model/MapDecorateModelDefine";
 
-export enum MapDecoratePosMode {
-    Tiled = "tiled",
-    World = "world"
-}
+
 
 export default class MapDecorateModel {
 

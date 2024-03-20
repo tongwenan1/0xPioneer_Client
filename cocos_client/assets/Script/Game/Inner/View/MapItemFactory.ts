@@ -4,7 +4,7 @@ import { EventName } from '../../../Const/ConstDefine';
 import { GameMain } from '../../../GameMain';
 import CommonTools from '../../../Tool/CommonTools';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
-import { FinishedEvent, InnerBuildingType, UserInfoEvent, UserInnerBuildInfo } from '../../../Const/Manager/UserInfoDefine';
+import { FinishedEvent, InnerBuildingType, UserInfoEvent, UserInnerBuildInfo } from '../../../Const/Manager/UserInfoMgrDefine';
 import { EventMgr, LanMgr, UserInfoMgr } from '../../../Utils/Global';
 
 const { ccclass, property } = _decorator;

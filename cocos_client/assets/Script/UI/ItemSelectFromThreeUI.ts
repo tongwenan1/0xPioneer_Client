@@ -1,10 +1,11 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt, Layout, Color } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
-import ArtifactData, { ArtifactEffectRankColor } from '../Model/ArtifactData';
 import { ItemConfigType, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import { ArtifactItem } from './ArtifactItem';
 import { ArtifactMgr, DropMgr, ItemMgr, LanMgr } from '../Utils/Global';
+import { ArtifactEffectRankColor } from '../Const/Model/ArtifactModelDefine';
+import ArtifactData from '../Model/ArtifactData';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemSelectFromThreeUI')

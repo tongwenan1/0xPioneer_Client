@@ -3,7 +3,7 @@ import { GameMain } from '../../GameMain';
 import { PopUpUI } from '../../BasicView/PopUpUI';
 import { EventName, NPCNameLangType } from '../../Const/ConstDefine';
 import { CountMgr, EventMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../../Utils/Global';
-import { CountType } from '../../Const/Manager/CountDefine';
+import { CountType } from '../../Const/Manager/CountMgrDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')

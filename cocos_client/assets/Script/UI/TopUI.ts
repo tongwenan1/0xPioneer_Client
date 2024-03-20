@@ -2,7 +2,7 @@ import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, war
 import { EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import { EventMgr, ItemMgr, LvlupMgr, UserInfoMgr } from '../Utils/Global';
-import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoDefine';
+import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { ItemMgrEvent } from '../Const/Manager/ItemMgrDefine';
 const { ccclass, property } = _decorator;
 

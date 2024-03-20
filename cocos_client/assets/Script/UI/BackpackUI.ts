@@ -1,11 +1,11 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
-import ItemData, { ItemType } from '../Model/ItemData';
 import { BackpackItem } from './BackpackItem';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { EventName } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import { ItemArrangeType, ItemMgrEvent } from '../Const/Manager/ItemMgrDefine';
 import { EventMgr, ItemMgr, LanMgr } from '../Utils/Global';
+import ItemData from '../Model/ItemData';
 const { ccclass, property } = _decorator;
 
 

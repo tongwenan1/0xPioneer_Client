@@ -1,12 +1,12 @@
 import { Asset, __private, resources, sys } from "cc";
-import ItemData, { ItemType } from "../Model/ItemData";
 import { GameMain } from "../GameMain";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
-import { UserInfoEvent, FinishedEvent, InnerBuildingType, UserInnerBuildInfo, GenerateTroopInfo } from "../Const/Manager/UserInfoDefine";
+import { UserInfoEvent, FinishedEvent, InnerBuildingType, UserInnerBuildInfo, GenerateTroopInfo } from "../Const/Manager/UserInfoMgrDefine";
 import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
-import { CountType } from "../Const/Manager/CountDefine";
+import { CountType } from "../Const/Manager/CountMgrDefine";
+import ItemData from "../Model/ItemData";
 
 export default class UserInfoMgr {
 

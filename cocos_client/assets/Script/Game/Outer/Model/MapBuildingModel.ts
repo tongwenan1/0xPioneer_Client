@@ -1,28 +1,8 @@
 import { Vec2 } from "cc";
 import CommonTools from "db://assets/Script/Tool/CommonTools";
 import { LanMgr } from "../../../Utils/Global";
-import { ResourceModel } from "../../../Const/Manager/UserInfoDefine";
-
-export enum MapBuildingType {
-    resource = 3,
-    explore = 1,
-    stronghold = 2,
-    city = 0,
-    event = 4,
-    decorate = 5
-}
-
-export enum BuildingFactionType {
-    netural = 0,
-    self = 1,
-    enemy = 2,
-}
-
-export enum BuildingStayPosType {
-    One = 0,
-    Three = 1,
-    Seven = 2
-}
+import { ResourceModel } from "../../../Const/Manager/UserInfoMgrDefine";
+import { BuildingFactionType, MapBuildingType, BuildingStayPosType } from "../../../Const/Model/MapBuildingModelDefine";
 
 export default class MapBuildingModel {
 

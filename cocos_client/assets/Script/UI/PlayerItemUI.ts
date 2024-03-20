@@ -1,6 +1,7 @@
 import { _decorator, Component, Label, log, Node, Sprite, SpriteFrame, Button, ProgressBar } from 'cc';
-import { MapPlayerPioneerModel, MapPioneerActionType, MapPioneerEventStatus } from '../Game/Outer/Model/MapPioneerModel';
 import { LanMgr, PioneerMgr } from '../Utils/Global';
+import { MapPioneerActionType, MapPioneerEventStatus } from '../Const/Model/MapPioneerModelDefine';
+import { MapPlayerPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerItemUI')

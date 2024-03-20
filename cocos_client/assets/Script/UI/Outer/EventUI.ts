@@ -1,11 +1,12 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import { GameMain } from '../../GameMain';
-import ItemData, { ItemConfigData, ItemType } from '../../Model/ItemData';
 import { PopUpUI } from '../../BasicView/PopUpUI';
 import { EventName, ItemConfigType } from '../../Const/ConstDefine';
-import { MapPioneerAttributesChangeModel } from '../../Game/Outer/Model/MapPioneerModel';
 import { BranchEventMgr, BuildingMgr, CountMgr, EventMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UserInfoMgr } from '../../Utils/Global';
-import { CountType } from '../../Const/Manager/CountDefine';
+import { CountType } from '../../Const/Manager/CountMgrDefine';
+import { MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
+import ItemData from '../../Model/ItemData';
+import { ItemType } from '../../Const/Model/ItemModelDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')

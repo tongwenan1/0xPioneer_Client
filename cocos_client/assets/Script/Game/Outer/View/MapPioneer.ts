@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, instantiate, Sprite, Quat, UITransform, misc, Label, ProgressBar, log, v3, color } from 'cc';
-import MapPioneerModel, { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection } from '../Model/MapPioneerModel';
 import { LanMgr } from '../../../Utils/Global';
+import { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection } from '../../../Const/Model/MapPioneerModelDefine';
+import MapPioneerModel from '../Model/MapPioneerModel';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapPioneer')

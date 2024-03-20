@@ -1,8 +1,6 @@
 import { _decorator, Color, Component, director, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
 import { GameMain } from '../../GameMain';
 import { TilePos } from '../TiledMap/TileTool';
-import { BuildingFactionType, MapResourceBuildingModel } from './Model/MapBuildingModel';
-import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel, MapPioneerMoveDirection, MapPioneerActionType, MapPioneerLogicModel, MapPioneerLogicType, MapPioneerAttributesChangeModel } from './Model/MapPioneerModel';
 import { OuterFightView } from './View/OuterFightView';
 import { OuterOtherPioneerView } from './View/OuterOtherPioneerView';
 import { MapItemMonster } from './View/MapItemMonster';
@@ -10,12 +8,16 @@ import { MapPioneer } from './View/MapPioneer';
 import { MapBG } from '../../Scene/MapBG';
 import { OuterMapCursorView } from './View/OuterMapCursorView';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import ItemData, { ItemType } from '../../Model/ItemData';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
-import { ArtifactEffectType } from '../../Model/ArtifactData';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
-import { FinishedEvent, UserInfoEvent } from '../../Const/Manager/UserInfoDefine';
+import { FinishedEvent, UserInfoEvent } from '../../Const/Manager/UserInfoMgrDefine';
 import { ArtifactMgr, BranchEventMgr, BuildingMgr, EventMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, SettlementMgr, TalkMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
+import { BuildingFactionType } from '../../Const/Model/MapBuildingModelDefine';
+import { MapPioneerLogicType, MapPioneerActionType, MapPioneerType, MapPioneerMoveDirection, MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
+import { MapResourceBuildingModel } from './Model/MapBuildingModel';
+import MapPioneerModel, { MapPioneerLogicModel, MapNpcPioneerModel } from './Model/MapPioneerModel';
+import { ArtifactEffectType } from '../../Const/Model/ArtifactModelDefine';
+import ItemData from '../../Model/ItemData';
 
 
 const { ccclass, property } = _decorator;

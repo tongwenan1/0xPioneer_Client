@@ -7,7 +7,7 @@ import ArtifactData from '../Model/ArtifactData';
 import ItemData from '../Model/ItemData';
 import { ArtifactItem } from './ArtifactItem';
 import { BackpackItem } from './BackpackItem';
-import { UserInfoEvent } from '../Const/Manager/UserInfoDefine';
+import { UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { EventMgr, LanMgr, LvlupMgr, UserInfoMgr, AudioMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
