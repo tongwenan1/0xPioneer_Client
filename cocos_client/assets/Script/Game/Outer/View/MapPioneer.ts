@@ -55,6 +55,15 @@ export class MapPioneer extends Component {
         }
         roleView.active = true;
         idleView = roleView.getChildByName("idle");
+        if (idleView.getChildByName("Common_Player_N_a_01") != null) {
+            this._currnetIdleAnim = idleView.getChildByName("Common_Player_N_a_01").getComponent(Animation);
+        } else if (idleView.getChildByName("Dual_Blade_N_a") != null) {
+            this._currnetIdleAnim = idleView.getChildByName("Dual_Blade_N_a").getComponent(Animation);
+        } else if (idleView.getChildByName("Double_Guns_N_a") != null) {
+            this._currnetIdleAnim = idleView.getChildByName("Double_Guns_N_a").getComponent(Animation);
+        } else if (idleView.getChildByName("Spy_N_a") != null) {
+            this._currnetIdleAnim = idleView.getChildByName("Spy_N_a").getComponent(Animation);
+        } 
         leftWalkView = roleView.getChildByName("walk_left");
         rightWalkView = roleView.getChildByName("walk_right");
         topWalkView = roleView.getChildByName("walk_top");
@@ -68,7 +77,7 @@ export class MapPioneer extends Component {
         rightWalkView.active = false;
         topWalkView.active = false;
         bottomWalkView.active = false;
-        
+
 
         if (this._lastStatus != this._model.actionType ||
             this._lastEventStatus != this._model.eventStatus) {
@@ -94,14 +103,14 @@ export class MapPioneer extends Component {
                     this.node.active = true;
                     deadView.active = true;
                 }
-                break;
+                    break;
 
                 case MapPioneerActionType.wakeup: {
                     this.node.active = true;
                     wakeUpView.active = true;
                     wakeUpView.getComponent(Animation).play();
                 }
-                break;
+                    break;
 
                 case MapPioneerActionType.defend: {
                     this.node.active = false; // not show
@@ -111,6 +120,10 @@ export class MapPioneer extends Component {
                 case MapPioneerActionType.idle: {
                     this.node.active = true; // only show
                     idleView.active = true;
+                    this._idleCountTime = 0;
+                    if (this._currnetIdleAnim != null) {
+                        this._currnetIdleAnim.play();
+                    }
                 }
                     break;
 
@@ -145,7 +158,7 @@ export class MapPioneer extends Component {
                     this.node.active = true;
                     idleView.active = true;
                     if (this._model.eventStatus == MapPioneerEventStatus.None) {
-                        
+
                     } else if (this._model.eventStatus == MapPioneerEventStatus.Waiting) {
                         this._eventingView.active = true;
                     } else if (this._model.eventStatus == MapPioneerEventStatus.Waited) {
@@ -170,7 +183,6 @@ export class MapPioneer extends Component {
         this._eventWaitedCallback = callback;
     }
 
-    private _playingView: Node[] = [];
     public playGetResourceAnim(resourceId: string, num: number, callback: () => void) {
         if (num <= 0) {
             return;
@@ -205,7 +217,9 @@ export class MapPioneer extends Component {
 
         this._playingView.push(animView);
     }
+    private _eventWaitedCallback: () => void = null;
 
+    private _playingView: Node[] = [];
     private _resourceAnimView: Node = null;
 
     private _roleNames: string[] = [
@@ -219,7 +233,10 @@ export class MapPioneer extends Component {
         "rebels",
         "secretGuard",
     ];
-    private _eventWaitedCallback: () => void = null;
+    private _idleAnimTime: number = 4;
+    private _idleGapWaitTime: number = 4;
+    private _idleCountTime: number = 0;
+    private _currnetIdleAnim: Animation = null;
     onLoad() {
         if (this.speedUpTag) {
             this.speedUpTag.active = false;
@@ -246,8 +263,18 @@ export class MapPioneer extends Component {
     start() {
     }
     update(deltaTime: number) {
-        const currentTimeStamp = new Date().getTime();
+        if (this._currnetIdleAnim != null) {
+            this._idleCountTime += deltaTime;
+            if (this._idleCountTime >= (this._idleAnimTime + this._idleGapWaitTime)) {
+                this._idleCountTime = 0;
+                this._currnetIdleAnim.play();
+            } else if (this._idleCountTime >= this._idleAnimTime) {
+                this._currnetIdleAnim.stop();
+            }
+        }
+        
 
+        const currentTimeStamp = new Date().getTime();
         if (this._actionTimeStamp > currentTimeStamp) {
 
             this._timeCountProgress.node.active = true;
