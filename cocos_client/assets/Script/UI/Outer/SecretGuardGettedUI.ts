@@ -1,13 +1,13 @@
 import { _decorator, Component, Label, Node, tween } from 'cc';
 import { GameMain } from '../../GameMain';
 import { PopUpUI } from '../../BasicView/PopUpUI';
-import { LanMgr } from '../../Utils/Global';
+import { LanMgr, UserInfoMgr } from '../../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('SecretGuardGettedUI')
 export class SecretGuardGettedUI extends PopUpUI {
 
-    public dialogShow(pioneerName: string) {
+    public dialogShow(pioneerAnimType: string) {
 
         const names = [
             "secretGuard",
@@ -34,9 +34,9 @@ export class SecretGuardGettedUI extends PopUpUI {
             LanMgr.getLanById("206006")
         ]
         for (const name of names) {
-            this.node.getChildByPath("bgc/" + name).active = name == pioneerName;
+            this.node.getChildByPath("bgc/" + name).active = name == pioneerAnimType;
         }
-        let index = names.indexOf(pioneerName);
+        let index = names.indexOf(pioneerAnimType);
         this.node.getChildByPath("lable/Label keen").getComponent(Label).string = keen[index];
         this.node.getChildByPath("lable/Label wind").getComponent(Label).string = wind[index];
 
@@ -44,6 +44,14 @@ export class SecretGuardGettedUI extends PopUpUI {
             .delay(2)
             .call(() => {
                 GameMain.inst.UI.serectGuardGettedUI.show(false);
+                if (UserInfoMgr.afterCivilizationClosedShowItemDatas.length > 0) {
+                    GameMain.inst.UI.itemInfoUI.showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas, true);
+                    UserInfoMgr.afterCivilizationClosedShowItemDatas = [];
+                }
+                if (UserInfoMgr.afterCivilizationClosedShowArtifactDatas.length > 0) {
+                    GameMain.inst.UI.artifactInfoUI.showItem(UserInfoMgr.afterCivilizationClosedShowArtifactDatas);
+                    UserInfoMgr.afterCivilizationClosedShowArtifactDatas = [];
+                }
             })
             .start();
     }

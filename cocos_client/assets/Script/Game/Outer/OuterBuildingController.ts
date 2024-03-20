@@ -20,6 +20,14 @@ const { ccclass, property } = _decorator;
 @ccclass('OuterBuildingController')
 export class OuterBuildingController extends Component implements UserInfoEvent, BuildingMgrEvent, PioneerMgrEvent {
 
+    public getBuildingView(buildingId: string): OuterBuildingView {
+        if (this._buildingMap.has(buildingId)) {
+            const view = this._buildingMap.get(buildingId).node.getComponent(OuterBuildingView);
+            return view;
+        }
+        return null;
+    }
+
     @property(Prefab)
     private buildingPrefab;
 

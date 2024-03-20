@@ -25,8 +25,8 @@ export interface PioneerMgrEvent {
     pioneerTaskBeenGetted(pioneerId: string, taskId: string): void;
     showGetTaskDialog(task: any): void;
 
-    beginFight?(fightId: string, attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void;
-    fightDidAttack?(fightId: string, attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void;
+    beginFight?(fightId: string, attacker: { id: string, name: string, hp: number, hpMax: number }, defender: { id: string, isBuilding: boolean, name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void;
+    fightDidAttack?(fightId: string, attacker: { id: string, name: string, hp: number, hpMax: number }, defender: { id: string, isBuilding: boolean, name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void;
     endFight?(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean, playerPioneerId: string): void;
 
     exploredPioneer(pioneerId: string): void;

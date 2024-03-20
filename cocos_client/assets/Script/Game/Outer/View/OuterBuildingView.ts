@@ -62,6 +62,10 @@ export class OuterBuildingView extends Component {
         this._selfView.active = false;
     }
 
+    public showName(isShow: boolean) {
+        this.node.getChildByName("Title").active = isShow;
+    }
+
     private _buildViewNames: string[] = [
         "city",
         "treasure",

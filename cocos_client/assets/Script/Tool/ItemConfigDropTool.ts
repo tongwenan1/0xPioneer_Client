@@ -72,7 +72,8 @@ export default class ItemConfigDropTool {
             ItemMgr.addItem(items);
             if (showDialog) {
                 setTimeout(()=> {
-                    if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
+                    if (GameMain.inst.UI.civilizationLevelUpUI.node.active ||
+                        GameMain.inst.UI.serectGuardGettedUI.node.active) {
                         UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...items);
                     } else {
                         GameMain.inst.UI.itemInfoUI.showItem(items, true);
@@ -84,7 +85,8 @@ export default class ItemConfigDropTool {
             ArtifactMgr.addArtifact(artifacts);
             if (showDialog) {
                 setTimeout(()=> {
-                    if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
+                    if (GameMain.inst.UI.civilizationLevelUpUI.node.active ||
+                        GameMain.inst.UI.serectGuardGettedUI.node.active) {
                         UserInfoMgr.afterCivilizationClosedShowArtifactDatas.push(...artifacts);
                     } else {
                         GameMain.inst.UI.artifactInfoUI.showItem(artifacts);

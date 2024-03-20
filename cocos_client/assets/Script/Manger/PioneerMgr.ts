@@ -433,6 +433,8 @@ export default class PioneerMgr {
             let attackerAttack = attacker.attack;
             let attackerDefend = attacker.defend;
 
+            let enemyId = enemy.id;
+            let isBuilding = false;
             let enemyName = enemy.name;
             let enemyHp = enemy.hp;
             let enemyHpMax = enemy.hpMax;
@@ -475,8 +477,8 @@ export default class PioneerMgr {
                 if (observer.beginFight != null) {
                     observer.beginFight(
                         fightId,
-                        { name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
-                        { name: enemyName, hp: enemyHp, hpMax: enemyHpMax },
+                        { id: attacker.id, name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
+                        { id: enemyId, isBuilding: isBuilding, name: enemyName, hp: enemyHp, hpMax: enemyHpMax },
                         attacker.friendly,
                         [attacker.stayPos]
                     );
@@ -510,6 +512,17 @@ export default class PioneerMgr {
                     }
                 }
                 selfAttack = !selfAttack;
+                for (const observer of this._observers) {
+                    if (observer.fightDidAttack != null) {
+                        observer.fightDidAttack(
+                            fightId,
+                            { id: attacker.id, name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
+                            { id: attacker.id, isBuilding: isBuilding, name: enemyName, hp: enemyHp, hpMax: enemyHpMax },
+                            attacker.friendly,
+                            [attacker.stayPos]
+                        );
+                    }
+                }
                 if (fightOver) {
                     if (deadPioneer == enemy &&
                         deadPioneer.winexp > 0) {
@@ -564,19 +577,7 @@ export default class PioneerMgr {
                     if (fightOverCallback != null) {
                         fightOverCallback(enemyHp <= 0);
                     }
-                } else {
-                    for (const observer of this._observers) {
-                        if (observer.fightDidAttack != null) {
-                            observer.fightDidAttack(
-                                fightId,
-                                { name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
-                                { name: enemyName, hp: enemyHp, hpMax: enemyHpMax },
-                                attacker.friendly,
-                                [attacker.stayPos]
-                            );
-                        }
-                    }
-                }
+                } 
             }, 250);
         }
     }
@@ -1473,6 +1474,8 @@ export default class PioneerMgr {
         const fightId: string = new Date().getTime().toString();
         // begin fight
         let defenderName: string = "";
+        let defenderId: string = "";
+        let defenderIsBuilding: boolean = false;
         let defenderHp: number = 0;
         let defenderHpMax: number = 0;
         let defenderAttack: number = 0;
@@ -1480,6 +1483,8 @@ export default class PioneerMgr {
         let defenderCenterPositions: Vec2[] = [];
         if (defender instanceof MapPioneerModel) {
             defenderName = defender.name;
+            defenderId = defender.id;
+            defenderIsBuilding = false;
             defenderHp = defender.hp;
             defenderHpMax = defender.hpMax;
             defenderAttack = defender.attack;
@@ -1488,6 +1493,8 @@ export default class PioneerMgr {
 
         } else if (defender instanceof MapBuildingModel) {
             defenderName = defender.name;
+            defenderId = defender.id;
+            defenderIsBuilding = true;
             defenderCenterPositions = defender.stayMapPositions;
             if (defender.type == MapBuildingType.city) {
                 defenderHp = (defender as MapMainCityBuildingModel).hp;
@@ -1509,8 +1516,8 @@ export default class PioneerMgr {
             if (observer.beginFight != null) {
                 observer.beginFight(
                     fightId,
-                    { name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
-                    { name: defenderName, hp: defenderHp, hpMax: defenderHpMax },
+                    { id: attacker.id, name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
+                    { id: defenderId, isBuilding: defenderIsBuilding, name: defenderName, hp: defenderHp, hpMax: defenderHpMax },
                     attacker.friendly,
                     defenderCenterPositions
                 );
@@ -1579,6 +1586,17 @@ export default class PioneerMgr {
                 }
             }
             selfAttack = !selfAttack;
+            for (const observer of this._observers) {
+                if (observer.fightDidAttack != null) {
+                    observer.fightDidAttack(
+                        fightId,
+                        { id: attacker.id, name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
+                        { id: defenderId, isBuilding: defenderIsBuilding, name: defenderName, hp: defenderHp, hpMax: defenderHpMax },
+                        attacker.friendly,
+                        defenderCenterPositions
+                    );
+                }
+            }
             if (fightOver) {
                 // fight end
                 if (deadPioneer.id == "npc_0") {
@@ -1654,18 +1672,6 @@ export default class PioneerMgr {
                     GameMain.inst.UI.ShowTip(tips);
                 }
 
-            } else {
-                for (const observer of this._observers) {
-                    if (observer.fightDidAttack != null) {
-                        observer.fightDidAttack(
-                            fightId,
-                            { name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
-                            { name: defenderName, hp: defenderHp, hpMax: defenderHpMax },
-                            attacker.friendly,
-                            defenderCenterPositions
-                        );
-                    }
-                }
             }
         }, 250);
     }

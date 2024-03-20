@@ -18,6 +18,7 @@ import { MapResourceBuildingModel } from './Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerLogicModel, MapNpcPioneerModel } from './Model/MapPioneerModel';
 import { ArtifactEffectType } from '../../Const/Model/ArtifactModelDefine';
 import ItemData from '../../Model/ItemData';
+import { OuterBuildingController } from './OuterBuildingController';
 
 
 const { ccclass, property } = _decorator;
@@ -417,7 +418,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             .start();
     }
 
-    private _refreshFightView(fightId: string, attacker: { name: string; hp: number; hpMax: number; }, defender: { name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositons: Vec2[]) {
+    private _refreshFightView(fightId: string, attacker: { id: string; name: string; hp: number; hpMax: number; }, defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositons: Vec2[]) {
         if (this._fightViewMap.has(fightId)) {
             this._fightViewMap.get(fightId).refreshUI(attacker, defender, attackerIsSelf);
 
@@ -441,6 +442,38 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 fightView.node.setWorldPosition(GameMain.inst.outSceneMap.mapBG.getPosWorld(fightPositons[0].x, fightPositons[0].y));
             }
             this._fightViewMap.set(fightId, fightView);
+        }
+        let isEndFight: boolean = attacker.hp <= 0 || defender.hp <= 0;
+        if (this._pioneerMap.has(attacker.id)) {
+            const attackView = this._pioneerMap.get(attacker.id);
+            if (isEndFight) {
+                const pioneer = PioneerMgr.getPioneerById(attacker.id);
+                if (pioneer != null && pioneer.show) {
+                    this.scheduleOnce(()=> {
+                        attackView.active = true;
+                    }, 0.8);
+                }
+            } else {
+                attackView.active = false;
+            }
+        }
+        if (defender.isBuilding) {
+            const buildingView = this.node.getComponent(OuterBuildingController).getBuildingView(defender.id);
+            if (buildingView != null) {
+                buildingView.showName(isEndFight);
+            }
+        } else if (this._pioneerMap.has(defender.id)) {
+            const defendView = this._pioneerMap.get(defender.id);
+            if (isEndFight) {
+                const pioneer = PioneerMgr.getPioneerById(defender.id);
+                if (pioneer != null && pioneer.show) {
+                    this.scheduleOnce(()=> {
+                        defendView.active = true;
+                    }, 0.8);
+                }
+            } else {
+                defendView.active = false;
+            }
         }
     }
 
@@ -560,10 +593,16 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             pioneerId == "pioneer_2" ||
             pioneerId == "pioneer_3") {
             // get secret guard
-            const pioeer = PioneerMgr.getPioneerById(pioneerId);
-            if (pioeer != null) {
-                GameMain.inst.UI.serectGuardGettedUI.dialogShow(pioeer.name);
-                GameMain.inst.UI.serectGuardGettedUI.show(true);
+            const pioneer = PioneerMgr.getPioneerById(pioneerId);
+            if (pioneer != null) {
+                setTimeout(() => {
+                    if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
+                        UserInfoMgr.afterCivilizationClosedShowPioneerDatas.push(pioneer);
+                    } else {
+                        GameMain.inst.UI.serectGuardGettedUI.dialogShow(pioneer.animType);
+                        GameMain.inst.UI.serectGuardGettedUI.show(true);
+                    }
+                });
             }
         }
         this._refreshUI();
@@ -593,12 +632,12 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         GameMain.inst.UI.dialogueUI.show(true);
     }
 
-    beginFight(fightId: string, attacker: { name: string; hp: number; hpMax: number; }, defender: { name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositons: Vec2[]): void {
-        this._refreshFightView(fightId, attacker, defender, attackerIsSelf, fightPositons);
+    beginFight(fightId: string, attacker: { id: string; name: string; hp: number; hpMax: number; }, defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositions: math.Vec2[]): void {
+        this._refreshFightView(fightId, attacker, defender, attackerIsSelf, fightPositions);
     }
 
-    fightDidAttack(fightId: string, attacker: { name: string; hp: number; hpMax: number; }, defender: { name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositons: Vec2[]): void {
-        this._refreshFightView(fightId, attacker, defender, attackerIsSelf, fightPositons);
+    fightDidAttack(fightId: string, attacker: { id: string; name: string; hp: number; hpMax: number; }, defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositions: math.Vec2[]): void {
+        this._refreshFightView(fightId, attacker, defender, attackerIsSelf, fightPositions);
     }
 
     endFight(fightId: string, isEventFight: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean, playerPioneerId: string): void {

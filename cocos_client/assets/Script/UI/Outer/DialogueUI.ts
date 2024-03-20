@@ -131,7 +131,8 @@ export class DialogueUI extends PopUpUI {
         //talk over
         if (UserInfoMgr.afterTalkItemGetData.has(this._talk.id)) {
             setTimeout(()=> {
-                if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
+                if (GameMain.inst.UI.civilizationLevelUpUI.node.active ||
+                    GameMain.inst.UI.serectGuardGettedUI.node.active) {
                     UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...UserInfoMgr.afterTalkItemGetData.get(this._talk.id));
                 } else {
                     GameMain.inst.UI.itemInfoUI.showItem(UserInfoMgr.afterTalkItemGetData.get(this._talk.id), true);

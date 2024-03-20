@@ -188,13 +188,19 @@ export class CivilizationLevelUpUI extends PopUpUI {
 
     private onTapClose() {
         this.show(false);
-        if (UserInfoMgr.afterCivilizationClosedShowItemDatas.length > 0) {
-            GameMain.inst.UI.itemInfoUI.showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas, true);
-            UserInfoMgr.afterCivilizationClosedShowItemDatas = [];
-        }
-        if (UserInfoMgr.afterCivilizationClosedShowArtifactDatas.length > 0) {
-            GameMain.inst.UI.artifactInfoUI.showItem(UserInfoMgr.afterCivilizationClosedShowArtifactDatas);
-            UserInfoMgr.afterCivilizationClosedShowArtifactDatas = [];
+        if (UserInfoMgr.afterCivilizationClosedShowPioneerDatas.length > 0) {
+            GameMain.inst.UI.serectGuardGettedUI.dialogShow(UserInfoMgr.afterCivilizationClosedShowPioneerDatas[0].animType);
+            GameMain.inst.UI.serectGuardGettedUI.show(true);
+            UserInfoMgr.afterCivilizationClosedShowPioneerDatas = [];
+        } else {
+            if (UserInfoMgr.afterCivilizationClosedShowItemDatas.length > 0) {
+                GameMain.inst.UI.itemInfoUI.showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas, true);
+                UserInfoMgr.afterCivilizationClosedShowItemDatas = [];
+            }
+            if (UserInfoMgr.afterCivilizationClosedShowArtifactDatas.length > 0) {
+                GameMain.inst.UI.artifactInfoUI.showItem(UserInfoMgr.afterCivilizationClosedShowArtifactDatas);
+                UserInfoMgr.afterCivilizationClosedShowArtifactDatas = [];
+            }
         }
     }
 }

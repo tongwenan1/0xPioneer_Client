@@ -7,6 +7,7 @@ import { UserInfoEvent, FinishedEvent, InnerBuildingType, UserInnerBuildInfo, Ge
 import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
 import { CountType } from "../Const/Manager/CountMgrDefine";
 import ItemData from "../Model/ItemData";
+import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
 
 export default class UserInfoMgr {
 
@@ -236,6 +237,9 @@ export default class UserInfoMgr {
     public get afterCivilizationClosedShowArtifactDatas() {
         return this._afterCivilizationClosedShowArtifactDatas;
     }
+    public get afterCivilizationClosedShowPioneerDatas() {
+        return this._afterCivilizationClosedShowPioneerDatas;
+    }
     public get currentTasks() {
         return this._currentTasks;
     }
@@ -398,6 +402,9 @@ export default class UserInfoMgr {
     public set afterCivilizationClosedShowArtifactDatas(artifactDatas: ArtifactData[]) {
         this._afterCivilizationClosedShowArtifactDatas = artifactDatas;
     }
+    public set afterCivilizationClosedShowPioneerDatas(pioneerDatas: MapPioneerModel[]) {
+        this._afterCivilizationClosedShowPioneerDatas = pioneerDatas;
+    }
 
     public constructor() {
         setInterval(() => {
@@ -424,6 +431,7 @@ export default class UserInfoMgr {
     private _afterTalkItemGetData: Map<string, ItemData[]> = new Map();
     private _afterCivilizationClosedShowItemDatas: ItemData[] = [];
     private _afterCivilizationClosedShowArtifactDatas: ArtifactData[] = [];
+    private _afterCivilizationClosedShowPioneerDatas: MapPioneerModel[] = [];
 
     private _currentTasks: any[] = [];
     private _finishedEvents: FinishedEvent[] = [];
@@ -608,7 +616,8 @@ export default class UserInfoMgr {
                 if (addItems.length > 0) {
                     ItemMgr.addItem(addItems);
                     setTimeout(()=> {
-                        if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
+                        if (GameMain.inst.UI.civilizationLevelUpUI.node.active ||
+                            GameMain.inst.UI.serectGuardGettedUI.node.active) {
                             this.afterCivilizationClosedShowItemDatas.push(...addItems);
                         } else {
                             GameMain.inst.UI.itemInfoUI.showItem(addItems, true);

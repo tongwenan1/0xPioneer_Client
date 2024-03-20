@@ -37,8 +37,9 @@ export class OuterFightView extends Component {
         animView.setPosition(v3(0, 100, 0));
         tween()
             .target(animView)
-            .to(0.4, { position: v3(0, 160, 0) })
             .delay(0.1)
+            .to(0.4, { position: v3(0, 160, 0) })
+            .delay(0.2)
             .call(() => {
                 if (callback != null) {
                     callback();
