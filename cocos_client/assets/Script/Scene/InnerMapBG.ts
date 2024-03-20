@@ -49,7 +49,7 @@ export class InnerMapBG extends Component {
         }, this);
         
         this.node.on(Node.EventType.MOUSE_WHEEL, (event:cc.EventMouse)=>{
-            let sc = GameMain.inst.MainCamera.orthoHeight / GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
+            let sc = this._curCameraZoom;
             let config = ConfigMgr.getConfigById("10001");
             if (config.length <= 0) return;
             let useConf = config[0];
@@ -67,6 +67,7 @@ export class InnerMapBG extends Component {
                 sc = useConf.para[0];
             }
             GameMain.inst.MainCamera.orthoHeight = sc * GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
+            this._curCameraZoom = sc;
             EventMgr.emit(EventName.MAP_SCALED);
         }, this);
 

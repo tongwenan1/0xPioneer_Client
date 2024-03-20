@@ -170,6 +170,10 @@ export class MapBG extends Component {
     private _hexViewRadius: number = 0;
     protected onLoad(): void {
         this.cameraOriginalOrthoHeight = GameMain.inst.MainCamera.orthoHeight;
+        const localOuterMapScale = localStorage.getItem("local_outer_map_scale");
+        if (localOuterMapScale != null) {
+            this._curCameraZoom = parseFloat(localOuterMapScale);
+        }
         // local shadow erase
         this._initTileMap();
 
@@ -216,7 +220,7 @@ export class MapBG extends Component {
         }, this);
 
         this.node.on(Node.EventType.MOUSE_WHEEL, (event: EventMouse) => {
-            let sc = GameMain.inst.MainCamera.orthoHeight / this.cameraOriginalOrthoHeight;
+            let sc = this._curCameraZoom;
             let config = ConfigMgr.getConfigById("10001");
             if (config.length <= 0) return;
             let useConf = config[0];
@@ -234,6 +238,7 @@ export class MapBG extends Component {
                 sc = useConf.para[0];
             }
             GameMain.inst.MainCamera.orthoHeight = sc * this.cameraOriginalOrthoHeight;
+            this._curCameraZoom = sc;
             localStorage.setItem("local_outer_map_scale", sc.toString());
             this._fixCameraPos(GameMain.inst.MainCamera.node.position);
 
