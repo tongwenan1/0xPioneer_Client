@@ -34,7 +34,7 @@
     ],
     "node": "ruin",
     "level": 1,
-    "progress": 5,
+    "progress": 50,
     "resources": null,
     "quota": null,
     "exp": null,
@@ -52,12 +52,12 @@
     "show": 0,
     "pos_type": 0,
     "positions": [
-      10,
-      49
+      11,
+      53
     ],
     "node": "treasure",
     "level": 1,
-    "progress": 5,
+    "progress": 50,
     "resources": null,
     "quota": null,
     "exp": null,
