@@ -1,7 +1,7 @@
 import { _decorator, Component, Label, Node, tween } from 'cc';
 import { GameMain } from '../../GameMain';
 import { PopUpUI } from '../../BasicView/PopUpUI';
-import LanMgr from '../../Manger/LanMgr';
+import { LanMgr } from '../../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('SecretGuardGettedUI')
@@ -19,19 +19,19 @@ export class SecretGuardGettedUI extends PopUpUI {
         // useLanMgr
         const keen = [
             // "Dual Guns Jack",
-            LanMgr.Instance.getLanById("206001"),
+            LanMgr.getLanById("206001"),
             // "Dual Blades Keen",
-            LanMgr.Instance.getLanById("206002"),
+            LanMgr.getLanById("206002"),
             // "Rebels Camus"
-            LanMgr.Instance.getLanById("206003")
+            LanMgr.getLanById("206003")
         ];
         const wind = [
             // "Gunman as Graceful as a Gazelle"
-            LanMgr.Instance.getLanById("206004"),
+            LanMgr.getLanById("206004"),
             // "Warrior as Wild as the Wind",
-            LanMgr.Instance.getLanById("206005"),
+            LanMgr.getLanById("206005"),
             // "Berserker as Fearless as a Beast"
-            LanMgr.Instance.getLanById("206006")
+            LanMgr.getLanById("206006")
         ]
         for (const name of names) {
             this.node.getChildByPath("bgc/" + name).active = name == pioneerName;

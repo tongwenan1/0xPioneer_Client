@@ -1,7 +1,7 @@
 import { _decorator, Component, Label, Layout, Node } from 'cc';
 import MapBuildingModel, { MapBuildingType } from '../Model/MapBuildingModel';
 import { MapPlayerPioneerModel } from '../Model/MapPioneerModel';
-import LanMgr from '../../../Manger/LanMgr';
+import { LanMgr } from '../../../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterBuildingView')
@@ -9,7 +9,7 @@ export class OuterBuildingView extends Component {
 
     public refreshUI(building: MapBuildingModel, players: MapPlayerPioneerModel[]) {
 
-        this.node.getChildByName("Title").getComponent(Label).string = "Lv." + building.level + "  " + LanMgr.Instance.getLanById(building.name);
+        this.node.getChildByName("Title").getComponent(Label).string = "Lv." + building.level + "  " + LanMgr.getLanById(building.name);
 
 
         for (const buildingName of this._buildViewNames) {

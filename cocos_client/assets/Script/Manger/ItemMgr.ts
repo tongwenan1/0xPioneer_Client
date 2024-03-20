@@ -1,17 +1,9 @@
 import { SpriteFrame, resources, sys } from "cc";
 import ItemData, { ItemConfigData, ItemType } from "../Model/ItemData";
-import UserInfoMgr, { FinishedEvent } from "./UserInfoMgr";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
-
-export enum ItemArrangeType {
-    Recently = "Recently",
-    Rarity = "Rarity",
-    Type = "Type",
-}
-
-export interface ItemMgrEvent {
-    itemChanged(): void;
-}
+import { UserInfoMgr } from "../Utils/Global";
+import { FinishedEvent } from "../Const/Manager/UserInfoDefine";
+import { ItemArrangeType, ItemMgrEvent } from "../Const/Manager/ItemMgrDefine";
 
 export default class ItemMgr {
 
@@ -94,7 +86,7 @@ export default class ItemMgr {
                 changed = true;
                 if (item.itemConfigId == "9") {
                     //get master key
-                    UserInfoMgr.Instance.finishEvent(FinishedEvent.BecomeCityMaster);
+                    UserInfoMgr.finishEvent(FinishedEvent.BecomeCityMaster);
                 }
                 // add timestamp
                 if (itemConfig.itemType == ItemType.Resource) {
@@ -214,12 +206,6 @@ export default class ItemMgr {
         }
     }
 
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new ItemMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
@@ -237,7 +223,6 @@ export default class ItemMgr {
     private _localStorageKey: string = "item_data";
     private _localItemDatas: ItemData[] = [];
 
-    private static _instance: ItemMgr = null;
     private _itemConfs = {};
     private _itemIconSpriteFrames = {};
     private async _initData() {

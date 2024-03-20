@@ -1,12 +1,9 @@
 import { _decorator, Component, Label, Layout, Node, ProgressBar, Slider } from 'cc';
-import UserInfo from '../../Manger/UserInfoMgr';
 import CommonTools from '../../Tool/CommonTools';
 import { PopUpUI } from '../../BasicView/PopUpUI';
-import LanMgr from '../../Manger/LanMgr';
-import EventMgr from '../../Manger/EventMgr';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import ItemMgr from '../../Manger/ItemMgr';
 import { GameMain } from '../../GameMain';
+import { EventMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
@@ -15,21 +12,21 @@ export class RecruitUI extends PopUpUI {
     public refreshUI(initSelectGenerate: boolean = false) {
         if (initSelectGenerate) {
             const maxTroop: number = Math.min(
-                ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
-                ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
+                ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
+                ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
                 this._maxRecruitTroop
             );
             this._selectGenerateNum = Math.min(maxTroop, 1);
         }
 
         // useLanMgr
-        // this.node.getChildByPath("__ViewContent/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByName("__ViewContent/current_res/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByName("__ViewContent/recruiting/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByName("__ViewContent/footer/time/txt").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByName("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByName("__ViewContent/current_res/title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByName("__ViewContent/recruiting/title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByName("__ViewContent/footer/time/txt").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByName("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
-        const currentTroops: number = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Troop);
+        const currentTroops: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop);
 
         const maxTroop: number = 9999999;
         this._totalTroop.string = maxTroop.toString();
@@ -49,9 +46,9 @@ export class RecruitUI extends PopUpUI {
         this._generateTime.string = CommonTools.formatSeconds(this._generateTimeNum);
 
         this._usedWood.string = Math.ceil(this._perTroopWood * this._selectGenerateNum).toString();
-        this._maxWood.string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Wood).toString();
+        this._maxWood.string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood).toString();
         this._usedStone.string = Math.ceil(this._perTroopStone * this._selectGenerateNum).toString();
-        this._maxStone.string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Stone).toString();
+        this._maxStone.string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone).toString();
     }
 
     private _perTroopTime: number = 0.001;
@@ -126,8 +123,8 @@ export class RecruitUI extends PopUpUI {
 
     private onTapGenerateMax() {
         const maxTroop: number = Math.min(
-            ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
-            ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
+            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
+            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
             this._maxRecruitTroop
         );
         if (maxTroop != this._selectGenerateNum) {
@@ -137,8 +134,8 @@ export class RecruitUI extends PopUpUI {
     }
     private onTapGenerateSub() {
         const maxTroop: number = Math.min(
-            ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
-            ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
+            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
+            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
             this._maxRecruitTroop
         );
         const minNum: number = Math.min(1, maxTroop);
@@ -150,8 +147,8 @@ export class RecruitUI extends PopUpUI {
     }
     private onTapGenerateAdd() {
         const maxTroop: number = Math.min(
-            ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
-            ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
+            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
+            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
             this._maxRecruitTroop
         );
         const changedNum = Math.min(this._selectGenerateNum + 100, maxTroop);
@@ -162,8 +159,8 @@ export class RecruitUI extends PopUpUI {
     }
     private onGenerateSlided(event: Event, customEventData: string) {
         const maxTroop: number = Math.min(
-            ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
-            ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
+            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
+            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
             this._maxRecruitTroop
         );
         const currentSelectTroop: number = Math.max(1, Math.min(Math.floor(this._generateSlider.progress * this._maxRecruitTroop), maxTroop));
@@ -178,13 +175,13 @@ export class RecruitUI extends PopUpUI {
     private onTapGenerate() {
         if (this._generateTimeNum <= 0) {
             // useLanMgr
-            // LanMgr.Instance.getLanById("107549")
+            // LanMgr.getLanById("107549")
             GameMain.inst.UI.ShowTip("Unable to produce");
             return;
         }
-        ItemMgr.Instance.subItem(ResourceCorrespondingItem.Wood, parseInt(this._usedWood.string));
-        ItemMgr.Instance.subItem(ResourceCorrespondingItem.Stone, parseInt(this._usedStone.string));
-        UserInfo.Instance.beginGenerateTroop(this._generateTimeNum, this._selectGenerateNum);
+        ItemMgr.subItem(ResourceCorrespondingItem.Wood, parseInt(this._usedWood.string));
+        ItemMgr.subItem(ResourceCorrespondingItem.Stone, parseInt(this._usedStone.string));
+        UserInfoMgr.beginGenerateTroop(this._generateTimeNum, this._selectGenerateNum);
         this.show(false, true);
     }
 }

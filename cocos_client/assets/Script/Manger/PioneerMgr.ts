@@ -1,75 +1,18 @@
 import { Details, Vec2, builtinResMgr, log, math, nextPow2, pingPong, resources, v2, v3 } from "cc";
-import UserInfo, { FinishedEvent } from "./UserInfoMgr";
 import CommonTools from "../Tool/CommonTools";
 import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
 import MapBuildingModel, { BuildingFactionType, MapBuildingType, MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
 import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel, MapPlayerPioneerModel, MapPioneerType, MapNpcPioneerModel, MapPioneerLogicType, MapPioneerEventStatus, MapPioneerAttributesChangeModel, MapPioneerAttributesChangeType } from "../Game/Outer/Model/MapPioneerModel";
-import BuildingMgr from "./BuildingMgr";
-import CountMgr, { CountType } from "./CountMgr";
-import BranchEventMgr from "./BranchEventMgr";
-import ItemMgr from "./ItemMgr";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
-import ArtifactMgr from "./ArtifactMgr";
 import { ArtifactEffectType } from "../Model/ArtifactData";
-import SettlementMgr from "./SettlementMgr";
-import UserInfoMgr from "./UserInfoMgr";
-import EventMgr from "db://assets/Script/Manger/EventMgr";
 import { EventName } from "db://assets/Script/Const/ConstDefine";
-import LanMgr from "./LanMgr";
-
-export interface PioneerMgrEvent {
-    pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void;
-
-    pioneerHpMaxChanged(pioneerId: string): void;
-    pioneerAttackChanged(pioneerId: string): void;
-    pioneerGainHp?(pioneerId: string, value: number): void;
-    pioneerLoseHp(pioneerId: string, value: number): void;
-    pionerrRebirthCount(pioneerId: string, count: number): void;
-    pioneerRebirth(pioneerId: string): void;
-
-    pioneerDidShow(pioneerId: string): void;
-    pioneerDidHide(pioneerId: string): void;
-
-    pioneerDidNonFriendly(pioneerId: string): void;
-    pioneerDidFriendly(pioneerId: string): void;
-
-    addNewOnePioneer(newPioneer: MapPioneerModel): void;
-    destroyOnePioneer(pioneerId: string): void;
-
-    pioneerTaskBeenGetted(pioneerId: string, taskId: string): void;
-    showGetTaskDialog(task: any): void;
-
-    beginFight?(fightId: string, attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void;
-    fightDidAttack?(fightId: string, attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean, fightPositions: Vec2[]): void;
-    endFight?(fightId: string, isEventFightOver: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean, playerPioneerId: string): void;
-
-    exploredPioneer(pioneerId: string): void;
-    exploredBuilding(buildingId: string): void;
-    miningBuilding(actionPioneerId: string, buildingId: string): void;
-    eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void;
-
-    pioneerTaskHideTimeCountChanged(pioneerId: string, timeCount: number): void;
-    pioneerTaskCdTimeCountChanged(pioneerId: string, timeCount: number): void;
-    pioneerLogicMovePathPrepared?(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void;
-    pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void;
-    pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void;
-
-    pioneerShowCount(pioneerId: string, count: number): void;
-
-    playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void;
-
-    playerPioneerDidMoveOneStep?(pioneerId: string): void;
-}
+import { ArtifactMgr, BranchEventMgr, BuildingMgr, CountMgr, EventMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
+import { FinishedEvent } from "../Const/Manager/UserInfoDefine";
+import { CountType } from "../Const/Manager/CountDefine";
+import { PioneerMgrEvent } from "../Const/Manager/PioneerMgrDefine";
 
 export default class PioneerMgr {
-
-    public static get instance() {
-        if (!this._instance) {
-            this._instance = new PioneerMgr();
-        }
-        return this._instance;
-    }
 
     public async initData() {
         await this._initData();
@@ -179,10 +122,10 @@ export default class PioneerMgr {
     public pioneerHealHpToMax(pioneerId: string) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
-            const healValue: number = Math.min(findPioneer.hpMax - findPioneer.hp, ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Troop));
+            const healValue: number = Math.min(findPioneer.hpMax - findPioneer.hp, ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop));
             if (healValue > 0) {
                 findPioneer.gainHp(healValue);
-                ItemMgr.Instance.subItem(ResourceCorrespondingItem.Troop, healValue);
+                ItemMgr.subItem(ResourceCorrespondingItem.Troop, healValue);
                 this._savePioneerData();
                 for (const observe of this._observers) {
                     if (observe.pioneerGainHp != null) {
@@ -269,7 +212,7 @@ export default class PioneerMgr {
                 findPioneer.movePaths.pop();
 
             } else if (findPioneer.purchaseMovingBuildingId != null) {
-                const findBuilding = BuildingMgr.instance.getBuildingById(findPioneer.purchaseMovingBuildingId);
+                const findBuilding = BuildingMgr.getBuildingById(findPioneer.purchaseMovingBuildingId);
                 if (findBuilding != null) {
                     const templeStayPositions = findBuilding.stayMapPositions.slice();
                     for (let i = findPioneer.movePaths.length - 1; i >= 0; i--) {
@@ -311,12 +254,12 @@ export default class PioneerMgr {
     public pioneerDidMoveOneStep(pioneerId: string) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
-            const allBuildings = BuildingMgr.instance.getAllBuilding();
+            const allBuildings = BuildingMgr.getAllBuilding();
             for (const building of allBuildings) {
                 if (building.show &&
                     building.faction != BuildingFactionType.netural &&
                     building.defendPioneerIds.indexOf(pioneerId) != -1) {
-                    BuildingMgr.instance.removeDefendPioneer(building.id, pioneerId);
+                    BuildingMgr.removeDefendPioneer(building.id, pioneerId);
                     break;
                 }
             }
@@ -377,8 +320,8 @@ export default class PioneerMgr {
             }
             if (findPioneer.type == MapPioneerType.player) {
                 // get new pioneer
-                SettlementMgr.instance.insertSettlement({
-                    level: UserInfoMgr.Instance.level,
+                SettlementMgr.insertSettlement({
+                    level: UserInfoMgr.level,
                     newPioneerIds: [pioneerId],
                     killEnemies: 0,
                     gainResources: 0,
@@ -414,9 +357,9 @@ export default class PioneerMgr {
             for (const observer of this._observers) {
                 observer.pioneerActionTypeChanged(findPioneer.id, findPioneer.actionType, findPioneer.actionEndTimeStamp);
             }
-            for (const building of BuildingMgr.instance.getStrongholdBuildings()) {
+            for (const building of BuildingMgr.getStrongholdBuildings()) {
                 if (building.defendPioneerIds.indexOf(pioneerId) != -1) {
-                    BuildingMgr.instance.removeDefendPioneer(building.id, pioneerId);
+                    BuildingMgr.removeDefendPioneer(building.id, pioneerId);
                     break;
                 }
             }
@@ -569,7 +512,7 @@ export default class PioneerMgr {
                     if (deadPioneer == enemy &&
                         deadPioneer.winexp > 0) {
                         // win fight, add exp
-                        UserInfoMgr.Instance.exp += enemy.winexp;
+                        UserInfoMgr.exp += enemy.winexp;
                     }
                     for (const observer of this._observers) {
                         if (observer.endFight != null) {
@@ -611,8 +554,8 @@ export default class PioneerMgr {
                         this._savePioneerData();
 
                         // useLanMgr
-                        let tips = LanMgr.Instance.replaceLanById("106001", [LanMgr.Instance.getLanById(deadPioneer.name)]);
-                        // let tips = LanMgr.Instance.getLanById(deadPioneer.name) + " is dead, please wait for the resurrection";
+                        let tips = LanMgr.replaceLanById("106001", [LanMgr.getLanById(deadPioneer.name)]);
+                        // let tips = LanMgr.getLanById(deadPioneer.name) + " is dead, please wait for the resurrection";
 
                         GameMain.inst.UI.ShowTip(tips);
                     }
@@ -741,207 +684,8 @@ export default class PioneerMgr {
 
 
     public constructor() {
-        setInterval(() => {
-            if (GameMain.inst == null) {
-                return;
-            }
-            for (const pioneer of this._pioneers) {
-                if (pioneer.showCountTime > 0) {
-                    pioneer.showCountTime -= 1;
-                    for (const observe of this._observers) {
-                        observe.pioneerShowCount(pioneer.id, pioneer.showCountTime);
-                    }
-                    this._savePioneerData();
-                    if (pioneer.showCountTime == 0) {
-                        this.showPioneer(pioneer.id);
-                    }
-                }
-                if (pioneer.show) {
-                    if (pioneer.actionType == MapPioneerActionType.idle) {
-                        if (pioneer.logics.length > 0) {
-                            const logic = pioneer.logics[0];
-                            let canAction: boolean = false;
-                            if (logic.condition != null && logic.condition != FinishedEvent.NoCondition) {
-                                if (UserInfo.Instance.finishedEvents.indexOf(logic.condition) != -1) {
-                                    canAction = true;
-                                }
-                            } else {
-                                canAction = true;
-                            }
-                            if (canAction) {
-                                //all move logic change to move one step by step
-                                if (logic.type == MapPioneerLogicType.stepmove) {
-                                    if (logic.repeat > 0 || logic.repeat == -1) {
-                                        if (logic.currentCd > 0) {
-                                            //move cd count
-                                            logic.currentCd -= 1;
-                                        }
-                                        for (const observe of this._observers) {
-                                            observe.pioneerLogicMoveTimeCountChanged(pioneer);
-                                        }
-                                        if (logic.currentCd == 0) {
-                                            logic.currentCd = logic.cd;
-                                            if (logic.repeat > 0) {
-                                                logic.repeat -= 1;
-                                            }
-                                            for (const observe of this._observers) {
-                                                observe.pioneerLogicMove(pioneer, logic);
-                                            }
-                                        }
-                                        if (logic.repeat == 0) {
-                                            pioneer.logics.splice(0, 1);
-                                        }
-                                    }
-
-                                } else if (logic.type == MapPioneerLogicType.targetmove) {
-                                    for (const observe of this._observers) {
-                                        observe.pioneerLogicMove(pioneer, logic);
-                                    }
-                                    pioneer.logics.splice(0, 1);
-
-                                } else if (logic.type == MapPioneerLogicType.hide) {
-                                    this.hidePioneer(pioneer.id);
-                                    pioneer.logics.splice(0, 1);
-
-                                } else if (logic.type == MapPioneerLogicType.patrol) {
-                                    if (logic.repeat > 0 || logic.repeat == -1) {
-                                        if (logic.currentCd == -1) {
-                                            // randomNextPos
-                                            let getNextPos: boolean = false;
-                                            do {
-                                                const xNegative: boolean = CommonTools.getRandomInt(0, 1) == 0;
-                                                const xChangeNum: number = CommonTools.getRandomInt(0, logic.range);
-                                                const yNegative: boolean = CommonTools.getRandomInt(0, 1) == 0;
-                                                const yChangeNum: number = CommonTools.getRandomInt(0, logic.range);
-                                                let nextPos = logic.originalPos.clone();
-                                                if (xNegative) {
-                                                    nextPos.x -= xChangeNum;
-                                                } else {
-                                                    nextPos.x += xChangeNum;
-                                                }
-                                                if (yNegative) {
-                                                    nextPos.y -= yChangeNum;
-                                                } else {
-                                                    nextPos.y += yChangeNum;
-                                                }
-                                                logic.patrolTargetPos = nextPos;
-
-                                                getNextPos = false;
-                                                if (GameMain.inst.outSceneMap.mapBG.isBlock(nextPos)) {
-                                                    getNextPos = true;
-                                                } else {
-                                                    const pioneers = this.getShowPioneersByMapPos(nextPos);
-                                                    if (pioneers.length > 0) {
-                                                        for (const temple of pioneers) {
-                                                            if (temple.type != MapPioneerType.player) {
-                                                                getNextPos = true;
-                                                                break;
-                                                            }
-                                                        }
-                                                    } else {
-                                                        const buildings = BuildingMgr.instance.getShowBuildingByMapPos(nextPos);
-                                                        if (buildings != null) {
-                                                            getNextPos = true;
-                                                        }
-                                                    }
-                                                }
-                                            } while (getNextPos);
-                                            logic.currentCd = 0;
-                                            if (logic.interval.length == 2) {
-                                                logic.currentCd = CommonTools.getRandomInt(logic.interval[0], logic.interval[1]);
-                                            }
-                                        }
-                                        if (logic.currentCd > 0) {
-                                            logic.currentCd -= 1;
-                                        }
-                                        for (const observe of this._observers) {
-                                            observe.pioneerLogicMoveTimeCountChanged(pioneer);
-                                        }
-                                        if (logic.currentCd == 0) {
-                                            logic.currentCd = -1;
-                                            if (logic.repeat > 0) {
-                                                logic.repeat -= 1;
-                                            }
-                                            for (const observe of this._observers) {
-                                                observe.pioneerLogicMove(pioneer, logic);
-                                            }
-                                            if (logic.repeat == 0) {
-                                                pioneer.logics.splice(0, 1);
-                                            }
-                                            for (const observe of this._observers) {
-                                                if (observe.pioneerLogicMovePathPrepared != null) {
-                                                    observe.pioneerLogicMovePathPrepared(pioneer, logic);
-                                                }
-                                            }
-                                        }
-                                    }
-                                } else if (logic.type == MapPioneerLogicType.commonmove) {
-                                    for (const observe of this._observers) {
-                                        observe.pioneerLogicMove(pioneer, logic);
-                                    }
-                                    pioneer.logics.splice(0, 1);
-                                }
-                                this._savePioneerData();
-                            }
-                        }
-                    }
-
-                    // task time count
-                    if (pioneer instanceof MapNpcPioneerModel) {
-                        const npc = pioneer as MapNpcPioneerModel;
-                        if (npc.taskHideTime > 0) {
-                            npc.taskHideTime -= 1;
-                            if (npc.taskHideTime == 0) {
-                                npc.hideTaskIds.push(npc.taskObj.id);
-                                npc.taskObj = null;
-                            }
-                            this._savePioneerData();
-                            for (const observe of this._observers) {
-                                observe.pioneerTaskHideTimeCountChanged(npc.id, npc.taskHideTime);
-                            }
-                        }
-                        if (npc.taskCdEndTime > 0) {
-                            npc.taskCdEndTime -= 1;
-                            this._savePioneerData();
-                            for (const observe of this._observers) {
-                                observe.pioneerTaskCdTimeCountChanged(npc.id, npc.taskCdEndTime);
-                            }
-                        }
-                    }
-
-                } else {
-                    if (pioneer instanceof MapPlayerPioneerModel) {
-                        if (pioneer.rebirthCountTime > 0) {
-                            pioneer.rebirthCountTime -= 1;
-                            for (const observe of this._observers) {
-                                observe.pionerrRebirthCount(pioneer.id, pioneer.rebirthCountTime);
-                            }
-                            if (pioneer.rebirthCountTime == 0) {
-                                let rebirthMapPos = null;
-                                const mainCity = BuildingMgr.instance.getBuildingById("building_1");
-                                if (mainCity != null && mainCity.faction != BuildingFactionType.enemy) {
-                                    rebirthMapPos = mainCity.stayMapPositions[1];
-                                } else {
-                                    rebirthMapPos = v2(pioneer.stayPos.x - 1, pioneer.stayPos.y);
-                                }
-                                let rebirthHp: number = Math.max(1, Math.min(ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Troop), pioneer.hpMax));
-                                ItemMgr.Instance.subItem(ResourceCorrespondingItem.Troop, rebirthHp);
-                                pioneer.rebirth(rebirthHp, rebirthMapPos);
-                                pioneer.eventStatus = MapPioneerEventStatus.None;
-                                pioneer.actionType = MapPioneerActionType.idle;
-                                for (const observe of this._observers) {
-                                    observe.pioneerRebirth(pioneer.id);
-                                }
-                            }
-                            this._savePioneerData();
-                        }
-                    }
-                }
-            }
-        }, 1000);
+        
     }
-
-    private static _instance: PioneerMgr;
 
     private _localStorageKey: string = "local_pioneers";
     private _observers: PioneerMgrEvent[] = [];
@@ -1180,19 +924,218 @@ export default class PioneerMgr {
         // default player id is "0"
         this._currentActionPioneerId = "pioneer_0";
         this._originalActionPioneerId = "pioneer_0";
+
+        setInterval(() => {
+            if (GameMain.inst == null) {
+                return;
+            }
+            for (const pioneer of this._pioneers) {
+                if (pioneer.showCountTime > 0) {
+                    pioneer.showCountTime -= 1;
+                    for (const observe of this._observers) {
+                        observe.pioneerShowCount(pioneer.id, pioneer.showCountTime);
+                    }
+                    this._savePioneerData();
+                    if (pioneer.showCountTime == 0) {
+                        this.showPioneer(pioneer.id);
+                    }
+                }
+                if (pioneer.show) {
+                    if (pioneer.actionType == MapPioneerActionType.idle) {
+                        if (pioneer.logics.length > 0) {
+                            const logic = pioneer.logics[0];
+                            let canAction: boolean = false;
+                            if (logic.condition != null && logic.condition != FinishedEvent.NoCondition) {
+                                if (UserInfoMgr.finishedEvents.indexOf(logic.condition) != -1) {
+                                    canAction = true;
+                                }
+                            } else {
+                                canAction = true;
+                            }
+                            if (canAction) {
+                                //all move logic change to move one step by step
+                                if (logic.type == MapPioneerLogicType.stepmove) {
+                                    if (logic.repeat > 0 || logic.repeat == -1) {
+                                        if (logic.currentCd > 0) {
+                                            //move cd count
+                                            logic.currentCd -= 1;
+                                        }
+                                        for (const observe of this._observers) {
+                                            observe.pioneerLogicMoveTimeCountChanged(pioneer);
+                                        }
+                                        if (logic.currentCd == 0) {
+                                            logic.currentCd = logic.cd;
+                                            if (logic.repeat > 0) {
+                                                logic.repeat -= 1;
+                                            }
+                                            for (const observe of this._observers) {
+                                                observe.pioneerLogicMove(pioneer, logic);
+                                            }
+                                        }
+                                        if (logic.repeat == 0) {
+                                            pioneer.logics.splice(0, 1);
+                                        }
+                                    }
+
+                                } else if (logic.type == MapPioneerLogicType.targetmove) {
+                                    for (const observe of this._observers) {
+                                        observe.pioneerLogicMove(pioneer, logic);
+                                    }
+                                    pioneer.logics.splice(0, 1);
+
+                                } else if (logic.type == MapPioneerLogicType.hide) {
+                                    this.hidePioneer(pioneer.id);
+                                    pioneer.logics.splice(0, 1);
+
+                                } else if (logic.type == MapPioneerLogicType.patrol) {
+                                    if (logic.repeat > 0 || logic.repeat == -1) {
+                                        if (logic.currentCd == -1) {
+                                            // randomNextPos
+                                            let getNextPos: boolean = false;
+                                            do {
+                                                const xNegative: boolean = CommonTools.getRandomInt(0, 1) == 0;
+                                                const xChangeNum: number = CommonTools.getRandomInt(0, logic.range);
+                                                const yNegative: boolean = CommonTools.getRandomInt(0, 1) == 0;
+                                                const yChangeNum: number = CommonTools.getRandomInt(0, logic.range);
+                                                let nextPos = logic.originalPos.clone();
+                                                if (xNegative) {
+                                                    nextPos.x -= xChangeNum;
+                                                } else {
+                                                    nextPos.x += xChangeNum;
+                                                }
+                                                if (yNegative) {
+                                                    nextPos.y -= yChangeNum;
+                                                } else {
+                                                    nextPos.y += yChangeNum;
+                                                }
+                                                logic.patrolTargetPos = nextPos;
+
+                                                getNextPos = false;
+                                                if (GameMain.inst.outSceneMap.mapBG.isBlock(nextPos)) {
+                                                    getNextPos = true;
+                                                } else {
+                                                    const pioneers = this.getShowPioneersByMapPos(nextPos);
+                                                    if (pioneers.length > 0) {
+                                                        for (const temple of pioneers) {
+                                                            if (temple.type != MapPioneerType.player) {
+                                                                getNextPos = true;
+                                                                break;
+                                                            }
+                                                        }
+                                                    } else {
+                                                        const buildings = BuildingMgr.getShowBuildingByMapPos(nextPos);
+                                                        if (buildings != null) {
+                                                            getNextPos = true;
+                                                        }
+                                                    }
+                                                }
+                                            } while (getNextPos);
+                                            logic.currentCd = 0;
+                                            if (logic.interval.length == 2) {
+                                                logic.currentCd = CommonTools.getRandomInt(logic.interval[0], logic.interval[1]);
+                                            }
+                                        }
+                                        if (logic.currentCd > 0) {
+                                            logic.currentCd -= 1;
+                                        }
+                                        for (const observe of this._observers) {
+                                            observe.pioneerLogicMoveTimeCountChanged(pioneer);
+                                        }
+                                        if (logic.currentCd == 0) {
+                                            logic.currentCd = -1;
+                                            if (logic.repeat > 0) {
+                                                logic.repeat -= 1;
+                                            }
+                                            for (const observe of this._observers) {
+                                                observe.pioneerLogicMove(pioneer, logic);
+                                            }
+                                            if (logic.repeat == 0) {
+                                                pioneer.logics.splice(0, 1);
+                                            }
+                                            for (const observe of this._observers) {
+                                                if (observe.pioneerLogicMovePathPrepared != null) {
+                                                    observe.pioneerLogicMovePathPrepared(pioneer, logic);
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else if (logic.type == MapPioneerLogicType.commonmove) {
+                                    for (const observe of this._observers) {
+                                        observe.pioneerLogicMove(pioneer, logic);
+                                    }
+                                    pioneer.logics.splice(0, 1);
+                                }
+                                this._savePioneerData();
+                            }
+                        }
+                    }
+
+                    // task time count
+                    if (pioneer instanceof MapNpcPioneerModel) {
+                        const npc = pioneer as MapNpcPioneerModel;
+                        if (npc.taskHideTime > 0) {
+                            npc.taskHideTime -= 1;
+                            if (npc.taskHideTime == 0) {
+                                npc.hideTaskIds.push(npc.taskObj.id);
+                                npc.taskObj = null;
+                            }
+                            this._savePioneerData();
+                            for (const observe of this._observers) {
+                                observe.pioneerTaskHideTimeCountChanged(npc.id, npc.taskHideTime);
+                            }
+                        }
+                        if (npc.taskCdEndTime > 0) {
+                            npc.taskCdEndTime -= 1;
+                            this._savePioneerData();
+                            for (const observe of this._observers) {
+                                observe.pioneerTaskCdTimeCountChanged(npc.id, npc.taskCdEndTime);
+                            }
+                        }
+                    }
+
+                } else {
+                    if (pioneer instanceof MapPlayerPioneerModel) {
+                        if (pioneer.rebirthCountTime > 0) {
+                            pioneer.rebirthCountTime -= 1;
+                            for (const observe of this._observers) {
+                                observe.pionerrRebirthCount(pioneer.id, pioneer.rebirthCountTime);
+                            }
+                            if (pioneer.rebirthCountTime == 0) {
+                                let rebirthMapPos = null;
+                                const mainCity = BuildingMgr.getBuildingById("building_1");
+                                if (mainCity != null && mainCity.faction != BuildingFactionType.enemy) {
+                                    rebirthMapPos = mainCity.stayMapPositions[1];
+                                } else {
+                                    rebirthMapPos = v2(pioneer.stayPos.x - 1, pioneer.stayPos.y);
+                                }
+                                let rebirthHp: number = Math.max(1, Math.min(ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop), pioneer.hpMax));
+                                ItemMgr.subItem(ResourceCorrespondingItem.Troop, rebirthHp);
+                                pioneer.rebirth(rebirthHp, rebirthMapPos);
+                                pioneer.eventStatus = MapPioneerEventStatus.None;
+                                pioneer.actionType = MapPioneerActionType.idle;
+                                for (const observe of this._observers) {
+                                    observe.pioneerRebirth(pioneer.id);
+                                }
+                            }
+                            this._savePioneerData();
+                        }
+                    }
+                }
+            }
+        }, 1000);
     }
 
     private _pioneerActionTypeChangedByMeetTrigger(pioneer: MapPioneerModel, isStay: boolean = true) {
         let stayBuilding: MapBuildingModel = null;
         if (pioneer.purchaseMovingBuildingId != null) {
-            const templeBuildings = BuildingMgr.instance.getShowBuildingsNearMapPos(pioneer.stayPos, 2);
+            const templeBuildings = BuildingMgr.getShowBuildingsNearMapPos(pioneer.stayPos, 2);
             if (templeBuildings.length > 0) {
                 // use first find building
                 stayBuilding = templeBuildings[0];
             }
             pioneer.purchaseMovingBuildingId = null;
         } else {
-            stayBuilding = BuildingMgr.instance.getShowBuildingByMapPos(pioneer.stayPos);
+            stayBuilding = BuildingMgr.getShowBuildingByMapPos(pioneer.stayPos);
         }
         const currentTimeStamp = new Date().getTime();
         if (stayBuilding == null) {
@@ -1214,7 +1157,7 @@ export default class PioneerMgr {
             if (interactPioneer != null) {
                 if (pioneer.type == MapPioneerType.player ||
                     interactPioneer.type == MapPioneerType.player) {
-                    CountMgr.instance.addNewCount({
+                    CountMgr.addNewCount({
                         type: CountType.actionPioneer,
                         timeStamp: new Date().getTime(),
                         data: {
@@ -1298,7 +1241,7 @@ export default class PioneerMgr {
             // building
             // need changed. use manger to deal with pioneer and building 
             if (pioneer.type == MapPioneerType.player) {
-                CountMgr.instance.addNewCount({
+                CountMgr.addNewCount({
                     type: CountType.actionBuilding,
                     timeStamp: new Date().getTime(),
                     data: {
@@ -1330,7 +1273,7 @@ export default class PioneerMgr {
                             for (const observer of this._observers) {
                                 observer.showGetTaskDialog(cityBuilding.taskObj);
                             }
-                            BuildingMgr.instance.buildingClearTask(cityBuilding.id);
+                            BuildingMgr.buildingClearTask(cityBuilding.id);
                         }
                     } else {
                         this._fight(pioneer, stayBuilding);
@@ -1368,7 +1311,7 @@ export default class PioneerMgr {
                     }, acionTime);
                 } else {
                     if (pioneer.name == "gangster_3") {
-                        BuildingMgr.instance.hideBuilding(stayBuilding.id, pioneer.id);
+                        BuildingMgr.hideBuilding(stayBuilding.id, pioneer.id);
                     }
                     if (isStay) {
                         pioneer.actionType = MapPioneerActionType.idle;
@@ -1386,8 +1329,8 @@ export default class PioneerMgr {
                 if (pioneer.type == MapPioneerType.player && pioneer.friendly) {
                     if (stayBuilding.faction != BuildingFactionType.enemy) {
                         tempAction = 2;
-                        BuildingMgr.instance.changeBuildingFaction(stayBuilding.id, BuildingFactionType.self);
-                        BuildingMgr.instance.insertDefendPioneer(stayBuilding.id, pioneer.id);
+                        BuildingMgr.changeBuildingFaction(stayBuilding.id, BuildingFactionType.self);
+                        BuildingMgr.insertDefendPioneer(stayBuilding.id, pioneer.id);
                         for (const observe of this._observers) {
                             observe.exploredBuilding(stayBuilding.id);
                         }
@@ -1399,7 +1342,7 @@ export default class PioneerMgr {
                         if (stayBuilding.faction != BuildingFactionType.self ||
                             stayBuilding.defendPioneerIds.length <= 0) {
                             tempAction = 0;
-                            BuildingMgr.instance.hideBuilding(stayBuilding.id, pioneer.id);
+                            BuildingMgr.hideBuilding(stayBuilding.id, pioneer.id);
                         } else {
                             pioneer.loseHp(Math.floor(pioneer.hp / 2));
                             pioneer.changeAttack({
@@ -1436,7 +1379,7 @@ export default class PioneerMgr {
                 if (pioneer.type == MapPioneerType.player && pioneer.friendly) {
 
                     // artifact
-                    const artifactEff = ArtifactMgr.Instance.getPropEffValue(UserInfo.Instance.level);
+                    const artifactEff = ArtifactMgr.getPropEffValue(UserInfoMgr.level);
                     let artifactGather = 0;
                     if (artifactEff.eff[ArtifactEffectType.GATHER_TIME]) {
                         artifactGather = artifactEff.eff[ArtifactEffectType.GATHER_TIME];
@@ -1459,7 +1402,7 @@ export default class PioneerMgr {
                         for (const observer of this._observers) {
                             observer.pioneerActionTypeChanged(pioneer.id, pioneer.actionType, pioneer.actionEndTimeStamp);
                         }
-                        BuildingMgr.instance.resourceBuildingCollected(stayBuilding.id);
+                        BuildingMgr.resourceBuildingCollected(stayBuilding.id);
                         for (const observe of this._observers) {
                             observe.miningBuilding(pioneer.id, stayBuilding.id);
                         }
@@ -1478,7 +1421,7 @@ export default class PioneerMgr {
             } else if (stayBuilding.type == MapBuildingType.event) {
                 if (pioneer.type == MapPioneerType.player) {
                     let currentEvent = null;
-                    const findEvents = BranchEventMgr.Instance.getEventById(stayBuilding.eventId);
+                    const findEvents = BranchEventMgr.getEventById(stayBuilding.eventId);
                     if (findEvents.length > 0) {
                         currentEvent = findEvents[0];
                     }
@@ -1612,7 +1555,7 @@ export default class PioneerMgr {
                                 }
                             }
                             if (defenderHp <= 0) {
-                                BuildingMgr.instance.hideBuilding(defender.id, attacker.id);
+                                BuildingMgr.hideBuilding(defender.id, attacker.id);
                                 fightOver = true;
                                 deadPioneer = defender;
                             }
@@ -1638,7 +1581,7 @@ export default class PioneerMgr {
                 // fight end
                 if (deadPioneer.id == "npc_0") {
                     //after killed prophetess, city become enemy
-                    BuildingMgr.instance.changeBuildingFaction("building_1", BuildingFactionType.enemy);
+                    BuildingMgr.changeBuildingFaction("building_1", BuildingFactionType.enemy);
                 }
 
                 let isSelfWin: boolean = false;
@@ -1646,7 +1589,7 @@ export default class PioneerMgr {
                 if (deadPioneer instanceof MapPioneerModel &&
                     deadPioneer.type != MapPioneerType.player &&
                     deadPioneer.winexp > 0) {
-                    UserInfoMgr.Instance.exp += deadPioneer.winexp;
+                    UserInfoMgr.exp += deadPioneer.winexp;
                     isSelfWin = true;
                 }
                 if (attacker.type == MapPioneerType.player) {
@@ -1703,8 +1646,8 @@ export default class PioneerMgr {
                     this._savePioneerData();
 
                     // useLanMgr
-                    let tips = LanMgr.Instance.replaceLanById("106001", [LanMgr.Instance.getLanById(deadPioneer.name)]);
-                    // let tips = LanMgr.Instance.getLanById(deadPioneer.name) + " is dead, please wait for the resurrection";
+                    let tips = LanMgr.replaceLanById("106001", [LanMgr.getLanById(deadPioneer.name)]);
+                    // let tips = LanMgr.getLanById(deadPioneer.name) + " is dead, please wait for the resurrection";
 
                     GameMain.inst.UI.ShowTip(tips);
                 }

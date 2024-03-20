@@ -1,16 +1,8 @@
 import { _decorator, Component, Node, Button, SpriteFrame, Sprite, Label, Prefab, instantiate, tiledLayerAssembler, Tween, v3, tween, math, randomRangeInt, Color, LabelOutline, ImageAsset } from 'cc';
 import { GameMain } from '../GameMain';
-import EventMgr from '../Manger/EventMgr';
-import PioneerMgr, { PioneerMgrEvent } from '../Manger/PioneerMgr';
-import UserInfo, { FinishedEvent, UserInfoEvent } from '../Manger/UserInfoMgr';
-import LocalDataLoader from '../Manger/LocalDataLoader';
-
 import { ECursorStyle, MouseCursor } from './MouseCursor';
-import ItemMgr from '../Manger/ItemMgr';
 import { TilePos } from '../Game/TiledMap/TileTool';
 import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
-
-
 import { BaseUI } from '../BasicView/BaseUI';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { ClaimRewardUI } from './ClaimRewardUI';
@@ -25,17 +17,17 @@ import { RecruitUI } from './Inner/RecruitUI';
 import { EventName } from '../Const/ConstDefine';
 import { BattleReportsUI } from "db://assets/Script/UI/BattleReportsUI";
 import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
-import LanMgr from '../Manger/LanMgr';
 import { ArtifactUI } from './ArtifactUI';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
 import { PlayerInfoUI } from './PlayerInfoUI';
 import { NewSettlementUI } from './NewSettlementUI';
-import SettlementMgr from '../Manger/SettlementMgr';
 import { LootsPopup } from "db://assets/Script/UI/LootsPopup";
-import BattleReportsMgr, { BattleReportsEvent } from "db://assets/Script/Manger/BattleReportsMgr";
 import { BuildingUpgradeUI } from './Inner/BuildingUpgradeUI';
 import { ItemSelectFromThreeUI } from './ItemSelectFromThreeUI';
-import DropMgr from '../Manger/DropMgr';
+import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
+import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoDefine';
+import { BattleReportsEvent } from '../Const/Manager/BattleReportsMgrDefine';
+import { BattleReportsMgr, EventMgr, LanMgr, LocalDataLoader, PioneerMgr, UserInfoMgr } from '../Utils/Global';
 
 const { ccclass, property } = _decorator;
 
@@ -139,9 +131,9 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         this._gangsterComingTipView.active = false;
 
         this._refreshSettlememntTip();
-        PioneerMgr.instance.addObserver(this);
-        UserInfo.Instance.addObserver(this);
-        BattleReportsMgr.Instance.addObserver(this);
+        PioneerMgr.addObserver(this);
+        UserInfoMgr.addObserver(this);
+        BattleReportsMgr.addObserver(this);
 
         EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
 
@@ -223,14 +215,14 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
         EventMgr.on(EventName.SCENE_CHANGE, this.onSceneChange, this);
 
-        if (LocalDataLoader.instance.loadStatus == 0) {
-            await LocalDataLoader.instance.loadLocalDatas();
+        if (LocalDataLoader.loadStatus == 0) {
+            await LocalDataLoader.loadLocalDatas();
         }
         EventMgr.emit(EventName.LOADING_FINISH);
 
         this.changeLang();
 
-        const bigGanster = PioneerMgr.instance.getPioneerById("gangster_3");
+        const bigGanster = PioneerMgr.getPioneerById("gangster_3");
         if (bigGanster != null && bigGanster.show) {
             this.checkCanShowGansterComingTip(bigGanster.id);
         }
@@ -254,7 +246,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
         const node = this.battleReportsBtn.node.getChildByName('unreadCount');
         const label = node.getChildByName('unreadCountLabel').getComponent(Label);
         if (node) {
-            const count = BattleReportsMgr.Instance.unreadCount;
+            const count = BattleReportsMgr.unreadCount;
             if (count != 0) {
                 label.string = count.toString();
                 node.active = true;
@@ -269,18 +261,18 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     }
 
     onDestroy(): void {
-        PioneerMgr.instance.removeObserver(this);
-        UserInfo.Instance.removeObserver(this);
-        BattleReportsMgr.Instance.removeObserver(this);
+        PioneerMgr.removeObserver(this);
+        UserInfoMgr.removeObserver(this);
+        BattleReportsMgr.removeObserver(this);
 
         EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
     }
 
     changeLang(): void {
         // useLanMgr
-        // this.node.getChildByPath("LeftNode/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("icon_treasure_box/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("icon_artifact/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("LeftNode/title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("icon_treasure_box/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("icon_artifact/Label").getComponent(Label).string = LanMgr.getLanById("107549");
     }
 
     private _refreshSettlememntTip() {
@@ -402,7 +394,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     }
 
     private checkCanShowGansterComingTip(pioneerId: string) {
-        if (pioneerId == "gangster_3" && UserInfo.Instance.finishedEvents.indexOf(FinishedEvent.KillDoomsDayGangTeam) != -1) {
+        if (pioneerId == "gangster_3" && UserInfoMgr.finishedEvents.indexOf(FinishedEvent.KillDoomsDayGangTeam) != -1) {
             this._gangsterComingTipView.active = true;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = true;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = false;
@@ -501,7 +493,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
 
             // useLanMgr
-            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.Instance.replaceLanById("200003", [this.secondsToTime(count)]);
+            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.replaceLanById("200003", [this.secondsToTime(count)]);
             // this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = "Big Team Coming: " + this.secondsToTime(count);
         }
     }

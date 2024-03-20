@@ -1,18 +1,11 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import { GameMain } from '../../GameMain';
-import PioneerMgr from '../../Manger/PioneerMgr';
-import ItemMgr from '../../Manger/ItemMgr';
 import ItemData, { ItemConfigData, ItemType } from '../../Model/ItemData';
-import BranchEventMgr from '../../Manger/BranchEventMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
-import BuildingMgr from '../../Manger/BuildingMgr';
-import CountMgr, { CountType } from '../../Manger/CountMgr';
-import LanMgr from '../../Manger/LanMgr';
-import EventMgr from '../../Manger/EventMgr';
 import { EventName, ItemConfigType } from '../../Const/ConstDefine';
-import SettlementMgr from '../../Manger/SettlementMgr';
-import UserInfoMgr from '../../Manger/UserInfoMgr';
 import { MapPioneerAttributesChangeModel } from '../../Game/Outer/Model/MapPioneerModel';
+import { BranchEventMgr, BuildingMgr, CountMgr, EventMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UserInfoMgr } from '../../Utils/Global';
+import { CountType } from '../../Const/Manager/CountDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -89,17 +82,17 @@ export class EventUI extends PopUpUI {
         // type = 6：jungle
 
         // useLanMgr
-        // this._dialogView.getChildByPath("nextButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._dialogView.getChildByPath("fightButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._dialogView.getChildByPath("nextButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._dialogView.getChildByPath("fightButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
         // useLanMgr
-        this._dialogView.getChildByPath("content/bg/label").getComponent(Label).string = LanMgr.Instance.getLanById(event.text);
+        this._dialogView.getChildByPath("content/bg/label").getComponent(Label).string = LanMgr.getLanById(event.text);
         // this._dialogView.getChildByPath("content/bg/label").getComponent(Label).string = event.text;
         let localLastTip = null;
         if (this._triggerPioneerId != null) {
             localLastTip = localStorage.getItem("local_event_last_title_" + this._triggerPioneerId);
         }
-        this._dialogView.getChildByPath("content/title").getComponent(Label).string = localLastTip == null ? "" : LanMgr.Instance.getLanById(localLastTip);
+        this._dialogView.getChildByPath("content/title").getComponent(Label).string = localLastTip == null ? "" : LanMgr.getLanById(localLastTip);
 
         this._dialogNextButton.active = false;
         this._dialogFightButton.active = false;
@@ -127,7 +120,7 @@ export class EventUI extends PopUpUI {
                     }
 
                     // useLanMgr
-                    item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? LanMgr.Instance.getLanById(event.select_txt[i]) : conditionResult.tipText) : LanMgr.Instance.getLanById(event.select_txt[i]);
+                    item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? LanMgr.getLanById(event.select_txt[i]) : conditionResult.tipText) : LanMgr.getLanById(event.select_txt[i]);
                     // item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? event.select_txt[i] : conditionResult.tipText) : event.select_txt[i];
 
                     item.getComponent(Sprite).grayscale = conditionResult != null ? !conditionResult.satisfy : false;
@@ -165,7 +158,7 @@ export class EventUI extends PopUpUI {
                         const changedValue: number = tempChange[3];
 
                         if (isPlayer && changedType == 1) {
-                            PioneerMgr.instance.pioneerChangeHpMax(pioneerId, { type: changeMethod, value: changedValue });
+                            PioneerMgr.pioneerChangeHpMax(pioneerId, { type: changeMethod, value: changedValue });
                         } else {
                             this._temporaryAttributes.set(pioneerId + "|" + changedType, { type: changeMethod, value: changedValue });
                         }
@@ -173,38 +166,38 @@ export class EventUI extends PopUpUI {
                             if (changedType == 1) {
 
                                 // useLanMgr
-                                showTip += LanMgr.Instance.getLanById("207001") + "\n";
+                                showTip += LanMgr.getLanById("207001") + "\n";
                                 // showTip += "Your HP has changed\n";
                             }
                             else {
                                 // useLanMgr
-                                showTip += LanMgr.Instance.getLanById("207002") + "\n";
+                                showTip += LanMgr.getLanById("207002") + "\n";
                                 // showTip += "Your Attack has changed\n";
                             }
                         }
                         else {
-                            const pioneerInfo = PioneerMgr.instance.getPioneerById(pioneerId);
+                            const pioneerInfo = PioneerMgr.getPioneerById(pioneerId);
                             if (pioneerInfo == null) {
                                 if (changedType == 1) {
                                     // useLanMgr
-                                    showTip += LanMgr.Instance.getLanById("207003") + "\n";
+                                    showTip += LanMgr.getLanById("207003") + "\n";
                                     // showTip += "Enemy's HP has changed\n";
                                 }
                                 else {
                                     // useLanMgr
-                                    showTip += LanMgr.Instance.getLanById("207004") + "\n";
+                                    showTip += LanMgr.getLanById("207004") + "\n";
                                     // showTip += "Enemy's Attack has changed\n";
                                 }
                             }
                             else {
                                 if (changedType == 1) {
                                     // useLanMgr
-                                    showTip += LanMgr.Instance.replaceLanById("207005", [pioneerInfo.name]) + "\n";
+                                    showTip += LanMgr.replaceLanById("207005", [pioneerInfo.name]) + "\n";
                                     // showTip += pioneerInfo.name + " HP has changed\n";
                                 }
                                 else {
                                     // useLanMgr
-                                    showTip += LanMgr.Instance.replaceLanById("207006", [pioneerInfo.name]) + "\n";
+                                    showTip += LanMgr.replaceLanById("207006", [pioneerInfo.name]) + "\n";
                                     // showTip += pioneerInfo.name + " Attack has changed\n";
                                 }
                             }
@@ -216,7 +209,7 @@ export class EventUI extends PopUpUI {
             }
         }
 
-        CountMgr.instance.addNewCount({
+        CountMgr.addNewCount({
             type: CountType.showEvent,
             timeStamp: new Date().getTime(),
             data: {
@@ -227,18 +220,18 @@ export class EventUI extends PopUpUI {
         if (event.map_building_refresh != null) {
             for (const [buidingId, type] of event.map_building_refresh) {
                 if (type == 1) {
-                    BuildingMgr.instance.showBuilding(buidingId);
+                    BuildingMgr.showBuilding(buidingId);
                 } else {
-                    BuildingMgr.instance.hideBuilding(buidingId);
+                    BuildingMgr.hideBuilding(buidingId);
                 }
             }
         }
         if (event.map_pioneer_unlock != null) {
             for (const [pioneerId, type] of event.map_pioneer_unlock) {
                 if (type == 1) {
-                    PioneerMgr.instance.showPioneer(pioneerId);
+                    PioneerMgr.showPioneer(pioneerId);
                 } else {
-                    PioneerMgr.instance.hidePioneer(pioneerId);
+                    PioneerMgr.hidePioneer(pioneerId);
                 }
             }
         }
@@ -252,15 +245,15 @@ export class EventUI extends PopUpUI {
             const num: number = condition[2];
 
             if (type == ItemConfigType.Item) {
-                const currentNum = ItemMgr.Instance.getOwnItemCount(id);
+                const currentNum = ItemMgr.getOwnItemCount(id);
                 if (currentNum >= num) {
                     temple.satisfy = true;
                 } else {
                     temple.satisfy = false;
-                    const itemConf = ItemMgr.Instance.getItemConf(id);
+                    const itemConf = ItemMgr.getItemConf(id);
                     if (itemConf != null) {
                         // useLanMgr
-                        temple.tipText = LanMgr.Instance.replaceLanById("207007", [num]) + LanMgr.Instance.getLanById(itemConf.itemName);
+                        temple.tipText = LanMgr.replaceLanById("207007", [num]) + LanMgr.getLanById(itemConf.itemName);
                         // temple.tipText = "you need AT LEAST " + num + " " + itemConf.itemName;
                     }
                 }
@@ -270,7 +263,7 @@ export class EventUI extends PopUpUI {
             // reserved for later
             // } else if (type == 3) {
             //     if (this._triggerPioneerId != null) {
-            //         const pioneer = PioneerMgr.instance.getPioneerById(this._triggerPioneerId);
+            //         const pioneer = PioneerMgr.getPioneerById(this._triggerPioneerId);
             //         if (id == 1) {
             //             // hp
             //             if (pioneer.hp > num) {
@@ -280,7 +273,7 @@ export class EventUI extends PopUpUI {
             //                 temple.satisfy = false;
 
             //                 // useLanMgr
-            //                 // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num+1]);
+            //                 // temple.tipText = LanMgr.replaceLanById("107549", [num+1]);
             //                 temple.tipText = "you need AT LEAST " + (num + 1) + " HP";
             //             }
 
@@ -292,7 +285,7 @@ export class EventUI extends PopUpUI {
             //                 temple.satisfy = false;
 
             //                 // useLanMgr
-            //                 // temple.tipText = LanMgr.Instance.replaceLanById("107549", [num]);
+            //                 // temple.tipText = LanMgr.replaceLanById("107549", [num]);
             //                 temple.tipText = "you need AT LEAST " + num + " Attack";
             //             }
             //         }
@@ -313,13 +306,13 @@ export class EventUI extends PopUpUI {
                 if (type == ItemConfigType.Item) {
                     // item
                     if (cost) {
-                        for (const item of ItemMgr.Instance.localItemDatas) {
+                        for (const item of ItemMgr.localItemDatas) {
                             if (item.itemConfigId == id) {
-                                const itemConf = ItemMgr.Instance.getItemConf(id);
-                                ItemMgr.Instance.subItem(item.itemConfigId, num);
+                                const itemConf = ItemMgr.getItemConf(id);
+                                ItemMgr.subItem(item.itemConfigId, num);
 
                                 // useLanMgr
-                                showTip += LanMgr.Instance.replaceLanById("207008", [num, LanMgr.Instance.getLanById(itemConf.itemName)]) + "\n";
+                                showTip += LanMgr.replaceLanById("207008", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
                                 // showTip += ("You lost" + num + " " + itemConf.itemName + "\n");
 
                                 break;
@@ -327,9 +320,9 @@ export class EventUI extends PopUpUI {
                         }
                     } else {
                         itemDatas.push(new ItemData(id, num));
-                        const itemConf = ItemMgr.Instance.getItemConf(id);
+                        const itemConf = ItemMgr.getItemConf(id);
                         // useLanMgr
-                        showTip += LanMgr.Instance.replaceLanById("207009", [num, LanMgr.Instance.getLanById(itemConf.itemName)]) + "\n";
+                        showTip += LanMgr.replaceLanById("207009", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
                         // showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
                     }
                 } else if (type == ItemConfigType.Artifact) {
@@ -338,11 +331,11 @@ export class EventUI extends PopUpUI {
             }
         }
         if (itemDatas.length > 0) {
-            ItemMgr.Instance.addItem(itemDatas);
+            ItemMgr.addItem(itemDatas);
 
             let hasItem: boolean = false;
             for (const item of itemDatas) {
-                const config = ItemMgr.Instance.getItemConf(item.itemConfigId);
+                const config = ItemMgr.getItemConf(item.itemConfigId);
                 if (config != null && config.itemType != ItemType.Resource) {
                     hasItem = true;
                     break;
@@ -360,8 +353,8 @@ export class EventUI extends PopUpUI {
 
     private _nextEvent(eventId: string) {
         // console.log(`_nextEvent, current: ${this._event.id}, next: ${eventId}`);
-        BranchEventMgr.Instance.latestActiveEventState.prevEventId = this._event.id;
-        BranchEventMgr.Instance.latestActiveEventState.eventId = eventId;
+        BranchEventMgr.latestActiveEventState.prevEventId = this._event.id;
+        BranchEventMgr.latestActiveEventState.eventId = eventId;
 
         if (eventId == "-1" ||
             eventId == "-2") {
@@ -373,19 +366,19 @@ export class EventUI extends PopUpUI {
             }
             if (this._eventBuildingId != null) {
                 if (eventId == "-1") {
-                    BuildingMgr.instance.changeBuildingEventId(this._eventBuildingId, null);
-                    BuildingMgr.instance.hideBuilding(this._eventBuildingId);
+                    BuildingMgr.changeBuildingEventId(this._eventBuildingId, null);
+                    BuildingMgr.hideBuilding(this._eventBuildingId);
 
                 } else if (eventId == "-2") {
-                    const building = BuildingMgr.instance.getBuildingById(this._eventBuildingId);
+                    const building = BuildingMgr.getBuildingById(this._eventBuildingId);
 
                     if (building != null) {
-                        BuildingMgr.instance.changeBuildingEventId(this._eventBuildingId, building.originalEventId);
+                        BuildingMgr.changeBuildingEventId(this._eventBuildingId, building.originalEventId);
                     }
                 }
             }
-            SettlementMgr.instance.insertSettlement({
-                level: UserInfoMgr.Instance.level,
+            SettlementMgr.insertSettlement({
+                level: UserInfoMgr.level,
                 newPioneerIds: [],
                 killEnemies: 0,
                 gainResources: 0,
@@ -393,16 +386,16 @@ export class EventUI extends PopUpUI {
             });
 
             if (this._triggerPioneerId != null) {
-                PioneerMgr.instance.pioneerToIdle(this._triggerPioneerId);
+                PioneerMgr.pioneerToIdle(this._triggerPioneerId);
             }
             // useLanMgr
-            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("207010"));
+            GameMain.inst.UI.ShowTip(LanMgr.getLanById("207010"));
             // GameMain.inst.UI.ShowTip("Event Ended");
             this.show(false);
         } else {
-            const event = BranchEventMgr.Instance.getEventById(eventId);
+            const event = BranchEventMgr.getEventById(eventId);
             if (event.length > 0) {
-                BuildingMgr.instance.changeBuildingEventId(this._eventBuildingId, event[0].id);
+                BuildingMgr.changeBuildingEventId(this._eventBuildingId, event[0].id);
                 this.show(false);
                 if (this._dealWithNextEvent != null) {
                     this._dealWithNextEvent(event[0]);
@@ -416,7 +409,7 @@ export class EventUI extends PopUpUI {
         const eventId = customEventData;
         const hasNextStep = eventId != "-1";
         // console.log(`eventStepEnd, source: onTapNext, eventId: ${this._event.id}, next: ${eventId}`);
-        BranchEventMgr.Instance.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
+        BranchEventMgr.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
 
         this._nextEvent(eventId);
     }
@@ -434,7 +427,7 @@ export class EventUI extends PopUpUI {
                 if (succeed) {
 
                 } else {
-                    const event = BranchEventMgr.Instance.getEventById(eventId);
+                    const event = BranchEventMgr.getEventById(eventId);
                     if (event.length > 0) {
                         eventId = event[0].result;
                     }
@@ -442,7 +435,7 @@ export class EventUI extends PopUpUI {
                 if (this._event) {
                     const hasNextStep = eventId != null && eventId != -1 && eventId != -2;
                     // console.log(`eventStepEnd, source: onTapFight, eventId: ${this._event.id}, next: ${eventId}`);
-                    BranchEventMgr.Instance.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
+                    BranchEventMgr.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
                 }
                 if (eventId != null) {
                     this._nextEvent(eventId);
@@ -457,7 +450,7 @@ export class EventUI extends PopUpUI {
     private onTapSelect(actionEvent: Event, customEventData: string, use: string) {
         const datas = customEventData.split("|");
         const eventId = datas[0];
-        const event = BranchEventMgr.Instance.getEventById(eventId);
+        const event = BranchEventMgr.getEventById(eventId);
 
         if (this._triggerPioneerId != null) {
             localStorage.setItem("local_event_last_title_" + this._triggerPioneerId, datas[1]);
@@ -465,7 +458,7 @@ export class EventUI extends PopUpUI {
         let hasNextStep = event.length > 0;
 
         // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}, next: ${eventId}`);
-        BranchEventMgr.Instance.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
+        BranchEventMgr.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
 
         this._nextEvent(eventId);
     }

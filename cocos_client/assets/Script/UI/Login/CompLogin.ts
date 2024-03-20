@@ -1,9 +1,7 @@
 import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, resources } from 'cc';
-import LocalDataLoader from '../../Manger/LocalDataLoader';
-import UserInfoMgr from '../../Manger/UserInfoMgr';
 import { Web3Helper } from '../../Game/MetaMask/EthHelper';
 import { md5 } from '../../Utils/Md5';
-import ConfigMgr from '../../Manger/ConfigMgr';
+import { ConfigMgr, LocalDataLoader, UserInfoMgr } from '../../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('CompLogin')
@@ -32,8 +30,8 @@ export class CompLogin extends Component {
             },
             async (error: null | Error, sceneAsset?: SceneAsset) => {
                 if (error == null) {
-                    if (LocalDataLoader.instance.loadStatus == 0) {
-                        await LocalDataLoader.instance.loadLocalDatas();
+                    if (LocalDataLoader.loadStatus == 0) {
+                        await LocalDataLoader.loadLocalDatas();
                     }
                     resources.loadDir("preload", (finished: number, total: number, item: any) => {
                         let currentRate = sceneTotalRate + finished / total * (1 - sceneTotalRate);
@@ -104,13 +102,13 @@ export class CompLogin extends Component {
     }
     OnEventNext(event: Event, customEventData: string) {
         if (customEventData == "guest") {
-            UserInfoMgr.Instance.playerName = "guest";
+            UserInfoMgr.playerName = "guest";
         }
         else {
             if (Web3Helper.getPubAddr() == undefined || Web3Helper.getPubAddr() == "") {
                 return;
             }
-            UserInfoMgr.Instance.playerName = Web3Helper.getPubAddr().substring(0, 10);
+            UserInfoMgr.playerName = Web3Helper.getPubAddr().substring(0, 10);
         }
         if (this._loaded == false) {
             return;
@@ -127,7 +125,7 @@ export class CompLogin extends Component {
             return;
         }
         let canEnter: boolean = false;
-        let config = ConfigMgr.Instance.getConfigById("10002");
+        let config = ConfigMgr.getConfigById("10002");
         if (config.length <= 0 || config[0].para == null || config[0].para.length <= 0) {
             canEnter = true;
         } else {

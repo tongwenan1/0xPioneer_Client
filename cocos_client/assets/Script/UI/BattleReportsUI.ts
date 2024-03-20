@@ -1,8 +1,9 @@
 import {_decorator, Button, Color, instantiate, Label, Layout, Mask, Node, ScrollView, UITransform} from 'cc';
 import {PopUpUI} from "db://assets/Script/BasicView/PopUpUI";
 import {BattleReportListItemUI} from "./BattleReportListItemUI";
-import BattleReportsMgr, {BattleReportsEvent, BattleReportType} from "db://assets/Script/Manger/BattleReportsMgr";
 import {ButtonEx, ButtonExEventType} from "db://assets/Script/UI/Common/ButtonEx";
+import BattleReportsMgrDefine, { BattleReportsEvent, BattleReportType } from '../Const/Manager/BattleReportsMgrDefine';
+import { BattleReportsMgr } from '../Utils/Global';
 
 const {ccclass} = _decorator;
 
@@ -155,22 +156,22 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
         }
         if (changed) {
             // console.log(`BattleReportsUI auto mark ${changed} reports.`);
-            BattleReportsMgr.Instance.saveData();
+            BattleReportsMgr.saveData();
         }
     }
 
     private _onClickMarkAllAsRead() {
-        BattleReportsMgr.Instance.markAllAsRead();
+        BattleReportsMgr.markAllAsRead();
         this.refreshUI();
     }
 
     private _onClickDeleteReadReports() {
-        BattleReportsMgr.Instance.deleteReadReports();
+        BattleReportsMgr.deleteReadReports();
         this.refreshUIAndResetScroll();
     }
 
     protected onEnable() {
-        BattleReportsMgr.Instance.addObserver(this);
+        BattleReportsMgr.addObserver(this);
 
         // Select filter tab "All" every time enter the reports UI.
         this._filterState.filterType = ReportsFilterType.None;
@@ -180,7 +181,7 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
     }
 
     protected onDisable() {
-        BattleReportsMgr.Instance.removeObserver(this);
+        BattleReportsMgr.removeObserver(this);
     }
 
     //#region filter group methods
@@ -240,7 +241,7 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
     }
 
     private _getReportsFiltered() {
-        const reports = BattleReportsMgr.Instance.getReports();
+        const reports = BattleReportsMgr.getReports();
         if (!reports) {
             return [];
         }
@@ -251,7 +252,7 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
             case ReportsFilterType.ReportType:
                 return reports.filter(item => item.type === this._filterState.reportType);
             case ReportsFilterType.Pending:
-                return reports.filter(item => BattleReportsMgr.isReportPending(item));
+                return reports.filter(item => BattleReportsMgrDefine.isReportPending(item));
             default:
                 console.error(`Unsupported filterType ${this._filterState.filterType}`);
         }

@@ -1,14 +1,10 @@
 import { _decorator, Button, color, Color, Component, instantiate, Label, Layout, Node, setDisplayStats, Sprite, tween, v3, Vec3 } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { GameMain } from '../GameMain';
-import BuildingMgr from '../Manger/BuildingMgr';
-import PioneerMgr from '../Manger/PioneerMgr';
 import CommonTools from '../Tool/CommonTools';
-import UserInfoMgr from '../Manger/UserInfoMgr';
-import LanMgr from '../Manger/LanMgr';
-import EventMgr from '../Manger/EventMgr';
 import { EventName } from '../Const/ConstDefine';
 import MapHelper from "db://assets/Script/Utils/MapHelper";
+import { BuildingMgr, EventMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../Utils/Global';
 
 const { ccclass, property } = _decorator;
 
@@ -19,13 +15,13 @@ export class TaskListUI extends PopUpUI {
     public refreshUI() {
 
         // useLanMgr
-        // this._actionTaskView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._detailTaskView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._detailTaskView.getChildByPath("ToDoButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._detailTaskView.getChildByPath("CompletedButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._detailProgressFinishTitleItem.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._detailProgressToDoTitleItem.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._detailProgressUndoneTitleItem.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._actionTaskView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._detailTaskView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._detailTaskView.getChildByPath("ToDoButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._detailTaskView.getChildByPath("CompletedButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._detailProgressFinishTitleItem.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._detailProgressToDoTitleItem.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._detailProgressUndoneTitleItem.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
         // clear
         for (const action of this._actionTaskList) {
@@ -42,7 +38,7 @@ export class TaskListUI extends PopUpUI {
         }
         this._detailProgressList = [];
 
-        const taskInfo = UserInfoMgr.Instance.currentTasks;
+        const taskInfo = UserInfoMgr.currentTasks;
 
         const finishedTasks = [];
         const toDoTasks = [];
@@ -67,8 +63,8 @@ export class TaskListUI extends PopUpUI {
             action.active = true;
 
             // useLanMgr
-            action.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(toDoTasks[i].name);
-            action.getChildByName("SubTitle").getComponent(Label).string = LanMgr.Instance.getLanById(curStep.name);
+            action.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(toDoTasks[i].name);
+            action.getChildByName("SubTitle").getComponent(Label).string = LanMgr.getLanById(curStep.name);
             // action.getChildByName("Title").getComponent(Label).string = toDoTasks[i].name;
             // action.getChildByName("SubTitle").getComponent(Label).string = curStep.name;
 
@@ -79,7 +75,7 @@ export class TaskListUI extends PopUpUI {
         }
 
         // useLanMgr
-        this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = LanMgr.Instance.replaceLanById("202003", [taskInfo.length]) + " >>";
+        this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = LanMgr.replaceLanById("202003", [taskInfo.length]) + " >>";
         // this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = "All " + taskInfo.length + " Tasks";
 
         this._detailTaskView.active = this._isDetailShow;
@@ -96,7 +92,7 @@ export class TaskListUI extends PopUpUI {
                 detail.active = true;
 
                 // useLanMgr
-                detail.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById(showTasks[i].name);
+                detail.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById(showTasks[i].name);
                 // detail.getChildByName("Label").getComponent(Label).string = showTasks[i].name;
 
                 detail.getChildByName("Selected").active = i == this._detailSelectedIndex;
@@ -175,7 +171,7 @@ export class TaskListUI extends PopUpUI {
                             finish.setParent(this._detailProgressFinishItem.getParent());
 
                             // useLanMgr
-                            finish.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(temple.stepData.name);
+                            finish.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(temple.stepData.name);
                             // finish.getChildByName("Title").getComponent(Label).string = temple.stepData.name;
 
                             finish.getChildByName("Progress").getComponent(Label).string = curStepCondIndex + "/" + temple.stepData.condwin.length;
@@ -194,7 +190,7 @@ export class TaskListUI extends PopUpUI {
                             finish.setParent(this._detailProgressToDoItem.getParent());
 
                             // useLanMgr
-                            finish.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(temple.stepData.name);
+                            finish.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(temple.stepData.name);
                             // finish.getChildByName("Title").getComponent(Label).string = temple.stepData.name;
 
                             finish.getChildByName("Progress").getComponent(Label).string = curStepCondIndex + "/" + temple.stepData.condwin.length;
@@ -307,14 +303,14 @@ export class TaskListUI extends PopUpUI {
                 // not action
             } else if (curCond.type == "getresourcereached") {
                 // resource
-                const resourceBuildings = BuildingMgr.instance.getResourceBuildings();
+                const resourceBuildings = BuildingMgr.getResourceBuildings();
                 const randomResourceBuilding = resourceBuildings[CommonTools.getRandomInt(0, resourceBuildings.length - 1)];
                 currentMapPos = randomResourceBuilding.stayMapPositions[0];
 
             } else if (curCond.type.includes("|") && curCond.type.includes("building")) {
                 // building
                 const buildingId = curCond.type.split("|")[1];
-                const currentBuilding = BuildingMgr.instance.getBuildingById(buildingId);
+                const currentBuilding = BuildingMgr.getBuildingById(buildingId);
                 if (currentBuilding != null) {
                     currentMapPos = currentBuilding.stayMapPositions[0];
                 }
@@ -322,7 +318,7 @@ export class TaskListUI extends PopUpUI {
             } else if (curCond.type.includes("|")) {
                 // pioneer
                 const pioneerId = curCond.type.split("|")[1];
-                const currentPioneer = PioneerMgr.instance.getPioneerById(pioneerId);
+                const currentPioneer = PioneerMgr.getPioneerById(pioneerId);
                 if (currentPioneer != null) {
                     currentMapPos = currentPioneer.stayPos;
                 }

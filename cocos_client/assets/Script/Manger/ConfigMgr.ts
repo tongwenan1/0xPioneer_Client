@@ -8,12 +8,6 @@ export default class ConfigMgr {
         });
     }
 
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new ConfigMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
@@ -22,7 +16,6 @@ export default class ConfigMgr {
 
     }
 
-    private static _instance: ConfigMgr = null;
     private _configs: any = {};
     private async _initData() {
         const obj: any = await new Promise((resolve) => {

@@ -1,7 +1,6 @@
 import { _decorator, Animation, Button, Component, Label, Node, tween, v3 } from 'cc';
-import EventMgr from '../../Manger/EventMgr';
 import { EventName } from '../../Const/ConstDefine';
-import UserInfoMgr from '../../Manger/UserInfoMgr';
+import { EventMgr, LanMgr } from '../../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('RookieGuide')
@@ -18,7 +17,7 @@ export class RookieGuide extends Component {
         this._videoView.active = false;
         this._guideView.active = true;
         // useLanMgr 
-        // this._videoView.getChildByPath("SkipButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._videoView.getChildByPath("SkipButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
     }
     start() {
 

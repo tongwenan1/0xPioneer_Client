@@ -8,12 +8,6 @@ export default class DropMgr {
         });
     }
 
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new DropMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
@@ -22,7 +16,6 @@ export default class DropMgr {
 
     }
 
-    private static _instance: DropMgr = null;
     private _drops: any[] = null;
     private async _initData() {
         const obj: any = await new Promise((resolve) => {

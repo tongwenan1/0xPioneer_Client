@@ -1,28 +1,6 @@
-export enum CountType {
-    actionPioneer = "actionPioneer",
-    actionBuilding = "actionBuilding",
-    openBox = "openBox",
-    selectDialog = "selectDialog",
-    showEvent = "showEvent",
-    buildInnerBuilding = "buildInnerBuilding",
-    generateTroops = "generateTroops",
-    useItem = "useItem",
-}
-
-
-export interface CountModel {
-    type: CountType;
-    timeStamp: number;
-    data: any;
-}
+import { CountModel } from "../Const/Manager/CountDefine";
 
 export default class CountMgr {
-    public static get instance() {
-        if (!this._instance) {
-            this._instance = new CountMgr();
-        }
-        return this._instance;
-    }
 
     public addNewCount(count: CountModel) {
         this._counts.push(count);
@@ -30,7 +8,6 @@ export default class CountMgr {
     }
 
 
-    private static _instance: CountMgr = null;
     private _counts: CountModel[] = null;
     public constructor() {
         this._counts = [];

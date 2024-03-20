@@ -1,5 +1,5 @@
 import { resources } from "cc";
-import { FinishedEvent } from "./UserInfoMgr";
+import { FinishedEvent } from "../Const/Manager/UserInfoDefine";
 
 export default class TaskMgr {
 
@@ -98,12 +98,6 @@ export default class TaskMgr {
     }
 
 
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new TaskMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
@@ -112,7 +106,6 @@ export default class TaskMgr {
 
     }
 
-    private static _instance: TaskMgr = null;
     private _taskInfos: any[] = [];
     private async _initData() {
         const obj = await new Promise((resolve) => {

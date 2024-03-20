@@ -1,12 +1,5 @@
 import { _decorator, Color, Component, director, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
 import { GameMain } from '../../GameMain';
-import BranchEventMgr from '../../Manger/BranchEventMgr';
-import BuildingMgr from '../../Manger/BuildingMgr';
-import EventMgr from '../../Manger/EventMgr';
-import PioneerMgr, { PioneerMgrEvent } from '../../Manger/PioneerMgr';
-import TalkMgr from '../../Manger/TalkMgr';
-import TaskMgr from '../../Manger/TaskMgr';
-import UserInfoMgr, { UserInfoEvent, FinishedEvent } from '../../Manger/UserInfoMgr';
 import { TilePos } from '../TiledMap/TileTool';
 import { BuildingFactionType, MapResourceBuildingModel } from './Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel, MapPioneerMoveDirection, MapPioneerActionType, MapPioneerLogicModel, MapPioneerLogicType, MapPioneerAttributesChangeModel } from './Model/MapPioneerModel';
@@ -15,16 +8,14 @@ import { OuterOtherPioneerView } from './View/OuterOtherPioneerView';
 import { MapItemMonster } from './View/MapItemMonster';
 import { MapPioneer } from './View/MapPioneer';
 import { MapBG } from '../../Scene/MapBG';
-import LvlupMgr from '../../Manger/LvlupMgr';
 import { OuterMapCursorView } from './View/OuterMapCursorView';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import ItemMgr from '../../Manger/ItemMgr';
 import ItemData, { ItemType } from '../../Model/ItemData';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
-import ArtifactMgr from '../../Manger/ArtifactMgr';
 import { ArtifactEffectType } from '../../Model/ArtifactData';
-import SettlementMgr from '../../Manger/SettlementMgr';
-import LanMgr from '../../Manger/LanMgr';
+import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
+import { FinishedEvent, UserInfoEvent } from '../../Const/Manager/UserInfoDefine';
+import { ArtifactMgr, BranchEventMgr, BuildingMgr, EventMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, SettlementMgr, TalkMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
 
 
 const { ccclass, property } = _decorator;
@@ -48,7 +39,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 this._actionPioneerView.setSiblingIndex(view.getSiblingIndex());
                 this._actionPioneerView.getComponent(MapItemMonster).shadowMode();
             }
-            const pioneer: MapPioneerModel = PioneerMgr.instance.getPioneerById(movingPioneerId);
+            const pioneer: MapPioneerModel = PioneerMgr.getPioneerById(movingPioneerId);
             if (pioneer != null) {
                 const path = [];
                 let stepLogic: MapPioneerLogicModel = null;
@@ -124,8 +115,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
     private _actionShowPioneerId: string = null;
     protected onLoad(): void {
-        PioneerMgr.instance.addObserver(this);
-        UserInfoMgr.Instance.addObserver(this);
+        PioneerMgr.addObserver(this);
+        UserInfoMgr.addObserver(this);
 
         this._pioneerMap = new Map();
 
@@ -141,8 +132,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     protected onDestroy(): void {
-        PioneerMgr.instance.removeObserver(this);
-        UserInfoMgr.Instance.removeObserver(this);
+        PioneerMgr.removeObserver(this);
+        UserInfoMgr.removeObserver(this);
     }
 
     private _cameraBeginOrthoHeight: number = 0;
@@ -150,11 +141,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         if (this._started && this._dataLoaded) {
             this._refreshUI();
             // recover, set, task, getTaskDialogShow, etc
-            PioneerMgr.instance.recoverLocalState();
+            PioneerMgr.recoverLocalState();
             // checkRookie
             this._cameraBeginOrthoHeight = GameMain.inst.MainCamera.orthoHeight;
 
-            const actionPioneer = PioneerMgr.instance.getCurrentPlayerPioneer();
+            const actionPioneer = PioneerMgr.getCurrentPlayerPioneer();
             if (actionPioneer != null) {
                 const currentWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(actionPioneer.stayPos.x, actionPioneer.stayPos.y);
                 GameMain.inst.MainCamera.node.worldPosition = currentWorldPos;
@@ -164,7 +155,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 }
             }
 
-            if (!UserInfoMgr.Instance.isFinishRookie) {
+            if (!UserInfoMgr.isFinishRookie) {
                 if (actionPioneer != null) {
                     this.scheduleOnce(() => {
                         GameMain.inst.outSceneMap.mapBG.shadowErase(actionPioneer.stayPos);
@@ -176,11 +167,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     }
                 }
 
-                // const prophetess = PioneerMgr.instance.getPioneerByName("prophetess");
+                // const prophetess = PioneerMgr.getPioneerByName("prophetess");
                 // if (actionPioneer != null && prophetess != null) {
                 //     const paths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(actionPioneer.stayPos, prophetess.stayPos);
                 //     actionPioneer.purchaseMovingPioneerId = prophetess.id;
-                //     PioneerMgr.instance.pioneerBeginMove(actionPioneer.id, paths);
+                //     PioneerMgr.pioneerBeginMove(actionPioneer.id, paths);
                 // }
             }
         }
@@ -191,7 +182,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         if (decorationView == null) {
             return;
         }
-        const allPioneers = PioneerMgr.instance.getAllPioneer();
+        const allPioneers = PioneerMgr.getAllPioneer();
         let changed: boolean = false;
         for (const pioneer of allPioneers) {
             if (pioneer.show) {
@@ -222,12 +213,12 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     if (pioneer.type == MapPioneerType.player) {
                         temple.getComponent(MapPioneer).refreshUI(pioneer);
                         temple.getComponent(MapPioneer).setEventWaitedCallback(() => {
-                            const allBuildings = BuildingMgr.instance.getAllBuilding();
+                            const allBuildings = BuildingMgr.getAllBuilding();
                             for (const building of allBuildings) {
                                 if (building.eventId == pioneer.actionEventId) {
-                                    const currentEvents = BranchEventMgr.Instance.getEventById(building.eventId);
+                                    const currentEvents = BranchEventMgr.getEventById(building.eventId);
                                     if (currentEvents.length > 0) {
-                                        PioneerMgr.instance.pioneerDealWithEvent(pioneer.id, building.id, currentEvents[0]);
+                                        PioneerMgr.pioneerDealWithEvent(pioneer.id, building.id, currentEvents[0]);
                                     }
                                     break;
                                 }
@@ -236,7 +227,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
                     } else if (pioneer.type == MapPioneerType.npc) {
                         const npcModel = pioneer as MapNpcPioneerModel;
-                        const task = TaskMgr.Instance.getTaskByNpcId(pioneer.id, npcModel.friendly, npcModel.hideTaskIds, UserInfoMgr.Instance.currentTaskIds, UserInfoMgr.Instance.finishedEvents);
+                        const task = TaskMgr.getTaskByNpcId(pioneer.id, npcModel.friendly, npcModel.hideTaskIds, UserInfoMgr.currentTaskIds, UserInfoMgr.finishedEvents);
                         if (npcModel.taskObj == null &&
                             task != null) {
                             // npc get task
@@ -258,7 +249,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                         temple.getComponent(OuterOtherPioneerView).refreshUI(pioneer);
 
                     } else if (pioneer.type == MapPioneerType.hred) {
-                        temple.getComponent(MapItemMonster).refreshUI(pioneer, UserInfoMgr.Instance.finishedEvents);
+                        temple.getComponent(MapItemMonster).refreshUI(pioneer, UserInfoMgr.finishedEvents);
                     }
                     if (firstInit) {
                         let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(pioneer.stayPos.x, pioneer.stayPos.y);
@@ -312,7 +303,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         if (dist < add) //havemove 2 target
         {
             pioneermap.setWorldPosition(nextwpos);
-            PioneerMgr.instance.pioneerDidMoveOneStep(pioneer.id);
+            PioneerMgr.pioneerDidMoveOneStep(pioneer.id);
             if (pioneer.id == this._actionShowPioneerId && this._actionUsedCursor != null) {
                 this._actionUsedCursor.hide();
                 this._actionUsedCursor.show([pioneer.stayPos], Color.WHITE);
@@ -344,7 +335,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 } else if (pioneermap.getComponent(MapPioneer) != null) {
                     pioneermap.getComponent(MapPioneer).refreshUI(pioneer);
                 } else if (pioneermap.getComponent(MapItemMonster) != null) {
-                    pioneermap.getComponent(MapItemMonster).refreshUI(pioneer, UserInfoMgr.Instance.finishedEvents);
+                    pioneermap.getComponent(MapItemMonster).refreshUI(pioneer, UserInfoMgr.finishedEvents);
                 }
             }
         }
@@ -355,11 +346,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         let defaultSpeed = 180;
 
         // defaultSpeed = 600;
-        const allPioneers = PioneerMgr.instance.getAllPioneer();
+        const allPioneers = PioneerMgr.getAllPioneer();
 
         // artifact effect
         let artifactSpeed = 0;
-        const artifactEff = ArtifactMgr.Instance.getPropEffValue(UserInfoMgr.Instance.level);
+        const artifactEff = ArtifactMgr.getPropEffValue(UserInfoMgr.level);
         if (artifactEff.eff[ArtifactEffectType.MOVE_SPEED]) {
             artifactSpeed = artifactEff.eff[ArtifactEffectType.MOVE_SPEED];
         }
@@ -391,7 +382,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     private onRookieGuideBeginEyes(data: { node: Node }) {
-        const actionPioneer = PioneerMgr.instance.getCurrentPlayerPioneer();
+        const actionPioneer = PioneerMgr.getCurrentPlayerPioneer();
         if (actionPioneer != null) {
             actionPioneer.actionType = MapPioneerActionType.wakeup;
             let view: MapPioneer = null;
@@ -402,10 +393,10 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             this.scheduleOnce(() => {
                 actionPioneer.actionType = MapPioneerActionType.idle;
                 view.refreshUI(actionPioneer);
-                GameMain.inst.UI.dialogueUI.dialogShow(TalkMgr.Instance.getTalk("talk14"), null, () => {
-                    UserInfoMgr.Instance.isFinishRookie = true;
+                GameMain.inst.UI.dialogueUI.dialogShow(TalkMgr.getTalk("talk14"), null, () => {
+                    UserInfoMgr.isFinishRookie = true;
                     // init resource
-                    ItemMgr.Instance.addItem([
+                    ItemMgr.addItem([
                         new ItemData(ResourceCorrespondingItem.Energy, 100),
                         new ItemData(ResourceCorrespondingItem.Food, 100),
                         new ItemData(ResourceCorrespondingItem.Stone, 100),
@@ -508,13 +499,13 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
     private _checkInMainCityRangeAndHealHpToMax(pioneerId: string) {
         const mainCityId = "building_1";
-        const pioneer = PioneerMgr.instance.getPioneerById(pioneerId);
-        const mainCity = BuildingMgr.instance.getBuildingById(mainCityId);
+        const pioneer = PioneerMgr.getPioneerById(pioneerId);
+        const mainCity = BuildingMgr.getBuildingById(mainCityId);
         if (mainCity != null && mainCity.faction != BuildingFactionType.enemy &&
             pioneer != null && pioneer.show) {
-            const isInCityRange: boolean = BuildingMgr.instance.checkMapPosIsInBuilingRange(pioneer.stayPos, mainCityId, UserInfoMgr.Instance.cityVision);
+            const isInCityRange: boolean = BuildingMgr.checkMapPosIsInBuilingRange(pioneer.stayPos, mainCityId, UserInfoMgr.cityVision);
             if (isInCityRange && pioneer.hp < pioneer.hpMax) {
-                PioneerMgr.instance.pioneerHealHpToMax(pioneerId);
+                PioneerMgr.pioneerHealHpToMax(pioneerId);
             }
         }
     }
@@ -567,7 +558,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             pioneerId == "pioneer_2" ||
             pioneerId == "pioneer_3") {
             // get secret guard
-            const pioeer = PioneerMgr.instance.getPioneerById(pioneerId);
+            const pioeer = PioneerMgr.getPioneerById(pioneerId);
             if (pioeer != null) {
                 GameMain.inst.UI.serectGuardGettedUI.dialogShow(pioeer.name);
                 GameMain.inst.UI.serectGuardGettedUI.show(true);
@@ -576,7 +567,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         this._refreshUI();
     }
     pioneerDidHide(pioneerId: string): void {
-        UserInfoMgr.Instance.hidePioneerCheckTaskFail(pioneerId);
+        UserInfoMgr.hidePioneerCheckTaskFail(pioneerId);
         this._refreshUI();
     }
     pioneerDidNonFriendly(pioneerId: string): void {
@@ -595,7 +586,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         this._refreshUI();
     }
     showGetTaskDialog(task: any): void {
-        const talk = TalkMgr.Instance.getTalk(task.entrypoint.talk);
+        const talk = TalkMgr.getTalk(task.entrypoint.talk);
         GameMain.inst.UI.dialogueUI.dialogShow(talk, task);
         GameMain.inst.UI.dialogueUI.show(true);
     }
@@ -627,17 +618,17 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         }
         // find task to finish
         if (isDeadPionner) {
-            SettlementMgr.instance.insertSettlement({
-                level: UserInfoMgr.Instance.level,
+            SettlementMgr.insertSettlement({
+                level: UserInfoMgr.level,
                 newPioneerIds: [],
                 killEnemies: 1,
                 gainResources: 0,
                 exploredEvents: 0,
             });
-            UserInfoMgr.Instance.checkCanFinishedTask("killpioneer", deadId);
-            const deadPioneer = PioneerMgr.instance.getPioneerById(deadId);
+            UserInfoMgr.checkCanFinishedTask("killpioneer", deadId);
+            const deadPioneer = PioneerMgr.getPioneerById(deadId);
             if (deadPioneer != null && !deadPioneer.friendly) {
-                UserInfoMgr.Instance.explorationValue += deadPioneer.winprogress;
+                UserInfoMgr.explorationValue += deadPioneer.winprogress;
                 if (deadPioneer.drop != null) {
                     ItemConfigDropTool.getItemByConfig(deadPioneer.drop);
                 }
@@ -645,36 +636,36 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
         } else {
             //building
-            UserInfoMgr.Instance.checkCanFinishedTask("destroybuilding", deadId);
+            UserInfoMgr.checkCanFinishedTask("destroybuilding", deadId);
 
-            const deadBuilding = BuildingMgr.instance.getBuildingById(deadId);
+            const deadBuilding = BuildingMgr.getBuildingById(deadId);
             if (deadBuilding != null && deadBuilding.faction == BuildingFactionType.enemy) {
-                UserInfoMgr.Instance.explorationValue += deadBuilding.winprogress;
+                UserInfoMgr.explorationValue += deadBuilding.winprogress;
             }
         }
     }
     exploredPioneer(pioneerId: string): void {
-        const pioneer = PioneerMgr.instance.getPioneerById(pioneerId);
+        const pioneer = PioneerMgr.getPioneerById(pioneerId);
         if (pioneer != null && pioneer.type == MapPioneerType.gangster) {
-            ItemMgr.Instance.addItem([new ItemData(ResourceCorrespondingItem.Troop, pioneer.hpMax)]);
+            ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Troop, pioneer.hpMax)]);
         }
-        UserInfoMgr.Instance.checkCanFinishedTask("explorewithpioneer", pioneerId);
+        UserInfoMgr.checkCanFinishedTask("explorewithpioneer", pioneerId);
     }
     exploredBuilding(buildingId: string): void {
-        UserInfoMgr.Instance.checkCanFinishedTask("explorewithbuilding", buildingId);
-        const building = BuildingMgr.instance.getBuildingById(buildingId);
+        UserInfoMgr.checkCanFinishedTask("explorewithbuilding", buildingId);
+        const building = BuildingMgr.getBuildingById(buildingId);
         if (building != null) {
-            if (building.progress > 0) UserInfoMgr.Instance.explorationValue += building.progress;
-            if (building.exp > 0) UserInfoMgr.Instance.exp += building.exp;
+            if (building.progress > 0) UserInfoMgr.explorationValue += building.progress;
+            if (building.exp > 0) UserInfoMgr.exp += building.exp;
         }
     }
     miningBuilding(actionPioneerId: string, buildingId: string): void {
-        UserInfoMgr.Instance.checkCanFinishedTask("getresourcereached", buildingId);
-        const building = BuildingMgr.instance.getBuildingById(buildingId);
+        UserInfoMgr.checkCanFinishedTask("getresourcereached", buildingId);
+        const building = BuildingMgr.getBuildingById(buildingId);
         if (building != null && building instanceof MapResourceBuildingModel) {
             if (building.resources != null && building.resources.length > 0) {
                 let isPlayer: boolean = false;
-                for (const temple of PioneerMgr.instance.getPlayerPioneer()) {
+                for (const temple of PioneerMgr.getPlayerPioneer()) {
                     if (temple.id == actionPioneerId) {
                         isPlayer = true;
                         break;
@@ -685,12 +676,12 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     actionView = this._pioneerMap.get(actionPioneerId);
                 }
                 for (const resource of building.resources) {
-                    const resultNum: number = Math.floor(resource.num * (1 + LvlupMgr.Instance.getTotalExtraRateByLvl(UserInfoMgr.Instance.level)));
+                    const resultNum: number = Math.floor(resource.num * (1 + LvlupMgr.getTotalExtraRateByLvl(UserInfoMgr.level)));
                     actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resultNum, () => {
-                        ItemMgr.Instance.addItem([new ItemData(resource.id, resultNum)]);
+                        ItemMgr.addItem([new ItemData(resource.id, resultNum)]);
                     });
-                    SettlementMgr.instance.insertSettlement({
-                        level: UserInfoMgr.Instance.level,
+                    SettlementMgr.insertSettlement({
+                        level: UserInfoMgr.level,
                         newPioneerIds: [],
                         killEnemies: 0,
                         gainResources: resultNum,
@@ -707,24 +698,24 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             }
         }
         if (building != null) {
-            if (building.progress > 0) UserInfoMgr.Instance.explorationValue += building.progress;
-            if (building.exp > 0) UserInfoMgr.Instance.exp += building.exp;
+            if (building.progress > 0) UserInfoMgr.explorationValue += building.progress;
+            if (building.exp > 0) UserInfoMgr.exp += building.exp;
         }
     }
     eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
-        BranchEventMgr.Instance.latestActiveEventState = {
+        BranchEventMgr.latestActiveEventState = {
             pioneerId: actionPioneerId,
             buildingId: buildingId,
             eventId: eventId,
             prevEventId: null,
         }
 
-        const event = BranchEventMgr.Instance.getEventById(eventId);
+        const event = BranchEventMgr.getEventById(eventId);
         if (event.length > 0) {
             GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
-                PioneerMgr.instance.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
+                PioneerMgr.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
             }, (nextEvent: any) => {
-                PioneerMgr.instance.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
+                PioneerMgr.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
             });
             GameMain.inst.UI.eventUI.show(true);
         }
@@ -752,7 +743,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             targetMapPos = logic.patrolTargetPos;
         }
         if (targetMapPos != null) {
-            PioneerMgr.instance.pioneerBeginMove(pioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, targetMapPos));
+            PioneerMgr.pioneerBeginMove(pioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, targetMapPos));
         }
     }
     pioneerLogicMovePathPrepared(pioneer: MapPioneerModel, logic: MapPioneerLogicModel) {
@@ -802,7 +793,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
     }
     getNewTask(task: string): void {
-        PioneerMgr.instance.clearNpcTask(task);
+        PioneerMgr.clearNpcTask(task);
     }
     finishEvent(event: FinishedEvent): void {
         this._refreshUI();
@@ -816,10 +807,10 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             temp[0] == "fightwithpioneer" ||
             temp[0] == "maincityfightwithpioneer" ||
             temp[0] == "getnewplayer") {
-            PioneerMgr.instance.dealWithTaskAction(action, delayTime);
+            PioneerMgr.dealWithTaskAction(action, delayTime);
 
         } else if (temp[0] == "talk") {
-            const talk = TalkMgr.Instance.getTalk(temp[1]);
+            const talk = TalkMgr.getTalk(temp[1]);
             GameMain.inst.UI.dialogueUI.dialogShow(talk, null);
             GameMain.inst.UI.dialogueUI.show(true);
         }
@@ -838,7 +829,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     gameTaskOver(): void {
 
         // useLanMgr
-        GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("200001"));
+        GameMain.inst.UI.ShowTip(LanMgr.getLanById("200001"));
         // GameMain.inst.UI.ShowTip("Boot ends");
 
     }

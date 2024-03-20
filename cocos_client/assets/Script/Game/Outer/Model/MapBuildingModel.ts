@@ -1,7 +1,7 @@
 import { Vec2 } from "cc";
-import { ResourceModel } from "../../../Manger/UserInfoMgr";
 import CommonTools from "db://assets/Script/Tool/CommonTools";
-import LanMgr from "db://assets/Script/Manger/LanMgr";
+import { LanMgr } from "../../../Utils/Global";
+import { ResourceModel } from "../../../Const/Manager/UserInfoDefine";
 
 export enum MapBuildingType {
     resource = 3,
@@ -139,7 +139,7 @@ export default class MapBuildingModel {
      * format: Abandoned Mine (198, 120)
      */
     public locationString() {
-        return `${LanMgr.Instance.getLanById(this.name)} ${CommonTools.formatMapPosition(this.stayMapPositions[0])}`
+        return `${LanMgr.getLanById(this.name)} ${CommonTools.formatMapPosition(this.stayMapPositions[0])}`
     }
 }
 

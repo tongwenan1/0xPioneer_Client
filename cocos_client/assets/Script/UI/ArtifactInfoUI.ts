@@ -10,10 +10,8 @@ import ArtifactData, {
     ArtifactEffectRankColor,
 } from "../Model/ArtifactData";
 import { PopUpUI } from "../BasicView/PopUpUI";
-import ArtifactMgr from "../Manger/ArtifactMgr";
-import LanMgr from "../Manger/LanMgr";
 import { ArtifactItem } from "./ArtifactItem";
-import UserInfoMgr from "../Manger/UserInfoMgr";
+import { ArtifactMgr, LanMgr, UserInfoMgr } from "../Utils/Global";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactInfoUI")
@@ -30,7 +28,7 @@ export class ArtifactInfoUI extends PopUpUI {
         if (this._artifacts.length > 0) {
             const curArtifact: ArtifactData = this._artifacts.splice(0, 1)[0];
             // show one 
-            const config = ArtifactMgr.Instance.getArtifactConf(curArtifact.artifactConfigId);
+            const config = ArtifactMgr.getArtifactConf(curArtifact.artifactConfigId);
             if (config != null) {
                 let useColor: Color = null;
                 if (config.rank == 1) {
@@ -48,7 +46,7 @@ export class ArtifactInfoUI extends PopUpUI {
                 const content = this.node.getChildByName("__ViewContent");
     
                 // name
-                content.getChildByName("Name").getComponent(Label).string = LanMgr.Instance.getLanById(config.name);
+                content.getChildByName("Name").getComponent(Label).string = LanMgr.getLanById(config.name);
                 content.getChildByName("Name").getComponent(Label).color = useColor;
     
                 // item
@@ -56,7 +54,7 @@ export class ArtifactInfoUI extends PopUpUI {
     
                 // title 
                 // useLanMgr
-                // content.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+                // content.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById("107549");
                 content.getChildByName("Title").getComponent(Label).color = useColor;
     
                 // effect
@@ -67,28 +65,28 @@ export class ArtifactInfoUI extends PopUpUI {
                     let effectIndex: number = 0;
                     let isStableShowed: boolean = false;
                     for (let i = 0; i < config.effect.length; i++) {
-                        const effectConfig = ArtifactMgr.Instance.getArtifactEffectConf(config.effect[i]);
+                        const effectConfig = ArtifactMgr.getArtifactEffectConf(config.effect[i]);
                         if (effectConfig == null) continue;
     
                         if (config.rank >= 4 && !isStableShowed) {
                             const stable = instantiate(this._stableEffectItem);
                             stable.active = true;
                             stable.parent = this._stableEffectItem.parent;
-                            stable.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById(effectConfig.des);
+                            stable.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(effectConfig.des);
                             stable.getChildByName("Title").getComponent(Label).color = useColor;
                             this._allEffectViews.push(stable);
                             isStableShowed = true;
     
                         } else {
                             effectIndex += 1;
-                            if (effectConfig.unlock > UserInfoMgr.Instance.level) {
+                            if (effectConfig.unlock > UserInfoMgr.level) {
                                 const unlock = instantiate(this._unlockEffectItem);
                                 unlock.active = true;
                                 unlock.parent = this._unlockEffectItem.parent;
                                 unlock.getChildByPath("LockIcon/No").getComponent(Label).string = numStrings[effectIndex];
-                                unlock.getChildByPath("Title").getComponent(Label).string = LanMgr.Instance.getLanById(effectConfig.des);
+                                unlock.getChildByPath("Title").getComponent(Label).string = LanMgr.getLanById(effectConfig.des);
                                 // useLanMgr
-                                // unlock.getChildByPath("Title/Unlock").getComponent(Label).string = "(" + LanMgr.Instance.getLanById("107549") + "C.LV " + effectConfig.unlock + ")";
+                                // unlock.getChildByPath("Title/Unlock").getComponent(Label).string = "(" + LanMgr.getLanById("107549") + "C.LV " + effectConfig.unlock + ")";
                                 unlock.getChildByPath("Title/Unlock").getComponent(Label).string = "(" + "Unlocked at" + "C.LV " + effectConfig.unlock + ")";
                                 this._allEffectViews.push(unlock);
     
@@ -97,14 +95,14 @@ export class ArtifactInfoUI extends PopUpUI {
                                 locked.active = true;
                                 locked.parent = this._lockedEffectItem.parent;
                                 locked.getChildByPath("LockIcon/No").getComponent(Label).string = numStrings[effectIndex];
-                                locked.getChildByPath("Title").getComponent(Label).string = LanMgr.Instance.getLanById(effectConfig.des);
+                                locked.getChildByPath("Title").getComponent(Label).string = LanMgr.getLanById(effectConfig.des);
                                 this._allEffectViews.push(locked);
                             }
                         }
                     }
     
                     // desc
-                    content.getChildByName("DescTxt").getComponent(RichText).string = LanMgr.Instance.getLanById(config.des);
+                    content.getChildByName("DescTxt").getComponent(RichText).string = LanMgr.getLanById(config.des);
                 }
             }
             this.show(true, true);

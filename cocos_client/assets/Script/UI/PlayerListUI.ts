@@ -1,15 +1,11 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, math, Node } from 'cc';
 import { GameMain } from '../GameMain';
 import { PlayerItemUI } from './PlayerItemUI';
-
-import PioneerInfo, { PioneerMgrEvent } from '../Manger/PioneerMgr';
-import EventMgr from '../Manger/EventMgr';
-
 import { TilePos } from '../Game/TiledMap/TileTool';
 import MapPioneerModel, { MapPlayerPioneerModel, MapPioneerActionType, MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
-import LanMgr from '../Manger/LanMgr';
 import { EventName } from '../Const/ConstDefine';
-import BuildingMgr from '../Manger/BuildingMgr';
+import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
+import { BuildingMgr, EventMgr, PioneerMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerListUI')
@@ -42,13 +38,13 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
     }
 
     start() {
-        PioneerInfo.instance.addObserver(this);
+        PioneerMgr.addObserver(this);
         this._started = true;
         this._startAction();
     }
 
     protected onDestroy(): void {
-        PioneerInfo.instance.removeObserver(this);
+        PioneerMgr.removeObserver(this);
         EventMgr.off(EventName.LOADING_FINISH, this.loadOver, this);
         EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
     }
@@ -63,7 +59,7 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
         if (this.node.active === false) return;
 
         // useLanMgr
-        // this.node.getChildByName("title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByName("title").getComponent(Label).string = LanMgr.getLanById("107549");
     }
 
     private _startAction() {
@@ -74,7 +70,7 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
 
     refreshPlayerList() {
         this._pioneers = [];
-        for (const temple of PioneerInfo.instance.getPlayerPioneer()) {
+        for (const temple of PioneerMgr.getPlayerPioneer()) {
             if (temple.show ||
                 (!temple.show && temple.rebirthCountTime > 0)) {
                 this._pioneers.push(temple);
@@ -108,7 +104,7 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
 
     private onTapPlayerItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
-        BuildingMgr.instance.hideBuilding("decorate_2");
+        BuildingMgr.hideBuilding("decorate_2");
         if (GameMain.inst.OutScene.active) {
             if (index < this._pioneers.length) {
                 const currentMapPos = this._pioneers[index].stayPos;
@@ -116,7 +112,7 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
                     const currentWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(currentMapPos.x, currentMapPos.y);
                     GameMain.inst.MainCamera.node.worldPosition = currentWorldPos;
                 }
-                PioneerInfo.instance.changeCurrentActionPioneer(this._pioneers[index].id);
+                PioneerMgr.changeCurrentActionPioneer(this._pioneers[index].id);
                 this.refreshPlayerList();
             }
         }
@@ -126,10 +122,10 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
 
     }
     private async onTapForceStop() {
-        const selfPioneer = await PioneerInfo.instance.getPlayerPioneer();
+        const selfPioneer = await PioneerMgr.getPlayerPioneer();
         for (const pioneer of selfPioneer) {
             if (pioneer.show) {
-                PioneerInfo.instance.pioneerForceStopMove(pioneer.id);
+                PioneerMgr.pioneerForceStopMove(pioneer.id);
             }
         }
     }

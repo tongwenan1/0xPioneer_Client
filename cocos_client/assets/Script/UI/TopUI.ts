@@ -1,11 +1,9 @@
 import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt, UIOpacity, instantiate, tween } from 'cc';
 import { EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
-import EventMgr from '../Manger/EventMgr';
-import LvlupMgr from '../Manger/LvlupMgr';
-import UserInfo, { FinishedEvent, UserInfoEvent } from '../Manger/UserInfoMgr';
-import ItemMgr, { ItemMgrEvent } from '../Manger/ItemMgr';
-import { AudioMgr } from '../Basic/AudioMgr';
+import { EventMgr, ItemMgr, LvlupMgr, UserInfoMgr } from '../Utils/Global';
+import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoDefine';
+import { ItemMgrEvent } from '../Const/Manager/ItemMgrDefine';
 const { ccclass, property } = _decorator;
 
 
@@ -43,8 +41,8 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
         this._expAnimLabel = this.node.getChildByPath("progressLv/AnimLabel").getComponent(Label);
         this._expAnimLabel.node.active = false;
 
-        UserInfo.Instance.addObserver(this);
-        ItemMgr.Instance.addObserver(this);
+        UserInfoMgr.addObserver(this);
+        ItemMgr.addObserver(this);
 
 
         EventMgr.on(EventName.LOADING_FINISH, this.loadOver, this);
@@ -56,8 +54,8 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
     }
 
     protected onDestroy(): void {
-        UserInfo.Instance.removeObserver(this);
-        ItemMgr.Instance.removeObserver(this);
+        UserInfoMgr.removeObserver(this);
+        ItemMgr.removeObserver(this);
     }
 
     private loadOver() {
@@ -72,23 +70,23 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
     }
 
     refreshTopUI() {
-        const info = UserInfo.Instance;
+        const info = UserInfoMgr;
         this.txtPlayerName.string = info.playerName;
         this.txtPlayerLV.string = "C.LV" + info.level;
         this.txtLvProgress.string = `${info.exp}/${1000}`;
-        this.txtMoney.string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Gold).toString();
-        this.txtEnergy.string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Energy).toString();
+        this.txtMoney.string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Gold).toString();
+        this.txtEnergy.string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Energy).toString();
 
-        const lvlupConfig = LvlupMgr.Instance.getConfigByLvl(info.level);
+        const lvlupConfig = LvlupMgr.getConfigByLvl(info.level);
         const maxExp = lvlupConfig[0].exp;
         this.lvProgress.progress =  Math.min(1, info.exp / maxExp);
         this.node.getChildByPath("progressLv/txtLvProgress").getComponent(Label).string = info.exp + "/" + maxExp;
         
         const resourceView = this.node.getChildByName("Resource");
-        resourceView.getChildByPath("Food/Label").getComponent(Label).string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Food).toString();
-        resourceView.getChildByPath("Wood/Label").getComponent(Label).string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Wood).toString();
-        resourceView.getChildByPath("Stone/Label").getComponent(Label).string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Stone).toString();
-        resourceView.getChildByPath("Troops/Label").getComponent(Label).string = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Troop).toString();
+        resourceView.getChildByPath("Food/Label").getComponent(Label).string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Food).toString();
+        resourceView.getChildByPath("Wood/Label").getComponent(Label).string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood).toString();
+        resourceView.getChildByPath("Stone/Label").getComponent(Label).string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone).toString();
+        resourceView.getChildByPath("Troops/Label").getComponent(Label).string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop).toString();
     }
 
     private _playExpGettedAnim(getExpValue: number, playOver: ()=> void = null) {
@@ -130,7 +128,7 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
         });
     }
     playerLvlupChanged(value: number): void {
-        const levelConfig = LvlupMgr.Instance.getConfigByLvl(value);
+        const levelConfig = LvlupMgr.getConfigByLvl(value);
         if (levelConfig.length > 0) {
             GameMain.inst.UI.civilizationLevelUpUI.refreshUI(levelConfig[0]);
             GameMain.inst.UI.civilizationLevelUpUI.show(true);

@@ -1,19 +1,5 @@
 import { resources } from "cc";
-
-export interface BranchEventMgrEvent {
-    onBranchEventStepEnd?(currentEventId: string, hasNextStep: boolean): void;
-}
-
-export class ActiveEventState {
-    /** current event id */
-    eventId: string = null;
-
-    prevEventId: string = null;
-
-    pioneerId: string = null;
-
-    buildingId: string = null;
-}
+import { ActiveEventState, BranchEventMgrEvent } from "../Const/Manager/BrachEventMgrDefine";
 
 export default class BranchEventMgr {
     private _observers: BranchEventMgrEvent[] = [];
@@ -38,12 +24,6 @@ export default class BranchEventMgr {
             .map(([_type, id, num]) => ({id: id, num: num}));
     }
 
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new BranchEventMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
@@ -52,7 +32,6 @@ export default class BranchEventMgr {
 
     }
 
-    private static _instance: BranchEventMgr = null;
     private _events: any[] = null;
     private async _initData() {
         const obj: any = await new Promise((resolve) => {

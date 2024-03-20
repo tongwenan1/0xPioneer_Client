@@ -1,13 +1,6 @@
 import { AudioClip, AudioSource, Node, Scene, director, resources } from "cc";
 
-export class AudioMgr {
-
-    public static get instance(): AudioMgr {
-        if (this._instance == null) {
-            this._instance = new AudioMgr();
-        }
-        return this._instance;
-    }
+export default class AudioMgr {
 
     public playMusic(path: string, loop: boolean = false) {
         if (path == null || path.length <= 0) {
@@ -53,14 +46,13 @@ export class AudioMgr {
         return this._effectVolume;
     }
 
-    private static _instance: AudioMgr = null;
-
     private _currentScene: Scene = null;
     private _musicSource: AudioSource = null;
     private _effectSource: AudioSource = null;
     private _musicVolume: number = 1.0;
     private _effectVolume: number = 1.0;
     constructor() {
+        return;
         this._currentScene = director.getScene();
         const musicNode = new Node();
         musicNode.name = "__audioMgr_music";

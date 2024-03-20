@@ -1,14 +1,10 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt, Layout, Color } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
-import LanMgr from '../Manger/LanMgr';
-import ArtifactMgr from '../Manger/ArtifactMgr';
 import ArtifactData, { ArtifactEffectRankColor } from '../Model/ArtifactData';
-import DropMgr from '../Manger/DropMgr';
 import { ItemConfigType, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import { ArtifactItem } from './ArtifactItem';
-import UserInfoMgr from '../Manger/UserInfoMgr';
-import ItemMgr from '../Manger/ItemMgr';
+import { ArtifactMgr, DropMgr, ItemMgr, LanMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemSelectFromThreeUI')
@@ -17,10 +13,10 @@ export class ItemSelectFromThreeUI extends PopUpUI {
     public async showItem(dropId: string, selectedCallback: () => void) {
 
         this._selectedCallback = selectedCallback;
-        const drops: any[] = DropMgr.Instance.getDropById(dropId);
+        const drops: any[] = DropMgr.getDropById(dropId);
         // useLanMgr
-        // this.node.getChildByPath("__ViewContent/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("__ViewContent/GetAllBtn/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/GetAllBtn/Title").getComponent(Label).string = LanMgr.getLanById("107549");
 
         if (drops.length > 0) {
             const drop = drops[0];
@@ -46,7 +42,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
 
                 const content = this.node.getChildByPath("__ViewContent/ImgTextBg/SelectContent").getComponent(Layout);
                 for (let i = 0; i < this._items.length; i++) {
-                    const config = ArtifactMgr.Instance.getArtifactConf(this._items[i].artifactConfigId);
+                    const config = ArtifactMgr.getArtifactConf(this._items[i].artifactConfigId);
                     if (config == null) {
                         continue;
                     }
@@ -71,7 +67,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
                     }
 
                     // name 
-                    tempView.getChildByName("Name").getComponent(Label).string = LanMgr.Instance.getLanById(config.name);
+                    tempView.getChildByName("Name").getComponent(Label).string = LanMgr.getLanById(config.name);
                     tempView.getChildByName("Name").getComponent(Label).color = useColor;
 
                     // item
@@ -79,20 +75,20 @@ export class ItemSelectFromThreeUI extends PopUpUI {
 
                     // title 
                     // useLanMgr
-                    // tempView.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+                    // tempView.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById("107549");
                     tempView.getChildByName("Title").getComponent(Label).color = useColor;
 
                     // effect
                     if (config.effect.length > 0) {
-                        const firstEffectConfig = ArtifactMgr.Instance.getArtifactEffectConf(config.effect[0]);
+                        const firstEffectConfig = ArtifactMgr.getArtifactEffectConf(config.effect[0]);
                         if (firstEffectConfig != null) {
-                            tempView.getChildByPath("StableEffect/Title").getComponent(Label).string = LanMgr.Instance.getLanById(firstEffectConfig.des);
+                            tempView.getChildByPath("StableEffect/Title").getComponent(Label).string = LanMgr.getLanById(firstEffectConfig.des);
                         }
                     }
                     // button
                     tempView.getChildByName("GetBtn").getComponent(Button).clickEvents[0].customEventData = i.toString();
                     // useLanMgr
-                    // tempView.getChildByPath("GetBtn/name").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+                    // tempView.getChildByPath("GetBtn/name").getComponent(Label).string = LanMgr.getLanById("107549");
 
                     content.node.addChild(tempView);
                     this._showItemViews.push(tempView);
@@ -130,7 +126,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
     private onTapGet(event: Event, customEventData: any) {
         const index: number = parseInt(customEventData);
         const item = this._items[index];
-        ArtifactMgr.Instance.addArtifact([item]);
+        ArtifactMgr.addArtifact([item]);
         GameMain.inst.UI.artifactInfoUI.showItem([item]);
 
         if (this._selectedCallback != null) {
@@ -140,11 +136,11 @@ export class ItemSelectFromThreeUI extends PopUpUI {
     }
 
     private onTapGetAll() {
-        const energyNum: number = ItemMgr.Instance.getOwnItemCount(ResourceCorrespondingItem.Energy);
+        const energyNum: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Energy);
         const needNum: number = 200;
         if (energyNum >= needNum) {
-            ArtifactMgr.Instance.addArtifact(this._items);
-            ItemMgr.Instance.subItem(ResourceCorrespondingItem.Energy, needNum);
+            ArtifactMgr.addArtifact(this._items);
+            ItemMgr.subItem(ResourceCorrespondingItem.Energy, needNum);
             GameMain.inst.UI.artifactInfoUI.showItem(this._items);
             if (this._selectedCallback != null) {
                 this._selectedCallback();
@@ -152,7 +148,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
             this.show(false, true);
         } else {
             // useLanMgr
-            // GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201004"));
+            // GameMain.inst.UI.ShowTip(LanMgr.getLanById("201004"));
             GameMain.inst.UI.ShowTip("Insufficient resources for get all");
         }
     }

@@ -1,15 +1,12 @@
 import { _decorator, Animation, Button, Component, instantiate, Label, Layout, Node, Sprite, tween, v3 } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { EventName, ItemConfigType } from '../Const/ConstDefine';
-import EventMgr from '../Manger/EventMgr';
-import LanMgr from '../Manger/LanMgr';
-import ItemMgr from '../Manger/ItemMgr';
 import { BackpackItem } from './BackpackItem';
 import ItemData from '../Model/ItemData';
 import { ArtifactItem } from './ArtifactItem';
 import ArtifactData from '../Model/ArtifactData';
-import UserInfoMgr from '../Manger/UserInfoMgr';
 import { GameMain } from '../GameMain';
+import { EventMgr, LanMgr, UserInfoMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('CivilizationLevelUpUI')
@@ -56,12 +53,12 @@ export class CivilizationLevelUpUI extends PopUpUI {
 
         const contentView = this.node.getChildByName("Content");
         // useLanMgr
-        // contentView.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/RewardContent/CityVersion").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/RewardContent/EventUpdate").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/RewardContent/ResGetRateUp").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/RewardContent/GetHpMax").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("Content/RewardContent/Rewards/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // contentView.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("Content/RewardContent/CityVersion").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("Content/RewardContent/EventUpdate").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("Content/RewardContent/ResGetRateUp").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("Content/RewardContent/GetHpMax").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("Content/RewardContent/Rewards/Title").getComponent(Label).string = LanMgr.getLanById("107549");
 
 
         // anim
@@ -118,20 +115,20 @@ export class CivilizationLevelUpUI extends PopUpUI {
         const content = contentView.getChildByName("RewardContent");
         content.getChildByName("CityFeature").active = levelConfig.city_feature != null && levelConfig.city_feature == 1;
         // useLanMgr
-        // content.getChildByPath("CityFeature/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // content.getChildByPath("CityFeature/Title").getComponent(Label).string = LanMgr.getLanById("107549");
 
         content.getChildByName("CityVersion").active = levelConfig.city_vision != null && levelConfig.city_vision > 0;
         // useLanMgr
-        // content.getChildByPath("CityVersion/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // content.getChildByPath("CityVersion/Title").getComponent(Label).string = LanMgr.getLanById("107549");
 
         content.getChildByName("EventUpdate").active = levelConfig.event_building != null;
         // useLanMgr
-        // content.getChildByPath("EventUpdate/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // content.getChildByPath("EventUpdate/Title").getComponent(Label).string = LanMgr.getLanById("107549");
 
         if (levelConfig.extra_res != null && levelConfig.extra_res > 0) {
             content.getChildByName("ResGetRateUp").active = true;
             // useLanMgr
-            // content.getChildByPath("ResGetRateUp/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            // content.getChildByPath("ResGetRateUp/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
             content.getChildByPath("ResGetRateUp/Value").getComponent(Label).string = "+" + (levelConfig.extra_res * 100) + "%!";
         } else {
             content.getChildByName("ResGetRateUp").active = false;
@@ -140,7 +137,7 @@ export class CivilizationLevelUpUI extends PopUpUI {
         if (levelConfig.hp_max != null && levelConfig.hp_max > 0) {
             content.getChildByName("GetHpMax").active = true;
             // useLanMgr
-            // content.getChildByPath("GetHpMax/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            // content.getChildByPath("GetHpMax/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
             content.getChildByPath("GetHpMax/Value").getComponent(Label).string = "+" + levelConfig.hp_max + "!";
         } else {
             content.getChildByName("GetHpMax").active = false;
@@ -191,13 +188,13 @@ export class CivilizationLevelUpUI extends PopUpUI {
 
     private onTapClose() {
         this.show(false);
-        if (UserInfoMgr.Instance.afterCivilizationClosedShowItemDatas.length > 0) {
-            GameMain.inst.UI.itemInfoUI.showItem(UserInfoMgr.Instance.afterCivilizationClosedShowItemDatas, true);
-            UserInfoMgr.Instance.afterCivilizationClosedShowItemDatas = [];
+        if (UserInfoMgr.afterCivilizationClosedShowItemDatas.length > 0) {
+            GameMain.inst.UI.itemInfoUI.showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas, true);
+            UserInfoMgr.afterCivilizationClosedShowItemDatas = [];
         }
-        if (UserInfoMgr.Instance.afterCivilizationClosedShowArtifactDatas.length > 0) {
-            GameMain.inst.UI.artifactInfoUI.showItem(UserInfoMgr.Instance.afterCivilizationClosedShowArtifactDatas);
-            UserInfoMgr.Instance.afterCivilizationClosedShowArtifactDatas = [];
+        if (UserInfoMgr.afterCivilizationClosedShowArtifactDatas.length > 0) {
+            GameMain.inst.UI.artifactInfoUI.showItem(UserInfoMgr.afterCivilizationClosedShowArtifactDatas);
+            UserInfoMgr.afterCivilizationClosedShowArtifactDatas = [];
         }
     }
 }

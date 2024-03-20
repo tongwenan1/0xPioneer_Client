@@ -1,28 +1,13 @@
 import { Vec2, math, resources, v2 } from "cc";
-import { ResourceModel } from "./UserInfoMgr";
 import MapBuildingModel, { BuildingFactionType, MapBuildingType, MapResourceBuildingModel, MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
 import MapDecorateModel, { MapDecoratePosMode } from "../Game/Outer/Model/MapDecorateModel";
 import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
-
-export interface BuildingMgrEvent {
-    buildingDidHide(buildingId: string, beacusePioneerId: string): void;
-    buildingDidShow(buildingId: string): void;
-
-
-    buildingFacitonChanged(buildingId: string, faction: BuildingFactionType): void;
-    buildingInsertDefendPioneer(buildingId: string, pioneerId: string): void;
-    buildingRemoveDefendPioneer(buildingId: string, pioneerId: string): void;
-}
+import { BuildingMgrEvent } from "../Const/Manager/BuildingMgrDefine";
+import { ResourceModel } from "../Const/Manager/UserInfoDefine";
 
 export default class BuildingMgr {
 
-    public static get instance() {
-        if (!this._instance) {
-            this._instance = new BuildingMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
@@ -320,7 +305,6 @@ export default class BuildingMgr {
 
     }
 
-    private static _instance: BuildingMgr;
     private _localStorageKey: string = "local_buildings";
     private _localDecorateKey: string = "local_decorate";
     private _observers: BuildingMgrEvent[] = [];

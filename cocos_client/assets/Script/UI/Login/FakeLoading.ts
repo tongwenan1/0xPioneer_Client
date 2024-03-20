@@ -1,9 +1,7 @@
 import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, resources, Prefab, AssetManager } from 'cc';
-import LocalDataLoader from '../../Manger/LocalDataLoader';
-import UserInfoMgr from '../../Manger/UserInfoMgr';
 import { Web3Helper } from '../../Game/MetaMask/EthHelper';
 import { md5 } from '../../Utils/Md5';
-import ConfigMgr from '../../Manger/ConfigMgr';
+import { ConfigMgr, LocalDataLoader, UserInfoMgr } from '../../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('FakeLoading')
@@ -16,8 +14,8 @@ export class FakeLoading extends Component {
     }
     async start() {
         this._loadingView.active = true;
-        if (LocalDataLoader.instance.loadStatus == 0) {
-            await LocalDataLoader.instance.loadLocalDatas();
+        if (LocalDataLoader.loadStatus == 0) {
+            await LocalDataLoader.loadLocalDatas();
         }
         // load prefab
         let loadRate: number = 0;
@@ -87,13 +85,13 @@ export class FakeLoading extends Component {
     }
     OnEventNext(event: Event, customEventData: string) {
         if (customEventData == "guest") {
-            UserInfoMgr.Instance.playerName = "guest";
+            UserInfoMgr.playerName = "guest";
         }
         else {
             if (Web3Helper.getPubAddr() == undefined || Web3Helper.getPubAddr() == "") {
                 return;
             }
-            UserInfoMgr.Instance.playerName = Web3Helper.getPubAddr().substring(0, 10);
+            UserInfoMgr.playerName = Web3Helper.getPubAddr().substring(0, 10);
         }
         if (this._loaded == false) {
             return;
@@ -110,7 +108,7 @@ export class FakeLoading extends Component {
             return;
         }
         let canEnter: boolean = false;
-        let config = ConfigMgr.Instance.getConfigById("10002");
+        let config = ConfigMgr.getConfigById("10002");
         if (config.length <= 0 || config[0].para == null || config[0].para.length <= 0) {
             canEnter = true;
         } else {

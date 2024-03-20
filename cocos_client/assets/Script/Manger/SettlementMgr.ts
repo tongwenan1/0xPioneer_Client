@@ -8,12 +8,6 @@ export interface SettlementModel {
 }
 
 export default class SettlementMgr {
-    public static get instance() {
-        if (!this._instance) {
-            this._instance = new SettlementMgr();
-        }
-        return this._instance;
-    }
     public insertSettlement(newSettlement: SettlementModel) {
         const index = this._settlements.findIndex(s => s.level == newSettlement.level);
         if (index >= 0) {
@@ -46,7 +40,6 @@ export default class SettlementMgr {
         return newSettlement;
     }
 
-    private static _instance: SettlementMgr = null;
     private _settlements: SettlementModel[] = null;
     private _localSettleKey: string = "localSettlement";
     public constructor() {

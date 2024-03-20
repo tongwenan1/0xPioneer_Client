@@ -2,16 +2,10 @@ import { _decorator, Component, Node, Vec2, Vec3, CCString, CCInteger, UIOpacity
 import { MapItem } from '../../../BasicView/MapItem';
 import { EventName } from '../../../Const/ConstDefine';
 import { GameMain } from '../../../GameMain';
-import EventMgr from '../../../Manger/EventMgr';
-import InnerBuildingMgr from '../../../Manger/InnerBuildingMgr';
-import UserInfoMgr, { UserInfoEvent, UserInnerBuildInfo, FinishedEvent, InnerBuildingType } from '../../../Manger/UserInfoMgr';
 import CommonTools from '../../../Tool/CommonTools';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
-import CountMgr, { CountType } from '../../../Manger/CountMgr';
-import LanMgr from '../../../Manger/LanMgr';
-import ItemMgr from '../../../Manger/ItemMgr';
-import ArtifactMgr from '../../../Manger/ArtifactMgr';
-import { ArtifactEffectType } from '../../../Model/ArtifactData';
+import { FinishedEvent, InnerBuildingType, UserInfoEvent, UserInnerBuildInfo } from '../../../Const/Manager/UserInfoDefine';
+import { EventMgr, LanMgr, UserInfoMgr } from '../../../Utils/Global';
 
 const { ccclass, property } = _decorator;
 
@@ -37,7 +31,7 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
         super._onClick();
         if (GameMain.inst.innerSceneMap.isUpgrading(this.buildID as InnerBuildingType)) {
             // useLanMgr
-            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201001"));
+            GameMain.inst.UI.ShowTip(LanMgr.getLanById("201001"));
             // GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
             return;
         }
@@ -46,9 +40,9 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
         }
         if (this.buildData.buildID == InnerBuildingType.Barrack &&
             this.buildData.buildLevel > 0) {
-            if (UserInfoMgr.Instance.isGeneratingTroop) {
+            if (UserInfoMgr.isGeneratingTroop) {
                 // useLanMgr
-                GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("201002"));
+                GameMain.inst.UI.ShowTip(LanMgr.getLanById("201002"));
                 // GameMain.inst.UI.ShowTip("Recruiting…Please wait…");
                 return;
             }
@@ -67,10 +61,10 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
 
     start() {
         super.start();
-        const innerBuildData = UserInfoMgr.Instance.innerBuilds;
+        const innerBuildData = UserInfoMgr.innerBuilds;
         this.buildData = innerBuildData.get(this.buildID);
         this.refresh();
-        UserInfoMgr.Instance.addObserver(this);
+        UserInfoMgr.addObserver(this);
     }
 
     protected onEnable(): void {
@@ -82,7 +76,7 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
     }
 
     protected onDestroy(): void {
-        UserInfoMgr.Instance.removeObserver(this);
+        UserInfoMgr.removeObserver(this);
     }
 
 

@@ -1,11 +1,7 @@
 import { _decorator, Component, Node, instantiate, director, BoxCharacterController, Label, Layout, UITransform, ProgressBar, Button, tween, v3, } from "cc";
-import UserInfoMgr from "../Manger/UserInfoMgr";
 import { GameMain } from "../GameMain";
-import BoxMgr from "../Manger/BoxMgr";
-import EventMgr from "../Manger/EventMgr"; 
-import LanMgr from "../Manger/LanMgr";
 import { EventName } from "../Const/ConstDefine";
-import DropMgr from "../Manger/DropMgr";
+import { BoxMgr, EventMgr, LanMgr, UserInfoMgr } from "../Utils/Global";
 const { ccclass, property } = _decorator;
 
 @ccclass("ClaimRewardUI")
@@ -13,14 +9,14 @@ export class ClaimRewardUI extends Component {
     @property(Node) RewardBoxArr: Node;
 
     public refreshUI() {
-        let value = UserInfoMgr.Instance.explorationValue;
+        let value = UserInfoMgr.explorationValue;
         let showBox = false;
         for (let i = 0; i < this._boxViews.length; i++) {
             if (i < this._boxDatas.length) {
                 const data = this._boxDatas[i];
                 // 0-no 1-can 2-getted
                 let getStatus: number = 0;
-                if (UserInfoMgr.Instance.gettedExplorationRewardIds.indexOf(data.id) != -1) {
+                if (UserInfoMgr.gettedExplorationRewardIds.indexOf(data.id) != -1) {
                     getStatus = 2;
                 } else if (value >= data.threshold) {
                     getStatus = 1;
@@ -88,7 +84,7 @@ export class ClaimRewardUI extends Component {
 
     private _startAction() {
         if (this._started && this._dataLoaded) {
-            this._boxDatas = BoxMgr.Instance.getAllBox();
+            this._boxDatas = BoxMgr.getAllBox();
             let pre = this.RewardBoxArr.getChildByName("icon_treasure_box");
             pre.active = false;
 
@@ -120,9 +116,9 @@ export class ClaimRewardUI extends Component {
         const data = this._boxDatas[index];
         // 0-no 1-can 2-getted
         let getStatus: number = 0;
-        if (UserInfoMgr.Instance.gettedExplorationRewardIds.indexOf(data.id) != -1) {
+        if (UserInfoMgr.gettedExplorationRewardIds.indexOf(data.id) != -1) {
             getStatus = 2;
-        } else if (UserInfoMgr.Instance.explorationValue >= data.threshold) {
+        } else if (UserInfoMgr.explorationValue >= data.threshold) {
             getStatus = 1;
         }
         if (getStatus == 2) {
@@ -135,7 +131,7 @@ export class ClaimRewardUI extends Component {
         } else if (getStatus == 0) {
 
             // useLanMgr
-            GameMain.inst.UI.ShowTip(LanMgr.Instance.getLanById("200002"));
+            GameMain.inst.UI.ShowTip(LanMgr.getLanById("200002"));
             // GameMain.inst.UI.ShowTip("Please explore more to get it");
         }
     }

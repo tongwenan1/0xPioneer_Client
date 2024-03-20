@@ -1,5 +1,5 @@
 import { CCBoolean, Component, _decorator } from "cc";
-import UserInfoMgr from "../Manger/UserInfoMgr";
+import { UserInfoMgr } from "../Utils/Global";
 
 const { ccclass, property } = _decorator;
 
@@ -12,7 +12,7 @@ export class MainRootController extends Component {
     protected onLoad(): void {
         const rookieGuideView = this.node.getChildByName("RookieGuide");
         if (this.canShowRookieGuide) {
-            rookieGuideView.active = !UserInfoMgr.Instance.isFinishRookie;
+            rookieGuideView.active = !UserInfoMgr.isFinishRookie;
         } else {
             rookieGuideView.active = false;
         }

@@ -1,16 +1,9 @@
 import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3 } from 'cc';
 import * as cc from "cc";
-import PioneerInfo from '../Manger/PioneerMgr';
-import PioneerMgr from '../Manger/PioneerMgr';
-import BuildingMgr from '../Manger/BuildingMgr';
-import ConfigMgr from '../Manger/ConfigMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { TilePos, TileMapHelper, TileHexDirection } from '../Game/TiledMap/TileTool';
-import { MapBuildingType, BuildingFactionType } from '../Game/Outer/Model/MapBuildingModel';
-import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
-import LocalDataLoader from '../Manger/LocalDataLoader';
-import EventMgr from '../Manger/EventMgr';
 import { EventName } from '../Const/ConstDefine';
+import { ConfigMgr, EventMgr, LocalDataLoader } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('TestMapBG')
@@ -19,13 +12,15 @@ export class TestMapBG extends Component {
     public addDynamicBlock(mapPos: Vec2) {
         this._tiledhelper.Path_AddDynamicBlock({
             TileX: mapPos.x,
-            TileY: mapPos.y
+            TileY: mapPos.y,
+            canMoveTo: false
         });
     }
     public removeDynamicBlock(mapPos: Vec2) {
         this._tiledhelper.Path_RemoveDynamicBlock({
             TileX: mapPos.x,
-            TileY: mapPos.y
+            TileY: mapPos.y,
+            canMoveTo: false
         });
     }
     public getAround(mapPos: Vec2): TilePos[] {
@@ -114,7 +109,7 @@ export class TestMapBG extends Component {
         this.node.on(Node.EventType.MOUSE_WHEEL, (event: cc.EventMouse) => {
             let sc = thisptr.node.parent.scale.x;
 
-            let config = ConfigMgr.Instance.getConfigById("10001");
+            let config = ConfigMgr.getConfigById("10001");
             if (config.length <= 0) return;
             let useConf = config[0];
 
@@ -159,7 +154,7 @@ export class TestMapBG extends Component {
 
         this.InitTileMap();
 
-        await LocalDataLoader.instance.loadLocalDatas();
+        await LocalDataLoader.loadLocalDatas();
         EventMgr.emit(EventName.LOADING_FINISH);
     }
     

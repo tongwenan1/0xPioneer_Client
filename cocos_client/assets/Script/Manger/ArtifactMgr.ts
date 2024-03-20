@@ -1,18 +1,7 @@
 import { SpriteFrame, resources, sys } from "cc";
 import ArtifactData, { ArtifactConfigData, ArtifactEffectConfigData, ArtifactProp, ArtifactPropValueType } from "../Model/ArtifactData";
-import UserInfoMgr, { FinishedEvent } from "./UserInfoMgr";
-import PioneerMgr from "./PioneerMgr";
-import { ArtifactItem } from "../UI/ArtifactItem";
-
-
-export enum ArtifactArrangeType {
-    Recently = "Recently",
-    Rarity = "Rarity",
-}
-
-export interface ArtifactMgrEvent {
-    artifactChanged(): void;
-}
+import { PioneerMgr } from "../Utils/Global";
+import { ArtifactArrangeType, ArtifactMgrEvent } from "../Const/Manager/ArtifactMgrDefine";
 
 export default class ArtifactMgr {
     public async getItemIcon(iconName: string): Promise<SpriteFrame> {
@@ -69,7 +58,7 @@ export default class ArtifactMgr {
 
         for (let i = 0; i < this._localArtifactDatas.length; i++) {
             const artifact = this._localArtifactDatas[i];
-            const artifactConfig = ArtifactMgr.Instance.getArtifactConf(artifact.artifactConfigId);
+            const artifactConfig = this.getArtifactConf(artifact.artifactConfigId);
 
             // prop
             if (artifactConfig.prop.length > 0) {
@@ -91,7 +80,7 @@ export default class ArtifactMgr {
             if (artifactConfig.effect.length > 0) {
                 for (let j = 0; j < artifactConfig.effect.length; j++) {
                     const effectId = artifactConfig.effect[j];
-                    const effConfig = ArtifactMgr.Instance.getArtifactEffectConf(effectId);
+                    const effConfig = this.getArtifactEffectConf(effectId);
                     const effectType = effConfig.type;
 
                     if (effConfig.unlock && effConfig.unlock > cLv) {
@@ -148,12 +137,12 @@ export default class ArtifactMgr {
                     const propType: ArtifactProp = artifactConfig.prop[j];
                     const propValue = artifactConfig.prop_value[j];
                     if (propType == ArtifactProp.HP) {
-                        PioneerMgr.instance.pioneerChangeAllPlayerHpMax({
+                        PioneerMgr.pioneerChangeAllPlayerHpMax({
                             type: propValue[0],
                             value: propValue[1] * artifact.count,
                         });
                     } else if (propType == ArtifactProp.ATTACK) {
-                        PioneerMgr.instance.pioneerChangeAllPlayerAttack({
+                        PioneerMgr.pioneerChangeAllPlayerAttack({
                             type: propValue[0],
                             value: propValue[1] * artifact.count,
                         });
@@ -240,12 +229,6 @@ export default class ArtifactMgr {
         }
     }
 
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new ArtifactMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
@@ -257,7 +240,6 @@ export default class ArtifactMgr {
     private _localStorageKey: string = "artifact_data";
     private _localArtifactDatas: ArtifactData[] = [];
 
-    private static _instance: ArtifactMgr = null;
     private _artifactConfs = {};
     private _artifactEffectConfs = {};
     private _itemIconSpriteFrames = {};

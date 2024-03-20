@@ -1,50 +1,27 @@
-import BoxMgr from "./BoxMgr";
-import EventMgr from "./EventMgr";
-import BuildingMgr from "./BuildingMgr";
-import ConfigMgr from "./ConfigMgr";
-import DropMgr from "./DropMgr";
-import InnerBuildingMgr from "./InnerBuildingMgr";
-import ItemMgr from "./ItemMgr";
-import PioneerMgr from "./PioneerMgr";
-import TalkMgr from "./TalkMgr";
-import TaskMgr from "./TaskMgr";
-import UserInfo from "./UserInfoMgr";
-import BranchEventMgr from "./BranchEventMgr";
-import BattleReportsMgr from "db://assets/Script/Manger/BattleReportsMgr";
-import LvlupMgr from "./LvlupMgr";
-import LanMgr from "./LanMgr";
-import ArtifactMgr from "./ArtifactMgr";
-import EvaluationMgr from "./EvaluationMgr";
+import { ArtifactMgr, BattleReportsMgr, BoxMgr, BranchEventMgr, BuildingMgr, ConfigMgr, DropMgr, EvaluationMgr, InnerBuildingMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, TalkMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
 
 export default class LocalDataLoader {
-
-    public static get instance() {
-        if (!this._instance) {
-            this._instance = new LocalDataLoader();
-        }
-        return this._instance;
-    }
 
     public async loadLocalDatas() {
         this._loadStatus = 1;
         this._importSaveOnStartIfExists();
 
-        await LanMgr.Instance.initData();
-        await BranchEventMgr.Instance.initData();
-        await DropMgr.Instance.initData();
-        await BoxMgr.Instance.initData();
-        await InnerBuildingMgr.Instance.initData();
-        await TalkMgr.Instance.initData();
-        await UserInfo.Instance.initData();
-        await BuildingMgr.instance.initData();
-        await TaskMgr.Instance.initData();
-        await PioneerMgr.instance.initData();
-        await ItemMgr.Instance.initData();
-        await ConfigMgr.Instance.initData();
-        await BattleReportsMgr.Instance.initData();
-        await LvlupMgr.Instance.initData();
-        await ArtifactMgr.Instance.initData();
-        await EvaluationMgr.Instance.initData();
+        await LanMgr.initData();
+        await BranchEventMgr.initData();
+        await DropMgr.initData();
+        await BoxMgr.initData();
+        await InnerBuildingMgr.initData();
+        await TalkMgr.initData();
+        await UserInfoMgr.initData();
+        await BuildingMgr.initData();
+        await TaskMgr.initData();
+        await PioneerMgr.initData();
+        await ItemMgr.initData();
+        await ConfigMgr.initData();
+        await BattleReportsMgr.initData();
+        await LvlupMgr.initData();
+        await ArtifactMgr.initData();
+        await EvaluationMgr.initData();
         this._loadStatus = 2;
     }
 
@@ -74,6 +51,5 @@ export default class LocalDataLoader {
         this._loadStatus = value;
     }
 
-    private static _instance: LocalDataLoader = null;
     private _loadStatus: number = 0;
 }

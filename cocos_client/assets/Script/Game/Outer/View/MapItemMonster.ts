@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, Vec2, Vec3, CCString, UITransform, Label, UIOpacity } from 'cc';
-import { FinishedEvent } from '../../../Manger/UserInfoMgr';
 import MapPioneerModel, { MapPioneerLogicType, MapPioneerActionType, MapPioneerMoveDirection } from '../Model/MapPioneerModel';
-import LanMgr from '../../../Manger/LanMgr';
+import { FinishedEvent } from '../../../Const/Manager/UserInfoDefine';
+import { LanMgr } from '../../../Utils/Global';
 
 const { ccclass, property } = _decorator;
 
@@ -9,7 +9,7 @@ const { ccclass, property } = _decorator;
 export class MapItemMonster extends Component {
 
     public refreshUI(model: MapPioneerModel, finishEvent: FinishedEvent[]) {
-        this._nameLabel.string = LanMgr.Instance.getLanById(model.name);
+        this._nameLabel.string = LanMgr.getLanById(model.name);
         this._fightView.active = !model.friendly;
         this._fightView.active = false;
 

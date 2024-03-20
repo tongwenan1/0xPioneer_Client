@@ -1,73 +1,15 @@
 import { Asset, __private, resources, sys } from "cc";
-import TaskMgr from "./TaskMgr";
-import ItemMgr from "./ItemMgr";
 import ItemData, { ItemType } from "../Model/ItemData";
 import { GameMain } from "../GameMain";
-import CountMgr, { CountType } from "./CountMgr";
-import LvlupMgr from "./LvlupMgr";
-import PioneerMgr from "./PioneerMgr";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
-import BuildingMgr from "./BuildingMgr";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
-
-export interface UserInnerBuildInfo {
-    buildID: string,
-    buildLevel: number,
-    buildUpTime: number,
-    buildName: string,
-}
-
-export enum InnerBuildingType {
-    MainCity = "0",
-    Barrack = "3",
-    House = "4"
-}
-
-export interface ResourceModel {
-    id: string;
-    num: number
-}
-
-export interface GenerateTroopInfo {
-    countTime: number;
-    troopNum: number;
-}
-
-export enum FinishedEvent {
-    NoCondition = "",
-    FirstTalkToProphetess = "FirstTalkToProphetess",
-    KillDoomsDayGangTeam = "KillDoomsDayGangTeam",
-    KillProphetess = "KillProphetess",
-    BecomeCityMaster = "BecomeCityMaster",
-}
-
-export interface UserInfoEvent {
-    playerNameChanged?(value: string): void;
-    playerExpChanged?(value: number): void;
-    playerLvlupChanged?(value: number): void;
-
-    playerExplorationValueChanged?(value: number): void;
-
-    getNewTask?(taskId: string): void;
-    triggerTaskStepAction?(action: string, delayTime: number): void;
-    finishEvent?(event: FinishedEvent): void;
-    taskProgressChanged?(taskId: string): void;
-    taskFailed?(taskId: string): void;
-
-    gameTaskOver?(): void;
-
-    generateTroopTimeCountChanged?(leftTime: number): void;
-}
+import { UserInfoEvent, FinishedEvent, InnerBuildingType, UserInnerBuildInfo, GenerateTroopInfo } from "../Const/Manager/UserInfoDefine";
+import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
+import { CountType } from "../Const/Manager/CountDefine";
 
 export default class UserInfoMgr {
 
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new UserInfoMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
@@ -244,7 +186,7 @@ export default class UserInfoMgr {
                 this.checkCanFinishedTask("buildhouse", "-1");
             }
 
-            CountMgr.instance.addNewCount({
+            CountMgr.addNewCount({
                 type: CountType.buildInnerBuilding,
                 timeStamp: new Date().getTime(),
                 data: {
@@ -259,7 +201,7 @@ export default class UserInfoMgr {
         this._localJsonData.playerData.gettedExplorationRewardIds = this._gettedExplorationRewardIds;
         this._localDataChanged(this._localJsonData);
 
-        CountMgr.instance.addNewCount({
+        CountMgr.addNewCount({
             type: CountType.openBox,
             timeStamp: new Date().getTime(),
             data: {
@@ -276,7 +218,7 @@ export default class UserInfoMgr {
         this._localJsonData.playerData.generateTroopInfo = this._generateTroopInfo;
         this._localDataChanged(this._localJsonData);
 
-        CountMgr.instance.addNewCount({
+        CountMgr.addNewCount({
             type: CountType.generateTroops,
             timeStamp: new Date().getTime(),
             data: {
@@ -368,8 +310,8 @@ export default class UserInfoMgr {
         let parseLv: boolean = true;
         const nextLvConfigs = [];
         do {
-            const lvlConfig = LvlupMgr.Instance.getConfigByLvl(this._level);
-            const nextLvConfig = LvlupMgr.Instance.getConfigByLvl(this._level + 1);
+            const lvlConfig = LvlupMgr.getConfigByLvl(this._level);
+            const nextLvConfig = LvlupMgr.getConfigByLvl(this._level + 1);
             if (nextLvConfig != null) {
                 if (this._exp >= lvlConfig[0].exp) {
                     isLvlup = true;
@@ -413,13 +355,13 @@ export default class UserInfoMgr {
 
                 // hpmax
                 if (nextLvConfig[0].hp_max > 0) {
-                    PioneerMgr.instance.pioneerChangeAllPlayerOriginalHpMax(nextLvConfig[0].hp_max);
+                    PioneerMgr.pioneerChangeAllPlayerOriginalHpMax(nextLvConfig[0].hp_max);
                 }
 
                 // event_building
                 if (nextLvConfig[0].event_building != null) {
                     for (const buidingId of nextLvConfig[0].event_building) {
-                        BuildingMgr.instance.showBuilding(buidingId);
+                        BuildingMgr.showBuilding(buidingId);
                     }
                 }
 
@@ -464,7 +406,7 @@ export default class UserInfoMgr {
                     this._generateTroopInfo.countTime -= 1;
                 }
                 if (this._generateTroopInfo.countTime <= 0) {
-                    ItemMgr.Instance.addItem([new ItemData(ResourceCorrespondingItem.Troop, this._generateTroopInfo.troopNum)]);
+                    ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Troop, this._generateTroopInfo.troopNum)]);
                     this._generateTroopInfo = null;
                 }
                 for (const observe of this._observers) {
@@ -478,7 +420,6 @@ export default class UserInfoMgr {
         }, 1000);
     }
 
-    private static _instance: UserInfoMgr = null;
 
     private _afterTalkItemGetData: Map<string, ItemData[]> = new Map();
     private _afterCivilizationClosedShowItemDatas: ItemData[] = [];
@@ -620,7 +561,7 @@ export default class UserInfoMgr {
                 }
                 const splitDatas = templeWinAction.type.split("|");
                 if (splitDatas[0] == "gettask") {
-                    this.getNewTask(TaskMgr.Instance.getTaskById(splitDatas[1]));
+                    this.getNewTask(TaskMgr.getTaskById(splitDatas[1]));
 
                 } else if (splitDatas[0] == "gameover") {
                     for (const observe of this._observers) {
@@ -641,7 +582,7 @@ export default class UserInfoMgr {
             if (step.rewardBackpackItem != null) {
                 const addItems: ItemData[] = [];
                 for (const r of step.rewardBackpackItem) {
-                    let itemConf = ItemMgr.Instance.getItemConf(r.itemConfigId);
+                    let itemConf = ItemMgr.getItemConf(r.itemConfigId);
                     if (!itemConf) {
                         continue;
                     }
@@ -665,7 +606,7 @@ export default class UserInfoMgr {
                     addItems.push(new ItemData(r.itemConfigId, r.num));
                 }
                 if (addItems.length > 0) {
-                    ItemMgr.Instance.addItem(addItems);
+                    ItemMgr.addItem(addItems);
                     setTimeout(()=> {
                         if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
                             this.afterCivilizationClosedShowItemDatas.push(...addItems);
@@ -680,7 +621,7 @@ export default class UserInfoMgr {
                 let talkId: string = null;
                 const addItems: ItemData[] = [];
                 for (const r of step.afterTalkRewardItem) {
-                    let itemConf = ItemMgr.Instance.getItemConf(r.itemConfigId);
+                    let itemConf = ItemMgr.getItemConf(r.itemConfigId);
                     if (!itemConf) {
                         continue;
                     }
@@ -704,7 +645,7 @@ export default class UserInfoMgr {
                     talkId = r.talkId;
                     addItems.push(new ItemData(r.itemConfigId, r.num));
                 }
-                ItemMgr.Instance.addItem(addItems);
+                ItemMgr.addItem(addItems);
                 if (talkId != null) {
                     this._afterTalkItemGetData.set(talkId, addItems);
                 }

@@ -1,7 +1,7 @@
 import { _decorator, Component, Sprite, SpriteFrame, Node } from 'cc';
 import * as cc from "cc";
 import ItemData from '../Model/ItemData';
-import ItemMgr from '../Manger/ItemMgr';
+import { ItemMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('BackpackItem')
@@ -12,13 +12,13 @@ export class BackpackItem extends Component {
             propView.active = false;
         } else {
             propView.active = true;
-            const config = ItemMgr.Instance.getItemConf(item.itemConfigId);
+            const config = ItemMgr.getItemConf(item.itemConfigId);
             // levelBg
             for (let i = 1; i <= 5; i++) {
                 propView.getChildByName("Level" + i).active = i == config.grade;
             }
             // icon
-            propView.getChildByName("Icon").getComponent(Sprite).spriteFrame = await ItemMgr.Instance.getItemIcon(config.icon);
+            propView.getChildByName("Icon").getComponent(Sprite).spriteFrame = await ItemMgr.getItemIcon(config.icon);
             // num
             propView.getChildByName("Count").getComponent(cc.Label).string = "x" + item.count;
         }

@@ -1,12 +1,11 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
-import LanMgr from '../Manger/LanMgr';
-import EventMgr from '../Manger/EventMgr';
 import { EventName } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
-import ArtifactMgr, { ArtifactArrangeType, ArtifactMgrEvent } from '../Manger/ArtifactMgr';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactItem } from './ArtifactItem';
+import { ArtifactArrangeType, ArtifactMgrEvent } from '../Const/Manager/ArtifactMgrDefine';
+import { ArtifactMgr, EventMgr, LanMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 
@@ -40,10 +39,10 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
     }
 
     start() {
-        ArtifactMgr.Instance.addObserver(this);
+        ArtifactMgr.addObserver(this);
 
         this._allItemViews = [];
-        for (let i = 0; i < ArtifactMgr.Instance.maxItemLength; i++) {
+        for (let i = 0; i < ArtifactMgr.maxItemLength; i++) {
             let itemView = instantiate(this.itemPrb);
             itemView.active = true;
 
@@ -65,7 +64,7 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
     }
 
     onDestroy(): void {
-        ArtifactMgr.Instance.removeObserver(this);
+        ArtifactMgr.removeObserver(this);
 
         EventMgr.off(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
     }
@@ -75,15 +74,15 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
             return;
         }
         // useLanMgr
-        // this.node.getChildByPath("__ViewContent/Bg/title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("__ViewContent/Bg/QuantityLabel").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("__ViewContent/Bg/SortView/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("__ViewContent/Bg/ArrangeButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._sortMenu.getChildByPath("Content/Recently").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/Bg/title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/Bg/QuantityLabel").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/Bg/SortView/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/Bg/ArrangeButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._sortMenu.getChildByPath("Content/Recently").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string = LanMgr.getLanById("107549");
 
-        const items = ArtifactMgr.Instance.localArtifactDatas;
+        const items = ArtifactMgr.localArtifactDatas;
         this._itemDatas = items;
 
         for (let i = 0; i < this._allItemViews.length; i++) {
@@ -91,7 +90,7 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
             itemView.getComponent(ArtifactItem).refreshUI(i < items.length ? items[i] : null);
             itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
         }
-        this.node.getChildByPath("__ViewContent/Bg/QuantityNum").getComponent(Label).string = items.length + "/" + ArtifactMgr.Instance.maxItemLength;
+        this.node.getChildByPath("__ViewContent/Bg/QuantityNum").getComponent(Label).string = items.length + "/" + ArtifactMgr.maxItemLength;
     }
 
     private _refreshMenu() {
@@ -115,7 +114,7 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
         }
     }
     private onTapArrange() {
-        ArtifactMgr.Instance.arrange(this._currentArrangeType);
+        ArtifactMgr.arrange(this._currentArrangeType);
     }
 
     private onTapSortMenuAction() {

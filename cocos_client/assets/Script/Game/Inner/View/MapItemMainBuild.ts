@@ -1,12 +1,10 @@
 import { _decorator, Component, Node, Vec2, Vec3, CCString, Prefab, instantiate } from 'cc';
 import { MapItem } from '../../../BasicView/MapItem';
-import { EventName } from '../../../Const/ConstDefine';
 import { GameMain } from '../../../GameMain';
-import ArtifactMgr from '../../../Manger/ArtifactMgr';
-import EventMgr from '../../../Manger/EventMgr';
-import UserInfoMgr, { InnerBuildingType, UserInnerBuildInfo } from '../../../Manger/UserInfoMgr';
 import { ArtifactEffectType } from '../../../Model/ArtifactData';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
+import { InnerBuildingType, UserInnerBuildInfo } from '../../../Const/Manager/UserInfoDefine';
+import { ArtifactMgr, UserInfoMgr } from '../../../Utils/Global';
 
 const { ccclass, property } = _decorator;
 
@@ -45,7 +43,7 @@ export class MapItemMainBuild extends MapItem {
         let up_time = 5;
         // artifact
         let artifactTime = 0;
-        let artifactPropEff = ArtifactMgr.Instance.getPropEffValue(UserInfoMgr.Instance.level);
+        let artifactPropEff = ArtifactMgr.getPropEffValue(UserInfoMgr.level);
         if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME]) {
             artifactTime = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME];
         }
@@ -54,7 +52,7 @@ export class MapItemMainBuild extends MapItem {
 
         this.buildingAnim.active = true;
         this.scheduleOnce(() => {
-            UserInfoMgr.Instance.upgradeBuild(InnerBuildingType.MainCity);
+            UserInfoMgr.upgradeBuild(InnerBuildingType.MainCity);
 
             this.refresh();
             this._buildUpgrading = false;
@@ -66,7 +64,7 @@ export class MapItemMainBuild extends MapItem {
         super.start();
 
         this.buildInfoUI = this.node.getChildByName('innerBuildUI')?.getComponent(InnerBuildUI);
-        const innerBuildData = await UserInfoMgr.Instance.innerBuilds;
+        const innerBuildData = await UserInfoMgr.innerBuilds;
         this._data = innerBuildData.get('0');
         this.refresh();
     }

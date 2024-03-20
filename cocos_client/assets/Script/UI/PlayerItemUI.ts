@@ -1,7 +1,6 @@
 import { _decorator, Component, Label, log, Node, Sprite, SpriteFrame, Button, ProgressBar } from 'cc';
-import PioneerMgr from '../Manger/PioneerMgr';
 import { MapPlayerPioneerModel, MapPioneerActionType, MapPioneerEventStatus } from '../Game/Outer/Model/MapPioneerModel';
-import LanMgr from '../Manger/LanMgr';
+import { LanMgr, PioneerMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerItemUI')
@@ -9,7 +8,7 @@ export class PlayerItemUI extends Component {
 
     refreshUI(model: MapPlayerPioneerModel) {
         //name
-        this._nameLabel.string = LanMgr.Instance.getLanById(model.name);
+        this._nameLabel.string = LanMgr.getLanById(model.name);
         //role
         let isSelf: boolean = true;
         for (const name of this._roleNames) {
@@ -36,7 +35,7 @@ export class PlayerItemUI extends Component {
         // eventremind
         this.node.getChildByName("EventRemind").active = model.actionType == MapPioneerActionType.eventing && model.eventStatus == MapPioneerEventStatus.Waited;
         //selected
-        this._selectedView.active = PioneerMgr.instance.getCurrentPlayerPioneer().id == model.id;
+        this._selectedView.active = PioneerMgr.getCurrentPlayerPioneer().id == model.id;
         //rebirth
         this._rebirthCountView.active = model.rebirthCountTime > 0;
         this._rebirthCountView.getChildByName("Label").getComponent(Label).string = model.rebirthCountTime + "s";

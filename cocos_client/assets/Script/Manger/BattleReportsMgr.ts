@@ -1,41 +1,14 @@
-import EventMgr from "db://assets/Script/Manger/EventMgr";
-import {EventName} from "db://assets/Script/Const/ConstDefine";
-import BranchEventMgr, {BranchEventMgrEvent} from "db://assets/Script/Manger/BranchEventMgr";
-import ConfigMgr from "db://assets/Script/Manger/ConfigMgr";
-
-export enum BattleReportType {
-    Fight = 1,
-    Mining = 2,
-    Exploring,
-}
-
-export class BattleReportRecord {
-    type: BattleReportType;
-    timestamp: number;
-    data: any;
-    unread: boolean;
-}
-
-export interface BattleReportsEvent {
-    onBattleReportListChanged?(): void;
-}
+import { EventName } from "../Const/ConstDefine";
+import { BattleReportRecord, BattleReportType, BattleReportsEvent } from "../Const/Manager/BattleReportsMgrDefine";
+import { BranchEventMgrEvent } from "../Const/Manager/BrachEventMgrDefine";
+import { BranchEventMgr, ConfigMgr, EventMgr } from "../Utils/Global";
 
 export default class BattleReportsMgr implements BranchEventMgrEvent {
-    private static _instance: BattleReportsMgr = null;
     private _storage: BattleReportRecord[];
     private readonly LOCAL_STORAGE_KEY: string = 'local_battle_reports';
 
     public get unreadCount(): number {
         return this._storage.filter(record => record.unread).length;
-    }
-
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new BattleReportsMgr();
-            this._instance._registerEvents();
-        }
-
-        return this._instance;
     }
 
     public getReports(): BattleReportRecord[] {
@@ -71,7 +44,7 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
     private _registerEvents() {
         EventMgr.on(EventName.FIGHT_FINISHED, this.onFightFinished, this);
         EventMgr.on(EventName.MINING_FINISHED, this.onMiningFinished, this);
-        BranchEventMgr.Instance.addObserver(this);
+        BranchEventMgr.addObserver(this);
     }
 
     public deleteReadReports() {
@@ -92,7 +65,7 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
     }
 
     private _autoDeleteWithMaxKeepRecords(save: boolean = true) {
-        const maxKeepRecords = ConfigMgr.Instance.getConfigById("110002")[0].para[0];
+        const maxKeepRecords = ConfigMgr.getConfigById("110002")[0].para[0];
         if (this._storage.length > maxKeepRecords) {
             console.log(`BattleReport: auto delete ${this._storage.length - maxKeepRecords} records, reason: maxKeepRecords`);
             this._storage = this._storage.slice(this._storage.length - maxKeepRecords);
@@ -103,7 +76,7 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
     }
 
     private _autoDeleteWithMaxKeepDays(save: boolean = true) {
-        const maxKeepDays = ConfigMgr.Instance.getConfigById("110000")[0].para[0];
+        const maxKeepDays = ConfigMgr.getConfigById("110000")[0].para[0];
         const expireBeforeThisTime = Date.now() - (maxKeepDays * 86400 * 1000);
         // find first index to keep.
         // requires data in array in ascending order
@@ -146,14 +119,14 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
             prevReport.data.nextStepFinished = true;
         }
 
-        const activeEventState = BranchEventMgr.Instance.latestActiveEventState;
+        const activeEventState = BranchEventMgr.latestActiveEventState;
         this._pushReport(BattleReportType.Exploring, {
             pioneerId: activeEventState.pioneerId,
             eventId: currentEventId,
             buildingId: activeEventState.buildingId,
             hasNextStep: hasNextStep,
             nextStepFinished: false,
-            rewards: BranchEventMgr.Instance.getEventItemRewards(currentEventId),
+            rewards: BranchEventMgr.getEventItemRewards(currentEventId),
         });
     }
     //#endregion
@@ -180,8 +153,4 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
         }
     }
     //#endregion
-
-    public static isReportPending(report: BattleReportRecord): boolean {
-        return report.type === BattleReportType.Exploring && report.data.hasNextStep && !report.data.nextStepFinished;
-    }
 }

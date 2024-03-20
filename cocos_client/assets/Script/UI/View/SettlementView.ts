@@ -1,14 +1,12 @@
 import { _decorator, Component, instantiate, Label, Layout, Node, UITransform, Widget } from 'cc';
-import SettlementMgr, { SettlementModel } from '../../Manger/SettlementMgr';
-import EvaluationMgr from '../../Manger/EvaluationMgr';
-import LanMgr from '../../Manger/LanMgr';
+import { EvaluationMgr, LanMgr, SettlementMgr } from '../../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('SettlementView')
 export class SettlementView extends Component {
 
     public refreshUI(beginLevel: number, endLevel: number) {
-        const model = SettlementMgr.instance.getSettlement(beginLevel, endLevel);
+        const model = SettlementMgr.getSettlement(beginLevel, endLevel);
 
         this.node.getChildByPath("Level/Before").getComponent(Label).string = "C.Lv " + beginLevel;
         this.node.getChildByPath("Level/After").getComponent(Label).string = "C.Lv " + endLevel;
@@ -17,7 +15,7 @@ export class SettlementView extends Component {
         const rightContent = this.node.getChildByPath("RightContent/SettlementContent");
         if (model.newPioneerIds.length > 0) {
             // useLanMgr
-            // leftContent.getChildByPath("NewPioneer/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            // leftContent.getChildByPath("NewPioneer/Title").getComponent(Label).string = LanMgr.getLanById("107549");
             leftContent.getChildByName("NewPioneer").active = true;
             for (const pioneerId of model.newPioneerIds) {
                 const item = instantiate(this._pioneerItem);
@@ -34,7 +32,7 @@ export class SettlementView extends Component {
 
         if (model.killEnemies > 0) {
             // useLanMgr
-            // leftContent.getChildByPath("KilledEnemies/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            // leftContent.getChildByPath("KilledEnemies/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
             leftContent.getChildByName("KilledEnemies").active = true;
             leftContent.getChildByPath("KilledEnemies/Value").getComponent(Label).string = model.killEnemies.toString();
         } else {
@@ -43,7 +41,7 @@ export class SettlementView extends Component {
 
         if (model.gainResources > 0) {
             // useLanMgr
-            // leftContent.getChildByPath("GainedResources/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            // leftContent.getChildByPath("GainedResources/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
             leftContent.getChildByName("GainedResources").active = true;
             leftContent.getChildByPath("GainedResources/Value").getComponent(Label).string = model.gainResources.toString();
         } else {
@@ -52,19 +50,19 @@ export class SettlementView extends Component {
 
         if (model.exploredEvents > 0) {
             // useLanMgr
-            // leftContent.getChildByPath("ExploredEvents/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            // leftContent.getChildByPath("ExploredEvents/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
             leftContent.getChildByName("ExploredEvents").active = true;
             leftContent.getChildByPath("ExploredEvents/Value").getComponent(Label).string = model.exploredEvents.toString();
         } else {
             leftContent.getChildByName("ExploredEvents").active = false;
         }
 
-        const evaluation = EvaluationMgr.Instance.getEvaluation(model.newPioneerIds.length, model.killEnemies, model.gainResources, model.exploredEvents);
+        const evaluation = EvaluationMgr.getEvaluation(model.newPioneerIds.length, model.killEnemies, model.gainResources, model.exploredEvents);
         if (evaluation != null) {
             // useLanMgr
-            // rightContent.getChildByPath("Evaluation/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            // rightContent.getChildByPath("Evaluation/Title").getComponent(Label).string = LanMgr.getLanById("107549");
             rightContent.getChildByName("Evaluation").active = true;
-            rightContent.getChildByPath("Evaluation/Value").getComponent(Label).string = LanMgr.Instance.getLanById(evaluation.title); 
+            rightContent.getChildByPath("Evaluation/Value").getComponent(Label).string = LanMgr.getLanById(evaluation.title); 
         } else {
             rightContent.getChildByName("Evaluation").active = false;
         }

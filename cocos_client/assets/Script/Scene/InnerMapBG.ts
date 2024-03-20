@@ -1,10 +1,9 @@
 import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3 } from 'cc';
 import { GameMain } from '../GameMain';
 import * as cc from "cc";
-import ConfigMgr from '../Manger/ConfigMgr';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { EventName } from '../Const/ConstDefine';
-import EventMgr from '../Manger/EventMgr';
+import { ConfigMgr, EventMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerMapBG')
@@ -51,7 +50,7 @@ export class InnerMapBG extends Component {
         
         this.node.on(Node.EventType.MOUSE_WHEEL, (event:cc.EventMouse)=>{
             let sc = GameMain.inst.MainCamera.orthoHeight / GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
-            let config = ConfigMgr.Instance.getConfigById("10001");
+            let config = ConfigMgr.getConfigById("10001");
             if (config.length <= 0) return;
             let useConf = config[0];
 

@@ -1,6 +1,6 @@
 import { resources } from "cc";
 import { EventName } from "../Const/ConstDefine";
-import EventMgr from "./EventMgr";
+import { EventMgr } from "../Utils/Global";
 
 export default class LanMgr {
 
@@ -35,12 +35,6 @@ export default class LanMgr {
         EventMgr.emit(EventName.CHANGE_LANG);
     }
 
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new LanMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
@@ -49,7 +43,6 @@ export default class LanMgr {
 
     }
 
-    private static _instance: LanMgr = null;
     private _configs: any = {};
     private _localLanKey: string = "local_lan";
     private async _initData() {

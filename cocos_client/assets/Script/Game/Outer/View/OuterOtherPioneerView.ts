@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, instantiate, Sprite, Quat, UITransform, misc, Label, ProgressBar, log, v3 } from 'cc';
-import LanMgr from '../../../Manger/LanMgr';
 import MapPioneerModel, { MapPioneerActionType, MapPioneerMoveDirection, MapPioneerType, MapNpcPioneerModel } from '../Model/MapPioneerModel';
+import { LanMgr } from '../../../Utils/Global';
 
 const { ccclass, property } = _decorator;
 
@@ -9,7 +9,7 @@ export class OuterOtherPioneerView extends Component {
 
     public refreshUI(pioneer: MapPioneerModel) {
         // name
-        this.node.getChildByName("name").getComponent(Label).string = LanMgr.Instance.getLanById(pioneer.name);
+        this.node.getChildByName("name").getComponent(Label).string = LanMgr.getLanById(pioneer.name);
         // role
         for (const name of this._roleNames) {
             const view = this.node.getChildByPath("role/" + name);
@@ -61,7 +61,7 @@ export class OuterOtherPioneerView extends Component {
                 this._timeCountLabel.node.active = true;
                 
                 // useLanMgr
-                this._timeCountLabel.string =  LanMgr.Instance.replaceLanById("202001", [pioneer.taskHideTime]);
+                this._timeCountLabel.string =  LanMgr.replaceLanById("202001", [pioneer.taskHideTime]);
                 // this._timeCountLabel.string = "task hide:" + pioneer.taskHideTime + "s";
                 
             } else {
@@ -77,7 +77,7 @@ export class OuterOtherPioneerView extends Component {
                     this._taskPreparingView.active = true;
 
                     // useLanMgr
-                    this._taskPreparingView.getComponent(Label).string =  LanMgr.Instance.replaceLanById("202002", [pioneer.taskCdEndTime]);
+                    this._taskPreparingView.getComponent(Label).string =  LanMgr.replaceLanById("202002", [pioneer.taskCdEndTime]);
                     // this._taskPreparingView.getComponent(Label).string = "prepare task..." + pioneer.taskCdEndTime + "s";
 
                 } else {

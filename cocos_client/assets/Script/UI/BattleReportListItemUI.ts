@@ -1,12 +1,9 @@
 import {_decorator, Button, Component, Label, Node, ProgressBar, RichText, Sprite, SpriteFrame} from 'cc';
 import CommonTools from "db://assets/Script/Tool/CommonTools";
-import BattleReportsMgr, {BattleReportRecord, BattleReportType} from "db://assets/Script/Manger/BattleReportsMgr";
-import BuildingMgr from "db://assets/Script/Manger/BuildingMgr";
-import PioneerMgr from "db://assets/Script/Manger/PioneerMgr";
 import MapHelper from "db://assets/Script/Utils/MapHelper";
 import {GameMain} from "db://assets/Script/GameMain";
-import BranchEventMgr from "db://assets/Script/Manger/BranchEventMgr";
-import LanMgr from "db://assets/Script/Manger/LanMgr";
+import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType } from '../Const/Manager/BattleReportsMgrDefine';
+import { BranchEventMgr, BuildingMgr, LanMgr, PioneerMgr } from '../Utils/Global';
 
 const {ccclass, property} = _decorator;
 
@@ -105,7 +102,7 @@ export class BattleReportListItemUI extends Component {
         this._report = report;
 
         if (this.pendingMark) {
-            this.pendingMark.active = BattleReportsMgr.isReportPending(report);
+            this.pendingMark.active = BattleReportsMgrDefine.isReportPending(report); 
         }
 
         switch (report.type) {
@@ -127,13 +124,13 @@ export class BattleReportListItemUI extends Component {
     private _initWithFightReport(report: BattleReportRecord): void {
         const data = report.data;
         const selfRoleInfo = data.attackerIsSelf ? data.attacker : data.defender;
-        this.leftNameLabel.string = LanMgr.Instance.getLanById(selfRoleInfo.name);
+        this.leftNameLabel.string = LanMgr.getLanById(selfRoleInfo.name);
         this.leftHpBar.progress = selfRoleInfo.hp / selfRoleInfo.hpMax;
         this.leftHpText.string = `${selfRoleInfo.hp} / ${selfRoleInfo.hpMax}`;
         this.leftAttackerOrDefenderSign.spriteFrame = data.attackerIsSelf ? this.attackerSign : this.defenderSign;
 
         const enemyRoleInfo = !data.attackerIsSelf ? data.attacker : data.defender;
-        this.rightNameLabel.string = LanMgr.Instance.getLanById(enemyRoleInfo.name);
+        this.rightNameLabel.string = LanMgr.getLanById(enemyRoleInfo.name);
         this.rightHpBar.progress = enemyRoleInfo.hp / enemyRoleInfo.hpMax;
         this.rightHpText.string = `${enemyRoleInfo.hp} / ${enemyRoleInfo.hpMax}`;
         this.rightAttackerOrDefenderSign.spriteFrame = !data.attackerIsSelf ? this.attackerSign : this.defenderSign;
@@ -150,10 +147,10 @@ export class BattleReportListItemUI extends Component {
     }
 
     private _initWithMiningReport(report: BattleReportRecord): void {
-        let buildingInfo = BuildingMgr.instance.getBuildingById(report.data.buildingId);
-        let pioneerInfo = PioneerMgr.instance.getPioneerById(report.data.pioneerId);
+        let buildingInfo = BuildingMgr.getBuildingById(report.data.buildingId);
+        let pioneerInfo = PioneerMgr.getPioneerById(report.data.pioneerId);
 
-        const roleName = LanMgr.Instance.getLanById(pioneerInfo.name);
+        const roleName = LanMgr.getLanById(pioneerInfo.name);
         const duration = report.data.duration; // in milliseconds
         const rewards = report.data.rewards;
 
@@ -162,20 +159,20 @@ export class BattleReportListItemUI extends Component {
         this._locationInfo = {type: "building", buildingId: buildingInfo.id};
         this.eventLocationLabel.string = this._locationString(this._locationInfo);
 
-        this.timeElapsedLabel.string = LanMgr.Instance.replaceLanById("701003", [CommonTools.formatSeconds(Math.floor(duration / 1000))]);
+        this.timeElapsedLabel.string = LanMgr.replaceLanById("701003", [CommonTools.formatSeconds(Math.floor(duration / 1000))]);
 
         this.eventTimeLabel.string = CommonTools.formatDateTime(report.timestamp);
-        this.miningResultLabel.string = LanMgr.Instance.replaceLanById("701001", ["100"]);
+        this.miningResultLabel.string = LanMgr.replaceLanById("701001", ["100"]);
 
         this._loots = rewards;
         this.lootsButton.node.active = rewards.length != 0;
     }
 
     private _initWithExploreReport(report: BattleReportRecord): void {
-        let buildingInfo = BuildingMgr.instance.getBuildingById(report.data.buildingId);
-        let pioneerInfo = PioneerMgr.instance.getPioneerById(report.data.pioneerId);
+        let buildingInfo = BuildingMgr.getBuildingById(report.data.buildingId);
+        let pioneerInfo = PioneerMgr.getPioneerById(report.data.pioneerId);
 
-        const roleName = LanMgr.Instance.getLanById(pioneerInfo.name);
+        const roleName = LanMgr.getLanById(pioneerInfo.name);
         const rewards = report.data.rewards;
 
         this.leftNameLabel.string = roleName;
@@ -209,7 +206,7 @@ export class BattleReportListItemUI extends Component {
                 pos = this._locationInfo.pos;
                 break;
             case "building":
-                let building = BuildingMgr.instance.getBuildingById(this._locationInfo.buildingId);
+                let building = BuildingMgr.getBuildingById(this._locationInfo.buildingId);
                 pos = building.stayMapPositions[0];
                 break;
             default:
@@ -232,8 +229,8 @@ export class BattleReportListItemUI extends Component {
 
     onClickBranchSelection() {
         const reportData = this.report.data;
-        const building = BuildingMgr.instance.getBuildingById(reportData.buildingId);
-        const findEvents = BranchEventMgr.Instance.getEventById(building.eventId);
+        const building = BuildingMgr.getBuildingById(reportData.buildingId);
+        const findEvents = BranchEventMgr.getEventById(building.eventId);
         if (findEvents.length == 0) {
             GameMain.inst.UI.ShowTip("Error");
             return;
@@ -241,15 +238,15 @@ export class BattleReportListItemUI extends Component {
 
         GameMain.inst.UI.battleReportsUI.show(false);
         const currentEvent = findEvents[0];
-        PioneerMgr.instance.pioneerDealWithEvent(reportData.pioneerId, reportData.buildingId, currentEvent);
+        PioneerMgr.pioneerDealWithEvent(reportData.pioneerId, reportData.buildingId, currentEvent);
     }
 
     private _locationString(locationInfo: LocationInfo): string {
         if (locationInfo.type === "building") {
-            const building = BuildingMgr.instance.getBuildingById(locationInfo.buildingId);
-            return `${LanMgr.Instance.getLanById(building.name)} <color=#a1cb7f>${CommonTools.formatMapPosition(building.stayMapPositions[0])}</color>`;
+            const building = BuildingMgr.getBuildingById(locationInfo.buildingId);
+            return `${LanMgr.getLanById(building.name)} <color=#a1cb7f>${CommonTools.formatMapPosition(building.stayMapPositions[0])}</color>`;
         } else {
-            return `${LanMgr.Instance.getLanById("701002")} <color=#a1cb7f>${CommonTools.formatMapPosition(locationInfo.pos)}</color>`;
+            return `${LanMgr.getLanById("701002")} <color=#a1cb7f>${CommonTools.formatMapPosition(locationInfo.pos)}</color>`;
         }
     }
 }

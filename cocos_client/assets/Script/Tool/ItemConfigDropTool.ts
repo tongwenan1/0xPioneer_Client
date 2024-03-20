@@ -1,11 +1,8 @@
 import { ItemConfigType } from "../Const/ConstDefine";
 import { GameMain } from "../GameMain";
-import ArtifactMgr from "../Manger/ArtifactMgr";
-import DropMgr from "../Manger/DropMgr";
-import ItemMgr from "../Manger/ItemMgr";
-import UserInfoMgr from "../Manger/UserInfoMgr";
 import ArtifactData from "../Model/ArtifactData";
 import ItemData, { ItemType } from "../Model/ItemData";
+import { ArtifactMgr, DropMgr, ItemMgr, UserInfoMgr } from "../Utils/Global";
 import CommonTools from "./CommonTools";
 
 export default class ItemConfigDropTool {
@@ -34,7 +31,7 @@ export default class ItemConfigDropTool {
 
                 } else if (type == ItemConfigType.Drop) {
                     let resultReward: { type: number, num: number, itemConfigId: string } = null;
-                    const drop = DropMgr.Instance.getDropById(id);
+                    const drop = DropMgr.getDropById(id);
                     if (drop.length > 0) {
                         const useDrop = drop[0];
                         const items: { type: number, num: number, itemConfigId: string }[] = [];
@@ -72,11 +69,11 @@ export default class ItemConfigDropTool {
             }
         }
         if (items.length > 0) {
-            ItemMgr.Instance.addItem(items);
+            ItemMgr.addItem(items);
             if (showDialog) {
                 setTimeout(()=> {
                     if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
-                        UserInfoMgr.Instance.afterCivilizationClosedShowItemDatas.push(...items);
+                        UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...items);
                     } else {
                         GameMain.inst.UI.itemInfoUI.showItem(items, true);
                     }
@@ -84,11 +81,11 @@ export default class ItemConfigDropTool {
             }
         }
         if (artifacts.length > 0) {
-            ArtifactMgr.Instance.addArtifact(artifacts);
+            ArtifactMgr.addArtifact(artifacts);
             if (showDialog) {
                 setTimeout(()=> {
                     if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
-                        UserInfoMgr.Instance.afterCivilizationClosedShowArtifactDatas.push(...artifacts);
+                        UserInfoMgr.afterCivilizationClosedShowArtifactDatas.push(...artifacts);
                     } else {
                         GameMain.inst.UI.artifactInfoUI.showItem(artifacts);
                     }

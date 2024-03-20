@@ -1,5 +1,5 @@
 import { _decorator, Vec3, Node, Animation, Prefab, instantiate, log, Component } from 'cc';
-import { InnerBuildingType } from '../Manger/UserInfoMgr';
+import { InnerBuildingType } from '../Const/Manager/UserInfoDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapInnerScene')

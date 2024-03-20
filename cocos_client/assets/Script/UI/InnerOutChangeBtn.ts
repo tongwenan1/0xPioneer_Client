@@ -1,8 +1,7 @@
 import { _decorator, Component, Node, Button, SpriteFrame, Sprite, resources, Label } from 'cc';
 import { EventName } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
-import EventMgr from '../Manger/EventMgr';
-import LanMgr from '../Manger/LanMgr';
+import { EventMgr, LanMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerOutChangeBtn')
@@ -42,12 +41,12 @@ export class InnerOutChangeBtn extends Component {
         if (GameMain.inst.isInnerScene()) {
             this._sprite.spriteFrame = this.OutIcon;
             // useLanMgr
-            // this._label.string = LanMgr.Instance.getLanById("107549");
+            this._label.string = LanMgr.getLanById("107549");
             this._label.string = "WORLD";
         } else {
             this._sprite.spriteFrame = this.InnerIcon;
             // useLanMgr
-            // this._label.string = LanMgr.Instance.getLanById("107549");
+            // this._label.string = LanMgr.getLanById("107549");
             this._label.string = "BASE";
         }
     }

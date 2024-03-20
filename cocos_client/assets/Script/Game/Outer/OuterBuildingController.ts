@@ -1,10 +1,5 @@
 import { _decorator, builtinResMgr, Component, instantiate, Node, Prefab, resources, UITransform, v2, v3, Vec2, Vec3, warn } from 'cc';
 import { GameMain } from '../../GameMain';
-import BuildingMgr, { BuildingMgrEvent } from '../../Manger/BuildingMgr';
-import EventMgr from '../../Manger/EventMgr';
-import PioneerMgr, { PioneerMgrEvent } from '../../Manger/PioneerMgr';
-import TaskMgr from '../../Manger/TaskMgr';
-import UserInfoMgr, { UserInfoEvent, FinishedEvent } from '../../Manger/UserInfoMgr';
 import { TileHexDirection, TilePos } from '../TiledMap/TileTool';
 import { MapBuildingType, BuildingFactionType, BuildingStayPosType } from './Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerActionType, MapPioneerLogicModel } from './Model/MapPioneerModel';
@@ -12,6 +7,10 @@ import { OuterBuildingView } from './View/OuterBuildingView';
 import { MapBG } from '../../Scene/MapBG';
 import { EventName } from '../../Const/ConstDefine';
 import MapDecorateModel, { MapDecoratePosMode } from './Model/MapDecorateModel';
+import { FinishedEvent, UserInfoEvent } from '../../Const/Manager/UserInfoDefine';
+import { BuildingMgrEvent } from '../../Const/Manager/BuildingMgrDefine';
+import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
+import { BuildingMgr, EventMgr, PioneerMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
 
 
 const { ccclass, property } = _decorator;
@@ -29,9 +28,9 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     private _dataLoaded: boolean = false;
     protected onLoad() {
         EventMgr.on(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
-        UserInfoMgr.Instance.addObserver(this);
-        BuildingMgr.instance.addObserver(this);
-        PioneerMgr.instance.addObserver(this);
+        UserInfoMgr.addObserver(this);
+        BuildingMgr.addObserver(this);
+        PioneerMgr.addObserver(this);
     }
 
     start() {
@@ -44,9 +43,9 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     }
 
     protected onDestroy(): void {
-        UserInfoMgr.Instance.removeObserver(this);
-        BuildingMgr.instance.removeObserver(this);
-        PioneerMgr.instance.removeObserver(this);
+        UserInfoMgr.removeObserver(this);
+        BuildingMgr.removeObserver(this);
+        PioneerMgr.removeObserver(this);
     }
 
     private onLocalDataLoadOver() {
@@ -59,7 +58,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
 
             const mapBg = this.node.getComponent(MapBG);
             // buildingPos
-            const allBuildings = BuildingMgr.instance.getAllBuilding();
+            const allBuildings = BuildingMgr.getAllBuilding();
             for (const building of allBuildings) {
                 if (building.stayPosType == BuildingStayPosType.One) {
                     // no action
@@ -78,14 +77,14 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                         newPos.push(mapBg.getAroundByDirection(originalPos, TileHexDirection.LeftBottom));
                         newPos.push(mapBg.getAroundByDirection(originalPos, TileHexDirection.RightBottom));
                     }
-                    BuildingMgr.instance.fillBuildingStayPos(building.id, newPos);
+                    BuildingMgr.fillBuildingStayPos(building.id, newPos);
                 }
             }
 
             this._refreshUI();
 
             // decorations
-            const decorates = BuildingMgr.instance.getAllDecorate();
+            const decorates = BuildingMgr.getAllDecorate();
             for (const decorate of decorates) {
                 if (decorate.posMode == MapDecoratePosMode.World) {
                     const tiledPositions: Vec2[] = [];
@@ -101,7 +100,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                             tilePos.y
                         ));
                     }
-                    BuildingMgr.instance.changeDecorateWorldPosToTiledPos(decorate.id, tiledPositions);
+                    BuildingMgr.changeDecorateWorldPosToTiledPos(decorate.id, tiledPositions);
                 }
             }
 
@@ -115,7 +114,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
             return;
         }
         let changed: boolean = false;
-        const allBuildings = BuildingMgr.instance.getAllBuilding();
+        const allBuildings = BuildingMgr.getAllBuilding();
         for (const building of allBuildings) {
             if (building.show) {
                 let temple = null;
@@ -131,7 +130,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                     changed = true;
                 }
                 if (temple != null) {
-                    temple.getComponent(OuterBuildingView).refreshUI(building, PioneerMgr.instance.getPlayerPioneer());
+                    temple.getComponent(OuterBuildingView).refreshUI(building, PioneerMgr.getPlayerPioneer());
                     if (building.stayMapPositions.length > 0) {
                         let worldPos = null;
                         if (building.stayMapPositions.length == 7) {
@@ -196,7 +195,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
             return;
         }
         let changed: boolean = false;
-        const allDecorates = BuildingMgr.instance.getAllDecorate();
+        const allDecorates = BuildingMgr.getAllDecorate();
         for (const decorate of allDecorates) {
             if (decorate.show) {
                 let temple: Node = null;
@@ -316,16 +315,16 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
             temp[0] == "buildingtoself" ||
             temp[0] == "buildinghide" ||
             temp[0] == "buildingshow") {
-            BuildingMgr.instance.dealWithTaskAction(action);
+            BuildingMgr.dealWithTaskAction(action);
         }
     }
     finishEvent(event: FinishedEvent): void {
         if (event == FinishedEvent.KillDoomsDayGangTeam) {
-            const allBuildings = BuildingMgr.instance.getAllBuilding();
+            const allBuildings = BuildingMgr.getAllBuilding();
             for (const building of allBuildings) {
                 if (building.type == MapBuildingType.city) {
-                    const task = TaskMgr.Instance.getTaskByBuilding(building.id, UserInfoMgr.Instance.currentTaskIds, UserInfoMgr.Instance.finishedEvents);
-                    BuildingMgr.instance.buildingGetTask(building.id, task);
+                    const task = TaskMgr.getTaskByBuilding(building.id, UserInfoMgr.currentTaskIds, UserInfoMgr.finishedEvents);
+                    BuildingMgr.buildingGetTask(building.id, task);
                 }
             }
         }
@@ -360,7 +359,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     buildingDidHide(buildingId: string, beacusePioneerId): void {
         this._refreshUI();
         this._refreshDecorationUI();
-        UserInfoMgr.Instance.pioneerHideBuildingCheckTaskFail(beacusePioneerId, buildingId);
+        UserInfoMgr.pioneerHideBuildingCheckTaskFail(beacusePioneerId, buildingId);
     }
     buildingDidShow(buildingId: string): void {
         this._refreshUI();

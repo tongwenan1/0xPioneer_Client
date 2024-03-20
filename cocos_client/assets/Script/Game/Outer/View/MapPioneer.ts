@@ -1,8 +1,6 @@
 import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, instantiate, Sprite, Quat, UITransform, misc, Label, ProgressBar, log, v3, color } from 'cc';
 import MapPioneerModel, { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection } from '../Model/MapPioneerModel';
-import EventMgr from '../../../Manger/EventMgr';
-import { EventName } from '../../../Const/ConstDefine';
-import LanMgr from '../../../Manger/LanMgr';
+import { LanMgr } from '../../../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapPioneer')
@@ -29,7 +27,7 @@ export class MapPioneer extends Component {
 
     public refreshUI(model: MapPioneerModel) {
         this._model = model;
-        this.nameLabel.string = LanMgr.Instance.getLanById(this._model.name);
+        this.nameLabel.string = LanMgr.getLanById(this._model.name);
         this._actionTimeStamp = this._model.actionEndTimeStamp;
         this._actionTotalTime = this._actionTimeStamp - model.actionBeginTimeStamp;
 

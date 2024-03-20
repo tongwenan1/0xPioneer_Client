@@ -6,12 +6,6 @@ export default class BoxMgr {
         return this._boxData;
     }
 
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new BoxMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
@@ -20,7 +14,6 @@ export default class BoxMgr {
 
     }
 
-    private static _instance: BoxMgr = null;
     private _boxData: any[] = null;
     private async _initData() {
         const obj: any = await new Promise((resolve) => {

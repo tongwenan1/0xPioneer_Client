@@ -18,19 +18,12 @@ export default class EvaluationMgr {
         });
     }
 
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new EvaluationMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
 
     public constructor() {}
 
-    private static _instance: EvaluationMgr = null;
     private _configs: any = [];
     private async _initData() {
         const obj: any = await new Promise((resolve) => {

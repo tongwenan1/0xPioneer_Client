@@ -20,12 +20,6 @@ export default class LvlupMgr {
         return this._visions[lvlStr] != undefined ? this._visions[lvlStr] : 0;
     }
 
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new LvlupMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
@@ -34,7 +28,6 @@ export default class LvlupMgr {
 
     }
 
-    private static _instance: LvlupMgr = null;
     private _configs: any = [];
     private _extras: any = {};
     private _hpmaxs: any = {};

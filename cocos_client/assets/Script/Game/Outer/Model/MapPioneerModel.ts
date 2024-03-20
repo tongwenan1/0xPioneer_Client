@@ -1,6 +1,6 @@
 import { Vec2, Vec3, log, v2 } from "cc";
-import { FinishedEvent } from "../../../Manger/UserInfoMgr";
 import { TilePos } from "../../TiledMap/TileTool";
+import { FinishedEvent } from "../../../Const/Manager/UserInfoDefine";
 
 export enum MapPioneerActionType {
     dead = "dead",

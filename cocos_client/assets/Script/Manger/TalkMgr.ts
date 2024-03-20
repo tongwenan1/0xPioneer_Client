@@ -9,12 +9,6 @@ export default class TalkMgr {
         return null;
     }
 
-    public static get Instance() {
-        if (!this._instance) {
-            this._instance = new TalkMgr();
-        }
-        return this._instance;
-    }
     public async initData() {
         await this._initData();
     }
@@ -23,7 +17,6 @@ export default class TalkMgr {
 
     }
 
-    private static _instance: TalkMgr = null;
     private _talks: any = null;
     private async _initData() {
         const obj = await new Promise((resolve) => {

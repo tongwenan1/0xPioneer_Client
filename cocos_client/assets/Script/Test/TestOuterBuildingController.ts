@@ -1,10 +1,8 @@
 import { _decorator, builtinResMgr, Component, instantiate, Node, Prefab, v2, v3, Vec2, Vec3, warn } from 'cc';
-import BuildingMgr from '../Manger/BuildingMgr';
-import EventMgr from '../Manger/EventMgr';
-import PioneerMgr from '../Manger/PioneerMgr';
 import { OuterBuildingView } from '../Game/Outer/View/OuterBuildingView';
 import { TestMapBG } from './TestMapBG';
 import { EventName } from '../Const/ConstDefine';
+import { BuildingMgr, EventMgr, PioneerMgr } from '../Utils/Global';
 
 const { ccclass, property } = _decorator;
 
@@ -51,7 +49,7 @@ export class TestOuterBuildingController extends Component {
     }
 
     private _refreshUI() {
-        const allBuildings = BuildingMgr.instance.getAllBuilding();
+        const allBuildings = BuildingMgr.getAllBuilding();
         for (const building of allBuildings) {
             if (building.show) {
                 let temple = null;
@@ -65,7 +63,7 @@ export class TestOuterBuildingController extends Component {
                     this._buildingMap.set(building.id, { node: temple, stayPositons: building.stayMapPositions });
                 }
                 if (temple != null) {
-                    temple.getComponent(OuterBuildingView).refreshUI(building, PioneerMgr.instance.getPlayerPioneer());
+                    temple.getComponent(OuterBuildingView).refreshUI(building, PioneerMgr.getPlayerPioneer());
                     if (building.stayMapPositions.length > 0) {
                         let worldPos = null;
                         if (building.stayMapPositions.length == 7) {

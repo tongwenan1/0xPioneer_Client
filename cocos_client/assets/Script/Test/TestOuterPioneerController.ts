@@ -1,13 +1,4 @@
 import { _decorator, Component, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
-import BranchEventMgr from '../Manger/BranchEventMgr';
-import BuildingMgr from '../Manger/BuildingMgr';
-import EventMgr from '../Manger/EventMgr';
-import PioneerMgr from '../Manger/PioneerMgr';
-import TalkMgr from '../Manger/TalkMgr';
-import TaskMgr from '../Manger/TaskMgr';
-import UserInfoMgr, { UserInfoEvent, FinishedEvent } from '../Manger/UserInfoMgr';
-import { TilePos } from '../Game/TiledMap/TileTool';
-import { BuildingFactionType, MapResourceBuildingModel } from '../Game/Outer/Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerType, MapNpcPioneerModel, MapPioneerMoveDirection, MapPioneerActionType, MapPioneerLogicModel, MapPioneerLogicType } from '../Game/Outer/Model/MapPioneerModel';
 import { OuterFightView } from '../Game/Outer/View/OuterFightView';
 import { OuterOtherPioneerView } from '../Game/Outer/View/OuterOtherPioneerView';
@@ -15,6 +6,7 @@ import { MapItemMonster } from '../Game/Outer/View/MapItemMonster';
 import { MapPioneer } from '../Game/Outer/View/MapPioneer';
 import { TestMapBG } from './TestMapBG';
 import { EventName } from '../Const/ConstDefine';
+import { EventMgr, PioneerMgr, TaskMgr, UserInfoMgr } from '../Utils/Global';
 
 
 const { ccclass, property } = _decorator;
@@ -65,22 +57,22 @@ export class TestOuterPioneerController extends Component {
         if (this._started && this._dataLoaded) {
             this._refreshUI();
             // recover, set, task, getTaskDialogShow, etc
-            PioneerMgr.instance.recoverLocalState();
+            PioneerMgr.recoverLocalState();
             // checkRookie
-            if (!UserInfoMgr.Instance.isFinishRookie) {
-                const actionPioneer = PioneerMgr.instance.getCurrentPlayerPioneer();
-                const prophetess = PioneerMgr.instance.getPioneerByName("prophetess");
+            if (!UserInfoMgr.isFinishRookie) {
+                const actionPioneer = PioneerMgr.getCurrentPlayerPioneer();
+                const prophetess = PioneerMgr.getPioneerByName("prophetess");
                 if (actionPioneer != null && prophetess != null) {
                     const paths = this.mapBG.getTiledMovePathByTiledPos(actionPioneer.stayPos, prophetess.stayPos);
                     actionPioneer.purchaseMovingPioneerId = prophetess.id;
-                    PioneerMgr.instance.pioneerBeginMove(actionPioneer.id, paths);
+                    PioneerMgr.pioneerBeginMove(actionPioneer.id, paths);
                 }
             }
         }
     }
 
     private _refreshUI() {
-        const allPioneers = PioneerMgr.instance.getAllPioneer();
+        const allPioneers = PioneerMgr.getAllPioneer();
         for (const pioneer of allPioneers) {
             if (pioneer.show) {
                 let firstInit: boolean = false;
@@ -110,7 +102,7 @@ export class TestOuterPioneerController extends Component {
 
                     } else if (pioneer.type == MapPioneerType.npc) {
                         const npcModel = pioneer as MapNpcPioneerModel;
-                        const task = TaskMgr.Instance.getTaskByNpcId(pioneer.id, npcModel.friendly, npcModel.hideTaskIds, UserInfoMgr.Instance.currentTaskIds, UserInfoMgr.Instance.finishedEvents);
+                        const task = TaskMgr.getTaskByNpcId(pioneer.id, npcModel.friendly, npcModel.hideTaskIds, UserInfoMgr.currentTaskIds, UserInfoMgr.finishedEvents);
                         if (npcModel.taskObj == null &&
                             task != null) {
                             // npc get task
@@ -132,7 +124,7 @@ export class TestOuterPioneerController extends Component {
                         temple.getComponent(OuterOtherPioneerView).refreshUI(pioneer);
 
                     } else if (pioneer.type == MapPioneerType.hred) {
-                        temple.getComponent(MapItemMonster).refreshUI(pioneer, UserInfoMgr.Instance.finishedEvents);
+                        temple.getComponent(MapItemMonster).refreshUI(pioneer, UserInfoMgr.finishedEvents);
                     }
                     if (firstInit) {
                         let worldPos = this.mapBG.getPosWorld(pioneer.stayPos.x, pioneer.stayPos.y);

@@ -1,5 +1,5 @@
 import { _decorator, Component, Label, Node, ProgressBar, Tween,v3 } from 'cc';
-import { UserInnerBuildInfo } from '../../Manger/UserInfoMgr';
+import { UserInnerBuildInfo } from '../../Const/Manager/UserInfoDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerBuildUI')

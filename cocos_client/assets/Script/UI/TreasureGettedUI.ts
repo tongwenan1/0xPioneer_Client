@@ -2,16 +2,10 @@ import { _decorator, Color, Component, Label, Node, Sprite, tween, v3, Animation
 import { PopUpUI } from '../BasicView/PopUpUI';
 import ItemData, { ItemType } from '../Model/ItemData';
 import { GameMain } from '../GameMain';
-import DropMgr from '../Manger/DropMgr';
-import ItemMgr from '../Manger/ItemMgr';
-import UserInfoMgr from '../Manger/UserInfoMgr';
-import { BackpackItem } from './BackpackItem';
 import CommonTools from '../Tool/CommonTools';
-import ItemConfigDropTool from '../Tool/ItemConfigDropTool';
 import { ItemConfigType } from '../Const/ConstDefine';
-import { ArtifactItem } from './ArtifactItem';
-import ArtifactMgr from '../Manger/ArtifactMgr';
 import ArtifactData from '../Model/ArtifactData';
+import { ArtifactMgr, DropMgr, ItemMgr, UserInfoMgr } from '../Utils/Global';
 
 
 const { ccclass, property } = _decorator;
@@ -48,14 +42,14 @@ export class TreasureGettedUI extends PopUpUI {
         itemShowNode.scale = v3(0.01, 0.01, 0.01);
         itemShowNode.active = false;
 
-        const drop = DropMgr.Instance.getDropById(box.drop);
+        const drop = DropMgr.getDropById(box.drop);
         if (drop.length > 0) {
             const useDrop = drop[0];
             if (useDrop.type == 2) {
                 // 1/3 select
                 this.scheduleOnce(()=> {
                     GameMain.inst.UI.itemSelectFromThreeUI.showItem(useDrop.id, ()=> {
-                        UserInfoMgr.Instance.getExplorationReward(box.id);
+                        UserInfoMgr.getExplorationReward(box.id);
                         if (gettedCallback) {
                             gettedCallback();
                         }
@@ -85,17 +79,17 @@ export class TreasureGettedUI extends PopUpUI {
                     framespr.color = Color.WHITE;
                     if (resultReward.type == ItemConfigType.Item) {
                         //item
-                        let itemConf = ItemMgr.Instance.getItemConf(resultReward.itemConfigId);
+                        let itemConf = ItemMgr.getItemConf(resultReward.itemConfigId);
                         if (itemConf) {
-                            iconspr.spriteFrame = await ItemMgr.Instance.getItemIcon(itemConf.icon);
+                            iconspr.spriteFrame = await ItemMgr.getItemIcon(itemConf.icon);
                             framespr.color = this.frameGradeColors[itemConf.grade - 1];
                         }
 
                     } else if (resultReward.type == ItemConfigType.Artifact) {
                         // artifact
-                        const artifactConf = ArtifactMgr.Instance.getArtifactConf(resultReward.itemConfigId);
+                        const artifactConf = ArtifactMgr.getArtifactConf(resultReward.itemConfigId);
                         if (artifactConf) {
-                            iconspr.spriteFrame = await ArtifactMgr.Instance.getItemIcon(artifactConf.icon);
+                            iconspr.spriteFrame = await ArtifactMgr.getItemIcon(artifactConf.icon);
                             framespr.color = this.frameGradeColors[artifactConf.rank - 1];
                         }
                     }
@@ -109,13 +103,13 @@ export class TreasureGettedUI extends PopUpUI {
                         .call(() => {
                             if (resultReward) {
                                 if (resultReward.type == ItemConfigType.Item) {
-                                    ItemMgr.Instance.addItem([new ItemData(resultReward.itemConfigId, resultReward.num)]);
+                                    ItemMgr.addItem([new ItemData(resultReward.itemConfigId, resultReward.num)]);
 
                                 } else if (resultReward.type == ItemConfigType.Artifact) {
-                                    ArtifactMgr.Instance.addArtifact([new ArtifactData(resultReward.itemConfigId, resultReward.num)])
+                                    ArtifactMgr.addArtifact([new ArtifactData(resultReward.itemConfigId, resultReward.num)])
                                 }
                             }
-                            UserInfoMgr.Instance.getExplorationReward(box.id);
+                            UserInfoMgr.getExplorationReward(box.id);
                             this.show(false);
                             if (gettedCallback) {
                                 gettedCallback();

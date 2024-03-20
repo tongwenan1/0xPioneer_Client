@@ -1,13 +1,9 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node } from 'cc';
 import { GameMain } from '../../GameMain';
-import PioneerMgr from '../../Manger/PioneerMgr';
-import UserInfo from '../../Manger/UserInfoMgr';
 import { PopUpUI } from '../../BasicView/PopUpUI';
-import CountMgr, { CountType } from '../../Manger/CountMgr';
-import LanMgr from '../../Manger/LanMgr';
-import EventMgr from '../../Manger/EventMgr';
 import { EventName, NPCNameLangType } from '../../Const/ConstDefine';
-import UserInfoMgr from '../../Manger/UserInfoMgr';
+import { CountMgr, EventMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../../Utils/Global';
+import { CountType } from '../../Const/Manager/CountDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -67,7 +63,7 @@ export class DialogueUI extends PopUpUI {
         }
         
         // useLanMgr
-        // this.node.getChildByPath("Dialog/NextButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("Dialog/NextButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
         const dialogView = this.node.getChildByName("Dialog");
         const selectView = this.node.getChildByName("SelectView");
@@ -83,15 +79,15 @@ export class DialogueUI extends PopUpUI {
             dialogView.getChildByName("player_name").active = false;
             if (this._roleViewNameMap.has(currentMesssage.name)) {
                 dialogView.getChildByName("name_bg").active = true;
-                dialogView.getChildByPath("name_bg/Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.name);
+                dialogView.getChildByPath("name_bg/Label").getComponent(Label).string = LanMgr.getLanById(currentMesssage.name);
 
             } else if (currentMesssage.name == NPCNameLangType.DefaultPlayer) {
 
                 dialogView.getChildByName("player_name").active = true;
-                dialogView.getChildByPath("player_name/Label").getComponent(Label).string = UserInfo.Instance.playerName;
+                dialogView.getChildByPath("player_name/Label").getComponent(Label).string = UserInfoMgr.playerName;
             }
 
-            dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.text);
+            dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.getLanById(currentMesssage.text);
 
             for (const roleName of this._roleNames) {
                 if (this._roleViewNameMap)
@@ -103,7 +99,7 @@ export class DialogueUI extends PopUpUI {
                 dialogView.getChildByName("name_bg").active = false;
                 dialogView.getChildByName("player_name").active = false;
 
-                dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.text);
+                dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.getLanById(currentMesssage.text);
 
                 for (const roleName of this._roleNames) {
                     dialogView.getChildByName(roleName).active = false;
@@ -121,7 +117,7 @@ export class DialogueUI extends PopUpUI {
                 if (i < currentMesssage.select.length) {
                     button.active = true;
 
-                    button.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById(currentMesssage.select[i]);
+                    button.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById(currentMesssage.select[i]);
 
                     button.getComponent(Button).clickEvents[0].customEventData = currentMesssage.select[i];
                 } else {
@@ -133,16 +129,16 @@ export class DialogueUI extends PopUpUI {
 
     private _talkOver() {
         //talk over
-        if (UserInfo.Instance.afterTalkItemGetData.has(this._talk.id)) {
+        if (UserInfoMgr.afterTalkItemGetData.has(this._talk.id)) {
             setTimeout(()=> {
                 if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
-                    UserInfoMgr.Instance.afterCivilizationClosedShowItemDatas.push(...UserInfo.Instance.afterTalkItemGetData.get(this._talk.id));
+                    UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...UserInfoMgr.afterTalkItemGetData.get(this._talk.id));
                 } else {
-                    GameMain.inst.UI.itemInfoUI.showItem(UserInfo.Instance.afterTalkItemGetData.get(this._talk.id), true);
+                    GameMain.inst.UI.itemInfoUI.showItem(UserInfoMgr.afterTalkItemGetData.get(this._talk.id), true);
 
                 }
             });
-            UserInfo.Instance.afterTalkItemGetData.delete(this._talk.id);
+            UserInfoMgr.afterTalkItemGetData.delete(this._talk.id);
         }
         if (this._talkOverCallback != null) {
             this._talkOverCallback();
@@ -167,22 +163,22 @@ export class DialogueUI extends PopUpUI {
         if (this._task != null) {
             if (this._task.entrypoint.result.includes(customEventData)) {
                 // get task
-                UserInfo.Instance.getNewTask(this._task);
+                UserInfoMgr.getNewTask(this._task);
     
                 // useLanMgr
-                GameMain.inst.UI.NewTaskTip(LanMgr.Instance.getLanById("202004"));
+                GameMain.inst.UI.NewTaskTip(LanMgr.getLanById("202004"));
                 // GameMain.inst.UI.NewTaskTip("New Task Taken");
     
             } else if (this._task.exitpoint != null &&
                 this._task.exitpoint.result.includes(customEventData)) {
                 // reject task action
                 for (const temp of this._task.exitpoint.action) {
-                    PioneerMgr.instance.dealWithTaskAction(temp.type, 0);
+                    PioneerMgr.dealWithTaskAction(temp.type, 0);
                 }
             }
         }
 
-        CountMgr.instance.addNewCount({
+        CountMgr.addNewCount({
             type: CountType.selectDialog,
             timeStamp: new Date().getTime(),
             data: {

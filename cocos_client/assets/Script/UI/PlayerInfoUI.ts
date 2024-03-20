@@ -1,19 +1,14 @@
 import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ProgressBar, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
-import UserInfoMgr, { UserInfoEvent } from '../Manger/UserInfoMgr';
-import LvlupMgr from '../Manger/LvlupMgr';
 import { GameMain } from '../GameMain';
-import ItemMgr from '../Manger/ItemMgr';
-import { AudioMgr } from '../Basic/AudioMgr';
-import LanMgr from '../Manger/LanMgr';
-import EventMgr from '../Manger/EventMgr';
 import { EventName, ItemConfigType } from '../Const/ConstDefine';
-import SettlementMgr from '../Manger/SettlementMgr';
 import { SettlementView } from './View/SettlementView';
 import ArtifactData from '../Model/ArtifactData';
 import ItemData from '../Model/ItemData';
 import { ArtifactItem } from './ArtifactItem';
 import { BackpackItem } from './BackpackItem';
+import { UserInfoEvent } from '../Const/Manager/UserInfoDefine';
+import { EventMgr, LanMgr, LvlupMgr, UserInfoMgr, AudioMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfoUI')
@@ -89,7 +84,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
         EventMgr.on(EventName.LOADING_FINISH, this._loadOver, this);
         EventMgr.on(EventName.CHANGE_LANG, this._onChangeLang, this);
 
-        UserInfoMgr.Instance.addObserver(this);
+        UserInfoMgr.addObserver(this);
 
     }
 
@@ -105,7 +100,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
         EventMgr.off(EventName.LOADING_FINISH, this._loadOver, this);
         EventMgr.off(EventName.CHANGE_LANG, this._onChangeLang, this);
 
-        UserInfoMgr.Instance.removeObserver(this);
+        UserInfoMgr.removeObserver(this);
     }
 
     // ---------------- UserInfoEvent
@@ -157,7 +152,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
     }
 
     private _loadOver() {
-        this._selectLang = LanMgr.Instance.getLang();
+        this._selectLang = LanMgr.getLang();
         this._refreshUI();
     }
 
@@ -181,29 +176,29 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
 
         const lang = new Map();
         // useLanMgr 
-        // lang.set("eng", LanMgr.Instance.getLanById("107549"));
-        // lang.set("cn", LanMgr.Instance.getLanById("107549"));
+        // lang.set("eng", LanMgr.getLanById("107549"));
+        // lang.set("cn", LanMgr.getLanById("107549"));
         lang.set("eng", "English");
         lang.set("cn", "Chinese");
 
         // useLanMgr
-        // infoBtn.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // summaryBtn.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // achievementBtn.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // settingBtn.getChildByName("Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // infoBtn.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // summaryBtn.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // achievementBtn.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // settingBtn.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
-        // infoView.getChildByPath("NextLevel/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549"); 
+        // infoView.getChildByPath("NextLevel/Label").getComponent(Label).string = LanMgr.getLanById("107549"); 
 
-        //  summaryView.getChildByName("Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549"); 
-        //  summaryView.getChildByName("EmptyTip").getComponent(Label).string = LanMgr.Instance.getLanById("107549"); 
+        //  summaryView.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById("107549"); 
+        //  summaryView.getChildByName("EmptyTip").getComponent(Label).string = LanMgr.getLanById("107549"); 
 
-        // settingView.getChildByName("Music").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // settingView.getChildByName("SFX").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // settingView.getChildByName("Language").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // settingView.getChildByName("Music").getComponent(Label).string = LanMgr.getLanById("107549");
+        // settingView.getChildByName("SFX").getComponent(Label).string = LanMgr.getLanById("107549");
+        // settingView.getChildByName("Language").getComponent(Label).string = LanMgr.getLanById("107549");
 
-        // this._changeNameView.getChildByPath("Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this._changeNameView.getChildByPath("Content/UserName").getComponent(EditBox).placeholder = LanMgr.Instance.getLanById("107549");
-        // this._changeNameView.getChildByPath("Content/ConfirmButton/Label").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this._changeNameView.getChildByPath("Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._changeNameView.getChildByPath("Content/UserName").getComponent(EditBox).placeholder = LanMgr.getLanById("107549");
+        // this._changeNameView.getChildByPath("Content/ConfirmButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
         this._langSelectView.getChildByPath("View/Content/English").getComponent(Label).string = lang.get("eng");
         this._langSelectView.getChildByPath("View/Content/Chinese").getComponent(Label).string = lang.get("cn");
@@ -222,27 +217,27 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
         const currentShowView = this._tabViews[this._selectIndex];
         if (this._selectIndex == 0) {
             // info
-            let currentLevel = UserInfoMgr.Instance.level;
-            currentShowView.getChildByPath("UserID/UserID").getComponent(Label).string = "ID: " + UserInfoMgr.Instance.playerID;
+            let currentLevel = UserInfoMgr.level;
+            currentShowView.getChildByPath("UserID/UserID").getComponent(Label).string = "ID: " + UserInfoMgr.playerID;
             // useLanMgr 
-            // currentShowView.getChildByPath("UserName/UserName").getComponent(Label).string = LanMgr.Instance.getLanById("107549") + ":" + UserInfoMgr.Instance.playerName;
-            currentShowView.getChildByPath("UserName/UserName").getComponent(Label).string = "Name: " + UserInfoMgr.Instance.playerName;
+            // currentShowView.getChildByPath("UserName/UserName").getComponent(Label).string = LanMgr.getLanById("107549") + ":" + UserInfoMgr.playerName;
+            currentShowView.getChildByPath("UserName/UserName").getComponent(Label).string = "Name: " + UserInfoMgr.playerName;
 
             // useLanMgr 
-            // currentShowView.getChildByPath("UserLCivilizationLv/UserLCivilizationLv").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            // currentShowView.getChildByPath("UserLCivilizationLv/UserLCivilizationLv").getComponent(Label).string = LanMgr.getLanById("107549");
             currentShowView.getChildByPath("UserCivilizationLv/Label").getComponent(Label).string = currentLevel.toString();
 
             // useLanMgr 
-            // currentShowView.getChildByPath("RewardContent/CityVersion/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-            currentShowView.getChildByPath("RewardContent/CityVersion/Value").getComponent(Label).string = "+" + LvlupMgr.Instance.getTotalVisionByLvl(currentLevel);
+            // currentShowView.getChildByPath("RewardContent/CityVersion/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+            currentShowView.getChildByPath("RewardContent/CityVersion/Value").getComponent(Label).string = "+" + LvlupMgr.getTotalVisionByLvl(currentLevel);
 
             // useLanMgr 
-            // currentShowView.getChildByPath("RewardContent/ResGetRateUp/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-            currentShowView.getChildByPath("RewardContent/ResGetRateUp/Value").getComponent(Label).string = "+" + LvlupMgr.Instance.getTotalExtraRateByLvl(currentLevel) * 100 + "%";
+            // currentShowView.getChildByPath("RewardContent/ResGetRateUp/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+            currentShowView.getChildByPath("RewardContent/ResGetRateUp/Value").getComponent(Label).string = "+" + LvlupMgr.getTotalExtraRateByLvl(currentLevel) * 100 + "%";
 
             // useLanMgr 
-            // currentShowView.getChildByPath("RewardContent/GetHpMax/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-            currentShowView.getChildByPath("RewardContent/GetHpMax/Value").getComponent(Label).string = "+" + LvlupMgr.Instance.getTotalHpMaxByLvl(currentLevel);
+            // currentShowView.getChildByPath("RewardContent/GetHpMax/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+            currentShowView.getChildByPath("RewardContent/GetHpMax/Value").getComponent(Label).string = "+" + LvlupMgr.getTotalHpMaxByLvl(currentLevel);
 
         } else if (this._selectIndex == 1) {
             // summary
@@ -255,7 +250,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
             }
             this._settleUseSelectItems = [];
 
-            let currentLevel: number = UserInfoMgr.Instance.level;
+            let currentLevel: number = UserInfoMgr.level;
             const gap: number = 4;
             const settleCount: number = Math.floor(currentLevel / gap);
             if (settleCount <= 0) {
@@ -299,17 +294,17 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
         } else if (this._selectIndex == 2) {
             // setting
             const bgmSlider = currentShowView.getChildByName("MusicVolumeSlider").getComponent(Slider);
-            bgmSlider.progress = AudioMgr.instance.musicVolume;
-            currentShowView.getChildByName("MusicProgressBar").getComponent(ProgressBar).progress = AudioMgr.instance.musicVolume;
+            bgmSlider.progress = AudioMgr.musicVolume;
+            currentShowView.getChildByName("MusicProgressBar").getComponent(ProgressBar).progress = AudioMgr.musicVolume;
 
             const effectSlider = currentShowView.getChildByName("SfxVolumeSlider").getComponent(Slider);
-            effectSlider.progress = AudioMgr.instance.effectVolume;
-            currentShowView.getChildByName("SfxProgressBar").getComponent(ProgressBar).progress = AudioMgr.instance.effectVolume;
+            effectSlider.progress = AudioMgr.effectVolume;
+            currentShowView.getChildByName("SfxProgressBar").getComponent(ProgressBar).progress = AudioMgr.effectVolume;
 
             currentShowView.getChildByPath("LanguageMenu/LanguageBtn/Label").getComponent(Label).string = lang.get(this._selectLang);
 
             // useLanMgr
-            // currentShowView.getChildByName("ResetButton").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            // currentShowView.getChildByName("ResetButton").getComponent(Label).string = LanMgr.getLanById("107549");
 
         } else if (this._selectIndex == 3) {
             // xx reversed   
@@ -317,14 +312,14 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
     }
 
     private async _refreshNextLevelView() {
-        const nextLevel = UserInfoMgr.Instance.level + 1;
+        const nextLevel = UserInfoMgr.level + 1;
         // useLanMgr 
-        // this._nextLevelView.getChildByPath("NextLevelInfo/UserCivilizationLv/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549")
+        // this._nextLevelView.getChildByPath("NextLevelInfo/UserCivilizationLv/Title").getComponent(Label).string = LanMgr.getLanById("107549")
         this._nextLevelView.getChildByPath("NextLevelInfo/UserCivilizationLv/NextLevel").getComponent(Label).string = nextLevel.toString();
 
         const rewardView = this._nextLevelView.getChildByPath("NextLevelInfo/RewardContent");
         const maxTip = this._nextLevelView.getChildByPath("NextLevelInfo/MaxTip");
-        const nextLvConfig = LvlupMgr.Instance.getConfigByLvl(nextLevel);
+        const nextLvConfig = LvlupMgr.getConfigByLvl(nextLevel);
         if (nextLvConfig.length > 0) {
             const levelConfig = nextLvConfig[0];
 
@@ -332,13 +327,13 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
             const content = rewardView;
             content.getChildByName("CityVersion").active = levelConfig.city_vision != null && levelConfig.city_vision > 0;
             // useLanMgr 
-            // content.getChildByPath("CityVersion/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+            // content.getChildByPath("CityVersion/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
             content.getChildByPath("CityVersion/Value").getComponent(Label).string = "+" + levelConfig.city_vision;
 
             if (levelConfig.extra_res != null && levelConfig.extra_res > 0) {
                 content.getChildByName("ResGetRateUp").active = true;
                 // useLanMgr
-                // content.getChildByPath("ResGetRateUp/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+                // content.getChildByPath("ResGetRateUp/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
                 content.getChildByPath("ResGetRateUp/Value").getComponent(Label).string = "+" + levelConfig.extra_res * 100 + "%";
             } else {
                 content.getChildByName("ResGetRateUp").active = false;
@@ -347,7 +342,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
             if (levelConfig.hp_max != null && levelConfig.hp_max > 0) {
                 content.getChildByName("GetHpMax").active = true;
                 // useLanMgr 
-                // content.getChildByPath("GetHpMax/Content/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+                // content.getChildByPath("GetHpMax/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
                 content.getChildByPath("GetHpMax/Value").getComponent(Label).string = "+" + levelConfig.hp_max;
             } else {
                 content.getChildByName("GetHpMax").active = false;
@@ -425,11 +420,11 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
         const changedName: string = this._changeNameView.getChildByPath("Content/UserName").getComponent(EditBox).string;
         if (changedName.length <= 0) {
             // useLanMgr
-            // LanMgr.Instance.getLanById("107549")
+            // LanMgr.getLanById("107549")
             GameMain.inst.UI.ShowTip("Name cannot be empty");
             return;
         }
-        UserInfoMgr.Instance.playerName = changedName;
+        UserInfoMgr.playerName = changedName;
         this._refreshUI();
         this._changeNameView.active = false;
     }
@@ -466,13 +461,13 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
     private onBgmVolumeChanged() {
         const bgmSlider = this.node.getChildByPath("Content/tabContents/SettingsContent/MusicVolumeSlider").getComponent(Slider);
         this.node.getChildByPath("Content/tabContents/SettingsContent/MusicProgressBar").getComponent(ProgressBar).progress = bgmSlider.progress;
-        AudioMgr.instance.changeMusicVolume(bgmSlider.progress);
+        AudioMgr.changeMusicVolume(bgmSlider.progress);
         this._refreshUI();
     }
     private onEffectVolumeChanged() {
         const effectSlider = this.node.getChildByPath("Content/tabContents/SettingsContent/SfxVolumeSlider").getComponent(Slider);
         this.node.getChildByPath("Content/tabContents/SettingsContent/SfxProgressBar").getComponent(ProgressBar).progress = effectSlider.progress;
-        AudioMgr.instance.changeEffectVolume(effectSlider.progress);
+        AudioMgr.changeEffectVolume(effectSlider.progress);
         this._refreshUI();
     }
     private onTapLangSelectShow() {
@@ -484,7 +479,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
     }
     private onTapLangItem(event: Event, customEventData: string) {
         this._selectLang = customEventData;
-        LanMgr.Instance.changeLang(this._selectLang);
+        LanMgr.changeLang(this._selectLang);
         this._refreshUI();
         this._langSelectView.active = false;
         this.node.getChildByPath("Content/tabContents/SettingsContent/LanguageMenu/LanguageBtn/Arrow").angle = 0;

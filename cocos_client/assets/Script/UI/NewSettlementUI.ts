@@ -1,27 +1,19 @@
 import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
-import UserInfoMgr from '../Manger/UserInfoMgr';
-import LvlupMgr from '../Manger/LvlupMgr';
-import { GameMain } from '../GameMain';
-import { BackpackItem } from './BackpackItem';
-import ItemMgr from '../Manger/ItemMgr';
-import { AudioMgr } from '../Basic/AudioMgr';
-import LanMgr from '../Manger/LanMgr';
-import EventMgr from '../Manger/EventMgr';
 import { EventName } from '../Const/ConstDefine';
-import SettlementMgr from '../Manger/SettlementMgr';
 import { SettlementView } from './View/SettlementView';
+import { EventMgr, LanMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('NewSettlementUI')
 export class NewSettlementUI extends PopUpUI {
-    
+
     public refreshUI(beginLevel: number, endLevel: number) {
         this._beginLevel = beginLevel;
         this._endLevel = endLevel;
         // useLanMgr 
-        // this.node.getChildByPath("SummaryContent/Title").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
-        // this.node.getChildByPath("SummaryContent/BottomTitle").getComponent(Label).string = LanMgr.Instance.getLanById("107549");
+        // this.node.getChildByPath("SummaryContent/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("SummaryContent/BottomTitle").getComponent(Label).string = LanMgr.getLanById("107549");
         this.node.getChildByPath("SummaryContent/Content").getComponent(SettlementView).refreshUI(beginLevel, endLevel);
     }
 
@@ -32,7 +24,7 @@ export class NewSettlementUI extends PopUpUI {
     }
 
     start() {
-           
+
     }
 
     update(deltaTime: number) {

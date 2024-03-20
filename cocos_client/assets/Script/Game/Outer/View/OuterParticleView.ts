@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, ParticleSystem2D, v3 } from 'cc';
-import EventMgr from '../../../Manger/EventMgr';
 import { EventName } from '../../../Const/ConstDefine';
+import { EventMgr } from '../../../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterParticleView')
