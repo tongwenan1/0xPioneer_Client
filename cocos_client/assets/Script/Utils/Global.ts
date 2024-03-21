@@ -21,7 +21,6 @@ import user from "../Manger/UserInfoMgr";
 import audio from "../Basic/AudioMgr";
 
 const ArtifactMgr = new af();
-const BattleReportsMgr = new br();
 const BoxMgr = new box();
 const BranchEventMgr = new Be();
 const BuildingMgr = new bd();
@@ -40,6 +39,8 @@ const SettlementMgr = new s();
 const TalkMgr = new t();
 const TaskMgr = new tk();
 const UserInfoMgr = new user();
+const BattleReportsMgr = new br();
+
 const AudioMgr = new audio();
 
 export {
