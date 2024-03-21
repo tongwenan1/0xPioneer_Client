@@ -79,6 +79,7 @@ export class MapItemMainBuild extends MapItem {
             this.buildNode.setPosition(new Vec3(0, 0, 0));
 
         }
+        this.node.getChildByName("innerBuildUI").setSiblingIndex(99);
     }
 
     update(deltaTime: number) {
