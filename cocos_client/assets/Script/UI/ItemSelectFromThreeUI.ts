@@ -63,7 +63,7 @@ export class ItemSelectFromThreeUI extends PopUpUI {
                     tempView.active = true;
 
                     // bg 
-                    for (let i = 2; i <= 4; i++) {
+                    for (let i = 2; i <= 5; i++) {
                         tempView.getChildByPath("Bg/Rank_" + i).active = config.rank == i;
                     }
 
