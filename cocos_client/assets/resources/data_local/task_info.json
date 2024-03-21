@@ -254,7 +254,7 @@
         "entrypoint": {
             "type": "talkwithnpc|npc_0",
             "talk": "talk04",
-            "result": "504006;504007?",
+            "result": "504006;504007",
             "cdtimecount": "5"
         },
         "steps": [
