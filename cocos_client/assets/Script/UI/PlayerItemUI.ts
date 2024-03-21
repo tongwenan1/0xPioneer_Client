@@ -14,6 +14,9 @@ export class PlayerItemUI extends Component {
         let isSelf: boolean = true;
         for (const name of this._roleNames) {
             this.node.getChildByPath("bg/" + name).active = name == model.animType;
+            if (this.node.getChildByPath("bg/" + name).active) {
+                isSelf = false;
+            }
         }
         this.node.getChildByPath("bg/pioneer_default").active = isSelf;
         //status
