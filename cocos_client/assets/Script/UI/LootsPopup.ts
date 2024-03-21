@@ -1,35 +1,34 @@
 import {_decorator, instantiate, Node, Prefab} from 'cc';
 import {BackpackItem} from './BackpackItem';
-import {PopUpUI} from '../BasicView/PopUpUI';
 import ItemData from "db://assets/Script/Model/ItemData";
+import ViewController from '../BasicView/ViewController';
+import { UIPanelMgr } from '../Utils/Global';
 
 const {ccclass, property} = _decorator;
 
 
 @ccclass('LootsPopup')
-export class LootsPopup extends PopUpUI {
+export class LootsPopup extends ViewController {
+
+    public showItems(items: { id: string, num: number }[]) {
+        this._items = items;
+        this._refreshUI();
+    }
+
     @property(Prefab)
     BackpackItemPfb: Prefab;
 
     @property(Node)
     itemsParentNode: Node;
-
+    
     private _items: { id: string, num: number }[];
 
-    override get typeName(): string {
-        return "LootsPopup";
-    }
+    protected viewDidStart(): void {
+        super.viewDidStart();
 
-    start() {
         this._refreshUI();
     }
-
-    public showItems(items: { id: string, num: number }[]) {
-        this._items = items;
-        this._refreshUI();
-        this.show(true);
-    }
-
+    
     private _refreshUI() {
         const items = this._items;
 
@@ -48,6 +47,6 @@ export class LootsPopup extends PopUpUI {
     }
 
     private onTapClose() {
-        this.show(false);
+        UIPanelMgr.removePanelByNode(this.node);
     }
 }

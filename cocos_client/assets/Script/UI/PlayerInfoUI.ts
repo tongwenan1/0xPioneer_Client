@@ -91,13 +91,11 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
 
     protected viewDidStart(): void {
         super.viewDidStart();
-        console.log("exce start");
     }
 
     protected viewDidAppear(): void {
         super.viewDidAppear();
 
-        console.log("exce appear");
         this._refreshUI();
     }
     

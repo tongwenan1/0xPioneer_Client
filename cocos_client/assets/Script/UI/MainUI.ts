@@ -1,12 +1,9 @@
 import { _decorator, Component, Node, Button, SpriteFrame, Sprite, Label, Prefab, instantiate, tiledLayerAssembler, Tween, v3, tween, math, randomRangeInt, Color, LabelOutline, ImageAsset } from 'cc';
 import { GameMain } from '../GameMain';import { TilePos } from '../Game/TiledMap/TileTool';
-import { BaseUI } from '../BasicView/BaseUI';
-import { PopUpUI } from '../BasicView/PopUpUI';
 import { ClaimRewardUI } from './ClaimRewardUI';
 import { ECursorStyle, EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { ArtifactUI } from './ArtifactUI';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
-import { LootsPopup } from "db://assets/Script/UI/LootsPopup";
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
 import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { BattleReportsEvent } from '../Const/Manager/BattleReportsMgrDefine';
@@ -21,7 +18,7 @@ import { NewSettlementUI } from './NewSettlementUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('MainUI')
-export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, BattleReportsEvent {
+export class MainUI extends Component implements PioneerMgrEvent, UserInfoEvent, BattleReportsEvent {
 
     @property(Node)
     UIRoot: Node;
@@ -29,24 +26,8 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     @property([ImageAsset])
     cursorImages: ImageAsset[] = [];
 
-
-    @property(Prefab)
-    LootsPopupPfb: Prefab;
-
-
-    @property(Prefab)
-    ArtifactUIPfb: Prefab;
-    @property(Prefab)
-    ArtifactInfoUIPfb: Prefab;
-
-
     @property([SpriteFrame])
     ResourceIconSpriteFrame: SpriteFrame[] = [];
-
-    public lootsPopupUI: LootsPopup;
-
-    public artifactUI: ArtifactUI;
-    public artifactInfoUI: ArtifactInfoUI;
 
     private _claimRewardUI: ClaimRewardUI;
 
@@ -83,21 +64,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     }
 
     async start() {
-       
-        this.lootsPopupUI = instantiate(this.LootsPopupPfb).getComponent(LootsPopup);
-        this.lootsPopupUI.node.setParent(this.UIRoot);
-        this.lootsPopupUI.node.active = false;
-
-
-
-
-        this.artifactUI = instantiate(this.ArtifactUIPfb).getComponent(ArtifactUI);
-        this.artifactUI.node.setParent(this.UIRoot);
-        this.artifactUI.node.active = false;
-        this.artifactInfoUI = instantiate(this.ArtifactInfoUIPfb).getComponent(ArtifactInfoUI);
-        this.artifactInfoUI.node.setParent(this.UIRoot);
-        this.artifactInfoUI.node.active = false;
-
         this._claimRewardUI = this.node.getChildByName("reward_ui").getComponent(ClaimRewardUI);
 
         EventMgr.on(EventName.SCENE_CHANGE, this.onSceneChange, this);
@@ -118,8 +84,8 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
             await UIPanelMgr.openPanel(UIName.Backpack);
         }, this);
 
-        this.artifactBtn.node.on(Button.EventType.CLICK, () => {
-            GameMain.inst.UI.artifactUI.show(true, true);
+        this.artifactBtn.node.on(Button.EventType.CLICK, async () => {
+            await UIPanelMgr.openPanel(UIName.Artifact);
         }, this);
 
         this.battleReportsBtn.node.on(Button.EventType.CLICK, async () => {
@@ -168,8 +134,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     }
 
     onSceneChange() {
-
-        PopUpUI.hideAllShowingPopUpUI();
         // this.LoadingUINode.active = true;
 
         // let thisptr = this;

@@ -14,5 +14,7 @@ export enum UIName {
     ItemInfoUI = "ItemInfoUI",
     ItemSelectFromThreeUI = "ItemSelectFromThreeUI",
     BattleReportUI = "BattleReportUI",
-    
+    LootsPopup = "LootsPopup",
+    Artifact = "Artifact",
+    ArtifactInfoUI = "ArtifactInfoUI",
 }

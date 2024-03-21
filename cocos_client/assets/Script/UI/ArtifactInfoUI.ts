@@ -6,15 +6,15 @@ import {
     RichText,
     Color,
 } from "cc";
-import { PopUpUI } from "../BasicView/PopUpUI";
 import { ArtifactItem } from "./ArtifactItem";
-import { ArtifactMgr, LanMgr, UserInfoMgr } from "../Utils/Global";
+import { ArtifactMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import ArtifactData from "../Model/ArtifactData";
 import { ArtifactEffectRankColor } from "../Const/Model/ArtifactModelDefine";
+import ViewController from "../BasicView/ViewController";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactInfoUI")
-export class ArtifactInfoUI extends PopUpUI {
+export class ArtifactInfoUI extends ViewController {
     public async showItem(artifacts: ArtifactData[], closeCallback: () => void = null) {
         this._artifacts = artifacts;
         this._closeCallback = closeCallback;
@@ -104,7 +104,6 @@ export class ArtifactInfoUI extends PopUpUI {
                     content.getChildByName("DescTxt").getComponent(RichText).string = LanMgr.getLanById(config.des);
                 }
             }
-            this.show(true, true);
         }
     }
 
@@ -115,7 +114,9 @@ export class ArtifactInfoUI extends PopUpUI {
     private _stableEffectItem: Node = null;
     private _lockedEffectItem: Node = null;
     private _unlockEffectItem: Node = null;
-    onLoad(): void {
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
         this._allEffectViews = [];
 
         this._stableEffectItem = this.node.getChildByPath("__ViewContent/EffectContent/StableEffect");
@@ -127,15 +128,18 @@ export class ArtifactInfoUI extends PopUpUI {
         this._unlockEffectItem = this.node.getChildByPath("__ViewContent/EffectContent/UnLockEffect");
         this._unlockEffectItem.active = false;
     }
-
-    start() {
-
+    protected viewPopAnimation(): boolean {
+        return true;
     }
-
+    protected contentView(): Node {
+        return this.node.getChildByName("__ViewContent");
+    }
+   
     //---------------------------------------------------- action
-    private onTapClose() {
+    private async onTapClose() {
         if (this._artifacts.length <= 0) {
-            this.show(false, true);
+            await this.playExitAnimation();
+            UIPanelMgr.removePanelByNode(this.node);
             if (this._closeCallback != null) {
                 this._closeCallback();
             }

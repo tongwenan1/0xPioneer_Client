@@ -235,7 +235,6 @@ export class BattleReportsUI extends ViewController implements BattleReportsEven
 
     private _getReportsFiltered() {
         const reports = BattleReportsMgr.getReports();
-        console.log("exce allr:", reports);
         if (!reports) {
             return [];
         }

@@ -3,6 +3,7 @@ import { UIName } from "../Const/ConstUIDefine";
 import { GameMain } from "../GameMain";
 import ArtifactData from "../Model/ArtifactData";
 import ItemData from "../Model/ItemData";
+import { ArtifactInfoUI } from "../UI/ArtifactInfoUI";
 import { ItemInfoUI } from "../UI/ItemInfoUI";
 import { ArtifactMgr, DropMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import CommonTools from "./CommonTools";
@@ -89,12 +90,15 @@ export default class ItemConfigDropTool {
         if (artifacts.length > 0) {
             ArtifactMgr.addArtifact(artifacts);
             if (showDialog) {
-                setTimeout(() => {
+                setTimeout(async () => {
                     if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
                         UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
                         UserInfoMgr.afterCivilizationClosedShowArtifactDatas.push(...artifacts);
                     } else {
-                        GameMain.inst.UI.artifactInfoUI.showItem(artifacts);
+                        const view = await UIPanelMgr.openPanel(UIName.ArtifactInfoUI);
+                        if (view != null) {
+                            view.getComponent(ArtifactInfoUI).showItem(artifacts);
+                        }
                     }
                 });
             }

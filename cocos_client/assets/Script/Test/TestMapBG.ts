@@ -1,6 +1,5 @@
 import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3 } from 'cc';
 import * as cc from "cc";
-import { PopUpUI } from '../BasicView/PopUpUI';
 import { TilePos, TileMapHelper, TileHexDirection } from '../Game/TiledMap/TileTool';
 import { EventName } from '../Const/ConstDefine';
 import { ConfigMgr, EventMgr, LocalDataLoader } from '../Utils/Global';
@@ -91,7 +90,6 @@ export class TestMapBG extends Component {
 
             downx = event.getLocation().x;
             downy = event.getLocation().y;
-            PopUpUI.hideAllShowingPopUpUI();
 
             mouseActionBeginTimeStamp = new Date().getTime();
         }, this);

@@ -1,17 +1,19 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
-import { PopUpUI } from '../BasicView/PopUpUI';
 import { EventName } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactItem } from './ArtifactItem';
 import { ArtifactArrangeType, ArtifactMgrEvent } from '../Const/Manager/ArtifactMgrDefine';
-import { ArtifactMgr, EventMgr, LanMgr } from '../Utils/Global';
+import { ArtifactMgr, EventMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
+import ViewController from '../BasicView/ViewController';
+import { UIName } from '../Const/ConstUIDefine';
+import { ArtifactInfoUI } from './ArtifactInfoUI';
 const { ccclass, property } = _decorator;
 
 
 @ccclass('ArtifactUI')
-export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
-    
+export class ArtifactUI extends ViewController implements ArtifactMgrEvent {
+
 
 
     @property(Prefab)
@@ -25,7 +27,9 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
     private _allItemViews: Node[] = null;
     private _sortMenu: Node = null;
     private _menuArrow: Node = null;
-    onLoad(): void {
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
         this._sortMenu = this.node.getChildByPath("__ViewContent/SortMenu");
         this._sortMenu.active = false;
 
@@ -38,7 +42,9 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
         EventMgr.on(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
     }
 
-    start() {
+    protected viewDidStart(): void {
+        super.viewDidStart();
+
         ArtifactMgr.addObserver(this);
 
         this._allItemViews = [];
@@ -60,14 +66,24 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
         }
         this._itemContent.getComponent(Layout).updateLayout();
 
-        this._refreshArtifactUI();    
+        this._refreshArtifactUI();
     }
 
-    onDestroy(): void {
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
+
         ArtifactMgr.removeObserver(this);
 
         EventMgr.off(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
     }
+
+    protected viewPopAnimation(): boolean {
+        return true;
+    }
+    protected contentView(): Node {
+        return this.node.getChildByName("__ViewContent");
+    }
+
 
     private async _refreshArtifactUI() {
         if (this._allItemViews == null) {
@@ -101,16 +117,20 @@ export class ArtifactUI extends PopUpUI implements ArtifactMgrEvent {
     }
 
     //------------------------------------------------------------ action
-    private onTapClose() {
+    private async onTapClose() {
         this._selectSortMenuShow = false;
         this._refreshMenu();
-        this.show(false, true);
+        await this.playExitAnimation();
+        UIPanelMgr.removePanelByNode(this.node);
     }
-    private onTapItem(event: Event, customEventData: string) {
+    private async onTapItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
         if (index < this._itemDatas.length) {
             const itemData = this._itemDatas[index];
-            GameMain.inst.UI.artifactInfoUI.showItem([itemData]);
+            const view = await UIPanelMgr.openPanel(UIName.ArtifactInfoUI);
+            if (view != null) {
+                view.getComponent(ArtifactInfoUI).showItem([itemData]);
+            }
         }
     }
     private onTapArrange() {

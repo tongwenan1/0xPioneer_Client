@@ -4,6 +4,7 @@ import { LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
 import { ItemInfoUI } from '../ItemInfoUI';
+import { ArtifactInfoUI } from '../ArtifactInfoUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('SecretGuardGettedUI')
@@ -52,7 +53,10 @@ export class SecretGuardGettedUI extends ViewController {
                     UserInfoMgr.afterCivilizationClosedShowItemDatas = [];
                 }
                 if (UserInfoMgr.afterCivilizationClosedShowArtifactDatas.length > 0) {
-                    GameMain.inst.UI.artifactInfoUI.showItem(UserInfoMgr.afterCivilizationClosedShowArtifactDatas);
+                    const view = await UIPanelMgr.openPanel(UIName.ArtifactInfoUI);
+                    if (view != null) {
+                        view.getComponent(ArtifactInfoUI).showItem(UserInfoMgr.afterCivilizationClosedShowArtifactDatas);
+                    }
                     UserInfoMgr.afterCivilizationClosedShowArtifactDatas = [];
                 }
             })

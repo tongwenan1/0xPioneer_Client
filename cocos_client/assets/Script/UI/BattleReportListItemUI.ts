@@ -5,6 +5,7 @@ import {GameMain} from "db://assets/Script/GameMain";
 import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, LocationInfo } from '../Const/Manager/BattleReportsMgrDefine';
 import { BranchEventMgr, BuildingMgr, LanMgr, PioneerMgr, UIPanelMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
+import { LootsPopup } from './LootsPopup';
 
 const {ccclass, property} = _decorator;
 
@@ -97,8 +98,6 @@ export class BattleReportListItemUI extends Component {
 
     public initWithReportData(report: BattleReportRecord): void {
         this._report = report;
-        console.log("exce rep: ", report);
-
         if (this.pendingMark) {
             this.pendingMark.active = BattleReportsMgrDefine.isReportPending(report); 
         }
@@ -216,13 +215,15 @@ export class BattleReportListItemUI extends Component {
         MapHelper.highlightPosOnOuterMap(pos);
     }
 
-    private onClickLoots() {
+    private async onClickLoots() {
         if (!this._loots) {
             console.error("BattleReportListItemUI._loots empty");
             return;
         }
-
-        GameMain.inst.UI.lootsPopupUI.showItems(this._loots);
+        const view = await UIPanelMgr.openPanel(UIName.LootsPopup);
+        if (view != null) {
+            view.getComponent(LootsPopup).showItems(this._loots);
+        }
     }
 
     onClickBranchSelection() {

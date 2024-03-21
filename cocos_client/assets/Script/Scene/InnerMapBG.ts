@@ -1,7 +1,6 @@
 import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3 } from 'cc';
 import { GameMain } from '../GameMain';
 import * as cc from "cc";
-import { PopUpUI } from '../BasicView/PopUpUI';
 import { EventName } from '../Const/ConstDefine';
 import { ConfigMgr, EventMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
@@ -34,7 +33,6 @@ export class InnerMapBG extends Component {
 
             downx = event.getLocation().x;
             downy = event.getLocation().y;
-            PopUpUI.hideAllShowingPopUpUI();
         }, this);
 
         this.node.on(Node.EventType.MOUSE_UP, (event: cc.EventMouse) => {

@@ -1,5 +1,4 @@
 import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
-import { PopUpUI } from '../BasicView/PopUpUI';
 import { EventName } from '../Const/ConstDefine';
 import { SettlementView } from './View/SettlementView';
 import { EventMgr, LanMgr, UIPanelMgr } from '../Utils/Global';

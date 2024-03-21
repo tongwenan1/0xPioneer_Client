@@ -1,5 +1,4 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt, Layout, Color } from 'cc';
-import { PopUpUI } from '../BasicView/PopUpUI';
 import { ItemConfigType, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import { ArtifactItem } from './ArtifactItem';
@@ -7,6 +6,8 @@ import { ArtifactMgr, DropMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Glob
 import { ArtifactEffectRankColor } from '../Const/Model/ArtifactModelDefine';
 import ArtifactData from '../Model/ArtifactData';
 import ViewController from '../BasicView/ViewController';
+import { UIName } from '../Const/ConstUIDefine';
+import { ArtifactInfoUI } from './ArtifactInfoUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemSelectFromThreeUI')
@@ -129,8 +130,10 @@ export class ItemSelectFromThreeUI extends ViewController {
         const index: number = parseInt(customEventData);
         const item = this._items[index];
         ArtifactMgr.addArtifact([item]);
-        GameMain.inst.UI.artifactInfoUI.showItem([item]);
-
+        const view = await UIPanelMgr.openPanel(UIName.ArtifactInfoUI);
+        if (view != null) {
+            view.getComponent(ArtifactInfoUI).showItem([item]);
+        }
         if (this._selectedCallback != null) {
             this._selectedCallback();
         }
@@ -144,7 +147,11 @@ export class ItemSelectFromThreeUI extends ViewController {
         if (energyNum >= needNum) {
             ArtifactMgr.addArtifact(this._items);
             ItemMgr.subItem(ResourceCorrespondingItem.Energy, needNum);
-            GameMain.inst.UI.artifactInfoUI.showItem(this._items);
+
+            const view = await UIPanelMgr.openPanel(UIName.ArtifactInfoUI);
+            if (view != null) {
+                view.getComponent(ArtifactInfoUI).showItem(this._items);
+            }
             if (this._selectedCallback != null) {
                 this._selectedCallback();
             }

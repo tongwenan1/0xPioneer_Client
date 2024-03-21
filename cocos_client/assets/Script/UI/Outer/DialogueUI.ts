@@ -1,6 +1,5 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node } from 'cc';
 import { GameMain } from '../../GameMain';
-import { PopUpUI } from '../../BasicView/PopUpUI';
 import { EventName, NPCNameLangType } from '../../Const/ConstDefine';
 import { CountMgr, EventMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { CountType } from '../../Const/Manager/CountMgrDefine';

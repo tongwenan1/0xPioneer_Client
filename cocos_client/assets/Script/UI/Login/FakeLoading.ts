@@ -32,7 +32,6 @@ export class FakeLoading extends Component {
             }
             resources.preloadDir("preload/icon", ()=> {
                 ResourcesMgr.Init((err: Error, file: any)=> {
-                    console.log("exce gomain")
                     director.loadScene("main");
                 });
             });

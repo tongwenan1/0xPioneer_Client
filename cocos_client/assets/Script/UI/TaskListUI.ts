@@ -1,6 +1,4 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node } from 'cc';
-import { PopUpUI } from '../BasicView/PopUpUI';
-import { GameMain } from '../GameMain';
 import CommonTools from '../Tool/CommonTools';
 import { EventName } from '../Const/ConstDefine';
 import MapHelper from "db://assets/Script/Utils/MapHelper";
