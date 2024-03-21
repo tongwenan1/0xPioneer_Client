@@ -1,8 +1,10 @@
 import { ItemConfigType } from "../Const/ConstDefine";
+import { UIName } from "../Const/ConstUIDefine";
 import { GameMain } from "../GameMain";
 import ArtifactData from "../Model/ArtifactData";
 import ItemData from "../Model/ItemData";
-import { ArtifactMgr, DropMgr, ItemMgr, UserInfoMgr } from "../Utils/Global";
+import { ItemInfoUI } from "../UI/ItemInfoUI";
+import { ArtifactMgr, DropMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import CommonTools from "./CommonTools";
 
 export default class ItemConfigDropTool {
@@ -24,7 +26,7 @@ export default class ItemConfigDropTool {
                 let tempArtifact: ArtifactData = null;
 
                 if (type == ItemConfigType.Item) {
-                    tempItem = new ItemData(id, num); 
+                    tempItem = new ItemData(id, num);
 
                 } else if (type == ItemConfigType.Artifact) {
                     tempArtifact = new ArtifactData(id, num);
@@ -65,18 +67,21 @@ export default class ItemConfigDropTool {
                 }
                 if (tempArtifact != null) {
                     artifacts.push(tempArtifact);
-                }  
+                }
             }
         }
         if (items.length > 0) {
             ItemMgr.addItem(items);
             if (showDialog) {
-                setTimeout(()=> {
-                    if (GameMain.inst.UI.civilizationLevelUpUI.node.active ||
-                        GameMain.inst.UI.serectGuardGettedUI.node.active) {
+                setTimeout(async () => {
+                    if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
+                        UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
                         UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...items);
                     } else {
-                        GameMain.inst.UI.itemInfoUI.showItem(items, true);
+                        const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                        if (view != null) {
+                            view.getComponent(ItemInfoUI).showItem(items, true);
+                        }
                     }
                 });
             }
@@ -84,9 +89,9 @@ export default class ItemConfigDropTool {
         if (artifacts.length > 0) {
             ArtifactMgr.addArtifact(artifacts);
             if (showDialog) {
-                setTimeout(()=> {
-                    if (GameMain.inst.UI.civilizationLevelUpUI.node.active ||
-                        GameMain.inst.UI.serectGuardGettedUI.node.active) {
+                setTimeout(() => {
+                    if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
+                        UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
                         UserInfoMgr.afterCivilizationClosedShowArtifactDatas.push(...artifacts);
                     } else {
                         GameMain.inst.UI.artifactInfoUI.showItem(artifacts);

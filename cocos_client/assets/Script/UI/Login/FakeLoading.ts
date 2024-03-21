@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, resources, Prefab, AssetManager } from 'cc';
 import { Web3Helper } from '../../Game/MetaMask/EthHelper';
 import { md5 } from '../../Utils/Md5';
-import { ConfigMgr, LocalDataLoader, UserInfoMgr } from '../../Utils/Global';
+import { ConfigMgr, LocalDataLoader, ResourcesMgr, UserInfoMgr } from '../../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('FakeLoading')
@@ -31,8 +31,12 @@ export class FakeLoading extends Component {
                 return;
             }
             resources.preloadDir("preload/icon", ()=> {
-                director.loadScene("main");
+                ResourcesMgr.Init((err: Error, file: any)=> {
+                    console.log("exce gomain")
+                    director.loadScene("main");
+                });
             });
+            
         });
 
         {

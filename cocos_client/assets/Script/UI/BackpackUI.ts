@@ -1,16 +1,18 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
 import { BackpackItem } from './BackpackItem';
-import { PopUpUI } from '../BasicView/PopUpUI';
 import { EventName } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import { ItemArrangeType, ItemMgrEvent } from '../Const/Manager/ItemMgrDefine';
-import { EventMgr, ItemMgr, LanMgr } from '../Utils/Global';
+import { EventMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
 import ItemData from '../Model/ItemData';
+import ViewController from '../BasicView/ViewController';
+import { UIName } from '../Const/ConstUIDefine';
+import { ItemInfoUI } from './ItemInfoUI';
 const { ccclass, property } = _decorator;
 
 
 @ccclass('BackpackUI')
-export class BackpackUI extends PopUpUI implements ItemMgrEvent {
+export class BackpackUI extends ViewController implements ItemMgrEvent {
 
 
     @property(Prefab)
@@ -24,7 +26,10 @@ export class BackpackUI extends PopUpUI implements ItemMgrEvent {
     private _allItemViews: Node[] = null;
     private _sortMenu: Node = null;
     private _menuArrow: Node = null;
-    onLoad(): void {
+
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
         this._sortMenu = this.node.getChildByPath("__ViewContent/SortMenu");
         this._sortMenu.active = false;
 
@@ -36,8 +41,10 @@ export class BackpackUI extends PopUpUI implements ItemMgrEvent {
 
         EventMgr.on(EventName.CHANGE_LANG, this._refreshBackpackUI, this);
     }
+    
+    protected viewDidStart(): void {
+        super.viewDidStart();
 
-    start() {
         ItemMgr.addObserver(this);
 
         this._allItemViews = [];
@@ -62,11 +69,20 @@ export class BackpackUI extends PopUpUI implements ItemMgrEvent {
         this._refreshBackpackUI();
     }
 
-    onDestroy(): void {
-        ItemMgr.removeObserver(this);
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
 
+        ItemMgr.removeObserver(this);
         EventMgr.off(EventName.CHANGE_LANG, this._refreshBackpackUI, this);
     }
+
+    protected viewPopAnimation(): boolean {
+        return true;
+    }
+    protected contentView(): Node {
+        return this.node.getChildByPath("__ViewContent");
+    }
+
 
     private async _refreshBackpackUI() {
         if (this._allItemViews == null) {
@@ -101,18 +117,21 @@ export class BackpackUI extends PopUpUI implements ItemMgrEvent {
         this._sortMenu.getChildByPath("Content/Type/ImgScreenSelect").active = this._currentArrangeType == ItemArrangeType.Type;
 
     }
-
     //------------------------------------------------------------ action
-    private onTapClose() {
+    private async onTapClose() {
         this._selectSortMenuShow = false;
         this._refreshMenu();
-        this.show(false, true);
+        await this.playExitAnimation();
+        UIPanelMgr.removePanelByNode(this.node);
     }
-    private onTapItem(event: Event, customEventData: string) {
+    private async onTapItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
         if (index < this._itemDatas.length) {
             const itemData = this._itemDatas[index];
-            GameMain.inst.UI.itemInfoUI.showItem([itemData]);
+            const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+            if (view != null) {
+                view.getComponent(ItemInfoUI).showItem([itemData]);
+            }
         }
     }
     private onTapArrange() {

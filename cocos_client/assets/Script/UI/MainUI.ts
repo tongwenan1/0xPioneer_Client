@@ -3,31 +3,20 @@ import { GameMain } from '../GameMain';import { TilePos } from '../Game/TiledMap
 import { BaseUI } from '../BasicView/BaseUI';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { ClaimRewardUI } from './ClaimRewardUI';
-import { EventUI } from './Outer/EventUI';
-import { SecretGuardGettedUI } from './Outer/SecretGuardGettedUI';
-import { TreasureGettedUI } from './TreasureGettedUI';
-import { TaskListUI } from './TaskListUI';
-import { BackpackUI } from './BackpackUI';
-import { ItemInfoUI } from './ItemInfoUI';
-import { DialogueUI } from './Outer/DialogueUI';
-import { RecruitUI } from './Inner/RecruitUI';
-import { ECursorStyle, EventName } from '../Const/ConstDefine';
-import { BattleReportsUI } from "db://assets/Script/UI/BattleReportsUI";
-import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
+import { ECursorStyle, EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { ArtifactUI } from './ArtifactUI';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
-import { PlayerInfoUI } from './PlayerInfoUI';
-import { NewSettlementUI } from './NewSettlementUI';
 import { LootsPopup } from "db://assets/Script/UI/LootsPopup";
-import { BuildingUpgradeUI } from './Inner/BuildingUpgradeUI';
-import { ItemSelectFromThreeUI } from './ItemSelectFromThreeUI';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
 import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { BattleReportsEvent } from '../Const/Manager/BattleReportsMgrDefine';
-import { BattleReportsMgr, EventMgr, LanMgr, LocalDataLoader, PioneerMgr, UserInfoMgr } from '../Utils/Global';
+import { BattleReportsMgr, EventMgr, LanMgr, LocalDataLoader, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import { MouseCursor } from './MouseCursor';
+import { UIName } from '../Const/ConstUIDefine';
+import { TaskListUI } from './TaskListUI';
+import { NewSettlementUI } from './NewSettlementUI';
 
 const { ccclass, property } = _decorator;
 
@@ -40,36 +29,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     @property([ImageAsset])
     cursorImages: ImageAsset[] = [];
 
-    @property(Prefab)
-    private dialoguePrefab: Prefab;
-    @property(Prefab)
-    private secretGuardGettedPrefab: Prefab;
-    @property(Prefab)
-    private treasureGettedPrefab: Prefab;
-    @property(Prefab)
-    private taskListPrefab: Prefab;
-    @property(Prefab)
-    private recruitPrefab: Prefab;
-    @property(Prefab)
-    private eventPrefab: Prefab;
-    @property(Prefab)
-    private civilizationLevelUpPrefab: Prefab;
-    @property(Prefab)
-    private playerInfoPrefab: Prefab;
-    @property(Prefab)
-    private newSettlementPrfab: Prefab;
-    @property(Prefab)
-    private buildingUpgradePrefab: Prefab;
-
-    @property(Prefab)
-    BackpackUIPfb: Prefab;
-    @property(Prefab)
-    ItemInfoUIPfb: Prefab;
-    @property(Prefab)
-    ItemSelectFromThreePrb: Prefab;
-
-    @property(Prefab)
-    BattleReportsUIPfb: Prefab;
 
     @property(Prefab)
     LootsPopupPfb: Prefab;
@@ -84,22 +43,6 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     @property([SpriteFrame])
     ResourceIconSpriteFrame: SpriteFrame[] = [];
 
-
-    public dialogueUI: DialogueUI;
-    public serectGuardGettedUI: SecretGuardGettedUI;
-    public treasureGettedUI: TreasureGettedUI;
-    public taskListUI: TaskListUI;
-    public recruitUI: RecruitUI;
-    public eventUI: EventUI;
-    public civilizationLevelUpUI: CivilizationLevelUpUI;
-    public playerInfoUI: PlayerInfoUI;
-    public newSettlementUI: NewSettlementUI;
-    public buildingUpgradeUI: BuildingUpgradeUI;
-
-    public backpackUI: BackpackUI;
-    public itemInfoUI: ItemInfoUI;
-    public itemSelectFromThreeUI: ItemSelectFromThreeUI;
-    public battleReportsUI: BattleReportsUI;
     public lootsPopupUI: LootsPopup;
 
     public artifactUI: ArtifactUI;
@@ -140,63 +83,7 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
     }
 
     async start() {
-        this.dialogueUI = instantiate(this.dialoguePrefab).getComponent(DialogueUI);
-        this.dialogueUI.node.setParent(this.UIRoot);
-        this.dialogueUI.node.active = false;
-
-
-        this.serectGuardGettedUI = instantiate(this.secretGuardGettedPrefab).getComponent(SecretGuardGettedUI);
-        this.serectGuardGettedUI.node.setParent(this.UIRoot);
-        this.serectGuardGettedUI.node.active = false;
-
-        this.treasureGettedUI = instantiate(this.treasureGettedPrefab).getComponent(TreasureGettedUI);
-        this.treasureGettedUI.node.setParent(this.UIRoot);
-        this.treasureGettedUI.node.active = false;
-
-        this.taskListUI = instantiate(this.taskListPrefab).getComponent(TaskListUI);
-        this.taskListUI.node.setParent(this.UIRoot);
-        this.taskListUI.node.active = false;
-
-        this.recruitUI = instantiate(this.recruitPrefab).getComponent(RecruitUI);
-        this.recruitUI.node.setParent(this.UIRoot);
-        this.recruitUI.node.active = false;
-
-        this.eventUI = instantiate(this.eventPrefab).getComponent(EventUI);
-        this.eventUI.node.setParent(this.UIRoot);
-        this.eventUI.node.active = false;
-
-        this.civilizationLevelUpUI = instantiate(this.civilizationLevelUpPrefab).getComponent(CivilizationLevelUpUI);
-        this.civilizationLevelUpUI.node.setParent(this.UIRoot);
-        this.civilizationLevelUpUI.node.active = false;
-
-        this.playerInfoUI = instantiate(this.playerInfoPrefab).getComponent(PlayerInfoUI);
-        this.playerInfoUI.node.setParent(this.UIRoot);
-        this.playerInfoUI.node.active = false;
-
-        this.newSettlementUI = instantiate(this.newSettlementPrfab).getComponent(NewSettlementUI);
-        this.newSettlementUI.node.setParent(this.UIRoot);
-        this.newSettlementUI.node.active = false;
-
-        this.buildingUpgradeUI = instantiate(this.buildingUpgradePrefab).getComponent(BuildingUpgradeUI);
-        this.buildingUpgradeUI.node.setParent(this.UIRoot);
-        this.buildingUpgradeUI.node.active = false;
-
-        this.backpackUI = instantiate(this.BackpackUIPfb).getComponent(BackpackUI);
-        this.backpackUI.node.setParent(this.UIRoot);
-        this.backpackUI.node.active = false;
-
-        this.itemInfoUI = instantiate(this.ItemInfoUIPfb).getComponent(ItemInfoUI);
-        this.itemInfoUI.node.setParent(this.UIRoot);
-        this.itemInfoUI.node.active = false;
-        // select reward from three
-        this.itemSelectFromThreeUI = instantiate(this.ItemSelectFromThreePrb).getComponent(ItemSelectFromThreeUI);
-        this.itemSelectFromThreeUI.node.setParent(this.UIRoot);
-        this.itemSelectFromThreeUI.node.active = false;
-
-
-        this.battleReportsUI = instantiate(this.BattleReportsUIPfb).getComponent(BattleReportsUI);
-        this.battleReportsUI.node.setParent(this.UIRoot);
-        this.battleReportsUI.node.active = false;
+       
         this.lootsPopupUI = instantiate(this.LootsPopupPfb).getComponent(LootsPopup);
         this.lootsPopupUI.node.setParent(this.UIRoot);
         this.lootsPopupUI.node.active = false;
@@ -227,17 +114,16 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
             this.checkCanShowGansterComingTip(bigGanster.id);
         }
 
-
-        this.backpackBtn.node.on(Button.EventType.CLICK, () => {
-            GameMain.inst.UI.backpackUI.show(true, true);
+        this.backpackBtn.node.on(Button.EventType.CLICK, async () => {
+            await UIPanelMgr.openPanel(UIName.Backpack);
         }, this);
 
         this.artifactBtn.node.on(Button.EventType.CLICK, () => {
             GameMain.inst.UI.artifactUI.show(true, true);
         }, this);
 
-        this.battleReportsBtn.node.on(Button.EventType.CLICK, () => {
-            GameMain.inst.UI.battleReportsUI.show(true);
+        this.battleReportsBtn.node.on(Button.EventType.CLICK, async () => {
+            await UIPanelMgr.openPanel(UIName.BattleReportUI);
         }, this);
         this.updateBattleReportsUnreadCount();
     }
@@ -321,20 +207,24 @@ export class MainUI extends BaseUI implements PioneerMgrEvent, UserInfoEvent, Ba
 
     }
 
-    private onTapNewSettlementTip() {
+    private async onTapNewSettlementTip() {
         const currentData = localStorage.getItem("local_newSettle");
         if (currentData != null) {
             const beginLevel = parseInt(currentData.split("|")[0]);
             const endLevel = parseInt(currentData.split("|")[1]);
-            this.newSettlementUI.refreshUI(beginLevel, endLevel);
-            this.newSettlementUI.show(true);
+            const view = await UIPanelMgr.openPanel(UIName.NewSettlementUI);
+            if (view != null) {
+                view.getComponent(NewSettlementUI).refreshUI(beginLevel, endLevel);
+            }
             localStorage.removeItem("local_newSettle");
             this._refreshSettlememntTip();
         }
     }
-    private onTapTaskList() {
-        GameMain.inst.UI.taskListUI.refreshUI();
-        GameMain.inst.UI.taskListUI.show(true);
+    private async onTapTaskList() {
+        const view = await UIPanelMgr.openPanel(UIName.TaskListUI);
+        if (view != null) {
+            view.getComponent(TaskListUI).refreshUI();
+        }
     }
 
 

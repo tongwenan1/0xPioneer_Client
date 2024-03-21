@@ -1,16 +1,18 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import { GameMain } from '../../GameMain';
-import { PopUpUI } from '../../BasicView/PopUpUI';
 import { EventName, ItemConfigType } from '../../Const/ConstDefine';
-import { BranchEventMgr, BuildingMgr, CountMgr, EventMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UserInfoMgr } from '../../Utils/Global';
+import { BranchEventMgr, BuildingMgr, CountMgr, EventMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { CountType } from '../../Const/Manager/CountMgrDefine';
 import { MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import ItemData from '../../Model/ItemData';
 import { ItemType } from '../../Const/Model/ItemModelDefine';
+import ViewController from '../../BasicView/ViewController';
+import { UIName } from '../../Const/ConstUIDefine';
+import { ItemInfoUI } from '../ItemInfoUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
-export class EventUI extends PopUpUI {
+export class EventUI extends ViewController {
 
     public eventUIShow(triggerPioneerId: string, eventBuildingId: string, event: any, fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => void, dealWithNextEvent: (event: any) => void) {
         this._triggerPioneerId = triggerPioneerId;
@@ -19,10 +21,6 @@ export class EventUI extends PopUpUI {
         this._dealWithNextEvent = dealWithNextEvent;
 
         this._refreshUI(event);
-    }
-
-    public override get typeName() {
-        return "EventUI";
     }
 
     private _triggerPioneerId: string = null;
@@ -43,7 +41,9 @@ export class EventUI extends PopUpUI {
 
     private _dialogSelectItems: Node[] = [];
 
-    onLoad(): void {
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
         this._contentView = this.node.getChildByPath("content");
 
         this._dialogView = this._contentView.getChildByName("dialog");
@@ -56,15 +56,9 @@ export class EventUI extends PopUpUI {
         EventMgr.on(EventName.CHANGE_LANG, this._refreshUI, this);
     }
 
-    start() {
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
 
-    }
-
-    update(deltaTime: number) {
-
-    }
-
-    onDestroy(): void {
         EventMgr.off(EventName.CHANGE_LANG, this._refreshUI, this);
     }
 
@@ -296,7 +290,7 @@ export class EventUI extends PopUpUI {
         return temple;
     }
 
-    private _loseOrGainItemAndResource(datas: any[], cost: boolean): string {
+    private async _loseOrGainItemAndResource(datas: any[], cost: boolean): Promise<string> {
         let showTip: string = "";
         const itemDatas: ItemData[] = [];
         for (const temple of datas) {
@@ -344,12 +338,15 @@ export class EventUI extends PopUpUI {
             }
             if (hasItem) {
                 this._contentView.active = false;
-                GameMain.inst.UI.itemInfoUI.showItem(itemDatas, true, () => {
-                    this._contentView.active = true;
-                });
+                const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                if (view != null) {
+                    view.getComponent(ItemInfoUI).showItem(itemDatas, true, () => {
+                        this._contentView.active = true;
+                    });
+                }
             }
+            return showTip;
         }
-        return showTip;
     }
 
     private _nextEvent(eventId: string) {
@@ -392,12 +389,12 @@ export class EventUI extends PopUpUI {
             // useLanMgr
             GameMain.inst.UI.ShowTip(LanMgr.getLanById("207010"));
             // GameMain.inst.UI.ShowTip("Event Ended");
-            this.show(false);
+            UIPanelMgr.removePanelByNode(this.node);
         } else {
             const event = BranchEventMgr.getEventById(eventId);
             if (event.length > 0) {
                 BuildingMgr.changeBuildingEventId(this._eventBuildingId, event[0].id);
-                this.show(false);
+                UIPanelMgr.removePanelByNode(this.node);
                 if (this._dealWithNextEvent != null) {
                     this._dealWithNextEvent(event[0]);
                 }
@@ -455,7 +452,7 @@ export class EventUI extends PopUpUI {
 
         if (this._triggerPioneerId != null) {
             localStorage.setItem("local_event_last_title_" + this._triggerPioneerId, datas[1]);
-        } 
+        }
         let hasNextStep = event.length > 0;
 
         // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}, next: ${eventId}`);

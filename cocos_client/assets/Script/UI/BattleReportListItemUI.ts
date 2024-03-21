@@ -3,7 +3,8 @@ import CommonTools from "db://assets/Script/Tool/CommonTools";
 import MapHelper from "db://assets/Script/Utils/MapHelper";
 import {GameMain} from "db://assets/Script/GameMain";
 import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, LocationInfo } from '../Const/Manager/BattleReportsMgrDefine';
-import { BranchEventMgr, BuildingMgr, LanMgr, PioneerMgr } from '../Utils/Global';
+import { BranchEventMgr, BuildingMgr, LanMgr, PioneerMgr, UIPanelMgr } from '../Utils/Global';
+import { UIName } from '../Const/ConstUIDefine';
 
 const {ccclass, property} = _decorator;
 
@@ -96,6 +97,7 @@ export class BattleReportListItemUI extends Component {
 
     public initWithReportData(report: BattleReportRecord): void {
         this._report = report;
+        console.log("exce rep: ", report);
 
         if (this.pendingMark) {
             this.pendingMark.active = BattleReportsMgrDefine.isReportPending(report); 
@@ -210,7 +212,7 @@ export class BattleReportListItemUI extends Component {
                 return;
         }
 
-        GameMain.inst.UI.battleReportsUI.show(false);
+        UIPanelMgr.removePanel(UIName.BattleReportUI);
         MapHelper.highlightPosOnOuterMap(pos);
     }
 
@@ -231,8 +233,7 @@ export class BattleReportListItemUI extends Component {
             GameMain.inst.UI.ShowTip("Error");
             return;
         }
-
-        GameMain.inst.UI.battleReportsUI.show(false);
+        UIPanelMgr.removePanel(UIName.BattleReportUI);
         const currentEvent = findEvents[0];
         PioneerMgr.pioneerDealWithEvent(reportData.pioneerId, reportData.buildingId, currentEvent);
     }

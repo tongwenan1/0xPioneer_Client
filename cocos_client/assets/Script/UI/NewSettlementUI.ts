@@ -2,11 +2,12 @@ import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layo
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { EventName } from '../Const/ConstDefine';
 import { SettlementView } from './View/SettlementView';
-import { EventMgr, LanMgr } from '../Utils/Global';
+import { EventMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
+import ViewController from '../BasicView/ViewController';
 const { ccclass, property } = _decorator;
 
 @ccclass('NewSettlementUI')
-export class NewSettlementUI extends PopUpUI {
+export class NewSettlementUI extends ViewController {
 
     public refreshUI(beginLevel: number, endLevel: number) {
         this._beginLevel = beginLevel;
@@ -19,19 +20,14 @@ export class NewSettlementUI extends PopUpUI {
 
     private _beginLevel: number;
     private _endLevel: number;
-    onLoad(): void {
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
         EventMgr.on(EventName.CHANGE_LANG, this._onLangChanged, this);
     }
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
 
-    start() {
-
-    }
-
-    update(deltaTime: number) {
-
-    }
-
-    onDestroy() {
         EventMgr.off(EventName.CHANGE_LANG, this._onLangChanged, this);
     }
 
@@ -44,7 +40,7 @@ export class NewSettlementUI extends PopUpUI {
     //----------------------------------------------------------------------
     // action
     private onTapClose() {
-        this.show(false);
+        UIPanelMgr.removePanelByNode(this.node);
     }
 }
 

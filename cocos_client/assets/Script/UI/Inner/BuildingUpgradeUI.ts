@@ -1,17 +1,17 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node, Sprite } from 'cc';
-import { PopUpUI } from '../../BasicView/PopUpUI';
 import { GameMain } from '../../GameMain';
 import CommonTools from '../../Tool/CommonTools';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { ItemMgrEvent } from '../../Const/Manager/ItemMgrDefine';
 import { InnerBuildingType, UserInnerBuildInfo } from '../../Const/Manager/UserInfoMgrDefine';
-import { ArtifactMgr, EventMgr, InnerBuildingMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, EventMgr, InnerBuildingMgr, ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { ArtifactEffectType } from '../../Const/Model/ArtifactModelDefine';
+import ViewController from '../../BasicView/ViewController';
 const { ccclass } = _decorator;
 
 @ccclass('BuildingUpgradeUI')
-export class BuildingUpgradeUI extends PopUpUI implements ItemMgrEvent {
-    
+export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
+
     public refreshUI() {
         const buildingInfoView = this.node.getChildByPath("__ViewContent/BuildingInfoView");
 
@@ -46,7 +46,10 @@ export class BuildingUpgradeUI extends PopUpUI implements ItemMgrEvent {
     private _levelInfoShowCostItems: Node[] = [];
 
     private _curBuildingType: InnerBuildingType = null;
-    onLoad(): void {
+
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
         this._barracksBtn = this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/BarracksBg").getComponent(Button);
         this._housesBtn = this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/ResidentialBg").getComponent(Button);
 
@@ -59,22 +62,23 @@ export class BuildingUpgradeUI extends PopUpUI implements ItemMgrEvent {
         ItemMgr.addObserver(this);
     }
 
-    start() {
-        
-    }
-    update(deltaTime: number) {
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
 
-    }
-
-    onDestroy() {
         EventMgr.off(EventName.CHANGE_LANG, this._onLangChang, this);
         ItemMgr.removeObserver(this);
+    }
+    protected viewPopAnimation(): boolean {
+        return true;
+    }
+    protected contentView(): Node {
+        return this.node.getChildByPath("__ViewContent");
     }
 
     private _onLangChang() {
         this.refreshUI();
     }
-    
+
     private _refreshUpgradeUI(buildingType: InnerBuildingType) {
         if (buildingType == null) {
             return;
@@ -164,7 +168,7 @@ export class BuildingUpgradeUI extends PopUpUI implements ItemMgrEvent {
     private onTapBuildingUpgradeHide() {
         this._closeBuildingUpgradeUI();
     }
-    private onTapBuildingUpgrade(event: Event, customEventData: string) {
+    private async onTapBuildingUpgrade(event: Event, customEventData: string) {
         const buildingType: InnerBuildingType = customEventData as InnerBuildingType;
         const userInnerData = UserInfoMgr.innerBuilds.get(buildingType);
         const innerBuildData = InnerBuildingMgr.getInfoById(buildingType);
@@ -221,12 +225,15 @@ export class BuildingUpgradeUI extends PopUpUI implements ItemMgrEvent {
 
             EventMgr.emit(EventName.BUILD_BEGIN_UPGRADE, { buildingType: buildingType, time: up_time });
             this._closeBuildingUpgradeUI();
-            this.show(false, true);
+
+            await this.playExitAnimation();
+            UIPanelMgr.removePanelByNode(this.node);
         }
     }
 
-    private onTapClose() {
-        this.show(false, true);
+    private async onTapClose() {
+        await this.playExitAnimation();
+        UIPanelMgr.removePanelByNode(this.node);
     }
 
     //------------------- ItemMgrEvent

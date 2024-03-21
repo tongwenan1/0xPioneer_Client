@@ -1,5 +1,4 @@
 import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ProgressBar, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
-import { PopUpUI } from '../BasicView/PopUpUI';
 import { GameMain } from '../GameMain';
 import { EventName, ItemConfigType } from '../Const/ConstDefine';
 import { SettlementView } from './View/SettlementView';
@@ -8,11 +7,12 @@ import ItemData from '../Model/ItemData';
 import { ArtifactItem } from './ArtifactItem';
 import { BackpackItem } from './BackpackItem';
 import { UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
-import { EventMgr, LanMgr, LvlupMgr, UserInfoMgr, AudioMgr } from '../Utils/Global';
+import { EventMgr, LanMgr, LvlupMgr, UserInfoMgr, AudioMgr, UIPanelMgr } from '../Utils/Global';
+import ViewController from '../BasicView/ViewController';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfoUI')
-export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
+export class PlayerInfoUI extends ViewController implements UserInfoEvent {
 
     private _selectIndex: number = 0;
     private _selectSettleIndex: number = 0;
@@ -22,7 +22,6 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
     private _tabViews: Node[] = [];
     private _tabButtons: Node[] = [];
 
-    private _settlementItem: Node = null;
     private _changeNameView: Node = null;
     private _nextLevelView: Node = null;
     private _rewardItem: Node = null;
@@ -30,16 +29,19 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
     private _showRewardItems: Node[] = [];
     private _showArtifactItems: Node[] = [];
 
+
+    private _settlementItem: Node = null;
+    private _settlementUseItems: Node[] = [];
+
     private _settleSelectItem: Node = null;
     private _settleUseSelectItems: Node[] = [];
 
     private _langSelectView: Node = null;
 
-
-    onLoad(): void {
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
 
         this._selectIndex = 0;
-
 
         const infoView = this.node.getChildByPath("Content/tabContents/InfoContent");
         const summaryView = this.node.getChildByPath("Content/tabContents/SummaryContent");
@@ -85,23 +87,29 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
         EventMgr.on(EventName.CHANGE_LANG, this._onChangeLang, this);
 
         UserInfoMgr.addObserver(this);
-
     }
 
-    start() {
-
+    protected viewDidStart(): void {
+        super.viewDidStart();
+        console.log("exce start");
     }
 
-    update(deltaTime: number) {
+    protected viewDidAppear(): void {
+        super.viewDidAppear();
 
+        console.log("exce appear");
+        this._refreshUI();
     }
+    
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
 
-    onDestroy() {
         EventMgr.off(EventName.LOADING_FINISH, this._loadOver, this);
         EventMgr.off(EventName.CHANGE_LANG, this._onChangeLang, this);
 
         UserInfoMgr.removeObserver(this);
     }
+
 
     // ---------------- UserInfoEvent
     public playerLvlupChanged() {
@@ -242,7 +250,10 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
         } else if (this._selectIndex == 1) {
             // summary
             const settleViewContent = currentShowView.getChildByPath("PeriodicSettlement/view/content");
-            settleViewContent.destroyAllChildren();
+            for (const item of this._settlementUseItems) {
+                item.destroy();
+            }
+            this._settlementUseItems = [];
 
             const selectItemContent = currentShowView.getChildByPath("SettlementList/view/content");
             for (const item of this._settleUseSelectItems) {
@@ -276,6 +287,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
                         lastViewOffsetHeight = this._selectSettleViewOffsetHeight[this._selectSettleViewOffsetHeight.length - 1];
                     }
                     this._selectSettleViewOffsetHeight.push(lastViewOffsetHeight + view.getComponent(UITransform).height);
+                    this._settlementUseItems.push(view);
 
                     // button
                     const select = instantiate(this._settleSelectItem);
@@ -492,7 +504,7 @@ export class PlayerInfoUI extends PopUpUI implements UserInfoEvent {
 
 
     private onTapClose() {
-        this.show(false);
+        UIPanelMgr.removePanelByNode(this.node);
     }
 }
 

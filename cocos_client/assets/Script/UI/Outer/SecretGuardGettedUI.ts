@@ -1,20 +1,20 @@
 import { _decorator, Component, Label, Node, tween } from 'cc';
 import { GameMain } from '../../GameMain';
-import { PopUpUI } from '../../BasicView/PopUpUI';
-import { LanMgr, UserInfoMgr } from '../../Utils/Global';
+import { LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import ViewController from '../../BasicView/ViewController';
+import { UIName } from '../../Const/ConstUIDefine';
+import { ItemInfoUI } from '../ItemInfoUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('SecretGuardGettedUI')
-export class SecretGuardGettedUI extends PopUpUI {
+export class SecretGuardGettedUI extends ViewController {
 
     public dialogShow(pioneerAnimType: string) {
-
         const names = [
             "secretGuard",
             "doomsdayGangSpy",
             "rebels",
         ];
-
 
         // useLanMgr
         const keen = [
@@ -42,10 +42,13 @@ export class SecretGuardGettedUI extends PopUpUI {
 
         tween(this.node)
             .delay(2)
-            .call(() => {
-                GameMain.inst.UI.serectGuardGettedUI.show(false);
+            .call(async () => {
+                UIPanelMgr.removePanelByNode(this.node);
                 if (UserInfoMgr.afterCivilizationClosedShowItemDatas.length > 0) {
-                    GameMain.inst.UI.itemInfoUI.showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas, true);
+                    const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                    if (view != null) {
+                        view.getComponent(ItemInfoUI).showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas, true);
+                    }
                     UserInfoMgr.afterCivilizationClosedShowItemDatas = [];
                 }
                 if (UserInfoMgr.afterCivilizationClosedShowArtifactDatas.length > 0) {
@@ -54,14 +57,6 @@ export class SecretGuardGettedUI extends PopUpUI {
                 }
             })
             .start();
-    }
-
-    start() {
-
-    }
-
-    update(deltaTime: number) {
-
     }
 }
 

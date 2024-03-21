@@ -1,19 +1,18 @@
-import { _decorator, Button, color, Color, Component, instantiate, Label, Layout, Node, setDisplayStats, Sprite, tween, v3, Vec3 } from 'cc';
+import { _decorator, Button, Color, instantiate, Label, Layout, Node } from 'cc';
 import { PopUpUI } from '../BasicView/PopUpUI';
 import { GameMain } from '../GameMain';
 import CommonTools from '../Tool/CommonTools';
 import { EventName } from '../Const/ConstDefine';
 import MapHelper from "db://assets/Script/Utils/MapHelper";
-import { BuildingMgr, EventMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../Utils/Global';
+import { BuildingMgr, EventMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import ViewController from '../BasicView/ViewController';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('TaskListUI')
-export class TaskListUI extends PopUpUI {
-
+export class TaskListUI extends ViewController {
 
     public refreshUI() {
-
         // useLanMgr
         // this._actionTaskView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.getLanById("107549");
         // this._detailTaskView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.getLanById("107549");
@@ -163,7 +162,7 @@ export class TaskListUI extends PopUpUI {
                             finishTitleItem.active = true;
                             finishTitleItem.setParent(this._detailProgressFinishTitleItem.getParent());
                             this._detailProgressList.push(finishTitleItem);
-                            
+
                         } else if (temple.status == 2) {
                             const curStepCondIndex = temple.stepData.condwinStep == null ? 0 : temple.stepData.condwinStep;
                             const finish = instantiate(this._detailProgressFinishItem);
@@ -234,11 +233,9 @@ export class TaskListUI extends PopUpUI {
     private _toDoButton: Node = null;
     private _completedButton: Node = null;
 
-    public override get typeName(): string {
-        return "TaskListUI";
-    }
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
 
-    onLoad(): void {
         this._actionTaskView = this.node.getChildByName("ActionTaskView");
         this._detailTaskView = this.node.getChildByName("TaskDetailView");
 
@@ -263,27 +260,23 @@ export class TaskListUI extends PopUpUI {
         this._completedButton = this.node.getChildByPath("TaskDetailView/CompletedButton");
 
         EventMgr.on(EventName.CHANGE_LANG, this.refreshUI, this);
-
     }
 
-    start() {
+    protected viewDidStart(): void {
+        super.viewDidStart();
+
         this.refreshUI();
     }
 
-    update(deltaTime: number) {
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
 
-    }
-
-    onDestroy(): void {
         EventMgr.off(EventName.CHANGE_LANG, this.refreshUI, this);
     }
-
-
-
     //---------------------------------------------------
     // action
     private onTapClose() {
-        GameMain.inst.UI.taskListUI.show(false);
+        UIPanelMgr.removePanelByNode(this.node);
     }
     private onTapShowDetail() {
         if (this._isDetailShow) {

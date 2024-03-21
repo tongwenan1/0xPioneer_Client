@@ -2,13 +2,16 @@ import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout
 import { GameMain } from '../../GameMain';
 import { PopUpUI } from '../../BasicView/PopUpUI';
 import { EventName, NPCNameLangType } from '../../Const/ConstDefine';
-import { CountMgr, EventMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../../Utils/Global';
+import { CountMgr, EventMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { CountType } from '../../Const/Manager/CountMgrDefine';
+import ViewController from '../../BasicView/ViewController';
+import { UIName } from '../../Const/ConstUIDefine';
+import { ItemInfoUI } from '../ItemInfoUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
-export class DialogueUI extends PopUpUI {
-    public dialogShow(talk: any, task: any, talkOverCallback: ()=> void = null) {
+export class DialogueUI extends ViewController {
+    public dialogShow(talk: any, task: any, talkOverCallback: () => void = null) {
         this._talk = talk;
         this._task = task;
         this._talkOverCallback = talkOverCallback;
@@ -16,13 +19,9 @@ export class DialogueUI extends PopUpUI {
         this._refreshUI();
     }
 
-    public override get typeName() {
-        return "DialogueUI";
-    }
-
     private _talk: any = null;
     private _task: any = null;
-    private _talkOverCallback: ()=> void;
+    private _talkOverCallback: () => void;
     private _dialogStep: number = 0;
     private _roleNames: string[] = [
         "artisan",
@@ -35,7 +34,9 @@ export class DialogueUI extends PopUpUI {
         "secretGuard"
     ];
     private _roleViewNameMap: Map<NPCNameLangType, string> = new Map();
-    onLoad(): void {
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
         EventMgr.on(EventName.CHANGE_LANG, this._refreshUI, this);
 
         this._roleViewNameMap.set(NPCNameLangType.Artisan, "artisan");
@@ -45,23 +46,19 @@ export class DialogueUI extends PopUpUI {
         this._roleViewNameMap.set(NPCNameLangType.Prophetess, "prophetess");
         this._roleViewNameMap.set(NPCNameLangType.SecretGuard, "secretGuard");
     }
-    start() {
 
-    }
-    update(deltaTime: number) {
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
 
-    }
-    onDestroy(): void {
         EventMgr.off(EventName.CHANGE_LANG, this._refreshUI, this);
     }
-
 
     private _refreshUI() {
         if (this._talk == null ||
             this._dialogStep > this._talk.messsages.length - 1) {
             return;
         }
-        
+
         // useLanMgr
         // this.node.getChildByPath("Dialog/NextButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
@@ -91,10 +88,10 @@ export class DialogueUI extends PopUpUI {
 
             for (const roleName of this._roleNames) {
                 if (this._roleViewNameMap)
-                dialogView.getChildByName(roleName).active = roleName == this._roleViewNameMap.get(currentMesssage.name);
+                    dialogView.getChildByName(roleName).active = roleName == this._roleViewNameMap.get(currentMesssage.name);
             }
         } else if (currentMesssage.type == 1) {
-            if ( currentMesssage.text != undefined) {
+            if (currentMesssage.text != undefined) {
                 dialogView.active = true;
                 dialogView.getChildByName("name_bg").active = false;
                 dialogView.getChildByName("player_name").active = false;
@@ -111,7 +108,7 @@ export class DialogueUI extends PopUpUI {
             selectView.active = true;
             dialogView.getChildByName("NextButton").active = false;
             dialogView.getChildByName("dialog_bg").getComponent(Button).interactable = false;
-            
+
             for (let i = 0; i < 3; i++) {
                 const button = selectView.getChildByName("Button_" + i);
                 if (i < currentMesssage.select.length) {
@@ -130,13 +127,15 @@ export class DialogueUI extends PopUpUI {
     private _talkOver() {
         //talk over
         if (UserInfoMgr.afterTalkItemGetData.has(this._talk.id)) {
-            setTimeout(()=> {
-                if (GameMain.inst.UI.civilizationLevelUpUI.node.active ||
-                    GameMain.inst.UI.serectGuardGettedUI.node.active) {
+            setTimeout(async () => {
+                if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
+                    UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
                     UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...UserInfoMgr.afterTalkItemGetData.get(this._talk.id));
                 } else {
-                    GameMain.inst.UI.itemInfoUI.showItem(UserInfoMgr.afterTalkItemGetData.get(this._talk.id), true);
-
+                    const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                    if (view != null) {
+                        view.getComponent(ItemInfoUI).showItem(UserInfoMgr.afterTalkItemGetData.get(this._talk.id), true);
+                    }
                 }
             });
             UserInfoMgr.afterTalkItemGetData.delete(this._talk.id);
@@ -150,7 +149,7 @@ export class DialogueUI extends PopUpUI {
     private onTapNext() {
         this._dialogStep += 1;
         if (this._dialogStep > this._talk.messsages.length - 1) {
-            GameMain.inst.UI.dialogueUI.show(false);
+            UIPanelMgr.removePanelByNode(this.node);
             this._talkOver();
         } else {
             this._refreshUI();
@@ -165,11 +164,11 @@ export class DialogueUI extends PopUpUI {
             if (this._task.entrypoint.result.includes(customEventData)) {
                 // get task
                 UserInfoMgr.getNewTask(this._task);
-    
+
                 // useLanMgr
                 GameMain.inst.UI.NewTaskTip(LanMgr.getLanById("202004"));
                 // GameMain.inst.UI.NewTaskTip("New Task Taken");
-    
+
             } else if (this._task.exitpoint != null &&
                 this._task.exitpoint.result.includes(customEventData)) {
                 // reject task action
@@ -189,7 +188,7 @@ export class DialogueUI extends PopUpUI {
 
         this._dialogStep += 1;
         if (this._dialogStep > this._talk.messsages.length - 1) {
-            GameMain.inst.UI.dialogueUI.show(false);
+            UIPanelMgr.removePanelByNode(this.node);
             this._talkOver();
         } else {
             this._refreshUI();

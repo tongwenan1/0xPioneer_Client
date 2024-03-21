@@ -1,17 +1,17 @@
 import { _decorator, Color, Component, Label, Node, Sprite, tween, v3, Animation, ParticleSystem2D } from 'cc';
-import { PopUpUI } from '../BasicView/PopUpUI';
 import { GameMain } from '../GameMain';
 import CommonTools from '../Tool/CommonTools';
 import { ItemConfigType } from '../Const/ConstDefine';
 import ArtifactData from '../Model/ArtifactData';
-import { ArtifactMgr, DropMgr, ItemMgr, UserInfoMgr } from '../Utils/Global';
+import { ArtifactMgr, DropMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import ItemData from '../Model/ItemData';
-
-
+import ViewController from '../BasicView/ViewController';
+import { UIName } from '../Const/ConstUIDefine';
+import { ItemSelectFromThreeUI } from './ItemSelectFromThreeUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('TreasureGettedUI')
-export class TreasureGettedUI extends PopUpUI {
+export class TreasureGettedUI extends ViewController {
 
     @property([Color])
     frameGradeColors: Color[] = [];
@@ -47,14 +47,17 @@ export class TreasureGettedUI extends PopUpUI {
             const useDrop = drop[0];
             if (useDrop.type == 2) {
                 // 1/3 select
-                this.scheduleOnce(()=> {
-                    GameMain.inst.UI.itemSelectFromThreeUI.showItem(useDrop.id, ()=> {
-                        UserInfoMgr.getExplorationReward(box.id);
-                        if (gettedCallback) {
-                            gettedCallback();
-                        }
-                    });
-                    this.show(false);
+                this.scheduleOnce(async ()=> {
+                    const view = await UIPanelMgr.openPanel(UIName.ItemSelectFromThreeUI);
+                    if (view != null) {
+                        view.getComponent(ItemSelectFromThreeUI).showItem(useDrop.id, ()=> {
+                            UserInfoMgr.getExplorationReward(box.id);
+                            if (gettedCallback) {
+                                gettedCallback();
+                            }
+                        });
+                    }
+                    UIPanelMgr.removePanelByNode(this.node);
                 }, (5.5 + 1.1));
             } else {
                 // weight get
@@ -110,7 +113,7 @@ export class TreasureGettedUI extends PopUpUI {
                                 }
                             }
                             UserInfoMgr.getExplorationReward(box.id);
-                            this.show(false);
+                            UIPanelMgr.removePanelByNode(this.node);
                             if (gettedCallback) {
                                 gettedCallback();
                             }
@@ -129,17 +132,6 @@ export class TreasureGettedUI extends PopUpUI {
             })
             .start();
     }
-
-    start() {
-
-    }
-
-    update(deltaTime: number) {
-
-    }
-
-
-
 }
 
 

@@ -1,15 +1,14 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt } from 'cc';
 import { BackpackItem } from './BackpackItem';
-import { PopUpUI } from '../BasicView/PopUpUI';
-import { CountMgr, ItemMgr, LanMgr } from '../Utils/Global';
+import { CountMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
 import { CountType } from '../Const/Manager/CountMgrDefine';
 import { ItemType } from '../Const/Model/ItemModelDefine';
 import ItemData from '../Model/ItemData';
+import ViewController from '../BasicView/ViewController';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemInfoUI')
-export class ItemInfoUI extends PopUpUI {
-
+export class ItemInfoUI extends ViewController {
     /**
      * 
      * @param items 
@@ -56,7 +55,11 @@ export class ItemInfoUI extends PopUpUI {
                     }
                 }
             }
-            this.show(true, true);
+        } else {
+            UIPanelMgr.removePanelByNode(this.node);
+            if (closeCallback != null) {
+                closeCallback();
+            }
         }
     }
 
@@ -64,14 +67,18 @@ export class ItemInfoUI extends PopUpUI {
     private _items: ItemData[] = [];
     private _isGet: boolean;
     private _closeCallback: () => void;
-
-    start() {
+    protected viewPopAnimation(): boolean {
+        return true;
+    }
+    protected contentView(): Node {
+        return this.node.getChildByName("__ViewContent");
     }
 
     //---------------------------------------------------- action
-    private onTapClose() {
+    private async onTapClose() {
         if (this._items.length <= 0) {
-            this.show(false, true);
+            await this.playExitAnimation();
+            UIPanelMgr.removePanelByNode(this.node);
             if (this._closeCallback != null) {
                 this._closeCallback();
             }
@@ -80,7 +87,7 @@ export class ItemInfoUI extends PopUpUI {
         }
 
     }
-    private onTapUse() {
+    private async onTapUse() {
         if (this._isGet) {
             this.onTapClose();
         } else {
@@ -95,7 +102,8 @@ export class ItemInfoUI extends PopUpUI {
                     }
                 });
             }
-            this.show(false, true);
+            await this.playExitAnimation();
+            UIPanelMgr.removePanelByNode(this.node);
             if (this._closeCallback != null) {
                 this._closeCallback();
             }

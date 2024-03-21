@@ -3,8 +3,10 @@ import { MapItem } from '../../../BasicView/MapItem';
 import { GameMain } from '../../../GameMain';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import { InnerBuildingType, UserInnerBuildInfo } from '../../../Const/Manager/UserInfoMgrDefine';
-import { ArtifactMgr, UserInfoMgr } from '../../../Utils/Global';
+import { ArtifactMgr, UIPanelMgr, UserInfoMgr } from '../../../Utils/Global';
 import { ArtifactEffectType } from '../../../Const/Model/ArtifactModelDefine';
+import { UIName } from '../../../Const/ConstUIDefine';
+import { BuildingUpgradeUI } from '../../../UI/Inner/BuildingUpgradeUI';
 
 const { ccclass, property } = _decorator;
 
@@ -25,11 +27,13 @@ export class MapItemMainBuild extends MapItem {
     private _data: UserInnerBuildInfo = null;
     private _buildUpgrading: boolean = false;
 
-    override _onClick() {
+    override async _onClick() {
         super._onClick();
 
-        GameMain.inst.UI.buildingUpgradeUI.refreshUI();
-        GameMain.inst.UI.buildingUpgradeUI.show(true, true);
+        const view = await UIPanelMgr.openPanel(UIName.BuildingUpgradeUI);
+        if (view != null) {
+            view.getComponent(BuildingUpgradeUI).refreshUI();
+        }
     }
 
     public upgradeBuild() {

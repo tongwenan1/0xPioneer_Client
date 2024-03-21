@@ -1,14 +1,14 @@
 import {_decorator, Button, Color, instantiate, Label, Layout, Mask, Node, ScrollView, UITransform} from 'cc';
-import {PopUpUI} from "db://assets/Script/BasicView/PopUpUI";
 import {BattleReportListItemUI} from "./BattleReportListItemUI";
 import {ButtonEx, ButtonExEventType} from "db://assets/Script/UI/Common/ButtonEx";
 import BattleReportsMgrDefine, { BattleReportsEvent, BattleReportType, ReportFilterState, ReportsFilterType } from '../Const/Manager/BattleReportsMgrDefine';
-import { BattleReportsMgr } from '../Utils/Global';
+import { BattleReportsMgr, UIPanelMgr } from '../Utils/Global';
+import ViewController from '../BasicView/ViewController';
 
 const {ccclass} = _decorator;
 
 @ccclass('BattleReportListUI')
-export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
+export class BattleReportsUI extends ViewController implements BattleReportsEvent {
 
     private _reportUiItems: BattleReportListItemUI[] = [];
     private _fightTypeItemTemplate: Node = null;
@@ -27,10 +27,6 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
 
     private readonly buttonLabelActiveColor: Color = new Color("433824");
     private readonly buttonLabelGrayColor: Color = new Color("817674");
-
-    public override get typeName(): string {
-        return "BattleReportsUI";
-    }
 
     public refreshUI() {
         this._refreshFilterGroup();
@@ -97,7 +93,9 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
         }
     }
 
-    onLoad(): void {
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
         this._fightTypeItemTemplate = this.node.getChildByPath('frame/ScrollView/view/content/fightTypeItemTemplate');
         this._fightTypeItemTemplate.active = false;
         this._miningTypeItemTemplate = this.node.getChildByPath('frame/ScrollView/view/content/miningTypeItemTemplate');
@@ -119,9 +117,29 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
         this._reportListScrollView = this.node.getChildByPath('frame/ScrollView').getComponent(ScrollView);
     }
 
-    update(_deltaTime: number) {
+    protected viewDidAppear(): void {
+        super.viewDidAppear();
+
+        BattleReportsMgr.addObserver(this);
+
+        // Select filter tab "All" every time enter the reports UI.
+        this._filterState.filterType = ReportsFilterType.None;
+        this.refreshUIAndResetScroll();
+
+        this._autoMarkReadSkipFrames = 1;
+    }
+    
+    protected viewUpdate(dt: number): void {
+        super.viewUpdate(dt);
         this._autoMarkRead();
     }
+
+    protected viewDidDisAppear(): void {
+        super.viewDidDisAppear();
+
+        BattleReportsMgr.removeObserver(this);
+    }
+    
 
     private _autoMarkRead() {
         // Extra spare frame for engine to doing the layout correctly,
@@ -157,20 +175,6 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
     private _onClickDeleteReadReports() {
         BattleReportsMgr.deleteReadReports();
         this.refreshUIAndResetScroll();
-    }
-
-    protected onEnable() {
-        BattleReportsMgr.addObserver(this);
-
-        // Select filter tab "All" every time enter the reports UI.
-        this._filterState.filterType = ReportsFilterType.None;
-        this.refreshUIAndResetScroll();
-
-        this._autoMarkReadSkipFrames = 1;
-    }
-
-    protected onDisable() {
-        BattleReportsMgr.removeObserver(this);
     }
 
     //#region filter group methods
@@ -231,6 +235,7 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
 
     private _getReportsFiltered() {
         const reports = BattleReportsMgr.getReports();
+        console.log("exce allr:", reports);
         if (!reports) {
             return [];
         }
@@ -252,7 +257,7 @@ export class BattleReportsUI extends PopUpUI implements BattleReportsEvent {
     //---------------------------------------------------
     // action
     onTapClose() {
-        this.show(false);
+        UIPanelMgr.removePanelByNode(this.node);
     }
 
     public onBattleReportListChanged() {

@@ -4,10 +4,12 @@ import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
 import { UserInfoEvent, FinishedEvent, InnerBuildingType, UserInnerBuildInfo, GenerateTroopInfo } from "../Const/Manager/UserInfoMgrDefine";
-import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
+import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
 import { CountType } from "../Const/Manager/CountMgrDefine";
 import ItemData from "../Model/ItemData";
 import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
+import { UIName } from "../Const/ConstUIDefine";
+import { ItemInfoUI } from "../UI/ItemInfoUI";
 
 export default class UserInfoMgr {
 
@@ -615,12 +617,15 @@ export default class UserInfoMgr {
                 }
                 if (addItems.length > 0) {
                     ItemMgr.addItem(addItems);
-                    setTimeout(()=> {
-                        if (GameMain.inst.UI.civilizationLevelUpUI.node.active ||
-                            GameMain.inst.UI.serectGuardGettedUI.node.active) {
+                    setTimeout(async ()=> {
+                        if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
+                            UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
                             this.afterCivilizationClosedShowItemDatas.push(...addItems);
                         } else {
-                            GameMain.inst.UI.itemInfoUI.showItem(addItems, true);
+                            const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                            if (view != null) {
+                                view.getComponent(ItemInfoUI).showItem(addItems, true);
+                            }
                         }
                     });
                 }

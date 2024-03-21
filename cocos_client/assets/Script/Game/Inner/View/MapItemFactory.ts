@@ -5,7 +5,9 @@ import { GameMain } from '../../../GameMain';
 import CommonTools from '../../../Tool/CommonTools';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import { FinishedEvent, InnerBuildingType, UserInfoEvent, UserInnerBuildInfo } from '../../../Const/Manager/UserInfoMgrDefine';
-import { EventMgr, LanMgr, UserInfoMgr } from '../../../Utils/Global';
+import { EventMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../../Utils/Global';
+import { UIName } from '../../../Const/ConstUIDefine';
+import { RecruitUI } from '../../../UI/Inner/RecruitUI';
 
 const { ccclass, property } = _decorator;
 
@@ -27,7 +29,7 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
 
     private _showBuilding: Node = null;
     private _recruitCountTime: Label = null;
-    override _onClick() {
+    override async _onClick() {
         super._onClick();
         if (GameMain.inst.innerSceneMap.isUpgrading(this.buildID as InnerBuildingType)) {
             // useLanMgr
@@ -46,8 +48,10 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
                 // GameMain.inst.UI.ShowTip("Recruiting…Please wait…");
                 return;
             }
-            GameMain.inst.UI.recruitUI.show(true, true);
-            GameMain.inst.UI.recruitUI.refreshUI(true);
+            const view = await UIPanelMgr.openPanel(UIName.RecruitUI);
+            if (view != null) {
+                view.getComponent(RecruitUI).refreshUI(true);
+            }
         }
     }
 
@@ -93,7 +97,7 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
             this.node.addChild(buildView);
             this._showBuilding = buildView;
         }
-        this.buildInfoUI.node.setSiblingIndex(999);
+        this.buildInfoUI.node.setSiblingIndex(99);
     }
 
     private _onBeginUpgrade(data: { buildingType: InnerBuildingType, time: number }) {

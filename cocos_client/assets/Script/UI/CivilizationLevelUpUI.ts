@@ -1,16 +1,19 @@
 import { _decorator, Animation, Button, Component, instantiate, Label, Layout, Node, Sprite, tween, v3 } from 'cc';
-import { PopUpUI } from '../BasicView/PopUpUI';
 import { EventName, ItemConfigType } from '../Const/ConstDefine';
 import { BackpackItem } from './BackpackItem';
 import ItemData from '../Model/ItemData';
 import { ArtifactItem } from './ArtifactItem';
 import ArtifactData from '../Model/ArtifactData';
 import { GameMain } from '../GameMain';
-import { EventMgr, LanMgr, UserInfoMgr } from '../Utils/Global';
+import { EventMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { UIName } from '../Const/ConstUIDefine';
+import { SecretGuardGettedUI } from './Outer/SecretGuardGettedUI';
+import ViewController from '../BasicView/ViewController';
+import { ItemInfoUI } from './ItemInfoUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('CivilizationLevelUpUI')
-export class CivilizationLevelUpUI extends PopUpUI {
+export class CivilizationLevelUpUI extends ViewController {
 
     private _rewardItem: Node = null;
     private _artifactItem: Node = null;
@@ -23,7 +26,9 @@ export class CivilizationLevelUpUI extends PopUpUI {
 
     private _showBuildAnimView: Node = null;
     private _showFinishAnimView: Node = null;
-    onLoad(): void {
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
         this._rewardItem = this.node.getChildByPath("Content/RewardContent/Rewards/Content/BackpackItem");
         this._rewardItem.active = false;
 
@@ -42,9 +47,12 @@ export class CivilizationLevelUpUI extends PopUpUI {
         EventMgr.on(EventName.CHANGE_LANG, this.refreshUI, this);
     }
 
-    onDestroy(): void {
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
+
         EventMgr.off(EventName.CHANGE_LANG, this.refreshUI, this);
     }
+
 
     public async refreshUI(levelConfig: any) {
         if (levelConfig == null) {
@@ -178,23 +186,20 @@ export class CivilizationLevelUpUI extends PopUpUI {
         }
     }
 
-    start() {
-
-    }
-
-    update(deltaTime: number) {
-
-    }
-
-    private onTapClose() {
-        this.show(false);
+    private async onTapClose() {
+        UIPanelMgr.removePanelByNode(this.node);
         if (UserInfoMgr.afterCivilizationClosedShowPioneerDatas.length > 0) {
-            GameMain.inst.UI.serectGuardGettedUI.dialogShow(UserInfoMgr.afterCivilizationClosedShowPioneerDatas[0].animType);
-            GameMain.inst.UI.serectGuardGettedUI.show(true);
+            const view = await UIPanelMgr.openPanel(UIName.SecretGuardGettedUI);
+            if (view != null) {
+                view.getComponent(SecretGuardGettedUI).dialogShow(UserInfoMgr.afterCivilizationClosedShowPioneerDatas[0].animType);
+            }
             UserInfoMgr.afterCivilizationClosedShowPioneerDatas = [];
         } else {
             if (UserInfoMgr.afterCivilizationClosedShowItemDatas.length > 0) {
-                GameMain.inst.UI.itemInfoUI.showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas, true);
+                const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                if (view != null) {
+                    view.getComponent(ItemInfoUI).showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas, true);
+                }
                 UserInfoMgr.afterCivilizationClosedShowItemDatas = [];
             }
             if (UserInfoMgr.afterCivilizationClosedShowArtifactDatas.length > 0) {

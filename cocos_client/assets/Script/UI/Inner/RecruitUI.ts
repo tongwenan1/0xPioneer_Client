@@ -1,13 +1,13 @@
 import { _decorator, Component, Label, Layout, Node, ProgressBar, Slider } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
-import { PopUpUI } from '../../BasicView/PopUpUI';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { GameMain } from '../../GameMain';
-import { EventMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
+import { EventMgr, ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import ViewController from '../../BasicView/ViewController';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
-export class RecruitUI extends PopUpUI {
+export class RecruitUI extends ViewController {
 
     public refreshUI(initSelectGenerate: boolean = false) {
         if (initSelectGenerate) {
@@ -74,11 +74,9 @@ export class RecruitUI extends PopUpUI {
     private _usedStone: Label = null;
     private _maxStone: Label = null;
 
-    public override get typeName() {
-        return "RecruitUI";
-    }
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
 
-    onLoad(): void {
         this._totalTroopProgress = this.node.getChildByPath("__ViewContent/ProgressBar").getComponent(ProgressBar);
         this._currentTroop = this.node.getChildByPath("__ViewContent/current_res/num/cur").getComponent(Label);
         this._totalTroop = this.node.getChildByPath("__ViewContent/current_res/num/max").getComponent(Label);
@@ -98,17 +96,19 @@ export class RecruitUI extends PopUpUI {
         EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
     }
 
-    start() {
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
 
-    }
-
-    update(deltaTime: number) {
-        
-    }
-
-    onDestroy(): void {
         EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
     }
+
+    protected viewPopAnimation(): boolean {
+        return true;
+    }
+    protected contentView(): Node {
+        return this.node.getChildByPath("__ViewContent");
+    }
+
 
     changeLang(): void {
         if (this.node.active === false) return;
@@ -117,8 +117,9 @@ export class RecruitUI extends PopUpUI {
 
     //---------------------------------- action
 
-    private onTapClose() {
-        this.show(false, true);
+    private async onTapClose() {
+        await this.playExitAnimation();
+        UIPanelMgr.removePanelByNode(this.node);
     }
 
     private onTapGenerateMax() {
@@ -172,7 +173,7 @@ export class RecruitUI extends PopUpUI {
         }
     }
     
-    private onTapGenerate() {
+    private async onTapGenerate() {
         if (this._generateTimeNum <= 0) {
             // useLanMgr
             // LanMgr.getLanById("107549")
@@ -182,7 +183,9 @@ export class RecruitUI extends PopUpUI {
         ItemMgr.subItem(ResourceCorrespondingItem.Wood, parseInt(this._usedWood.string));
         ItemMgr.subItem(ResourceCorrespondingItem.Stone, parseInt(this._usedStone.string));
         UserInfoMgr.beginGenerateTroop(this._generateTimeNum, this._selectGenerateNum);
-        this.show(false, true);
+        
+        await this.playExitAnimation();
+        UIPanelMgr.removePanelByNode(this.node);
     }
 }
 

@@ -1,16 +1,19 @@
 import { _decorator, Animation, Button, Component, Label, Node, tween, v3 } from 'cc';
 import { EventName } from '../../Const/ConstDefine';
 import { EventMgr, LanMgr } from '../../Utils/Global';
+import ViewController from '../../BasicView/ViewController';
 const { ccclass, property } = _decorator;
 
 @ccclass('RookieGuide')
-export class RookieGuide extends Component {
+export class RookieGuide extends ViewController {
 
     private _videoView: Node = null;
     private _guideView: Node = null;
 
     private _wakeUpTimes: number = 0;
-    protected onLoad(): void {
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
         this._videoView = this.node.getChildByName("VideoContent");
         this._guideView = this.node.getChildByName("GuideContent");
 
@@ -18,17 +21,6 @@ export class RookieGuide extends Component {
         this._guideView.active = true;
         // useLanMgr 
         // this._videoView.getChildByPath("SkipButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
-    }
-    start() {
-
-    }
-
-    update(deltaTime: number) {
-
-    }
-
-    protected onDestroy(): void {
-
     }
 
     //---------------------------------------
@@ -81,7 +73,7 @@ export class RookieGuide extends Component {
                 const openEyesView = this._guideView.getChildByName("OpenEyes");
                 openEyesView.active = true;
                 openEyesView.getComponent(Animation).play();
-                EventMgr.emit(EventName.ROOKIE_GUIDE_BEGIN_EYES, { node: this.node });
+                EventMgr.emit(EventName.ROOKIE_GUIDE_BEGIN_EYES);
                 this.scheduleOnce(() => {
                     EventMgr.emit(EventName.ROOKIE_GUIDE_THIRD_EYES);
                 }, 3);

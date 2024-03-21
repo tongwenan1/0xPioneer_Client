@@ -1,7 +1,9 @@
 import { _decorator, Component, Node, instantiate, director, BoxCharacterController, Label, Layout, UITransform, ProgressBar, Button, tween, v3, } from "cc";
 import { GameMain } from "../GameMain";
 import { EventName } from "../Const/ConstDefine";
-import { BoxMgr, EventMgr, LanMgr, UserInfoMgr } from "../Utils/Global";
+import { BoxMgr, EventMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
+import { UIName } from "../Const/ConstUIDefine";
+import { TreasureGettedUI } from "./TreasureGettedUI";
 const { ccclass, property } = _decorator;
 
 @ccclass("ClaimRewardUI")
@@ -111,7 +113,7 @@ export class ClaimRewardUI extends Component {
     }
 
     //------------------------------------------ action
-    private onTapBoxItem(event: Event, customEventData: string) {
+    private async onTapBoxItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
         const data = this._boxDatas[index];
         // 0-no 1-can 2-getted
@@ -124,10 +126,12 @@ export class ClaimRewardUI extends Component {
         if (getStatus == 2) {
 
         } else if (getStatus == 1) {
-            GameMain.inst.UI.treasureGettedUI.show(true);
-            GameMain.inst.UI.treasureGettedUI.dialogShow(data, ()=> {
-                this.refreshUI();
-            });
+            const view = await UIPanelMgr.openPanel(UIName.TreasureGettedUI);
+            if (view != null) {
+                view.getComponent(TreasureGettedUI).dialogShow(data, ()=> {
+                    this.refreshUI();
+                });
+            }
         } else if (getStatus == 0) {
 
             // useLanMgr

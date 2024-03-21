@@ -41,7 +41,7 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
         this._storage = str ? JSON.parse(str) : [];
     }
 
-    private _registerEvents() {
+    private _registerEvents() { 
         EventMgr.on(EventName.FIGHT_FINISHED, this.onFightFinished, this);
         EventMgr.on(EventName.MINING_FINISHED, this.onMiningFinished, this);
         BranchEventMgr.addObserver(this);
@@ -153,4 +153,8 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
         }
     }
     //#endregion
+
+    public constructor() {
+        this._registerEvents();    
+    }
 }

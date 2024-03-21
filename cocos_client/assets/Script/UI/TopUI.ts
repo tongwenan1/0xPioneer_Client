@@ -1,15 +1,17 @@
 import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt, UIOpacity, instantiate, tween } from 'cc';
 import { EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
-import { EventMgr, ItemMgr, LvlupMgr, UserInfoMgr } from '../Utils/Global';
+import { EventMgr, ItemMgr, LvlupMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { ItemMgrEvent } from '../Const/Manager/ItemMgrDefine';
+import { UIName } from '../Const/ConstUIDefine';
+import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
 const { ccclass, property } = _decorator;
 
 
 @ccclass('TopUI')
 export default class TopUI extends Component implements UserInfoEvent, ItemMgrEvent {
-    
+
 
     @property(Label)
     txtPlayerName: Label = null;
@@ -79,9 +81,9 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
 
         const lvlupConfig = LvlupMgr.getConfigByLvl(info.level);
         const maxExp = lvlupConfig[0].exp;
-        this.lvProgress.progress =  Math.min(1, info.exp / maxExp);
+        this.lvProgress.progress = Math.min(1, info.exp / maxExp);
         this.node.getChildByPath("progressLv/txtLvProgress").getComponent(Label).string = info.exp + "/" + maxExp;
-        
+
         const resourceView = this.node.getChildByName("Resource");
         resourceView.getChildByPath("Food/Label").getComponent(Label).string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Food).toString();
         resourceView.getChildByPath("Wood/Label").getComponent(Label).string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood).toString();
@@ -89,7 +91,7 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
         resourceView.getChildByPath("Troops/Label").getComponent(Label).string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop).toString();
     }
 
-    private _playExpGettedAnim(getExpValue: number, playOver: ()=> void = null) {
+    private _playExpGettedAnim(getExpValue: number, playOver: () => void = null) {
         if (getExpValue <= 0) {
             return;
         }
@@ -104,7 +106,7 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
         );
         tween(animNode)
             .to(0.4, { position: v3(animNode.position.x, animNode.position.y + 30, animNode.position.z) })
-            .call(()=> {
+            .call(() => {
                 animNode.destroy();
                 if (playOver != null) {
                     playOver();
@@ -114,8 +116,8 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
     }
 
     //------------------------------------------------ action
-    private onTapPlayerInfo() {
-        GameMain.inst.UI.playerInfoUI.show(true);
+    private async onTapPlayerInfo() {
+        await UIPanelMgr.openPanel(UIName.PlayerInfoUI);
     }
     //-----------------------------------------------
     // userinfoevent
@@ -123,15 +125,17 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
         this.refreshTopUI();
     }
     playerExpChanged(value: number): void {
-        this._playExpGettedAnim(value, ()=> {
+        this._playExpGettedAnim(value, () => {
             this.refreshTopUI();
         });
     }
-    playerLvlupChanged(value: number): void {
+    async playerLvlupChanged(value: number): Promise<void> {
         const levelConfig = LvlupMgr.getConfigByLvl(value);
         if (levelConfig.length > 0) {
-            GameMain.inst.UI.civilizationLevelUpUI.refreshUI(levelConfig[0]);
-            GameMain.inst.UI.civilizationLevelUpUI.show(true);
+            const view = await UIPanelMgr.openPanel(UIName.CivilizationLevelUpUI);
+            if (view != null) {
+                view.getComponent(CivilizationLevelUpUI).refreshUI(levelConfig[0]);
+            }
         }
     }
 

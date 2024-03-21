@@ -11,7 +11,7 @@ import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
 import { FinishedEvent, UserInfoEvent } from '../../Const/Manager/UserInfoMgrDefine';
-import { ArtifactMgr, BranchEventMgr, BuildingMgr, EventMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, SettlementMgr, TalkMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, BranchEventMgr, BuildingMgr, EventMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, SettlementMgr, TalkMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { BuildingFactionType } from '../../Const/Model/MapBuildingModelDefine';
 import { MapPioneerLogicType, MapPioneerActionType, MapPioneerType, MapPioneerMoveDirection, MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import { MapResourceBuildingModel } from './Model/MapBuildingModel';
@@ -19,6 +19,11 @@ import MapPioneerModel, { MapPioneerLogicModel, MapNpcPioneerModel } from './Mod
 import { ArtifactEffectType } from '../../Const/Model/ArtifactModelDefine';
 import ItemData from '../../Model/ItemData';
 import { OuterBuildingController } from './OuterBuildingController';
+import { UIName } from '../../Const/ConstUIDefine';
+import { DialogueUI } from '../../UI/Outer/DialogueUI';
+import { SecretGuardGettedUI } from '../../UI/Outer/SecretGuardGettedUI';
+import { TaskListUI } from '../../UI/TaskListUI';
+import { EventUI } from '../../UI/Outer/EventUI';
 
 
 const { ccclass, property } = _decorator;
@@ -348,7 +353,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         // default speed
         let defaultSpeed = 180;
 
-        // defaultSpeed = 600;
+        defaultSpeed = 600;
         const allPioneers = PioneerMgr.getAllPioneer();
 
         // artifact effect
@@ -384,7 +389,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         this._startAction();
     }
 
-    private onRookieGuideBeginEyes(data: { node: Node }) {
+    private onRookieGuideBeginEyes() {
         const actionPioneer = PioneerMgr.getCurrentPlayerPioneer();
         if (actionPioneer != null) {
             actionPioneer.actionType = MapPioneerActionType.wakeup;
@@ -393,22 +398,25 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 view = this._pioneerMap.get(actionPioneer.id).getComponent(MapPioneer);
             }
             view.refreshUI(actionPioneer);
-            this.scheduleOnce(() => {
+            this.scheduleOnce(async () => {
                 actionPioneer.actionType = MapPioneerActionType.idle;
                 view.refreshUI(actionPioneer);
-                GameMain.inst.UI.dialogueUI.dialogShow(TalkMgr.getTalk("talk14"), null, () => {
-                    UserInfoMgr.isFinishRookie = true;
-                    // init resource
-                    ItemMgr.addItem([
-                        new ItemData(ResourceCorrespondingItem.Energy, 100),
-                        new ItemData(ResourceCorrespondingItem.Food, 100),
-                        new ItemData(ResourceCorrespondingItem.Stone, 100),
-                        new ItemData(ResourceCorrespondingItem.Wood, 100),
-                        new ItemData(ResourceCorrespondingItem.Troop, 500),
-                    ]);
-                    data.node.active = false;
-                });
-                GameMain.inst.UI.dialogueUI.show(true);
+                UIPanelMgr.removePanel(UIName.RookieGuide);
+                
+                const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
+                if (dialog != null) {
+                    dialog.getComponent(DialogueUI).dialogShow(TalkMgr.getTalk("talk14"), null, () => {
+                        UserInfoMgr.isFinishRookie = true;
+                        // init resource
+                        ItemMgr.addItem([
+                            new ItemData(ResourceCorrespondingItem.Energy, 100),
+                            new ItemData(ResourceCorrespondingItem.Food, 100),
+                            new ItemData(ResourceCorrespondingItem.Stone, 100),
+                            new ItemData(ResourceCorrespondingItem.Wood, 100),
+                            new ItemData(ResourceCorrespondingItem.Troop, 500),
+                        ]);
+                    });
+                }
             }, 10);
         }
     }
@@ -595,12 +603,14 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             // get secret guard
             const pioneer = PioneerMgr.getPioneerById(pioneerId);
             if (pioneer != null) {
-                setTimeout(() => {
-                    if (GameMain.inst.UI.civilizationLevelUpUI.node.active) {
+                setTimeout(async () => {
+                    if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI)) {
                         UserInfoMgr.afterCivilizationClosedShowPioneerDatas.push(pioneer);
                     } else {
-                        GameMain.inst.UI.serectGuardGettedUI.dialogShow(pioneer.animType);
-                        GameMain.inst.UI.serectGuardGettedUI.show(true);
+                        const view = await UIPanelMgr.openPanel(UIName.SecretGuardGettedUI);
+                        if (view != null) {
+                            view.getComponent(SecretGuardGettedUI).dialogShow(pioneer.animType);
+                        }
                     }
                 });
             }
@@ -626,10 +636,12 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     pioneerTaskBeenGetted(pioneerId: string, taskId: string): void {
         this._refreshUI();
     }
-    showGetTaskDialog(task: any): void {
+    async showGetTaskDialog(task: any): Promise<void> {
         const talk = TalkMgr.getTalk(task.entrypoint.talk);
-        GameMain.inst.UI.dialogueUI.dialogShow(talk, task);
-        GameMain.inst.UI.dialogueUI.show(true);
+        const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
+        if (dialog != null) {
+            dialog.getComponent(DialogueUI).dialogShow(talk, task);
+        }
     }
 
     beginFight(fightId: string, attacker: { id: string; name: string; hp: number; hpMax: number; }, defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositions: math.Vec2[]): void {
@@ -743,7 +755,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             if (building.exp > 0) UserInfoMgr.exp += building.exp;
         }
     }
-    eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
+    async eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): Promise<void> {
         BranchEventMgr.latestActiveEventState = {
             pioneerId: actionPioneerId,
             buildingId: buildingId,
@@ -753,12 +765,14 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
         const event = BranchEventMgr.getEventById(eventId);
         if (event.length > 0) {
-            GameMain.inst.UI.eventUI.eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
-                PioneerMgr.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
-            }, (nextEvent: any) => {
-                PioneerMgr.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
-            });
-            GameMain.inst.UI.eventUI.show(true);
+            const view = await UIPanelMgr.openPanel(UIName.BrachEventUI);
+            if (view != null) {
+                view.getComponent(EventUI).eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
+                    PioneerMgr.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
+                }, (nextEvent: any) => {
+                    PioneerMgr.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
+                });
+            }
         }
     }
 
@@ -839,7 +853,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     finishEvent(event: FinishedEvent): void {
         this._refreshUI();
     }
-    triggerTaskStepAction(action: string, delayTime: number): void {
+    async triggerTaskStepAction(action: string, delayTime: number): Promise<void> {
         const temp = action.split("|");
         if (temp[0] == "pioneershow" ||
             temp[0] == "pioneerhide" ||
@@ -852,15 +866,23 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
         } else if (temp[0] == "talk") {
             const talk = TalkMgr.getTalk(temp[1]);
-            GameMain.inst.UI.dialogueUI.dialogShow(talk, null);
-            GameMain.inst.UI.dialogueUI.show(true);
+            const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
+            if (dialog != null) {
+                dialog.getComponent(DialogueUI).dialogShow(talk, null);
+            }
         }
     }
     taskProgressChanged(taskId: string): void {
-        GameMain.inst.UI.taskListUI.refreshUI();
+        if (UIPanelMgr.getPanelIsShow(UIName.TaskListUI)) {
+            const view = UIPanelMgr.getPanel(UIName.TaskListUI);
+            view.getComponent(TaskListUI).refreshUI();
+        }
     }
     taskFailed(taskId: string): void {
-        GameMain.inst.UI.taskListUI.refreshUI();
+        if (UIPanelMgr.getPanelIsShow(UIName.TaskListUI)) {
+            const view = UIPanelMgr.getPanel(UIName.TaskListUI);
+            view.getComponent(TaskListUI).refreshUI();
+        }
     }
 
     getProp(propId: string, num: number): void {

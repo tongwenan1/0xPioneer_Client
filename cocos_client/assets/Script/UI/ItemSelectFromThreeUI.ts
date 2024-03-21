@@ -3,22 +3,21 @@ import { PopUpUI } from '../BasicView/PopUpUI';
 import { ItemConfigType, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import { ArtifactItem } from './ArtifactItem';
-import { ArtifactMgr, DropMgr, ItemMgr, LanMgr } from '../Utils/Global';
+import { ArtifactMgr, DropMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
 import { ArtifactEffectRankColor } from '../Const/Model/ArtifactModelDefine';
 import ArtifactData from '../Model/ArtifactData';
+import ViewController from '../BasicView/ViewController';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemSelectFromThreeUI')
-export class ItemSelectFromThreeUI extends PopUpUI {
+export class ItemSelectFromThreeUI extends ViewController {
 
     public async showItem(dropId: string, selectedCallback: () => void) {
-
         this._selectedCallback = selectedCallback;
         const drops: any[] = DropMgr.getDropById(dropId);
         // useLanMgr
         // this.node.getChildByPath("__ViewContent/Title").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/GetAllBtn/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-
         if (drops.length > 0) {
             const drop = drops[0];
             if (drop.type == 2) {
@@ -95,9 +94,6 @@ export class ItemSelectFromThreeUI extends PopUpUI {
                     this._showItemViews.push(tempView);
                 }
                 content.updateLayout();
-
-                // show
-                this.show(true, true);
             }
         }
     }
@@ -107,24 +103,29 @@ export class ItemSelectFromThreeUI extends PopUpUI {
 
     private _itemView: Node = null;
     private _showItemViews: Node[] = null;
-    onLoad(): void {
+
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
         this._itemView = this.node.getChildByPath("__ViewContent/ImgTextBg/SelectContent/Item");
         this._itemView.active = false;
 
         this._showItemViews = [];
     }
-
-    start() {
-
-
+    protected viewPopAnimation(): boolean {
+        return true;
+    }
+    protected contentView(): Node {
+        return this.node.getChildByPath("__ViewContent");
     }
 
     //---------------------------------------------------- action
-    private onTapClose() {
-        this.show(false, true);
+    private async onTapClose() {
+        await this.playExitAnimation();
+        UIPanelMgr.removePanelByNode(this.node);
     }
 
-    private onTapGet(event: Event, customEventData: any) {
+    private async onTapGet(event: Event, customEventData: any) {
         const index: number = parseInt(customEventData);
         const item = this._items[index];
         ArtifactMgr.addArtifact([item]);
@@ -133,10 +134,11 @@ export class ItemSelectFromThreeUI extends PopUpUI {
         if (this._selectedCallback != null) {
             this._selectedCallback();
         }
-        this.show(false, true);
+        await this.playExitAnimation();
+        UIPanelMgr.removePanelByNode(this.node);
     }
 
-    private onTapGetAll() {
+    private async onTapGetAll() {
         const energyNum: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Energy);
         const needNum: number = 200;
         if (energyNum >= needNum) {
@@ -146,7 +148,8 @@ export class ItemSelectFromThreeUI extends PopUpUI {
             if (this._selectedCallback != null) {
                 this._selectedCallback();
             }
-            this.show(false, true);
+            await this.playExitAnimation();
+            UIPanelMgr.removePanelByNode(this.node);
         } else {
             // useLanMgr
             // GameMain.inst.UI.ShowTip(LanMgr.getLanById("201004"));
