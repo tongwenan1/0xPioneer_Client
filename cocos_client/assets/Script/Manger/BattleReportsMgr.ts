@@ -153,8 +153,7 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
         }
     }
     //#endregion
-
     public constructor() {
-        this._registerEvents();    
+        this._registerEvents();
     }
 }
