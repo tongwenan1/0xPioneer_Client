@@ -62,7 +62,7 @@ export class EventUI extends ViewController {
         EventMgr.off(EventName.CHANGE_LANG, this._refreshUI, this);
     }
 
-    private _refreshUI(event: any) {
+    private async _refreshUI(event: any) {
         if (event == null) {
             return;
         }
@@ -134,10 +134,10 @@ export class EventUI extends ViewController {
             if (event.type == 4) {
                 let showTip: string = "";
                 if (event.cost != null) {
-                    showTip += this._loseOrGainItemAndResource(event.cost, true);
+                    showTip += await this._loseOrGainItemAndResource(event.cost, true);
                 }
                 if (event.reward != null) {
-                    showTip += this._loseOrGainItemAndResource(event.reward, false);
+                    showTip += await this._loseOrGainItemAndResource(event.reward, false);
                 }
                 GameMain.inst.UI.ShowTip(showTip);
             } else if (event.type == 5) {
@@ -197,7 +197,6 @@ export class EventUI extends ViewController {
                                 }
                             }
                         }
-
                     }
                     GameMain.inst.UI.ShowTip(showTip);
                 }
