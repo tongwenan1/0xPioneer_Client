@@ -9,6 +9,7 @@ import { BackpackItem } from './BackpackItem';
 import { UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { EventMgr, LanMgr, LvlupMgr, UserInfoMgr, AudioMgr, UIPanelMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
+import { UIHUDController } from './UIHUDController';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfoUI')
@@ -128,7 +129,7 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
             data[key] = localStorage.getItem(key);
         }
         await navigator.clipboard.writeText(JSON.stringify(data));
-        GameMain.inst.UI.ShowTip("Save exported to clipboard.")
+        UIHUDController.showCenterTip("Save exported to clipboard.")
     }
 
     private onClickImportSave() {
@@ -141,14 +142,14 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
         try {
             saveObj = JSON.parse(saveText);
         } catch (e) {
-            GameMain.inst.UI.ShowTip("Parse save text failed: not valid JSON");
+            UIHUDController.showCenterTip("Parse save text failed: not valid JSON");
             console.error(`Parse save text failed: ${e}`);
             return;
         }
 
         for (const k in saveObj) {
             if (typeof saveObj[k] !== "string") {
-                GameMain.inst.UI.ShowTip("Import save failed: save text format error.");
+                UIHUDController.showCenterTip("Import save failed: save text format error.");
                 return;
             }
         }
@@ -431,7 +432,7 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
         if (changedName.length <= 0) {
             // useLanMgr
             // LanMgr.getLanById("107549")
-            GameMain.inst.UI.ShowTip("Name cannot be empty");
+            UIHUDController.showCenterTip("Name cannot be empty");
             return;
         }
         UserInfoMgr.playerName = changedName;

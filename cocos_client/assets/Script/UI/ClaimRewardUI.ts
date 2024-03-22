@@ -4,6 +4,7 @@ import { EventName } from "../Const/ConstDefine";
 import { BoxMgr, EventMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TreasureGettedUI } from "./TreasureGettedUI";
+import { UIHUDController } from "./UIHUDController";
 const { ccclass, property } = _decorator;
 
 @ccclass("ClaimRewardUI")
@@ -135,8 +136,8 @@ export class ClaimRewardUI extends Component {
         } else if (getStatus == 0) {
 
             // useLanMgr
-            GameMain.inst.UI.ShowTip(LanMgr.getLanById("200002"));
-            // GameMain.inst.UI.ShowTip("Please explore more to get it");
+            UIHUDController.showCenterTip(LanMgr.getLanById("200002"));
+            // UIHUDController.showCenterTip("Please explore more to get it");
         }
     }
 }

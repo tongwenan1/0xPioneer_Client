@@ -1,41 +1,22 @@
 import { _decorator, Component, Node, Button, SpriteFrame, Sprite, Label, Prefab, instantiate, tiledLayerAssembler, Tween, v3, tween, math, randomRangeInt, Color, LabelOutline, ImageAsset } from 'cc';
-import { GameMain } from '../GameMain';import { TilePos } from '../Game/TiledMap/TileTool';
+import { TilePos } from '../Game/TiledMap/TileTool';
 import { ClaimRewardUI } from './ClaimRewardUI';
-import { ECursorStyle, EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
-import { ArtifactUI } from './ArtifactUI';
-import { ArtifactInfoUI } from './ArtifactInfoUI';
+import { EventName } from '../Const/ConstDefine';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
 import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { BattleReportsEvent } from '../Const/Manager/BattleReportsMgrDefine';
 import { BattleReportsMgr, EventMgr, LanMgr, LocalDataLoader, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
-import { MouseCursor } from './MouseCursor';
 import { UIName } from '../Const/ConstUIDefine';
 import { TaskListUI } from './TaskListUI';
 import { NewSettlementUI } from './NewSettlementUI';
+import ViewController from '../BasicView/ViewController';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('MainUI')
-export class MainUI extends Component implements PioneerMgrEvent, UserInfoEvent, BattleReportsEvent {
-
-    @property(Node)
-    UIRoot: Node;
-
-    @property([ImageAsset])
-    cursorImages: ImageAsset[] = [];
-
-    @property([SpriteFrame])
-    ResourceIconSpriteFrame: SpriteFrame[] = [];
-
-    private _claimRewardUI: ClaimRewardUI;
-
-    @property(Node)
-    public leftUI: Node = null;
-
-    @property(Node)
-    public btnBuild: Node = null;
+export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoEvent, BattleReportsEvent {
 
     @property(Button)
     backpackBtn: Button = null;
@@ -46,10 +27,11 @@ export class MainUI extends Component implements PioneerMgrEvent, UserInfoEvent,
     @property(Button)
     artifactBtn: Button = null;
 
+    private _claimRewardUI: ClaimRewardUI;
     private _gangsterComingTipView: Node = null;
 
-    onLoad(): void {
-        MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[0].nativeUrl);
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
 
         this._gangsterComingTipView = this.node.getChildByName("GangsterTipView");
         this._gangsterComingTipView.active = false;
@@ -60,13 +42,12 @@ export class MainUI extends Component implements PioneerMgrEvent, UserInfoEvent,
         BattleReportsMgr.addObserver(this);
 
         EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
-
     }
+    
+    protected async viewDidStart(): Promise<void> {
+        super.viewDidStart();
 
-    async start() {
         this._claimRewardUI = this.node.getChildByName("reward_ui").getComponent(ClaimRewardUI);
-
-        EventMgr.on(EventName.SCENE_CHANGE, this.onSceneChange, this);
 
         if (LocalDataLoader.loadStatus == 0) {
             await LocalDataLoader.loadLocalDatas();
@@ -94,6 +75,16 @@ export class MainUI extends Component implements PioneerMgrEvent, UserInfoEvent,
         this.updateBattleReportsUnreadCount();
     }
 
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
+
+        PioneerMgr.removeObserver(this);
+        UserInfoMgr.removeObserver(this);
+        BattleReportsMgr.removeObserver(this);
+
+        EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
+    }
+    
     private updateBattleReportsUnreadCount() {
         const node = this.battleReportsBtn.node.getChildByName('unreadCount');
         const label = node.getChildByName('unreadCountLabel').getComponent(Label);
@@ -108,18 +99,6 @@ export class MainUI extends Component implements PioneerMgrEvent, UserInfoEvent,
         }
     }
 
-    update(deltaTime: number) {
-
-    }
-
-    onDestroy(): void {
-        PioneerMgr.removeObserver(this);
-        UserInfoMgr.removeObserver(this);
-        BattleReportsMgr.removeObserver(this);
-
-        EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
-    }
-
     changeLang(): void {
         // useLanMgr
         // this.node.getChildByPath("LeftNode/title").getComponent(Label).string = LanMgr.getLanById("107549");
@@ -131,40 +110,6 @@ export class MainUI extends Component implements PioneerMgrEvent, UserInfoEvent,
         const newSettle = localStorage.getItem("local_newSettle");
         const view = this.node.getChildByName("NewSettlementTipView");
         view.active = newSettle != null;
-    }
-
-    onSceneChange() {
-        // this.LoadingUINode.active = true;
-
-        // let thisptr = this;
-        // tween(this.LoadingUINode)
-        //     .delay(1.5)
-        //     .to(0, { active: false })
-        //     .call(() => {
-
-        // if (GameMain.inst.isInnerScene()) {
-        //     thisptr.leftUI.active = false;
-        //     //thisptr.btnBuild.active = true;
-        //     this.btnBuild.active = false; // for Debug ...
-        // }
-        // else {
-        //     thisptr.leftUI.active = true;
-        //     thisptr.btnBuild.active = false;
-        // }
-        // })
-        // .start();
-
-
-        // if(GameMain.inst.isInnerScene()) {
-        //     this.leftUI.active = false;
-        //     //this.btnBuild.active = true;
-        //     this.btnBuild.active = false; // for Debug ...
-        // }
-        // else {
-        //     this.leftUI.active = true;
-        //     this.btnBuild.active = false;
-        // }
-
     }
 
     onBuliClick() {
@@ -189,62 +134,6 @@ export class MainUI extends Component implements PioneerMgrEvent, UserInfoEvent,
         if (view != null) {
             view.getComponent(TaskListUI).refreshUI();
         }
-    }
-
-
-    // index : 0:normal, 1:gear, 2:forbiden
-    public ChangeCursor(index: number) {
-        if (index >= this.cursorImages.length) {
-            index = 0;
-        }
-
-        MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[index].nativeUrl);
-        //MouseCursor.SetCursorStyle(ECursorStyle.crosshair);
-    }
-
-    public ShowTip(str: string) {
-        let node = new Node();
-        node.setParent(this.UIRoot);
-        let label = node.addComponent(Label);
-        label.string = str;
-        label.fontSize = 30;
-
-        // TO DO : change color by input parameter
-        label.color = Color.WHITE;
-        let labelOutline = node.addComponent(LabelOutline);
-        labelOutline.color = Color.BLACK;
-        labelOutline.width = 3;
-
-        let action = new Tween(node);
-        action.to(0.2, { position: v3(0, 200, 0) });
-        action.delay(1.5);
-        action.call(() => {
-            node.destroy();
-        });
-        action.start();
-    }
-
-    public NewTaskTip(str: string) {
-        let parent = this.node.getChildByName("task_tip");
-        let node = new Node();
-        node.setParent(parent);
-        let label = node.addComponent(Label);
-        label.string = str;
-        label.fontSize = 30;
-
-        // TO DO : change color by input parameter
-        label.color = Color.YELLOW;
-        let labelOutline = node.addComponent(LabelOutline);
-        labelOutline.color = Color.BLACK;
-        labelOutline.width = 3;
-
-        let action = new Tween(node);
-        action.to(0.2, { position: v3(-200, 0, 0) });
-        action.delay(1.5);
-        action.call(() => {
-            node.destroy();
-        });
-        action.start();
     }
 
     private checkCanShowGansterComingTip(pioneerId: string) {

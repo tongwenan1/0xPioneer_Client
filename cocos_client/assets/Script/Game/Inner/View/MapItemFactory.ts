@@ -8,6 +8,7 @@ import { FinishedEvent, InnerBuildingType, UserInfoEvent, UserInnerBuildInfo } f
 import { EventMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../../Utils/Global';
 import { UIName } from '../../../Const/ConstUIDefine';
 import { RecruitUI } from '../../../UI/Inner/RecruitUI';
+import { UIHUDController } from '../../../UI/UIHUDController';
 
 const { ccclass, property } = _decorator;
 
@@ -33,8 +34,8 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
         super._onClick();
         if (GameMain.inst.innerSceneMap.isUpgrading(this.buildID as InnerBuildingType)) {
             // useLanMgr
-            GameMain.inst.UI.ShowTip(LanMgr.getLanById("201001"));
-            // GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
+            UIHUDController.showCenterTip(LanMgr.getLanById("201001"));
+            // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
             return;
         }
         if (this.buildData == null) {
@@ -44,8 +45,8 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
             this.buildData.buildLevel > 0) {
             if (UserInfoMgr.isGeneratingTroop) {
                 // useLanMgr
-                GameMain.inst.UI.ShowTip(LanMgr.getLanById("201002"));
-                // GameMain.inst.UI.ShowTip("Recruiting…Please wait…");
+                UIHUDController.showCenterTip(LanMgr.getLanById("201002"));
+                // UIHUDController.showCenterTip("Recruiting…Please wait…");
                 return;
             }
             const view = await UIPanelMgr.openPanel(UIName.RecruitUI);

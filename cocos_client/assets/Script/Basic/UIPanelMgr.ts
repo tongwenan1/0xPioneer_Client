@@ -4,11 +4,14 @@ import ResourcesManager from "./ResourcesMgr";
 
 export default class UIPanelManger {
 
-    public setRootView(rootView: Node) {
-        this._rootView = rootView;
+    public setUIRootView(rootView: Node) {
+        this._uiRootView = rootView;
+    }
+    public setHUDRootView(rootView: Node) {
+        this._hudRootView = rootView;
     }
 
-    public getPanelIsShow(name :string): boolean {
+    public getPanelIsShow(name: string): boolean {
         const nd = this._uiMap.get(name);
         if (nd != null && nd.isValid && nd.active) {
             return true;
@@ -35,28 +38,60 @@ export default class UIPanelManger {
     }
 
     public async openPanel(name: string): Promise<Node> {
-        if (this._rootView == null ||
-            !this._rootView.isValid) {
+        if (this._uiRootView == null ||
+            !this._uiRootView.isValid) {
             return;
         }
         let nd = this._uiMap.get(name);
         if (nd != null && nd.isValid) {
-            
+
         } else {
-            const prefab = await this._resourceMgr.LoadABResource("prefab/" + name, Prefab);
-            if (prefab != null) {
-                nd = instantiate(prefab);
-                nd.setParent(this._rootView);
-                this._uiMap.set(name, nd);
-            }
+            nd = await this._open(name, this._uiRootView);
         }
         return nd;
     }
 
-    private _uiMap: Map<string, Node> = new Map();
+    public async openHUDPanel(name: string): Promise<Node> {
+        if (this._hudRootView == null ||
+            !this._hudRootView.isValid) {
+            return;
+        }
+        const nd = await this._open(name, this._hudRootView);
+        return nd;
+    }
+    public closeHUDPanel(node: Node) {
+        for (let i = 0; i < this._hudQueue.length; i++) {
+            if (node == this._hudQueue[i]) {
+                const deleteNode = this._hudQueue.splice(i, 1);
+                deleteNode[0].destroy();
+                break;
+            }
+        }
+    }
     private _resourceMgr: ResourcesManager = null;
-    private _rootView: Node = null;
+
+    private _uiMap: Map<string, Node> = new Map();
+    private _uiRootView: Node = null;
+
+    private _hudRootView: Node = null;
+    private _hudQueue: Node[] = [];
     public constructor(resourceMgr) {
         this._resourceMgr = resourceMgr;
+    }
+
+    private async _open(name: string, rootView: Node, path: string = "prefab/"): Promise<Node | null> {
+        const prefab = await this._resourceMgr.LoadABResource(path + name, Prefab);
+        if (prefab != null) {
+            const nd = instantiate(prefab);
+            nd.setParent(rootView);
+            if (rootView == this._uiRootView) {
+                this._uiMap.set(name, nd);
+
+            } else if (rootView == this._hudRootView) {
+                this._hudQueue.push(nd);
+            }
+            return nd;
+        }
+        return null;
     }
 }

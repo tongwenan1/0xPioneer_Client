@@ -24,6 +24,7 @@ import { DialogueUI } from '../../UI/Outer/DialogueUI';
 import { SecretGuardGettedUI } from '../../UI/Outer/SecretGuardGettedUI';
 import { TaskListUI } from '../../UI/TaskListUI';
 import { EventUI } from '../../UI/Outer/EventUI';
+import { UIHUDController } from '../../UI/UIHUDController';
 
 
 const { ccclass, property } = _decorator;
@@ -134,7 +135,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     start() {
-
+        console.log("exce stated: " + (Date.now()));
         this._started = true;
         this._startAction();
     }
@@ -161,6 +162,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 if (localOuterMapScale != null) {
                     GameMain.inst.MainCamera.orthoHeight = this._cameraBeginOrthoHeight * parseFloat(localOuterMapScale);
                 }
+                console.log("exce force: " + (Date.now()));
             }
 
             if (!UserInfoMgr.isFinishRookie) {
@@ -892,8 +894,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     gameTaskOver(): void {
 
         // useLanMgr
-        GameMain.inst.UI.ShowTip(LanMgr.getLanById("200001"));
-        // GameMain.inst.UI.ShowTip("Boot ends");
+        UIHUDController.showCenterTip(LanMgr.getLanById("200001"));
+        // UIHUDController.showCenterTip("Boot ends");
 
     }
     generateTroopTimeCountChanged(leftTime: number): void {

@@ -4,6 +4,7 @@ import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { GameMain } from '../../GameMain';
 import { EventMgr, ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
+import { UIHUDController } from '../UIHUDController';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
@@ -177,7 +178,7 @@ export class RecruitUI extends ViewController {
         if (this._generateTimeNum <= 0) {
             // useLanMgr
             // LanMgr.getLanById("107549")
-            GameMain.inst.UI.ShowTip("Unable to produce");
+            UIHUDController.showCenterTip("Unable to produce");
             return;
         }
         ItemMgr.subItem(ResourceCorrespondingItem.Wood, parseInt(this._usedWood.string));

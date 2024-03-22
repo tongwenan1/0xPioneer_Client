@@ -6,6 +6,7 @@ import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, LocationI
 import { BranchEventMgr, BuildingMgr, LanMgr, PioneerMgr, UIPanelMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { LootsPopup } from './LootsPopup';
+import { UIHUDController } from './UIHUDController';
 
 const {ccclass, property} = _decorator;
 
@@ -231,7 +232,7 @@ export class BattleReportListItemUI extends Component {
         const building = BuildingMgr.getBuildingById(reportData.buildingId);
         const findEvents = BranchEventMgr.getEventById(building.eventId);
         if (findEvents.length == 0) {
-            GameMain.inst.UI.ShowTip("Error");
+            UIHUDController.showCenterTip("Error");
             return;
         }
         UIPanelMgr.removePanel(UIName.BattleReportUI);

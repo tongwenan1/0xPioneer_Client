@@ -8,6 +8,7 @@ import ArtifactData from '../Model/ArtifactData';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
+import { UIHUDController } from './UIHUDController';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemSelectFromThreeUI')
@@ -159,8 +160,8 @@ export class ItemSelectFromThreeUI extends ViewController {
             UIPanelMgr.removePanelByNode(this.node);
         } else {
             // useLanMgr
-            // GameMain.inst.UI.ShowTip(LanMgr.getLanById("201004"));
-            GameMain.inst.UI.ShowTip("Insufficient resources for get all");
+            // UIHUDController.showCenterTip(LanMgr.getLanById("201004"));
+            UIHUDController.showCenterTip("Insufficient resources for get all");
         }
     }
 }

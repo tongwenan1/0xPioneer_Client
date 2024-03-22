@@ -9,6 +9,7 @@ import { ItemType } from '../../Const/Model/ItemModelDefine';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
 import { ItemInfoUI } from '../ItemInfoUI';
+import { UIHUDController } from '../UIHUDController';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -139,7 +140,7 @@ export class EventUI extends ViewController {
                 if (event.reward != null) {
                     showTip += await this._loseOrGainItemAndResource(event.reward, false);
                 }
-                GameMain.inst.UI.ShowTip(showTip);
+                UIHUDController.showCenterTip(showTip);
             } else if (event.type == 5) {
                 if (event.change != null) {
                     let showTip: string = "";
@@ -198,7 +199,7 @@ export class EventUI extends ViewController {
                             }
                         }
                     }
-                    GameMain.inst.UI.ShowTip(showTip);
+                    UIHUDController.showCenterTip(showTip);
                 }
             }
         }
@@ -386,8 +387,8 @@ export class EventUI extends ViewController {
                 PioneerMgr.pioneerToIdle(this._triggerPioneerId);
             }
             // useLanMgr
-            GameMain.inst.UI.ShowTip(LanMgr.getLanById("207010"));
-            // GameMain.inst.UI.ShowTip("Event Ended");
+            UIHUDController.showCenterTip(LanMgr.getLanById("207010"));
+            // UIHUDController.showCenterTip("Event Ended");
             UIPanelMgr.removePanelByNode(this.node);
         } else {
             const event = BranchEventMgr.getEventById(eventId);

@@ -11,6 +11,7 @@ import { BuildingMgr, ConfigMgr, EventMgr, LanMgr, PioneerMgr, UserInfoMgr } fro
 import { BuildingFactionType, MapBuildingType } from '../Const/Model/MapBuildingModelDefine';
 import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel from '../Game/Outer/Model/MapPioneerModel';
+import { UIHUDController } from '../UI/UIHUDController';
 const { ccclass, property } = _decorator;
 
 @ccclass('CPrefabInfo')
@@ -245,7 +246,7 @@ export class MapBG extends Component {
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {
-            GameMain.inst.UI.ChangeCursor(0);
+            EventMgr.emit(EventName.CHANGE_CURSOR, { index: 0 });
             if (thisptr._mouseDown) {
                 let pos = GameMain.inst.MainCamera.node.position.add(new Vec3(-event.movementX, event.movementY, 0));
 
@@ -272,7 +273,7 @@ export class MapBG extends Component {
                                 } else {
                                     this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE);
                                 }
-                                GameMain.inst.UI.ChangeCursor(1);
+                                EventMgr.emit(EventName.CHANGE_CURSOR, { index: 1 });
                             } else {
                                 const isBlock = this._tiledhelper.Path_IsBlock(tp.x, tp.y);
                                 if (isBlock) {
@@ -292,7 +293,7 @@ export class MapBG extends Component {
                                         }
                                     }
                                     this._mapCursorView.show(cursorShowTilePositions, Color.RED);
-                                    GameMain.inst.UI.ChangeCursor(2);
+                                    EventMgr.emit(EventName.CHANGE_CURSOR, { index: 2 });
 
                                 } else {
                                     const stayPioneers = PioneerMgr.getShowPioneersByMapPos(v2(tp.x, tp.y));
@@ -304,7 +305,7 @@ export class MapBG extends Component {
                                         }
                                     }
                                     if (existOtherPioneer != null) {
-                                        GameMain.inst.UI.ChangeCursor(1);
+                                        EventMgr.emit(EventName.CHANGE_CURSOR, { index: 1 });
                                     }
                                     this._mapCursorView.show([v2(tp.x, tp.y)], Color.WHITE);
                                 }
@@ -312,7 +313,7 @@ export class MapBG extends Component {
 
                         } else {
                             this._mapCursorView.hide();
-                            GameMain.inst.UI.ChangeCursor(2);
+                            EventMgr.emit(EventName.CHANGE_CURSOR, { index: 2 });
                         }
                     } else {
                         this._mapCursorView.hide();
@@ -517,16 +518,16 @@ export class MapBG extends Component {
         // check is busy
         if (PioneerMgr.currentActionPioneerIsBusy()) {
             // useLanMgr
-            // GameMain.inst.UI.ShowTip(LanMgr.getLanById("203002"));
-            // GameMain.inst.UI.ShowTip("pioneer is busy");
+            // UIHUDController.showCenterTip(LanMgr.getLanById("203002"));
+            // UIHUDController.showCenterTip("pioneer is busy");
             return;
         }
         // check is dead
         const currentActionPioneer = PioneerMgr.getCurrentPlayerPioneer();
         if (!currentActionPioneer.show && currentActionPioneer.rebirthCountTime > 0) {
             // useLanMgr
-            GameMain.inst.UI.ShowTip(LanMgr.getLanById("203003"));
-            // GameMain.inst.UI.ShowTip("pioneer is dead");
+            UIHUDController.showCenterTip(LanMgr.getLanById("203003"));
+            // UIHUDController.showCenterTip("pioneer is dead");
             return;
         }
 
@@ -548,8 +549,8 @@ export class MapBG extends Component {
             } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing) {
                 actionType = -2;
                 // useLanMgr
-                GameMain.inst.UI.ShowTip(LanMgr.getLanById("203005"));
-                // GameMain.inst.UI.ShowTip("pioneer is processing event");
+                UIHUDController.showCenterTip(LanMgr.getLanById("203005"));
+                // UIHUDController.showCenterTip("pioneer is processing event");
             } else {
                 if (stayBuilding.type == MapBuildingType.city) {
                     if (stayBuilding.faction != BuildingFactionType.enemy) {
@@ -576,21 +577,21 @@ export class MapBG extends Component {
             const isBlock = this._tiledhelper.Path_IsBlock(tiledPos.x, tiledPos.y);
             if (isBlock) {
                 // useLanMgr
-                GameMain.inst.UI.ShowTip(LanMgr.getLanById("203001"));
-                // GameMain.inst.UI.ShowTip("cann't move to block");
+                UIHUDController.showCenterTip(LanMgr.getLanById("203001"));
+                // UIHUDController.showCenterTip("cann't move to block");
                 return;
             }
             if (currentActionPioneer.actionType == MapPioneerActionType.defend) {
                 actionType = -2;
                 // useLanMgr
-                GameMain.inst.UI.ShowTip(LanMgr.getLanById("203004"));
-                // GameMain.inst.UI.ShowTip("pioneer is defending");
+                UIHUDController.showCenterTip(LanMgr.getLanById("203004"));
+                // UIHUDController.showCenterTip("pioneer is defending");
 
             } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing) {
                 actionType = -2;
                 // useLanMgr
-                GameMain.inst.UI.ShowTip(LanMgr.getLanById("203005"));
-                // GameMain.inst.UI.ShowTip("pioneer is processing event");
+                UIHUDController.showCenterTip(LanMgr.getLanById("203005"));
+                // UIHUDController.showCenterTip("pioneer is processing event");
             } else {
                 const stayPioneers = PioneerMgr.getShowPioneersByMapPos(v2(tiledPos.x, tiledPos.y));
                 let currentPioneer: MapPioneerModel = null;

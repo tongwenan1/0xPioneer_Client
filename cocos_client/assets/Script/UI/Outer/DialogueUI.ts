@@ -6,6 +6,7 @@ import { CountType } from '../../Const/Manager/CountMgrDefine';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
 import { ItemInfoUI } from '../ItemInfoUI';
+import { UIHUDController } from '../UIHUDController';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -165,8 +166,8 @@ export class DialogueUI extends ViewController {
                 UserInfoMgr.getNewTask(this._task);
 
                 // useLanMgr
-                GameMain.inst.UI.NewTaskTip(LanMgr.getLanById("202004"));
-                // GameMain.inst.UI.NewTaskTip("New Task Taken");
+                UIHUDController.showTaskTip(LanMgr.getLanById("202004"));
+                // UIHUDController.showTaskTip("New Task Taken");
 
             } else if (this._task.exitpoint != null &&
                 this._task.exitpoint.result.includes(customEventData)) {

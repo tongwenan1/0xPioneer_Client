@@ -7,6 +7,7 @@ import { InnerBuildingType, UserInnerBuildInfo } from '../../Const/Manager/UserI
 import { ArtifactMgr, EventMgr, InnerBuildingMgr, ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { ArtifactEffectType } from '../../Const/Model/ArtifactModelDefine';
 import ViewController from '../../BasicView/ViewController';
+import { UIHUDController } from '../UIHUDController';
 const { ccclass } = _decorator;
 
 @ccclass('BuildingUpgradeUI')
@@ -176,8 +177,8 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
         if (upgradeData != null) {
             if (GameMain.inst.innerSceneMap.isUpgrading(buildingType)) {
                 // useLanMgr
-                GameMain.inst.UI.ShowTip(LanMgr.getLanById("201004"));
-                // GameMain.inst.UI.ShowTip("The building is being upgraded, please wait.");
+                UIHUDController.showCenterTip(LanMgr.getLanById("201004"));
+                // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
                 return;
             }
             // artifact effect
@@ -203,8 +204,8 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
             }
             if (!canUpgrade) {
                 // useLanMgr
-                GameMain.inst.UI.ShowTip(LanMgr.getLanById("201004"));
-                // GameMain.inst.UI.ShowTip("Insufficient resources for building upgrades");
+                UIHUDController.showCenterTip(LanMgr.getLanById("201004"));
+                // UIHUDController.showCenterTip("Insufficient resources for building upgrades");
                 return;
             }
             for (const resource of upgradeData.cost) {

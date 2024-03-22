@@ -13,6 +13,7 @@ import MapBuildingModel, { MapMainCityBuildingModel } from "../Game/Outer/Model/
 import { MapPioneerType, MapPioneerActionType, MapPioneerAttributesChangeModel, MapPioneerEventStatus, MapPioneerAttributesChangeType, MapPioneerLogicType } from "../Const/Model/MapPioneerModelDefine";
 import MapPioneerModel, { MapPlayerPioneerModel, MapNpcPioneerModel, MapPioneerLogicModel } from "../Game/Outer/Model/MapPioneerModel";
 import { ArtifactEffectType } from "../Const/Model/ArtifactModelDefine";
+import { UIHUDController } from "../UI/UIHUDController";
 
 export default class PioneerMgr {
 
@@ -572,12 +573,12 @@ export default class PioneerMgr {
                         let tips = LanMgr.replaceLanById("106001", [LanMgr.getLanById(deadPioneer.name)]);
                         // let tips = LanMgr.getLanById(deadPioneer.name) + " is dead, please wait for the resurrection";
 
-                        GameMain.inst.UI.ShowTip(tips);
+                        UIHUDController.showCenterTip(tips);
                     }
                     if (fightOverCallback != null) {
                         fightOverCallback(enemyHp <= 0);
                     }
-                } 
+                }
             }, 250);
         }
     }
@@ -687,7 +688,7 @@ export default class PioneerMgr {
 
 
     public constructor() {
-        
+
     }
 
     private _localStorageKey: string = "local_pioneers";
@@ -1674,7 +1675,7 @@ export default class PioneerMgr {
                     let tips = LanMgr.replaceLanById("106001", [LanMgr.getLanById(deadPioneer.name)]);
                     // let tips = LanMgr.getLanById(deadPioneer.name) + " is dead, please wait for the resurrection";
 
-                    GameMain.inst.UI.ShowTip(tips);
+                    UIHUDController.showCenterTip(tips);
                 }
 
             }
