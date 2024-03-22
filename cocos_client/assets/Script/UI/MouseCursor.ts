@@ -11,13 +11,12 @@ export class MouseCursor {
         if (style == ECursorStyle.url)
         {
             // game.canvas.style.cursor = `url(${url}),auto`;
-            game.canvas.style.cursor = `url("/${url}"), auto`;
+            game.canvas.style.cursor = `url("${window.location.href}${url}"), auto`;
         }
         else {
             //game.canvas.style.cursor = style;
             game.canvas.style.cursor = style;
         }
-
         MouseCursor.lastStyle = game.canvas.style.cursor;
     }
 

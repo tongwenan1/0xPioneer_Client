@@ -1,26 +1,25 @@
 import { Asset, resources, assetManager, isValid, AssetManager, sys } from "cc";
 
-export const ABResBundleName = "bundle_ui";
+export const ABResBundleName = "abresources";
 
 export default class ResourcesManager {
-    public async Init(progressCB: (err: Error | null, file: any) => void) {
+    public async Init(progressCB: (err: Error | null, bundle: AssetManager.Bundle) => void) {
         this.initABBundle(progressCB);
     }
 
-    initABBundle(progressCB: (err: Error | null, file: any) => void) {
+    initABBundle(progressCB: (err: Error | null, bundle: AssetManager.Bundle) => void) {
         assetManager.loadBundle(
             ABResBundleName,
             {
                 onFileProgress: (loaded: number, total: number) => {
-                    console.log("ResourcesManager loadBundle " + ABResBundleName + ":" + loaded + "/" + total);
+                    console.log("exce ResourcesManager loadBundle " + ABResBundleName + ":" + loaded + "/" + total);
                 },
             },
             (err: Error | null, bundle: AssetManager.Bundle) => {
                 if (err) {
-                    return err;
+                    progressCB(err, null);
+                    return;
                 }
-
-                bundle.preloadDir("Prefab", null);
                 progressCB(null, bundle);
             }
         );

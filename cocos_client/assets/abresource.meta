@@ -8,7 +8,6 @@
   "userData": {
     "isBundle": true,
     "bundleName": "bundle_ui",
-    "priority": 9,
-    "bundleConfigID": "3591oU8vZEhKOhLp7021t2"
+    "priority": 6
   }
 }

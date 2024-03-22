@@ -14,30 +14,17 @@ export class FakeLoading extends Component {
     }
     async start() {
         this._loadingView.active = true;
-        if (LocalDataLoader.loadStatus == 0) {
-            await LocalDataLoader.loadLocalDatas();
-        }
         // load prefab
         let loadRate: number = 0;
-        
-        resources.loadDir("decoration", Prefab, (finished: number, total: number, item: AssetManager.RequestItem) => {
-           const currentRate = finished / total;
-           if (currentRate > loadRate) {
-               loadRate = currentRate;
-               this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
-           }
-        }, (err: Error, data: Prefab[]) => {
+        ResourcesMgr.Init(async (err: Error, bundle: AssetManager.Bundle) => {
             if (err != null) {
                 return;
             }
-            resources.preloadDir("preload/icon", ()=> {
-                ResourcesMgr.Init((err: Error, file: any)=> {
-                    director.loadScene("main");
-                });
-            });
-            
+            if (LocalDataLoader.loadStatus == 0) {
+                await LocalDataLoader.loadLocalDatas();
+            }
+            director.loadScene("main");
         });
-
         {
             //Find and Reg recall method.
             let b1 = this.node.getChildByName("btn-recall").getComponent(Button);

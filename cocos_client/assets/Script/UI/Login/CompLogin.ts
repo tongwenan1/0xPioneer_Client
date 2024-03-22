@@ -1,7 +1,7 @@
-import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, resources } from 'cc';
+import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, resources, AssetManager, Asset } from 'cc';
 import { Web3Helper } from '../../Game/MetaMask/EthHelper';
 import { md5 } from '../../Utils/Md5';
-import { ConfigMgr, LocalDataLoader, UserInfoMgr } from '../../Utils/Global';
+import { ConfigMgr, LocalDataLoader, ResourcesMgr, UserInfoMgr } from '../../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('CompLogin')
@@ -17,40 +17,39 @@ export class CompLogin extends Component {
         this._loadingView.active = true;
         this.node.getChildByName("label-info").getComponent(Label).string = "loading is done. can go next.";
         let loadRate: number = 0;
-        const sceneTotalRate: number = 0.7;
-        const prefabFirstRate: number = 0.27;
-        director.preloadScene(
-            "main",
-            (completedCount: number, totalCount: number, item: any) => {
-                const currentRate = completedCount / totalCount * sceneTotalRate;
+        const preloadRate: number = 0.4;
+        ResourcesMgr.Init(async (err: Error, bundle: AssetManager.Bundle) => {
+            if (err != null) {
+                return;
+            }
+            if (LocalDataLoader.loadStatus == 0) {
+                await LocalDataLoader.loadLocalDatas();
+            }
+            bundle.preloadDir("", (finished: number, total: number, item: AssetManager.RequestItem) => {
+                const currentRate = finished / total;
                 if (currentRate > loadRate) {
                     loadRate = currentRate;
                     this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
                 }
-            },
-            async (error: null | Error, sceneAsset?: SceneAsset) => {
-                if (error == null) {
-                    if (LocalDataLoader.loadStatus == 0) {
-                        await LocalDataLoader.loadLocalDatas();
-                    }
-                    resources.loadDir("preload", (finished: number, total: number, item: any) => {
-                        let currentRate = sceneTotalRate + finished / total * (1 - sceneTotalRate);
-                        if (currentRate >= 1) {
-                            this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = currentRate;
-                        } else {
-                            currentRate = sceneTotalRate + finished / total * (1 - sceneTotalRate - prefabFirstRate);
-                            if (currentRate > loadRate) {
-                                loadRate = currentRate;
-                                this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
-                            }
-                        }
-                    }, ()=> {
-                        this._loaded = true;
-                        this._loadingView.active = false;
-                    });
+            }, (err: Error, data: AssetManager.RequestItem[]) => {
+                if (err != null) {
+                    return;
                 }
-            }
-        );
+                bundle.loadDir("", (finished: number, total: number, item: AssetManager.RequestItem) => {
+                    const currentRate = preloadRate + finished / total * (1 - preloadRate);
+                    if (currentRate > loadRate) {
+                        loadRate = currentRate;
+                        this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
+                    }
+                }, (err: Error, data: Asset[]) => {
+                    if (err != null) {
+                        return;
+                    }
+                    this._loaded = true;
+                    this._loadingView.active = false;
+                });
+            });
+        });
 
         {
             //Find and Reg recall method.
@@ -119,7 +118,7 @@ export class CompLogin extends Component {
 
     }
 
-    private onTapLogin() {
+    private async onTapLogin() {
         const codeEditBox = this.node.getChildByPath("LoginView/CodeInput").getComponent(EditBox);
         if (codeEditBox.string.length <= 0) {
             return;
@@ -137,7 +136,10 @@ export class CompLogin extends Component {
             }
         }
         if (canEnter) {
-            director.loadScene("main");
+            const mainScene = await ResourcesMgr.LoadABResource("scene/main", SceneAsset);
+            if (mainScene != null) {
+                director.runScene(mainScene);
+            }
         }
     }
 

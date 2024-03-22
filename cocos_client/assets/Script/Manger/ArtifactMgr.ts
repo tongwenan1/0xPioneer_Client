@@ -1,5 +1,5 @@
 import { SpriteFrame, resources, sys } from "cc";
-import { PioneerMgr } from "../Utils/Global";
+import { PioneerMgr, ResourcesMgr } from "../Utils/Global";
 import { ArtifactArrangeType, ArtifactMgrEvent } from "../Const/Manager/ArtifactMgrDefine";
 import { ArtifactConfigData, ArtifactEffectConfigData, ArtifactPropValueType, ArtifactProp } from "../Const/Model/ArtifactModelDefine";
 import ArtifactData from "../Model/ArtifactData";
@@ -9,16 +9,7 @@ export default class ArtifactMgr {
         if (iconName in this._itemIconSpriteFrames) {
             return this._itemIconSpriteFrames[iconName];
         }
-        const t = Date.now();
-        const frame = await new Promise((resolve) => {
-            resources.load("preload/icon/artifact/" + iconName + "/spriteFrame", SpriteFrame, (err: Error, icon) => {
-                if (err) {
-                    resolve(null);
-                    return;
-                }
-                resolve(icon);
-            });
-        });
+        const frame = await ResourcesMgr.LoadABResource("icon/artifact/" + iconName + "/spriteFrame", SpriteFrame);
         if (frame != null) {
             this._itemIconSpriteFrames[iconName] = frame;
         }

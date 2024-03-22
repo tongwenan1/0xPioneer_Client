@@ -2,10 +2,11 @@
   "ver": "1.2.0",
   "importer": "directory",
   "imported": true,
-  "uuid": "21e991d2-489c-4c9d-b4bc-abb4bac2ac1b",
+  "uuid": "795eedaf-8ae7-4497-8063-e45c70fdc30d",
   "files": [],
   "subMetas": {},
   "userData": {
-    "bundleName": "ABResources"
+    "isBundle": true,
+    "bundleName": "abresources"
   }
 }

@@ -1,6 +1,6 @@
 import { SpriteFrame, resources, sys } from "cc";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
-import { UserInfoMgr } from "../Utils/Global";
+import { ResourcesMgr, UserInfoMgr } from "../Utils/Global";
 import { FinishedEvent } from "../Const/Manager/UserInfoMgrDefine";
 import { ItemArrangeType, ItemMgrEvent } from "../Const/Manager/ItemMgrDefine";
 import { ItemConfigData, ItemType } from "../Const/Model/ItemModelDefine";
@@ -12,15 +12,7 @@ export default class ItemMgr {
         if (iconName in this._itemIconSpriteFrames) {
             return this._itemIconSpriteFrames[iconName];
         }
-        const frame = await new Promise((resolve) => {
-            resources.load("preload/icon/" + iconName + "/spriteFrame", SpriteFrame, (err: Error, icon) => {
-                if (err) {
-                    resolve(null);
-                    return;
-                }
-                resolve(icon);
-            });
-        });
+        const frame = await ResourcesMgr.LoadABResource("icon/item/" + iconName + "/spriteFrame", SpriteFrame);
         if (frame != null) {
             this._itemIconSpriteFrames[iconName] = frame;
         }

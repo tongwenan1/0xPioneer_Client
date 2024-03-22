@@ -11,17 +11,16 @@ export class UIMainRootController extends ViewController {
     @property(CCBoolean)
     private canShowRookieGuide: boolean = true;
 
-    protected viewDidLoad(): void {
+    protected async viewDidLoad(): Promise<void> {
         super.viewDidLoad();
 
         UIPanelMgr.setRootView(this.node);
+        if (this.canShowRookieGuide && !UserInfoMgr.isFinishRookie) {
+            await UIPanelMgr.openPanel(UIName.RookieGuide);
+        }
     }
     
     protected async viewDidStart(): Promise<void> {
         super.viewDidStart();
-
-        if (this.canShowRookieGuide && !UserInfoMgr.isFinishRookie) {
-            await UIPanelMgr.openPanel(UIName.RookieGuide);
-        }
     }
 }
