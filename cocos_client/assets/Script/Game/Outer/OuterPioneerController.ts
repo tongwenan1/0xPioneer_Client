@@ -353,7 +353,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         // default speed
         let defaultSpeed = 180;
 
-        defaultSpeed = 600;
+        // defaultSpeed = 600;
         const allPioneers = PioneerMgr.getAllPioneer();
 
         // artifact effect
