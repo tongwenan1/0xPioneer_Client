@@ -1456,6 +1456,11 @@ export default class PioneerMgr {
                 }
             }
         }
+
+        if (attacker.type == MapPioneerType.hred &&
+            defender.type != MapPioneerType.player) {
+            canFight = false;
+        }
         if (!canFight) {
             return;
         }
