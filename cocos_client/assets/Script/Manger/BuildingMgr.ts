@@ -443,7 +443,7 @@ export default class BuildingMgr {
                         temple._defendPioneerIds,
                         temple._level,
                         mapPositions,
-                        temple._posType,
+                        temple._stayPosType,
                         temple._hpMax,
                         temple._hp,
                         temple._attack,
@@ -468,7 +468,7 @@ export default class BuildingMgr {
                         temple._defendPioneerIds,
                         temple._level,
                         mapPositions,
-                        temple._posType,
+                        temple._stayPosType,
                         resources,
                         temple._quota
                     );
@@ -482,7 +482,7 @@ export default class BuildingMgr {
                         temple._defendPioneerIds,
                         temple._level,
                         mapPositions,
-                        temple._posType,
+                        temple._stayPosType,
                     );
                 }
                 newModel.progress = temple._progress;

@@ -136,8 +136,8 @@ export class DialogueUI extends ViewController {
                         view.getComponent(ItemInfoUI).showItem(UserInfoMgr.afterTalkItemGetData.get(this._talk.id), true);
                     }
                 }
+                UserInfoMgr.afterTalkItemGetData.delete(this._talk.id);
             });
-            UserInfoMgr.afterTalkItemGetData.delete(this._talk.id);
         }
         if (this._talkOverCallback != null) {
             this._talkOverCallback();
