@@ -1,5 +1,5 @@
 import { CCBoolean, Component, ImageAsset, _decorator } from "cc";
-import { EventMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
+import { EventMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import ViewController from "../BasicView/ViewController";
 import { ECursorStyle, EventName } from "../Const/ConstDefine";
@@ -35,6 +35,10 @@ export class UIMainRootController extends ViewController {
         super.viewDidStart();
 
         EventMgr.on(EventName.CHANGE_CURSOR, this.cursorChanged, this);
+
+        NotificationMgr.registerNotificaiton(this, "testgofo", (data: { text: string })=> {
+            console.log("testgofo: " + data.text);
+        });
     }
 
     protected viewDidDestroy(): void {

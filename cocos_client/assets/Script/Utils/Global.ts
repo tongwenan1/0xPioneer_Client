@@ -1,4 +1,5 @@
 import { EventTarget } from "cc";
+import motification from "../Basic/NotificationMgr";
 import af from "../Manger/ArtifactMgr";
 import br from "../Manger/BattleReportsMgr";
 import box from "../Manger/BoxMgr";
@@ -23,6 +24,7 @@ import audio from "../Basic/AudioMgr";
 import uip from "../Basic/UIPanelMgr";
 import res from "../Basic/ResourcesMgr";
 
+const NotificationMgr = new motification();
 const ArtifactMgr = new af();
 const BoxMgr = new box();
 const BranchEventMgr = new Be();
@@ -72,6 +74,7 @@ export {
     UserInfoMgr,
 
     // system
+    NotificationMgr,
     AudioMgr,
     UIPanelMgr,
     ResourcesMgr
