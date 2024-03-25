@@ -1,5 +1,5 @@
 import { CCBoolean, Component, ImageAsset, _decorator } from "cc";
-import { EventMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
+import { NotificationMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import ViewController from "../BasicView/ViewController";
 import { ECursorStyle, EventName } from "../Const/ConstDefine";
@@ -34,17 +34,13 @@ export class UIMainRootController extends ViewController {
     protected async viewDidStart(): Promise<void> {
         super.viewDidStart();
 
-        EventMgr.on(EventName.CHANGE_CURSOR, this.cursorChanged, this);
-
-        NotificationMgr.registerNotificaiton(this, "testgofo", (data: { text: string })=> {
-            console.log("testgofo: " + data.text);
-        });
+        NotificationMgr.addListener(EventName.CHANGE_CURSOR, this.cursorChanged, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        EventMgr.off(EventName.CHANGE_CURSOR, this.cursorChanged, this);
+        NotificationMgr.removeListener(EventName.CHANGE_CURSOR, this.cursorChanged, this);
     }
 
     private cursorChanged(data: { index: number }) {

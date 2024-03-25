@@ -7,7 +7,7 @@ import { EventName } from '../../Const/ConstDefine';
 import { FinishedEvent, UserInfoEvent } from '../../Const/Manager/UserInfoMgrDefine';
 import { BuildingMgrEvent } from '../../Const/Manager/BuildingMgrDefine';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
-import { BuildingMgr, EventMgr, PioneerMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
+import { BuildingMgr, NotificationMgr, PioneerMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
 import { BuildingStayPosType, MapBuildingType, BuildingFactionType } from '../../Const/Model/MapBuildingModelDefine';
 import { MapDecoratePosMode } from '../../Const/Model/MapDecorateModelDefine';
 import MapDecorateModel from './Model/MapDecorateModel';
@@ -37,7 +37,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     private _started: boolean = false;
     private _dataLoaded: boolean = false;
     protected onLoad() {
-        EventMgr.on(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
+        NotificationMgr.addListener(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
         UserInfoMgr.addObserver(this);
         BuildingMgr.addObserver(this);
         PioneerMgr.addObserver(this);

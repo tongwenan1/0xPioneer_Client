@@ -1,7 +1,7 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import { GameMain } from '../../GameMain';
 import { EventName, ItemConfigType } from '../../Const/ConstDefine';
-import { BranchEventMgr, BuildingMgr, CountMgr, EventMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { BranchEventMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, NotificationMgr, PioneerMgr, SettlementMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { CountType } from '../../Const/Manager/CountMgrDefine';
 import { MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import ItemData from '../../Model/ItemData';
@@ -54,13 +54,13 @@ export class EventUI extends ViewController {
         this._selectItem = this._dialogSelectView.getChildByName("button");
         this._selectItem.active = false;
 
-        EventMgr.on(EventName.CHANGE_LANG, this._refreshUI, this);
+        NotificationMgr.addListener(EventName.CHANGE_LANG, this._refreshUI, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        EventMgr.off(EventName.CHANGE_LANG, this._refreshUI, this);
+        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._refreshUI, this);
     }
 
     private async _refreshUI(event: any) {

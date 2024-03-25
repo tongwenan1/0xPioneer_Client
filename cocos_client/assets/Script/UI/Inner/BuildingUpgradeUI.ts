@@ -4,7 +4,7 @@ import CommonTools from '../../Tool/CommonTools';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { ItemMgrEvent } from '../../Const/Manager/ItemMgrDefine';
 import { InnerBuildingType, UserInnerBuildInfo } from '../../Const/Manager/UserInfoMgrDefine';
-import { ArtifactMgr, EventMgr, InnerBuildingMgr, ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, InnerBuildingMgr, ItemMgr, LanMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { ArtifactEffectType } from '../../Const/Model/ArtifactModelDefine';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
@@ -59,14 +59,14 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
         this._levelInfoCostItem = this._levelInfoView.getChildByPath("UpgradeContent/Resource/Item");
         this._levelInfoCostItem.active = false;
 
-        EventMgr.on(EventName.CHANGE_LANG, this._onLangChang, this);
+        NotificationMgr.addListener(EventName.CHANGE_LANG, this._onLangChang, this);
         ItemMgr.addObserver(this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        EventMgr.off(EventName.CHANGE_LANG, this._onLangChang, this);
+        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._onLangChang, this);
         ItemMgr.removeObserver(this);
     }
     protected viewPopAnimation(): boolean {
@@ -224,7 +224,7 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
             up_time = Math.floor(up_time - (up_time * artifactTime));
             if (up_time <= 0) up_time = 1;
 
-            EventMgr.emit(EventName.BUILD_BEGIN_UPGRADE, { buildingType: buildingType, time: up_time });
+            NotificationMgr.triggerEvent(EventName.BUILD_BEGIN_UPGRADE, { buildingType: buildingType, time: up_time });
             this._closeBuildingUpgradeUI();
 
             await this.playExitAnimation();

@@ -2,7 +2,7 @@ import { _decorator, Component, Node, Camera, EventHandler, Vec3, tween } from '
 import { EventName } from './Const/ConstDefine';
 import { MapOutScene } from './Scene/MapOutScene';
 import { MapInnerScene } from './Scene/MapInnerScene';
-import { EventMgr } from './Utils/Global';
+import { NotificationMgr } from './Utils/Global';
 import ViewController from './BasicView/ViewController';
 const { ccclass, property } = _decorator;
 
@@ -39,10 +39,11 @@ export class GameMain extends ViewController {
 
             this._currentScene = this.InnerScene;
 
-            EventMgr.emit(EventName.CHANGE_CURSOR, { index: 0 });
+            NotificationMgr.triggerEvent(EventName.CHANGE_CURSOR, { index: 0 });
+            
         }
 
-        EventMgr.emit(EventName.SCENE_CHANGE);
+        NotificationMgr.triggerEvent(EventName.SCENE_CHANGE);
     }
 
     public getCurrentScene(): Node {
@@ -75,8 +76,8 @@ export class GameMain extends ViewController {
         this.OutScene.active = true;
         this.innerSceneMap = this.InnerScene.getComponent(MapInnerScene);
 
-        EventMgr.on(EventName.CHANGE_GAMECAMERA_POSITION, this._changeGameCameraPosition, this);
-        EventMgr.on(EventName.CHANGE_GAMECAMERA_ZOOM, this._changeGameCameraZoom, this);
+        NotificationMgr.addListener(EventName.CHANGE_GAMECAMERA_POSITION, this._changeGameCameraPosition, this);
+        NotificationMgr.addListener(EventName.CHANGE_GAMECAMERA_ZOOM, this._changeGameCameraZoom, this);
     }
     
     //-------------------------------------- event

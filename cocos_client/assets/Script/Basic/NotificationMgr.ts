@@ -1,41 +1,21 @@
+import { EventTarget } from 'cc';
+
 export default class NotificationMgr {
-    public registerNotificaiton(observer: any, notificationName: string, callback: Function) {
-        if (this._observers.has(observer)) {
-            this._observers.get(observer).push({ notificationName: notificationName, callback: callback });
-        } else {
-            this._observers.set(observer, [{ notificationName: notificationName, callback: callback }]);
-        }
-    }
-    public removeNotificaition(observer: any, notificationName: string) {
-        if (this._observers.has(observer)) {
-            for (let i = 0; i < this._observers.get(observer).length; i++) {
-                if (this._observers.get(observer)[i].notificationName == notificationName) {
-                    this._observers.get(observer).splice(i, 1);
-                    break;
-                }
-            }
-            if (this._observers.get(observer).length == 0) {
-                this._observers.delete(observer);
-            }
-        }
-    }
-    public removeAllNotificaition(observer: any) {
-        if (this._observers.has(observer)) {
-            this._observers.delete(observer);
-        }
-    }
-    public notify(notificationName: string, data: any) {
-        this._observers.forEach((value: { notificationName: string, callback: Function}[], key: any)=> {
-            for (const temple of value) {
-                if (temple.notificationName == notificationName) {
-                    temple.callback.call(key, data);
-                }
-            }
-        });
+
+    public addListener<T extends (...any: any[]) => void>(ev: string, func: T, target: any) {
+        this._eventTarget.on(ev, func, target);
     }
 
-    private _observers: Map<any, { notificationName: string, callback: Function}[]> = null;
+    public removeListener<T extends (...any: any[]) => void>(ev: string, func: T, target: any) {
+        this._eventTarget.off(ev, func, target);
+    }
+
+    public triggerEvent(ev: string, param: any = null) {
+        this._eventTarget.emit(ev, param);
+    }
+
+    private _eventTarget: EventTarget = null;
     public constructor() {
-        this._observers = new Map();
+        this._eventTarget = new EventTarget();
     }
 }

@@ -4,8 +4,7 @@ import { BackpackItem } from './BackpackItem';
 import ItemData from '../Model/ItemData';
 import { ArtifactItem } from './ArtifactItem';
 import ArtifactData from '../Model/ArtifactData';
-import { GameMain } from '../GameMain';
-import { EventMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { LanMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { SecretGuardGettedUI } from './Outer/SecretGuardGettedUI';
 import ViewController from '../BasicView/ViewController';
@@ -45,13 +44,14 @@ export class CivilizationLevelUpUI extends ViewController {
         this._finishLightAnimView = this.node.getChildByPath("Content/Video/Mask/FinishLight");
         this._finishLightAnimView.active = false;
 
-        EventMgr.on(EventName.CHANGE_LANG, this.refreshUI, this);
+        NotificationMgr.addListener(EventName.CHANGE_LANG, this.refreshUI, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        EventMgr.off(EventName.CHANGE_LANG, this.refreshUI, this);
+        NotificationMgr.removeListener(EventName.CHANGE_LANG, this.refreshUI, this);
+        
     }
 
 

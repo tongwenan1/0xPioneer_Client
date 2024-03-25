@@ -11,7 +11,7 @@ import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
 import { FinishedEvent, UserInfoEvent } from '../../Const/Manager/UserInfoMgrDefine';
-import { ArtifactMgr, BranchEventMgr, BuildingMgr, EventMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, SettlementMgr, TalkMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, BranchEventMgr, BuildingMgr, ItemMgr, LanMgr, LvlupMgr, NotificationMgr, PioneerMgr, SettlementMgr, TalkMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { BuildingFactionType } from '../../Const/Model/MapBuildingModelDefine';
 import { MapPioneerLogicType, MapPioneerActionType, MapPioneerType, MapPioneerMoveDirection, MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import { MapResourceBuildingModel } from './Model/MapBuildingModel';
@@ -129,9 +129,9 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
         this._pioneerMap = new Map();
 
-        EventMgr.on(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
-        EventMgr.on(EventName.ROOKIE_GUIDE_BEGIN_EYES, this.onRookieGuideBeginEyes, this);
-        EventMgr.on(EventName.ROOKIE_GUIDE_THIRD_EYES, this.onRookieGuideThirdEyes, this);
+        NotificationMgr.addListener(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
+        NotificationMgr.addListener(EventName.ROOKIE_GUIDE_BEGIN_EYES, this.onRookieGuideBeginEyes, this);
+        NotificationMgr.addListener(EventName.ROOKIE_GUIDE_THIRD_EYES, this.onRookieGuideThirdEyes, this);
     }
 
     start() {
@@ -744,7 +744,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     });
                 }
 
-                EventMgr.emit(EventName.MINING_FINISHED, {
+                NotificationMgr.triggerEvent(EventName.MINING_FINISHED, {
                     buildingId: buildingId,
                     pioneerId: actionPioneerId,
                     duration: 3000, //todo see assets/Script/Manger/PioneerMgr.ts:1225

@@ -5,7 +5,7 @@ import { EventName } from '../Const/ConstDefine';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
 import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { BattleReportsEvent } from '../Const/Manager/BattleReportsMgrDefine';
-import { BattleReportsMgr, EventMgr, LanMgr, LocalDataLoader, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { BattleReportsMgr, LanMgr, LocalDataLoader, NotificationMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import { UIName } from '../Const/ConstUIDefine';
@@ -41,7 +41,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         UserInfoMgr.addObserver(this);
         BattleReportsMgr.addObserver(this);
 
-        EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
+        NotificationMgr.addListener(EventName.CHANGE_LANG, this.changeLang, this);
     }
     
     protected async viewDidStart(): Promise<void> {
@@ -52,7 +52,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         if (LocalDataLoader.loadStatus == 0) {
             await LocalDataLoader.loadLocalDatas();
         }
-        EventMgr.emit(EventName.LOADING_FINISH);
+        NotificationMgr.triggerEvent(EventName.LOADING_FINISH);
 
         this.changeLang();
 
@@ -82,7 +82,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         UserInfoMgr.removeObserver(this);
         BattleReportsMgr.removeObserver(this);
 
-        EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
+        NotificationMgr.removeListener(EventName.CHANGE_LANG, this.changeLang, this);
     }
     
     private updateBattleReportsUnreadCount() {

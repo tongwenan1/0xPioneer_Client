@@ -1,9 +1,8 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
 import { BackpackItem } from './BackpackItem';
 import { EventName } from '../Const/ConstDefine';
-import { GameMain } from '../GameMain';
 import { ItemArrangeType, ItemMgrEvent } from '../Const/Manager/ItemMgrDefine';
-import { EventMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
+import { ItemMgr, LanMgr, NotificationMgr, UIPanelMgr } from '../Utils/Global';
 import ItemData from '../Model/ItemData';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
@@ -39,7 +38,7 @@ export class BackpackUI extends ViewController implements ItemMgrEvent {
 
         this._itemContent = this.node.getChildByPath("__ViewContent/Bg/ScrollView/View/Content");
 
-        EventMgr.on(EventName.CHANGE_LANG, this._refreshBackpackUI, this);
+        NotificationMgr.addListener(EventName.CHANGE_LANG, this._refreshBackpackUI, this);
     }
     
     protected viewDidStart(): void {
@@ -73,7 +72,7 @@ export class BackpackUI extends ViewController implements ItemMgrEvent {
         super.viewDidDestroy();
 
         ItemMgr.removeObserver(this);
-        EventMgr.off(EventName.CHANGE_LANG, this._refreshBackpackUI, this);
+        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._refreshBackpackUI, this);
     }
 
     protected viewPopAnimation(): boolean {

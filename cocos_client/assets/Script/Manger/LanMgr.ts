@@ -1,6 +1,6 @@
 import { resources } from "cc";
 import { EventName } from "../Const/ConstDefine";
-import { EventMgr } from "../Utils/Global";
+import { NotificationMgr } from "../Utils/Global";
 
 export default class LanMgr {
 
@@ -32,7 +32,7 @@ export default class LanMgr {
     public changeLang(lang: string) {
         this._language = lang;
         localStorage.setItem(this._localLanKey, lang);
-        EventMgr.emit(EventName.CHANGE_LANG);
+        NotificationMgr.triggerEvent(EventName.CHANGE_LANG);
     }
 
     public async initData() {

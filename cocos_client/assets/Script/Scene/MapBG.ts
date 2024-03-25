@@ -7,7 +7,7 @@ import { ResOprView } from '../Game/Outer/View/ResOprView';
 import { OuterPioneerController } from '../Game/Outer/OuterPioneerController';
 import { OuterFogAnimShapMask } from '../Game/Outer/View/OuterFogAnimShapMask';
 import { OuterMapCursorView } from '../Game/Outer/View/OuterMapCursorView';
-import { BuildingMgr, ConfigMgr, EventMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../Utils/Global';
+import { BuildingMgr, ConfigMgr, LanMgr, NotificationMgr, PioneerMgr, UserInfoMgr } from '../Utils/Global';
 import { BuildingFactionType, MapBuildingType } from '../Const/Model/MapBuildingModelDefine';
 import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel from '../Game/Outer/Model/MapPioneerModel';
@@ -242,11 +242,11 @@ export class MapBG extends Component {
             localStorage.setItem("local_outer_map_scale", sc.toString());
             this._fixCameraPos(GameMain.inst.MainCamera.node.position);
 
-            EventMgr.emit(EventName.MAP_SCALED);
+            NotificationMgr.triggerEvent(EventName.MAP_SCALED);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {
-            EventMgr.emit(EventName.CHANGE_CURSOR, { index: 0 });
+            NotificationMgr.triggerEvent(EventName.CHANGE_CURSOR, { index: 0 });
             if (thisptr._mouseDown) {
                 let pos = GameMain.inst.MainCamera.node.position.add(new Vec3(-event.movementX, event.movementY, 0));
 
@@ -273,7 +273,7 @@ export class MapBG extends Component {
                                 } else {
                                     this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE);
                                 }
-                                EventMgr.emit(EventName.CHANGE_CURSOR, { index: 1 });
+                                NotificationMgr.triggerEvent(EventName.CHANGE_CURSOR, { index: 1 });
                             } else {
                                 const isBlock = this._tiledhelper.Path_IsBlock(tp.x, tp.y);
                                 if (isBlock) {
@@ -293,7 +293,7 @@ export class MapBG extends Component {
                                         }
                                     }
                                     this._mapCursorView.show(cursorShowTilePositions, Color.RED);
-                                    EventMgr.emit(EventName.CHANGE_CURSOR, { index: 2 });
+                                    NotificationMgr.triggerEvent(EventName.CHANGE_CURSOR, { index: 2 });
 
                                 } else {
                                     const stayPioneers = PioneerMgr.getShowPioneersByMapPos(v2(tp.x, tp.y));
@@ -305,7 +305,7 @@ export class MapBG extends Component {
                                         }
                                     }
                                     if (existOtherPioneer != null) {
-                                        EventMgr.emit(EventName.CHANGE_CURSOR, { index: 1 });
+                                        NotificationMgr.triggerEvent(EventName.CHANGE_CURSOR, { index: 1 });
                                     }
                                     this._mapCursorView.show([v2(tp.x, tp.y)], Color.WHITE);
                                 }
@@ -313,7 +313,7 @@ export class MapBG extends Component {
 
                         } else {
                             this._mapCursorView.hide();
-                            EventMgr.emit(EventName.CHANGE_CURSOR, { index: 2 });
+                            NotificationMgr.triggerEvent(EventName.CHANGE_CURSOR, { index: 2 });
                         }
                     } else {
                         this._mapCursorView.hide();

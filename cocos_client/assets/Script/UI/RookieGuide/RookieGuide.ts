@@ -1,6 +1,6 @@
 import { _decorator, Animation, Button, Component, Label, Node, tween, v3 } from 'cc';
 import { EventName } from '../../Const/ConstDefine';
-import { EventMgr, LanMgr } from '../../Utils/Global';
+import { LanMgr, NotificationMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 const { ccclass, property } = _decorator;
 
@@ -73,9 +73,9 @@ export class RookieGuide extends ViewController {
                 const openEyesView = this._guideView.getChildByName("OpenEyes");
                 openEyesView.active = true;
                 openEyesView.getComponent(Animation).play();
-                EventMgr.emit(EventName.ROOKIE_GUIDE_BEGIN_EYES);
+                NotificationMgr.triggerEvent(EventName.ROOKIE_GUIDE_BEGIN_EYES);
                 this.scheduleOnce(() => {
-                    EventMgr.emit(EventName.ROOKIE_GUIDE_THIRD_EYES);
+                    NotificationMgr.triggerEvent(EventName.ROOKIE_GUIDE_THIRD_EYES);
                 }, 3);
                 openEyesView.getComponent(Animation).on(Animation.EventType.FINISHED, () => {
                 });

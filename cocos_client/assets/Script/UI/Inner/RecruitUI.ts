@@ -1,8 +1,7 @@
 import { _decorator, Component, Label, Layout, Node, ProgressBar, Slider } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { GameMain } from '../../GameMain';
-import { EventMgr, ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ItemMgr, LanMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 const { ccclass, property } = _decorator;
@@ -94,13 +93,13 @@ export class RecruitUI extends ViewController {
         this._usedStone = this.node.getChildByPath("__ViewContent/footer/material/stone_bg/stone/num/left").getComponent(Label);
         this._maxStone = this.node.getChildByPath("__ViewContent/footer/material/stone_bg/stone/num/right").getComponent(Label);
 
-        EventMgr.on(EventName.CHANGE_LANG, this.changeLang, this);
+        NotificationMgr.addListener(EventName.CHANGE_LANG, this.changeLang, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        EventMgr.off(EventName.CHANGE_LANG, this.changeLang, this);
+        NotificationMgr.removeListener(EventName.CHANGE_LANG, this.changeLang, this);
     }
 
     protected viewPopAnimation(): boolean {

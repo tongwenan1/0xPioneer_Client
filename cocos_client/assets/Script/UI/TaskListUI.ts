@@ -2,7 +2,7 @@ import { _decorator, Button, Color, instantiate, Label, Layout, Node } from 'cc'
 import CommonTools from '../Tool/CommonTools';
 import { EventName } from '../Const/ConstDefine';
 import MapHelper from "db://assets/Script/Utils/MapHelper";
-import { BuildingMgr, EventMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { BuildingMgr, LanMgr, NotificationMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 
 const { ccclass, property } = _decorator;
@@ -257,7 +257,7 @@ export class TaskListUI extends ViewController {
         this._toDoButton = this.node.getChildByPath("TaskDetailView/ToDoButton");
         this._completedButton = this.node.getChildByPath("TaskDetailView/CompletedButton");
 
-        EventMgr.on(EventName.CHANGE_LANG, this.refreshUI, this);
+        NotificationMgr.addListener(EventName.CHANGE_LANG, this.refreshUI, this);
     }
 
     protected viewDidStart(): void {
@@ -269,7 +269,7 @@ export class TaskListUI extends ViewController {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        EventMgr.off(EventName.CHANGE_LANG, this.refreshUI, this);
+        NotificationMgr.removeListener(EventName.CHANGE_LANG, this.refreshUI, this);
     }
     //---------------------------------------------------
     // action

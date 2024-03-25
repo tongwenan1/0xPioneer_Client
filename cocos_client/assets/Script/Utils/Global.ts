@@ -1,4 +1,3 @@
-import { EventTarget } from "cc";
 import motification from "../Basic/NotificationMgr";
 import af from "../Manger/ArtifactMgr";
 import br from "../Manger/BattleReportsMgr";
@@ -33,7 +32,6 @@ const ConfigMgr = new cf();
 const CountMgr = new ct();
 const DropMgr = new Dp();
 const EvaluationMgr = new ev();
-const EventMgr = new EventTarget();
 const InnerBuildingMgr = new ibd();
 const ItemMgr = new im();
 const LanMgr = new l();
@@ -62,7 +60,6 @@ export {
     CountMgr,
     DropMgr,
     EvaluationMgr,
-    EventMgr,
     InnerBuildingMgr,
     ItemMgr,
     LanMgr,

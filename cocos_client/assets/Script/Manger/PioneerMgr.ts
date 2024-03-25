@@ -4,7 +4,7 @@ import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { EventName } from "db://assets/Script/Const/ConstDefine";
-import { ArtifactMgr, BranchEventMgr, BuildingMgr, CountMgr, EventMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
+import { ArtifactMgr, BranchEventMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, NotificationMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
 import { FinishedEvent } from "../Const/Manager/UserInfoMgrDefine";
 import { CountType } from "../Const/Manager/CountMgrDefine";
 import { PioneerMgrEvent } from "../Const/Manager/PioneerMgrDefine";
@@ -536,7 +536,7 @@ export default class PioneerMgr {
                         }
                     }
 
-                    EventMgr.emit(EventName.FIGHT_FINISHED, {
+                    NotificationMgr.triggerEvent(EventName.FIGHT_FINISHED, {
                         attacker: {
                             name: attacker.name,
                             avatarIcon: "icon_player_avatar", // todo
@@ -1632,7 +1632,7 @@ export default class PioneerMgr {
                     }
                 }
 
-                EventMgr.emit(EventName.FIGHT_FINISHED, {
+                NotificationMgr.triggerEvent(EventName.FIGHT_FINISHED, {
                     attacker: {
                         name: attacker.name,
                         avatarIcon: "icon_player_avatar", // todo

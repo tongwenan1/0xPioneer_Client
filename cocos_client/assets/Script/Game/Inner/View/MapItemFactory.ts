@@ -5,7 +5,7 @@ import { GameMain } from '../../../GameMain';
 import CommonTools from '../../../Tool/CommonTools';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import { FinishedEvent, InnerBuildingType, UserInfoEvent, UserInnerBuildInfo } from '../../../Const/Manager/UserInfoMgrDefine';
-import { EventMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../../Utils/Global';
+import { LanMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from '../../../Utils/Global';
 import { UIName } from '../../../Const/ConstUIDefine';
 import { RecruitUI } from '../../../UI/Inner/RecruitUI';
 import { UIHUDController } from '../../../UI/UIHUDController';
@@ -61,7 +61,7 @@ export class MapItemFactory extends MapItem implements UserInfoEvent {
             this._recruitCountTime = this.node.getChildByName("RecruitTime").getComponent(Label);
             this._recruitCountTime.node.active = false;
         }
-        EventMgr.on(EventName.BUILD_BEGIN_UPGRADE, this._onBeginUpgrade, this);
+        NotificationMgr.addListener(EventName.BUILD_BEGIN_UPGRADE, this._onBeginUpgrade, this);
     }
 
     start() {

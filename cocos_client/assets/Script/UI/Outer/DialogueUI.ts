@@ -1,7 +1,7 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node } from 'cc';
 import { GameMain } from '../../GameMain';
 import { EventName, NPCNameLangType } from '../../Const/ConstDefine';
-import { CountMgr, EventMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { CountMgr, LanMgr, NotificationMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { CountType } from '../../Const/Manager/CountMgrDefine';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
@@ -37,7 +37,7 @@ export class DialogueUI extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        EventMgr.on(EventName.CHANGE_LANG, this._refreshUI, this);
+        NotificationMgr.addListener(EventName.CHANGE_LANG, this._refreshUI, this);
 
         this._roleViewNameMap.set(NPCNameLangType.Artisan, "artisan");
         this._roleViewNameMap.set(NPCNameLangType.DoomsdayGangBigTeam, "doomsdayGangBigTeam");
@@ -50,7 +50,7 @@ export class DialogueUI extends ViewController {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        EventMgr.off(EventName.CHANGE_LANG, this._refreshUI, this);
+        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._refreshUI, this);
     }
 
     private _refreshUI() {

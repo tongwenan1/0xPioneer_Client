@@ -2,7 +2,7 @@ import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, in
 import * as cc from "cc";
 import { TilePos, TileMapHelper, TileHexDirection } from '../Game/TiledMap/TileTool';
 import { EventName } from '../Const/ConstDefine';
-import { ConfigMgr, EventMgr, LocalDataLoader } from '../Utils/Global';
+import { ConfigMgr, LocalDataLoader, NotificationMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('TestMapBG')
@@ -124,7 +124,7 @@ export class TestMapBG extends Component {
                 sc = useConf.para[0];
             }
             thisptr.node.parent.setScale(v3(sc, sc, sc));
-            EventMgr.emit(EventName.MAP_SCALED, sc);
+            NotificationMgr.triggerEvent(EventName.MAP_SCALED, sc);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: cc.EventMouse) => {
@@ -153,7 +153,7 @@ export class TestMapBG extends Component {
         this.InitTileMap();
 
         await LocalDataLoader.loadLocalDatas();
-        EventMgr.emit(EventName.LOADING_FINISH);
+        NotificationMgr.triggerEvent(EventName.LOADING_FINISH);
     }
     
     private _tiledhelper: TileMapHelper = null;

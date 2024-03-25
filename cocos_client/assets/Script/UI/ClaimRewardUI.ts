@@ -1,7 +1,6 @@
 import { _decorator, Component, Node, instantiate, director, BoxCharacterController, Label, Layout, UITransform, ProgressBar, Button, tween, v3, } from "cc";
-import { GameMain } from "../GameMain";
 import { EventName } from "../Const/ConstDefine";
-import { BoxMgr, EventMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
+import { BoxMgr, LanMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TreasureGettedUI } from "./TreasureGettedUI";
 import { UIHUDController } from "./UIHUDController";
@@ -71,7 +70,7 @@ export class ClaimRewardUI extends Component {
     private _boxViews: Node[] = [];
 
     protected onLoad(): void {
-        EventMgr.on(EventName.LOADING_FINISH, this.loadOver, this);
+        NotificationMgr.addListener(EventName.LOADING_FINISH, this.loadOver, this);
     }
     start() {
         this._started = true;

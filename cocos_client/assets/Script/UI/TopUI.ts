@@ -1,7 +1,6 @@
 import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt, UIOpacity, instantiate, tween } from 'cc';
 import { EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
-import { GameMain } from '../GameMain';
-import { EventMgr, ItemMgr, LvlupMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { ItemMgr, LvlupMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { ItemMgrEvent } from '../Const/Manager/ItemMgrDefine';
 import { UIName } from '../Const/ConstUIDefine';
@@ -47,7 +46,7 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
         ItemMgr.addObserver(this);
 
 
-        EventMgr.on(EventName.LOADING_FINISH, this.loadOver, this);
+        NotificationMgr.addListener(EventName.LOADING_FINISH, this.loadOver, this);
     }
 
     start() {
@@ -117,9 +116,6 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
 
     //------------------------------------------------ action
     private async onTapPlayerInfo() {
-
-        NotificationMgr.notify("testgofo", { text: "?????" });
-
         await UIPanelMgr.openPanel(UIName.PlayerInfoUI);
     }
     //-----------------------------------------------

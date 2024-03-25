@@ -1,7 +1,7 @@
 import { EventName } from "../Const/ConstDefine";
 import { BattleReportRecord, BattleReportType, BattleReportsEvent } from "../Const/Manager/BattleReportsMgrDefine";
 import { BranchEventMgrEvent } from "../Const/Manager/BrachEventMgrDefine";
-import { BranchEventMgr, ConfigMgr, EventMgr } from "../Utils/Global";
+import { BranchEventMgr, ConfigMgr, NotificationMgr } from "../Utils/Global";
 
 export default class BattleReportsMgr implements BranchEventMgrEvent {
     private _storage: BattleReportRecord[];
@@ -42,8 +42,8 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
     }
 
     private _registerEvents() { 
-        EventMgr.on(EventName.FIGHT_FINISHED, this.onFightFinished, this);
-        EventMgr.on(EventName.MINING_FINISHED, this.onMiningFinished, this);
+        NotificationMgr.addListener(EventName.FIGHT_FINISHED, this.onFightFinished, this);
+        NotificationMgr.addListener(EventName.MINING_FINISHED, this.onMiningFinished, this);
         BranchEventMgr.addObserver(this);
     }
 

@@ -4,7 +4,7 @@ import { GameMain } from '../GameMain';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactItem } from './ArtifactItem';
 import { ArtifactArrangeType, ArtifactMgrEvent } from '../Const/Manager/ArtifactMgrDefine';
-import { ArtifactMgr, EventMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
+import { ArtifactMgr, LanMgr, NotificationMgr, UIPanelMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
@@ -39,7 +39,7 @@ export class ArtifactUI extends ViewController implements ArtifactMgrEvent {
 
         this._itemContent = this.node.getChildByPath("__ViewContent/Bg/ScrollView/View/Content");
 
-        EventMgr.on(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
+        NotificationMgr.addListener(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
     }
 
     protected viewDidStart(): void {
@@ -74,7 +74,7 @@ export class ArtifactUI extends ViewController implements ArtifactMgrEvent {
 
         ArtifactMgr.removeObserver(this);
 
-        EventMgr.off(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
+        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
     }
 
     protected viewPopAnimation(): boolean {

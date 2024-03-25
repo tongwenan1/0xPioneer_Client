@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, Button, SpriteFrame, Sprite, resources, Label } from 'cc';
 import { EventName } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
-import { EventMgr, LanMgr } from '../Utils/Global';
+import { LanMgr, NotificationMgr } from '../Utils/Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerOutChangeBtn')
@@ -24,17 +24,17 @@ export class InnerOutChangeBtn extends Component {
         this._sprite = this.node.getChildByName("Icon").getComponent(Sprite);
         this._label = this.node.getChildByPath("BgWord/Label").getComponent(Label);
 
-        EventMgr.on(EventName.SCENE_CHANGE, this.onSceneChange, this);
-        EventMgr.on(EventName.LOADING_FINISH, this.refreshUI, this);
-        EventMgr.on(EventName.CHANGE_LANG, this.refreshUI, this);
+        NotificationMgr.addListener(EventName.SCENE_CHANGE, this.onSceneChange, this);
+        NotificationMgr.addListener(EventName.LOADING_FINISH, this.refreshUI, this);
+        NotificationMgr.addListener(EventName.CHANGE_LANG, this.refreshUI, this);
     }
 
     start() {
     }
 
     onDestroy(): void {
-        EventMgr.off(EventName.CHANGE_LANG, this.refreshUI, this);
-        EventMgr.off(EventName.LOADING_FINISH, this.refreshUI, this);
+        NotificationMgr.removeListener(EventName.CHANGE_LANG, this.refreshUI, this);
+        NotificationMgr.removeListener(EventName.LOADING_FINISH, this.refreshUI, this);
     }
 
     onSceneChange() {

@@ -7,7 +7,7 @@ import ItemData from '../Model/ItemData';
 import { ArtifactItem } from './ArtifactItem';
 import { BackpackItem } from './BackpackItem';
 import { UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
-import { EventMgr, LanMgr, LvlupMgr, UserInfoMgr, AudioMgr, UIPanelMgr } from '../Utils/Global';
+import { LanMgr, LvlupMgr, UserInfoMgr, AudioMgr, UIPanelMgr, NotificationMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import { UIHUDController } from './UIHUDController';
 const { ccclass, property } = _decorator;
@@ -84,8 +84,8 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
         this._langSelectView = this.node.getChildByName("OptionContainer");
         this._langSelectView.active = false;
 
-        EventMgr.on(EventName.LOADING_FINISH, this._loadOver, this);
-        EventMgr.on(EventName.CHANGE_LANG, this._onChangeLang, this);
+        NotificationMgr.addListener(EventName.LOADING_FINISH, this._loadOver, this);
+        NotificationMgr.addListener(EventName.CHANGE_LANG, this._onChangeLang, this);
 
         UserInfoMgr.addObserver(this);
     }
@@ -103,8 +103,8 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        EventMgr.off(EventName.LOADING_FINISH, this._loadOver, this);
-        EventMgr.off(EventName.CHANGE_LANG, this._onChangeLang, this);
+        NotificationMgr.removeListener(EventName.LOADING_FINISH, this._loadOver, this);
+        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._onChangeLang, this);
 
         UserInfoMgr.removeObserver(this);
     }
