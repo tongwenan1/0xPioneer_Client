@@ -1,116 +1,26 @@
 {
-  "0": {
-    "buildId": "0",
-    "maxLevel": 1,
-    "up": {
-      "1": {
-        "desc": "upup gogogog",
-        "time": 5,
-        "cost": [
-          {
-            "type": "8003",
-            "num": 100
-          },
-          {
-            "type": "8002",
-            "num": 100
-          }
-        ],
-        "pic": "",
-        "progress": 10
-      },
-      "2": {
-        "desc": "upup gogogog",
-        "time": 5,
-        "cost": [
-          {
-            "type": "8003",
-            "num": 200
-          },
-          {
-            "type": "8002",
-            "num": 200
-          }
-        ],
-        "pic": "",
-        "progress": 20
-      }
-    }
+  "30001": {
+    "id": "30001",
+    "name": "120001",
+    "anim": "MainBuild",
+    "unlock": 1,
+    "maxlevel": 10,
+    "lvlup_cost": "cost_main"
   },
-  "3": {
-    "id": "3",
-    "maxLevel": 1,
-    "up": {
-      "1": {
-        "desc": "upup gogogog",
-        "time": 5,
-        "cost": [
-          {
-            "type": "8003",
-            "num": 100
-          },
-          {
-            "type": "8002",
-            "num": 100
-          }
-        ],
-        "pic": "",
-        "progress": 10
-      },
-      "2": {
-        "desc": "upup gogogog",
-        "time": 5,
-        "cost": [
-          {
-            "type": "8003",
-            "num": 200
-          },
-          {
-            "type": "8002",
-            "num": 200
-          }
-        ],
-        "pic": "",
-        "progress": 20
-      }
-    }
+  "30002": {
+    "id": "30002",
+    "name": "120002",
+    "anim": "Factory",
+    "unlock": 1,
+    "maxlevel": 10,
+    "lvlup_cost": "cost_barr"
   },
-  "4": {
-    "id": "4",
-    "maxLevel": 1,
-    "up": {
-      "1": {
-        "desc": "upup gogogog",
-        "time": 5,
-        "cost": [
-          {
-            "type": "8003",
-            "num": 100
-          },
-          {
-            "type": "8002",
-            "num": 100
-          }
-        ],
-        "pic": "",
-        "progress": 10
-      },
-      "2": {
-        "desc": "upup gogogog",
-        "time": 5,
-        "cost": [
-          {
-            "type": "8003",
-            "num": 200
-          },
-          {
-            "type": "8002",
-            "num": 200
-          }
-        ],
-        "pic": "",
-        "progress": 20
-      }
-    }
+  "30003": {
+    "id": "30003",
+    "name": "120003",
+    "anim": "House",
+    "unlock": 1,
+    "maxlevel": 10,
+    "lvlup_cost": "cost_barr"
   }
 }

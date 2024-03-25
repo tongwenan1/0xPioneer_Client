@@ -271,6 +271,18 @@
     "id": "117010",
     "eng": "An old axe, used to belong to someone."
   },
+  "120001": {
+    "id": "120001",
+    "eng": "City Hall"
+  },
+  "120002": {
+    "id": "120002",
+    "eng": "Barracks"
+  },
+  "120003": {
+    "id": "120003",
+    "eng": "House"
+  },
   "200001": {
     "id": "200001",
     "eng": "Boot ends"
