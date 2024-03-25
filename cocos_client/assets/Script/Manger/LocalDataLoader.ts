@@ -1,8 +1,15 @@
+import ArtifactConfig from "../Config/ArtifactConfig";
+import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import { ArtifactMgr, AudioMgr, BattleReportsMgr, BoxMgr, BranchEventMgr, BuildingMgr, ConfigMgr, DropMgr, EvaluationMgr, InnerBuildingMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, TalkMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
 
 export default class LocalDataLoader {
 
     public async loadLocalDatas() {
+
+        // load configs
+        await ArtifactConfig.init();
+        await ArtifactEffectConfig.init();
+
         this._loadStatus = 1;
         this._importSaveOnStartIfExists();
 

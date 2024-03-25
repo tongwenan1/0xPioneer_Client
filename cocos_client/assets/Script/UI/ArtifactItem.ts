@@ -2,6 +2,7 @@ import { _decorator, Component, Sprite, SpriteFrame, Node } from 'cc';
 import * as cc from "cc";
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactMgr } from '../Utils/Global';
+import ArtifactConfig from '../Config/ArtifactConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('ArtifactItem')
@@ -12,7 +13,7 @@ export class ArtifactItem extends Component {
             propView.active = false;
         } else {
             propView.active = true;
-            const config = ArtifactMgr.getArtifactConf(item.artifactConfigId);
+            const config = ArtifactConfig.getById(item.artifactConfigId);
             // levelBg
             for (let i = 1; i <= 5; i++) {
                 propView.getChildByName("Level" + i).active = i == config.rank;

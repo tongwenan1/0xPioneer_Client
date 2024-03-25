@@ -9,6 +9,8 @@ import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
 import { UIHUDController } from './UIHUDController';
+import ArtifactConfig from '../Config/ArtifactConfig';
+import ArtifactEffectConfig from '../Config/ArtifactEffectConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemSelectFromThreeUI')
@@ -44,7 +46,7 @@ export class ItemSelectFromThreeUI extends ViewController {
 
                 const content = this.node.getChildByPath("__ViewContent/ImgTextBg/SelectContent").getComponent(Layout);
                 for (let i = 0; i < this._items.length; i++) {
-                    const config = ArtifactMgr.getArtifactConf(this._items[i].artifactConfigId);
+                    const config = ArtifactConfig.getById(this._items[i].artifactConfigId);
                     if (config == null) {
                         continue;
                     }
@@ -82,7 +84,7 @@ export class ItemSelectFromThreeUI extends ViewController {
 
                     // effect
                     if (config.effect.length > 0) {
-                        const firstEffectConfig = ArtifactMgr.getArtifactEffectConf(config.effect[0]);
+                        const firstEffectConfig = ArtifactEffectConfig.getById(config.effect[0]);
                         if (firstEffectConfig != null) {
                             tempView.getChildByPath("StableEffect/Title").getComponent(Label).string = LanMgr.getLanById(firstEffectConfig.des);
                         }

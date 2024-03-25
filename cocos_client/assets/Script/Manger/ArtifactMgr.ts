@@ -1,10 +1,32 @@
-import { SpriteFrame, resources, sys } from "cc";
+import { SpriteFrame, sys } from "cc";
 import { PioneerMgr, ResourcesMgr } from "../Utils/Global";
-import { ArtifactArrangeType, ArtifactMgrEvent } from "../Const/Manager/ArtifactMgrDefine";
-import { ArtifactConfigData, ArtifactEffectConfigData, ArtifactPropValueType, ArtifactProp } from "../Const/Model/ArtifactModelDefine";
+import { ArtifactArrangeType } from "../Const/Manager/ArtifactMgrDefine";
+import { ArtifactPropValueType, ArtifactProp } from "../Const/Model/ArtifactModelDefine";
 import ArtifactData from "../Model/ArtifactData";
+import ArtifactConfig from "../Config/ArtifactConfig";
+import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
+import NotificationMgr from "../Basic/NotificationMgr";
+import { EventName } from "../Const/ConstDefine";
 
 export default class ArtifactMgr {
+    private _maxArtifactLength: number = 100;
+    private _localStorageKey: string = "artifact_data";
+    private _localArtifactDatas: ArtifactData[] = [];
+
+    private _itemIconSpriteFrames = {};
+
+    public get artifactIsFull(): boolean {
+        return this._localArtifactDatas.length >= this._maxArtifactLength;
+    }
+    public get maxItemLength(): number {
+        return this._maxArtifactLength;
+    }
+    public get localArtifactDatas(): ArtifactData[] {
+        return this._localArtifactDatas;
+    }
+
+    public constructor() {}
+
     public async getItemIcon(iconName: string): Promise<SpriteFrame> {
         if (iconName in this._itemIconSpriteFrames) {
             return this._itemIconSpriteFrames[iconName];
@@ -16,20 +38,19 @@ export default class ArtifactMgr {
         return this._itemIconSpriteFrames[iconName];
     }
 
-    public getArtifactConf(artifactConfigId: string): ArtifactConfigData {
-        let key = artifactConfigId;
-        if (key in this._artifactConfs) {
-            return this._artifactConfs[key];
+    public async initData(): Promise<boolean> {
+        // load local artifact data
+        const jsonStr = sys.localStorage.getItem(this._localStorageKey);
+        if (jsonStr) {
+            try {
+                this._localArtifactDatas = JSON.parse(jsonStr);
+                return true;
+            } catch (e) {
+                console.error("ArtifactMgr initData error", e);
+                return false;
+            }
         }
-        console.error(`getArtifactConf error, artifact config[${key}] not exist`);
-        return null;
-    }
-    public getArtifactEffectConf(effectConfigId: string): ArtifactEffectConfigData {
-        let key = effectConfigId;
-        if (key in this._artifactEffectConfs) {
-            return this._artifactEffectConfs[key];
-        }
-        return null;
+        return true;
     }
 
     public getOwnArtifactCount(artifactConfigId: string): number {
@@ -50,7 +71,7 @@ export default class ArtifactMgr {
 
         for (let i = 0; i < this._localArtifactDatas.length; i++) {
             const artifact = this._localArtifactDatas[i];
-            const artifactConfig = this.getArtifactConf(artifact.artifactConfigId);
+            const artifactConfig = ArtifactConfig.getById(artifact.artifactConfigId);
 
             // prop
             if (artifactConfig.prop.length > 0) {
@@ -72,7 +93,7 @@ export default class ArtifactMgr {
             if (artifactConfig.effect.length > 0) {
                 for (let j = 0; j < artifactConfig.effect.length; j++) {
                     const effectId = artifactConfig.effect[j];
-                    const effConfig = this.getArtifactEffectConf(effectId);
+                    const effConfig = ArtifactEffectConfig.getById(effectId);
                     const effectType = effConfig.type;
 
                     if (effConfig.unlock && effConfig.unlock > cLv) {
@@ -88,28 +109,18 @@ export default class ArtifactMgr {
         return r;
     }
 
-    public get artifactIsFull(): boolean {
-        return this._localArtifactDatas.length >= this._maxArtifactLength;
-    }
-    public get maxItemLength(): number {
-        return this._maxArtifactLength;
-    }
-    public get localArtifactDatas(): ArtifactData[] {
-        return this._localArtifactDatas;
-    }
-
     public addArtifact(artifacts: ArtifactData[]): void {
         if (artifacts.length <= 0) {
             return;
         }
         let changed: boolean = false;
         for (const artifact of artifacts) {
-            const artifactConfig = this.getArtifactConf(artifact.artifactConfigId);
+            const artifactConfig = ArtifactConfig.getById(artifact.artifactConfigId);
             if (artifactConfig == null) continue;
             if (this.artifactIsFull) continue;
 
             changed = true;
-            const exsitArtifacts = this._localArtifactDatas.filter(v => v.artifactConfigId == artifact.artifactConfigId);
+            const exsitArtifacts = this._localArtifactDatas.filter((v) => v.artifactConfigId == artifact.artifactConfigId);
             if (exsitArtifacts.length > 0) {
                 exsitArtifacts[0].count += artifact.count;
                 exsitArtifacts[0].addTimeStamp = new Date().getTime();
@@ -120,8 +131,7 @@ export default class ArtifactMgr {
 
             if (artifactConfig.effect != null) {
                 for (const temple of artifactConfig.effect) {
-                    const effectData = this.getArtifactEffectConf(temple);
-
+                    const effectData = ArtifactEffectConfig.getById(temple);
                 }
             }
             if (artifactConfig.prop != null) {
@@ -143,12 +153,11 @@ export default class ArtifactMgr {
             }
         }
         if (changed) {
-            for (const observe of this._observers) {
-                observe.artifactChanged();
-            }
             sys.localStorage.setItem(this._localStorageKey, JSON.stringify(this._localArtifactDatas));
+            NotificationMgr.triggerEvent(EventName.ARTIFACT_CHANGE);
         }
     }
+
     public subArtifact(artifactConfigId: string, count: number): boolean {
         let idx = this._localArtifactDatas.findIndex((v) => {
             return v.artifactConfigId == artifactConfigId;
@@ -164,7 +173,7 @@ export default class ArtifactMgr {
 
         this._localArtifactDatas[idx].count -= count;
 
-        const artifactConfig = this.getArtifactConf(artifactConfigId);
+        const artifactConfig = ArtifactConfig.getById(artifactConfigId);
         if (artifactConfig != null) {
             // TODO: calc prop
         }
@@ -172,13 +181,13 @@ export default class ArtifactMgr {
         if (this._localArtifactDatas[idx].count <= 0) {
             this._localArtifactDatas.splice(idx, 1);
         }
-        for (const observe of this._observers) {
-            observe.artifactChanged();
-        }
+
         sys.localStorage.setItem(this._localStorageKey, JSON.stringify(this._localArtifactDatas));
+        NotificationMgr.triggerEvent(EventName.ARTIFACT_CHANGE);
 
         return true;
     }
+
     public arrange(sortType: ArtifactArrangeType): void {
         // merge same item
         const singleItems: Map<string, ArtifactData> = new Map();
@@ -203,101 +212,10 @@ export default class ArtifactMgr {
         } else if (sortType == ArtifactArrangeType.Rarity) {
             //bigger in front
             this._localArtifactDatas.sort((a, b) => {
-                return this.getArtifactConf(b.artifactConfigId).rank - this.getArtifactConf(a.artifactConfigId).rank;
+                return ArtifactConfig.getById(b.artifactConfigId).rank - ArtifactConfig.getById(a.artifactConfigId).rank;
             });
         }
-        for (const observe of this._observers) {
-            observe.artifactChanged();
-        }
-    }
 
-    public addObserver(observer: ArtifactMgrEvent) {
-        this._observers.push(observer);
-    }
-    public removeObserver(observer: ArtifactMgrEvent) {
-        const index: number = this._observers.indexOf(observer);
-        if (index != -1) {
-            this._observers.splice(index, 1);
-        }
-    }
-
-    public async initData() {
-        await this._initData();
-    }
-
-    private _observers: ArtifactMgrEvent[] = [];
-    public constructor() { }
-
-    private _maxArtifactLength: number = 100;
-    private _localStorageKey: string = "artifact_data";
-    private _localArtifactDatas: ArtifactData[] = [];
-
-    private _artifactConfs = {};
-    private _artifactEffectConfs = {};
-    private _itemIconSpriteFrames = {};
-    private async _initData() {
-        // read artifact config
-        const obj = await new Promise((resolve) => {
-            resources.load("data_local/artifact", (err: Error, data: any) => {
-                if (err) {
-                    resolve(null);
-                    return;
-                }
-                resolve(data.json);
-            });
-        });
-        if (obj != null) {
-            // format config
-            let jsonObj = obj as object;
-
-            for (var id in jsonObj) {
-                let jd = jsonObj[id];
-                let d = new ArtifactConfigData();
-                for (var key in jd) {
-                    if (!d.hasOwnProperty(key)) {
-                        continue;
-                    }
-                    d[key] = jd[key];
-                }
-                d.configId = jd.id;
-                this._artifactConfs[id] = d;
-            }
-        }
-
-        // read artifact effect config
-        const effobj = await new Promise((resolve) => {
-            resources.load("data_local/artifact_effect", (err: Error, data: any) => {
-                if (err) {
-                    resolve(null);
-                    return;
-                }
-                resolve(data.json);
-            });
-        });
-        if (effobj != null) {
-            // format config
-            let jsonObj = effobj as object;
-
-            for (var id in jsonObj) {
-                let jd = jsonObj[id];
-                let d = new ArtifactEffectConfigData();
-                for (var key in jd) {
-                    if (!d.hasOwnProperty(key)) {
-                        continue;
-                    }
-                    d[key] = jd[key];
-                }
-                d.effectId = jd.id;
-                this._artifactEffectConfs[id] = d;
-            }
-        }
-
-        // load local artifact data
-        let jsonStr = sys.localStorage.getItem(this._localStorageKey);
-        if (!jsonStr) {
-            this._localArtifactDatas = [];
-        } else {
-            this._localArtifactDatas = JSON.parse(jsonStr);
-        }
+        NotificationMgr.triggerEvent(EventName.ARTIFACT_CHANGE);
     }
 }

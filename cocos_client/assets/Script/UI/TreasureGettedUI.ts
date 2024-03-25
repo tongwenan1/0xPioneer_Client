@@ -8,6 +8,7 @@ import ItemData from '../Model/ItemData';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import { ItemSelectFromThreeUI } from './ItemSelectFromThreeUI';
+import ArtifactConfig from '../Config/ArtifactConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('TreasureGettedUI')
@@ -90,7 +91,7 @@ export class TreasureGettedUI extends ViewController {
 
                     } else if (resultReward.type == ItemConfigType.Artifact) {
                         // artifact
-                        const artifactConf = ArtifactMgr.getArtifactConf(resultReward.itemConfigId);
+                        const artifactConf = ArtifactConfig.getById(resultReward.itemConfigId);
                         if (artifactConf) {
                             iconspr.spriteFrame = await ArtifactMgr.getItemIcon(artifactConf.icon);
                             framespr.color = this.frameGradeColors[artifactConf.rank - 1];

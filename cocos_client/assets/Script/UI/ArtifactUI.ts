@@ -1,21 +1,17 @@
-import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
-import { EventName } from '../Const/ConstDefine';
-import ArtifactData from '../Model/ArtifactData';
-import { ArtifactItem } from './ArtifactItem';
-import { ArtifactArrangeType, ArtifactMgrEvent } from '../Const/Manager/ArtifactMgrDefine';
-import { ArtifactMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
-import ViewController from '../BasicView/ViewController';
-import { UIName } from '../Const/ConstUIDefine';
-import { ArtifactInfoUI } from './ArtifactInfoUI';
-import NotificationMgr from '../Basic/NotificationMgr';
+import { _decorator, Label, Node, Button, EventHandler, Prefab, instantiate, Layout } from "cc";
+import { EventName } from "../Const/ConstDefine";
+import ArtifactData from "../Model/ArtifactData";
+import { ArtifactItem } from "./ArtifactItem";
+import { ArtifactArrangeType } from "../Const/Manager/ArtifactMgrDefine";
+import { ArtifactMgr, LanMgr, UIPanelMgr } from "../Utils/Global";
+import ViewController from "../BasicView/ViewController";
+import { UIName } from "../Const/ConstUIDefine";
+import { ArtifactInfoUI } from "./ArtifactInfoUI";
+import NotificationMgr from "../Basic/NotificationMgr";
 const { ccclass, property } = _decorator;
 
-
-@ccclass('ArtifactUI')
-export class ArtifactUI extends ViewController implements ArtifactMgrEvent {
-
-
-
+@ccclass("ArtifactUI")
+export class ArtifactUI extends ViewController {
     @property(Prefab)
     private itemPrb: Prefab = null;
 
@@ -40,12 +36,13 @@ export class ArtifactUI extends ViewController implements ArtifactMgrEvent {
         this._itemContent = this.node.getChildByPath("__ViewContent/Bg/ScrollView/View/Content");
 
         NotificationMgr.addListener(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
+        NotificationMgr.addListener(EventName.ARTIFACT_CHANGE, this._refreshArtifactUI, this);
     }
 
     protected viewDidStart(): void {
         super.viewDidStart();
 
-        ArtifactMgr.addObserver(this);
+        // ArtifactMgr.addObserver(this);
 
         this._allItemViews = [];
         for (let i = 0; i < ArtifactMgr.maxItemLength; i++) {
@@ -72,9 +69,10 @@ export class ArtifactUI extends ViewController implements ArtifactMgrEvent {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        ArtifactMgr.removeObserver(this);
+        // ArtifactMgr.removeObserver(this);
 
         NotificationMgr.removeListener(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
+        NotificationMgr.removeListener(EventName.ARTIFACT_CHANGE, this._refreshArtifactUI, this);
     }
 
     protected viewPopAnimation(): boolean {
@@ -83,7 +81,6 @@ export class ArtifactUI extends ViewController implements ArtifactMgrEvent {
     protected contentView(): Node {
         return this.node.getChildByName("__ViewContent");
     }
-
 
     private async _refreshArtifactUI() {
         if (this._allItemViews == null) {
@@ -150,20 +147,18 @@ export class ArtifactUI extends ViewController implements ArtifactMgrEvent {
 
         switch (this._currentArrangeType) {
             case ArtifactArrangeType.Rarity:
-                this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string;
+                this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu
+                    .getChildByPath("Content/Rarity")
+                    .getComponent(Label).string;
                 break;
             case ArtifactArrangeType.Recently:
-                this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Recently").getComponent(Label).string;
+                this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu
+                    .getChildByPath("Content/Recently")
+                    .getComponent(Label).string;
                 break;
         }
 
         this._selectSortMenuShow = false;
         this._refreshMenu();
-    }
-
-    //--------------------------------------
-    //ArtifactMgrEvent
-    artifactChanged(): void {
-        this._refreshArtifactUI();
     }
 }

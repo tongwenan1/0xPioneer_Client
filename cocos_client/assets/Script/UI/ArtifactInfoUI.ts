@@ -11,6 +11,8 @@ import { ArtifactMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import ArtifactData from "../Model/ArtifactData";
 import { ArtifactEffectRankColor } from "../Const/Model/ArtifactModelDefine";
 import ViewController from "../BasicView/ViewController";
+import ArtifactConfig from "../Config/ArtifactConfig";
+import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactInfoUI")
@@ -27,7 +29,7 @@ export class ArtifactInfoUI extends ViewController {
         if (this._artifacts.length > 0) {
             const curArtifact: ArtifactData = this._artifacts.splice(0, 1)[0];
             // show one 
-            const config = ArtifactMgr.getArtifactConf(curArtifact.artifactConfigId);
+            const config = ArtifactConfig.getById(curArtifact.artifactConfigId);
             if (config != null) {
                 let useColor: Color = null;
                 if (config.rank == 1) {
@@ -64,7 +66,7 @@ export class ArtifactInfoUI extends ViewController {
                     let effectIndex: number = 0;
                     let isStableShowed: boolean = false;
                     for (let i = 0; i < config.effect.length; i++) {
-                        const effectConfig = ArtifactMgr.getArtifactEffectConf(config.effect[i]);
+                        const effectConfig = ArtifactEffectConfig.getById(config.effect[i]);
                         if (effectConfig == null) continue;
     
                         if (config.rank >= 4 && !isStableShowed) {
