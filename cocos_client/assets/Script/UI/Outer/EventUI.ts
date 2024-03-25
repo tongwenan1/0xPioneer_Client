@@ -381,7 +381,12 @@ export class EventUI extends ViewController {
                 newPioneerIds: [],
                 killEnemies: 0,
                 gainResources: 0,
-                exploredEvents: 1,
+                consumeResources: 0,
+                gainTroops: 0,
+                consumeTroops: 0,
+                gainEnergy: 0,
+                consumeEnergy: 0,
+                exploredEvents: 1
             });
 
             if (this._triggerPioneerId != null) {

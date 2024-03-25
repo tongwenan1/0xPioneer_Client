@@ -4,7 +4,7 @@ import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
 import { UserInfoEvent, FinishedEvent, InnerBuildingType, UserInnerBuildInfo, GenerateTroopInfo } from "../Const/Manager/UserInfoMgrDefine";
-import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
+import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, SettlementMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
 import { CountType } from "../Const/Manager/CountMgrDefine";
 import ItemData from "../Model/ItemData";
 import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";

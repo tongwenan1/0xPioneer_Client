@@ -679,7 +679,12 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 newPioneerIds: [],
                 killEnemies: 1,
                 gainResources: 0,
-                exploredEvents: 0,
+                consumeResources: 0,
+                gainTroops: 0,
+                consumeTroops: 0,
+                gainEnergy: 0,
+                consumeEnergy: 0,
+                exploredEvents: 0
             });
             UserInfoMgr.checkCanFinishedTask("killpioneer", deadId);
             const deadPioneer = PioneerMgr.getPioneerById(deadId);
@@ -735,13 +740,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     const resultNum: number = Math.floor(resource.num * (1 + LvlupMgr.getTotalExtraRateByLvl(UserInfoMgr.level)));
                     actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resultNum, () => {
                         ItemMgr.addItem([new ItemData(resource.id, resultNum)]);
-                    });
-                    SettlementMgr.insertSettlement({
-                        level: UserInfoMgr.level,
-                        newPioneerIds: [],
-                        killEnemies: 0,
-                        gainResources: resultNum,
-                        exploredEvents: 0,
                     });
                 }
 

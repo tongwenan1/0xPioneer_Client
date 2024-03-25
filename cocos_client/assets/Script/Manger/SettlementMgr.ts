@@ -8,6 +8,11 @@ export default class SettlementMgr {
             temple.newPioneerIds = temple.newPioneerIds.concat(newSettlement.newPioneerIds);
             temple.killEnemies += newSettlement.killEnemies;
             temple.gainResources += newSettlement.gainResources;
+            temple.consumeResources += newSettlement.consumeResources;
+            temple.gainTroops += newSettlement.gainTroops;
+            temple.consumeTroops += newSettlement.consumeTroops;
+            temple.gainEnergy += newSettlement.gainEnergy;
+            temple.consumeEnergy += newSettlement.consumeEnergy;
             temple.exploredEvents += newSettlement.exploredEvents;
         } else {
             this._settlements.push(newSettlement);
@@ -20,6 +25,11 @@ export default class SettlementMgr {
             newPioneerIds: [],
             killEnemies: 0,
             gainResources: 0,
+            consumeResources: 0,
+            gainTroops: 0,
+            consumeTroops: 0,
+            gainEnergy: 0,
+            consumeEnergy: 0,
             exploredEvents: 0,
         };
         for (const temple of this._settlements) {
@@ -27,6 +37,11 @@ export default class SettlementMgr {
                 newSettlement.newPioneerIds = newSettlement.newPioneerIds.concat(temple.newPioneerIds);
                 newSettlement.killEnemies += temple.killEnemies;
                 newSettlement.gainResources += temple.gainResources;
+                newSettlement.consumeResources += temple.consumeResources;
+                newSettlement.gainTroops += temple.gainTroops;
+                newSettlement.consumeTroops += temple.consumeTroops;
+                newSettlement.gainEnergy += temple.gainEnergy;
+                newSettlement.consumeEnergy += temple.consumeEnergy;
                 newSettlement.exploredEvents += temple.exploredEvents;
             }
         }

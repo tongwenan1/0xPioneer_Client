@@ -329,7 +329,12 @@ export default class PioneerMgr {
                     newPioneerIds: [pioneerId],
                     killEnemies: 0,
                     gainResources: 0,
-                    exploredEvents: 0,
+                    consumeResources: 0,
+                    gainTroops: 0,
+                    consumeTroops: 0,
+                    gainEnergy: 0,
+                    consumeEnergy: 0,
+                    exploredEvents: 0
                 });
             }
             if (pioneerId == "pioneer_3") {
