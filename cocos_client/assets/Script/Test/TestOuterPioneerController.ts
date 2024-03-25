@@ -5,9 +5,10 @@ import { MapItemMonster } from '../Game/Outer/View/MapItemMonster';
 import { MapPioneer } from '../Game/Outer/View/MapPioneer';
 import { TestMapBG } from './TestMapBG';
 import { EventName } from '../Const/ConstDefine';
-import { NotificationMgr, PioneerMgr, TaskMgr, UserInfoMgr } from '../Utils/Global';
+import { PioneerMgr, TaskMgr, UserInfoMgr } from '../Utils/Global';
 import { MapPioneerType } from '../Const/Model/MapPioneerModelDefine';
 import { MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
+import NotificationMgr from '../Basic/NotificationMgr';
 
 
 const { ccclass, property } = _decorator;

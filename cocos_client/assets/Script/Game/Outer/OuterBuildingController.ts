@@ -7,12 +7,13 @@ import { EventName } from '../../Const/ConstDefine';
 import { FinishedEvent, UserInfoEvent } from '../../Const/Manager/UserInfoMgrDefine';
 import { BuildingMgrEvent } from '../../Const/Manager/BuildingMgrDefine';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
-import { BuildingMgr, NotificationMgr, PioneerMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
+import { BuildingMgr, PioneerMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
 import { BuildingStayPosType, MapBuildingType, BuildingFactionType } from '../../Const/Model/MapBuildingModelDefine';
 import { MapDecoratePosMode } from '../../Const/Model/MapDecorateModelDefine';
 import MapDecorateModel from './Model/MapDecorateModel';
 import { MapPioneerActionType } from '../../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPioneerLogicModel } from './Model/MapPioneerModel';
+import NotificationMgr from '../../Basic/NotificationMgr';
 
 
 const { ccclass, property } = _decorator;

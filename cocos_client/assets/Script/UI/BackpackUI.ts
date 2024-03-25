@@ -2,11 +2,12 @@ import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, 
 import { BackpackItem } from './BackpackItem';
 import { EventName } from '../Const/ConstDefine';
 import { ItemArrangeType, ItemMgrEvent } from '../Const/Manager/ItemMgrDefine';
-import { ItemMgr, LanMgr, NotificationMgr, UIPanelMgr } from '../Utils/Global';
+import { ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
 import ItemData from '../Model/ItemData';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import { ItemInfoUI } from './ItemInfoUI';
+import NotificationMgr from '../Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
 

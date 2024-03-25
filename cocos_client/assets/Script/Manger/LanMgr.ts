@@ -1,6 +1,6 @@
 import { resources } from "cc";
 import { EventName } from "../Const/ConstDefine";
-import { NotificationMgr } from "../Utils/Global";
+import NotificationMgr from "../Basic/NotificationMgr";
 
 export default class LanMgr {
 

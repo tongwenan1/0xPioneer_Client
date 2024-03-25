@@ -1,9 +1,10 @@
 import { _decorator, Component, Label, Layout, Node, ProgressBar, Slider } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ItemMgr, LanMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
+import NotificationMgr from '../../Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')

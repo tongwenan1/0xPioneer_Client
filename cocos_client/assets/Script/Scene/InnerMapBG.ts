@@ -2,7 +2,8 @@ import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, in
 import { GameMain } from '../GameMain';
 import * as cc from "cc";
 import { EventName } from '../Const/ConstDefine';
-import { ConfigMgr, NotificationMgr } from '../Utils/Global';
+import { ConfigMgr } from '../Utils/Global';
+import NotificationMgr from '../Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerMapBG')

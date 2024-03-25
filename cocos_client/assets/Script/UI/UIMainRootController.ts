@@ -1,9 +1,10 @@
 import { CCBoolean, Component, ImageAsset, _decorator } from "cc";
-import { NotificationMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
+import { UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import ViewController from "../BasicView/ViewController";
 import { ECursorStyle, EventName } from "../Const/ConstDefine";
 import { MouseCursor } from "./MouseCursor";
+import NotificationMgr from "../Basic/NotificationMgr";
 
 const { ccclass, property } = _decorator;
 

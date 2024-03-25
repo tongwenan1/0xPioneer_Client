@@ -2,8 +2,9 @@ import { _decorator, Button, Color, instantiate, Label, Layout, Node } from 'cc'
 import CommonTools from '../Tool/CommonTools';
 import { EventName } from '../Const/ConstDefine';
 import MapHelper from "db://assets/Script/Utils/MapHelper";
-import { BuildingMgr, LanMgr, NotificationMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { BuildingMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
+import NotificationMgr from '../Basic/NotificationMgr';
 
 const { ccclass, property } = _decorator;
 

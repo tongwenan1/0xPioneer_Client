@@ -1,12 +1,12 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node } from 'cc';
-import { GameMain } from '../../GameMain';
 import { EventName, NPCNameLangType } from '../../Const/ConstDefine';
-import { CountMgr, LanMgr, NotificationMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { CountMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { CountType } from '../../Const/Manager/CountMgrDefine';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
 import { ItemInfoUI } from '../ItemInfoUI';
 import { UIHUDController } from '../UIHUDController';
+import NotificationMgr from '../../Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')

@@ -11,7 +11,7 @@ import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
 import { FinishedEvent, UserInfoEvent } from '../../Const/Manager/UserInfoMgrDefine';
-import { ArtifactMgr, BranchEventMgr, BuildingMgr, ItemMgr, LanMgr, LvlupMgr, NotificationMgr, PioneerMgr, SettlementMgr, TalkMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, BranchEventMgr, BuildingMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, SettlementMgr, TalkMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { BuildingFactionType } from '../../Const/Model/MapBuildingModelDefine';
 import { MapPioneerLogicType, MapPioneerActionType, MapPioneerType, MapPioneerMoveDirection, MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import { MapResourceBuildingModel } from './Model/MapBuildingModel';
@@ -25,6 +25,7 @@ import { SecretGuardGettedUI } from '../../UI/Outer/SecretGuardGettedUI';
 import { TaskListUI } from '../../UI/TaskListUI';
 import { EventUI } from '../../UI/Outer/EventUI';
 import { UIHUDController } from '../../UI/UIHUDController';
+import NotificationMgr from '../../Basic/NotificationMgr';
 
 
 const { ccclass, property } = _decorator;

@@ -4,7 +4,7 @@ import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { EventName } from "db://assets/Script/Const/ConstDefine";
-import { ArtifactMgr, BranchEventMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, NotificationMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
+import { ArtifactMgr, BranchEventMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
 import { FinishedEvent } from "../Const/Manager/UserInfoMgrDefine";
 import { CountType } from "../Const/Manager/CountMgrDefine";
 import { PioneerMgrEvent } from "../Const/Manager/PioneerMgrDefine";
@@ -14,6 +14,7 @@ import { MapPioneerType, MapPioneerActionType, MapPioneerAttributesChangeModel, 
 import MapPioneerModel, { MapPlayerPioneerModel, MapNpcPioneerModel, MapPioneerLogicModel } from "../Game/Outer/Model/MapPioneerModel";
 import { ArtifactEffectType } from "../Const/Model/ArtifactModelDefine";
 import { UIHUDController } from "../UI/UIHUDController";
+import NotificationMgr from "../Basic/NotificationMgr";
 
 export default class PioneerMgr {
 

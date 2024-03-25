@@ -4,10 +4,11 @@ import CommonTools from '../../Tool/CommonTools';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { ItemMgrEvent } from '../../Const/Manager/ItemMgrDefine';
 import { InnerBuildingType, UserInnerBuildInfo } from '../../Const/Manager/UserInfoMgrDefine';
-import { ArtifactMgr, InnerBuildingMgr, ItemMgr, LanMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, InnerBuildingMgr, ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { ArtifactEffectType } from '../../Const/Model/ArtifactModelDefine';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
+import NotificationMgr from '../../Basic/NotificationMgr';
 const { ccclass } = _decorator;
 
 @ccclass('BuildingUpgradeUI')

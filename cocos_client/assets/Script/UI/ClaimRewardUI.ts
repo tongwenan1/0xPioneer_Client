@@ -1,9 +1,10 @@
 import { _decorator, Component, Node, instantiate, director, BoxCharacterController, Label, Layout, UITransform, ProgressBar, Button, tween, v3, } from "cc";
 import { EventName } from "../Const/ConstDefine";
-import { BoxMgr, LanMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
+import { BoxMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TreasureGettedUI } from "./TreasureGettedUI";
 import { UIHUDController } from "./UIHUDController";
+import NotificationMgr from "../Basic/NotificationMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("ClaimRewardUI")

@@ -1,8 +1,9 @@
 import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
 import { EventName } from '../Const/ConstDefine';
 import { SettlementView } from './View/SettlementView';
-import { LanMgr, NotificationMgr, UIPanelMgr } from '../Utils/Global';
+import { LanMgr, UIPanelMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
+import NotificationMgr from '../Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('NewSettlementUI')

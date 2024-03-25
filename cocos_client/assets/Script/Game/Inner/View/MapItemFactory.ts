@@ -5,10 +5,11 @@ import { GameMain } from '../../../GameMain';
 import CommonTools from '../../../Tool/CommonTools';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import { FinishedEvent, InnerBuildingType, UserInfoEvent, UserInnerBuildInfo } from '../../../Const/Manager/UserInfoMgrDefine';
-import { LanMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from '../../../Utils/Global';
+import { LanMgr, UIPanelMgr, UserInfoMgr } from '../../../Utils/Global';
 import { UIName } from '../../../Const/ConstUIDefine';
 import { RecruitUI } from '../../../UI/Inner/RecruitUI';
 import { UIHUDController } from '../../../UI/UIHUDController';
+import NotificationMgr from '../../../Basic/NotificationMgr';
 
 const { ccclass, property } = _decorator;
 

@@ -1,13 +1,13 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
 import { EventName } from '../Const/ConstDefine';
-import { GameMain } from '../GameMain';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactItem } from './ArtifactItem';
 import { ArtifactArrangeType, ArtifactMgrEvent } from '../Const/Manager/ArtifactMgrDefine';
-import { ArtifactMgr, LanMgr, NotificationMgr, UIPanelMgr } from '../Utils/Global';
+import { ArtifactMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
+import NotificationMgr from '../Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
 

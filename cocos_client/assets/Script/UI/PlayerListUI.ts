@@ -4,9 +4,10 @@ import { PlayerItemUI } from './PlayerItemUI';
 import { TilePos } from '../Game/TiledMap/TileTool';
 import { EventName } from '../Const/ConstDefine';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
-import { BuildingMgr, NotificationMgr, PioneerMgr } from '../Utils/Global';
+import { BuildingMgr, PioneerMgr } from '../Utils/Global';
 import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPlayerPioneerModel, MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
+import NotificationMgr from '../Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerListUI')

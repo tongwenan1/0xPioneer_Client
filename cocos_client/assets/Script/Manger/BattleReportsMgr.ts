@@ -1,7 +1,8 @@
+import NotificationMgr from "../Basic/NotificationMgr";
 import { EventName } from "../Const/ConstDefine";
 import { BattleReportRecord, BattleReportType, BattleReportsEvent } from "../Const/Manager/BattleReportsMgrDefine";
 import { BranchEventMgrEvent } from "../Const/Manager/BrachEventMgrDefine";
-import { BranchEventMgr, ConfigMgr, NotificationMgr } from "../Utils/Global";
+import { BranchEventMgr, ConfigMgr } from "../Utils/Global";
 
 export default class BattleReportsMgr implements BranchEventMgrEvent {
     private _storage: BattleReportRecord[];

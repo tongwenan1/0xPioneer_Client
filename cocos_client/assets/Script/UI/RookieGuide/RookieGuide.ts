@@ -1,7 +1,8 @@
 import { _decorator, Animation, Button, Component, Label, Node, tween, v3 } from 'cc';
 import { EventName } from '../../Const/ConstDefine';
-import { LanMgr, NotificationMgr } from '../../Utils/Global';
+import { LanMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
+import NotificationMgr from '../../Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('RookieGuide')

@@ -4,12 +4,13 @@ import { BackpackItem } from './BackpackItem';
 import ItemData from '../Model/ItemData';
 import { ArtifactItem } from './ArtifactItem';
 import ArtifactData from '../Model/ArtifactData';
-import { LanMgr, NotificationMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { LanMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { SecretGuardGettedUI } from './Outer/SecretGuardGettedUI';
 import ViewController from '../BasicView/ViewController';
 import { ItemInfoUI } from './ItemInfoUI';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
+import NotificationMgr from '../Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('CivilizationLevelUpUI')

@@ -2,7 +2,8 @@ import { _decorator, builtinResMgr, Component, instantiate, Node, Prefab, v2, v3
 import { OuterBuildingView } from '../Game/Outer/View/OuterBuildingView';
 import { TestMapBG } from './TestMapBG';
 import { EventName } from '../Const/ConstDefine';
-import { BuildingMgr, NotificationMgr, PioneerMgr } from '../Utils/Global';
+import { BuildingMgr, PioneerMgr } from '../Utils/Global';
+import NotificationMgr from '../Basic/NotificationMgr';
 
 const { ccclass, property } = _decorator;
 

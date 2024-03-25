@@ -2,8 +2,8 @@ import { _decorator, Component, Node, Camera, EventHandler, Vec3, tween } from '
 import { EventName } from './Const/ConstDefine';
 import { MapOutScene } from './Scene/MapOutScene';
 import { MapInnerScene } from './Scene/MapInnerScene';
-import { NotificationMgr } from './Utils/Global';
 import ViewController from './BasicView/ViewController';
+import NotificationMgr from './Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameMain')

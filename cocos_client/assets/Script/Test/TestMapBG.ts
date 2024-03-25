@@ -2,7 +2,8 @@ import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, in
 import * as cc from "cc";
 import { TilePos, TileMapHelper, TileHexDirection } from '../Game/TiledMap/TileTool';
 import { EventName } from '../Const/ConstDefine';
-import { ConfigMgr, LocalDataLoader, NotificationMgr } from '../Utils/Global';
+import { ConfigMgr, LocalDataLoader } from '../Utils/Global';
+import NotificationMgr from '../Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('TestMapBG')

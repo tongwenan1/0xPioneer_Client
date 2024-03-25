@@ -5,13 +5,14 @@ import { EventName } from '../Const/ConstDefine';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
 import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { BattleReportsEvent } from '../Const/Manager/BattleReportsMgrDefine';
-import { BattleReportsMgr, LanMgr, LocalDataLoader, NotificationMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { BattleReportsMgr, LanMgr, LocalDataLoader, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import { UIName } from '../Const/ConstUIDefine';
 import { TaskListUI } from './TaskListUI';
 import { NewSettlementUI } from './NewSettlementUI';
 import ViewController from '../BasicView/ViewController';
+import NotificationMgr from '../Basic/NotificationMgr';
 
 const { ccclass, property } = _decorator;
 

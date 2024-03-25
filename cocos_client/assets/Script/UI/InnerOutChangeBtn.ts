@@ -1,7 +1,8 @@
 import { _decorator, Component, Node, Button, SpriteFrame, Sprite, resources, Label } from 'cc';
 import { EventName } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
-import { LanMgr, NotificationMgr } from '../Utils/Global';
+import { LanMgr } from '../Utils/Global';
+import NotificationMgr from '../Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerOutChangeBtn')
