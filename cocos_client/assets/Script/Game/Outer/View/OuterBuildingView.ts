@@ -1,7 +1,7 @@
 import { _decorator, Component, Label, Layout, Node } from 'cc';
 import { MapPlayerPioneerModel } from '../Model/MapPioneerModel';
 import { LanMgr } from '../../../Utils/Global';
-import { MapBuildingType } from '../../../Const/Model/MapBuildingModelDefine';
+import { BuildingFactionType, MapBuildingType } from '../../../Const/Model/MapBuildingModelDefine';
 import MapBuildingModel from '../Model/MapBuildingModel';
 const { ccclass, property } = _decorator;
 
@@ -10,26 +10,41 @@ export class OuterBuildingView extends Component {
 
     public refreshUI(building: MapBuildingModel, players: MapPlayerPioneerModel[]) {
 
-        this.node.getChildByName("Title").getComponent(Label).string = "Lv." + building.level + "  " + LanMgr.getLanById(building.name);
-
+        this.node.getChildByPath("Title/Text").getComponent(Label).string = LanMgr.getLanById(building.name);
+        this.node.getChildByPath("Level/Text").getComponent(Label).string = "Lv." + building.level;
 
         for (const buildingName of this._buildViewNames) {
             this.node.getChildByPath("BuildingContent/" + buildingName).active = buildingName == building.animType;
         }
 
-        const strongholdView = this.node.getChildByName("StrongholdContent");
-
+        const strongholdView = this.node.getChildByPath("StrongholdContent");
         strongholdView.active = false;
-       
-        this._neturalView.active = false;
-        this._selfView.active = false;
 
+        const collectIcon = this.node.getChildByPath("Level/Collect");
+        const exploreIcon = this.node.getChildByPath("Level/Explore");
+        const strongholdIcon = this.node.getChildByPath("Level/Stronghold");
+        const battleIcon = this.node.getChildByPath("Level/Battle");
+
+        collectIcon.active = false;
+        exploreIcon.active = false;
+        strongholdIcon.active = false;
+        battleIcon.active = false;
+
+        this.node.getChildByPath("Level").active = true;
         if (building.type == MapBuildingType.city) {
+            if (building.faction == BuildingFactionType.enemy) {
+                this.node.getChildByPath("Level").active = true;
+                battleIcon.active = true;
+            } else {
+                this.node.getChildByPath("Level").active = false;
+            }
 
         } else if (building.type == MapBuildingType.explore) {
-            this._neturalView.active = true;
+            exploreIcon.active = true;
 
         } else if (building.type == MapBuildingType.stronghold) {
+            strongholdIcon.active = true;
+
             let isSelf = false;
             for (const player of players) {
                 if (building.defendPioneerIds.indexOf(player.id) != -1) {
@@ -39,31 +54,35 @@ export class OuterBuildingView extends Component {
             }
             if (building.defendPioneerIds.length > 0) {
                 strongholdView.active = true;
-                strongholdView.getChildByName("pioneer_default").active = building.defendPioneerIds.indexOf("pioneer_0") != -1;
-                strongholdView.getChildByName("secretGuard").active = building.defendPioneerIds.indexOf("pioneer_1") != -1;
-                strongholdView.getChildByName("doomsdayGangSpy").active = building.defendPioneerIds.indexOf("pioneer_2") != -1;
-                strongholdView.getChildByName("rebels").active = building.defendPioneerIds.indexOf("pioneer_3") != -1;
+                strongholdView.getChildByPath("pioneer_default").active = building.defendPioneerIds.indexOf("pioneer_0") != -1;
+                strongholdView.getChildByPath("secretGuard").active = building.defendPioneerIds.indexOf("pioneer_1") != -1;
+                strongholdView.getChildByPath("doomsdayGangSpy").active = building.defendPioneerIds.indexOf("pioneer_2") != -1;
+                strongholdView.getChildByPath("rebels").active = building.defendPioneerIds.indexOf("pioneer_3") != -1;
                 strongholdView.getComponent(Layout).updateLayout();
             }
             if (isSelf) {
-                this._selfView.active = true;
+                // this._selfView.active = true;
             } else {
-                this._neturalView.active = true;
+                // this._neturalView.active = true;
             }
 
         } else if (building.type == MapBuildingType.resource) {
-            this._neturalView.active = true;
-            
+            collectIcon.active = true;
+
         } else if (building.type == MapBuildingType.event) {
-            this._neturalView.active = true;
+            exploreIcon.active = true;
         }
 
-        this._neturalView.active = false;
-        this._selfView.active = false;
+        this._levelShowing = this.node.getChildByPath("Level").active;
     }
 
     public showName(isShow: boolean) {
-        this.node.getChildByName("Title").active = isShow;
+        this.node.getChildByPath("Title").active = isShow;
+        if (isShow) {
+            this.node.getChildByPath("Level").active = this._levelShowing;
+        } else {
+            this.node.getChildByPath("Level").active = false;
+        }
     }
 
     private _buildViewNames: string[] = [
@@ -82,11 +101,9 @@ export class OuterBuildingView extends Component {
         "Pyramid_Group"
     ];
 
-    private _neturalView: Node = null;
-    private _selfView: Node = null;
+    private _levelShowing: boolean = false;
     protected onLoad(): void {
-        this._neturalView = this.node.getChildByPath("mining_status/netual");
-        this._selfView = this.node.getChildByPath("mining_status/self");
+
     }
 
     start() {

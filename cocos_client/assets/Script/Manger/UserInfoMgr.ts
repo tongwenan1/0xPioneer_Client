@@ -3,13 +3,14 @@ import { GameMain } from "../GameMain";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
-import { UserInfoEvent, FinishedEvent, InnerBuildingType, UserInnerBuildInfo, GenerateTroopInfo } from "../Const/Manager/UserInfoMgrDefine";
+import { UserInfoEvent, FinishedEvent, InnerBuildingType, UserInnerBuildInfo, GenerateTroopInfo, GenerateEnergyInfo, UserInfoNotification } from "../Const/Manager/UserInfoMgrDefine";
 import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, SettlementMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
 import { CountType } from "../Const/Manager/CountMgrDefine";
 import ItemData from "../Model/ItemData";
 import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
 import { UIName } from "../Const/ConstUIDefine";
 import { ItemInfoUI } from "../UI/ItemInfoUI";
+import NotificationMgr from "../Basic/NotificationMgr";
 
 export default class UserInfoMgr {
 
@@ -230,6 +231,14 @@ export default class UserInfoMgr {
         });
     }
 
+    public generateEnergyGetted() {
+        if (this._generateEnergyInfo == null) {
+            return;
+        }
+        this._generateEnergyInfo.totalEnergyNum = 0;
+        NotificationMgr.triggerEvent(UserInfoNotification.generateEnergyNumChanged, this._generateEnergyInfo);
+    }
+
     public get afterTalkItemGetData() {
         return this._afterTalkItemGetData;
     }
@@ -285,6 +294,9 @@ export default class UserInfoMgr {
     }
     public get isGeneratingTroop() {
         return this._generateTroopInfo != null;
+    }
+    public get generateEnergyInfo() {
+        return this._generateEnergyInfo;
     }
 
 
@@ -426,6 +438,37 @@ export default class UserInfoMgr {
                 this._localJsonData.playerData.generateTroopInfo = this._generateTroopInfo;
                 this._localDataChanged(this._localJsonData);
             }
+            let energyStationBuilded: boolean = false;
+            if (this._innerBuilds != null && this._innerBuilds.has(InnerBuildingType.EnergyStation)) {
+                energyStationBuilded = this._innerBuilds.get(InnerBuildingType.EnergyStation).buildLevel > 0;
+            }
+            if (energyStationBuilded) {
+                const perGenerateTime: number = 5;
+                if (this._generateEnergyInfo == null) {
+                    this._generateEnergyInfo = {
+                        countTime: perGenerateTime,
+                        totalEnergyNum: 0
+                    };
+                }
+                if (this._generateEnergyInfo.countTime > 0) {
+                    this._generateEnergyInfo.countTime -= 1;
+                }
+                this._localJsonData.playerData.generateEnergyInfo = this._generateEnergyInfo;
+                this._localDataChanged(this._localJsonData);
+
+                NotificationMgr.triggerEvent(UserInfoNotification.generateEnergyTimeCountChanged);
+
+                if (this._generateEnergyInfo.countTime <= 0) {
+                    const generateNumPerMin: number = 20;
+                    this._generateEnergyInfo.totalEnergyNum = Math.min(999, this._generateEnergyInfo.totalEnergyNum + generateNumPerMin);
+                    this._generateEnergyInfo.countTime = perGenerateTime;
+
+                    this._localJsonData.playerData.generateEnergyInfo = this._generateEnergyInfo;
+                    this._localDataChanged(this._localJsonData);
+
+                    NotificationMgr.triggerEvent(UserInfoNotification.generateEnergyNumChanged);
+                }
+            }
         }, 1000);
     }
 
@@ -450,6 +493,7 @@ export default class UserInfoMgr {
     private _gettedExplorationRewardIds: string[] = [];
 
     private _generateTroopInfo: GenerateTroopInfo = null;
+    private _generateEnergyInfo: GenerateEnergyInfo = null;
 
     private _localJsonData: any = null;
 
@@ -501,6 +545,9 @@ export default class UserInfoMgr {
         }
         if (jsonObject.playerData.generateTroopInfo != null) {
             this._generateTroopInfo = jsonObject.playerData.generateTroopInfo;
+        }
+        if (jsonObject.playerData.generateEnergyInfo != null) {
+            this._generateEnergyInfo = jsonObject.playerData.generateEnergyInfo;
         }
 
         this._innerBuilds = new Map();
@@ -617,7 +664,7 @@ export default class UserInfoMgr {
                 }
                 if (addItems.length > 0) {
                     ItemMgr.addItem(addItems);
-                    setTimeout(async ()=> {
+                    setTimeout(async () => {
                         if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
                             UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
                             this.afterCivilizationClosedShowItemDatas.push(...addItems);

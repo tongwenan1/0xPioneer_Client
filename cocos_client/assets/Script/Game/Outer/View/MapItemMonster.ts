@@ -11,8 +11,6 @@ export class MapItemMonster extends Component {
 
     public refreshUI(model: MapPioneerModel, finishEvent: FinishedEvent[]) {
         this._nameLabel.string = LanMgr.getLanById(model.name);
-        this._fightView.active = !model.friendly;
-        this._fightView.active = false;
 
         let moveCounting: boolean = false;
         if (model.logics.length > 0) {
@@ -33,11 +31,11 @@ export class MapItemMonster extends Component {
             view.active = type == model.animType;
             if (view.active) {
                 this._currentShowMonster = view;
-                view.getChildByName("idle").active = model.actionType == MapPioneerActionType.idle;
-                view.getChildByName("walk_left").active = model.actionType == MapPioneerActionType.moving && model.moveDirection == MapPioneerMoveDirection.left;
-                view.getChildByName("walk_right").active = model.actionType == MapPioneerActionType.moving && model.moveDirection == MapPioneerMoveDirection.right;
-                view.getChildByName("walk_top").active = model.actionType == MapPioneerActionType.moving && model.moveDirection == MapPioneerMoveDirection.top;
-                view.getChildByName("walk_bottom").active = model.actionType == MapPioneerActionType.moving && model.moveDirection == MapPioneerMoveDirection.bottom;
+                view.getChildByPath("idle").active = model.actionType == MapPioneerActionType.idle;
+                view.getChildByPath("walk_left").active = model.actionType == MapPioneerActionType.moving && model.moveDirection == MapPioneerMoveDirection.left;
+                view.getChildByPath("walk_right").active = model.actionType == MapPioneerActionType.moving && model.moveDirection == MapPioneerMoveDirection.right;
+                view.getChildByPath("walk_top").active = model.actionType == MapPioneerActionType.moving && model.moveDirection == MapPioneerMoveDirection.top;
+                view.getChildByPath("walk_bottom").active = model.actionType == MapPioneerActionType.moving && model.moveDirection == MapPioneerMoveDirection.bottom;
             }
         }
     }
@@ -48,21 +46,19 @@ export class MapItemMonster extends Component {
             const view = this.node.getChildByPath("role/" + type);
             if (view.active) {
                 this._currentShowMonster = view;
-                view.getChildByName("idle").active = true;
+                view.getChildByPath("idle").active = true;
                 view.getChildByPath("idle/Monster_Shadow").active = false;
-                view.getChildByName("walk_left").active = false;
-                view.getChildByName("walk_right").active = false;
-                view.getChildByName("walk_top").active = false;
-                view.getChildByName("walk_bottom").active = false;
+                view.getChildByPath("walk_left").active = false;
+                view.getChildByPath("walk_right").active = false;
+                view.getChildByPath("walk_top").active = false;
+                view.getChildByPath("walk_bottom").active = false;
             }
         }
         this._nameLabel.node.active = false;
-        this._fightView.active = false;
         this._moveCountLabel.node.active = false;
     }
 
     private _nameLabel: Label = null;
-    private _fightView: Node = null;
     private _moveCountLabel: Label = null;
     private _currentShowMonster: Node = null;
     private _monsterTypeNames: string[] = [
@@ -79,9 +75,8 @@ export class MapItemMonster extends Component {
         "monster_c_3",
     ];
     onLoad() {
-        this._nameLabel = this.node.getChildByName("name").getComponent(Label);
-        this._fightView = this.node.getChildByName("fight_res_neutral");
-        this._moveCountLabel = this.node.getChildByName("MoveCountLabel").getComponent(Label);
+        this._nameLabel = this.node.getChildByPath("name").getComponent(Label);
+        this._moveCountLabel = this.node.getChildByPath("MoveCountLabel").getComponent(Label);
     }
 
     update(deltaTime: number) {

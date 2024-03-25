@@ -25,6 +25,7 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
         const mainData = innerData.get(InnerBuildingType.MainCity);
         const barracksData = innerData.get(InnerBuildingType.Barrack);
         const houseData = innerData.get(InnerBuildingType.House);
+        const energyStationData = innerData.get(InnerBuildingType.EnergyStation);
         // useLanMgr 
         // LanMgr.replaceLanById("107549", [LanMgr.getLanById(mainData.buildName), mainData.buildLevel]); // %s Lv.%s  
         buildingInfoView.getChildByPath("MainCityBg/MainCity/MainCityLabel").getComponent(Label).string = mainData.buildName + " Lv." + mainData.buildLevel;
@@ -37,11 +38,17 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
         // LanMgr.replaceLanById("107549", [LanMgr.getLanById(houseData.buildName), houseData.buildLevel]); // %s Lv.%s  
         buildingInfoView.getChildByPath("Buildings/ResidentialBg/Residential/ResidentialLabel").getComponent(Label).string = houseData.buildName + " Lv." + houseData.buildLevel;
         this._housesBtn.clickEvents[0].customEventData = houseData.buildID;
+
+        // useLanMgr 
+        // LanMgr.replaceLanById("107549", [LanMgr.getLanById(energyStationData.buildName), energyStationData.buildLevel]); // %s Lv.%s  
+        buildingInfoView.getChildByPath("Buildings/EnergyStationBg/Level").getComponent(Label).string = energyStationData.buildName + " Lv." + energyStationData.buildLevel;
+        this._energyStationBtn.clickEvents[0].customEventData = energyStationData.buildID;
     }
 
     public mainCityBtn: Button = null;
     private _barracksBtn: Button = null;
     private _housesBtn: Button = null;
+    private _energyStationBtn: Button = null;
 
     private _levelInfoView: Node = null;
     private _levelInfoCostItem: Node = null;
@@ -54,6 +61,7 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
 
         this._barracksBtn = this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/BarracksBg").getComponent(Button);
         this._housesBtn = this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/ResidentialBg").getComponent(Button);
+        this._energyStationBtn = this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/EnergyStationBg").getComponent(Button);
 
         this._levelInfoView = this.node.getChildByPath("__ViewContent/LevelInfoView");
         this._levelInfoView.active = false;

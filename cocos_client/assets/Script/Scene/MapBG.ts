@@ -243,7 +243,7 @@ export class MapBG extends Component {
             localStorage.setItem("local_outer_map_scale", sc.toString());
             this._fixCameraPos(GameMain.inst.MainCamera.node.position);
 
-            NotificationMgr.triggerEvent(EventName.MAP_SCALED);
+            NotificationMgr.triggerEvent(EventName.MAP_SCALED, sc);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {

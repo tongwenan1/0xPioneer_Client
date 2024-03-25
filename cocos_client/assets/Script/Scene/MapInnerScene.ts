@@ -1,5 +1,7 @@
 import { _decorator, Vec3, Node, Animation, Prefab, instantiate, log, Component } from 'cc';
 import { InnerBuildingType } from '../Const/Manager/UserInfoMgrDefine';
+import { UserInfoMgr } from '../Utils/Global';
+import { InnerEnergyStationBuildingView } from '../Game/Inner/View/InnerEnergyStationBuildingView';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapInnerScene')
@@ -11,6 +13,7 @@ export class MapInnerScene extends Component {
     private _buidingAnimMap: Map<InnerBuildingType, Node> = null;
     start() {
         this._buidingAnimMap = new Map();
+        this._refreshInnerBuildings();
     }
 
     isUpgrading(buildingType: InnerBuildingType) {
@@ -33,6 +36,18 @@ export class MapInnerScene extends Component {
 
     update(deltaTime: number) {
 
+    }
+
+    //--------------------------- function
+    private _refreshInnerBuildings() {
+        for (const building of UserInfoMgr.innerBuilds) {
+            
+        }
+
+        const energyStationData = UserInfoMgr.innerBuilds.get(InnerBuildingType.EnergyStation);
+        if (energyStationData != null) {
+            this.node.getChildByName("EnergyStation").getComponent(InnerEnergyStationBuildingView).refreshUI(energyStationData);
+        }
     }
 }
 

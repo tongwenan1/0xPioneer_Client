@@ -356,7 +356,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         // default speed
         let defaultSpeed = 180;
 
-        // defaultSpeed = 600;
+        defaultSpeed = 600;
         const allPioneers = PioneerMgr.getAllPioneer();
 
         // artifact effect
@@ -405,7 +405,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 actionPioneer.actionType = MapPioneerActionType.idle;
                 view.refreshUI(actionPioneer);
                 UIPanelMgr.removePanel(UIName.RookieGuide);
-                
+
                 const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
                 if (dialog != null) {
                     dialog.getComponent(DialogueUI).dialogShow(TalkMgr.getTalk("talk14"), null, () => {
@@ -460,7 +460,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             if (isEndFight) {
                 const pioneer = PioneerMgr.getPioneerById(attacker.id);
                 if (pioneer != null && pioneer.show) {
-                    this.scheduleOnce(()=> {
+                    this.scheduleOnce(() => {
                         attackView.active = true;
                     }, 0.8);
                 }
@@ -478,7 +478,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             if (isEndFight) {
                 const pioneer = PioneerMgr.getPioneerById(defender.id);
                 if (pioneer != null && pioneer.show) {
-                    this.scheduleOnce(()=> {
+                    this.scheduleOnce(() => {
                         defendView.active = true;
                     }, 0.8);
                 }

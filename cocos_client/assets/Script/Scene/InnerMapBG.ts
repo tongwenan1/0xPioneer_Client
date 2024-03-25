@@ -2,7 +2,7 @@ import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, in
 import { GameMain } from '../GameMain';
 import * as cc from "cc";
 import { EventName } from '../Const/ConstDefine';
-import { ConfigMgr } from '../Utils/Global';
+import { ConfigMgr, UserInfoMgr } from '../Utils/Global';
 import NotificationMgr from '../Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
 
@@ -67,7 +67,7 @@ export class InnerMapBG extends Component {
             }
             GameMain.inst.MainCamera.orthoHeight = sc * GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
             this._curCameraZoom = sc;
-            NotificationMgr.triggerEvent(EventName.MAP_SCALED);
+            NotificationMgr.triggerEvent(EventName.MAP_SCALED, sc);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: cc.EventMouse) => {
@@ -89,6 +89,7 @@ export class InnerMapBG extends Component {
                 GameMain.inst.MainCamera.node.setPosition(pos);              
             }
         }, this);
+
     }
 
     protected onDisable(): void {
@@ -104,6 +105,8 @@ export class InnerMapBG extends Component {
     update(deltaTime: number) {
 
     }
+
+    
 }
 
 

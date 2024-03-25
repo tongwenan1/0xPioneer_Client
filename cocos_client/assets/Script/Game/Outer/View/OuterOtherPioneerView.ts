@@ -10,18 +10,18 @@ export class OuterOtherPioneerView extends Component {
 
     public refreshUI(pioneer: MapPioneerModel) {
         // name
-        this.node.getChildByName("name").getComponent(Label).string = LanMgr.getLanById(pioneer.name);
+        this.node.getChildByPath("name").getComponent(Label).string = LanMgr.getLanById(pioneer.name);
         // role
         for (const name of this._roleNames) {
             const view = this.node.getChildByPath("role/" + name);
             view.active = name === pioneer.animType;
             if (view.active) {
-                const wLeft = view.getChildByName("walk_left");
-                const wRight = view.getChildByName("walk_right");
-                const wTop = view.getChildByName("walk_top");
-                const wBottom = view.getChildByName("walk_bottom");
+                const wLeft = view.getChildByPath("walk_left");
+                const wRight = view.getChildByPath("walk_right");
+                const wTop = view.getChildByPath("walk_top");
+                const wBottom = view.getChildByPath("walk_bottom");
                 if (pioneer.actionType == MapPioneerActionType.idle) {
-                    view.getChildByName("idle").active = true;
+                    view.getChildByPath("idle").active = true;
 
                     if (wLeft != null) {
                         wLeft.active = false;
@@ -36,7 +36,7 @@ export class OuterOtherPioneerView extends Component {
                         wBottom.active = false;
                     }
                 } else if (pioneer.actionType == MapPioneerActionType.moving) {
-                    view.getChildByName("idle").active = false;
+                    view.getChildByPath("idle").active = false;
                     if (wLeft != null) {
                         wLeft.active = pioneer.moveDirection == MapPioneerMoveDirection.left;
                     }
@@ -53,9 +53,27 @@ export class OuterOtherPioneerView extends Component {
             }
         }
         // friendly
-        this._nonFriendlyView.active = !pioneer.friendly;
-        this._nonFriendlyView.active = false;
-        this._canSearchView.active = pioneer.type == MapPioneerType.gangster && pioneer.friendly;
+        const statusView = this.node.getChildByPath("StatusView");
+        statusView.active = false;
+        if (!pioneer.friendly) {
+            statusView.active = true;
+            // useLanMgr
+            // statusView.getChildByName("Text").getComponent(Label).string = LanMgr.getLanById("201001");
+            statusView.getChildByPath("Text").getComponent(Label).string = "Battle";
+            statusView.getChildByPath("Icon/Battle").active = true;
+            statusView.getChildByPath("Icon/Search").active = false;
+            statusView.getChildByName("Level").getComponent(Label).string = "Lv.1";
+
+        } else if (pioneer.type == MapPioneerType.gangster && pioneer.friendly) {
+            statusView.active = true;
+            // useLanMgr
+            // statusView.getChildByName("Text").getComponent(Label).string = LanMgr.getLanById("201001");
+            statusView.getChildByPath("Text").getComponent(Label).string = "Search";
+            statusView.getChildByPath("Icon/Battle").active = false;
+            statusView.getChildByPath("Icon/Search").active = true;
+            statusView.getChildByName("Level").getComponent(Label).string = "Lv.1";
+        }
+      
         // taskhide
         if (pioneer instanceof MapNpcPioneerModel) {
             if (pioneer.taskObj != null && pioneer.taskHideTime > 0) {
@@ -93,9 +111,6 @@ export class OuterOtherPioneerView extends Component {
     private _taskPreparingView: Node = null;
     private _timeCountLabel: Label = null;
 
-    private _nonFriendlyView: Node = null;
-    private _canSearchView: Node = null;
-
     private _roleNames: string[] = [
         "artisan",
         "doomsdayGangBigTeam",
@@ -116,16 +131,11 @@ export class OuterOtherPioneerView extends Component {
         this._taskPreparingView = this.node.getChildByPath("task_status/prepare_task");
         this._timeCountLabel = this.node.getChildByPath("task_status/task_hide_count").getComponent(Label);
 
-        this._nonFriendlyView = this.node.getChildByPath("action_status/non_friendly");
-        this._canSearchView = this.node.getChildByPath("action_status/search")
 
         this._hasTaskView.active = false;
         this._playerChattingView.active = false;
         this._taskPreparingView.active = false;
         this._timeCountLabel.node.active = false;
-
-        this._nonFriendlyView.active = false;
-        this._canSearchView.active = false;
     }
 
     start() {

@@ -24,6 +24,12 @@
 			"buildLevel": 0,
             "buildName":"House",
             "unlock":0
+		},
+		"5": {
+			"buildID": "5",
+			"buildLevel": 0,
+            "buildName":"EnergyStation",
+            "unlock":0
 		}
 	}
 }

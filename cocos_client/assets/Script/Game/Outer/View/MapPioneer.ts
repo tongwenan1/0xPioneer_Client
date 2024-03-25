@@ -62,7 +62,7 @@ export class MapPioneer extends Component {
             this._currnetIdleAnim = idleView.getChildByName("Double_Guns_N_a").getComponent(Animation);
         } else if (idleView.getChildByName("Spy_N_a") != null) {
             this._currnetIdleAnim = idleView.getChildByName("Spy_N_a").getComponent(Animation);
-        } 
+        }
         leftWalkView = roleView.getChildByName("walk_left");
         rightWalkView = roleView.getChildByName("walk_right");
         topWalkView = roleView.getChildByName("walk_top");
@@ -271,7 +271,7 @@ export class MapPioneer extends Component {
                 this._currnetIdleAnim.stop();
             }
         }
-        
+
 
         const currentTimeStamp = new Date().getTime();
         if (this._actionTimeStamp > currentTimeStamp) {
