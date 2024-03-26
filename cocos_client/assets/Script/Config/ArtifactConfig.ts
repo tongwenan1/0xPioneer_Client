@@ -3,7 +3,7 @@ import { ArtifactConfigData } from "../Const/Artifact";
 import CLog from "../Utils/CLog";
 
 export default class ArtifactConfig {
-    private static _confs = {};
+    private static _confs: { [index: string]: ArtifactConfigData } = {};
 
     public static async init(): Promise<boolean> {
         // read artifact config
@@ -16,36 +16,36 @@ export default class ArtifactConfig {
                 resolve(data.json);
             });
         });
-        if (obj != null) {
-            // format config
-            let jsonObj = obj as object;
 
-            for (var id in jsonObj) {
-                let jd = jsonObj[id];
-                let d = new ArtifactConfigData();
-                for (var key in jd) {
-                    if (!d.hasOwnProperty(key)) {
-                        continue;
-                    }
-                    d[key] = jd[key];
-                }
-                d.configId = jd.id;
-                this._confs[id] = d;
-            }
-            CLog.debug("ArtifactConfig init success", this._confs);
-            return true;
-        } else {
+        if (!obj) {
             CLog.error("ArtifactConfig init error");
+            return false;
         }
-        return false;
+
+        // format config
+        let jsonObj = obj as object;
+
+        for (var id in jsonObj) {
+            let jd = jsonObj[id];
+            let d = new ArtifactConfigData();
+            for (var key in jd) {
+                if (!d.hasOwnProperty(key)) {
+                    continue;
+                }
+                d[key] = jd[key];
+            }
+            d.configId = jd.id;
+            this._confs[id] = d;
+        }
+        CLog.debug("ArtifactConfig init success", this._confs);
+        return true;
     }
 
     public static getById(artifactConfigId: string): ArtifactConfigData {
-        let key = artifactConfigId;
-        if (key in this._confs) {
-            return this._confs[key];
+        if (artifactConfigId in this._confs) {
+            return this._confs[artifactConfigId];
         }
-        CLog.error(`ArtifactConfig getConfigById error, config[${key}] not exist`);
+        CLog.error(`ArtifactConfig getConfigById error, config[${artifactConfigId}] not exist`);
         return null;
     }
 }

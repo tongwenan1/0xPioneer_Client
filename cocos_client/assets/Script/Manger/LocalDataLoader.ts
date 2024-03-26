@@ -1,6 +1,7 @@
 import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
-import { ArtifactMgr, AudioMgr, BattleReportsMgr, BoxMgr, BranchEventMgr, BuildingMgr, ConfigMgr, DropMgr, EvaluationMgr, InnerBuildingMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, TalkMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
+import BoxInfoConfig from "../Config/BoxInfoConfig";
+import { ArtifactMgr, AudioMgr, BattleReportsMgr, BranchEventMgr, BuildingMgr, ConfigMgr, DropMgr, EvaluationMgr, InnerBuildingMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, TalkMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
 
 export default class LocalDataLoader {
 
@@ -9,6 +10,7 @@ export default class LocalDataLoader {
         // load configs
         await ArtifactConfig.init();
         await ArtifactEffectConfig.init();
+        await BoxInfoConfig.init();
 
         this._loadStatus = 1;
         this._importSaveOnStartIfExists();
@@ -16,7 +18,6 @@ export default class LocalDataLoader {
         await LanMgr.initData();
         await BranchEventMgr.initData();
         await DropMgr.initData();
-        await BoxMgr.initData();
         await InnerBuildingMgr.initData();
         await TalkMgr.initData();
         await UserInfoMgr.initData();

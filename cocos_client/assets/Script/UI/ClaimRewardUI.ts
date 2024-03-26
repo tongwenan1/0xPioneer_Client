@@ -1,10 +1,12 @@
 import { _decorator, Component, Node, instantiate, director, BoxCharacterController, Label, Layout, UITransform, ProgressBar, Button, tween, v3, } from "cc";
 import { EventName } from "../Const/ConstDefine";
-import { BoxMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
+import { LanMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TreasureGettedUI } from "./TreasureGettedUI";
 import { UIHUDController } from "./UIHUDController";
 import NotificationMgr from "../Basic/NotificationMgr";
+import BoxInfoConfig from "../Config/BoxInfoConfig";
+import { BoxInfoConfigData } from "../Const/BoxInfo";
 const { ccclass, property } = _decorator;
 
 @ccclass("ClaimRewardUI")
@@ -65,7 +67,7 @@ export class ClaimRewardUI extends Component {
 
     private _started: boolean = false;
     private _dataLoaded: boolean = false;
-    private _boxDatas: any[] = [];
+    private _boxDatas: BoxInfoConfigData[] = [];
     private _maxthreshold: number = 0;
 
     private _boxViews: Node[] = [];
@@ -87,7 +89,7 @@ export class ClaimRewardUI extends Component {
 
     private _startAction() {
         if (this._started && this._dataLoaded) {
-            this._boxDatas = BoxMgr.getAllBox();
+            this._boxDatas = BoxInfoConfig.getAllBox();
             let pre = this.RewardBoxArr.getChildByName("icon_treasure_box");
             pre.active = false;
 
@@ -99,7 +101,7 @@ export class ClaimRewardUI extends Component {
                 for (let j = 0; j < 3; j++) {
                     item.getChildByPath("Treasure/Treasure_box_" + j).active = j == this._boxDatas[i].icon;
                 }
-                item.getChildByName("Progress").getComponent(Label).string = this._boxDatas[i].threshold;
+                item.getChildByName("Progress").getComponent(Label).string = this._boxDatas[i].threshold.toString();
                 item.getChildByName("Treasure").getComponent(Button).clickEvents[0].customEventData = i.toString();
                 this._boxViews.push(item);
                 item["__fromthreshold"] = beginThresholdValue + this._boxDatas[i].threshold;
