@@ -1,8 +1,8 @@
 import { _decorator, Component, Node, Vec2, Vec3, CCString, UITransform, Label, UIOpacity } from 'cc';
-import { FinishedEvent } from '../../../Const/Manager/UserInfoMgrDefine';
 import { LanMgr } from '../../../Utils/Global';
 import { MapPioneerLogicType, MapPioneerActionType, MapPioneerMoveDirection } from '../../../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel from '../Model/MapPioneerModel';
+import { FinishedEvent } from '../../../Const/UserInfoDefine';
 
 const { ccclass, property } = _decorator;
 

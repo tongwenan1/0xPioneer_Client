@@ -5,16 +5,16 @@ import { TilePos } from "../Game/TiledMap/TileTool";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { EventName } from "db://assets/Script/Const/ConstDefine";
 import { ArtifactMgr, BranchEventMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
-import { FinishedEvent } from "../Const/Manager/UserInfoMgrDefine";
 import { CountType } from "../Const/Manager/CountMgrDefine";
 import { PioneerMgrEvent } from "../Const/Manager/PioneerMgrDefine";
-import { BuildingFactionType, MapBuildingType } from "../Const/Model/MapBuildingModelDefine";
 import MapBuildingModel, { MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
 import { MapPioneerType, MapPioneerActionType, MapPioneerAttributesChangeModel, MapPioneerEventStatus, MapPioneerAttributesChangeType, MapPioneerLogicType } from "../Const/Model/MapPioneerModelDefine";
 import MapPioneerModel, { MapPlayerPioneerModel, MapNpcPioneerModel, MapPioneerLogicModel } from "../Game/Outer/Model/MapPioneerModel";
 import { UIHUDController } from "../UI/UIHUDController";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { ArtifactEffectType } from "../Const/Artifact";
+import { BuildingFactionType, MapBuildingType } from "../Const/BuildingDefine";
+import { FinishedEvent } from "../Const/UserInfoDefine";
 
 export default class PioneerMgr {
 

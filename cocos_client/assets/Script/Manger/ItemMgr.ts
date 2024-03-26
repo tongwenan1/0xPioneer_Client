@@ -1,11 +1,11 @@
 import { SpriteFrame, resources, sys } from "cc";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import { ResourcesMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
-import { FinishedEvent } from "../Const/Manager/UserInfoMgrDefine";
 import { ItemArrangeType, ItemMgrEvent } from "../Const/Manager/ItemMgrDefine";
 import { ItemConfigData, ItemType } from "../Const/Model/ItemModelDefine";
 import ItemData from "../Model/ItemData";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { FinishedEvent } from "../Const/UserInfoDefine";
 
 export default class ItemMgr {
 

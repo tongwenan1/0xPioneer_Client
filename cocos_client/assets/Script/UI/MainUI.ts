@@ -3,7 +3,6 @@ import { TilePos } from '../Game/TiledMap/TileTool';
 import { ClaimRewardUI } from './ClaimRewardUI';
 import { EventName } from '../Const/ConstDefine';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
-import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { BattleReportsEvent } from '../Const/Manager/BattleReportsMgrDefine';
 import { BattleReportsMgr, LanMgr, LocalDataLoader, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
@@ -13,6 +12,7 @@ import { TaskListUI } from './TaskListUI';
 import { NewSettlementUI } from './NewSettlementUI';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
+import { UserInfoEvent, FinishedEvent } from '../Const/UserInfoDefine';
 
 const { ccclass, property } = _decorator;
 
@@ -284,10 +284,6 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     taskFailed(taskId: string): void {
 
     }
-    generateTroopTimeCountChanged(leftTime: number): void {
-
-    }
-
     onBattleReportListChanged() {
         this.updateBattleReportsUnreadCount();
     }

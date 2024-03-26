@@ -4,6 +4,8 @@ import BoxInfoConfig from "../Config/BoxInfoConfig";
 import ConfigConfig from "../Config/ConfigConfig";
 import DropConfig from "../Config/DropConfig";
 import EvaluationConfig from "../Config/EvaluationConfig";
+import InnerBuildingConfig from "../Config/InnerBuildingConfig";
+import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
 import LanConfig from "../Config/LanConfig";
 import {
     ArtifactMgr,
@@ -12,7 +14,6 @@ import {
     BranchEventMgr,
     BuildingMgr,
     EvaluationMgr,
-    InnerBuildingMgr,
     ItemMgr,
     LanMgr,
     LvlupMgr,
@@ -21,6 +22,7 @@ import {
     TaskMgr,
     UserInfoMgr,
 } from "../Utils/Global";
+
 
 export default class LocalDataLoader {
     public async loadLocalDatas() {
@@ -32,6 +34,8 @@ export default class LocalDataLoader {
         await DropConfig.init();
         await EvaluationConfig.init();
         await LanConfig.init();
+        await InnerBuildingConfig.init();
+        await InnerBuildingLvlUpConfig.init();
 
         this._loadStatus = 1;
         this._importSaveOnStartIfExists();
@@ -40,7 +44,6 @@ export default class LocalDataLoader {
         await LanMgr.initData();
 
         await BranchEventMgr.initData();
-        await InnerBuildingMgr.initData();
         await TalkMgr.initData();
         await UserInfoMgr.initData();
         await BuildingMgr.initData();

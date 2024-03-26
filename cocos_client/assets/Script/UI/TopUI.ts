@@ -1,11 +1,11 @@
 import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt, UIOpacity, instantiate, tween } from 'cc';
 import { EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { ItemMgr, LvlupMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
-import { FinishedEvent, UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { ItemMgrEvent } from '../Const/Manager/ItemMgrDefine';
 import { UIName } from '../Const/ConstUIDefine';
 import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
 import NotificationMgr from '../Basic/NotificationMgr';
+import { UserInfoEvent, FinishedEvent } from '../Const/UserInfoDefine';
 const { ccclass, property } = _decorator;
 
 
@@ -158,9 +158,6 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
 
     }
     taskFailed(taskId: string): void {
-
-    }
-    generateTroopTimeCountChanged(leftTime: number): void {
 
     }
 

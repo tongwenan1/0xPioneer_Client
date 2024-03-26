@@ -6,11 +6,11 @@ import ArtifactData from '../Model/ArtifactData';
 import ItemData from '../Model/ItemData';
 import { ArtifactItem } from './ArtifactItem';
 import { BackpackItem } from './BackpackItem';
-import { UserInfoEvent } from '../Const/Manager/UserInfoMgrDefine';
 import { LanMgr, LvlupMgr, UserInfoMgr, AudioMgr, UIPanelMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import { UIHUDController } from './UIHUDController';
 import NotificationMgr from '../Basic/NotificationMgr';
+import { UserInfoEvent } from '../Const/UserInfoDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfoUI')

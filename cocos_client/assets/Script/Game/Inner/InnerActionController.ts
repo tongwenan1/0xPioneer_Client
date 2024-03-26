@@ -1,21 +1,24 @@
-import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3 } from 'cc';
-import { GameMain } from '../GameMain';
-import * as cc from "cc";
-import { EventName } from '../Const/ConstDefine';
-import NotificationMgr from '../Basic/NotificationMgr';
-import ConfigConfig from '../Config/ConfigConfig';
+import { EventMouse, Node, UITransform, Vec3, _decorator } from "cc";
+import ViewController from "../../BasicView/ViewController";
+import { GameMain } from "../../GameMain";
+import NotificationMgr from "../../Basic/NotificationMgr";
+import { EventName } from "../../Const/ConstDefine";
+import ConfigConfig from "../../Config/ConfigConfig";
+
 const { ccclass, property } = _decorator;
 
-@ccclass('InnerMapBG')
-export class InnerMapBG extends Component {
+@ccclass('InnerActionController')
+export default class InnerActionController extends ViewController {
 
     private _mouseDown: boolean = false;
     private _curCameraPos: Vec3 = Vec3.ZERO;
     private _curCameraZoom: number = 1;
-    start() {
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+    }
 
-        this._mouseDown = false;
-        let thisptr = this;
+    protected viewDidStart(): void {
+        super.viewDidStart();
 
         let halfCameraWidth = GameMain.inst.MainCamera.camera.width / 2;
         let halfCameraHeight = GameMain.inst.MainCamera.camera.height / 2;
@@ -29,49 +32,45 @@ export class InnerMapBG extends Component {
 
         let downx = 0;
         let downy = 0;
-        this.node.on(Node.EventType.MOUSE_DOWN, (event: cc.EventMouse) => {
-            thisptr._mouseDown = true;
+        this.node.on(Node.EventType.MOUSE_DOWN, (event: EventMouse) => {
+            this._mouseDown = true;
 
             downx = event.getLocation().x;
             downy = event.getLocation().y;
         }, this);
 
-        this.node.on(Node.EventType.MOUSE_UP, (event: cc.EventMouse) => {
-            thisptr._mouseDown = false;
+        this.node.on(Node.EventType.MOUSE_UP, (event: EventMouse) => {
+            this._mouseDown = false;
             var pos = event.getLocation();
 
             if (downx == pos.x &&
                 downy == pos.y) {
-
-            
             };
         }, this);
-        
-        this.node.on(Node.EventType.MOUSE_WHEEL, (event:cc.EventMouse)=>{
-            let sc = this._curCameraZoom;
-            const useConf = ConfigConfig.getById("10001");
-            if (useConf == null) return;
 
+        this.node.on(Node.EventType.MOUSE_WHEEL, (event: EventMouse) => {
+            let sc = this._curCameraZoom;
+            let config = ConfigConfig.getById("10001");
+            if (config == null) return;
             if (event.getScrollY() > 0) {
                 sc -= 0.05;
             }
             else {
                 sc += 0.05;
             }
-            if (sc > useConf.para[1]) {
-                sc = useConf.para[1];
+            if (sc > config.para[1]) {
+                sc = config.para[1];
             }
-            else if (sc < useConf.para[0]) {
-                sc = useConf.para[0];
+            else if (sc < config.para[0]) {
+                sc = config.para[0];
             }
             GameMain.inst.MainCamera.orthoHeight = sc * GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
             this._curCameraZoom = sc;
             NotificationMgr.triggerEvent(EventName.MAP_SCALED, sc);
         }, this);
 
-        this.node.on(Node.EventType.MOUSE_MOVE, (event: cc.EventMouse) => {
-            if (thisptr._mouseDown) {
-
+        this.node.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {
+            if (this._mouseDown) {
                 let pos = GameMain.inst.MainCamera.node.position.add(new Vec3(-event.movementX, event.movementY, 0));
                 if (pos.x < -moveDistX) {
                     pos.x = -moveDistX;
@@ -85,27 +84,22 @@ export class InnerMapBG extends Component {
                 else if (pos.y > moveDistY) {
                     pos.y = moveDistY;
                 }
-                GameMain.inst.MainCamera.node.setPosition(pos);              
+                GameMain.inst.MainCamera.node.setPosition(pos);
             }
         }, this);
-
     }
 
-    protected onDisable(): void {
-        this._curCameraPos = GameMain.inst.MainCamera.node.position.clone();
-        this._curCameraZoom = GameMain.inst.MainCamera.camera.orthoHeight / GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
-    }
-
-    protected onEnable(): void {
+    protected viewDidAppear(): void {
+        super.viewDidAppear();
+    
         GameMain.inst.MainCamera.node.setPosition(this._curCameraPos.clone());
         GameMain.inst.MainCamera.camera.orthoHeight = this._curCameraZoom * GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
     }
 
-    update(deltaTime: number) {
+    protected viewDidDisAppear(): void {
+        super.viewDidDisAppear();
 
+        this._curCameraPos = GameMain.inst.MainCamera.node.position.clone();
+        this._curCameraZoom = GameMain.inst.MainCamera.camera.orthoHeight / GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
     }
-
-    
 }
-
-

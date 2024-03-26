@@ -1,16 +1,16 @@
 import { Asset, __private, resources, sys } from "cc";
-import { GameMain } from "../GameMain";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
-import { UserInfoEvent, FinishedEvent, InnerBuildingType, UserInnerBuildInfo, GenerateTroopInfo, GenerateEnergyInfo, UserInfoNotification } from "../Const/Manager/UserInfoMgrDefine";
-import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, SettlementMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
+import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
 import { CountType } from "../Const/Manager/CountMgrDefine";
 import ItemData from "../Model/ItemData";
 import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
 import { UIName } from "../Const/ConstUIDefine";
 import { ItemInfoUI } from "../UI/ItemInfoUI";
 import NotificationMgr from "../Basic/NotificationMgr";
+import { UserInfoEvent, FinishedEvent, UserInfoNotification, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";
+import { InnerBuildingType, UserInnerBuildInfo } from "../Const/BuildingDefine";
 
 export default class UserInfoMgr {
 
@@ -177,15 +177,28 @@ export default class UserInfoMgr {
             }
         }
     }
-    public upgradeBuild(buildID: InnerBuildingType) {
-        const buildInfo = this._innerBuilds.get(buildID);
+    public beginBuilding(buildingType: InnerBuildingType) {
+        const buildInfo = this._innerBuilds.get(buildingType);
+        if (buildInfo != null) {
+            buildInfo.building = true;
+        }
+    }
+    public buildingIsBuilding(buildingType: InnerBuildingType) {
+        const buildInfo = this._innerBuilds.get(buildingType);
+        if (buildInfo != null) {
+            return buildInfo.building;
+        }
+        return false;
+    }
+    public upgradeBuild(buildingType: InnerBuildingType) {
+        const buildInfo = this._innerBuilds.get(buildingType);
         if (buildInfo != null) {
             buildInfo.buildLevel += 1;
-            this._innerBuilds.set(buildID, buildInfo);
-            this._localJsonData.innerBuildData[buildID].buildLevel = buildInfo.buildLevel;
+            this._innerBuilds.set(buildingType, buildInfo);
+            this._localJsonData.innerBuildData[buildingType].buildLevel = buildInfo.buildLevel;
             this._localDataChanged(this._localJsonData);
 
-            if (buildInfo.buildID == "4") {
+            if (buildInfo.buildType == InnerBuildingType.House) {
                 // build house
                 this.checkCanFinishedTask("buildhouse", "-1");
             }
@@ -194,7 +207,7 @@ export default class UserInfoMgr {
                 type: CountType.buildInnerBuilding,
                 timeStamp: new Date().getTime(),
                 data: {
-                    bId: buildID,
+                    bId: buildingType,
                     level: buildInfo.buildLevel,
                 }
             });
@@ -283,7 +296,7 @@ export default class UserInfoMgr {
     public get cityVision() {
         return this._cityVision;
     }
-    public get innerBuilds(): Map<string, UserInnerBuildInfo> {
+    public get innerBuilds(): Map<InnerBuildingType, UserInnerBuildInfo> {
         return this._innerBuilds;
     }
     public get explorationValue() {
@@ -292,8 +305,8 @@ export default class UserInfoMgr {
     public get gettedExplorationRewardIds() {
         return this._gettedExplorationRewardIds;
     }
-    public get isGeneratingTroop() {
-        return this._generateTroopInfo != null;
+    public get generateTroopInfo() {
+        return this._generateTroopInfo;
     }
     public get generateEnergyInfo() {
         return this._generateEnergyInfo;
@@ -426,17 +439,19 @@ export default class UserInfoMgr {
                 if (this._generateTroopInfo.countTime > 0) {
                     this._generateTroopInfo.countTime -= 1;
                 }
+                this._localJsonData.playerData.generateTroopInfo = this._generateTroopInfo;
+                this._localDataChanged(this._localJsonData);
+
+                NotificationMgr.triggerEvent(UserInfoNotification.generateTroopTimeCountChanged);
+
                 if (this._generateTroopInfo.countTime <= 0) {
                     ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Troop, this._generateTroopInfo.troopNum)]);
                     this._generateTroopInfo = null;
+                    this._localJsonData.playerData.generateTroopInfo = this._generateTroopInfo;
+                    this._localDataChanged(this._localJsonData);
+
+                    NotificationMgr.triggerEvent(UserInfoNotification.generateTroopNumChanged);
                 }
-                for (const observe of this._observers) {
-                    if (observe.generateTroopTimeCountChanged) {
-                        observe.generateTroopTimeCountChanged(this._generateTroopInfo == null ? 0 : this._generateTroopInfo.countTime);
-                    }
-                }
-                this._localJsonData.playerData.generateTroopInfo = this._generateTroopInfo;
-                this._localDataChanged(this._localJsonData);
             }
             let energyStationBuilded: boolean = false;
             if (this._innerBuilds != null && this._innerBuilds.has(InnerBuildingType.EnergyStation)) {
@@ -487,7 +502,7 @@ export default class UserInfoMgr {
     private _level: number = null;
     private _exp: number = null;
     private _cityVision: number = null;
-    private _innerBuilds: Map<string, UserInnerBuildInfo> = null;
+    private _innerBuilds: Map<InnerBuildingType, UserInnerBuildInfo> = null;
 
     private _explorationValue: number = 0;
     private _gettedExplorationRewardIds: string[] = [];
@@ -504,61 +519,72 @@ export default class UserInfoMgr {
         const localData = sys.localStorage.getItem(this._localStorageKey);
         if (localData != null) {
             jsonObject = JSON.parse(localData);
-
-        } else {
-            jsonObject = await new Promise((resolve, reject) => {
-                resources.load("data_local/user_Info", (err: Error, data: any) => {
-                    if (err) {
-                        resolve(null);
-                        return;
-                    }
-                    resolve(data.json);
-                });
-            });
-            // localsave
-            this._localDataChanged(jsonObject);
         }
         this._localJsonData = jsonObject;
-        if (jsonObject == null) {
-            return;
-        }
-        this._playerID = jsonObject.playerData.playerID;
-        this._playerName = jsonObject.playerData.playerName;
-        this._level = jsonObject.playerData.level;
-        this._exp = jsonObject.playerData.exp;
-        this._cityVision = jsonObject.playerData.cityVision;
-
-        if (jsonObject.playerData.currentTasks != null) {
-            this._currentTasks = jsonObject.playerData.currentTasks;
-        }
-        if (jsonObject.playerData.finishedEvents != null) {
-            this._finishedEvents = jsonObject.playerData.finishedEvents;
-        }
-        if (jsonObject.playerData.isFinishRookie != null) {
-            this._isFinishRookie = jsonObject.playerData.isFinishRookie;
-        }
-        if (jsonObject.playerData.explorationValue != null) {
-            this._explorationValue = jsonObject.playerData.explorationValue;
-        }
-        if (jsonObject.playerData.gettedExplorationRewardIds != null) {
-            this._gettedExplorationRewardIds = jsonObject.playerData.gettedExplorationRewardIds;
-        }
-        if (jsonObject.playerData.generateTroopInfo != null) {
-            this._generateTroopInfo = jsonObject.playerData.generateTroopInfo;
-        }
-        if (jsonObject.playerData.generateEnergyInfo != null) {
-            this._generateEnergyInfo = jsonObject.playerData.generateEnergyInfo;
-        }
-
-        this._innerBuilds = new Map();
-        for (let id in jsonObject.innerBuildData) {
-            const innerBuildInfo: UserInnerBuildInfo = {
-                buildID: jsonObject.innerBuildData[id].buildID,
-                buildLevel: jsonObject.innerBuildData[id].buildLevel,
-                buildUpTime: jsonObject.innerBuildData[id].buildUpTime,
-                buildName: jsonObject.innerBuildData[id].buildName,
+        if (this._localJsonData == null) {
+            // init data
+            this._playerID = "1001";
+            this._playerName = "Player";
+            this._level = 1;
+            this._exp = 0;
+            this._cityVision = 7;
+            this._localJsonData.playerData = {
+                "playerID": "1001",
+                "playerName": "Player",
+                "level": 1,
+                "exp": 0,
+                "cityVision": 7
             };
-            this._innerBuilds.set(id, innerBuildInfo);
+            this._localJsonData.innerBuildData = {
+                "30001": {
+                    "buildID": "30001",
+                    "buildLevel": 0
+                },
+                "30002": {
+                    "buildID": "30002",
+                    "buildLevel": 0
+                },
+                "30003": {
+                    "buildID": "30003",
+                    "buildLevel": 0
+                }
+            }
+            this._localDataChanged(this._localJsonData);
+        }
+        this._playerID = this._localJsonData.playerData.playerID;
+        this._playerName = this._localJsonData.playerData.playerName;
+        this._level = this._localJsonData.playerData.level;
+        this._exp = this._localJsonData.playerData.exp;
+        this._cityVision = this._localJsonData.playerData.cityVision;
+        if (this._localJsonData.playerData.currentTasks != null) {
+            this._currentTasks = this._localJsonData.playerData.currentTasks;
+        }
+        if (this._localJsonData.playerData.finishedEvents != null) {
+            this._finishedEvents = this._localJsonData.playerData.finishedEvents;
+        }
+        if (this._localJsonData.playerData.isFinishRookie != null) {
+            this._isFinishRookie = this._localJsonData.playerData.isFinishRookie;
+        }
+        if (this._localJsonData.playerData.explorationValue != null) {
+            this._explorationValue = this._localJsonData.playerData.explorationValue;
+        }
+        if (this._localJsonData.playerData.gettedExplorationRewardIds != null) {
+            this._gettedExplorationRewardIds = this._localJsonData.playerData.gettedExplorationRewardIds;
+        }
+        if (this._localJsonData.playerData.generateTroopInfo != null) {
+            this._generateTroopInfo = this._localJsonData.playerData.generateTroopInfo;
+        }
+        if (this._localJsonData.playerData.generateEnergyInfo != null) {
+            this._generateEnergyInfo = this._localJsonData.playerData.generateEnergyInfo;
+        }
+        this._innerBuilds = new Map();
+        for (let id in this._localJsonData.innerBuildData) {
+            const innerBuildInfo: UserInnerBuildInfo = {
+                buildType: this._localJsonData.innerBuildData[id].buildID,
+                buildLevel: this._localJsonData.innerBuildData[id].buildLevel,
+                building: false
+            };
+            this._innerBuilds.set(innerBuildInfo.buildType, innerBuildInfo);
         }
     }
 
@@ -729,9 +755,5 @@ export default class UserInfoMgr {
         if (jsonObject != null) {
             sys.localStorage.setItem(this._localStorageKey, JSON.stringify(jsonObject));
         }
-    }
-
-    private _levelup() {
-
     }
 }

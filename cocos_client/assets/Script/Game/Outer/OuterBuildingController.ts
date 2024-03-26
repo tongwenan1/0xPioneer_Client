@@ -4,16 +4,15 @@ import { TileHexDirection, TilePos } from '../TiledMap/TileTool';
 import { OuterBuildingView } from './View/OuterBuildingView';
 import { MapBG } from '../../Scene/MapBG';
 import { EventName } from '../../Const/ConstDefine';
-import { FinishedEvent, UserInfoEvent } from '../../Const/Manager/UserInfoMgrDefine';
-import { BuildingMgrEvent } from '../../Const/Manager/BuildingMgrDefine';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
 import { BuildingMgr, PioneerMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
-import { BuildingStayPosType, MapBuildingType, BuildingFactionType } from '../../Const/Model/MapBuildingModelDefine';
 import { MapDecoratePosMode } from '../../Const/Model/MapDecorateModelDefine';
 import MapDecorateModel from './Model/MapDecorateModel';
 import { MapPioneerActionType } from '../../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPioneerLogicModel } from './Model/MapPioneerModel';
 import NotificationMgr from '../../Basic/NotificationMgr';
+import { BuildingMgrEvent, BuildingStayPosType, MapBuildingType, BuildingFactionType } from '../../Const/BuildingDefine';
+import { UserInfoEvent, FinishedEvent } from '../../Const/UserInfoDefine';
 
 
 const { ccclass, property } = _decorator;
@@ -353,9 +352,6 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     }
 
     gameTaskOver(): void {
-
-    }
-    generateTroopTimeCountChanged(leftTime: number): void {
 
     }
 

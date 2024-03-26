@@ -1,12 +1,11 @@
 import { Vec2, math, resources, v2 } from "cc";
 import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
-import { BuildingMgrEvent } from "../Const/Manager/BuildingMgrDefine";
-import { ResourceModel } from "../Const/Manager/UserInfoMgrDefine";
-import { MapBuildingType, BuildingFactionType } from "../Const/Model/MapBuildingModelDefine";
 import MapBuildingModel, { MapResourceBuildingModel, MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
 import { MapDecoratePosMode } from "../Const/Model/MapDecorateModelDefine";
 import MapDecorateModel from "../Game/Outer/Model/MapDecorateModel";
+import { BuildingMgrEvent, MapBuildingType, BuildingFactionType } from "../Const/BuildingDefine";
+import { ResourceModel } from "../Const/UserInfoDefine";
 
 export default class BuildingMgr {
 

@@ -1,7 +1,6 @@
 import { _decorator, Component, Node, Camera, EventHandler, Vec3, tween } from 'cc';
 import { EventName } from './Const/ConstDefine';
 import { MapOutScene } from './Scene/MapOutScene';
-import { MapInnerScene } from './Scene/MapInnerScene';
 import ViewController from './BasicView/ViewController';
 import NotificationMgr from './Basic/NotificationMgr';
 const { ccclass, property } = _decorator;
@@ -21,7 +20,6 @@ export class GameMain extends ViewController {
     public static inst: GameMain;
 
     public outSceneMap: MapOutScene;
-    public innerSceneMap: MapInnerScene;
 
     protected _currentScene: Node;
 
@@ -74,7 +72,6 @@ export class GameMain extends ViewController {
 
         this.InnerScene.active = false;
         this.OutScene.active = true;
-        this.innerSceneMap = this.InnerScene.getComponent(MapInnerScene);
 
         NotificationMgr.addListener(EventName.CHANGE_GAMECAMERA_POSITION, this._changeGameCameraPosition, this);
         NotificationMgr.addListener(EventName.CHANGE_GAMECAMERA_ZOOM, this._changeGameCameraZoom, this);

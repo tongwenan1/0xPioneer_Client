@@ -8,12 +8,13 @@ import { OuterPioneerController } from '../Game/Outer/OuterPioneerController';
 import { OuterFogAnimShapMask } from '../Game/Outer/View/OuterFogAnimShapMask';
 import { OuterMapCursorView } from '../Game/Outer/View/OuterMapCursorView';
 import { BuildingMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../Utils/Global';
-import { BuildingFactionType, MapBuildingType } from '../Const/Model/MapBuildingModelDefine';
 import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel from '../Game/Outer/Model/MapPioneerModel';
 import { UIHUDController } from '../UI/UIHUDController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import ConfigConfig from '../Config/ConfigConfig';
+import { BuildingFactionType, MapBuildingType } from '../Const/BuildingDefine';
+
 const { ccclass, property } = _decorator;
 
 @ccclass('CPrefabInfo')

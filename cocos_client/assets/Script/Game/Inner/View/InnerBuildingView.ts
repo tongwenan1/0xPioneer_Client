@@ -1,10 +1,9 @@
-import { _decorator, Component, Node } from 'cc';
-import { InnerBuildingType, UserInnerBuildInfo } from '../../../Const/Manager/UserInfoMgrDefine';
+import { _decorator, CCInteger, Component, instantiate, Node, Prefab, UITransform } from 'cc';
 import ViewController from '../../../BasicView/ViewController';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
-import { GameMain } from '../../../GameMain';
-import { UIHUDController } from '../../../UI/UIHUDController';
-import { LanMgr } from '../../../Utils/Global';
+import NotificationMgr from '../../../Basic/NotificationMgr';
+import { UserInnerBuildInfo } from '../../../Const/BuildingDefine';
+import { UserInnerBuildNotification } from '../../../Const/UserInfoDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerBuildingView')
@@ -12,18 +11,46 @@ export class InnerBuildingView extends ViewController {
 
     public refreshUI(building: UserInnerBuildInfo) {
         this._building = building;
-        console.log("exce bu: ", building)
+
+        let showBuildingIndex: number = -1;
+        if (this._building.buildLevel < this.buildingPrbs.length) {
+            showBuildingIndex = this._building.buildLevel;
+        } else {
+            showBuildingIndex = this.buildingPrbs.length - 1;
+        }
+        if (this._currentShowBuildingIndex != showBuildingIndex) {
+            if (this._showBuilding != null) {
+                this._showBuilding.destroy();
+            }
+            const buildView = instantiate(this.buildingPrbs[showBuildingIndex]);
+            this.node.getChildByPath("BuildingContent").addChild(buildView);
+            this._showBuilding = buildView;
+            this._currentShowBuildingIndex = showBuildingIndex;
+            //change tap area height
+            if (this._currentShowBuildingIndex < this.buildingShowHeight.length) {
+                this.node.getChildByPath("clickNode").getComponent(UITransform).height = this.buildingShowHeight[this._currentShowBuildingIndex];
+            }
+        }
         this._infoView.refreshUI(this._building);
-        this._infoView.node.setSiblingIndex(999);
-        // if (this.buildData.buildLevel < this.buildPfbList.length) {
-        //     if (this._showBuilding != null) {
-        //         this._showBuilding.destroy();
-        //     }
-        //     const buildView = instantiate(this.buildPfbList[this.buildData.buildLevel]);
-        //     this.node.addChild(buildView);
-        //     this._showBuilding = buildView;
-        // }
     }
+    public playBuildAnim(buildTime: number) {
+        const buildAnim = instantiate(this.buildingAnimPrb);
+        this.node.getChildByPath("BuildingContent").addChild(buildAnim);
+        this._infoView.setProgressTime(buildTime);
+        this.scheduleOnce(()=> {
+            buildAnim.destroy();
+            NotificationMgr.triggerEvent(UserInnerBuildNotification.buildFinished, this._building.buildType);
+        }, buildTime);
+    }
+
+
+    @property([Prefab])
+    private buildingPrbs: Prefab[] = [];
+    @property([CCInteger])
+    private buildingShowHeight: number[] = [];
+
+    @property(Prefab)
+    private buildingAnimPrb: Prefab = null;
 
     protected innerBuildingLoad() {
     }
@@ -31,6 +58,8 @@ export class InnerBuildingView extends ViewController {
     }
 
     private _infoView: InnerBuildUI = null;
+    private _showBuilding: Node = null;
+    private _currentShowBuildingIndex: number = -1;
 
     protected _building: UserInnerBuildInfo = null;
     protected viewDidLoad(): void {
@@ -45,11 +74,6 @@ export class InnerBuildingView extends ViewController {
         if (this._building == null) {
             return;
         }
-        // if (GameMain.inst.innerSceneMap.isUpgrading(this._building.buildID)) {
-            // useLanMgr
-            // UIHUDController.showCenterTip(LanMgr.getLanById("201001"));
-            // return;
-        // }
         this.innerBuildingTaped();
     }
 }

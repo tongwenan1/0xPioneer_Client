@@ -1,11 +1,12 @@
 import { Label, Node, _decorator } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
-import { UserInfoNotification, UserInnerBuildInfo } from "../../../Const/Manager/UserInfoMgrDefine";
 import { UIHUDController } from "../../../UI/UIHUDController";
 import { ItemMgr, UserInfoMgr } from "../../../Utils/Global";
 import ItemData from "../../../Model/ItemData";
 import { ResourceCorrespondingItem } from "../../../Const/ConstDefine";
 import NotificationMgr from "../../../Basic/NotificationMgr";
+import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
+import { UserInfoNotification } from "../../../Const/UserInfoDefine";
 
 const { ccclass, property } = _decorator;
 

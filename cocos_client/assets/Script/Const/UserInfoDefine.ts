@@ -1,15 +1,5 @@
-export interface UserInnerBuildInfo {
-    buildID: InnerBuildingType,
-    buildLevel: number,
-    buildUpTime: number,
-    buildName: string,
-}
-
-export enum InnerBuildingType {
-    MainCity = "0",
-    Barrack = "3",
-    House = "4",
-    EnergyStation = "5"
+export enum UserInnerBuildNotification {
+    buildFinished = "buildFinished"
 }
 
 export interface ResourceModel {
@@ -38,6 +28,9 @@ export enum FinishedEvent {
 export enum UserInfoNotification {
     generateEnergyTimeCountChanged = "generateEnergyTimeCountChanged",
     generateEnergyNumChanged = "generateEnergyNumChanged",
+
+    generateTroopTimeCountChanged = "generateTroopTimeCountChanged",
+    generateTroopNumChanged = "generateTroopNumChanged",
 }
 
 export interface UserInfoEvent {
@@ -54,6 +47,4 @@ export interface UserInfoEvent {
     taskFailed?(taskId: string): void;
 
     gameTaskOver?(): void;
-
-    generateTroopTimeCountChanged?(leftTime: number): void;
 }
