@@ -41,11 +41,11 @@ export default class ArtifactConfig {
         return true;
     }
 
-    public static getById(artifactConfigId: string): ArtifactConfigData {
+    public static getById(artifactConfigId: string): ArtifactConfigData | null {
         if (artifactConfigId in this._confs) {
             return this._confs[artifactConfigId];
         }
-        CLog.error(`ArtifactConfig getConfigById error, config[${artifactConfigId}] not exist`);
+        CLog.error(`ArtifactConfig getById error, config[${artifactConfigId}] not exist`);
         return null;
     }
 }

@@ -41,11 +41,11 @@ export default class ArtifactEffectConfig {
         return true;
     }
 
-    public static getById(effectConfigId: string): ArtifactEffectConfigData {
+    public static getById(effectConfigId: string): ArtifactEffectConfigData | null {
         if (effectConfigId in this._confs) {
             return this._confs[effectConfigId];
         }
-        console.error(`ArtifactEffectConfig geConfigById error, config[${effectConfigId}] not exist`);
+        console.error(`ArtifactEffectConfig getById error, config[${effectConfigId}] not exist`);
         return null;
     }
 }

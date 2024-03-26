@@ -23,6 +23,8 @@ export default class BoxInfoConfig {
         for (const key in obj) {
             this._confs.push(obj[key]);
         }
+        CLog.debug("BoxInfoConfig init success", this._confs);
+        return true;
     }
 
     public static getById(boxId: string): BoxInfoConfigData | null {
