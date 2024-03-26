@@ -1,3 +1,4 @@
+import DropConfig from "../Config/DropConfig";
 import { ItemConfigType } from "../Const/ConstDefine";
 import { UIName } from "../Const/ConstUIDefine";
 import { GameMain } from "../GameMain";
@@ -5,7 +6,7 @@ import ArtifactData from "../Model/ArtifactData";
 import ItemData from "../Model/ItemData";
 import { ArtifactInfoUI } from "../UI/ArtifactInfoUI";
 import { ItemInfoUI } from "../UI/ItemInfoUI";
-import { ArtifactMgr, DropMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
+import { ArtifactMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import CommonTools from "./CommonTools";
 
 export default class ItemConfigDropTool {
@@ -34,9 +35,9 @@ export default class ItemConfigDropTool {
 
                 } else if (type == ItemConfigType.Drop) {
                     let resultReward: { type: number, num: number, itemConfigId: string } = null;
-                    const drop = DropMgr.getDropById(id);
-                    if (drop.length > 0) {
-                        const useDrop = drop[0];
+                    const drop = DropConfig.getById(id);
+                    if (drop != null) {
+                        const useDrop = drop;
                         const items: { type: number, num: number, itemConfigId: string }[] = [];
                         const weights = [];
                         // drop type index 0

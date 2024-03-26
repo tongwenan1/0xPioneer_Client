@@ -3,7 +3,6 @@ import br from "../Manger/BattleReportsMgr";
 import Be from "../Manger/BranchEventMgr";
 import bd from "../Manger/BuildingMgr";
 import ct from "../Manger/CountMgr";
-import Dp from "../Manger/DropMgr";
 import ev from "../Manger/EvaluationMgr";
 import ibd from "../Manger/InnerBuildingMgr";
 import im from "../Manger/ItemMgr";
@@ -24,7 +23,6 @@ const ArtifactMgr = new af();
 const BranchEventMgr = new Be();
 const BuildingMgr = new bd();
 const CountMgr = new ct();
-const DropMgr = new Dp();
 const EvaluationMgr = new ev();
 const InnerBuildingMgr = new ibd();
 const ItemMgr = new im();
@@ -50,7 +48,6 @@ export {
     BranchEventMgr,
     BuildingMgr,
     CountMgr,
-    DropMgr,
     EvaluationMgr,
     InnerBuildingMgr,
     ItemMgr,

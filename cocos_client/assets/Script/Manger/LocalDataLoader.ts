@@ -2,6 +2,7 @@ import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import BoxInfoConfig from "../Config/BoxInfoConfig";
 import ConfigConfig from "../Config/ConfigConfig";
+import DropConfig from "../Config/DropConfig";
 import LanConfig from "../Config/LanConfig";
 import {
     ArtifactMgr,
@@ -9,7 +10,6 @@ import {
     BattleReportsMgr,
     BranchEventMgr,
     BuildingMgr,
-    DropMgr,
     EvaluationMgr,
     InnerBuildingMgr,
     ItemMgr,
@@ -28,6 +28,7 @@ export default class LocalDataLoader {
         await ArtifactEffectConfig.init();
         await BoxInfoConfig.init();
         await ConfigConfig.init();
+        await DropConfig.init();
         await LanConfig.init();
 
         this._loadStatus = 1;
@@ -35,7 +36,6 @@ export default class LocalDataLoader {
 
         await LanMgr.initData();
         await BranchEventMgr.initData();
-        await DropMgr.initData();
         await InnerBuildingMgr.initData();
         await TalkMgr.initData();
         await UserInfoMgr.initData();

@@ -2,7 +2,7 @@ import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, 
 import { ItemConfigType, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import { ArtifactItem } from './ArtifactItem';
-import { ArtifactMgr, DropMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
+import { ArtifactMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
 import ArtifactData from '../Model/ArtifactData';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
@@ -11,6 +11,8 @@ import { UIHUDController } from './UIHUDController';
 import ArtifactConfig from '../Config/ArtifactConfig';
 import ArtifactEffectConfig from '../Config/ArtifactEffectConfig';
 import { ArtifactEffectRankColor } from '../Const/Artifact';
+import DropConfig from '../Config/DropConfig';
+import { DropConfigData } from '../Const/Drop';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemSelectFromThreeUI')
@@ -18,12 +20,12 @@ export class ItemSelectFromThreeUI extends ViewController {
 
     public async showItem(dropId: string, selectedCallback: () => void) {
         this._selectedCallback = selectedCallback;
-        const drops: any[] = DropMgr.getDropById(dropId);
+        const drops = DropConfig.getById(dropId);
         // useLanMgr
         // this.node.getChildByPath("__ViewContent/Title").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/GetAllBtn/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-        if (drops.length > 0) {
-            const drop = drops[0];
+        if (drops != null) {
+            const drop = drops[0] as DropConfigData;
             if (drop.type == 2) {
                 // only support artifact
                 const items: ArtifactData[] = [];
