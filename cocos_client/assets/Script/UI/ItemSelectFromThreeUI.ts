@@ -3,7 +3,6 @@ import { ItemConfigType, ResourceCorrespondingItem } from '../Const/ConstDefine'
 import { GameMain } from '../GameMain';
 import { ArtifactItem } from './ArtifactItem';
 import { ArtifactMgr, DropMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
-import { ArtifactEffectRankColor } from '../Const/Model/ArtifactModelDefine';
 import ArtifactData from '../Model/ArtifactData';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
@@ -11,6 +10,7 @@ import { ArtifactInfoUI } from './ArtifactInfoUI';
 import { UIHUDController } from './UIHUDController';
 import ArtifactConfig from '../Config/ArtifactConfig';
 import ArtifactEffectConfig from '../Config/ArtifactEffectConfig';
+import { ArtifactEffectRankColor } from '../Const/Artifact';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemSelectFromThreeUI')

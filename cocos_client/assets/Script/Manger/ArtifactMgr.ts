@@ -1,12 +1,11 @@
 import { SpriteFrame, sys } from "cc";
 import { PioneerMgr, ResourcesMgr } from "../Utils/Global";
-import { ArtifactArrangeType } from "../Const/Manager/ArtifactMgrDefine";
-import { ArtifactPropValueType, ArtifactProp } from "../Const/Model/ArtifactModelDefine";
 import ArtifactData from "../Model/ArtifactData";
 import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { EventName } from "../Const/ConstDefine";
+import { ArtifactArrangeType, ArtifactProp, ArtifactPropValueType } from "../Const/Artifact";
 
 export default class ArtifactMgr {
     private _maxArtifactLength: number = 100;

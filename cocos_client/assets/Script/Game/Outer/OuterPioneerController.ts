@@ -16,7 +16,6 @@ import { BuildingFactionType } from '../../Const/Model/MapBuildingModelDefine';
 import { MapPioneerLogicType, MapPioneerActionType, MapPioneerType, MapPioneerMoveDirection, MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import { MapResourceBuildingModel } from './Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerLogicModel, MapNpcPioneerModel } from './Model/MapPioneerModel';
-import { ArtifactEffectType } from '../../Const/Model/ArtifactModelDefine';
 import ItemData from '../../Model/ItemData';
 import { OuterBuildingController } from './OuterBuildingController';
 import { UIName } from '../../Const/ConstUIDefine';
@@ -26,6 +25,7 @@ import { TaskListUI } from '../../UI/TaskListUI';
 import { EventUI } from '../../UI/Outer/EventUI';
 import { UIHUDController } from '../../UI/UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
+import { ArtifactEffectType } from '../../Const/Artifact';
 
 
 const { ccclass, property } = _decorator;

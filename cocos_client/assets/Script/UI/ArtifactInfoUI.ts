@@ -9,10 +9,10 @@ import {
 import { ArtifactItem } from "./ArtifactItem";
 import { ArtifactMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import ArtifactData from "../Model/ArtifactData";
-import { ArtifactEffectRankColor } from "../Const/Model/ArtifactModelDefine";
 import ViewController from "../BasicView/ViewController";
 import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
+import { ArtifactEffectRankColor } from "../Const/Artifact";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactInfoUI")

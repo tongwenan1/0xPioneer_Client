@@ -12,9 +12,9 @@ import { BuildingFactionType, MapBuildingType } from "../Const/Model/MapBuilding
 import MapBuildingModel, { MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
 import { MapPioneerType, MapPioneerActionType, MapPioneerAttributesChangeModel, MapPioneerEventStatus, MapPioneerAttributesChangeType, MapPioneerLogicType } from "../Const/Model/MapPioneerModelDefine";
 import MapPioneerModel, { MapPlayerPioneerModel, MapNpcPioneerModel, MapPioneerLogicModel } from "../Game/Outer/Model/MapPioneerModel";
-import { ArtifactEffectType } from "../Const/Model/ArtifactModelDefine";
 import { UIHUDController } from "../UI/UIHUDController";
 import NotificationMgr from "../Basic/NotificationMgr";
+import { ArtifactEffectType } from "../Const/Artifact";
 
 export default class PioneerMgr {
 

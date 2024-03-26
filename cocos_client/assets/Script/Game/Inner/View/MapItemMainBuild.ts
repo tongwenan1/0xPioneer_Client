@@ -4,9 +4,9 @@ import { GameMain } from '../../../GameMain';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import { InnerBuildingType, UserInnerBuildInfo } from '../../../Const/Manager/UserInfoMgrDefine';
 import { ArtifactMgr, UIPanelMgr, UserInfoMgr } from '../../../Utils/Global';
-import { ArtifactEffectType } from '../../../Const/Model/ArtifactModelDefine';
 import { UIName } from '../../../Const/ConstUIDefine';
 import { BuildingUpgradeUI } from '../../../UI/Inner/BuildingUpgradeUI';
+import { ArtifactEffectType } from '../../../Const/Artifact';
 
 const { ccclass, property } = _decorator;
 

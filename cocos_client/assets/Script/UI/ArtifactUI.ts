@@ -2,12 +2,12 @@ import { _decorator, Label, Node, Button, EventHandler, Prefab, instantiate, Lay
 import { EventName } from "../Const/ConstDefine";
 import ArtifactData from "../Model/ArtifactData";
 import { ArtifactItem } from "./ArtifactItem";
-import { ArtifactArrangeType } from "../Const/Manager/ArtifactMgrDefine";
 import { ArtifactMgr, LanMgr, UIPanelMgr } from "../Utils/Global";
 import ViewController from "../BasicView/ViewController";
 import { UIName } from "../Const/ConstUIDefine";
 import { ArtifactInfoUI } from "./ArtifactInfoUI";
 import NotificationMgr from "../Basic/NotificationMgr";
+import { ArtifactArrangeType } from "../Const/Artifact";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactUI")

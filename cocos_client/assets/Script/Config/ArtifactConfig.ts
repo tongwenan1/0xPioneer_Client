@@ -1,5 +1,5 @@
 import { resources } from "cc";
-import { ArtifactConfigData } from "../Const/Model/ArtifactModelDefine";
+import { ArtifactConfigData } from "../Const/Artifact";
 import CLog from "../Utils/CLog";
 
 export default class ArtifactConfig {
