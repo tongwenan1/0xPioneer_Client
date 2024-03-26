@@ -1,7 +1,8 @@
 import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, resources, AssetManager, Asset } from 'cc';
 import { Web3Helper } from '../../Game/MetaMask/EthHelper';
 import { md5 } from '../../Utils/Md5';
-import { ConfigMgr, LocalDataLoader, ResourcesMgr, UserInfoMgr } from '../../Utils/Global';
+import { LocalDataLoader, ResourcesMgr, UserInfoMgr } from '../../Utils/Global';
+import ConfigConfig from '../../Config/ConfigConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('CompLogin')
@@ -124,11 +125,11 @@ export class CompLogin extends Component {
             return;
         }
         let canEnter: boolean = false;
-        let config = ConfigMgr.getConfigById("10002");
-        if (config.length <= 0 || config[0].para == null || config[0].para.length <= 0) {
+        let config = ConfigConfig.getById("10002");
+        if (config == null || config.para == null || config.para.length <= 0) {
             canEnter = true;
         } else {
-            for (const temple of config[0].para) {
+            for (const temple of config.para) {
                 if (temple.toUpperCase() === md5(codeEditBox.string).toUpperCase()) {
                     canEnter = true;
                     break;

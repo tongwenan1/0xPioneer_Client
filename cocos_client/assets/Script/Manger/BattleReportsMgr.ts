@@ -1,8 +1,9 @@
 import NotificationMgr from "../Basic/NotificationMgr";
+import ConfigConfig from "../Config/ConfigConfig";
 import { EventName } from "../Const/ConstDefine";
 import { BattleReportRecord, BattleReportType, BattleReportsEvent } from "../Const/Manager/BattleReportsMgrDefine";
 import { BranchEventMgrEvent } from "../Const/Manager/BrachEventMgrDefine";
-import { BranchEventMgr, ConfigMgr } from "../Utils/Global";
+import { BranchEventMgr } from "../Utils/Global";
 
 export default class BattleReportsMgr implements BranchEventMgrEvent {
     private _storage: BattleReportRecord[];
@@ -66,7 +67,7 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
     }
 
     private _autoDeleteWithMaxKeepRecords(save: boolean = true) {
-        const maxKeepRecords = ConfigMgr.getConfigById("110002")[0].para[0];
+        const maxKeepRecords = ConfigConfig.getById("110002").para[0];
         if (this._storage.length > maxKeepRecords) {
             console.log(`BattleReport: auto delete ${this._storage.length - maxKeepRecords} records, reason: maxKeepRecords`);
             this._storage = this._storage.slice(this._storage.length - maxKeepRecords);
@@ -77,7 +78,7 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
     }
 
     private _autoDeleteWithMaxKeepDays(save: boolean = true) {
-        const maxKeepDays = ConfigMgr.getConfigById("110000")[0].para[0];
+        const maxKeepDays = ConfigConfig.getById("110000").para[0];
         const expireBeforeThisTime = Date.now() - (maxKeepDays * 86400 * 1000);
         // find first index to keep.
         // requires data in array in ascending order

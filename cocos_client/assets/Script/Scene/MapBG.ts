@@ -7,12 +7,13 @@ import { ResOprView } from '../Game/Outer/View/ResOprView';
 import { OuterPioneerController } from '../Game/Outer/OuterPioneerController';
 import { OuterFogAnimShapMask } from '../Game/Outer/View/OuterFogAnimShapMask';
 import { OuterMapCursorView } from '../Game/Outer/View/OuterMapCursorView';
-import { BuildingMgr, ConfigMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../Utils/Global';
+import { BuildingMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../Utils/Global';
 import { BuildingFactionType, MapBuildingType } from '../Const/Model/MapBuildingModelDefine';
 import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel from '../Game/Outer/Model/MapPioneerModel';
 import { UIHUDController } from '../UI/UIHUDController';
 import NotificationMgr from '../Basic/NotificationMgr';
+import ConfigConfig from '../Config/ConfigConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('CPrefabInfo')
@@ -222,9 +223,8 @@ export class MapBG extends Component {
 
         this.node.on(Node.EventType.MOUSE_WHEEL, (event: EventMouse) => {
             let sc = this._curCameraZoom;
-            let config = ConfigMgr.getConfigById("10001");
-            if (config.length <= 0) return;
-            let useConf = config[0];
+            const useConf = ConfigConfig.getById("10001");
+            if (useConf == null) return;
 
             if (event.getScrollY() > 0) {
                 sc -= 0.05;

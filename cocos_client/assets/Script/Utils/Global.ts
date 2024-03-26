@@ -2,7 +2,6 @@ import af from "../Manger/ArtifactMgr";
 import br from "../Manger/BattleReportsMgr";
 import Be from "../Manger/BranchEventMgr";
 import bd from "../Manger/BuildingMgr";
-import cf from "../Manger/ConfigMgr";
 import ct from "../Manger/CountMgr";
 import Dp from "../Manger/DropMgr";
 import ev from "../Manger/EvaluationMgr";
@@ -24,7 +23,6 @@ import res from "../Basic/ResourcesMgr";
 const ArtifactMgr = new af();
 const BranchEventMgr = new Be();
 const BuildingMgr = new bd();
-const ConfigMgr = new cf();
 const CountMgr = new ct();
 const DropMgr = new Dp();
 const EvaluationMgr = new ev();
@@ -51,7 +49,6 @@ export {
     BattleReportsMgr,
     BranchEventMgr,
     BuildingMgr,
-    ConfigMgr,
     CountMgr,
     DropMgr,
     EvaluationMgr,

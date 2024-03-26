@@ -2,8 +2,8 @@ import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, in
 import { GameMain } from '../GameMain';
 import * as cc from "cc";
 import { EventName } from '../Const/ConstDefine';
-import { ConfigMgr, UserInfoMgr } from '../Utils/Global';
 import NotificationMgr from '../Basic/NotificationMgr';
+import ConfigConfig from '../Config/ConfigConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerMapBG')
@@ -49,9 +49,8 @@ export class InnerMapBG extends Component {
         
         this.node.on(Node.EventType.MOUSE_WHEEL, (event:cc.EventMouse)=>{
             let sc = this._curCameraZoom;
-            let config = ConfigMgr.getConfigById("10001");
-            if (config.length <= 0) return;
-            let useConf = config[0];
+            const useConf = ConfigConfig.getById("10001");
+            if (useConf == null) return;
 
             if (event.getScrollY() > 0) {
                 sc -= 0.05;
