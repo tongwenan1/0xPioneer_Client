@@ -528,6 +528,7 @@ export default class UserInfoMgr {
             this._level = 1;
             this._exp = 0;
             this._cityVision = 7;
+            this._localJsonData = {};
             this._localJsonData.playerData = {
                 "playerID": "1001",
                 "playerName": "Player",
