@@ -3,6 +3,7 @@ import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import BoxInfoConfig from "../Config/BoxInfoConfig";
 import ConfigConfig from "../Config/ConfigConfig";
 import DropConfig from "../Config/DropConfig";
+import EvaluationConfig from "../Config/EvaluationConfig";
 import LanConfig from "../Config/LanConfig";
 import {
     ArtifactMgr,
@@ -29,12 +30,15 @@ export default class LocalDataLoader {
         await BoxInfoConfig.init();
         await ConfigConfig.init();
         await DropConfig.init();
+        await EvaluationConfig.init();
         await LanConfig.init();
 
         this._loadStatus = 1;
         this._importSaveOnStartIfExists();
 
+        await ArtifactMgr.initData();
         await LanMgr.initData();
+
         await BranchEventMgr.initData();
         await InnerBuildingMgr.initData();
         await TalkMgr.initData();
@@ -45,8 +49,7 @@ export default class LocalDataLoader {
         await ItemMgr.initData();
         await BattleReportsMgr.initData();
         await LvlupMgr.initData();
-        await ArtifactMgr.initData();
-        await EvaluationMgr.initData();
+        
         AudioMgr.prepareAudioSource();
         this._loadStatus = 2;
     }

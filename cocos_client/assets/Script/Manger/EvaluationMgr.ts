@@ -1,58 +1,13 @@
-import { resources } from "cc";
-import { EvaluationCondType, EvaluationCondOperation } from "../Const/Manager/EvaluationMgrDefine";
-
-
+import EvaluationConfig from "../Config/EvaluationConfig";
+import { EvaluationCondOperation, EvaluationCondType } from "../Const/Evaluation";
 
 export default class EvaluationMgr {
-    public getConfigById(configId: string) {
-        return this._configs.filter((config) => {
-            return config.id == configId;
-        });
-    }
-
-    public async initData() {
-        await this._initData();
-    }
-
     public constructor() {}
 
-    private _configs: any = [];
-    private async _initData() {
-        const obj: any = await new Promise((resolve) => {
-            resources.load("data_local/evaluation", (err: Error, data: any) => {
-                if (err) {
-                    resolve(null);
-                    return;
-                }
-                resolve(data.json);
-            });
-        });
-        if (obj == null) {
-            console.error("evaluation config err");
-            return;
-        }
-
-        for (let k in obj) {
-            this._configs.push(obj[k]);
-        }
-
-        this._configs.sort((a, b) => {
-            // rank
-            if (a.rank > b.rank) return 1;
-            if (a.rank < b.rank) return -1;
-
-            // id
-            const aId = Number(a.id);
-            const bId = Number(b.id);
-            if (aId > bId) return 1;
-            if (aId < bId) return -1;
-            return 0;
-        });
-    }
-
     public getEvaluation(newPioneer: number, killEnemies: number, gainResources: number, exploredEvents: number) {
-        for (let i = 0; i < this._configs.length; i++) {
-            const conf = this._configs[i];
+        const configs = EvaluationConfig.getAll();
+        for (let i = 0; i < configs.length; i++) {
+            const conf = configs[i];
             if (conf.cond == null) {
                 return conf;
             }
