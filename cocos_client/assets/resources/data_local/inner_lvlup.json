@@ -1,6 +1,9 @@
 {
   "1": {
     "id": "1",
+    "progress": 5,
+    "exp": 10,
+    "lvlup_time": 20,
     "cost_main": [
       [
         8002,
@@ -11,6 +14,8 @@
         100
       ]
     ],
+    "prefab_main": "Headquarters_LV1",
+    "desc_main": "121001",
     "cost_barr": [
       [
         8002,
@@ -21,11 +26,19 @@
         100
       ]
     ],
+    "prefab_barr": "Damage_house_B",
+    "desc_barr": "121002",
+    "prefab_house": "Damage_house_A",
+    "desc_house": "121003",
+    "desc_energy": "121004",
     "psyc_output": 2,
     "psyc_storage": 50
   },
   "2": {
     "id": "2",
+    "progress": 5,
+    "exp": 20,
+    "lvlup_time": 300,
     "cost_main": [
       [
         8002,
@@ -36,6 +49,8 @@
         200
       ]
     ],
+    "prefab_main": "Headquarters",
+    "desc_main": "121001",
     "cost_barr": [
       [
         8002,
@@ -46,11 +61,19 @@
         200
       ]
     ],
+    "prefab_barr": "Pioneer_factory_A",
+    "desc_barr": "121002",
+    "prefab_house": "Pioneer_house",
+    "desc_house": "121003",
+    "desc_energy": "121004",
     "psyc_output": 4,
     "psyc_storage": 100
   },
   "3": {
     "id": "3",
+    "progress": 5,
+    "exp": 30,
+    "lvlup_time": 1200,
     "cost_main": [
       [
         8002,
@@ -61,6 +84,8 @@
         300
       ]
     ],
+    "prefab_main": "Headquarters",
+    "desc_main": "121001",
     "cost_barr": [
       [
         8002,
@@ -71,11 +96,19 @@
         300
       ]
     ],
+    "prefab_barr": "Pioneer_factory_A",
+    "desc_barr": "121002",
+    "prefab_house": "Pioneer_house",
+    "desc_house": "121003",
+    "desc_energy": "121004",
     "psyc_output": 6,
     "psyc_storage": 150
   },
   "4": {
     "id": "4",
+    "progress": 5,
+    "exp": 40,
+    "lvlup_time": 1200,
     "cost_main": [
       [
         8002,
@@ -86,6 +119,8 @@
         400
       ]
     ],
+    "prefab_main": "Headquarters",
+    "desc_main": "121001",
     "cost_barr": [
       [
         8002,
@@ -96,11 +131,19 @@
         400
       ]
     ],
+    "prefab_barr": "Pioneer_factory_A",
+    "desc_barr": "121002",
+    "prefab_house": "Pioneer_house",
+    "desc_house": "121003",
+    "desc_energy": "121004",
     "psyc_output": 8,
     "psyc_storage": 200
   },
   "5": {
     "id": "5",
+    "progress": 5,
+    "exp": 50,
+    "lvlup_time": 1200,
     "cost_main": [
       [
         8002,
@@ -111,6 +154,8 @@
         500
       ]
     ],
+    "prefab_main": "Headquarters",
+    "desc_main": "121001",
     "cost_barr": [
       [
         8002,
@@ -121,11 +166,19 @@
         500
       ]
     ],
+    "prefab_barr": "Pioneer_factory_A",
+    "desc_barr": "121002",
+    "prefab_house": "Pioneer_house",
+    "desc_house": "121003",
+    "desc_energy": "121004",
     "psyc_output": 10,
     "psyc_storage": 250
   },
   "6": {
     "id": "6",
+    "progress": 5,
+    "exp": 60,
+    "lvlup_time": 1200,
     "cost_main": [
       [
         8002,
@@ -136,6 +189,8 @@
         600
       ]
     ],
+    "prefab_main": "Headquarters",
+    "desc_main": "121001",
     "cost_barr": [
       [
         8002,
@@ -146,11 +201,19 @@
         600
       ]
     ],
+    "prefab_barr": "Pioneer_factory_A",
+    "desc_barr": "121002",
+    "prefab_house": "Pioneer_house",
+    "desc_house": "121003",
+    "desc_energy": "121004",
     "psyc_output": 12,
     "psyc_storage": 300
   },
   "7": {
     "id": "7",
+    "progress": 5,
+    "exp": 70,
+    "lvlup_time": 1200,
     "cost_main": [
       [
         8002,
@@ -161,6 +224,8 @@
         700
       ]
     ],
+    "prefab_main": "Headquarters",
+    "desc_main": "121001",
     "cost_barr": [
       [
         8002,
@@ -171,11 +236,19 @@
         700
       ]
     ],
+    "prefab_barr": "Pioneer_factory_A",
+    "desc_barr": "121002",
+    "prefab_house": "Pioneer_house",
+    "desc_house": "121003",
+    "desc_energy": "121004",
     "psyc_output": 14,
     "psyc_storage": 350
   },
   "8": {
     "id": "8",
+    "progress": 5,
+    "exp": 80,
+    "lvlup_time": 1200,
     "cost_main": [
       [
         8002,
@@ -186,6 +259,8 @@
         800
       ]
     ],
+    "prefab_main": "Headquarters",
+    "desc_main": "121001",
     "cost_barr": [
       [
         8002,
@@ -196,11 +271,19 @@
         800
       ]
     ],
+    "prefab_barr": "Pioneer_factory_A",
+    "desc_barr": "121002",
+    "prefab_house": "Pioneer_house",
+    "desc_house": "121003",
+    "desc_energy": "121004",
     "psyc_output": 16,
     "psyc_storage": 400
   },
   "9": {
     "id": "9",
+    "progress": 5,
+    "exp": 90,
+    "lvlup_time": 1200,
     "cost_main": [
       [
         8002,
@@ -211,6 +294,8 @@
         900
       ]
     ],
+    "prefab_main": "Headquarters",
+    "desc_main": "121001",
     "cost_barr": [
       [
         8002,
@@ -221,11 +306,19 @@
         900
       ]
     ],
+    "prefab_barr": "Pioneer_factory_A",
+    "desc_barr": "121002",
+    "prefab_house": "Pioneer_house",
+    "desc_house": "121003",
+    "desc_energy": "121004",
     "psyc_output": 18,
     "psyc_storage": 450
   },
   "10": {
     "id": "10",
+    "progress": 5,
+    "exp": 100,
+    "lvlup_time": 1200,
     "cost_main": [
       [
         8002,
@@ -236,6 +329,8 @@
         1000
       ]
     ],
+    "prefab_main": "Headquarters",
+    "desc_main": "121001",
     "cost_barr": [
       [
         8002,
@@ -246,6 +341,11 @@
         1000
       ]
     ],
+    "prefab_barr": "Pioneer_factory_A",
+    "desc_barr": "121002",
+    "prefab_house": "Pioneer_house",
+    "desc_house": "121003",
+    "desc_energy": "121004",
     "psyc_output": 20,
     "psyc_storage": 500
   }

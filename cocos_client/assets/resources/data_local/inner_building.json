@@ -5,7 +5,12 @@
     "anim": "MainBuild",
     "unlock": 1,
     "maxlevel": 10,
-    "lvlup_cost": "cost_main"
+    "lvlup_progress": "progress",
+    "lvlup_exp": "exp",
+    "lvlup_cost": "cost_main",
+    "lvlup_time": "lvlup_time",
+    "prefab": "prefab_main",
+    "desc": "desc_main"
   },
   "30002": {
     "id": "30002",
@@ -13,7 +18,12 @@
     "anim": "Factory",
     "unlock": 1,
     "maxlevel": 10,
-    "lvlup_cost": "cost_barr"
+    "lvlup_progress": "progress",
+    "lvlup_exp": "exp",
+    "lvlup_cost": "cost_barr",
+    "lvlup_time": "lvlup_time",
+    "prefab": "prefab_barr",
+    "desc": "desc_barr"
   },
   "30003": {
     "id": "30003",
@@ -21,6 +31,24 @@
     "anim": "House",
     "unlock": 1,
     "maxlevel": 10,
-    "lvlup_cost": "cost_barr"
+    "lvlup_progress": "progress",
+    "lvlup_exp": "exp",
+    "lvlup_cost": "cost_barr",
+    "lvlup_time": "lvlup_time",
+    "prefab": "prefab_house",
+    "desc": "desc_house"
+  },
+  "30004": {
+    "id": "30004",
+    "name": "120004",
+    "anim": "EnergyStation",
+    "unlock": 1,
+    "maxlevel": 10,
+    "lvlup_progress": "progress",
+    "lvlup_exp": "exp",
+    "lvlup_cost": "cost_barr",
+    "lvlup_time": "lvlup_time",
+    "prefab": "",
+    "desc": "desc_energy"
   }
 }
