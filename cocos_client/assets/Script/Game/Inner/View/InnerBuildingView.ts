@@ -1,9 +1,8 @@
-import { _decorator, CCInteger, Component, instantiate, Node, Prefab, UITransform } from 'cc';
+import { _decorator, CCInteger, Component, instantiate, Node, Prefab, UITransform, v3, Vec3 } from 'cc';
 import ViewController from '../../../BasicView/ViewController';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import NotificationMgr from '../../../Basic/NotificationMgr';
-import { UserInnerBuildInfo } from '../../../Const/BuildingDefine';
-import { UserInnerBuildNotification } from '../../../Const/UserInfoDefine';
+import { InnerBuildingNotification, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerBuildingView')
@@ -24,6 +23,7 @@ export class InnerBuildingView extends ViewController {
             }
             const buildView = instantiate(this.buildingPrbs[showBuildingIndex]);
             this.node.getChildByPath("BuildingContent").addChild(buildView);
+            buildView.setPosition(v3(0, 0, 0));
             this._showBuilding = buildView;
             this._currentShowBuildingIndex = showBuildingIndex;
             //change tap area height
@@ -35,11 +35,12 @@ export class InnerBuildingView extends ViewController {
     }
     public playBuildAnim(buildTime: number) {
         const buildAnim = instantiate(this.buildingAnimPrb);
+        buildAnim.setPosition(Vec3.ZERO);
         this.node.getChildByPath("BuildingContent").addChild(buildAnim);
         this._infoView.setProgressTime(buildTime);
         this.scheduleOnce(()=> {
             buildAnim.destroy();
-            NotificationMgr.triggerEvent(UserInnerBuildNotification.buildFinished, this._building.buildType);
+            NotificationMgr.triggerEvent(InnerBuildingNotification.upgradeFinished, this._building.buildType);
         }, buildTime);
     }
 
@@ -65,7 +66,7 @@ export class InnerBuildingView extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        this._infoView = this.node.getChildByName("InnrBuildUI").getComponent(InnerBuildUI);
+        this._infoView = this.node.getChildByName("innerBuildUI").getComponent(InnerBuildUI);
 
         this.innerBuildingLoad();
     }

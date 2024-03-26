@@ -1,6 +1,6 @@
 import { _decorator, Component, Label, Node, ProgressBar, Tween, v3 } from 'cc';
 import { LanMgr } from '../../Utils/Global';
-import { UserInnerBuildInfo } from '../../Const/BuildingDefine';
+import { InnerBuildingType, UserInnerBuildInfo } from '../../Const/BuildingDefine';
 import InnerBuildingConfig from '../../Config/InnerBuildingConfig';
 const { ccclass, property } = _decorator;
 
@@ -11,9 +11,15 @@ export class InnerBuildUI extends Component {
         let buildingName: string = "";
         const innerBuildingConfig = InnerBuildingConfig.getByBuildingType(buildData.buildType);
         if (innerBuildingConfig != null) {
-            buildingName = innerBuildingConfig.name;
+            buildingName = LanMgr.getLanById(innerBuildingConfig.name);
+        } else {
+            if (buildData.buildType == InnerBuildingType.EnergyStation) {
+                // useLanMgr
+                // buildingName = LanMgr.getLanById("201004");
+                buildingName = "Energy Station";
+            }
         }
-        this.txtBuildName.string = `${LanMgr.getLanById(buildingName)} LV.${buildData.buildLevel}`;
+        this.txtBuildName.string = `${buildingName} LV.${buildData.buildLevel}`;
 
         if (!buildData || buildData.buildLevel <= 0) {// unlock
             this.unlockStatusIconNode.active = false;

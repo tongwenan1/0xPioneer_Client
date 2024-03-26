@@ -1,6 +1,3 @@
-export enum UserInnerBuildNotification {
-    buildFinished = "buildFinished"
-}
 
 export interface ResourceModel {
     id: string;

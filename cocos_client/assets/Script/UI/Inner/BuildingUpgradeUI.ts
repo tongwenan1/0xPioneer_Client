@@ -8,7 +8,7 @@ import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
 import { ArtifactEffectType } from '../../Const/Artifact';
-import { InnerBuildingType, UserInnerBuildInfo } from '../../Const/BuildingDefine';
+import { InnerBuildingNotification, InnerBuildingType, UserInnerBuildInfo } from '../../Const/BuildingDefine';
 import InnerBuildingConfig from '../../Config/InnerBuildingConfig';
 import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 const { ccclass } = _decorator;
@@ -227,11 +227,15 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
             }
             let canUpgrade: boolean = true;
             for (const resource of costDatas) {
+                if (resource.length != 2) {
+                    continue;
+                }
+                const type = resource[0].toString();
                 let needNum = resource[1];
                 // total num
                 needNum = Math.floor(needNum - (needNum * artifactResource));
 
-                if (ItemMgr.getOwnItemCount(resource.type) < needNum) {
+                if (ItemMgr.getOwnItemCount(type) < needNum) {
                     canUpgrade = false;
                     break;
                 }
@@ -242,25 +246,10 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
                 // UIHUDController.showCenterTip("Insufficient resources for building upgrades");
                 return;
             }
-            // for (const resource of upgradeData.cost) {
-            //     let needNum = resource.num;
-            //     // total num
-            //     needNum = Math.floor(needNum - (needNum * artifactResource));
-            //     ItemMgr.subItem(resource.type, needNum);
-            // }
-            // UserInfoMgr.upgradeBuild(buildingType);
-            // UserInfoMgr.explorationValue += upgradeData.progress;
-            // // exp
-            // if (upgradeData.exp) UserInfoMgr.exp += upgradeData.exp;
-
-            // let up_time = upgradeData.time;
-            // // total time
-            // up_time = Math.floor(up_time - (up_time * artifactTime));
-            // if (up_time <= 0) up_time = 1;
-
-            // NotificationMgr.triggerEvent(EventName.BUILD_BEGIN_UPGRADE, { buildingType: buildingType, time: up_time });
-            // this._closeBuildingUpgradeUI();
-
+            UserInfoMgr.beginBuilding(buildingType);
+            NotificationMgr.triggerEvent(InnerBuildingNotification.BeginUpgrade, buildingType);
+            
+            this._closeBuildingUpgradeUI();
             await this.playExitAnimation();
             UIPanelMgr.removePanelByNode(this.node);
         }

@@ -29,9 +29,6 @@ export default class InnerBuildingLvlUpConfig {
             let jd = jsonObj[id];
             let d = {};
             for (var key in jd) {
-                if (!d.hasOwnProperty(key)) {
-                    continue;
-                }
                 d[key] = jd[key];
             }
             this._confs[id] = d as ConfigInnerBuildingLevelUpData;

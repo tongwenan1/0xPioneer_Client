@@ -11,6 +11,7 @@ import { ItemInfoUI } from "../UI/ItemInfoUI";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { UserInfoEvent, FinishedEvent, UserInfoNotification, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";
 import { InnerBuildingType, UserInnerBuildInfo } from "../Const/BuildingDefine";
+import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
 
 export default class UserInfoMgr {
 
@@ -193,6 +194,7 @@ export default class UserInfoMgr {
     public upgradeBuild(buildingType: InnerBuildingType) {
         const buildInfo = this._innerBuilds.get(buildingType);
         if (buildInfo != null) {
+            buildInfo.building = false;
             buildInfo.buildLevel += 1;
             this._innerBuilds.set(buildingType, buildInfo);
             this._localJsonData.innerBuildData[buildingType].buildLevel = buildInfo.buildLevel;
@@ -453,11 +455,14 @@ export default class UserInfoMgr {
                     NotificationMgr.triggerEvent(UserInfoNotification.generateTroopNumChanged);
                 }
             }
+            // generate energy
             let energyStationBuilded: boolean = false;
-            if (this._innerBuilds != null && this._innerBuilds.has(InnerBuildingType.EnergyStation)) {
-                energyStationBuilded = this._innerBuilds.get(InnerBuildingType.EnergyStation).buildLevel > 0;
+            if (this._innerBuilds != null && this._innerBuilds.has(InnerBuildingType.MainCity)) {
+                energyStationBuilded = this._innerBuilds.get(InnerBuildingType.MainCity).buildLevel > 0;
             }
             if (energyStationBuilded) {
+                const mainCityData = this._innerBuilds.get(InnerBuildingType.MainCity);
+                const generateConfig = InnerBuildingLvlUpConfig.getByLevel(mainCityData.buildLevel);
                 const perGenerateTime: number = 5;
                 if (this._generateEnergyInfo == null) {
                     this._generateEnergyInfo = {
@@ -465,23 +470,28 @@ export default class UserInfoMgr {
                         totalEnergyNum: 0
                     };
                 }
-                if (this._generateEnergyInfo.countTime > 0) {
-                    this._generateEnergyInfo.countTime -= 1;
-                }
-                this._localJsonData.playerData.generateEnergyInfo = this._generateEnergyInfo;
-                this._localDataChanged(this._localJsonData);
-
-                NotificationMgr.triggerEvent(UserInfoNotification.generateEnergyTimeCountChanged);
-
-                if (this._generateEnergyInfo.countTime <= 0) {
-                    const generateNumPerMin: number = 20;
-                    this._generateEnergyInfo.totalEnergyNum = Math.min(999, this._generateEnergyInfo.totalEnergyNum + generateNumPerMin);
+                if (this._generateEnergyInfo.totalEnergyNum >= generateConfig.psyc_storage) {
                     this._generateEnergyInfo.countTime = perGenerateTime;
-
+                } else {
+                    if (this._generateEnergyInfo.countTime > 0) {
+                        this._generateEnergyInfo.countTime -= 1;
+                    }
                     this._localJsonData.playerData.generateEnergyInfo = this._generateEnergyInfo;
                     this._localDataChanged(this._localJsonData);
-
-                    NotificationMgr.triggerEvent(UserInfoNotification.generateEnergyNumChanged);
+    
+                    NotificationMgr.triggerEvent(UserInfoNotification.generateEnergyTimeCountChanged);
+    
+                    if (this._generateEnergyInfo.countTime <= 0) {
+                        
+                        const generateNumPerMin: number = generateConfig.psyc_output;
+                        this._generateEnergyInfo.totalEnergyNum = Math.min(generateConfig.psyc_storage, this._generateEnergyInfo.totalEnergyNum + generateNumPerMin);
+                        this._generateEnergyInfo.countTime = perGenerateTime;
+    
+                        this._localJsonData.playerData.generateEnergyInfo = this._generateEnergyInfo;
+                        this._localDataChanged(this._localJsonData);
+    
+                        NotificationMgr.triggerEvent(UserInfoNotification.generateEnergyNumChanged);
+                    }
                 }
             }
         }, 1000);

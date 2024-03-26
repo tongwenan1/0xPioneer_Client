@@ -46,6 +46,11 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
         if (this._building == null) {
             return;
         }
+        if (this._building.building) {
+            UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
+            // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
+            return;
+        }
         if (this._building.buildLevel > 0) {
             if (UserInfoMgr.generateTroopInfo != null) {
                 UIHUDController.showCenterTip(LanMgr.getLanById("201002"));

@@ -28,6 +28,11 @@ export interface BuildingMgrEvent {
     buildingRemoveDefendPioneer(buildingId: string, pioneerId: string): void;
 }
 
+export enum InnerBuildingNotification {
+    BeginUpgrade = "BeginUpgrade",
+    upgradeFinished = "upgradeFinished"
+}
+
 export enum InnerBuildingType {
     MainCity = "30001",
     EnergyStation = "-30001",

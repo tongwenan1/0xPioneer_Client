@@ -32,13 +32,10 @@
     "_components": [
       {
         "__id__": 27
-      },
-      {
-        "__id__": 29
       }
     ],
     "_prefab": {
-      "__id__": 31
+      "__id__": 29
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -491,39 +488,6 @@
     "fileId": "f6ISlcipFKiKqTJ2Kp6Awa"
   },
   {
-    "__type__": "a9328DPyLNOjaKqGpeR7MjI",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "__prefab": {
-      "__id__": 30
-    },
-    "buildID": "1",
-    "buildInfoUI": null,
-    "buildPfbList": [
-      {
-        "__uuid__": "43f6d4e8-30a3-4e55-87ed-d11daaf74a8a",
-        "__expectedType__": "cc.Prefab"
-      },
-      {
-        "__uuid__": "7e06887e-4edf-4a4c-8ae3-d39ae092a025",
-        "__expectedType__": "cc.Prefab"
-      }
-    ],
-    "buildNode": {
-      "__id__": 8
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.CompPrefabInfo",
-    "fileId": "adA7yQZVdAnJRpAUvMcitV"
-  },
-  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
@@ -532,6 +496,7 @@
       "__id__": 0
     },
     "fileId": "f92VbizoRHdLddYbBeO1Mf",
+    "instance": null,
     "targetOverrides": null,
     "nestedPrefabInstanceRoots": [
       {

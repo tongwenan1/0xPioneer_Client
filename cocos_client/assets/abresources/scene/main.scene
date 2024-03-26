@@ -21455,10 +21455,22 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "mainCityPrb": null,
-    "barracksPrb": null,
-    "housePrb": null,
-    "energyStationPrb": null,
+    "mainCityPrb": {
+      "__uuid__": "f91100fc-f5ee-4799-bbb5-2c4e6a17172c",
+      "__expectedType__": "cc.Prefab"
+    },
+    "barracksPrb": {
+      "__uuid__": "193b8c90-3676-49cc-af3a-7dbee7be3df3",
+      "__expectedType__": "cc.Prefab"
+    },
+    "housePrb": {
+      "__uuid__": "07d15105-f274-49dd-95e1-2dc22f5d335d",
+      "__expectedType__": "cc.Prefab"
+    },
+    "energyStationPrb": {
+      "__uuid__": "5078a262-2a3d-423a-921f-198a56562490",
+      "__expectedType__": "cc.Prefab"
+    },
     "_id": "6cyO1tSRxMjb1CS0W/ghlS"
   },
   {
