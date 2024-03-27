@@ -85,6 +85,11 @@ export interface GetPropData {
     num: number
 }
 
+export interface ResourceData {
+    type: ResourceCorrespondingItem,
+    num: number
+}
+
 export enum GetPropRankColor {
     RANK1 = "#40ffa3",
     RANK2 = "#409aff",

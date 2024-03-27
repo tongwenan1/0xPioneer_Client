@@ -1,13 +1,15 @@
 import { Label, Node, _decorator } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
-import { ItemMgr, LanMgr, UserInfoMgr } from "../../../Utils/Global";
+import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../../../Utils/Global";
 import ItemData from "../../../Model/ItemData";
 import { ResourceCorrespondingItem } from "../../../Const/ConstDefine";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import { UserInfoNotification } from "../../../Const/UserInfoDefine";
 import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
+import { UIName } from "../../../Const/ConstUIDefine";
+import { TransformToEnergyUI } from "../../../UI/Inner/TransformToEnergyUI";
 
 const { ccclass, property } = _decorator;
 
@@ -38,7 +40,7 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
     }
 
 
-    protected innerBuildingTaped(): void {
+    protected async innerBuildingTaped(): Promise<void> {
         super.innerBuildingTaped();
         if (this._building == null) {
             return;
@@ -48,21 +50,15 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
             // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
             return;
         }
-        if (UserInfoMgr.generateEnergyInfo == null) {
-            return;
+        if (this._building.buildLevel > 0) {
+            const view = await UIPanelMgr.openPanel(UIName.TransformToEnergyUI);
+            if (view != null) {
+                view.getComponent(TransformToEnergyUI).refreshUI(true);
+            }
         }
-        const produceNum: number = UserInfoMgr.generateEnergyInfo.totalEnergyNum;
-        if (produceNum <= 0) {
-            // useLanMgr
-            // UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
-            UIHUDController.showCenterTip("No PSYC to collect");
-            return;
-        }
-        ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Energy, produceNum)]);
-        UserInfoMgr.generateEnergyGetted();
     }
 
-    //------------------------------- action
+    //------------------------------- function
     private _countingGenerate() {
         if (this._building == null) {
             return;
@@ -89,5 +85,26 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
         } else {
             this._produceInfoView.active = false;
         }
+    }
+
+    //------------------------------- action
+    private onTapGetPSYC() {
+        if (this._building.upgradeTotalTime > 0) {
+            UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
+            // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
+            return;
+        }
+        if (UserInfoMgr.generateEnergyInfo == null) {
+            return;
+        }
+        const produceNum: number = UserInfoMgr.generateEnergyInfo.totalEnergyNum;
+        if (produceNum <= 0) {
+            // useLanMgr
+            // UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
+            UIHUDController.showCenterTip("No PSYC to collect");
+            return;
+        }
+        ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Energy, produceNum)]);
+        UserInfoMgr.generateEnergyGetted();
     }
 }

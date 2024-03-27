@@ -22,10 +22,10 @@ export class RecruitUI extends ViewController {
 
         // useLanMgr
         // this.node.getChildByPath("__ViewContent/title").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByName("__ViewContent/current_res/title").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByName("__ViewContent/recruiting/title").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByName("__ViewContent/footer/time/txt").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByName("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/current_res/title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/recruiting/title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/footer/time/txt").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
         const currentTroops: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop);
 
@@ -83,7 +83,7 @@ export class RecruitUI extends ViewController {
         this._totalTroop = this.node.getChildByPath("__ViewContent/current_res/num/max").getComponent(Label);
 
         this._generateProgress = this.node.getChildByPath("__ViewContent/recruiting/scroll/ProgressBar").getComponent(ProgressBar);
-        this._generateSlider = this._generateProgress.node.getChildByName("Slider").getComponent(Slider);
+        this._generateSlider = this._generateProgress.node.getChildByPath("Slider").getComponent(Slider);
         this._generateMaxTroop = this.node.getChildByPath("__ViewContent/recruiting/control/num/max").getComponent(Label);
         this._generateSelectTroop = this.node.getChildByPath("__ViewContent/recruiting/control/num/cur").getComponent(Label);
 

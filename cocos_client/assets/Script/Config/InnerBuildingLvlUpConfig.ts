@@ -1,6 +1,7 @@
 import { resources } from "cc";
 import CLog from "../Utils/CLog";
 import { ConfigInnerBuildingLevelUpData, InnerBuildingPsycData, InnerBuildingType } from "../Const/BuildingDefine";
+import { ResourceCorrespondingItem, ResourceData } from "../Const/ConstDefine";
 
 export default class InnerBuildingLvlUpConfig {
     private static _confs: { [index: string]: ConfigInnerBuildingLevelUpData } = {};
@@ -54,10 +55,20 @@ export default class InnerBuildingLvlUpConfig {
     public static getEnergyLevelData(level: number): InnerBuildingPsycData {
         if (level.toString() in this._confs) {
             const temple = this._confs[level.toString()];
+            const convertCostResources: ResourceData[] = [];
+            for (const resource of temple.psyc_convert) {
+                if (resource.length != 2) {
+                    continue;
+                }
+                convertCostResources.push({
+                    type: resource[0].toString() as ResourceCorrespondingItem,
+                    num: resource[1]
+                });
+            }
             return {
                 output: temple.psyc_output,
                 storage: temple.psyc_storage,
-                convert: temple.psyc_convert,
+                convert: convertCostResources,
             }
         } else {
             return null;

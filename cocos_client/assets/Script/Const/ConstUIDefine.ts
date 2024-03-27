@@ -9,6 +9,7 @@ export enum UIName {
     TaskListUI = "ui/TaskListUI",
     BuildingUpgradeUI = "ui/BuildingUpgradeUI",
     RecruitUI = "ui/RecruitUI",
+    TransformToEnergyUI = "ui/TransformToEnergyUI",
     BrachEventUI = "ui/BrachEventUI",
     CivilizationLevelUpUI = "ui/CivilizationLevelUpUI",
     PlayerInfoUI = "ui/PlayerInfoUI",

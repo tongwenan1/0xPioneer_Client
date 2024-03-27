@@ -1,3 +1,5 @@
+import { ResourceData } from "./ConstDefine";
+
 export enum MapBuildingType {
     resource = 3,
     explore = 1,
@@ -93,5 +95,5 @@ export interface ConfigInnerBuildingLevelUpData {
 export interface InnerBuildingPsycData {
     output: number,
     storage: number,
-    convert: [number, number][]
+    convert: ResourceData[]
 }
