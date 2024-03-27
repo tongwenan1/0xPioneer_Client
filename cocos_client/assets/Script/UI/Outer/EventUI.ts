@@ -1,7 +1,6 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import { EventName, ItemConfigType } from '../../Const/ConstDefine';
 import { BranchEventMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
-import { CountType } from '../../Const/Manager/CountMgrDefine';
 import { MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import ItemData from '../../Model/ItemData';
 import { ItemType } from '../../Const/Model/ItemModelDefine';
@@ -10,6 +9,7 @@ import { UIName } from '../../Const/ConstUIDefine';
 import { ItemInfoUI } from '../ItemInfoUI';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
+import { CountType } from '../../Const/Count';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')

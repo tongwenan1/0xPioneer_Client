@@ -6,6 +6,7 @@ import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { EventName } from "../Const/ConstDefine";
 import { ArtifactArrangeType, ArtifactProp, ArtifactPropValueType } from "../Const/Artifact";
+import CLog from "../Utils/CLog";
 
 export default class ArtifactMgr {
     private _maxArtifactLength: number = 100;
@@ -45,7 +46,7 @@ export default class ArtifactMgr {
                 this._localArtifactDatas = JSON.parse(jsonStr);
                 return true;
             } catch (e) {
-                console.error("ArtifactMgr initData error", e);
+                CLog.error("ArtifactMgr initData error", e);
                 return false;
             }
         }

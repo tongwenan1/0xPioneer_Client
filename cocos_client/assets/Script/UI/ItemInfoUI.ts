@@ -1,10 +1,10 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt } from 'cc';
 import { BackpackItem } from './BackpackItem';
 import { CountMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
-import { CountType } from '../Const/Manager/CountMgrDefine';
 import { ItemType } from '../Const/Model/ItemModelDefine';
 import ItemData from '../Model/ItemData';
 import ViewController from '../BasicView/ViewController';
+import { CountType } from '../Const/Count';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemInfoUI')

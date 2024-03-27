@@ -13,6 +13,7 @@ import {
     BattleReportsMgr,
     BranchEventMgr,
     BuildingMgr,
+    CountMgr,
     EvaluationMgr,
     ItemMgr,
     LanMgr,
@@ -41,6 +42,7 @@ export default class LocalDataLoader {
         this._importSaveOnStartIfExists();
 
         await ArtifactMgr.initData();
+        await CountMgr.initData();
         await LanMgr.initData();
 
         await BranchEventMgr.initData();

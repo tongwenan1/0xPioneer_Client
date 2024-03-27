@@ -3,7 +3,6 @@ import { GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
 import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
-import { CountType } from "../Const/Manager/CountMgrDefine";
 import ItemData from "../Model/ItemData";
 import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
 import { UIName } from "../Const/ConstUIDefine";
@@ -13,6 +12,7 @@ import { UserInfoEvent, FinishedEvent, UserInfoNotification, GenerateTroopInfo, 
 import { InnerBuildingNotification, InnerBuildingType, UserInnerBuildInfo } from "../Const/BuildingDefine";
 import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
 import InnerBuildingConfig from "../Config/InnerBuildingConfig";
+import { CountType } from "../Const/Count";
 
 export default class UserInfoMgr {
 
