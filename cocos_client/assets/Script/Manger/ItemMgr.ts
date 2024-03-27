@@ -208,19 +208,14 @@ export default class ItemMgr {
         }
         const itemConfig = this.getItemConf(itemConfigId);
         if (itemConfig != null) {
-            // if (itemConfig.itemType == ItemType.AddProp) {
-            //     const exsitItems = this._localItemDatas.filter(v => v.itemConfigId.toString() == itemConfig.gainPropId);
-            //     if (exsitItems.length > 0) {
-            //         exsitItems[0].count += itemConfig.gainPropCount;
-            //         exsitItems[0].addTimeStamp = new Date().getTime();
-            //     } else {
-            //         const newItem = new ItemData(itemConfig.gainPropId, itemConfig.gainPropCount);
-            //         newItem.addTimeStamp = new Date().getTime();
-            //         this._localItemDatas.push(newItem);
-            //     }
-            // }
             if (itemConfig.gain_item != null) {
-                ItemConfigDropTool.getItemByConfig([itemConfig.gain_item]);
+                if (itemConfig.gain_item.length == 3) {
+                    ItemConfigDropTool.getItemByConfig([{
+                        type: itemConfig.gain_item[0],
+                        propId: itemConfig.gain_item[1],
+                        num: itemConfig.gain_item[2],
+                    }]);
+                }
             }
         }
 
@@ -341,10 +336,5 @@ export default class ItemMgr {
         else {
             this._localItemDatas = JSON.parse(jsonStr);
         }
-
-        this.addItem([
-            new ItemData(ResourceCorrespondingItem.Stone, 10000),
-            new ItemData(ResourceCorrespondingItem.Wood, 10000)
-        ]);
     }
 }

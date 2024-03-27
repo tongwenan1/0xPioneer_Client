@@ -63,7 +63,7 @@ export default class CommonTools {
     }
 
     /**
-     * format: 2024/1/17/01:18:30
+     * format: 2024/1/17 01:18:30
      */
     public static formatDateTime(timestamp: number): string {
         const date = new Date(timestamp);

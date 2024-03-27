@@ -1,5 +1,4 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
-import { GameMain } from '../../GameMain';
 import { EventName, ItemConfigType } from '../../Const/ConstDefine';
 import { BranchEventMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { CountType } from '../../Const/Manager/CountMgrDefine';

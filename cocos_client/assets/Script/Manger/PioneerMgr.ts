@@ -2,7 +2,7 @@ import { Details, Vec2, builtinResMgr, log, math, nextPow2, pingPong, resources,
 import CommonTools from "../Tool/CommonTools";
 import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
-import { ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { EventName } from "db://assets/Script/Const/ConstDefine";
 import { ArtifactMgr, BranchEventMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
 import { CountType } from "../Const/Manager/CountMgrDefine";
@@ -815,7 +815,18 @@ export default class PioneerMgr {
                         pioneer.winexp = temple.exp;
                     }
                     if (temple.drop != null) {
-                        pioneer.drop = temple.drop;
+                        let dropDatas: GetPropData[] = [];
+                        for (const dropData of temple.drop) {
+                            if (dropData.length != 3) {
+                                continue;
+                            }
+                            dropDatas.push({
+                                type: dropData[0],
+                                propId: dropData[1],
+                                num: dropData[2]
+                            });
+                        }
+                        pioneer.drop = dropDatas;
                     }
                     if (temple.animType != null) {
                         pioneer.animType = temple.animType;

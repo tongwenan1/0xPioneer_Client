@@ -2,6 +2,7 @@ import { Vec2, Vec3, log, v2 } from "cc";
 import { TilePos } from "../../TiledMap/TileTool";
 import { MapPioneerAttributesChangeType, MapPioneerAttributesChangeModel, MapPioneerLogicType, MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerType } from "../../../Const/Model/MapPioneerModelDefine";
 import { FinishedEvent } from "../../../Const/UserInfoDefine";
+import { GetPropData } from "../../../Const/ConstDefine";
 
 export default class MapPioneerModel {
     // hp
@@ -159,7 +160,7 @@ export default class MapPioneerModel {
     public set winexp(value: number) {
         this._winexp = value;
     }
-    public set drop(value: any[]) {
+    public set drop(value: GetPropData[]) {
         this._drop = value;
     }
 
@@ -260,7 +261,7 @@ export default class MapPioneerModel {
     public get winexp(): number {
         return this._winexp;
     }
-    public get drop(): any[] {
+    public get drop(): GetPropData[] {
         return this._drop;
     }
 
@@ -336,7 +337,7 @@ export default class MapPioneerModel {
     private _purchaseMovingBuildingId: string | null;
     private _winprogress: number;
     private _winexp: number;
-    private _drop: any[];
+    private _drop: GetPropData[];
 }
 
 export class MapPlayerPioneerModel extends MapPioneerModel {

@@ -69,8 +69,8 @@ export interface ConfigInnerBuildingLevelUpData {
     exp: number,
     lvlup_time: number,
 
-    cost_main: [],
-    cost_barr: [],
+    cost_main: [number, number][],
+    cost_barr: [number, number][],
 
     prefab_main: string,
     desc_main: string,
@@ -87,11 +87,11 @@ export interface ConfigInnerBuildingLevelUpData {
 
     psyc_output: number,
     psyc_storage: number,
-    psyc_convert: []
+    psyc_convert: [number, number][]
 }
 
 export interface InnerBuildingPsycData {
     output: number,
     storage: number,
-    convert: []
+    convert: [number, number][]
 }

@@ -1,5 +1,5 @@
 import { Asset, __private, resources, sys } from "cc";
-import { ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
 import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
@@ -413,7 +413,18 @@ export default class UserInfoMgr {
 
                 // reward
                 if (nextLvConfig[0].reward != null) {
-                    ItemConfigDropTool.getItemByConfig(nextLvConfig[0].reward, false);
+                    const propDatas: GetPropData[] = [];
+                    for (const propData of nextLvConfig[0].reward) {
+                        if (propData.length != 3) {
+                            continue;
+                        }
+                        propDatas.push({
+                            type: propData[0],
+                            propId: propData[1],
+                            num: propData[2]
+                        });
+                    }
+                    ItemConfigDropTool.getItemByConfig(propDatas, false);
                 }
             }
         }

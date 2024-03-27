@@ -78,3 +78,17 @@ export const enum ECursorStyle {
     wait = "wait",
     help = "help"
 }
+
+export interface GetPropData {
+    type: number,
+    propId: string,
+    num: number
+}
+
+export enum GetPropRankColor {
+    RANK1 = "#40ffa3",
+    RANK2 = "#409aff",
+    RANK3 = "#dd40ff",
+    RANK4 = "#ff9e40",
+    RANK5 = "#ff4040",
+}

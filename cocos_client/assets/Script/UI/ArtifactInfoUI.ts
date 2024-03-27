@@ -12,7 +12,7 @@ import ArtifactData from "../Model/ArtifactData";
 import ViewController from "../BasicView/ViewController";
 import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
-import { ArtifactEffectRankColor } from "../Const/Artifact";
+import { GetPropRankColor } from "../Const/ConstDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactInfoUI")
@@ -33,15 +33,15 @@ export class ArtifactInfoUI extends ViewController {
             if (config != null) {
                 let useColor: Color = null;
                 if (config.rank == 1) {
-                    useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK1);
+                    useColor = new Color().fromHEX(GetPropRankColor.RANK1);
                 } else if (config.rank == 2) {
-                    useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK2);
+                    useColor = new Color().fromHEX(GetPropRankColor.RANK2);
                 } else if (config.rank == 3) {
-                    useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK3);
+                    useColor = new Color().fromHEX(GetPropRankColor.RANK3);
                 } else if (config.rank == 4) {
-                    useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK4);
+                    useColor = new Color().fromHEX(GetPropRankColor.RANK4);
                 } else if (config.rank == 5) {
-                    useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK5);
+                    useColor = new Color().fromHEX(GetPropRankColor.RANK5);
                 }
     
                 const content = this.node.getChildByName("__ViewContent");

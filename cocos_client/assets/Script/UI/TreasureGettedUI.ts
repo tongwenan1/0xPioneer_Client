@@ -1,7 +1,7 @@
 import { _decorator, Color, Component, Label, Node, Sprite, tween, v3, Animation, ParticleSystem2D } from 'cc';
 import { GameMain } from '../GameMain';
 import CommonTools from '../Tool/CommonTools';
-import { ItemConfigType } from '../Const/ConstDefine';
+import { GetPropRankColor, ItemConfigType } from '../Const/ConstDefine';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import ItemData from '../Model/ItemData';
@@ -10,14 +10,11 @@ import { UIName } from '../Const/ConstUIDefine';
 import { ItemSelectFromThreeUI } from './ItemSelectFromThreeUI';
 import ArtifactConfig from '../Config/ArtifactConfig';
 import DropConfig from '../Config/DropConfig';
+import ItemConfigDropTool from '../Tool/ItemConfigDropTool';
 const { ccclass, property } = _decorator;
 
 @ccclass('TreasureGettedUI')
 export class TreasureGettedUI extends ViewController {
-
-    @property([Color])
-    frameGradeColors: Color[] = [];
-
     public async dialogShow(box: any, gettedCallback: () => void) {
         for (let i = 0; i < 3; i++) {
             this.node.getChildByPath("Content/Treasure_box_" + i).active = i == box.icon;
@@ -46,13 +43,12 @@ export class TreasureGettedUI extends ViewController {
 
         const drop = DropConfig.getById(box.drop);
         if (drop != null) {
-            const useDrop = drop;
-            if (useDrop.type == 2) {
+            if (drop.type == 2) {
                 // 1/3 select
-                this.scheduleOnce(async ()=> {
+                this.scheduleOnce(async () => {
                     const view = await UIPanelMgr.openPanel(UIName.ItemSelectFromThreeUI);
                     if (view != null) {
-                        view.getComponent(ItemSelectFromThreeUI).showItem(useDrop.id, ()=> {
+                        view.getComponent(ItemSelectFromThreeUI).showItem(drop.id, () => {
                             UserInfoMgr.getExplorationReward(box.id);
                             if (gettedCallback) {
                                 gettedCallback();
@@ -62,41 +58,44 @@ export class TreasureGettedUI extends ViewController {
                     UIPanelMgr.removePanelByNode(this.node);
                 }, (5.5 + 1.1));
             } else {
-                // weight get
-                const items = [];
-                const weights = [];
-                // drop type index 0
-                // drop num index 1
-                // drop weight index 2
-                // drop id index 3
-                for (const temple of useDrop.drop_group) {
-                    items.push({
-                        type: temple[0],
-                        num: temple[1],
-                        itemConfigId: temple.length > 3 ? temple[3] : 0
-                    });
-                    weights.push(temple[2]);
-                }
-                let resultReward = CommonTools.weightedRandomValue(items, weights);
-                if (resultReward != null) {
+                const dropResultProp = ItemConfigDropTool.getItemByDropConfig(drop.id);
+                if (dropResultProp != null) {
                     let iconspr = itemShowNode.getChildByPath("icon").getComponent(Sprite);
                     let framespr = itemShowNode.getChildByPath("Item_frame").getComponent(Sprite);
-                    framespr.color = Color.WHITE;
-                    if (resultReward.type == ItemConfigType.Item) {
+
+                    let rank: number = 0;
+                    if (dropResultProp.type == ItemConfigType.Item) {
                         //item
-                        let itemConf = ItemMgr.getItemConf(resultReward.itemConfigId);
+                        let itemConf = ItemMgr.getItemConf(dropResultProp.propId);
                         if (itemConf) {
                             iconspr.spriteFrame = await ItemMgr.getItemIcon(itemConf.icon);
-                            framespr.color = this.frameGradeColors[itemConf.grade - 1];
+                            rank = itemConf.grade;
                         }
 
-                    } else if (resultReward.type == ItemConfigType.Artifact) {
+                    } else if (dropResultProp.type == ItemConfigType.Artifact) {
                         // artifact
-                        const artifactConf = ArtifactConfig.getById(resultReward.itemConfigId);
+                        const artifactConf = ArtifactConfig.getById(dropResultProp.propId);
                         if (artifactConf) {
                             iconspr.spriteFrame = await ArtifactMgr.getItemIcon(artifactConf.icon);
-                            framespr.color = this.frameGradeColors[artifactConf.rank - 1];
+                            rank = artifactConf.rank;
                         }
+                    }
+                    let useColor: Color = null;
+                    if (rank == 1) {
+                        useColor = new Color().fromHEX(GetPropRankColor.RANK1);
+                    } else if (rank == 2) {
+                        useColor = new Color().fromHEX(GetPropRankColor.RANK2);
+                    } else if (rank == 3) {
+                        useColor = new Color().fromHEX(GetPropRankColor.RANK3);
+                    } else if (rank == 4) {
+                        useColor = new Color().fromHEX(GetPropRankColor.RANK4);
+                    } else if (rank == 5) {
+                        useColor = new Color().fromHEX(GetPropRankColor.RANK5);
+                    }
+                    if (useColor != null) {
+                        framespr.color = useColor;
+                    } else {
+                        framespr.color = Color.WHITE;
                     }
                     tween(itemShowNode)
                         .delay(5.5)
@@ -106,13 +105,11 @@ export class TreasureGettedUI extends ViewController {
                         .to(0.2, { scale: v3(0.7, 0.7, 0.7) })
                         .delay(0.5)
                         .call(() => {
-                            if (resultReward) {
-                                if (resultReward.type == ItemConfigType.Item) {
-                                    ItemMgr.addItem([new ItemData(resultReward.itemConfigId, resultReward.num)]);
+                            if (dropResultProp.type == ItemConfigType.Item) {
+                                ItemMgr.addItem([new ItemData(dropResultProp.propId, dropResultProp.num)]);
 
-                                } else if (resultReward.type == ItemConfigType.Artifact) {
-                                    ArtifactMgr.addArtifact([new ArtifactData(resultReward.itemConfigId, resultReward.num)])
-                                }
+                            } else if (dropResultProp.type == ItemConfigType.Artifact) {
+                                ArtifactMgr.addArtifact([new ArtifactData(dropResultProp.propId, dropResultProp.num)])
                             }
                             UserInfoMgr.getExplorationReward(box.id);
                             UIPanelMgr.removePanelByNode(this.node);

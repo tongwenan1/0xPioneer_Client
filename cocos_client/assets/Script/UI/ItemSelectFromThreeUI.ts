@@ -1,5 +1,5 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt, Layout, Color } from 'cc';
-import { ItemConfigType, ResourceCorrespondingItem } from '../Const/ConstDefine';
+import { GetPropRankColor, ItemConfigType, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import { ArtifactItem } from './ArtifactItem';
 import { ArtifactMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
@@ -10,7 +10,6 @@ import { ArtifactInfoUI } from './ArtifactInfoUI';
 import { UIHUDController } from './UIHUDController';
 import ArtifactConfig from '../Config/ArtifactConfig';
 import ArtifactEffectConfig from '../Config/ArtifactEffectConfig';
-import { ArtifactEffectRankColor } from '../Const/Artifact';
 import DropConfig from '../Config/DropConfig';
 import { DropConfigData } from '../Const/Drop';
 const { ccclass, property } = _decorator;
@@ -53,15 +52,15 @@ export class ItemSelectFromThreeUI extends ViewController {
                     }
                     let useColor: Color = null;
                     if (config.rank == 1) {
-                        useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK1);
+                        useColor = new Color().fromHEX(GetPropRankColor.RANK1);
                     } else if (config.rank == 2) {
-                        useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK2);
+                        useColor = new Color().fromHEX(GetPropRankColor.RANK2);
                     } else if (config.rank == 3) {
-                        useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK3);
+                        useColor = new Color().fromHEX(GetPropRankColor.RANK3);
                     } else if (config.rank == 4) {
-                        useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK4);
+                        useColor = new Color().fromHEX(GetPropRankColor.RANK4);
                     } else if (config.rank == 5) {
-                        useColor = new Color().fromHEX(ArtifactEffectRankColor.RANK5);
+                        useColor = new Color().fromHEX(GetPropRankColor.RANK5);
                     }
                     const tempView = instantiate(this._itemView);
                     tempView.active = true;

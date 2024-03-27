@@ -32,6 +32,7 @@ export class ItemInfoUI extends ViewController {
         }
         if (this._items.length > 0) {
             let currentItem: ItemData = this._items.splice(0, 1)[0];
+            this._canGetItem = currentItem;
             let currentConfig = ItemMgr.getItemConf(currentItem.itemConfigId);
             if (currentConfig != null) {
                 const contentView = this.node.getChildByName("__ViewContent");
@@ -66,6 +67,7 @@ export class ItemInfoUI extends ViewController {
 
     private _items: ItemData[] = [];
     private _isGet: boolean;
+    private _canGetItem: ItemData = null;
     private _closeCallback: () => void;
     protected viewPopAnimation(): boolean {
         return true;
@@ -85,28 +87,23 @@ export class ItemInfoUI extends ViewController {
         } else {
             this.showItem(this._items, this._isGet, this._closeCallback);
         }
-
     }
     private async onTapUse() {
         if (this._isGet) {
-            this.onTapClose();
+            
         } else {
-            for (const temple of this._items) {
-                ItemMgr.subItem(temple.itemConfigId, 1);
+            if (this._canGetItem != null) {
+                ItemMgr.subItem(this._canGetItem.itemConfigId, 1);
                 CountMgr.addNewCount({
                     type: CountType.useItem,
                     timeStamp: new Date().getTime(),
                     data: {
-                        itemId: temple.itemConfigId,
+                        itemId: this._canGetItem.itemConfigId,
                         num: 1
                     }
                 });
             }
-            await this.playExitAnimation();
-            UIPanelMgr.removePanelByNode(this.node);
-            if (this._closeCallback != null) {
-                this._closeCallback();
-            }
         }
+        this.onTapClose();
     }
 }
