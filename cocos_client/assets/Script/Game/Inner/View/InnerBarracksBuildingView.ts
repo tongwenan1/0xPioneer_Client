@@ -2,8 +2,6 @@ import { Label, Node, _decorator } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
 import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../../../Utils/Global";
-import ItemData from "../../../Model/ItemData";
-import { ResourceCorrespondingItem } from "../../../Const/ConstDefine";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { UIName } from "../../../Const/ConstUIDefine";
 import { RecruitUI } from "../../../UI/Inner/RecruitUI";
@@ -16,8 +14,8 @@ const { ccclass, property } = _decorator;
 @ccclass('InnerBarracksBuildingView')
 export class InnerBarracksBuildingView extends InnerBuildingView {
 
-    public refreshUI(building: UserInnerBuildInfo) {
-        super.refreshUI(building);
+    public async refreshUI(building: UserInnerBuildInfo) {
+        await super.refreshUI(building);
 
         this._countingGenerate();
     }
@@ -46,7 +44,7 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
         if (this._building == null) {
             return;
         }
-        if (this._building.building) {
+        if (this._building.upgradeTotalTime > 0) {
             UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
             // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
             return;

@@ -1,5 +1,5 @@
 import { resources } from "cc";
-import { FinishedEvent } from "../Const/Manager/UserInfoMgrDefine";
+import { FinishedEvent } from "../Const/UserInfoDefine";
 
 export default class TaskMgr {
 

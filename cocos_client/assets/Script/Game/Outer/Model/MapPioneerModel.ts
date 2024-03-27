@@ -1,7 +1,7 @@
 import { Vec2, Vec3, log, v2 } from "cc";
 import { TilePos } from "../../TiledMap/TileTool";
-import { FinishedEvent } from "../../../Const/Manager/UserInfoMgrDefine";
 import { MapPioneerAttributesChangeType, MapPioneerAttributesChangeModel, MapPioneerLogicType, MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerType } from "../../../Const/Model/MapPioneerModelDefine";
+import { FinishedEvent } from "../../../Const/UserInfoDefine";
 
 export default class MapPioneerModel {
     // hp

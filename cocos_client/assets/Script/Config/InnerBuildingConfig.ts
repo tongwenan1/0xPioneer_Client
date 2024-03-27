@@ -37,6 +37,9 @@ export default class InnerBuildingConfig {
         return true;
     }
 
+    public static getConfs() {
+        return this._confs;
+    }
     public static getByBuildingType(type: InnerBuildingType): ConfigInnerBuildingData {
         if (type in this._confs) {
             return this._confs[type];

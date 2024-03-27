@@ -1,8 +1,8 @@
 import { Vec2 } from "cc";
 import CommonTools from "db://assets/Script/Tool/CommonTools";
 import { LanMgr } from "../../../Utils/Global";
-import { ResourceModel } from "../../../Const/Manager/UserInfoMgrDefine";
-import { BuildingFactionType, MapBuildingType, BuildingStayPosType } from "../../../Const/Model/MapBuildingModelDefine";
+import { BuildingFactionType, BuildingStayPosType, MapBuildingType } from "../../../Const/BuildingDefine";
+import { ResourceModel } from "../../../Const/UserInfoDefine";
 
 export default class MapBuildingModel {
 

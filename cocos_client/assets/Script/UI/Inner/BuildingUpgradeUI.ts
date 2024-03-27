@@ -1,5 +1,4 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node, Sprite } from 'cc';
-import { GameMain } from '../../GameMain';
 import CommonTools from '../../Tool/CommonTools';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { ItemMgrEvent } from '../../Const/Manager/ItemMgrDefine';
@@ -8,7 +7,7 @@ import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
 import { ArtifactEffectType } from '../../Const/Artifact';
-import { InnerBuildingNotification, InnerBuildingType, UserInnerBuildInfo } from '../../Const/BuildingDefine';
+import { InnerBuildingType, UserInnerBuildInfo } from '../../Const/BuildingDefine';
 import InnerBuildingConfig from '../../Config/InnerBuildingConfig';
 import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 const { ccclass } = _decorator;
@@ -51,6 +50,7 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
         this._buildingMap.set(InnerBuildingType.MainCity, this.node.getChildByPath("__ViewContent/BuildingInfoView/MainCity"));
         this._buildingMap.set(InnerBuildingType.Barrack, this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/Barracks"));
         this._buildingMap.set(InnerBuildingType.House, this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/House"));
+        this._buildingMap.set(InnerBuildingType.EnergyStation, this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/EnergyStation"));
 
         this._levelInfoView = this.node.getChildByPath("__ViewContent/LevelInfoView");
         this._levelInfoView.active = false;
@@ -84,21 +84,22 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
         }
         const userInnerData = UserInfoMgr.innerBuilds.get(buildingType);
         const innerConfig = InnerBuildingConfig.getByBuildingType(buildingType);
-        const innerLevelUpConfig = InnerBuildingLvlUpConfig.getByLevel(userInnerData.buildLevel + 1);
 
         if (userInnerData == null || innerConfig == null) {
             return;
         }
-
+        const costData = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_cost);
         // icon
         this._levelInfoView.getChildByPath("Bg/Barracks").active = buildingType == InnerBuildingType.Barrack;
         this._levelInfoView.getChildByPath("Bg/House").active = buildingType == InnerBuildingType.House;
         this._levelInfoView.getChildByPath("Bg/MainCity").active = buildingType == InnerBuildingType.MainCity;
+        this._levelInfoView.getChildByPath("Bg/EnergyStation").active = buildingType == InnerBuildingType.EnergyStation;
+
 
         const upgradeView = this._levelInfoView.getChildByPath("UpgradeContent");
         const maxTipView = this._levelInfoView.getChildByPath("LevelMaxContent");
         if (userInnerData.buildLevel >= innerConfig.maxLevel ||
-            innerLevelUpConfig == null) {
+            costData == null) {
             // level max
             upgradeView.active = false;
             maxTipView.active = true;
@@ -108,15 +109,21 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
             // up level
             upgradeView.getChildByName("Level").getComponent(Label).string = "lv. " + userInnerData.buildLevel + "> lv. " + (userInnerData.buildLevel + 1);
 
-            // desc wait config
-            // useLanMgr
-            // LanMgr.getLanById(upgradeData.desc);
-            upgradeView.getChildByName("UpgradeLevelDesc").getComponent(Label).string = "";
+            // desc
+            const desc = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.desc);
+            if (desc != null) {
+                upgradeView.getChildByName("UpgradeLevelDesc").getComponent(Label).string = LanMgr.getLanById(desc);
+            } else {
+                upgradeView.getChildByName("UpgradeLevelDesc").getComponent(Label).string = "";
+            }
 
-            // useTime wait config
-            // useLanMgr
-            // LanMgr.getLanById("107549");
-            upgradeView.getChildByPath("Time/Label-001").getComponent(Label).string = CommonTools.formatSeconds(5);
+            // useTime
+            const time = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_time);
+            if (time != null) {
+                upgradeView.getChildByPath("Time/Label-001").getComponent(Label).string = CommonTools.formatSeconds(time);
+            } else {
+                upgradeView.getChildByPath("Time/Label-001").getComponent(Label).string = CommonTools.formatSeconds(5);
+            }
 
             // cost
             // upgradeView.getChildByName("CostTitle").getComponent(Label).string = LanMgr.getLanById("107549"); 
@@ -124,17 +131,8 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
                 item.destroy();
             }
             this._levelInfoShowCostItems = [];
-            let costDatas = null;
-            if (innerLevelUpConfig != null) {
-                if (innerConfig.lvlup_cost == "cost_main") {
-                    costDatas = innerLevelUpConfig.cost_main;
-                } else if (innerConfig.lvlup_cost == "cost_barr") {
-                    costDatas = innerLevelUpConfig.cost_barr;
-                }
-            }
-            if (costDatas != null) {
-                for (const cost of costDatas) {
-
+            if (costData != null) {
+                for (const cost of costData) {
                     const type = cost[0].toString();
                     const num = cost[1];
                     const ownNum: number = ItemMgr.getOwnItemCount(type);
@@ -187,11 +185,10 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
     }
     private async onTapBuildingUpgrade(event: Event, customEventData: string) {
         const buildingType: InnerBuildingType = customEventData as InnerBuildingType;
+
         const userInnerData = UserInfoMgr.innerBuilds.get(buildingType);
         const innerConfig = InnerBuildingConfig.getByBuildingType(buildingType);
-        const innerLevelUpConfig = InnerBuildingLvlUpConfig.getByLevel(userInnerData.buildLevel + 1);
-
-        if (userInnerData == null || innerConfig == null || innerLevelUpConfig == null) {
+        if (userInnerData == null || innerConfig == null) {
             return;
         }
         if (UserInfoMgr.level < innerConfig.unlock) {
@@ -200,21 +197,14 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
             UIHUDController.showCenterTip("Insufficient civilization level");
             return;
         }
-        if (userInnerData.building) {
+        if (userInnerData.upgradeTotalTime > 0) {
             UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
             // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
             return;
         }
-
-        let costDatas = null;
-        if (innerLevelUpConfig != null) {
-            if (innerConfig.lvlup_cost == "cost_main") {
-                costDatas = innerLevelUpConfig.cost_main;
-            } else if (innerConfig.lvlup_cost == "cost_barr") {
-                costDatas = innerLevelUpConfig.cost_barr;
-            }
-        }
-        if (costDatas != null) {
+        const costData = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_cost);
+        const time = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_time);
+        if (costData != null && time != null) {
             // artifact effect
             const artifactPropEff = ArtifactMgr.getPropEffValue(UserInfoMgr.level);
             let artifactTime = 0;
@@ -226,7 +216,7 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
                 artifactResource = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVLUP_RESOURCE];
             }
             let canUpgrade: boolean = true;
-            for (const resource of costDatas) {
+            for (const resource of costData) {
                 if (resource.length != 2) {
                     continue;
                 }
@@ -246,8 +236,13 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
                 // UIHUDController.showCenterTip("Insufficient resources for building upgrades");
                 return;
             }
-            UserInfoMgr.beginBuilding(buildingType);
-            NotificationMgr.triggerEvent(InnerBuildingNotification.BeginUpgrade, buildingType);
+            // cost resource
+            for (const cost of costData) {
+                if (cost.length == 2) {
+                    ItemMgr.subItem(cost[0].toString(), cost[1]);
+                }
+            }
+            UserInfoMgr.beginUpgrade(buildingType, time);
             
             this._closeBuildingUpgradeUI();
             await this.playExitAnimation();

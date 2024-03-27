@@ -1,6 +1,6 @@
 import { resources } from "cc";
 import CLog from "../Utils/CLog";
-import { ConfigInnerBuildingLevelUpData } from "../Const/BuildingDefine";
+import { ConfigInnerBuildingLevelUpData, InnerBuildingPsycData, InnerBuildingType } from "../Const/BuildingDefine";
 
 export default class InnerBuildingLvlUpConfig {
     private static _confs: { [index: string]: ConfigInnerBuildingLevelUpData } = {};
@@ -27,21 +27,40 @@ export default class InnerBuildingLvlUpConfig {
 
         for (var id in jsonObj) {
             let jd = jsonObj[id];
-            let d = {};
+            let d: any = {};
             for (var key in jd) {
                 d[key] = jd[key];
             }
+            if (d.prefab_energy == null) {
+                d.prefab_energy = "";
+            }
             this._confs[id] = d as ConfigInnerBuildingLevelUpData;
         }
-        CLog.debug("InnerBuildingLvlUpConfig init success", this._confs);
         return true;
     }
 
-    public static getByLevel(level: number): ConfigInnerBuildingLevelUpData {
+    public static getBuildingLevelData(level: number, key: string): any {
         if (level.toString() in this._confs) {
-            return this._confs[level.toString()];
-        };
-        CLog.error(`InnerBuildingLvlUpConfig getByBuildingType error, config[${level.toString()}] not exist`);
-        return null;
+            const temple = this._confs[level.toString()];
+            if (key in temple) {
+                return temple[key];
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    public static getEnergyLevelData(level: number): InnerBuildingPsycData {
+        if (level.toString() in this._confs) {
+            const temple = this._confs[level.toString()];
+            return {
+                output: temple.psyc_output,
+                storage: temple.psyc_storage,
+                convert: temple.psyc_convert,
+            }
+        } else {
+            return null;
+        }
     }
 }

@@ -2,7 +2,7 @@
   "30001": {
     "id": "30001",
     "name": "120001",
-    "anim": "MainBuild",
+    "anim": "MainCity",
     "unlock": 1,
     "maxlevel": 10,
     "lvlup_progress": "progress",
@@ -15,7 +15,7 @@
   "30002": {
     "id": "30002",
     "name": "120002",
-    "anim": "Factory",
+    "anim": "Barracks",
     "unlock": 1,
     "maxlevel": 10,
     "lvlup_progress": "progress",

@@ -10,8 +10,9 @@ import { UIName } from "../Const/ConstUIDefine";
 import { ItemInfoUI } from "../UI/ItemInfoUI";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { UserInfoEvent, FinishedEvent, UserInfoNotification, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";
-import { InnerBuildingType, UserInnerBuildInfo } from "../Const/BuildingDefine";
+import { InnerBuildingNotification, InnerBuildingType, UserInnerBuildInfo } from "../Const/BuildingDefine";
 import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
+import InnerBuildingConfig from "../Config/InnerBuildingConfig";
 
 export default class UserInfoMgr {
 
@@ -178,27 +179,39 @@ export default class UserInfoMgr {
             }
         }
     }
-    public beginBuilding(buildingType: InnerBuildingType) {
+    public beginUpgrade(buildingType: InnerBuildingType, upgradeTime: number) {
         const buildInfo = this._innerBuilds.get(buildingType);
         if (buildInfo != null) {
-            buildInfo.building = true;
-        }
-    }
-    public buildingIsBuilding(buildingType: InnerBuildingType) {
-        const buildInfo = this._innerBuilds.get(buildingType);
-        if (buildInfo != null) {
-            return buildInfo.building;
-        }
-        return false;
-    }
-    public upgradeBuild(buildingType: InnerBuildingType) {
-        const buildInfo = this._innerBuilds.get(buildingType);
-        if (buildInfo != null) {
-            buildInfo.building = false;
-            buildInfo.buildLevel += 1;
-            this._innerBuilds.set(buildingType, buildInfo);
-            this._localJsonData.innerBuildData[buildingType].buildLevel = buildInfo.buildLevel;
+            buildInfo.upgradeCountTime = 0;
+            buildInfo.upgradeTotalTime = upgradeTime;
+
+            this._localJsonData.innerBuildData[buildingType] = buildInfo;
             this._localDataChanged(this._localJsonData);
+
+            NotificationMgr.triggerEvent(InnerBuildingNotification.BeginUpgrade, buildingType);
+        }
+    }
+    public upgradeFinished(buildingType: InnerBuildingType) {
+        const buildInfo = this._innerBuilds.get(buildingType);
+        if (buildInfo != null) {
+            buildInfo.upgradeCountTime = 0;
+            buildInfo.upgradeTotalTime = 0;
+            buildInfo.buildLevel += 1;
+            this._localJsonData.innerBuildData[buildingType] = buildInfo;
+            this._localDataChanged(this._localJsonData);
+
+            const innerData = InnerBuildingConfig.getByBuildingType(buildingType);
+            if (innerData != null) {
+                const expValue = InnerBuildingLvlUpConfig.getBuildingLevelData(buildInfo.buildLevel, innerData.lvlup_exp);
+                if (expValue != null && expValue > 0) {
+                    this.exp += expValue;
+                }
+                const progressValue = InnerBuildingLvlUpConfig.getBuildingLevelData(buildInfo.buildLevel, innerData.lvlup_progress);
+                if (progressValue != null && progressValue > 0) {
+                    this.explorationValue += progressValue;
+                }
+            }
+
 
             if (buildInfo.buildType == InnerBuildingType.House) {
                 // build house
@@ -437,6 +450,28 @@ export default class UserInfoMgr {
 
     public constructor() {
         setInterval(() => {
+            // upgrade building
+            if (this._innerBuilds != null) {
+                this._innerBuilds.forEach((value: UserInnerBuildInfo, key: InnerBuildingType) => {
+                    if (value.upgradeCountTime < value.upgradeTotalTime) {
+                        value.upgradeCountTime += 1;
+                        this._localJsonData.innerBuildData[key] = value;
+                        this._localDataChanged(this._localJsonData);
+
+                        NotificationMgr.triggerEvent(InnerBuildingNotification.upgradeCountTimeChanged);
+
+                        if (value.upgradeCountTime >= value.upgradeTotalTime) {
+                            this.upgradeFinished(key);
+                            this._localJsonData.innerBuildData[key] = value;
+                            this._localDataChanged(this._localJsonData);
+
+                            NotificationMgr.triggerEvent(InnerBuildingNotification.upgradeFinished);
+                        }
+                    }
+                });
+            }
+
+            // generate troops
             if (this._generateTroopInfo != null) {
                 if (this._generateTroopInfo.countTime > 0) {
                     this._generateTroopInfo.countTime -= 1;
@@ -457,12 +492,12 @@ export default class UserInfoMgr {
             }
             // generate energy
             let energyStationBuilded: boolean = false;
-            if (this._innerBuilds != null && this._innerBuilds.has(InnerBuildingType.MainCity)) {
-                energyStationBuilded = this._innerBuilds.get(InnerBuildingType.MainCity).buildLevel > 0;
+            if (this._innerBuilds != null && this._innerBuilds.has(InnerBuildingType.EnergyStation)) {
+                energyStationBuilded = this._innerBuilds.get(InnerBuildingType.EnergyStation).buildLevel > 0;
             }
             if (energyStationBuilded) {
-                const mainCityData = this._innerBuilds.get(InnerBuildingType.MainCity);
-                const generateConfig = InnerBuildingLvlUpConfig.getByLevel(mainCityData.buildLevel);
+                const energyBuildingData = this._innerBuilds.get(InnerBuildingType.EnergyStation);
+                const generateConfig = InnerBuildingLvlUpConfig.getEnergyLevelData(energyBuildingData.buildLevel);
                 const perGenerateTime: number = 5;
                 if (this._generateEnergyInfo == null) {
                     this._generateEnergyInfo = {
@@ -470,7 +505,7 @@ export default class UserInfoMgr {
                         totalEnergyNum: 0
                     };
                 }
-                if (this._generateEnergyInfo.totalEnergyNum >= generateConfig.psyc_storage) {
+                if (this._generateEnergyInfo.totalEnergyNum >= generateConfig.storage) {
                     this._generateEnergyInfo.countTime = perGenerateTime;
                 } else {
                     if (this._generateEnergyInfo.countTime > 0) {
@@ -478,18 +513,18 @@ export default class UserInfoMgr {
                     }
                     this._localJsonData.playerData.generateEnergyInfo = this._generateEnergyInfo;
                     this._localDataChanged(this._localJsonData);
-    
+
                     NotificationMgr.triggerEvent(UserInfoNotification.generateEnergyTimeCountChanged);
-    
+
                     if (this._generateEnergyInfo.countTime <= 0) {
-                        
-                        const generateNumPerMin: number = generateConfig.psyc_output;
-                        this._generateEnergyInfo.totalEnergyNum = Math.min(generateConfig.psyc_storage, this._generateEnergyInfo.totalEnergyNum + generateNumPerMin);
+
+                        const generateNumPerMin: number = generateConfig.output;
+                        this._generateEnergyInfo.totalEnergyNum = Math.min(generateConfig.storage, this._generateEnergyInfo.totalEnergyNum + generateNumPerMin);
                         this._generateEnergyInfo.countTime = perGenerateTime;
-    
+
                         this._localJsonData.playerData.generateEnergyInfo = this._generateEnergyInfo;
                         this._localDataChanged(this._localJsonData);
-    
+
                         NotificationMgr.triggerEvent(UserInfoNotification.generateEnergyNumChanged);
                     }
                 }
@@ -533,11 +568,6 @@ export default class UserInfoMgr {
         this._localJsonData = jsonObject;
         if (this._localJsonData == null) {
             // init data
-            this._playerID = "1001";
-            this._playerName = "Player";
-            this._level = 1;
-            this._exp = 0;
-            this._cityVision = 7;
             this._localJsonData = {};
             this._localJsonData.playerData = {
                 "playerID": "1001",
@@ -546,18 +576,15 @@ export default class UserInfoMgr {
                 "exp": 0,
                 "cityVision": 7
             };
-            this._localJsonData.innerBuildData = {
-                "30001": {
-                    "buildID": "30001",
-                    "buildLevel": 0
-                },
-                "30002": {
-                    "buildID": "30002",
-                    "buildLevel": 0
-                },
-                "30003": {
-                    "buildID": "30003",
-                    "buildLevel": 0
+
+            this._localJsonData.innerBuildData = {};
+            const buildingInfo = InnerBuildingConfig.getConfs();
+            for (const key in buildingInfo) {
+                this._localJsonData.innerBuildData[key] = {
+                    buildType: buildingInfo[key].id,
+                    buildLevel: 0,
+                    upgradeCountTime: 0,
+                    upgradeTotalTime: 0
                 }
             }
             this._localDataChanged(this._localJsonData);
@@ -591,9 +618,10 @@ export default class UserInfoMgr {
         this._innerBuilds = new Map();
         for (let id in this._localJsonData.innerBuildData) {
             const innerBuildInfo: UserInnerBuildInfo = {
-                buildType: this._localJsonData.innerBuildData[id].buildID,
+                buildType: this._localJsonData.innerBuildData[id].buildType,
                 buildLevel: this._localJsonData.innerBuildData[id].buildLevel,
-                building: false
+                upgradeCountTime: this._localJsonData.innerBuildData[id].upgradeCountTime,
+                upgradeTotalTime: this._localJsonData.innerBuildData[id].upgradeTotalTime,
             };
             this._innerBuilds.set(innerBuildInfo.buildType, innerBuildInfo);
         }

@@ -31,15 +31,13 @@ export class InnerBuildUI extends Component {
         }
     }
 
-    public setProgressTime(time: number = 1) {
-        this.progresssBar.node.active = true;
-        // Start a timer and make the progress bar go from 0 to 100 within time
-        this.progresssBar.progress = 0;
-
-        let t1 = new Tween(this.progresssBar);
-        t1.to(time, { progress: 1 });
-        t1.call(() => this.progresssBar.node.active = false);
-        t1.start();
+    public setProgressTime(currentTime: number, totalTime: number) {
+        if (currentTime <= totalTime) {
+            this.progresssBar.node.active = true;
+            this.progresssBar.progress = currentTime / totalTime;
+        } else {
+            this.progresssBar.node.active = false;
+        }
     }
 
     @property(Label)

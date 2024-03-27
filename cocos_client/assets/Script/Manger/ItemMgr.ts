@@ -341,5 +341,10 @@ export default class ItemMgr {
         else {
             this._localItemDatas = JSON.parse(jsonStr);
         }
+
+        this.addItem([
+            new ItemData(ResourceCorrespondingItem.Stone, 10000),
+            new ItemData(ResourceCorrespondingItem.Wood, 10000)
+        ]);
     }
 }
