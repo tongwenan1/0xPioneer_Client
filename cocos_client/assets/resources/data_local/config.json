@@ -24,6 +24,20 @@
       "Outside_Player_Base_A"
     ]
   },
+  "10004": {
+    "id": "10004",
+    "**NOTES**": "energy cost constant",
+    "para": [
+      2
+    ]
+  },
+  "10005": {
+    "id": "10005",
+    "**NOTES**": "energy tips threshold",
+    "para": [
+      0.5
+    ]
+  },
   "110000": {
     "id": "110000",
     "**NOTES**": "battle report max keep days",

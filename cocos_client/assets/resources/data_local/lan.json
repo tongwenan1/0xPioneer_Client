@@ -3,6 +3,18 @@
     "id": "106001",
     "eng": "%s is dead, please wait for the rebirth…"
   },
+  "106002": {
+    "id": "106002",
+    "eng": "Insufficient energy for move…"
+  },
+  "106003": {
+    "id": "106003",
+    "eng": "%s + %s"
+  },
+  "106004": {
+    "id": "106004",
+    "eng": "Construction of %s Lv%s has been completed"
+  },
   "107001": {
     "id": "107001",
     "eng": "Eye of Pharaoh"
