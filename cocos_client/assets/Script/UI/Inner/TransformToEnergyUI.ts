@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Layout, math, Node, ProgressBar, Slider } from 'cc';
+import { _decorator, Color, Component, instantiate, Label, Layout, math, Node, ProgressBar, Slider } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
@@ -8,6 +8,7 @@ import NotificationMgr from '../../Basic/NotificationMgr';
 import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 import { InnerBuildingType } from '../../Const/BuildingDefine';
 import { UserInfoNotification } from '../../Const/UserInfoDefine';
+import ItemData from '../../Model/ItemData';
 const { ccclass, property } = _decorator;
 
 @ccclass('TransformToEnergyUI')
@@ -27,19 +28,18 @@ export class TransformToEnergyUI extends ViewController {
             return;
         }
 
-        let maxGenerate: number = 99999;
+        let maxGenerate: number = 99999999;
         for (const data of energyData.convert) {
             maxGenerate = Math.min(maxGenerate, ItemMgr.getOwnItemCount(data.type) / data.num);
         }
-        maxGenerate = Math.min(maxGenerate, energyData.storage - userEnergyInfo.totalEnergyNum);
         if (initSelectGenerate) {
-            maxGenerate = Math.min(maxGenerate, 1);
-            this._selectGenerateNum = maxGenerate;
-        } else {
-            if (this._selectGenerateNum > maxGenerate) {
-                this._selectGenerateNum = maxGenerate;
-            }
-        }
+            this._selectGenerateNum = Math.min(maxGenerate, 1);
+        } 
+        // else {
+        //     if (this._selectGenerateNum > maxGenerate) {
+        //         this._selectGenerateNum = maxGenerate;
+        //     }
+        // }
         // useLanMgr
         // this.node.getChildByPath("__ViewContent/title").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/RightContent/title").getComponent(Label).string = LanMgr.getLanById("107549");
@@ -56,13 +56,52 @@ export class TransformToEnergyUI extends ViewController {
             this._generateProgress.node.active = false;
         } else {
             this._generateProgress.node.active = true;
-            this._generateProgress.progress = this._selectGenerateNum / (energyData.storage - userEnergyInfo.totalEnergyNum);
+            this._generateProgress.progress = this._selectGenerateNum / maxGenerate;
             this._generateSlider.progress = this._generateProgress.progress;
         }
 
         // useLanMgr
         // this._generateNumLabel.string = LanMgr.getLanById("107549") + " " + this._selectGenerateNum;
         this._generateNumLabel.string = "Convert for PSYC" + " " + this._selectGenerateNum;
+
+        // cost
+        if (this._costShowItems.length == energyData.convert.length) {
+            for (let i = 0; i < this._costShowItems.length; i++) {
+                let currentCost = energyData.convert[i].num * this._selectGenerateNum;
+                if (this._selectGenerateNum == 0) {
+                    currentCost = energyData.convert[i].num;
+                }
+                const ownNum: number = ItemMgr.getOwnItemCount(energyData.convert[i].type);
+
+                const item = this._costShowItems[i];
+                item.getChildByPath("num/left").getComponent(Label).string = currentCost + "";
+                item.getChildByPath("num/right").getComponent(Label).string = ownNum.toString();
+                item.getChildByPath("num/right").getComponent(Label).color = ownNum >= currentCost ? new Color(142, 218, 97) : Color.RED;
+                item.getChildByPath("num").getComponent(Layout).updateLayout();
+            }
+        } else {
+            // init
+            for (const cost of energyData.convert) {
+                let currentCost = cost.num * this._selectGenerateNum;
+                if (this._selectGenerateNum == 0) {
+                    currentCost = cost.num;
+                }
+                const ownNum: number = ItemMgr.getOwnItemCount(cost.type);
+                const item = instantiate(this._costItem);
+                item.active = true;
+                item.setParent(this._costItem.parent);
+                item.getChildByPath("Icon/8001").active = cost.type == ResourceCorrespondingItem.Food;
+                item.getChildByPath("Icon/8002").active = cost.type == ResourceCorrespondingItem.Wood;
+                item.getChildByPath("Icon/8003").active = cost.type == ResourceCorrespondingItem.Stone;
+                item.getChildByPath("Icon/8004").active = cost.type == ResourceCorrespondingItem.Troop;
+    
+                item.getChildByPath("num/left").getComponent(Label).string = currentCost + "";
+                item.getChildByPath("num/right").getComponent(Label).string = ownNum.toString();
+                item.getChildByPath("num/right").getComponent(Label).color = ownNum >= currentCost ? new Color(142, 218, 97) : Color.RED;
+                item.getChildByPath("num").getComponent(Layout).updateLayout();
+                this._costShowItems.push(item);
+            }
+        }
     }
 
     private _selectGenerateNum: number = 0;
@@ -75,6 +114,8 @@ export class TransformToEnergyUI extends ViewController {
     private _generateProgress: ProgressBar = null;
     private _generateSlider: Slider = null;
     private _generateNumLabel: Label = null;
+    private _costItem: Node = null;
+    private _costShowItems: Node[] = [];
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
@@ -86,6 +127,9 @@ export class TransformToEnergyUI extends ViewController {
         this._generateProgress = this.node.getChildByPath("__ViewContent/RightContent/scroll/ProgressBar").getComponent(ProgressBar);
         this._generateSlider = this.node.getChildByPath("__ViewContent/RightContent/scroll/ProgressBar/Slider").getComponent(Slider);
         this._generateNumLabel = this.node.getChildByPath("__ViewContent/RightContent/GenerateNum").getComponent(Label);
+
+        this._costItem = this.node.getChildByPath("__ViewContent/footer/Resource/Item");
+        this._costItem.active = false;
     }
 
     protected viewDidAppear(): void {
@@ -117,7 +161,7 @@ export class TransformToEnergyUI extends ViewController {
         this.refreshUI();
     }
 
-    
+
     //---------------------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
@@ -136,37 +180,42 @@ export class TransformToEnergyUI extends ViewController {
         if (energyData == null) {
             return;
         }
-        let maxGenerate: number = 99999;
+        let maxGenerate: number = 99999999;
         for (const data of energyData.convert) {
             maxGenerate = Math.min(maxGenerate, ItemMgr.getOwnItemCount(data.type) / data.num);
         }
-        maxGenerate = Math.min(maxGenerate, energyData.storage - userEnergyInfo.totalEnergyNum);
+        // maxGenerate = Math.min(maxGenerate, energyData.storage - userEnergyInfo.totalEnergyNum);
 
-        const currentSelectTroop: number = Math.max(1, Math.min(Math.floor(this._generateSlider.progress * (energyData.storage - userEnergyInfo.totalEnergyNum)), maxGenerate));
+        // const currentSelectTroop: number = Math.max(1, Math.min(Math.floor(this._generateSlider.progress * (energyData.storage - userEnergyInfo.totalEnergyNum)), maxGenerate));
+        const currentSelectTroop: number = Math.max(1, Math.min(Math.floor(this._generateSlider.progress *maxGenerate)));
 
-        this._generateSlider.progress = currentSelectTroop / (energyData.storage - userEnergyInfo.totalEnergyNum);
+        this._generateSlider.progress = currentSelectTroop / maxGenerate;
         if (currentSelectTroop != this._selectGenerateNum) {
             this._selectGenerateNum = currentSelectTroop;
             this.refreshUI();
         }
     }
     private onTapConvert() {
-
-    }
-
-    private async onTapGenerate() {
-        // if (this._generateTimeNum <= 0) {
-        //     // useLanMgr
-        //     // LanMgr.getLanById("107549")
-        //     UIHUDController.showCenterTip("Unable to produce");
-        //     return;
-        // }
-        // ItemMgr.subItem(ResourceCorrespondingItem.Wood, parseInt(this._usedWood.string));
-        // ItemMgr.subItem(ResourceCorrespondingItem.Stone, parseInt(this._usedStone.string));
-        // UserInfoMgr.beginGenerateTroop(this._generateTimeNum, this._selectGenerateNum);
-
-        // await this.playExitAnimation();
-        // UIPanelMgr.removePanelByNode(this.node);
+        const energyBuilding = UserInfoMgr.innerBuilds.get(InnerBuildingType.EnergyStation);
+        if (energyBuilding == null) {
+            return;
+        }
+        const energyData = InnerBuildingLvlUpConfig.getEnergyLevelData(energyBuilding.buildLevel);
+        if (energyData == null) {
+            return;
+        }
+        if (this._selectGenerateNum <= 0) {
+            // useLanMgr
+            // LanMgr.getLanById("107549")
+            UIHUDController.showCenterTip("Unable to produce");
+            return;
+        }
+        for (const cost of energyData.convert) {
+            const currentCost = cost.num * this._selectGenerateNum;
+            ItemMgr.subItem(cost.type, currentCost);            
+        }
+        ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Energy, this._selectGenerateNum)]);
+        this.refreshUI(true);
     }
 }
 
