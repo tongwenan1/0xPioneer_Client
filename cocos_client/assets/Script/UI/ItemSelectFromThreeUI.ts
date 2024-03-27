@@ -20,12 +20,11 @@ export class ItemSelectFromThreeUI extends ViewController {
 
     public async showItem(dropId: string, selectedCallback: () => void) {
         this._selectedCallback = selectedCallback;
-        const drops = DropConfig.getById(dropId);
+        const drop = DropConfig.getById(dropId);
         // useLanMgr
         // this.node.getChildByPath("__ViewContent/Title").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/GetAllBtn/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-        if (drops != null) {
-            const drop = drops[0] as DropConfigData;
+        if (drop != null) {
             if (drop.type == 2) {
                 // only support artifact
                 const items: ArtifactData[] = [];
