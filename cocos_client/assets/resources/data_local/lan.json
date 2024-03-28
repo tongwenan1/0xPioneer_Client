@@ -1,4 +1,24 @@
 {
+  "105001": {
+    "id": "105001",
+    "eng": "Common"
+  },
+  "105002": {
+    "id": "105002",
+    "eng": "Rare"
+  },
+  "105003": {
+    "id": "105003",
+    "eng": "Legend"
+  },
+  "105004": {
+    "id": "105004",
+    "eng": "Relic the Mythic"
+  },
+  "105005": {
+    "id": "105005",
+    "eng": "Relic the Genesis"
+  },
   "106001": {
     "id": "106001",
     "eng": "%s is dead, please wait for the rebirth…"
