@@ -18,7 +18,7 @@ const { ccclass, property } = _decorator;
 @ccclass('EventUI')
 export class EventUI extends ViewController {
 
-    public eventUIShow(triggerPioneerId: string, eventBuildingId: string, event: any, fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => void, dealWithNextEvent: (event: any) => void) {
+    public eventUIShow(triggerPioneerId: string, eventBuildingId: string, event: EventConfigData, fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => void, dealWithNextEvent: (event: any) => void) {
         this._triggerPioneerId = triggerPioneerId;
         this._eventBuildingId = eventBuildingId;
         this._fightCallback = fightCallback;
@@ -33,7 +33,7 @@ export class EventUI extends ViewController {
     private _fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => void = null;
     private _dealWithNextEvent: (event: EventConfigData) => void = null;
 
-    private _event: any = null;
+    private _event: EventConfigData = null;
 
     private _contentView: Node = null;
 
@@ -66,7 +66,7 @@ export class EventUI extends ViewController {
         NotificationMgr.removeListener(EventName.CHANGE_LANG, this._refreshUI, this);
     }
 
-    private async _refreshUI(event: any) {
+    private async _refreshUI(event: EventConfigData) {
         if (event == null) {
             return;
         }
@@ -433,7 +433,10 @@ export class EventUI extends ViewController {
                 if (succeed) {
 
                 } else {
-                    eventId = EventConfig.getById(eventId);
+                    const event = EventConfig.getById(eventId);
+                    if (event != null) {
+                        eventId = event.result;
+                    }
                 }
                 if (this._event) {
                     const hasNextStep = eventId != null && eventId != -1 && eventId != -2;
