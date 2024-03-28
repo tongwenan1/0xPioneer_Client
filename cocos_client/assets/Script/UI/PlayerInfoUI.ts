@@ -1,6 +1,6 @@
 import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ProgressBar, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
 import { GameMain } from '../GameMain';
-import { EventName, ItemConfigType } from '../Const/ConstDefine';
+import { EventName } from '../Const/ConstDefine';
 import { SettlementView } from './View/SettlementView';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactItem } from './ArtifactItem';
@@ -11,7 +11,7 @@ import { UIHUDController } from './UIHUDController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { UserInfoEvent } from '../Const/UserInfoDefine';
 import LvlupConfig from '../Config/LvlupConfig';
-import ItemData from '../Const/Item';
+import ItemData, { ItemConfigType } from '../Const/Item';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfoUI')

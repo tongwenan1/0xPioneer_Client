@@ -1,7 +1,7 @@
 import { _decorator, Color, Component, Label, Node, Sprite, tween, v3, Animation, ParticleSystem2D } from 'cc';
 import { GameMain } from '../GameMain';
 import CommonTools from '../Tool/CommonTools';
-import { GetPropRankColor, ItemConfigType } from '../Const/ConstDefine';
+import { GetPropRankColor } from '../Const/ConstDefine';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
@@ -11,7 +11,7 @@ import ArtifactConfig from '../Config/ArtifactConfig';
 import DropConfig from '../Config/DropConfig';
 import ItemConfigDropTool from '../Tool/ItemConfigDropTool';
 import ItemConfig from '../Config/ItemConfig';
-import ItemData from '../Const/Item';
+import ItemData, { ItemConfigType } from '../Const/Item';
 const { ccclass, property } = _decorator;
 
 @ccclass('TreasureGettedUI')

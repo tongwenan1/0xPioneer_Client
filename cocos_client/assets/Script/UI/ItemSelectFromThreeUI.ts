@@ -1,5 +1,5 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt, Layout, Color } from 'cc';
-import { GetPropRankColor, ItemConfigType, ResourceCorrespondingItem } from '../Const/ConstDefine';
+import { GetPropRankColor, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { GameMain } from '../GameMain';
 import { ArtifactItem } from './ArtifactItem';
 import { ArtifactMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
@@ -12,6 +12,7 @@ import ArtifactConfig from '../Config/ArtifactConfig';
 import ArtifactEffectConfig from '../Config/ArtifactEffectConfig';
 import DropConfig from '../Config/DropConfig';
 import { DropConfigData } from '../Const/Drop';
+import { ItemConfigType } from '../Const/Item';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemSelectFromThreeUI')

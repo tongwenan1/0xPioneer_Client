@@ -1,5 +1,5 @@
 import { _decorator, Animation, Button, Component, instantiate, Label, Layout, Node, Sprite, tween, v3 } from 'cc';
-import { EventName, ItemConfigType } from '../Const/ConstDefine';
+import { EventName } from '../Const/ConstDefine';
 import { BackpackItem } from './BackpackItem';
 import { ArtifactItem } from './ArtifactItem';
 import ArtifactData from '../Model/ArtifactData';
@@ -11,7 +11,7 @@ import { ItemInfoUI } from './ItemInfoUI';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { LvlupConfigData } from '../Const/Lvlup';
-import ItemData from '../Const/Item';
+import ItemData, { ItemConfigType } from '../Const/Item';
 const { ccclass, property } = _decorator;
 
 @ccclass('CivilizationLevelUpUI')

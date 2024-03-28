@@ -1,5 +1,5 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
-import { EventName, ItemConfigType } from '../../Const/ConstDefine';
+import { EventName } from '../../Const/ConstDefine';
 import { BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import ViewController from '../../BasicView/ViewController';
@@ -11,7 +11,7 @@ import { CountType } from '../../Const/Count';
 import EventConfig from '../../Config/EventConfig';
 import { EventConfigData } from '../../Const/Event';
 import GlobalData from '../../Data/GlobalData';
-import ItemData, { ItemType } from '../../Const/Item';
+import ItemData, { ItemConfigType, ItemType } from '../../Const/Item';
 import ItemConfig from '../../Config/ItemConfig';
 const { ccclass, property } = _decorator;
 

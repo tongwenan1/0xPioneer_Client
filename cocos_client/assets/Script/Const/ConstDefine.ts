@@ -1,3 +1,5 @@
+import { ItemConfigType } from "./Item"
+
 export enum EventName {
     MAP_SCALED = "MAP_SCALED",
     CHANGE_CURSOR = "CHANGE_CURSOR",
@@ -50,12 +52,6 @@ export enum ResourceCorrespondingItem {
     Troop = "8004",
     Energy = "8005",
     Gold = "8006"
-}
-
-export enum ItemConfigType {
-    Item = 1,
-    Artifact = 3,
-    Drop = 4
 }
 
 export enum NPCNameLangType {
