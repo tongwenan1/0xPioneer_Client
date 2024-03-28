@@ -2,7 +2,7 @@ import { Label, Node, _decorator } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
 import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../../../Utils/Global";
-import { ResourceCorrespondingItem } from "../../../Const/ConstDefine";
+import { EventName, ResourceCorrespondingItem } from "../../../Const/ConstDefine";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import { UserInfoNotification } from "../../../Const/UserInfoDefine";
@@ -28,15 +28,15 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
         super.innerBuildingLoad();
         this._produceInfoView = this.node.getChildByName("InfoView");
 
-        NotificationMgr.addListener(UserInfoNotification.generateEnergyTimeCountChanged, this._countingGenerate, this);
-        NotificationMgr.addListener(UserInfoNotification.generateEnergyNumChanged, this._countingGenerate, this);
+        NotificationMgr.addListener(EventName.GENERATE_ENERGY_TIME_COUNT_CHANGED, this._countingGenerate, this);
+        NotificationMgr.addListener(EventName.GENERATE_ENERGY_NUM_CHANGED, this._countingGenerate, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(UserInfoNotification.generateEnergyTimeCountChanged, this._countingGenerate, this);
-        NotificationMgr.removeListener(UserInfoNotification.generateEnergyNumChanged, this._countingGenerate, this);
+        NotificationMgr.addListener(EventName.GENERATE_ENERGY_TIME_COUNT_CHANGED, this._countingGenerate, this);
+        NotificationMgr.addListener(EventName.GENERATE_ENERGY_NUM_CHANGED, this._countingGenerate, this);
     }
 
 

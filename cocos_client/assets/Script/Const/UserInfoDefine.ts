@@ -23,8 +23,7 @@ export enum FinishedEvent {
 }
 
 export enum UserInfoNotification {
-    generateEnergyTimeCountChanged = "generateEnergyTimeCountChanged",
-    generateEnergyNumChanged = "generateEnergyNumChanged",
+    
 
     generateTroopTimeCountChanged = "generateTroopTimeCountChanged",
     generateTroopNumChanged = "generateTroopNumChanged",

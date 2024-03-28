@@ -1,14 +1,22 @@
 import { _decorator, Component, Label, Layout, Node } from 'cc';
 import { MapPlayerPioneerModel } from '../Model/MapPioneerModel';
-import { LanMgr } from '../../../Utils/Global';
+import { ItemMgr, LanMgr, UserInfoMgr } from '../../../Utils/Global';
 import MapBuildingModel from '../Model/MapBuildingModel';
-import { MapBuildingType, BuildingFactionType } from '../../../Const/BuildingDefine';
+import { MapBuildingType, BuildingFactionType, InnerBuildingType, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
+import ViewController from '../../../BasicView/ViewController';
+import NotificationMgr from '../../../Basic/NotificationMgr';
+import { EventName } from '../../../Const/ConstDefine';
+import ConfigConfig from '../../../Config/ConfigConfig';
+import InnerBuildingLvlUpConfig from '../../../Config/InnerBuildingLvlUpConfig';
+import InnerBuildingConfig from '../../../Config/InnerBuildingConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterBuildingView')
-export class OuterBuildingView extends Component {
+export class OuterBuildingView extends ViewController {
 
     public refreshUI(building: MapBuildingModel, players: MapPlayerPioneerModel[]) {
+
+        this._building = building;
 
         this.node.getChildByPath("Title/Text").getComponent(Label).string = LanMgr.getLanById(building.name);
         this.node.getChildByPath("Level/Text").getComponent(Label).string = "Lv." + building.level;
@@ -74,6 +82,9 @@ export class OuterBuildingView extends Component {
         }
 
         this._levelShowing = this.node.getChildByPath("Level").active;
+
+        this._refreshEnergyTipShow();
+        this._refreshBuildTipShow();
     }
 
     public showName(isShow: boolean) {
@@ -84,6 +95,10 @@ export class OuterBuildingView extends Component {
             this.node.getChildByPath("Level").active = false;
         }
     }
+
+
+    private _toGetEnergyTip: Node = null;
+    private _toBuildBuildingTip: Node = null;
 
     private _buildViewNames: string[] = [
         "city",
@@ -100,18 +115,94 @@ export class OuterBuildingView extends Component {
         "Tree_Group",
         "Pyramid_Group"
     ];
-
     private _levelShowing: boolean = false;
-    protected onLoad(): void {
+    private _building: MapBuildingModel = null;
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
+        this._toGetEnergyTip = this.node.getChildByName("ToGetEnergyTip");
+        this._toGetEnergyTip.active = false;
+
+        this._toBuildBuildingTip = this.node.getChildByName("ToBuildBuildingTip");
+        this._toBuildBuildingTip.active = false;
+    }
+
+    protected viewDidStart(): void {
+        super.viewDidStart();
+
+        NotificationMgr.addListener(EventName.GENERATE_ENERGY_NUM_CHANGED, this._onEnergyNumChanged, this);
+        NotificationMgr.addListener(EventName.RESOURCE_GETTED, this._onResourceChanged, this);
+        NotificationMgr.addListener(EventName.RESOURCE_CONSUMED, this._onResourceChanged, this);
+    }
+
+    protected viewDidAppear(): void {
+        super.viewDidAppear();
 
     }
 
-    start() {
-
+    protected viewDidDisAppear(): void {
+        super.viewDidDisAppear();
     }
 
-    update(deltaTime: number) {
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
 
+        NotificationMgr.removeListener(EventName.GENERATE_ENERGY_NUM_CHANGED, this._onEnergyNumChanged, this);
+        NotificationMgr.removeListener(EventName.RESOURCE_GETTED, this._onResourceChanged, this);
+        NotificationMgr.removeListener(EventName.RESOURCE_CONSUMED, this._onResourceChanged, this);
+    }
+
+    //-------------------------------- function
+    private _refreshEnergyTipShow() {
+        this._toGetEnergyTip.active = false;
+        if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != BuildingFactionType.enemy) {
+            const energyInfo = UserInfoMgr.generateEnergyInfo;
+            if (energyInfo != null) {
+                const threshold = ConfigConfig.getEnergyTipThresholdConfig().para[0];
+                const energyStationData = UserInfoMgr.innerBuilds.get(InnerBuildingType.EnergyStation);
+                const psycData = InnerBuildingLvlUpConfig.getEnergyLevelData(energyStationData.buildLevel);
+                if (psycData != null) {
+                    if ((energyInfo.totalEnergyNum / psycData.storage) >= threshold) {
+                        this._toGetEnergyTip.active = true;
+                    }
+                }
+            }
+        }
+    }
+    private _refreshBuildTipShow() {
+        this._toBuildBuildingTip.active = false;
+        if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != BuildingFactionType.enemy) {
+            let canBuild: boolean = false;
+            UserInfoMgr.innerBuilds.forEach((value: UserInnerBuildInfo, key: InnerBuildingType) => {
+                const innerConfig = InnerBuildingConfig.getByBuildingType(key);
+                const levelConfig = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel + 1, innerConfig.lvlup_cost);
+                if (levelConfig != null) {
+                    let thisBuild: boolean = true;
+                    for (const cost of levelConfig) {
+                        const type = cost[0].toString();
+                        const num = cost[1];
+                        if (ItemMgr.getOwnItemCount(type) < num) {
+                            thisBuild = false;
+                            break;
+                        }
+                    }
+                    if (thisBuild) {
+                        canBuild = true;
+                    }
+                }
+            });
+            if (canBuild) {
+                this._toBuildBuildingTip.active = true;
+            }
+        }
+    }
+
+    //-------------------------------- notification
+    private _onEnergyNumChanged() {
+        this._refreshEnergyTipShow();
+    }
+    private _onResourceChanged() {
+        this._refreshBuildTipShow();
     }
 }
 

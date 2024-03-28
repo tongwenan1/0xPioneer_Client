@@ -1,12 +1,13 @@
 import { SpriteFrame, resources, sys } from "cc";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import { ResourcesMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
+import ItemData from "../Model/ItemData";
 import { EventName, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { FinishedEvent } from "../Const/UserInfoDefine";
-import CLog from "../Utils/CLog";
-import ItemConfig from "../Config/ItemConfig";
 import NotificationMgr from "../Basic/NotificationMgr";
-import ItemData, { ItemArrangeType, ItemType } from "../Const/Item";
+import ItemConfig from "../Config/ItemConfig";
+import { ItemArrangeType, ItemType } from "../Const/Item";
+import CLog from "../Utils/CLog";
 
 export default class ItemMgr {
     private _maxItemLength: number = 100;
@@ -89,6 +90,8 @@ export default class ItemMgr {
             if (itemConfig == null) {
             } else {
                 if (itemConfig.itemType == ItemType.Resource) {
+                    NotificationMgr.triggerEvent(EventName.RESOURCE_GETTED, item);
+
                 } else if (this.itemIsFull) {
                     continue;
                 }
@@ -178,6 +181,8 @@ export default class ItemMgr {
         }
 
         this._localItemDatas[idx].count -= count;
+
+        let isResource: boolean = false;
         // settlementCount
         if (
             itemConfigId == ResourceCorrespondingItem.Food ||
@@ -196,6 +201,7 @@ export default class ItemMgr {
                 consumeEnergy: 0,
                 exploredEvents: 0,
             });
+            isResource = true;
         } else if (itemConfigId == ResourceCorrespondingItem.Troop) {
             SettlementMgr.insertSettlement({
                 level: UserInfoMgr.level,
@@ -209,6 +215,7 @@ export default class ItemMgr {
                 consumeEnergy: 0,
                 exploredEvents: 0,
             });
+            isResource = true;
         } else if (itemConfigId == ResourceCorrespondingItem.Energy) {
             SettlementMgr.insertSettlement({
                 level: UserInfoMgr.level,
@@ -222,7 +229,12 @@ export default class ItemMgr {
                 consumeEnergy: count,
                 exploredEvents: 0,
             });
+            isResource = true;
         }
+        if (isResource) {
+            NotificationMgr.triggerEvent(EventName.RESOURCE_CONSUMED);
+        }
+
         const itemConfig = ItemConfig.getById(itemConfigId);
         if (itemConfig != null) {
             if (itemConfig.gain_item != null) {

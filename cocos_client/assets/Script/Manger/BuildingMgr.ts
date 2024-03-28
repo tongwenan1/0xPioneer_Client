@@ -365,15 +365,11 @@ export default class BuildingMgr {
                             );
                         } else if (temple.type == MapBuildingType.resource) {
                             const resources: ResourceModel[] = [];
-                            if (temple.resources != null) {
-                                for (const resourceData of temple.resources) {
-                                    if (resourceData.length == 2) {
-                                        resources.push({
-                                            id: resourceData[0],
-                                            num: resourceData[1],
-                                        });
-                                    }
-                                }
+                            if (temple.resources != null && temple.resources.length == 2) {
+                                resources.push({
+                                    id: temple.resources[0],
+                                    num: temple.resources[1],
+                                });
                             }
                             newModel = new MapResourceBuildingModel(
                                 temple.show,

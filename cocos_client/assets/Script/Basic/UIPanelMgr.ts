@@ -92,7 +92,6 @@ export default class UIPanelManger {
                 this._uiMap.set(name, nd);
 
             } else if (rootView == this._hudRootView) {
-                nd.name = name;
                 this._hudQueue.push(nd);
             }
             return nd;

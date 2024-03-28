@@ -30,12 +30,6 @@ export interface BuildingMgrEvent {
     buildingRemoveDefendPioneer(buildingId: string, pioneerId: string): void;
 }
 
-export enum InnerBuildingNotification {
-    BeginUpgrade = "BeginUpgrade",
-    upgradeCountTimeChanged = "upgradeCountTimeChanged",
-    upgradeFinished = "upgradeFinished"
-}
-
 export enum InnerBuildingType {
     MainCity = "30001",
     Barrack = "30002",
@@ -43,11 +37,11 @@ export enum InnerBuildingType {
     EnergyStation = "30004",
 }
 
-export interface UserInnerBuildInfo {
-    buildType: InnerBuildingType,
-    buildLevel: number,
-    upgradeCountTime: number,
-    upgradeTotalTime: number
+export class UserInnerBuildInfo {
+    buildType: InnerBuildingType;
+    buildLevel: number;
+    upgradeCountTime: number;
+    upgradeTotalTime: number;
 }
 
 export interface ConfigInnerBuildingData {

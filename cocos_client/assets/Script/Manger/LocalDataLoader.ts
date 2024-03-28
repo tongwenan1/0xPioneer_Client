@@ -7,6 +7,7 @@ import EvaluationConfig from "../Config/EvaluationConfig";
 import EventConfig from "../Config/EventConfig";
 import InnerBuildingConfig from "../Config/InnerBuildingConfig";
 import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
+import ItemConfig from "../Config/ItemConfig";
 import LanConfig from "../Config/LanConfig";
 import LvlupConfig from "../Config/LvlupConfig";
 import TalkConfig from "../Config/TalkConfig";
@@ -27,6 +28,7 @@ export default class LocalDataLoader {
     public async loadLocalDatas() {
         // load configs
         await ArtifactConfig.init();
+        await ItemConfig.init();
         await ArtifactEffectConfig.init();
         await BoxInfoConfig.init();
         await ConfigConfig.init();

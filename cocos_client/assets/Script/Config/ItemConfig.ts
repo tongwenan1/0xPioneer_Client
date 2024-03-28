@@ -6,9 +6,9 @@ export default class ItemConfig {
     private static _confs: { [index: string]: ItemConfigData } = {};
 
     public static async init(): Promise<boolean> {
-        // read artifact config
+        // read itemconf config
         const obj = await new Promise((resolve) => {
-            resources.load("data_local/artifact", (err: Error, data: any) => {
+            resources.load("data_local/itemconf", (err: Error, data: any) => {
                 if (err) {
                     resolve(null);
                     return;
@@ -41,11 +41,11 @@ export default class ItemConfig {
         return true;
     }
 
-    public static getById(artifactConfigId: string): ItemConfigData | null {
-        if (artifactConfigId in this._confs) {
-            return this._confs[artifactConfigId];
+    public static getById(itemConfigId: string): ItemConfigData | null {
+        if (itemConfigId in this._confs) {
+            return this._confs[itemConfigId];
         }
-        CLog.error(`ItemConfig getById error, config[${artifactConfigId}] not exist`);
+        CLog.error(`ItemConfig getById error, config[${itemConfigId}] not exist`);
         return null;
     }
 }

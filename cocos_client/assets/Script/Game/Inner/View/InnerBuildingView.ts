@@ -2,10 +2,11 @@ import { _decorator, CCInteger, Component, instantiate, Node, Prefab, size, Size
 import ViewController from '../../../BasicView/ViewController';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import NotificationMgr from '../../../Basic/NotificationMgr';
-import { InnerBuildingNotification, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
+import { UserInnerBuildInfo } from '../../../Const/BuildingDefine';
 import { ResourcesMgr } from '../../../Utils/Global';
 import InnerBuildingLvlUpConfig from '../../../Config/InnerBuildingLvlUpConfig';
 import InnerBuildingConfig from '../../../Config/InnerBuildingConfig';
+import { EventName } from '../../../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerBuildingView')
@@ -122,17 +123,17 @@ export class InnerBuildingView extends ViewController {
     protected viewDidAppear(): void {
         super.viewDidAppear();
 
-        NotificationMgr.addListener(InnerBuildingNotification.BeginUpgrade, this._beginUpgrade, this);
-        NotificationMgr.addListener(InnerBuildingNotification.upgradeCountTimeChanged, this._upgradeCountTimeChanged, this);
-        NotificationMgr.addListener(InnerBuildingNotification.upgradeFinished, this._upgradeFinished, this);
+        NotificationMgr.addListener(EventName.INNER_BUILDING_BEGIN_UPGRADE, this._beginUpgrade, this);
+        NotificationMgr.addListener(EventName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED, this._upgradeCountTimeChanged, this);
+        NotificationMgr.addListener(EventName.INNER_BUILDING_UPGRADE_FINISHED, this._upgradeFinished, this);
     }
 
     protected viewDidDisAppear(): void {
         super.viewDidDisAppear();
 
-        NotificationMgr.removeListener(InnerBuildingNotification.BeginUpgrade, this._beginUpgrade, this);
-        NotificationMgr.removeListener(InnerBuildingNotification.upgradeCountTimeChanged, this._upgradeCountTimeChanged, this);
-        NotificationMgr.removeListener(InnerBuildingNotification.upgradeFinished, this._upgradeFinished, this);
+        NotificationMgr.removeListener(EventName.INNER_BUILDING_BEGIN_UPGRADE, this._beginUpgrade, this);
+        NotificationMgr.removeListener(EventName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED, this._upgradeCountTimeChanged, this);
+        NotificationMgr.removeListener(EventName.INNER_BUILDING_UPGRADE_FINISHED, this._upgradeFinished, this);
     }
 
     protected viewDidDestroy(): void {

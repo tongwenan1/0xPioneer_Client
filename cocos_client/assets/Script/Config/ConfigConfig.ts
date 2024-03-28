@@ -1,5 +1,5 @@
 import { resources } from "cc";
-import { BattleReportMaxKeepDaysConfigData, BattleReportMaxKeepRecordsConfigData, ConfigConfigData, ConfigType, MapScaleConfigData, OneStepCostEnergyConfigData } from "../Const/Config";
+import { BattleReportMaxKeepDaysConfigData, BattleReportMaxKeepRecordsConfigData, ConfigConfigData, ConfigType, MainCityEnergyTipThresholdConfigData, MapScaleConfigData, OneStepCostEnergyConfigData } from "../Const/Config";
 import CLog from "../Utils/CLog";
 
 export default class ConfigConfig {
@@ -35,6 +35,9 @@ export default class ConfigConfig {
     }
     public static getEnergyCostConfig(): OneStepCostEnergyConfigData {
         return this.getById(ConfigType.OneStepCostEnergy) as OneStepCostEnergyConfigData;
+    }
+    public static getEnergyTipThresholdConfig(): MainCityEnergyTipThresholdConfigData {
+        return this.getById(ConfigType.MainCityEnergyTipThreshold) as MainCityEnergyTipThresholdConfigData;
     }
     public static getBattleReportMaxKeepDaysConfig(): BattleReportMaxKeepDaysConfigData {
         return this.getById(ConfigType.BattleReportMaxKeepDays) as BattleReportMaxKeepDaysConfigData;
