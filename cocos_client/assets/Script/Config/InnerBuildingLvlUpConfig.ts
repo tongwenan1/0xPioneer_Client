@@ -7,7 +7,7 @@ export default class InnerBuildingLvlUpConfig {
     private static _confs: { [index: string]: ConfigInnerBuildingLevelUpData } = {};
 
     public static async init(): Promise<boolean> {
-        // read artifact config
+        // read config
         const obj = await new Promise((resolve) => {
             resources.load("data_local/inner_lvlup", (err: Error, data: any) => {
                 if (err) {
