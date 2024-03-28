@@ -1,11 +1,12 @@
 import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt, UIOpacity, instantiate, tween } from 'cc';
 import { EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
-import { ItemMgr, LvlupMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { ItemMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { ItemMgrEvent } from '../Const/Manager/ItemMgrDefine';
 import { UIName } from '../Const/ConstUIDefine';
 import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { UserInfoEvent, FinishedEvent } from '../Const/UserInfoDefine';
+import LvlupConfig from '../Config/LvlupConfig';
 const { ccclass, property } = _decorator;
 
 
@@ -79,8 +80,8 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
         this.txtMoney.string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Gold).toString();
         this.txtEnergy.string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Energy).toString();
 
-        const lvlupConfig = LvlupMgr.getConfigByLvl(info.level);
-        const maxExp = lvlupConfig[0].exp;
+        const lvlupConfig = LvlupConfig.getById(info.level.toString());
+        const maxExp = lvlupConfig.exp;
         this.lvProgress.progress = Math.min(1, info.exp / maxExp);
         this.node.getChildByPath("progressLv/txtLvProgress").getComponent(Label).string = info.exp + "/" + maxExp;
 
@@ -130,11 +131,11 @@ export default class TopUI extends Component implements UserInfoEvent, ItemMgrEv
         });
     }
     async playerLvlupChanged(value: number): Promise<void> {
-        const levelConfig = LvlupMgr.getConfigByLvl(value);
-        if (levelConfig.length > 0) {
+        const levelConfig = LvlupConfig.getById(value.toString());
+        if (levelConfig != null) {
             const view = await UIPanelMgr.openPanel(UIName.CivilizationLevelUpUI);
             if (view != null) {
-                view.getComponent(CivilizationLevelUpUI).refreshUI(levelConfig[0]);
+                view.getComponent(CivilizationLevelUpUI).refreshUI(levelConfig);
             }
         }
     }

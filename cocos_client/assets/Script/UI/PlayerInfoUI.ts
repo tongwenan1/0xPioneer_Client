@@ -6,11 +6,12 @@ import ArtifactData from '../Model/ArtifactData';
 import ItemData from '../Model/ItemData';
 import { ArtifactItem } from './ArtifactItem';
 import { BackpackItem } from './BackpackItem';
-import { LanMgr, LvlupMgr, UserInfoMgr, AudioMgr, UIPanelMgr } from '../Utils/Global';
+import { LanMgr, UserInfoMgr, AudioMgr, UIPanelMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import { UIHUDController } from './UIHUDController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { UserInfoEvent } from '../Const/UserInfoDefine';
+import LvlupConfig from '../Config/LvlupConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfoUI')
@@ -237,15 +238,15 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
 
             // useLanMgr 
             // currentShowView.getChildByPath("RewardContent/CityVersion/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-            currentShowView.getChildByPath("RewardContent/CityVersion/Value").getComponent(Label).string = "+" + LvlupMgr.getTotalVisionByLvl(currentLevel);
+            currentShowView.getChildByPath("RewardContent/CityVersion/Value").getComponent(Label).string = "+" + LvlupConfig.getTotalVisionByLvl(currentLevel);
 
             // useLanMgr 
             // currentShowView.getChildByPath("RewardContent/ResGetRateUp/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-            currentShowView.getChildByPath("RewardContent/ResGetRateUp/Value").getComponent(Label).string = "+" + LvlupMgr.getTotalExtraRateByLvl(currentLevel) * 100 + "%";
+            currentShowView.getChildByPath("RewardContent/ResGetRateUp/Value").getComponent(Label).string = "+" + LvlupConfig.getTotalExtraRateByLvl(currentLevel) * 100 + "%";
 
             // useLanMgr 
             // currentShowView.getChildByPath("RewardContent/GetHpMax/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-            currentShowView.getChildByPath("RewardContent/GetHpMax/Value").getComponent(Label).string = "+" + LvlupMgr.getTotalHpMaxByLvl(currentLevel);
+            currentShowView.getChildByPath("RewardContent/GetHpMax/Value").getComponent(Label).string = "+" + LvlupConfig.getTotalHpMaxByLvl(currentLevel);
 
         } else if (this._selectIndex == 1) {
             // summary
@@ -331,9 +332,9 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
 
         const rewardView = this._nextLevelView.getChildByPath("NextLevelInfo/RewardContent");
         const maxTip = this._nextLevelView.getChildByPath("NextLevelInfo/MaxTip");
-        const nextLvConfig = LvlupMgr.getConfigByLvl(nextLevel);
-        if (nextLvConfig.length > 0) {
-            const levelConfig = nextLvConfig[0];
+        const nextLvConfig = LvlupConfig.getById(nextLevel.toString());
+        if (nextLvConfig != null) {
+            const levelConfig = nextLvConfig;
 
             rewardView.active = true;
             const content = rewardView;
@@ -376,14 +377,14 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
                             const view = instantiate(this._rewardItem);
                             view.active = true;
                             view.getComponent(BackpackItem).refreshUI(new ItemData(id, num));
-                            view.getChildByName("Count").getComponent(Label).string = num;
+                            view.getChildByName("Count").getComponent(Label).string = num.toString();
                             view.setParent(content.getChildByPath("Rewards/Content"));
                             this._showRewardItems.push(view);
                         } else if (type == ItemConfigType.Artifact) {
                             const view = instantiate(this._artifactItem);
                             view.active = true;
                             view.getComponent(ArtifactItem).refreshUI(new ArtifactData(id, num));
-                            view.getChildByName("Count").getComponent(Label).string = num;
+                            view.getChildByName("Count").getComponent(Label).string = num.toString();
                             view.setParent(content.getChildByPath("Rewards/Content"));
                             this._showArtifactItems.push(view);
                         }

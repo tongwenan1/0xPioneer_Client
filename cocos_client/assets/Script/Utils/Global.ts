@@ -7,7 +7,6 @@ import ev from "../Manger/EvaluationMgr";
 import im from "../Manger/ItemMgr";
 import l from "../Manger/LanMgr";
 import locad from "../Manger/LocalDataLoader";
-import lvl from "../Manger/LvlupMgr";
 import p from "../Manger/PioneerMgr";
 import s from "../Manger/SettlementMgr";
 import tk from "../Manger/TaskMgr";
@@ -25,7 +24,6 @@ const EvaluationMgr = new ev();
 const ItemMgr = new im();
 const LanMgr = new l();
 const LocalDataLoader = new locad();
-const LvlupMgr = new lvl();
 const PioneerMgr = new p();
 const SettlementMgr = new s();
 const TaskMgr = new tk();
@@ -47,7 +45,6 @@ export {
     EvaluationMgr,
     ItemMgr,
     LanMgr,
-    LvlupMgr,
     PioneerMgr,
     SettlementMgr,
     TaskMgr,

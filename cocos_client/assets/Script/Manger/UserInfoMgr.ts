@@ -2,7 +2,7 @@ import { Asset, __private, resources, sys } from "cc";
 import { GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
-import { BuildingMgr, CountMgr, ItemMgr, LvlupMgr, PioneerMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
+import { BuildingMgr, CountMgr, ItemMgr, PioneerMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
 import ItemData from "../Model/ItemData";
 import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
 import { UIName } from "../Const/ConstUIDefine";
@@ -13,6 +13,8 @@ import { InnerBuildingNotification, InnerBuildingType, UserInnerBuildInfo } from
 import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
 import InnerBuildingConfig from "../Config/InnerBuildingConfig";
 import { CountType } from "../Const/Count";
+import LvlupConfig from "../Config/LvlupConfig";
+import { LvlupConfigData } from "../Const/Lvlup";
 
 export default class UserInfoMgr {
 
@@ -354,16 +356,16 @@ export default class UserInfoMgr {
 
         let isLvlup: boolean = false;
         let parseLv: boolean = true;
-        const nextLvConfigs = [];
+        const nextLvConfigs: LvlupConfigData[] = [];
         do {
-            const lvlConfig = LvlupMgr.getConfigByLvl(this._level);
-            const nextLvConfig = LvlupMgr.getConfigByLvl(this._level + 1);
+            const lvlConfig = LvlupConfig.getById(this._level.toString());
+            const nextLvConfig = LvlupConfig.getById((this._level + 1).toString());
             if (nextLvConfig != null) {
-                if (this._exp >= lvlConfig[0].exp) {
+                if (this._exp >= lvlConfig.exp) {
                     isLvlup = true;
                     this._level += 1;
-                    this._exp -= lvlConfig[0].exp;
-                    this.cityVision += nextLvConfig[0].city_vision;
+                    this._exp -= lvlConfig.exp;
+                    this.cityVision += nextLvConfig.city_vision;
 
                     nextLvConfigs.push(nextLvConfig);
                 }
@@ -400,21 +402,21 @@ export default class UserInfoMgr {
                 }
 
                 // hpmax
-                if (nextLvConfig[0].hp_max > 0) {
-                    PioneerMgr.pioneerChangeAllPlayerOriginalHpMax(nextLvConfig[0].hp_max);
+                if (nextLvConfig.hp_max > 0) {
+                    PioneerMgr.pioneerChangeAllPlayerOriginalHpMax(nextLvConfig.hp_max);
                 }
 
                 // event_building
-                if (nextLvConfig[0].event_building != null) {
-                    for (const buidingId of nextLvConfig[0].event_building) {
+                if (nextLvConfig.event_building != null) {
+                    for (const buidingId of nextLvConfig.event_building) {
                         BuildingMgr.showBuilding(buidingId);
                     }
                 }
 
                 // reward
-                if (nextLvConfig[0].reward != null) {
+                if (nextLvConfig.reward != null) {
                     const propDatas: GetPropData[] = [];
-                    for (const propData of nextLvConfig[0].reward) {
+                    for (const propData of nextLvConfig.reward) {
                         if (propData.length != 3) {
                             continue;
                         }

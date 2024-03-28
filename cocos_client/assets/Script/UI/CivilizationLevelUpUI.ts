@@ -11,6 +11,7 @@ import ViewController from '../BasicView/ViewController';
 import { ItemInfoUI } from './ItemInfoUI';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
 import NotificationMgr from '../Basic/NotificationMgr';
+import { LvlupConfigData } from '../Const/Lvlup';
 const { ccclass, property } = _decorator;
 
 @ccclass('CivilizationLevelUpUI')
@@ -56,7 +57,7 @@ export class CivilizationLevelUpUI extends ViewController {
     }
 
 
-    public async refreshUI(levelConfig: any) {
+    public async refreshUI(levelConfig: LvlupConfigData) {
         if (levelConfig == null) {
             return;
         }
@@ -118,7 +119,7 @@ export class CivilizationLevelUpUI extends ViewController {
             .start();
 
         // level 
-        contentView.getChildByPath("Level/Before").getComponent(Label).string = "C.LV" + (levelConfig.id - 1);
+        contentView.getChildByPath("Level/Before").getComponent(Label).string = "C.LV" + (Number(levelConfig.id) - 1).toString();
         contentView.getChildByPath("Level/After").getComponent(Label).string = "C.LV" + levelConfig.id;
 
         // reward
@@ -169,14 +170,14 @@ export class CivilizationLevelUpUI extends ViewController {
                         const view = instantiate(this._rewardItem);
                         view.active = true;
                         view.getComponent(BackpackItem).refreshUI(new ItemData(id, num));
-                        view.getChildByName("Count").getComponent(Label).string = num;
+                        view.getChildByName("Count").getComponent(Label).string = num.toString();
                         view.setParent(content.getChildByPath("Rewards/Content"));
                         this._showRewardItems.push(view);
                     } else if (type == ItemConfigType.Artifact) {
                         const view = instantiate(this._artifactItem);
                         view.active = true;
                         view.getComponent(ArtifactItem).refreshUI(new ArtifactData(id, num));
-                        view.getChildByName("Count").getComponent(Label).string = num;
+                        view.getChildByName("Count").getComponent(Label).string = num.toString();
                         view.setParent(content.getChildByPath("Rewards/Content"));
                         this._showArtifactItems.push(view);
                     }

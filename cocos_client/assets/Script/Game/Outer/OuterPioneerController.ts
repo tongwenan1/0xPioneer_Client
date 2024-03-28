@@ -10,7 +10,7 @@ import { OuterMapCursorView } from './View/OuterMapCursorView';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
-import { ArtifactMgr, BranchEventMgr, BuildingMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, SettlementMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, BranchEventMgr, BuildingMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { MapPioneerLogicType, MapPioneerActionType, MapPioneerType, MapPioneerMoveDirection, MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import { MapResourceBuildingModel } from './Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerLogicModel, MapNpcPioneerModel } from './Model/MapPioneerModel';
@@ -27,6 +27,7 @@ import { ArtifactEffectType } from '../../Const/Artifact';
 import { BuildingFactionType } from '../../Const/BuildingDefine';
 import { UserInfoEvent, FinishedEvent } from '../../Const/UserInfoDefine';
 import TalkConfig from '../../Config/TalkConfig';
+import LvlupConfig from '../../Config/LvlupConfig';
 
 
 const { ccclass, property } = _decorator;
@@ -736,7 +737,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     actionView = this._pioneerMap.get(actionPioneerId);
                 }
                 for (const resource of building.resources) {
-                    const resultNum: number = Math.floor(resource.num * (1 + LvlupMgr.getTotalExtraRateByLvl(UserInfoMgr.level)));
+                    const resultNum: number = Math.floor(resource.num * (1 + LvlupConfig.getTotalExtraRateByLvl(UserInfoMgr.level)));
                     actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resultNum, () => {
                         ItemMgr.addItem([new ItemData(resource.id, resultNum)]);
                     });
