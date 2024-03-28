@@ -51,16 +51,22 @@ export class ItemSelectFromThreeUI extends ViewController {
                         continue;
                     }
                     let useColor: Color = null;
+                    let useTitle: string = null;
                     if (config.rank == 1) {
                         useColor = new Color().fromHEX(GetPropRankColor.RANK1);
+                        useTitle = LanMgr.getLanById("105001");
                     } else if (config.rank == 2) {
                         useColor = new Color().fromHEX(GetPropRankColor.RANK2);
+                        useTitle = LanMgr.getLanById("105002");
                     } else if (config.rank == 3) {
                         useColor = new Color().fromHEX(GetPropRankColor.RANK3);
+                        useTitle = LanMgr.getLanById("105003");
                     } else if (config.rank == 4) {
                         useColor = new Color().fromHEX(GetPropRankColor.RANK4);
+                        useTitle = LanMgr.getLanById("105004");
                     } else if (config.rank == 5) {
                         useColor = new Color().fromHEX(GetPropRankColor.RANK5);
+                        useTitle = LanMgr.getLanById("105005");
                     }
                     const tempView = instantiate(this._itemView);
                     tempView.active = true;
@@ -78,8 +84,7 @@ export class ItemSelectFromThreeUI extends ViewController {
                     tempView.getChildByName("ArtifactItem").getComponent(ArtifactItem).refreshUI(items[i]);
 
                     // title 
-                    // useLanMgr
-                    // tempView.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById("107549");
+                    tempView.getChildByName("Title").getComponent(Label).string = useTitle;
                     tempView.getChildByName("Title").getComponent(Label).color = useColor;
 
                     // effect
