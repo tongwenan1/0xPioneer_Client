@@ -7,7 +7,6 @@ import { ItemInfoUI } from '../ItemInfoUI';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
 import { CountType } from '../../Const/Count';
-import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -128,8 +127,18 @@ export class DialogueUI extends ViewController {
     private _talkOver() {
         //talk over
         if (UserInfoMgr.afterTalkItemGetData.has(this._talk.id)) {
-            ItemConfigDropTool.showItemGetted(UserInfoMgr.afterTalkItemGetData.get(this._talk.id));
-            UserInfoMgr.afterTalkItemGetData.delete(this._talk.id);
+            setTimeout(async () => {
+                if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
+                    UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
+                    UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...UserInfoMgr.afterTalkItemGetData.get(this._talk.id));
+                } else {
+                    const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                    if (view != null) {
+                        view.getComponent(ItemInfoUI).showItem(UserInfoMgr.afterTalkItemGetData.get(this._talk.id), true);
+                    }
+                }
+                UserInfoMgr.afterTalkItemGetData.delete(this._talk.id);
+            });
         }
         if (this._talkOverCallback != null) {
             this._talkOverCallback();

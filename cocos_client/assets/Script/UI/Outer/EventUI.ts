@@ -13,7 +13,6 @@ import { CountType } from '../../Const/Count';
 import EventConfig from '../../Config/EventConfig';
 import { EventConfigData } from '../../Const/Event';
 import GlobalData from '../../Data/GlobalData';
-import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -342,9 +341,12 @@ export class EventUI extends ViewController {
             }
             if (hasItem) {
                 this._contentView.active = false;
-                ItemConfigDropTool.showItemGetted(itemDatas, () => {
-                    this._contentView.active = true;
-                });
+                const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                if (view != null) {
+                    view.getComponent(ItemInfoUI).showItem(itemDatas, true, () => {
+                        this._contentView.active = true;
+                    });
+                }
             }
             return showTip;
         }

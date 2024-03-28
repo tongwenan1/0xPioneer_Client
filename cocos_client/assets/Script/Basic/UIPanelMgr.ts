@@ -22,6 +22,10 @@ export default class UIPanelManger {
         const nd = this._uiMap.get(name);
         return nd && nd.isValid ? nd : null;
     }
+    public getHUDPanel(name: string) {
+        const nd = this._hudQueue.find(nd => nd.name == name);
+        return nd && nd.isValid ? nd : null;
+    }
 
     public removePanelByNode(node: Node) {
         for (const [key, value] of this._uiMap) {
@@ -88,6 +92,7 @@ export default class UIPanelManger {
                 this._uiMap.set(name, nd);
 
             } else if (rootView == this._hudRootView) {
+                nd.name = name;
                 this._hudQueue.push(nd);
             }
             return nd;

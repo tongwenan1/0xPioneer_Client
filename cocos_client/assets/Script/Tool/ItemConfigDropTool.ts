@@ -1,11 +1,10 @@
 import DropConfig from "../Config/DropConfig";
-import { GetPropData, ItemConfigType, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { GetPropData, ItemConfigType } from "../Const/ConstDefine";
 import { UIName } from "../Const/ConstUIDefine";
 import ArtifactData from "../Model/ArtifactData";
 import ItemData from "../Model/ItemData";
 import { ArtifactInfoUI } from "../UI/ArtifactInfoUI";
 import { ItemInfoUI } from "../UI/ItemInfoUI";
-import { ResourceGettedView } from "../UI/View/ResourceGettedView";
 import { ArtifactMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import CommonTools from "./CommonTools";
 
@@ -45,10 +44,23 @@ export default class ItemConfigDropTool {
                 artifacts.push(tempArtifact);
             }
         }
+        console.log("exce datas: " + JSON.stringify(datas));
+        console.log("exce items:" + JSON.stringify(items));
+        console.log("exce artifacts:" + JSON.stringify(artifacts));
         if (items.length > 0) {
             ItemMgr.addItem(items);
             if (showDialog) {
-                this.showItemGetted(items);
+                setTimeout(async () => {
+                    if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
+                        UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
+                        UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...items);
+                    } else {
+                        const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                        if (view != null) {
+                            view.getComponent(ItemInfoUI).showItem(items, true);
+                        }
+                    }
+                });
             }
         }
         if (artifacts.length > 0) {
@@ -93,56 +105,5 @@ export default class ItemConfigDropTool {
             resultReward = CommonTools.weightedRandomValue(items, weights);
         }
         return resultReward;
-    }
-
-    public static showItemGetted(items: ItemData[], closeCallback: () => void = null) {
-        setTimeout(async () => {
-            if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
-                UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
-                UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...items);
-            } else {
-                const resourceItems = [];
-                const otherItems = [];
-                for (const item of items) {
-                    if (this.checkItemIsResource(item.itemConfigId)) {
-                        resourceItems.push(item);
-                    } else {
-                        otherItems.push(item);
-                    }
-                }
-                if (resourceItems.length > 0) {
-                    let view = UIPanelMgr.getPanel(UIName.ResourceGettedView);
-                    if (view == null) {
-                        view = await UIPanelMgr.openPanel(UIName.ResourceGettedView);
-                    }
-                    if (view != null) {
-                        view.getComponent(ResourceGettedView).showTip(resourceItems);
-                    }
-                }
-                if (otherItems.length > 0) {
-                    const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
-                    if (view != null) {
-                        view.getComponent(ItemInfoUI).showItem(otherItems, true, () => {
-                            if (closeCallback != null) {
-                                closeCallback();
-                            }
-                        });
-                    }
-                } else {
-                    if (closeCallback != null) {
-                        closeCallback();
-                    }
-                }
-            }
-        });
-    }
-
-    public static checkItemIsResource(itemId: string) {
-        return itemId == ResourceCorrespondingItem.Energy ||
-            itemId == ResourceCorrespondingItem.Food ||
-            itemId == ResourceCorrespondingItem.Gold ||
-            itemId == ResourceCorrespondingItem.Stone ||
-            itemId == ResourceCorrespondingItem.Troop ||
-            itemId == ResourceCorrespondingItem.Wood
     }
 }

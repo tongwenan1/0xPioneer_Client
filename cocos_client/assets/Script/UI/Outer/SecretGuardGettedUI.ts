@@ -5,7 +5,6 @@ import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
 import { ItemInfoUI } from '../ItemInfoUI';
 import { ArtifactInfoUI } from '../ArtifactInfoUI';
-import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 const { ccclass, property } = _decorator;
 
 @ccclass('SecretGuardGettedUI')
@@ -47,7 +46,10 @@ export class SecretGuardGettedUI extends ViewController {
             .call(async () => {
                 UIPanelMgr.removePanelByNode(this.node);
                 if (UserInfoMgr.afterCivilizationClosedShowItemDatas.length > 0) {
-                    ItemConfigDropTool.showItemGetted(UserInfoMgr.afterCivilizationClosedShowItemDatas);
+                    const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                    if (view != null) {
+                        view.getComponent(ItemInfoUI).showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas, true);
+                    }
                     UserInfoMgr.afterCivilizationClosedShowItemDatas = [];
                 }
                 if (UserInfoMgr.afterCivilizationClosedShowArtifactDatas.length > 0) {
