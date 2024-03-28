@@ -1,5 +1,6 @@
 export enum UIName {
     HUDView = "ui/HUDView",
+    ResourceGettedView = "ui/ResourceGettedView",
 
     MainUI = "ui/MainUI",
     RookieGuide = "ui/RookieGuide",

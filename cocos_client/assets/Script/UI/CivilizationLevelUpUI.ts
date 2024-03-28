@@ -12,6 +12,7 @@ import { ItemInfoUI } from './ItemInfoUI';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { LvlupConfigData } from '../Const/Lvlup';
+import ItemConfigDropTool from '../Tool/ItemConfigDropTool';
 const { ccclass, property } = _decorator;
 
 @ccclass('CivilizationLevelUpUI')
@@ -199,10 +200,7 @@ export class CivilizationLevelUpUI extends ViewController {
             UserInfoMgr.afterCivilizationClosedShowPioneerDatas = [];
         } else {
             if (UserInfoMgr.afterCivilizationClosedShowItemDatas.length > 0) {
-                const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
-                if (view != null) {
-                    view.getComponent(ItemInfoUI).showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas, true);
-                }
+                ItemConfigDropTool.showItemGetted(UserInfoMgr.afterCivilizationClosedShowItemDatas);
                 UserInfoMgr.afterCivilizationClosedShowItemDatas = [];
             }
             if (UserInfoMgr.afterCivilizationClosedShowArtifactDatas.length > 0) {

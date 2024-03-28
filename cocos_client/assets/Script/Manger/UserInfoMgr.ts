@@ -742,17 +742,7 @@ export default class UserInfoMgr {
                 }
                 if (addItems.length > 0) {
                     ItemMgr.addItem(addItems);
-                    setTimeout(async () => {
-                        if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
-                            UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
-                            this.afterCivilizationClosedShowItemDatas.push(...addItems);
-                        } else {
-                            const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
-                            if (view != null) {
-                                view.getComponent(ItemInfoUI).showItem(addItems, true);
-                            }
-                        }
-                    });
+                    ItemConfigDropTool.showItemGetted(addItems);
                 }
             }
 

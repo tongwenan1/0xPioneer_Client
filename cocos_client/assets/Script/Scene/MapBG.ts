@@ -742,14 +742,14 @@ export class MapBG extends Component {
 
             this._actionView.show(setWorldPosition, actionType, movePaths.length, (useActionType: number, costEnergy: number) => {
                 this["_actionViewActioned"] = true;
-                if (costEnergy > 0) {
-                    const ownEnergy: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Energy);
-                    if (ownEnergy < costEnergy) {
-                        UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
-                        return;
-                    }
-                    ItemMgr.subItem(ResourceCorrespondingItem.Energy, costEnergy);
-                }
+                // if (costEnergy > 0) {
+                //     const ownEnergy: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Energy);
+                //     if (ownEnergy < costEnergy) {
+                //         UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
+                //         return;
+                //     }
+                //     ItemMgr.subItem(ResourceCorrespondingItem.Energy, costEnergy);
+                // }
                 if (useActionType == 6) {
                     // cancel camp
                     PioneerMgr.pioneerToIdle(currentActionPioneer.id);
