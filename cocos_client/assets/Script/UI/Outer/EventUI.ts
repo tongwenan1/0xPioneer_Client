@@ -1,6 +1,6 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import { EventName, ItemConfigType } from '../../Const/ConstDefine';
-import { BranchEventMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import ItemData from '../../Model/ItemData';
 import { ItemType } from '../../Const/Model/ItemModelDefine';
@@ -10,6 +10,9 @@ import { ItemInfoUI } from '../ItemInfoUI';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
 import { CountType } from '../../Const/Count';
+import EventConfig from '../../Config/EventConfig';
+import { EventConfigData } from '../../Const/Event';
+import GlobalData from '../../Data/GlobalData';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -28,7 +31,7 @@ export class EventUI extends ViewController {
     private _eventBuildingId: string = null;
     private _temporaryAttributes: Map<string, MapPioneerAttributesChangeModel> = new Map();
     private _fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => void = null;
-    private _dealWithNextEvent: (event: any) => void = null;
+    private _dealWithNextEvent: (event: EventConfigData) => void = null;
 
     private _event: any = null;
 
@@ -351,8 +354,8 @@ export class EventUI extends ViewController {
 
     private _nextEvent(eventId: string) {
         // console.log(`_nextEvent, current: ${this._event.id}, next: ${eventId}`);
-        BranchEventMgr.latestActiveEventState.prevEventId = this._event.id;
-        BranchEventMgr.latestActiveEventState.eventId = eventId;
+        GlobalData.latestActiveEventState.prevEventId = this._event.id;
+        GlobalData.latestActiveEventState.eventId = eventId;
 
         if (eventId == "-1" ||
             eventId == "-2") {
@@ -396,12 +399,12 @@ export class EventUI extends ViewController {
             // UIHUDController.showCenterTip("Event Ended");
             UIPanelMgr.removePanelByNode(this.node);
         } else {
-            const event = BranchEventMgr.getEventById(eventId);
-            if (event.length > 0) {
-                BuildingMgr.changeBuildingEventId(this._eventBuildingId, event[0].id);
+            const event = EventConfig.getById(eventId);
+            if (event != null) {
+                BuildingMgr.changeBuildingEventId(this._eventBuildingId, event.id);
                 UIPanelMgr.removePanelByNode(this.node);
                 if (this._dealWithNextEvent != null) {
-                    this._dealWithNextEvent(event[0]);
+                    this._dealWithNextEvent(event);
                 }
             }
         }
@@ -412,7 +415,7 @@ export class EventUI extends ViewController {
         const eventId = customEventData;
         const hasNextStep = eventId != "-1";
         // console.log(`eventStepEnd, source: onTapNext, eventId: ${this._event.id}, next: ${eventId}`);
-        BranchEventMgr.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
+        NotificationMgr.triggerEvent(EventName.Event_StepEnd, [this._event.id, hasNextStep]);
 
         this._nextEvent(eventId);
     }
@@ -430,15 +433,12 @@ export class EventUI extends ViewController {
                 if (succeed) {
 
                 } else {
-                    const event = BranchEventMgr.getEventById(eventId);
-                    if (event.length > 0) {
-                        eventId = event[0].result;
-                    }
+                    eventId = EventConfig.getById(eventId);
                 }
                 if (this._event) {
                     const hasNextStep = eventId != null && eventId != -1 && eventId != -2;
                     // console.log(`eventStepEnd, source: onTapFight, eventId: ${this._event.id}, next: ${eventId}`);
-                    BranchEventMgr.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
+                    NotificationMgr.triggerEvent(EventName.Event_StepEnd, [this._event.id, hasNextStep]);
                 }
                 if (eventId != null) {
                     this._nextEvent(eventId);
@@ -453,15 +453,15 @@ export class EventUI extends ViewController {
     private onTapSelect(actionEvent: Event, customEventData: string, use: string) {
         const datas = customEventData.split("|");
         const eventId = datas[0];
-        const event = BranchEventMgr.getEventById(eventId);
+        const event = EventConfig.getById(eventId);
 
         if (this._triggerPioneerId != null) {
             localStorage.setItem("local_event_last_title_" + this._triggerPioneerId, datas[1]);
         }
-        let hasNextStep = event.length > 0;
+        let hasNextStep = event != null;
 
         // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}, next: ${eventId}`);
-        BranchEventMgr.fireOnBranchEventStepEnd(this._event.id, hasNextStep);
+        NotificationMgr.triggerEvent(EventName.Event_StepEnd, [this._event.id, hasNextStep]);
 
         this._nextEvent(eventId);
     }

@@ -1,11 +1,11 @@
 import NotificationMgr from "../Basic/NotificationMgr";
 import ConfigConfig from "../Config/ConfigConfig";
+import EventConfig from "../Config/EventConfig";
 import { EventName } from "../Const/ConstDefine";
 import { BattleReportRecord, BattleReportType, BattleReportsEvent } from "../Const/Manager/BattleReportsMgrDefine";
-import { BranchEventMgrEvent } from "../Const/Manager/BrachEventMgrDefine";
-import { BranchEventMgr } from "../Utils/Global";
+import GlobalData from "../Data/GlobalData";
 
-export default class BattleReportsMgr implements BranchEventMgrEvent {
+export default class BattleReportsMgr {
     private _storage: BattleReportRecord[];
     private readonly LOCAL_STORAGE_KEY: string = 'local_battle_reports';
 
@@ -46,7 +46,7 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
     private _registerEvents() { 
         NotificationMgr.addListener(EventName.FIGHT_FINISHED, this.onFightFinished, this);
         NotificationMgr.addListener(EventName.MINING_FINISHED, this.onMiningFinished, this);
-        BranchEventMgr.addObserver(this);
+        NotificationMgr.addListener(EventName.Event_StepEnd, this.onEventStepEnd, this);
     }
 
     public deleteReadReports() {
@@ -103,9 +103,12 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
         this._pushReport(BattleReportType.Mining, args);
     }
 
-    onBranchEventStepEnd(currentEventId: string, hasNextStep: boolean): void {
+    private onEventStepEnd(args: any): void {
         // console.log(`onBranchEventStepEnd. eventId: ${currentEventId}, hasNext: ${hasNextStep}`);
 
+        const currentEventId: string = args[0];
+        const hasNextStep: boolean = args[1];
+        
         // change state of prev report.
         // not very strict association check it's ok cause we don't have parallel events for now.
         let prevReport: BattleReportRecord = null;
@@ -121,14 +124,14 @@ export default class BattleReportsMgr implements BranchEventMgrEvent {
             prevReport.data.nextStepFinished = true;
         }
 
-        const activeEventState = BranchEventMgr.latestActiveEventState;
+        const activeEventState = GlobalData.latestActiveEventState;
         this._pushReport(BattleReportType.Exploring, {
             pioneerId: activeEventState.pioneerId,
             eventId: currentEventId,
             buildingId: activeEventState.buildingId,
             hasNextStep: hasNextStep,
             nextStepFinished: false,
-            rewards: BranchEventMgr.getEventItemRewards(currentEventId),
+            rewards: EventConfig.getRewards(currentEventId),
         });
     }
     //#endregion

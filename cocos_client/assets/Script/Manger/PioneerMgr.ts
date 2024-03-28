@@ -4,7 +4,7 @@ import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
 import { GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { EventName } from "db://assets/Script/Const/ConstDefine";
-import { ArtifactMgr, BranchEventMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
+import { ArtifactMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
 import { PioneerMgrEvent } from "../Const/Manager/PioneerMgrDefine";
 import MapBuildingModel, { MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
 import { MapPioneerType, MapPioneerActionType, MapPioneerAttributesChangeModel, MapPioneerEventStatus, MapPioneerAttributesChangeType, MapPioneerLogicType } from "../Const/Model/MapPioneerModelDefine";
@@ -15,6 +15,8 @@ import { ArtifactEffectType } from "../Const/Artifact";
 import { BuildingFactionType, MapBuildingType } from "../Const/BuildingDefine";
 import { FinishedEvent } from "../Const/UserInfoDefine";
 import { CountType } from "../Const/Count";
+import { EventConfigData } from "../Const/Event";
+import EventConfig from "../Config/EventConfig";
 
 export default class PioneerMgr {
 
@@ -375,7 +377,7 @@ export default class PioneerMgr {
             this._savePioneerData();
         }
     }
-    public pioneerDealWithEvent(pioneerId: string, buildingId: string, currentEvent: any) {
+    public pioneerDealWithEvent(pioneerId: string, buildingId: string, currentEvent: EventConfigData) {
         const pioneer = this.getPioneerById(pioneerId);
         if (pioneer == null) {
             return;
@@ -1441,12 +1443,10 @@ export default class PioneerMgr {
                 }
             } else if (stayBuilding.type == MapBuildingType.event) {
                 if (pioneer.type == MapPioneerType.player) {
-                    let currentEvent = null;
-                    const findEvents = BranchEventMgr.getEventById(stayBuilding.eventId);
-                    if (findEvents.length > 0) {
-                        currentEvent = findEvents[0];
+                    let currentEvent = EventConfig.getById(stayBuilding.eventId);
+                    if (currentEvent != null) {
+                        this.pioneerDealWithEvent(pioneer.id, stayBuilding.id, currentEvent);
                     }
-                    this.pioneerDealWithEvent(pioneer.id, stayBuilding.id, currentEvent);
                 } else {
                     if (isStay) {
                         pioneer.actionType = MapPioneerActionType.idle;

@@ -1,6 +1,5 @@
 import af from "../Manger/ArtifactMgr";
 import br from "../Manger/BattleReportsMgr";
-import Be from "../Manger/BranchEventMgr";
 import bd from "../Manger/BuildingMgr";
 import ct from "../Manger/CountMgr";
 import ev from "../Manger/EvaluationMgr";
@@ -17,7 +16,6 @@ import uip from "../Basic/UIPanelMgr";
 import res from "../Basic/ResourcesMgr";
 
 const ArtifactMgr = new af();
-const BranchEventMgr = new Be();
 const BuildingMgr = new bd();
 const CountMgr = new ct();
 const EvaluationMgr = new ev();
@@ -39,7 +37,6 @@ export {
     LocalDataLoader,
     ArtifactMgr,
     BattleReportsMgr,
-    BranchEventMgr,
     BuildingMgr,
     CountMgr,
     EvaluationMgr,

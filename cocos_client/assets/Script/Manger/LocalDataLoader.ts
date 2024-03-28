@@ -4,6 +4,7 @@ import BoxInfoConfig from "../Config/BoxInfoConfig";
 import ConfigConfig from "../Config/ConfigConfig";
 import DropConfig from "../Config/DropConfig";
 import EvaluationConfig from "../Config/EvaluationConfig";
+import EventConfig from "../Config/EventConfig";
 import InnerBuildingConfig from "../Config/InnerBuildingConfig";
 import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
 import LanConfig from "../Config/LanConfig";
@@ -13,7 +14,6 @@ import {
     ArtifactMgr,
     AudioMgr,
     BattleReportsMgr,
-    BranchEventMgr,
     BuildingMgr,
     CountMgr,
     ItemMgr,
@@ -32,6 +32,7 @@ export default class LocalDataLoader {
         await ConfigConfig.init();
         await DropConfig.init();
         await EvaluationConfig.init();
+        await EventConfig.init();
         await LanConfig.init();
         await LvlupConfig.init();
         await InnerBuildingConfig.init();
@@ -45,7 +46,6 @@ export default class LocalDataLoader {
         await CountMgr.initData();
         await LanMgr.initData();
 
-        await BranchEventMgr.initData();
         await UserInfoMgr.initData();
         await BuildingMgr.initData();
         await TaskMgr.initData();

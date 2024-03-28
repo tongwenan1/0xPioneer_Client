@@ -31,6 +31,11 @@ export enum EventName {
      * Artifact
      */
     ARTIFACT_CHANGE = "ARTIFACT_CHANGE",
+
+    /**
+     * Event
+     */
+    Event_StepEnd = "EVENT_STEPEND",
 }
 
 export enum ResourceCorrespondingItem {

@@ -10,7 +10,7 @@ import { OuterMapCursorView } from './View/OuterMapCursorView';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
-import { ArtifactMgr, BranchEventMgr, BuildingMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, BuildingMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { MapPioneerLogicType, MapPioneerActionType, MapPioneerType, MapPioneerMoveDirection, MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import { MapResourceBuildingModel } from './Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerLogicModel, MapNpcPioneerModel } from './Model/MapPioneerModel';
@@ -28,6 +28,8 @@ import { BuildingFactionType } from '../../Const/BuildingDefine';
 import { UserInfoEvent, FinishedEvent } from '../../Const/UserInfoDefine';
 import TalkConfig from '../../Config/TalkConfig';
 import LvlupConfig from '../../Config/LvlupConfig';
+import EventConfig from '../../Config/EventConfig';
+import GlobalData from '../../Data/GlobalData';
 
 
 const { ccclass, property } = _decorator;
@@ -227,9 +229,9 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                             const allBuildings = BuildingMgr.getAllBuilding();
                             for (const building of allBuildings) {
                                 if (building.eventId == pioneer.actionEventId) {
-                                    const currentEvents = BranchEventMgr.getEventById(building.eventId);
-                                    if (currentEvents.length > 0) {
-                                        PioneerMgr.pioneerDealWithEvent(pioneer.id, building.id, currentEvents[0]);
+                                    const currentEvent = EventConfig.getById(building.eventId);
+                                    if (currentEvent != null) {
+                                        PioneerMgr.pioneerDealWithEvent(pioneer.id, building.id, currentEvent);
                                     }
                                     break;
                                 }
@@ -757,18 +759,18 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         }
     }
     async eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): Promise<void> {
-        BranchEventMgr.latestActiveEventState = {
+        GlobalData.latestActiveEventState = {
             pioneerId: actionPioneerId,
             buildingId: buildingId,
             eventId: eventId,
             prevEventId: null,
         }
 
-        const event = BranchEventMgr.getEventById(eventId);
-        if (event.length > 0) {
+        const event = EventConfig.getById(eventId);
+        if (event != null) {
             const view = await UIPanelMgr.openPanel(UIName.BrachEventUI);
             if (view != null) {
-                view.getComponent(EventUI).eventUIShow(actionPioneerId, buildingId, event[0], (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
+                view.getComponent(EventUI).eventUIShow(actionPioneerId, buildingId, event, (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
                     PioneerMgr.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
                 }, (nextEvent: any) => {
                     PioneerMgr.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);

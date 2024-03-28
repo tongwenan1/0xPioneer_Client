@@ -3,10 +3,11 @@ import CommonTools from "db://assets/Script/Tool/CommonTools";
 import MapHelper from "db://assets/Script/Utils/MapHelper";
 import {GameMain} from "db://assets/Script/GameMain";
 import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, LocationInfo } from '../Const/Manager/BattleReportsMgrDefine';
-import { BranchEventMgr, BuildingMgr, LanMgr, PioneerMgr, UIPanelMgr } from '../Utils/Global';
+import { BuildingMgr, LanMgr, PioneerMgr, UIPanelMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { LootsPopup } from './LootsPopup';
 import { UIHUDController } from './UIHUDController';
+import EventConfig from '../Config/EventConfig';
 
 const {ccclass, property} = _decorator;
 
@@ -230,13 +231,12 @@ export class BattleReportListItemUI extends Component {
     onClickBranchSelection() {
         const reportData = this.report.data;
         const building = BuildingMgr.getBuildingById(reportData.buildingId);
-        const findEvents = BranchEventMgr.getEventById(building.eventId);
-        if (findEvents.length == 0) {
+        const currentEvent = EventConfig.getById(building.eventId);
+        if (currentEvent == null) {
             UIHUDController.showCenterTip("Error");
             return;
         }
         UIPanelMgr.removePanel(UIName.BattleReportUI);
-        const currentEvent = findEvents[0];
         PioneerMgr.pioneerDealWithEvent(reportData.pioneerId, reportData.buildingId, currentEvent);
     }
 
