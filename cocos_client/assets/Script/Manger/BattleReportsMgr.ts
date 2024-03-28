@@ -67,7 +67,7 @@ export default class BattleReportsMgr {
     }
 
     private _autoDeleteWithMaxKeepRecords(save: boolean = true) {
-        const maxKeepRecords = ConfigConfig.getById("110002").para[0];
+        const maxKeepRecords = ConfigConfig.getBattleReportMaxKeepRecordsConfig().para[0];
         if (this._storage.length > maxKeepRecords) {
             console.log(`BattleReport: auto delete ${this._storage.length - maxKeepRecords} records, reason: maxKeepRecords`);
             this._storage = this._storage.slice(this._storage.length - maxKeepRecords);
@@ -78,7 +78,7 @@ export default class BattleReportsMgr {
     }
 
     private _autoDeleteWithMaxKeepDays(save: boolean = true) {
-        const maxKeepDays = ConfigConfig.getById("110000").para[0];
+        const maxKeepDays = ConfigConfig.getBattleReportMaxKeepDaysConfig().para[0];
         const expireBeforeThisTime = Date.now() - (maxKeepDays * 86400 * 1000);
         // find first index to keep.
         // requires data in array in ascending order

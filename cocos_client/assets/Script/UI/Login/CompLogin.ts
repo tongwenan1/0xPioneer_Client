@@ -3,6 +3,7 @@ import { Web3Helper } from '../../Game/MetaMask/EthHelper';
 import { md5 } from '../../Utils/Md5';
 import { LocalDataLoader, ResourcesMgr, UserInfoMgr } from '../../Utils/Global';
 import ConfigConfig from '../../Config/ConfigConfig';
+import { ConfigType } from '../../Const/Config';
 const { ccclass, property } = _decorator;
 
 @ccclass('CompLogin')
@@ -125,7 +126,7 @@ export class CompLogin extends Component {
             return;
         }
         let canEnter: boolean = false;
-        let config = ConfigConfig.getById("10002");
+        let config = ConfigConfig.getWhiteListConfig();
         if (config == null || config.para == null || config.para.length <= 0) {
             canEnter = true;
         } else {

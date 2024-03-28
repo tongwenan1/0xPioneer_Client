@@ -61,15 +61,6 @@ export class TestOuterPioneerController extends Component {
             // recover, set, task, getTaskDialogShow, etc
             PioneerMgr.recoverLocalState();
             // checkRookie
-            if (!UserInfoMgr.isFinishRookie) {
-                const actionPioneer = PioneerMgr.getCurrentPlayerPioneer();
-                const prophetess = PioneerMgr.getPioneerByName("prophetess");
-                if (actionPioneer != null && prophetess != null) {
-                    const paths = this.mapBG.getTiledMovePathByTiledPos(actionPioneer.stayPos, prophetess.stayPos);
-                    actionPioneer.purchaseMovingPioneerId = prophetess.id;
-                    PioneerMgr.pioneerBeginMove(actionPioneer.id, paths);
-                }
-            }
         }
     }
 

@@ -5,6 +5,7 @@ import { EventName } from '../Const/ConstDefine';
 import { LocalDataLoader } from '../Utils/Global';
 import NotificationMgr from '../Basic/NotificationMgr';
 import ConfigConfig from '../Config/ConfigConfig';
+import { ConfigType } from '../Const/Config';
 const { ccclass, property } = _decorator;
 
 @ccclass('TestMapBG')
@@ -109,7 +110,7 @@ export class TestMapBG extends Component {
         this.node.on(Node.EventType.MOUSE_WHEEL, (event: cc.EventMouse) => {
             let sc = thisptr.node.parent.scale.x;
 
-            const useConf = ConfigConfig.getById("10001");
+            const useConf = ConfigConfig.getMapScaleConfig();
             if (useConf == null) return;
 
             if (event.getScrollY() > 0) {

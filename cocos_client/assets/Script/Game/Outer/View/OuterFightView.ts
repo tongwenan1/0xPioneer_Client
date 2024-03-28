@@ -28,26 +28,6 @@ export class OuterFightView extends Component {
         defenderView.getChildByPath("Hp/Value").getComponent(Label).string = selfInfo.hp.toString();
     }
 
-    public showResult(isWin: boolean, callback: ()=> void = null) {
-        const winView = this.node.getChildByName("FightWin");
-        const failView = this.node.getChildByName("FightFail");
-
-        const animView = isWin ? winView : failView;
-        animView.active = true;
-        animView.setPosition(v3(0, 100, 0));
-        tween()
-            .target(animView)
-            .delay(0.1)
-            .to(0.4, { position: v3(0, 160, 0) })
-            .delay(0.2)
-            .call(() => {
-                if (callback != null) {
-                    callback();
-                }
-            })
-            .start();
-    }
-
     start() {
 
     }

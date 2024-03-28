@@ -30,6 +30,7 @@ import TalkConfig from '../../Config/TalkConfig';
 import LvlupConfig from '../../Config/LvlupConfig';
 import EventConfig from '../../Config/EventConfig';
 import GlobalData from '../../Data/GlobalData';
+import { OuterFightResultView } from './View/OuterFightResultView';
 
 
 const { ccclass, property } = _decorator;
@@ -109,6 +110,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
     @property(Prefab)
     private fightPrefab: Prefab;
+    @property(Prefab)
+    private fightResultPrefab: Prefab;
 
     @property(Prefab)
     private footPathPrefab: Prefab;
@@ -179,13 +182,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                         this._pioneerMap.get(actionPioneer.id).getComponent(MapPioneer).refreshUI(actionPioneer);
                     }
                 }
-
-                // const prophetess = PioneerMgr.getPioneerByName("prophetess");
-                // if (actionPioneer != null && prophetess != null) {
-                //     const paths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(actionPioneer.stayPos, prophetess.stayPos);
-                //     actionPioneer.purchaseMovingPioneerId = prophetess.id;
-                //     PioneerMgr.pioneerBeginMove(actionPioneer.id, paths);
-                // }
             }
         }
     }
@@ -358,7 +354,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         // default speed
         let defaultSpeed = 180;
 
-        // defaultSpeed = 600;
+        defaultSpeed = 600;
         const allPioneers = PioneerMgr.getAllPioneer();
 
         // artifact effect
@@ -660,10 +656,14 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     endFight(fightId: string, isEventFight: boolean, isDeadPionner: boolean, deadId: string, isPlayerWin: boolean, playerPioneerId: string): void {
         //fightview destroy
         if (this._fightViewMap.has(fightId)) {
-            const currentFightView = this._fightViewMap.get(fightId);
-            currentFightView.showResult(isPlayerWin, () => {
-                currentFightView.node.destroy();
+            const fightView = this._fightViewMap.get(fightId);
+            const resultView = instantiate(this.fightResultPrefab);
+            resultView.setParent(fightView.node.parent);
+            resultView.position = fightView.node.position;
+            resultView.getComponent(OuterFightResultView).showResult(isPlayerWin, ()=> {
+                resultView.destroy();
             });
+            fightView.node.destroy();
             this._fightViewMap.delete(fightId);
         }
 
@@ -801,7 +801,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             targetMapPos = logic.patrolTargetPos;
         }
         if (targetMapPos != null) {
-            PioneerMgr.pioneerBeginMove(pioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, targetMapPos));
+            PioneerMgr.pioneerBeginMove(pioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, targetMapPos).path);
         }
     }
     pioneerLogicMovePathPrepared(pioneer: MapPioneerModel, logic: MapPioneerLogicModel) {
@@ -813,7 +813,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 }
                 this._actionPioneerFootStepViews = null;
             }
-            const movePaths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, logic.patrolTargetPos);
+            const movePaths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, logic.patrolTargetPos).path;
             const path = [];
             for (const temple of movePaths) {
                 path.push(temple);

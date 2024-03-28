@@ -97,7 +97,7 @@ export class SettlementView extends Component {
             }
             this._pioneerItem.parent.getComponent(Layout).updateLayout();
         } else {
-            leftContent.getChildByName("NewPioneer").active = false;
+            rightContent.getChildByName("NewPioneer").active = false;
         }
 
         const evaluation = EvaluationMgr.getEvaluation(model.newPioneerIds.length, model.killEnemies, model.gainResources, model.exploredEvents);

@@ -212,48 +212,29 @@ export default class PioneerMgr {
     public pioneerBeginMove(pioneerId: string, paths: TilePos[]) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
-            findPioneer.actionType = MapPioneerActionType.moving;
-            findPioneer.movePaths = paths;
-            if (findPioneer.purchaseMovingPioneerId != null) {
-                findPioneer.movePaths.pop();
-
-            } else if (findPioneer.purchaseMovingBuildingId != null) {
-                const findBuilding = BuildingMgr.getBuildingById(findPioneer.purchaseMovingBuildingId);
-                if (findBuilding != null) {
-                    const templeStayPositions = findBuilding.stayMapPositions.slice();
-                    for (let i = findPioneer.movePaths.length - 1; i >= 0; i--) {
-                        let isExit: boolean = false;
-                        for (let j = 0; j < templeStayPositions.length; j++) {
-                            if (templeStayPositions[j].x == findPioneer.movePaths[i].x &&
-                                templeStayPositions[j].y == findPioneer.movePaths[i].y) {
-                                isExit = true;
-                                templeStayPositions.splice(j, 1);
-                                break;
-                            }
-                        }
-                        if (isExit) {
-                            findPioneer.movePaths.splice(i, 1);
-                        }
-                        if (templeStayPositions.length == 0) {
-                            break;
-                        }
+            if (paths.length > 0) {
+                findPioneer.actionType = MapPioneerActionType.moving;
+                findPioneer.movePaths = paths;
+                
+                for (const observer of this._observers) {
+                    observer.pioneerActionTypeChanged(pioneerId, MapPioneerActionType.moving, 0);
+                }
+                let needFootPath: boolean = false;
+                for (const temple of this.getPlayerPioneer()) {
+                    if (temple.id == pioneerId) {
+                        needFootPath = true;
+                        break;
                     }
                 }
-            }
-            for (const observer of this._observers) {
-                observer.pioneerActionTypeChanged(pioneerId, MapPioneerActionType.moving, 0);
-            }
-            let needFootPath: boolean = false;
-            for (const temple of this.getPlayerPioneer()) {
-                if (temple.id == pioneerId) {
-                    needFootPath = true;
-                    break;
+                if (needFootPath) {
+                    for (const observe of this._observers) {
+                        observe.playerPioneerShowMovePath(pioneerId, paths);
+                    }
                 }
-            }
-            if (needFootPath) {
-                for (const observe of this._observers) {
-                    observe.playerPioneerShowMovePath(pioneerId, paths);
-                }
+            } else {
+                findPioneer.actionType = MapPioneerActionType.idle;
+                this._savePioneerData();
+                this._pioneerActionTypeChangedByMeetTrigger(findPioneer);
             }
         }
     }

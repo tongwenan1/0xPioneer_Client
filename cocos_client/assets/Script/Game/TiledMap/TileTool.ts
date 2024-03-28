@@ -574,7 +574,6 @@ export class TileMapHelper {
      * @param from 
      * @param to 
      * @param limitstep 
-     * @param forceMove force move, can ignore block 
      * @returns move path, if is only one pos from, cannot move to toPos
      */
     Path_FromTo(from: TilePos, to: TilePos, limitstep = 100): TilePos[] {

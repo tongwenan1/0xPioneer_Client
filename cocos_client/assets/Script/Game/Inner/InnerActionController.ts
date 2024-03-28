@@ -4,6 +4,7 @@ import { GameMain } from "../../GameMain";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { EventName } from "../../Const/ConstDefine";
 import ConfigConfig from "../../Config/ConfigConfig";
+import { ConfigType, MapScaleConfigData } from "../../Const/Config";
 
 const { ccclass, property } = _decorator;
 
@@ -50,7 +51,7 @@ export default class InnerActionController extends ViewController {
 
         this.node.on(Node.EventType.MOUSE_WHEEL, (event: EventMouse) => {
             let sc = this._curCameraZoom;
-            let config = ConfigConfig.getById("10001");
+            let config = ConfigConfig.getMapScaleConfig();
             if (config == null) return;
             if (event.getScrollY() > 0) {
                 sc -= 0.05;

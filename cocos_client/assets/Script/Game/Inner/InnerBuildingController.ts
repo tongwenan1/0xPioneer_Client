@@ -28,8 +28,7 @@ export class InnerBuildingController extends ViewController {
 
     protected viewDidAppear(): void {
         super.viewDidAppear();
-
-
+        this._refreshBuilding();
     }
 
     protected viewDidDisAppear(): void {

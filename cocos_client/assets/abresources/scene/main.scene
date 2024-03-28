@@ -1758,6 +1758,10 @@
       "__uuid__": "fe6a4e1c-56e8-4174-b489-ffb1fca372f7",
       "__expectedType__": "cc.Prefab"
     },
+    "fightResultPrefab": {
+      "__uuid__": "5e4518e8-3a50-408a-a438-1d7e489fd931",
+      "__expectedType__": "cc.Prefab"
+    },
     "footPathPrefab": {
       "__uuid__": "212051bc-e6f1-4f53-95a7-0800945bb19b",
       "__expectedType__": "cc.Prefab"
@@ -22005,27 +22009,12 @@
     "__type__": "25885ASmp5LTZOyjVVb2eHC",
     "_name": "",
     "_objFlags": 0,
+    "__editorExtras__": {},
     "node": {
       "__id__": 75
     },
     "_enabled": true,
     "__prefab": null,
-    "mainCityPrb": {
-      "__uuid__": "f91100fc-f5ee-4799-bbb5-2c4e6a17172c",
-      "__expectedType__": "cc.Prefab"
-    },
-    "barracksPrb": {
-      "__uuid__": "193b8c90-3676-49cc-af3a-7dbee7be3df3",
-      "__expectedType__": "cc.Prefab"
-    },
-    "housePrb": {
-      "__uuid__": "07d15105-f274-49dd-95e1-2dc22f5d335d",
-      "__expectedType__": "cc.Prefab"
-    },
-    "energyStationPrb": {
-      "__uuid__": "5078a262-2a3d-423a-921f-198a56562490",
-      "__expectedType__": "cc.Prefab"
-    },
     "_id": "6cyO1tSRxMjb1CS0W/ghlS"
   },
   {

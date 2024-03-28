@@ -1,5 +1,5 @@
 import { resources } from "cc";
-import { ConfigConfigData } from "../Const/Config";
+import { BattleReportMaxKeepDaysConfigData, BattleReportMaxKeepRecordsConfigData, ConfigConfigData, ConfigType, MapScaleConfigData, OneStepCostEnergyConfigData } from "../Const/Config";
 import CLog from "../Utils/CLog";
 
 export default class ConfigConfig {
@@ -27,9 +27,25 @@ export default class ConfigConfig {
         return true;
     }
 
-    public static getById(configId: string): ConfigConfigData | null {
+    public static getMapScaleConfig(): MapScaleConfigData {
+        return this.getById(ConfigType.MapScaleMaxAndMin) as MapScaleConfigData;
+    }
+    public static getWhiteListConfig(): ConfigConfigData {
+        return this.getById(ConfigType.LoginWhiteList);
+    }
+    public static getEnergyCostConfig(): OneStepCostEnergyConfigData {
+        return this.getById(ConfigType.OneStepCostEnergy) as OneStepCostEnergyConfigData;
+    }
+    public static getBattleReportMaxKeepDaysConfig(): BattleReportMaxKeepDaysConfigData {
+        return this.getById(ConfigType.BattleReportMaxKeepDays) as BattleReportMaxKeepDaysConfigData;
+    }
+    public static getBattleReportMaxKeepRecordsConfig(): BattleReportMaxKeepRecordsConfigData {
+        return this.getById(ConfigType.BattleReportMaxKeepRecords) as BattleReportMaxKeepRecordsConfigData;
+    }
+
+    private static getById(configType: ConfigType): ConfigConfigData {
         const findConf = this._confs.filter((conf) => {
-            return conf.id === configId;
+            return conf.id === configType;
         });
         if (findConf.length > 0) {
             return findConf[0];
