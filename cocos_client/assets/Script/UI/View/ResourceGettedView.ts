@@ -1,8 +1,9 @@
 import { _decorator, Component, Details, instantiate, Label, Layout, Node, tween, UIOpacity, v3 } from "cc";
 import ViewController from "../../BasicView/ViewController";
-import ItemData from "../../Model/ItemData";
 import { ResourceCorrespondingItem } from "../../Const/ConstDefine";
 import { ItemMgr, LanMgr, UIPanelMgr } from "../../Utils/Global";
+import ItemConfig from "../../Config/ItemConfig";
+import ItemData from "../../Const/Item";
 
 const { ccclass, property } = _decorator;
 
@@ -15,7 +16,7 @@ export class ResourceGettedView extends ViewController {
             delayTime = gapTime;
         }
         for (const item of items) {
-            const config = ItemMgr.getItemConf(item.itemConfigId);
+            const config = ItemConfig.getById(item.itemConfigId);
             if (config == null) {
                 continue;
             }

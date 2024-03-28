@@ -1,8 +1,8 @@
 import DropConfig from "../Config/DropConfig";
 import { GetPropData, ItemConfigType } from "../Const/ConstDefine";
 import { UIName } from "../Const/ConstUIDefine";
+import ItemData from "../Const/Item";
 import ArtifactData from "../Model/ArtifactData";
-import ItemData from "../Model/ItemData";
 import { ArtifactInfoUI } from "../UI/ArtifactInfoUI";
 import { ItemInfoUI } from "../UI/ItemInfoUI";
 import { ArtifactMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";

@@ -33,6 +33,11 @@ export enum EventName {
     ARTIFACT_CHANGE = "ARTIFACT_CHANGE",
 
     /**
+     * Item
+     */
+    ITEM_CHANGE = "ITEM_CHANGE",
+
+    /**
      * Event
      */
     Event_StepEnd = "EVENT_STEPEND",
@@ -85,7 +90,7 @@ export const enum ECursorStyle {
 }
 
 export interface GetPropData {
-    type: number,
+    type: ItemConfigType,
     propId: string,
     num: number
 }

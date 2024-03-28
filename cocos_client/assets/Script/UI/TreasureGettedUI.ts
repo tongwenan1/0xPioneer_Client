@@ -4,13 +4,14 @@ import CommonTools from '../Tool/CommonTools';
 import { GetPropRankColor, ItemConfigType } from '../Const/ConstDefine';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
-import ItemData from '../Model/ItemData';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import { ItemSelectFromThreeUI } from './ItemSelectFromThreeUI';
 import ArtifactConfig from '../Config/ArtifactConfig';
 import DropConfig from '../Config/DropConfig';
 import ItemConfigDropTool from '../Tool/ItemConfigDropTool';
+import ItemConfig from '../Config/ItemConfig';
+import ItemData from '../Const/Item';
 const { ccclass, property } = _decorator;
 
 @ccclass('TreasureGettedUI')
@@ -66,7 +67,7 @@ export class TreasureGettedUI extends ViewController {
                     let rank: number = 0;
                     if (dropResultProp.type == ItemConfigType.Item) {
                         //item
-                        let itemConf = ItemMgr.getItemConf(dropResultProp.propId);
+                        let itemConf = ItemConfig.getById(dropResultProp.propId);
                         if (itemConf) {
                             iconspr.spriteFrame = await ItemMgr.getItemIcon(itemConf.icon);
                             rank = itemConf.grade;

@@ -3,7 +3,6 @@ import { GameMain } from '../GameMain';
 import { EventName, ItemConfigType } from '../Const/ConstDefine';
 import { SettlementView } from './View/SettlementView';
 import ArtifactData from '../Model/ArtifactData';
-import ItemData from '../Model/ItemData';
 import { ArtifactItem } from './ArtifactItem';
 import { BackpackItem } from './BackpackItem';
 import { LanMgr, UserInfoMgr, AudioMgr, UIPanelMgr } from '../Utils/Global';
@@ -12,6 +11,7 @@ import { UIHUDController } from './UIHUDController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { UserInfoEvent } from '../Const/UserInfoDefine';
 import LvlupConfig from '../Config/LvlupConfig';
+import ItemData from '../Const/Item';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfoUI')

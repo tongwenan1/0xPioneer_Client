@@ -1,3 +1,5 @@
+import { ItemConfigType } from "./ConstDefine";
+
 export interface LvlupConfigData {
     id: string;
     exp: number;
@@ -6,5 +8,5 @@ export interface LvlupConfigData {
     city_vision: number;
     city_feature: number;
     event_building: string[] | null;
-    reward: [number, string, number][] | null;
+    reward: [ItemConfigType, string, number][] | null;
 }

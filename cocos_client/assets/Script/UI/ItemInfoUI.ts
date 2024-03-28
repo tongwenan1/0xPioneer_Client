@@ -1,10 +1,10 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt } from 'cc';
 import { BackpackItem } from './BackpackItem';
 import { CountMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
-import { ItemType } from '../Const/Model/ItemModelDefine';
-import ItemData from '../Model/ItemData';
 import ViewController from '../BasicView/ViewController';
 import { CountType } from '../Const/Count';
+import ItemConfig from '../Config/ItemConfig';
+import ItemData, { ItemType } from '../Const/Item';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemInfoUI')
@@ -23,7 +23,7 @@ export class ItemInfoUI extends ViewController {
         // resource not show
         // remove all resource
         for (let i = 0; i < this._items.length; i++) {
-            const templeConfig = ItemMgr.getItemConf(this._items[i].itemConfigId);
+            const templeConfig = ItemConfig.getById(this._items[i].itemConfigId);
             if (templeConfig != null && templeConfig.itemType == ItemType.Resource) {
                 // resource no show
                 this._items.splice(i, 1);
@@ -33,7 +33,7 @@ export class ItemInfoUI extends ViewController {
         if (this._items.length > 0) {
             let currentItem: ItemData = this._items.splice(0, 1)[0];
             this._canGetItem = currentItem;
-            let currentConfig = ItemMgr.getItemConf(currentItem.itemConfigId);
+            let currentConfig = ItemConfig.getById(currentItem.itemConfigId);
             if (currentConfig != null) {
                 const contentView = this.node.getChildByName("__ViewContent");
                 // name 

@@ -1,7 +1,6 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ItemMgrEvent } from '../../Const/Manager/ItemMgrDefine';
 import { ArtifactMgr, ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
@@ -13,7 +12,7 @@ import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 const { ccclass } = _decorator;
 
 @ccclass('BuildingUpgradeUI')
-export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
+export class BuildingUpgradeUI extends ViewController {
 
     public refreshUI() {
         const buildingInfoView = this.node.getChildByPath("__ViewContent/BuildingInfoView");
@@ -58,14 +57,14 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
         this._levelInfoCostItem.active = false;
 
         NotificationMgr.addListener(EventName.CHANGE_LANG, this._onLangChang, this);
-        ItemMgr.addObserver(this);
+        NotificationMgr.addListener(EventName.ITEM_CHANGE, this.onItemChanged, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
         NotificationMgr.removeListener(EventName.CHANGE_LANG, this._onLangChang, this);
-        ItemMgr.removeObserver(this);
+        NotificationMgr.removeListener(EventName.ITEM_CHANGE, this.onItemChanged, this);
     }
     protected viewPopAnimation(): boolean {
         return true;
@@ -256,7 +255,7 @@ export class BuildingUpgradeUI extends ViewController implements ItemMgrEvent {
     }
 
     //------------------- ItemMgrEvent
-    itemChanged(): void {
+    onItemChanged(): void {
         this._refreshUpgradeUI(this._curBuildingType);
     }
 }

@@ -1,8 +1,8 @@
 import {_decorator, instantiate, Node, Prefab} from 'cc';
 import {BackpackItem} from './BackpackItem';
-import ItemData from "db://assets/Script/Model/ItemData";
 import ViewController from '../BasicView/ViewController';
 import { UIPanelMgr } from '../Utils/Global';
+import ItemData from '../Const/Item';
 
 const {ccclass, property} = _decorator;
 

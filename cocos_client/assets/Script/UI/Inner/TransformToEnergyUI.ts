@@ -8,7 +8,7 @@ import NotificationMgr from '../../Basic/NotificationMgr';
 import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 import { InnerBuildingType } from '../../Const/BuildingDefine';
 import { UserInfoNotification } from '../../Const/UserInfoDefine';
-import ItemData from '../../Model/ItemData';
+import ItemData from '../../Const/Item';
 const { ccclass, property } = _decorator;
 
 @ccclass('TransformToEnergyUI')

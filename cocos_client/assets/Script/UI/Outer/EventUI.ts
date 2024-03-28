@@ -2,8 +2,6 @@ import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout
 import { EventName, ItemConfigType } from '../../Const/ConstDefine';
 import { BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
-import ItemData from '../../Model/ItemData';
-import { ItemType } from '../../Const/Model/ItemModelDefine';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
 import { ItemInfoUI } from '../ItemInfoUI';
@@ -13,6 +11,8 @@ import { CountType } from '../../Const/Count';
 import EventConfig from '../../Config/EventConfig';
 import { EventConfigData } from '../../Const/Event';
 import GlobalData from '../../Data/GlobalData';
+import ItemData, { ItemType } from '../../Const/Item';
+import ItemConfig from '../../Config/ItemConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -248,7 +248,7 @@ export class EventUI extends ViewController {
                     temple.satisfy = true;
                 } else {
                     temple.satisfy = false;
-                    const itemConf = ItemMgr.getItemConf(id);
+                    const itemConf = ItemConfig.getById(id);
                     if (itemConf != null) {
                         // useLanMgr
                         temple.tipText = LanMgr.replaceLanById("207007", [num]) + LanMgr.getLanById(itemConf.itemName);
@@ -306,7 +306,7 @@ export class EventUI extends ViewController {
                     if (cost) {
                         for (const item of ItemMgr.localItemDatas) {
                             if (item.itemConfigId == id) {
-                                const itemConf = ItemMgr.getItemConf(id);
+                                const itemConf = ItemConfig.getById(id);
                                 ItemMgr.subItem(item.itemConfigId, num);
 
                                 // useLanMgr
@@ -318,7 +318,7 @@ export class EventUI extends ViewController {
                         }
                     } else {
                         itemDatas.push(new ItemData(id, num));
-                        const itemConf = ItemMgr.getItemConf(id);
+                        const itemConf = ItemConfig.getById(id);
                         // useLanMgr
                         showTip += LanMgr.replaceLanById("207009", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
                         // showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
@@ -333,7 +333,7 @@ export class EventUI extends ViewController {
 
             let hasItem: boolean = false;
             for (const item of itemDatas) {
-                const config = ItemMgr.getItemConf(item.itemConfigId);
+                const config = ItemConfig.getById(item.itemConfigId);
                 if (config != null && config.itemType != ItemType.Resource) {
                     hasItem = true;
                     break;

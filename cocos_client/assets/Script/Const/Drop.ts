@@ -1,5 +1,7 @@
+import { ItemConfigType } from "./ConstDefine";
+
 export interface DropConfigData {
     id: string;
     type: number;
-    drop_group: [number, number, number, string][];
+    drop_group: [ItemConfigType, number, number, string][];
 }

@@ -1,7 +1,8 @@
 import { _decorator, Component, Sprite, SpriteFrame, Node } from 'cc';
 import * as cc from "cc";
-import ItemData from '../Model/ItemData';
 import { ItemMgr } from '../Utils/Global';
+import ItemConfig from '../Config/ItemConfig';
+import ItemData from '../Const/Item';
 const { ccclass, property } = _decorator;
 
 @ccclass('BackpackItem')
@@ -12,7 +13,7 @@ export class BackpackItem extends Component {
             propView.active = false;
         } else {
             propView.active = true;
-            const config = ItemMgr.getItemConf(item.itemConfigId);
+            const config = ItemConfig.getById(item.itemConfigId);
             // levelBg
             for (let i = 1; i <= 5; i++) {
                 propView.getChildByName("Level" + i).active = i == config.grade;

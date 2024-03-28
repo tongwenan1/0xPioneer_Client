@@ -14,7 +14,6 @@ import { ArtifactMgr, BuildingMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, T
 import { MapPioneerLogicType, MapPioneerActionType, MapPioneerType, MapPioneerMoveDirection, MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import { MapResourceBuildingModel } from './Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerLogicModel, MapNpcPioneerModel } from './Model/MapPioneerModel';
-import ItemData from '../../Model/ItemData';
 import { OuterBuildingController } from './OuterBuildingController';
 import { UIName } from '../../Const/ConstUIDefine';
 import { DialogueUI } from '../../UI/Outer/DialogueUI';
@@ -31,6 +30,7 @@ import LvlupConfig from '../../Config/LvlupConfig';
 import EventConfig from '../../Config/EventConfig';
 import GlobalData from '../../Data/GlobalData';
 import { OuterFightResultView } from './View/OuterFightResultView';
+import ItemData from '../../Const/Item';
 
 
 const { ccclass, property } = _decorator;

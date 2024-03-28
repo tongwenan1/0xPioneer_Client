@@ -1,13 +1,47 @@
 import { SpriteFrame, resources, sys } from "cc";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import { ResourcesMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
-import { ItemArrangeType, ItemMgrEvent } from "../Const/Manager/ItemMgrDefine";
-import { ItemConfigData, ItemType } from "../Const/Model/ItemModelDefine";
-import ItemData from "../Model/ItemData";
-import { ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { EventName, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { FinishedEvent } from "../Const/UserInfoDefine";
+import CLog from "../Utils/CLog";
+import ItemConfig from "../Config/ItemConfig";
+import NotificationMgr from "../Basic/NotificationMgr";
+import ItemData, { ItemArrangeType, ItemType } from "../Const/Item";
 
 export default class ItemMgr {
+    private _maxItemLength: number = 100;
+    private _localStorageKey: string = "item_data";
+    private _localItemDatas: ItemData[] = [];
+
+    private _itemIconSpriteFrames = {};
+
+    public get itemIsFull(): boolean {
+        let count: number = 0;
+        for (const temple of this._localItemDatas) {
+            const itemConf = ItemConfig.getById(temple.itemConfigId);
+            if (itemConf != null && itemConf.itemType != ItemType.Resource) {
+                count += 1;
+            }
+        }
+        return count >= this._maxItemLength;
+    }
+    public get maxItemLength(): number {
+        return this._maxItemLength;
+    }
+    public get localItemDatas(): ItemData[] {
+        return this._localItemDatas;
+    }
+    public get localBackpackItemDatas(): ItemData[] {
+        return this._localItemDatas.filter((item) => {
+            const config = ItemConfig.getById(item.itemConfigId);
+            if (config == null) {
+                return false;
+            }
+            return config.itemType != ItemType.Resource;
+        });
+    }
+
+    public constructor() {}
 
     public async getItemIcon(iconName: string): Promise<SpriteFrame> {
         if (iconName in this._itemIconSpriteFrames) {
@@ -20,13 +54,21 @@ export default class ItemMgr {
         return this._itemIconSpriteFrames[iconName];
     }
 
-    public getItemConf(itemConfigId: string): ItemConfigData {
-        let key = itemConfigId;
-        if (key in this._itemConfs) {
-            return this._itemConfs[key];
+    public async initData() {
+        // load local item data
+        const jsonStr = sys.localStorage.getItem(this._localStorageKey);
+        if (jsonStr) {
+            try {
+                this._localItemDatas = JSON.parse(jsonStr);
+                return true;
+            } catch (e) {
+                CLog.error("ItemMgr initData error", e);
+                return false;
+            }
         }
-        return null;
+        return true;
     }
+
     public getOwnItemCount(itemConfigId: string): number {
         let count: number = 0;
         for (const item of this._localItemDatas) {
@@ -37,43 +79,16 @@ export default class ItemMgr {
         return count;
     }
 
-    public get maxItemLength(): number {
-        return this._maxItemLength;
-    }
-    public get itemIsFull(): boolean {
-        let count: number = 0;
-        for (const temple of this._localItemDatas) {
-            if (this.getItemConf(temple.itemConfigId).itemType != ItemType.Resource) {
-                count += 1;
-            }
-        }
-        return count >= this._maxItemLength;
-    }
-    public get localBackpackItemDatas(): ItemData[] {
-        return this._localItemDatas.filter((item) => {
-            const config = this.getItemConf(item.itemConfigId);
-            if (config == null) {
-                return false;
-            }
-            return config.itemType != ItemType.Resource;
-        });
-    }
-    public get localItemDatas(): ItemData[] {
-        return this._localItemDatas;
-    }
-
     public addItem(items: ItemData[]): void {
         if (items.length <= 0) {
             return;
         }
         let changed: boolean = false;
         for (const item of items) {
-            const itemConfig = this.getItemConf(item.itemConfigId);
+            const itemConfig = ItemConfig.getById(item.itemConfigId);
             if (itemConfig == null) {
-
             } else {
                 if (itemConfig.itemType == ItemType.Resource) {
-
                 } else if (this.itemIsFull) {
                     continue;
                 }
@@ -84,7 +99,7 @@ export default class ItemMgr {
                 }
                 // add timestamp
                 if (itemConfig.itemType == ItemType.Resource) {
-                    const exsitItems = this._localItemDatas.filter(v => v.itemConfigId == item.itemConfigId);
+                    const exsitItems = this._localItemDatas.filter((v) => v.itemConfigId == item.itemConfigId);
                     if (exsitItems.length > 0) {
                         exsitItems[0].count += item.count;
                         exsitItems[0].addTimeStamp = new Date().getTime();
@@ -93,9 +108,11 @@ export default class ItemMgr {
                         this._localItemDatas.push(item);
                     }
                     // settlementCount
-                    if (itemConfig.configId == ResourceCorrespondingItem.Food ||
+                    if (
+                        itemConfig.configId == ResourceCorrespondingItem.Food ||
                         itemConfig.configId == ResourceCorrespondingItem.Wood ||
-                        itemConfig.configId == ResourceCorrespondingItem.Stone) {
+                        itemConfig.configId == ResourceCorrespondingItem.Stone
+                    ) {
                         SettlementMgr.insertSettlement({
                             level: UserInfoMgr.level,
                             newPioneerIds: [],
@@ -106,7 +123,7 @@ export default class ItemMgr {
                             consumeTroops: 0,
                             gainEnergy: 0,
                             consumeEnergy: 0,
-                            exploredEvents: 0
+                            exploredEvents: 0,
                         });
                     } else if (itemConfig.configId == ResourceCorrespondingItem.Troop) {
                         SettlementMgr.insertSettlement({
@@ -119,7 +136,7 @@ export default class ItemMgr {
                             consumeTroops: 0,
                             gainEnergy: 0,
                             consumeEnergy: 0,
-                            exploredEvents: 0
+                            exploredEvents: 0,
                         });
                     } else if (itemConfig.configId == ResourceCorrespondingItem.Energy) {
                         SettlementMgr.insertSettlement({
@@ -132,10 +149,9 @@ export default class ItemMgr {
                             consumeTroops: 0,
                             gainEnergy: item.count,
                             consumeEnergy: 0,
-                            exploredEvents: 0
+                            exploredEvents: 0,
                         });
                     }
-
                 } else {
                     item.addTimeStamp = new Date().getTime();
                     this._localItemDatas.push(item);
@@ -143,12 +159,11 @@ export default class ItemMgr {
             }
         }
         if (changed) {
-            for (const observe of this._observers) {
-                observe.itemChanged();
-            }
             localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+            NotificationMgr.triggerEvent(EventName.ITEM_CHANGE);
         }
     }
+
     public subItem(itemConfigId: string, count: number): boolean {
         let idx = this._localItemDatas.findIndex((v) => {
             return v.itemConfigId == itemConfigId;
@@ -164,9 +179,11 @@ export default class ItemMgr {
 
         this._localItemDatas[idx].count -= count;
         // settlementCount
-        if (itemConfigId == ResourceCorrespondingItem.Food ||
+        if (
+            itemConfigId == ResourceCorrespondingItem.Food ||
             itemConfigId == ResourceCorrespondingItem.Wood ||
-            itemConfigId == ResourceCorrespondingItem.Stone) {
+            itemConfigId == ResourceCorrespondingItem.Stone
+        ) {
             SettlementMgr.insertSettlement({
                 level: UserInfoMgr.level,
                 newPioneerIds: [],
@@ -177,7 +194,7 @@ export default class ItemMgr {
                 consumeTroops: 0,
                 gainEnergy: 0,
                 consumeEnergy: 0,
-                exploredEvents: 0
+                exploredEvents: 0,
             });
         } else if (itemConfigId == ResourceCorrespondingItem.Troop) {
             SettlementMgr.insertSettlement({
@@ -190,7 +207,7 @@ export default class ItemMgr {
                 consumeTroops: count,
                 gainEnergy: 0,
                 consumeEnergy: 0,
-                exploredEvents: 0
+                exploredEvents: 0,
             });
         } else if (itemConfigId == ResourceCorrespondingItem.Energy) {
             SettlementMgr.insertSettlement({
@@ -203,18 +220,20 @@ export default class ItemMgr {
                 consumeTroops: 0,
                 gainEnergy: 0,
                 consumeEnergy: count,
-                exploredEvents: 0
+                exploredEvents: 0,
             });
         }
-        const itemConfig = this.getItemConf(itemConfigId);
+        const itemConfig = ItemConfig.getById(itemConfigId);
         if (itemConfig != null) {
             if (itemConfig.gain_item != null) {
                 if (itemConfig.gain_item.length == 3) {
-                    ItemConfigDropTool.getItemByConfig([{
-                        type: itemConfig.gain_item[0],
-                        propId: itemConfig.gain_item[1],
-                        num: itemConfig.gain_item[2],
-                    }]);
+                    ItemConfigDropTool.getItemByConfig([
+                        {
+                            type: itemConfig.gain_item[0],
+                            propId: itemConfig.gain_item[1],
+                            num: itemConfig.gain_item[2],
+                        },
+                    ]);
                 }
             }
         }
@@ -222,13 +241,12 @@ export default class ItemMgr {
         if (this._localItemDatas[idx].count <= 0) {
             this._localItemDatas.splice(idx, 1);
         }
-        for (const observe of this._observers) {
-            observe.itemChanged();
-        }
         localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+        NotificationMgr.triggerEvent(EventName.ITEM_CHANGE);
 
         return true;
     }
+
     public arrange(sortType: ItemArrangeType): void {
         // merge same item
         const singleItems: Map<string, ItemData> = new Map();
@@ -252,89 +270,18 @@ export default class ItemMgr {
             this._localItemDatas.sort((a, b) => {
                 return b.addTimeStamp - a.addTimeStamp;
             });
-
         } else if (sortType == ItemArrangeType.Rarity) {
             //bigger in front
             this._localItemDatas.sort((a, b) => {
-                return this.getItemConf(b.itemConfigId).grade - this.getItemConf(a.itemConfigId).grade;
+                return ItemConfig.getById(b.itemConfigId).grade - ItemConfig.getById(a.itemConfigId).grade;
             });
-
         } else if (sortType == ItemArrangeType.Type) {
             //smaller in front
             this._localItemDatas.sort((a, b) => {
-                return this.getItemConf(a.itemConfigId).itemType - this.getItemConf(b.itemConfigId).itemType;
+                return ItemConfig.getById(a.itemConfigId).itemType - ItemConfig.getById(b.itemConfigId).itemType;
             });
         }
-        for (const observe of this._observers) {
-            observe.itemChanged();
-        }
-    }
 
-    public addObserver(observer: ItemMgrEvent) {
-        this._observers.push(observer);
-    }
-    public removeObserver(observer: ItemMgrEvent) {
-        const index: number = this._observers.indexOf(observer);
-        if (index != -1) {
-            this._observers.splice(index, 1);
-        }
-    }
-
-    public async initData() {
-        await this._initData();
-    }
-
-
-
-
-
-    private _observers: ItemMgrEvent[] = [];
-    public constructor() {
-
-    }
-
-    private _maxItemLength: number = 100;
-    private _localStorageKey: string = "item_data";
-    private _localItemDatas: ItemData[] = [];
-
-    private _itemConfs = {};
-    private _itemIconSpriteFrames = {};
-    private async _initData() {
-        // read item config
-        const obj = await new Promise((resolve) => {
-            resources.load("data_local/itemconf", (err: Error, data: any) => {
-                if (err) {
-                    resolve(null);
-                    return;
-                }
-                resolve(data.json);
-            });
-        })
-        if (obj != null) {
-            // format config
-            let jsonObj = obj as object;
-
-            for (var id in jsonObj) {
-                let jd = jsonObj[id];
-                let d = new ItemConfigData();
-                for (var key in jd) {
-                    if (!d.hasOwnProperty(key)) {
-                        continue;
-                    }
-                    d[key] = jd[key];
-                }
-                d.configId = jd.id;
-                this._itemConfs[id] = d;
-            }
-        }
-
-        // load local item data
-        let jsonStr = localStorage.getItem(this._localStorageKey);
-        if (!jsonStr) {
-            this._localItemDatas = [];
-        }
-        else {
-            this._localItemDatas = JSON.parse(jsonStr);
-        }
+        NotificationMgr.triggerEvent(EventName.ITEM_CHANGE);
     }
 }

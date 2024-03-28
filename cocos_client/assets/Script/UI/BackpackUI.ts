@@ -1,18 +1,17 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
 import { BackpackItem } from './BackpackItem';
 import { EventName } from '../Const/ConstDefine';
-import { ItemArrangeType, ItemMgrEvent } from '../Const/Manager/ItemMgrDefine';
 import { ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
-import ItemData from '../Model/ItemData';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import { ItemInfoUI } from './ItemInfoUI';
 import NotificationMgr from '../Basic/NotificationMgr';
+import ItemData, { ItemArrangeType } from '../Const/Item';
 const { ccclass, property } = _decorator;
 
 
 @ccclass('BackpackUI')
-export class BackpackUI extends ViewController implements ItemMgrEvent {
+export class BackpackUI extends ViewController {
 
 
     @property(Prefab)
@@ -40,12 +39,11 @@ export class BackpackUI extends ViewController implements ItemMgrEvent {
         this._itemContent = this.node.getChildByPath("__ViewContent/Bg/ScrollView/View/Content");
 
         NotificationMgr.addListener(EventName.CHANGE_LANG, this._refreshBackpackUI, this);
+        NotificationMgr.addListener(EventName.ITEM_CHANGE, this._refreshBackpackUI, this);
     }
     
     protected viewDidStart(): void {
         super.viewDidStart();
-
-        ItemMgr.addObserver(this);
 
         this._allItemViews = [];
         for (let i = 0; i < ItemMgr.maxItemLength; i++) {
@@ -72,8 +70,8 @@ export class BackpackUI extends ViewController implements ItemMgrEvent {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        ItemMgr.removeObserver(this);
         NotificationMgr.removeListener(EventName.CHANGE_LANG, this._refreshBackpackUI, this);
+        NotificationMgr.removeListener(EventName.ITEM_CHANGE, this._refreshBackpackUI, this);
     }
 
     protected viewPopAnimation(): boolean {
@@ -163,11 +161,5 @@ export class BackpackUI extends ViewController implements ItemMgrEvent {
 
         this._selectSortMenuShow = false;
         this._refreshMenu();
-    }
-
-    //--------------------------------------
-    //ItemMgrEvent
-    itemChanged(): void {
-        this._refreshBackpackUI();
     }
 }

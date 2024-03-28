@@ -14,8 +14,7 @@ import { UIHUDController } from '../UI/UIHUDController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import ConfigConfig from '../Config/ConfigConfig';
 import { BuildingFactionType, MapBuildingType } from '../Const/BuildingDefine';
-import { ConfigType } from '../Const/Config';
-import ItemData from '../Model/ItemData';
+
 
 const { ccclass, property } = _decorator;
 

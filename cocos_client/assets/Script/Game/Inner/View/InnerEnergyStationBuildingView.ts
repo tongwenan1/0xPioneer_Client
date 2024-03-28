@@ -2,7 +2,6 @@ import { Label, Node, _decorator } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
 import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../../../Utils/Global";
-import ItemData from "../../../Model/ItemData";
 import { ResourceCorrespondingItem } from "../../../Const/ConstDefine";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
@@ -10,6 +9,7 @@ import { UserInfoNotification } from "../../../Const/UserInfoDefine";
 import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
 import { UIName } from "../../../Const/ConstUIDefine";
 import { TransformToEnergyUI } from "../../../UI/Inner/TransformToEnergyUI";
+import ItemData from "../../../Const/Item";
 
 const { ccclass, property } = _decorator;
 
