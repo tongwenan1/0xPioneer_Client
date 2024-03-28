@@ -7,6 +7,7 @@ import EvaluationConfig from "../Config/EvaluationConfig";
 import InnerBuildingConfig from "../Config/InnerBuildingConfig";
 import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
 import LanConfig from "../Config/LanConfig";
+import TalkConfig from "../Config/TalkConfig";
 import {
     ArtifactMgr,
     AudioMgr,
@@ -14,16 +15,13 @@ import {
     BranchEventMgr,
     BuildingMgr,
     CountMgr,
-    EvaluationMgr,
     ItemMgr,
     LanMgr,
     LvlupMgr,
     PioneerMgr,
-    TalkMgr,
     TaskMgr,
     UserInfoMgr,
 } from "../Utils/Global";
-
 
 export default class LocalDataLoader {
     public async loadLocalDatas() {
@@ -37,6 +35,7 @@ export default class LocalDataLoader {
         await LanConfig.init();
         await InnerBuildingConfig.init();
         await InnerBuildingLvlUpConfig.init();
+        await TalkConfig.init();
 
         this._loadStatus = 1;
         this._importSaveOnStartIfExists();
@@ -46,7 +45,6 @@ export default class LocalDataLoader {
         await LanMgr.initData();
 
         await BranchEventMgr.initData();
-        await TalkMgr.initData();
         await UserInfoMgr.initData();
         await BuildingMgr.initData();
         await TaskMgr.initData();
@@ -54,7 +52,7 @@ export default class LocalDataLoader {
         await ItemMgr.initData();
         await BattleReportsMgr.initData();
         await LvlupMgr.initData();
-        
+
         AudioMgr.prepareAudioSource();
         this._loadStatus = 2;
     }

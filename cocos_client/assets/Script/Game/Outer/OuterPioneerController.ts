@@ -10,7 +10,7 @@ import { OuterMapCursorView } from './View/OuterMapCursorView';
 import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
-import { ArtifactMgr, BranchEventMgr, BuildingMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, SettlementMgr, TalkMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, BranchEventMgr, BuildingMgr, ItemMgr, LanMgr, LvlupMgr, PioneerMgr, SettlementMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { MapPioneerLogicType, MapPioneerActionType, MapPioneerType, MapPioneerMoveDirection, MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import { MapResourceBuildingModel } from './Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerLogicModel, MapNpcPioneerModel } from './Model/MapPioneerModel';
@@ -26,6 +26,7 @@ import NotificationMgr from '../../Basic/NotificationMgr';
 import { ArtifactEffectType } from '../../Const/Artifact';
 import { BuildingFactionType } from '../../Const/BuildingDefine';
 import { UserInfoEvent, FinishedEvent } from '../../Const/UserInfoDefine';
+import TalkConfig from '../../Config/TalkConfig';
 
 
 const { ccclass, property } = _decorator;
@@ -406,7 +407,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
                 const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
                 if (dialog != null) {
-                    dialog.getComponent(DialogueUI).dialogShow(TalkMgr.getTalk("talk14"), null, () => {
+                    dialog.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), null, () => {
                         UserInfoMgr.isFinishRookie = true;
                         // init resource
                         ItemMgr.addItem([
@@ -638,7 +639,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         this._refreshUI();
     }
     async showGetTaskDialog(task: any): Promise<void> {
-        const talk = TalkMgr.getTalk(task.entrypoint.talk);
+        const talk = TalkConfig.getById(task.entrypoint.talk);
         const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
         if (dialog != null) {
             dialog.getComponent(DialogueUI).dialogShow(talk, task);
@@ -864,7 +865,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             PioneerMgr.dealWithTaskAction(action, delayTime);
 
         } else if (temp[0] == "talk") {
-            const talk = TalkMgr.getTalk(temp[1]);
+            const talk = TalkConfig.getById(temp[1]);
             const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
             if (dialog != null) {
                 dialog.getComponent(DialogueUI).dialogShow(talk, null);

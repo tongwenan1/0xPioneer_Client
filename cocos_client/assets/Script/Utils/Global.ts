@@ -10,7 +10,6 @@ import locad from "../Manger/LocalDataLoader";
 import lvl from "../Manger/LvlupMgr";
 import p from "../Manger/PioneerMgr";
 import s from "../Manger/SettlementMgr";
-import t from "../Manger/TalkMgr";
 import tk from "../Manger/TaskMgr";
 import user from "../Manger/UserInfoMgr";
 
@@ -29,7 +28,6 @@ const LocalDataLoader = new locad();
 const LvlupMgr = new lvl();
 const PioneerMgr = new p();
 const SettlementMgr = new s();
-const TalkMgr = new t();
 const TaskMgr = new tk();
 const UserInfoMgr = new user();
 const BattleReportsMgr = new br();
@@ -52,7 +50,6 @@ export {
     LvlupMgr,
     PioneerMgr,
     SettlementMgr,
-    TalkMgr,
     TaskMgr,
     UserInfoMgr,
 
