@@ -1,10 +1,10 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node } from 'cc';
 import CommonTools from '../Tool/CommonTools';
-import MapHelper from "db://assets/Script/Utils/MapHelper";
 import { BuildingMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
+import GameMainHelper from '../Game/Helper/GameMainHelper';
 
 const { ccclass, property } = _decorator;
 
@@ -316,7 +316,7 @@ export class TaskListUI extends ViewController {
                 }
             }
             if (currentMapPos != null) {
-                MapHelper.highlightPosOnOuterMap(currentMapPos);
+                GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y), true);
             }
         }
     }

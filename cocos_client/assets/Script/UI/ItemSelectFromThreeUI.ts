@@ -1,6 +1,5 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt, Layout, Color } from 'cc';
 import { GetPropRankColor, ResourceCorrespondingItem } from '../Const/ConstDefine';
-import { GameMain } from '../GameMain';
 import { ArtifactItem } from './ArtifactItem';
 import { ArtifactMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
 import ArtifactData from '../Model/ArtifactData';

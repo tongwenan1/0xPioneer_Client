@@ -1,6 +1,6 @@
 import { _decorator, Color, Component, instantiate, Node, size, Sprite, SpriteFrame, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
 import { TileHexDirection, TilePos } from '../../TiledMap/TileTool';
-import { GameMain } from '../../../GameMain';
+import GameMainHelper from '../../Helper/GameMainHelper';
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterMapCursorView')
@@ -107,9 +107,9 @@ export class OuterMapCursorView extends Component {
         const sinValue = Math.sin(30 * Math.PI / 180);
         for (let i = 0; i < tiledPositions.length; i++) {
             const tiledPos = tiledPositions[i];
-            const centerWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(tiledPos.x, tiledPos.y);
+            const centerWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(tiledPos.x, tiledPos.y);
             // left top
-            const leftTop = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.LeftTop);
+            const leftTop = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.LeftTop);
             if (leftTop == null ||
                 !tiledPositions.some(pos => pos.x === leftTop.x && pos.y === leftTop.y)) {
                 worldPositons.push({
@@ -123,7 +123,7 @@ export class OuterMapCursorView extends Component {
                 });
             }
             // left 
-            const left = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.Left);
+            const left = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.Left);
             if (left == null ||
                 !tiledPositions.some(pos => pos.x === left.x && pos.y === left.y)) {
                 worldPositons.push({
@@ -137,7 +137,7 @@ export class OuterMapCursorView extends Component {
                 });
             }
             // left bottom
-            const leftBottom = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.LeftBottom);
+            const leftBottom = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.LeftBottom);
             if (leftBottom == null ||
                 !tiledPositions.some(pos => pos.x === leftBottom.x && pos.y === leftBottom.y)) {
                 worldPositons.push({
@@ -151,7 +151,7 @@ export class OuterMapCursorView extends Component {
                 });
             }
             // right bottom
-            const rightBottom = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.RightBottom);
+            const rightBottom = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.RightBottom);
             if (rightBottom == null ||
                 !tiledPositions.some(pos => pos.x === rightBottom.x && pos.y === rightBottom.y)) {
                 worldPositons.push({
@@ -165,7 +165,7 @@ export class OuterMapCursorView extends Component {
                 });
             }
             // right
-            const right = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.Right);
+            const right = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.Right);
             if (right == null ||
                 !tiledPositions.some(pos => pos.x === right.x && pos.y === right.y)) {
                 worldPositons.push({
@@ -179,7 +179,8 @@ export class OuterMapCursorView extends Component {
                 });
             }
             // right top
-            const rightTop = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.RightTop);
+            GameMainHelper.instance.tiledMapGetAroundByDirection
+            const rightTop = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(tiledPos.x, tiledPos.y), TileHexDirection.RightTop);
             if (rightTop == null ||
                 !tiledPositions.some(pos => pos.x === rightTop.x && pos.y === rightTop.y)) {
                 worldPositons.push({

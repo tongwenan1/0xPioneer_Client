@@ -280,7 +280,7 @@ export class TileMapHelper {
 
         return bn;
     }
-    Shadow_Init(cleantag: number, shadowtag: number, shadowborderPfb: cc.Prefab, layername: string = "shadow"): void {
+    Shadow_Init(cleantag: number, shadowtag: number, shadowborderPfb: cc.Prefab = null, layername: string = "shadow"): void {
         this._shadowcleantag = cleantag;
         this._shadowtag = shadowtag;
         var layer = this._tilemap.getLayer(layername);

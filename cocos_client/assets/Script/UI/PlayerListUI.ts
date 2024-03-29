@@ -1,5 +1,4 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, math, Node } from 'cc';
-import { GameMain } from '../GameMain';
 import { PlayerItemUI } from './PlayerItemUI';
 import { TilePos } from '../Game/TiledMap/TileTool';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
@@ -8,6 +7,7 @@ import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPlayerPioneerModel, MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
+import GameMainHelper from '../Game/Helper/GameMainHelper';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerListUI')
@@ -107,12 +107,12 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
     private onTapPlayerItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
         BuildingMgr.hideBuilding("decorate_2");
-        if (GameMain.inst.OutScene.active) {
+        if (GameMainHelper.instance.isGameShowOuter) {
             if (index < this._pioneers.length) {
                 const currentMapPos = this._pioneers[index].stayPos;
                 if (currentMapPos != null) {
-                    const currentWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(currentMapPos.x, currentMapPos.y);
-                    GameMain.inst.MainCamera.node.worldPosition = currentWorldPos;
+                    const currentWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y);
+                    GameMainHelper.instance.changeGameCameraWorldPosition(currentWorldPos, true);
                 }
                 PioneerMgr.changeCurrentActionPioneer(this._pioneers[index].id);
                 this.refreshPlayerList();

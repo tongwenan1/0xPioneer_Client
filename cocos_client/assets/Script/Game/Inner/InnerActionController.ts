@@ -1,9 +1,6 @@
 import { EventMouse, Node, UITransform, Vec3, _decorator } from "cc";
 import ViewController from "../../BasicView/ViewController";
-import { GameMain } from "../../GameMain";
-import NotificationMgr from "../../Basic/NotificationMgr";
-import ConfigConfig from "../../Config/ConfigConfig";
-import { NotificationName } from "../../Const/Notification";
+import GameMainHelper from "../Helper/GameMainHelper";
 
 const { ccclass, property } = _decorator;
 
@@ -11,8 +8,8 @@ const { ccclass, property } = _decorator;
 export default class InnerActionController extends ViewController {
 
     private _mouseDown: boolean = false;
-    private _curCameraPos: Vec3 = Vec3.ZERO;
-    private _curCameraZoom: number = 1;
+    private _showInnerCameraPosition: Vec3 = Vec3.ZERO;
+    private _showInnerCameraZoom: number = 1;
     protected viewDidLoad(): void {
         super.viewDidLoad();
     }
@@ -20,15 +17,14 @@ export default class InnerActionController extends ViewController {
     protected viewDidStart(): void {
         super.viewDidStart();
 
-        let halfCameraWidth = GameMain.inst.MainCamera.camera.width / 2;
-        let halfCameraHeight = GameMain.inst.MainCamera.camera.height / 2;
+        const cameraSize = GameMainHelper.instance.gameCameraSize;
 
         let uiTrans = this.node.getComponent(UITransform);
         let halfMapWidth = uiTrans.contentSize.width / 2;
         let halfMapHeight = uiTrans.contentSize.height / 2;
 
-        let moveDistX = halfMapWidth - halfCameraWidth;
-        let moveDistY = halfMapHeight - halfCameraHeight;
+        let moveDistX = halfMapWidth - cameraSize.width / 2;
+        let moveDistY = halfMapHeight - cameraSize.height / 2;
 
         let downx = 0;
         let downy = 0;
@@ -49,57 +45,47 @@ export default class InnerActionController extends ViewController {
         }, this);
 
         this.node.on(Node.EventType.MOUSE_WHEEL, (event: EventMouse) => {
-            let sc = this._curCameraZoom;
-            let config = ConfigConfig.getMapScaleConfig();
-            if (config == null) return;
+            let zoom = GameMainHelper.instance.gameCameraZoom;
             if (event.getScrollY() > 0) {
-                sc -= 0.05;
+                zoom -= 0.05;
+            } else {
+                zoom += 0.05;
             }
-            else {
-                sc += 0.05;
-            }
-            if (sc > config.para[1]) {
-                sc = config.para[1];
-            }
-            else if (sc < config.para[0]) {
-                sc = config.para[0];
-            }
-            GameMain.inst.MainCamera.orthoHeight = sc * GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
-            this._curCameraZoom = sc;
-            NotificationMgr.triggerEvent(NotificationName.MAP_SCALED, sc);
+            GameMainHelper.instance.changeGameCameraZoom(zoom);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {
             if (this._mouseDown) {
-                let pos = GameMain.inst.MainCamera.node.position.add(new Vec3(-event.movementX, event.movementY, 0));
+                let pos = GameMainHelper.instance.gameCameraPosition.add(new Vec3(-event.movementX, event.movementY, 0));
                 if (pos.x < -moveDistX) {
                     pos.x = -moveDistX;
-                }
-                else if (pos.x > moveDistX) {
+
+                } else if (pos.x > moveDistX) {
                     pos.x = moveDistX;
                 }
+
                 if (pos.y < -moveDistY) {
                     pos.y = -moveDistY;
-                }
-                else if (pos.y > moveDistY) {
+
+                } else if (pos.y > moveDistY) {
                     pos.y = moveDistY;
                 }
-                GameMain.inst.MainCamera.node.setPosition(pos);
+                GameMainHelper.instance.changeGameCameraPosition(pos);
             }
         }, this);
     }
 
     protected viewDidAppear(): void {
         super.viewDidAppear();
-    
-        GameMain.inst.MainCamera.node.setPosition(this._curCameraPos.clone());
-        GameMain.inst.MainCamera.camera.orthoHeight = this._curCameraZoom * GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
+
+        GameMainHelper.instance.changeGameCameraPosition(this._showInnerCameraPosition.clone());
+        GameMainHelper.instance.changeGameCameraZoom(this._showInnerCameraZoom);
     }
 
     protected viewDidDisAppear(): void {
         super.viewDidDisAppear();
 
-        this._curCameraPos = GameMain.inst.MainCamera.node.position.clone();
-        this._curCameraZoom = GameMain.inst.MainCamera.camera.orthoHeight / GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
+        this._showInnerCameraPosition = GameMainHelper.instance.gameCameraPosition.clone();
+        this._showInnerCameraZoom = GameMainHelper.instance.gameCameraZoom;
     }
 }

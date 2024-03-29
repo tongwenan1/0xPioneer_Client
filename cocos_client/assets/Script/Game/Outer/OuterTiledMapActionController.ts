@@ -1,35 +1,24 @@
 import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3, Mask, tween, CCString, SpriteFrame, instantiate, Sprite, EventMouse, Color, TiledMap, size, RenderRoot2D, Widget, CCInteger, Animation, view, Canvas } from 'cc';
-import { GameMain } from '../GameMain';
-import { TilePos, TileMapHelper, TileHexDirection } from '../Game/TiledMap/TileTool';
-import { ResourceCorrespondingItem } from '../Const/ConstDefine';
-import { OuterFogMask } from '../Game/Outer/View/OuterFogMask';
-import { ResOprView } from '../Game/Outer/View/ResOprView';
-import { OuterPioneerController } from '../Game/Outer/OuterPioneerController';
-import { OuterFogAnimShapMask } from '../Game/Outer/View/OuterFogAnimShapMask';
-import { OuterMapCursorView } from '../Game/Outer/View/OuterMapCursorView';
-import { BuildingMgr, ItemMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../Utils/Global';
-import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType } from '../Const/Model/MapPioneerModelDefine';
-import MapPioneerModel from '../Game/Outer/Model/MapPioneerModel';
-import { UIHUDController } from '../UI/UIHUDController';
-import NotificationMgr from '../Basic/NotificationMgr';
-import ConfigConfig from '../Config/ConfigConfig';
-import { BuildingFactionType, MapBuildingType } from '../Const/BuildingDefine';
-import { NotificationName } from '../Const/Notification';
+import { MapBuildingType, BuildingFactionType } from '../../Const/BuildingDefine';
+import { ECursorType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType } from '../../Const/Model/MapPioneerModelDefine';
+import { UIHUDController } from '../../UI/UIHUDController';
+import { TilePos, TileHexDirection } from '../TiledMap/TileTool';
+import MapPioneerModel from './Model/MapPioneerModel';
+import { OuterPioneerController } from './OuterPioneerController';
+import { OuterFogAnimShapMask } from './View/OuterFogAnimShapMask';
+import { OuterFogMask } from './View/OuterFogMask';
+import { OuterMapCursorView } from './View/OuterMapCursorView';
+import { ResOprView } from './View/ResOprView';
+import { BuildingMgr, ItemMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../../Utils/Global';
+import GameMainHelper from '../Helper/GameMainHelper';
+import ViewController from '../../BasicView/ViewController';
 
 
 const { ccclass, property } = _decorator;
 
-@ccclass('CPrefabInfo')
-class PrefabInfo {
-    @property(CCString)
-    name: string
-
-    @property(Prefab)
-    prefab: Prefab;
-}
-
-@ccclass('MapBG')
-export class MapBG extends Component {
+@ccclass('OuterTiledMapActionController')
+export class OuterTiledMapActionController extends ViewController {
 
     public mapBottomView(): Node {
         return this._mapBottomView;
@@ -43,7 +32,7 @@ export class MapBG extends Component {
         for (const children of this._decorationView.children) {
             items.push({
                 node: children,
-                tilePos: this._tiledhelper.getPosByWorldPos(children.worldPosition)
+                tilePos: GameMainHelper.instance.tiledMapGetTiledPosByWorldPos(children.worldPosition)
             });
         };
         items.sort((a, b) => {
@@ -53,87 +42,6 @@ export class MapBG extends Component {
             item.node.setSiblingIndex(index);
             index += 1;
         }
-    }
-
-    public addDynamicBlock(mapPos: Vec2, canMoveTo: boolean = false) {
-        this._tiledhelper.Path_AddDynamicBlock({
-            TileX: mapPos.x,
-            TileY: mapPos.y,
-            canMoveTo: canMoveTo
-        });
-    }
-    public removeDynamicBlock(mapPos: Vec2) {
-        this._tiledhelper.Path_RemoveDynamicBlock({
-            TileX: mapPos.x,
-            TileY: mapPos.y,
-            canMoveTo: false
-        });
-    }
-    public getAround(mapPos: Vec2): TilePos[] {
-        mapPos = v2(Math.min(this._tiledhelper.width - 1, mapPos.x), Math.min(this._tiledhelper.height - 1, mapPos.y));
-        return this._tiledhelper.Path_GetAround(this._tiledhelper.getPos(mapPos.x, mapPos.y));
-    }
-    public getAroundByDirection(mapPos: Vec2, direction: TileHexDirection): TilePos {
-        mapPos = v2(Math.min(this._tiledhelper.width - 1, mapPos.x), Math.min(this._tiledhelper.height - 1, mapPos.y));
-        return this._tiledhelper.Path_GetAroundByDirection(this._tiledhelper.getPos(mapPos.x, mapPos.y), direction);
-    }
-    public getExtAround(mapPos: Vec2, range: number): TilePos[] {
-        return this._tiledhelper.getExtAround(this._tiledhelper.getPos(mapPos.x, mapPos.y), range - 1);
-    }
-    public getPosWorld(x: number, y: number): Vec3 {
-        return this._tiledhelper.getPosWorld(x, y);
-    }
-    public getTiledPos(worldPos: Vec3): TilePos {
-        return this._tiledhelper.getPosByWorldPos(worldPos);
-    }
-    public getTiledMovePathByTiledPos(fromTilePos: Vec2, toTilePos: Vec2, toStayPos: Vec2[] = []): { canMove: boolean, path: TilePos[] } {
-        const fromPos = this._tiledhelper.getPos(
-            Math.min(Math.max(0, fromTilePos.x), this._tiledhelper.width - 1),
-            Math.min(Math.max(0, fromTilePos.y), this._tiledhelper.height - 1)
-        );
-        const toPos = this._tiledhelper.getPos(
-            Math.min(Math.max(0, toTilePos.x), this._tiledhelper.width - 1),
-            Math.min(Math.max(0, toTilePos.y), this._tiledhelper.height - 1)
-        );
-        // path
-        const movePaths = this._tiledhelper.Path_FromTo(fromPos, toPos);
-        let canMove = true;
-        if (movePaths.length <= 1) {
-            //only one from pos, cannot move
-            canMove = false;
-        }
-        // delete unuseless path
-        const templeToStayPos = toStayPos.slice();
-        for (let i = 0; i < movePaths.length; i++) {
-            const path = movePaths[i];
-            let needRemove: boolean = false;
-            if (path.x == fromPos.x && path.y == fromPos.y) {
-                needRemove = true;
-            } else {
-                for (let j = 0; j < templeToStayPos.length; j++) {
-                    if (templeToStayPos[j].x == path.x && templeToStayPos[j].y == path.y) {
-                        needRemove = true;
-                        templeToStayPos.splice(j, 1);
-                        break;
-                    }
-                }
-            }
-            if (needRemove) {
-                movePaths.splice(i, 1);
-                i--;
-            }
-        }
-        return { canMove: canMove, path: movePaths };
-    }
-    public isAllBlackShadow(x: number, y: number): boolean {
-        return this._tiledhelper.Shadow_IsAllBlack(x, y);
-    }
-    public isBlock(mapPos: Vec2): boolean {
-        return this._tiledhelper.Path_IsBlock(mapPos.x, mapPos.y);
-    }
-    public shadowErase(mapPos: Vec2) {
-        this._tiledhelper.Shadow_Earse(this._tiledhelper.getPos(mapPos.x, mapPos.y), 0, 6, false);
-        this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons());
     }
 
     @property(Prefab)
@@ -148,33 +56,16 @@ export class MapBG extends Component {
     @property([SpriteFrame])
     private fogAnimDissolveImages: SpriteFrame[] = [];
 
-    @property([PrefabInfo])
-    PrefabInfo: PrefabInfo[] = [];
-
     @property(Prefab)
     private shadowBorderPrefab = null;
 
     @property(Prefab)
     private gridFogPrefab = null;
 
-    CreateDecoration(index: number): Node {
-        if (this.PrefabInfo.length == 0)
-            return null;
-        for (var i = 0; i < this.PrefabInfo.length; i++) {
-            if (this.PrefabInfo[i].name == index.toString()) {
-                return instantiate(this.PrefabInfo[i].prefab);
-            }
-        }
-        return null;
-    }
-
-    public cameraOriginalOrthoHeight: number = 0;
-
     private _mouseDown: boolean = false;
-    private _curCameraPos: Vec3 = Vec3.ZERO;
-    private _curCameraZoom: number = 1;
+    private _showOuterCameraPosition: Vec3 = Vec3.ZERO;
+    private _showOuterCameraZoom: number = 1;
 
-    private _tiledhelper: TileMapHelper = null;
     private _localEraseShadowWorldPos: Vec2[] = [];
     private _localEraseDataKey: string = "erase_shadow";
     private _fogAnimOriginalPos: Vec3 = null;
@@ -187,7 +78,6 @@ export class MapBG extends Component {
 
     private _fogItem: Node = null;
 
-    private _buildinglayer: Node = null;
     private _mapBottomView: Node = null;
     private _mapCursorView: OuterMapCursorView = null;
     private _mapActionCursorView: OuterMapCursorView = null;
@@ -200,17 +90,13 @@ export class MapBG extends Component {
     private _boundPrefabItems: Node[] = [];
     private _actionView: ResOprView = null;
 
-    private _hexScale: number = 0.5;
     private _hexViewRadius: number = 0;
-    protected onLoad(): void {
-        this.cameraOriginalOrthoHeight = GameMain.inst.MainCamera.orthoHeight;
-        const localOuterMapScale = localStorage.getItem("local_outer_map_scale");
-        if (localOuterMapScale != null) {
-            this._curCameraZoom = parseFloat(localOuterMapScale);
-        }
-        // local shadow erase
-        this._initTileMap();
+    protected viewDidLoad(): void {
+        super.viewDidLoad()
 
+        this._initTileMap();
+        
+        // local shadow erase
         this._localEraseShadowWorldPos = [];
         const eraseShadowData: any = localStorage.getItem(this._localEraseDataKey);
         if (eraseShadowData != null) {
@@ -219,78 +105,62 @@ export class MapBG extends Component {
             }
         }
         for (const pos of this._localEraseShadowWorldPos) {
-            var tiledpos = this._tiledhelper.getPos(pos.x, pos.y);
-            this._tiledhelper.Shadow_Earse(tiledpos, 0, 6, false);
+            GameMainHelper.instance.tiledMapShadowErase(pos);
         }
     }
-    start() {
+    protected viewDidStart(): void {
+        super.viewDidStart();
+
         this._mouseDown = false;
-        let thisptr = this;
         let downx = 0;
         let downy = 0;
         this.node.on(Node.EventType.MOUSE_DOWN, (event: EventMouse) => {
-            thisptr._mouseDown = true;
-
+            this._mouseDown = true;
             downx = event.getLocation().x;
             downy = event.getLocation().y;
         }, this);
 
         this.node.on(Node.EventType.MOUSE_UP, (event: EventMouse) => {
-            thisptr._mouseDown = false;
+            this._mouseDown = false;
             var pos = event.getLocation();
-
             if (Math.abs(downx - pos.x) <= 3 &&
                 Math.abs(downy - pos.y) <= 3) {
                 //if pick a empty area.
                 //let pioneer move to
-                var wpos = GameMain.inst.MainCamera.screenToWorld(new Vec3(pos.x, pos.y, 0));
+                const wpos = GameMainHelper.instance.getGameCameraScreenToWorld(v3(pos.x, pos.y, 0));
                 this._clickOnMap(wpos);
             };
         }, this);
 
         this.node.on(Node.EventType.MOUSE_LEAVE, (event: EventMouse) => {
-            thisptr._mouseDown = false;
+            this._mouseDown = false;
         }, this);
 
         this.node.on(Node.EventType.MOUSE_WHEEL, (event: EventMouse) => {
-            let sc = this._curCameraZoom;
-            const useConf = ConfigConfig.getMapScaleConfig();
-            if (useConf == null) return;
-
+            let zoom = GameMainHelper.instance.gameCameraZoom;
             if (event.getScrollY() > 0) {
-                sc -= 0.05;
+                zoom -= 0.05;
+            } else {
+                zoom += 0.05;
             }
-            else {
-                sc += 0.05;
-            }
-            if (sc > useConf.para[1]) {
-                sc = useConf.para[1];
-            }
-            else if (sc < useConf.para[0]) {
-                sc = useConf.para[0];
-            }
-            GameMain.inst.MainCamera.orthoHeight = sc * this.cameraOriginalOrthoHeight;
-            this._curCameraZoom = sc;
-            localStorage.setItem("local_outer_map_scale", sc.toString());
-            this._fixCameraPos(GameMain.inst.MainCamera.node.position);
-
-            NotificationMgr.triggerEvent(NotificationName.MAP_SCALED, sc);
+            GameMainHelper.instance.changeGameCameraZoom(zoom);
+            localStorage.setItem("local_outer_map_scale", zoom.toString());
+            this._fixCameraPos(GameMainHelper.instance.gameCameraPosition);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {
-            NotificationMgr.triggerEvent(NotificationName.CHANGE_CURSOR, { index: 0 });
-            if (thisptr._mouseDown) {
-                let pos = GameMain.inst.MainCamera.node.position.add(new Vec3(-event.movementX, event.movementY, 0));
-
+            GameMainHelper.instance.changeCursor(ECursorType.Common);
+            if (this._mouseDown) {
+                let pos = GameMainHelper.instance.gameCameraPosition.add(new Vec3(-event.movementX, event.movementY, 0));
                 this._fixCameraPos(pos);
-            }
-            else {
-                if (this._tiledhelper != null) {
-                    var pos = event.getLocation();
-                    var wpos = GameMain.inst.MainCamera.screenToWorld(new Vec3(pos.x, pos.y, 0));
-                    var tp = this._tiledhelper.getPosByWorldPos(wpos);
+
+            } else {
+                if (GameMainHelper.instance.isTiledMapHelperInited) {
+                    const pos = event.getLocation();
+                    const wpos = GameMainHelper.instance.getGameCameraScreenToWorld(v3(pos.x, pos.y, 0));
+                    var tp = GameMainHelper.instance.tiledMapGetTiledPosByWorldPos(wpos);
                     if (tp != null) {
-                        if (!this.isAllBlackShadow(tp.x, tp.y)) {
+                        if (!GameMainHelper.instance.tiledMapIsAllBlackShadow(tp.x, tp.y)) {
                             // check building first, because of building is block
                             const stayBuilding = BuildingMgr.getShowBuildingByMapPos(v2(tp.x, tp.y));
                             if (stayBuilding != null && stayBuilding.show) {
@@ -298,16 +168,17 @@ export class MapBG extends Component {
                                     stayBuilding.faction != BuildingFactionType.enemy) {
                                     const centerPos = stayBuilding.stayMapPositions[3];
                                     const visionPositions = [];
-                                    for (const temple of this._tiledhelper.getExtAround(this._tiledhelper.getPos(centerPos.x, centerPos.y), UserInfoMgr.cityVision - 1)) {
+                                    const extAround = GameMainHelper.instance.tiledMapGetExtAround(centerPos, UserInfoMgr.cityVision - 1);
+                                    for (const temple of extAround) {
                                         visionPositions.push(v2(temple.x, temple.y));
                                     }
                                     this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE, visionPositions, Color.BLUE);
                                 } else {
                                     this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE);
                                 }
-                                NotificationMgr.triggerEvent(NotificationName.CHANGE_CURSOR, { index: 1 });
+                                GameMainHelper.instance.changeCursor(ECursorType.Action);
                             } else {
-                                const isBlock = this._tiledhelper.Path_IsBlock(tp.x, tp.y);
+                                const isBlock = GameMainHelper.instance.tiledMapIsBlock(v2(tp.x, tp.y));
                                 if (isBlock) {
                                     let cursorShowTilePositions: Vec2[] = null;
                                     for (const positions of this._togetherBlockPositons) {
@@ -325,7 +196,7 @@ export class MapBG extends Component {
                                         }
                                     }
                                     this._mapCursorView.show(cursorShowTilePositions, Color.RED);
-                                    NotificationMgr.triggerEvent(NotificationName.CHANGE_CURSOR, { index: 2 });
+                                    GameMainHelper.instance.changeCursor(ECursorType.Error);
 
                                 } else {
                                     const stayPioneers = PioneerMgr.getShowPioneersByMapPos(v2(tp.x, tp.y));
@@ -337,7 +208,7 @@ export class MapBG extends Component {
                                         }
                                     }
                                     if (existOtherPioneer != null) {
-                                        NotificationMgr.triggerEvent(NotificationName.CHANGE_CURSOR, { index: 1 });
+                                        GameMainHelper.instance.changeCursor(ECursorType.Action);
                                     }
                                     this._mapCursorView.show([v2(tp.x, tp.y)], Color.WHITE);
                                 }
@@ -345,7 +216,7 @@ export class MapBG extends Component {
 
                         } else {
                             this._mapCursorView.hide();
-                            NotificationMgr.triggerEvent(NotificationName.CHANGE_CURSOR, { index: 2 });
+                            GameMainHelper.instance.changeCursor(ECursorType.Error);
                         }
                     } else {
                         this._mapCursorView.hide();
@@ -356,23 +227,29 @@ export class MapBG extends Component {
             }
         }, this);
         // local fog
-        this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons());
+        this._refreshFog(GameMainHelper.instance.tiledMapGetShadowClearedTiledPositions());
+    }
+    
+    protected viewDidAppear(): void {
+        super.viewDidAppear();
+
+        GameMainHelper.instance.changeGameCameraPosition(this._showOuterCameraPosition.clone());
+        GameMainHelper.instance.changeGameCameraZoom(this._showOuterCameraZoom);
+        
     }
 
-    protected onDisable(): void {
-        this._curCameraPos = GameMain.inst.MainCamera.node.position.clone();
-        this._curCameraZoom = GameMain.inst.MainCamera.camera.orthoHeight / GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
-    }
+    protected viewDidDisAppear(): void {
+        super.viewDidDisAppear();
 
-    protected onEnable(): void {
-        GameMain.inst.MainCamera.node.setPosition(this._curCameraPos.clone());
-        GameMain.inst.MainCamera.camera.orthoHeight = this._curCameraZoom * GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
+        this._showOuterCameraPosition = GameMainHelper.instance.gameCameraPosition.clone();
+        this._showOuterCameraZoom = GameMainHelper.instance.gameCameraZoom;
     }
+    
+    protected viewUpdate(dt: number): void {
+        super.viewUpdate(dt);
 
-    update(deltaTime: number) {
-        this._updateTiledmap(deltaTime);
+        this._updateTiledmap(dt);
     }
-
     //------------------------------------
     private _initTileMap(): void {
         if (this.tiledmap == null)
@@ -389,7 +266,7 @@ export class MapBG extends Component {
             this._togetherBlockPositons.push(temple);
         }
 
-        this._decorationView = mapView.getChildByName("deco_layer");
+        this._decorationView = mapView.getChildByPath("deco_layer");
 
         this._mapBottomView = new Node("bottomContent");
         this._mapBottomView.layer = this.node.layer;
@@ -397,16 +274,16 @@ export class MapBG extends Component {
         this._mapBottomView.addComponent(UITransform).setContentSize(mapView.getComponent(UITransform).contentSize);
         this._mapBottomView.setSiblingIndex(this._decorationView.getSiblingIndex());
 
-        this._mapCursorView = this.node.getChildByName("PointerCursor").getComponent(OuterMapCursorView);
+        this._mapCursorView = this.node.getChildByPath("Floor/PointerCursor").getComponent(OuterMapCursorView);
         this._mapCursorView.node.removeFromParent();
         this._mapBottomView.addChild(this._mapCursorView.node);
 
-        this._mapActionCursorView = this.node.getChildByName("ActionCursor").getComponent(OuterMapCursorView);
+        this._mapActionCursorView = this.node.getChildByPath("Floor/ActionCursor").getComponent(OuterMapCursorView);
         this._mapActionCursorView.node.removeFromParent();
         this._mapBottomView.addChild(this._mapActionCursorView.node);
 
         // force change shadow siblingIndex
-        mapView.getChildByName("shadow").setSiblingIndex(99);
+        mapView.getChildByPath("shadow").setSiblingIndex(99);
 
         var _tilemap = mapView.getComponent(TiledMap);
         _tilemap.enableCulling = false;
@@ -414,53 +291,24 @@ export class MapBG extends Component {
         _tilemap.getLayer("shadow").color = c;
 
         //init tiledmap by a helper class
-        this._tiledhelper = new TileMapHelper(_tilemap);
-        this._tiledhelper.Shadow_Init(0, 75, this.shadowBorderPrefab);
-        this._tiledhelper._shadowhalftag = 73;
-        this._tiledhelper._shadowhalf2tag = 74;
-
-        //place building on blayer, will be coverd by shadow.
-
-        var _lnode = new Node("blayer");
-        _lnode.parent = mapView;
-        _lnode.layer = mapView.layer;
-        _lnode.setSiblingIndex(1);
-        this._buildinglayer = _lnode;
-
-        //add this for findpath.
-        //maybe can use. no check enough.
-        //
-        //set a callback here. 35 is block,other tag place a  view only prefab on there.
-        this._tiledhelper.Path_InitBlock(35,
-            (x, y, tag) => {
-                //create decoration
-                var obj = this.CreateDecoration(tag);
-                if (obj != null) {
-                    obj.parent = this._buildinglayer;
-                    this._setObjLayer(obj, this._buildinglayer.layer);
-
-                    var posworld = this._tiledhelper.getPosWorld(x, y);
-                    obj.setWorldPosition(posworld);
-                }
-            }
-        );
-
+        GameMainHelper.instance.initTiledMapHelper(_tilemap);
+        
         this._fogItem = instantiate(this.gridFogPrefab);
         this._fogItem.layer = this.node.layer;
         // this._fogItem.scale = v3(1.8, 1.8, 1);
         this._fogItem.active = false;
 
-        this._fogView = this.node.getChildByName("Fog").getComponent(OuterFogMask);
+        this._fogView = this.node.getChildByPath("Floor/Fog").getComponent(OuterFogMask);
         this._fogView.node.setSiblingIndex(99);
 
-        this._fogAnimView = this.node.getChildByName("FogAnim").getComponent(Mask);
+        this._fogAnimView = this.node.getChildByPath("Floor/FogAnim").getComponent(Mask);
         this._fogAnimView.node.active = false;
         this._fogAnimView.node.setSiblingIndex(100);
         this._fogAnimOriginalPos = this._fogAnimView.node.position.clone();
 
-        this._fogAnimShapView = this._fogAnimView.node.getChildByName("SharpMask").getComponent(OuterFogAnimShapMask);
+        this._fogAnimShapView = this._fogAnimView.node.getChildByPath("SharpMask").getComponent(OuterFogAnimShapMask);
 
-        this._boundContent = this.node.getChildByName("BoundContent");
+        this._boundContent = this.node.getChildByPath("Floor/BoundContent");
         this._boundContent.setSiblingIndex(101);
 
 
@@ -469,27 +317,19 @@ export class MapBG extends Component {
         this._actionView.node.setParent(this.node);
         this._actionView.hide();
 
-        this._hexViewRadius = this._tiledhelper.tilewidth * this._hexScale / 2;
+        this._hexViewRadius = GameMainHelper.instance.tiledMapTilewidth * this.node.scale.x / 2;
 
-        this._mapCursorView.initData(this._hexViewRadius, this._hexScale);
-        this._mapActionCursorView.initData(this._hexViewRadius, this._hexScale);
-
-    }
-    private _setObjLayer(obj: Node, layer: number) {
-        obj.layer = layer;
-        if (obj.children == null) return;
-        for (var i = 0; i < obj.children.length; i++) {
-            this._setObjLayer(obj.children[i], layer);
-        }
+        this._mapCursorView.initData(this._hexViewRadius, this.node.scale.x);
+        this._mapActionCursorView.initData(this._hexViewRadius, this.node.scale.x);
     }
 
     private _lastPioneerStayPos: Map<string, Vec2> = new Map();
     private _lastTime: number = 0;
     private async _updateTiledmap(delta: number) {
-        if (this._tiledhelper == null)
+        if (!GameMainHelper.instance.isTiledMapHelperInited) {
             return;
-
-        this._tiledhelper.Shadow_Update(delta);
+        }
+        GameMainHelper.instance.tiledMapShadowUpdate(delta);
         //clean pioneer view
         const selfPioneer = await PioneerMgr.getPlayerPioneer();
         for (const pioneer of selfPioneer) {
@@ -502,8 +342,7 @@ export class MapBG extends Component {
                         break;
                     }
                 }
-                var tiledpos = this._tiledhelper.getPos(pioneer.stayPos.x, pioneer.stayPos.y);
-                const newCleardPositons = this._tiledhelper.Shadow_Earse(tiledpos, pioneer.id, 6, false);
+                const newCleardPositons = GameMainHelper.instance.tiledMapShadowErase(pioneer.stayPos, pioneer.id);
                 if (!isExsit) {
                     this._localEraseShadowWorldPos.push(pioneer.stayPos);
                     localStorage.setItem(this._localEraseDataKey, JSON.stringify(this._localEraseShadowWorldPos));
@@ -518,7 +357,7 @@ export class MapBG extends Component {
                     // let currentMoveDirection = null;
                     // const direction = [TileHexDirection.Left, TileHexDirection.LeftBottom, TileHexDirection.LeftTop, TileHexDirection.Right, TileHexDirection.RightBottom, TileHexDirection.RightTop];
                     // for (const d of direction) {
-                    //     const around = this._tiledhelper.Path_GetAroundByDirection(this._tiledhelper.getPos(lastStayPos.x, lastStayPos.y), d);
+                    //     const around = GameMainHelper.instance.tiledMapGetAroundByDirection(this._tiledhelper.getPos(lastStayPos.x, lastStayPos.y), d);
                     //     if (around.x == pioneer.stayPos.x &&
                     //         around.y == pioneer.stayPos.y) {
                     //         currentMoveDirection = d;
@@ -526,7 +365,7 @@ export class MapBG extends Component {
                     //     }
                     // }
                     this._lastPioneerStayPos.set(pioneer.id, pioneer.stayPos);
-                    this._refreshFog(this._tiledhelper.Shadow_GetClearedTiledPositons(), newCleardPositons, pioneer.stayPos);
+                    this._refreshFog(GameMainHelper.instance.tiledMapGetShadowClearedTiledPositions(), newCleardPositons, pioneer.stayPos);
                 }
             }
         }
@@ -543,8 +382,8 @@ export class MapBG extends Component {
             this["_actionViewActioned"] = false;
             return;
         }
-        const tiledPos = this._tiledhelper.getPosByWorldPos(worldpos);
-        if (this.isAllBlackShadow(tiledPos.x, tiledPos.y)) {
+        const tiledPos = GameMainHelper.instance.tiledMapGetTiledPosByWorldPos(worldpos);
+        if (GameMainHelper.instance.tiledMapIsAllBlackShadow(tiledPos.x, tiledPos.y)) {
             return;
         }
         // check is busy
@@ -586,7 +425,7 @@ export class MapBG extends Component {
             } else {
                 if (stayBuilding.type == MapBuildingType.city) {
                     if (stayBuilding.faction != BuildingFactionType.enemy) {
-                        GameMain.inst.changeScene();
+                        GameMainHelper.instance.changeInnerAndOuterShow();
                         actionType = -2;
                     } else {
                         actionType = 3;
@@ -606,7 +445,7 @@ export class MapBG extends Component {
                 stayPositons = stayBuilding.stayMapPositions;
             }
         } else {
-            const isBlock = this._tiledhelper.Path_IsBlock(tiledPos.x, tiledPos.y);
+            const isBlock = GameMainHelper.instance.tiledMapIsBlock(v2(tiledPos.x, tiledPos.y));
             if (isBlock) {
                 // useLanMgr
                 UIHUDController.showCenterTip(LanMgr.getLanById("203001"));
@@ -670,11 +509,11 @@ export class MapBG extends Component {
             this._mapActionCursorView.show(stayPositons, Color.WHITE);
             let setWorldPosition = null;
             if (stayPositons.length == 1) {
-                setWorldPosition = this._tiledhelper.getPosWorld(stayPositons[0].x, stayPositons[0].y);
+                setWorldPosition = GameMainHelper.instance.tiledMapGetPosWorld(stayPositons[0].x, stayPositons[0].y);
 
             } else if (stayPositons.length == 3) {
-                const beginWorldPos = this._tiledhelper.getPosWorld(stayPositons[0].x, stayPositons[0].y);
-                const endWorldPos = this._tiledhelper.getPosWorld(stayPositons[1].x, stayPositons[1].y);
+                const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(stayPositons[0].x, stayPositons[0].y);
+                const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(stayPositons[1].x, stayPositons[1].y);
                 setWorldPosition = v3(
                     beginWorldPos.x,
                     endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2,
@@ -682,21 +521,21 @@ export class MapBG extends Component {
                 );
 
             } else if (stayPositons.length == 7) {
-                setWorldPosition = this._tiledhelper.getPosWorld(stayPositons[3].x, stayPositons[3].y);
+                setWorldPosition = GameMainHelper.instance.tiledMapGetPosWorld(stayPositons[3].x, stayPositons[3].y);
             }
             // cacluate will movePath
             // -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel
             let movePaths = [];
             if (actionType == -1) {
-                movePaths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y)).path;
+                movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y)).path;
 
             } else if (actionType == 3) {
                 if (actionMovingPioneerId != null) {
                     // to moving enemy
-                    movePaths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, PioneerMgr.getPioneerById(actionMovingPioneerId).stayPos).path;
+                    movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, PioneerMgr.getPioneerById(actionMovingPioneerId).stayPos).path;
 
                 } else {
-                    movePaths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y)).path;
+                    movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y)).path;
                 }
             } else if (actionType == 6) {
                 // nothing
@@ -709,20 +548,20 @@ export class MapBG extends Component {
                     if (toStayPioneer != null) {
                         toStayPos = [toStayPioneer.stayPos];
                     }
-                    movePaths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y), toStayPos).path;
+                    movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y)).path;
 
                 } else if (purchaseMovingBuildingId != null) {
                     const toStayBuilding = BuildingMgr.getBuildingById(purchaseMovingBuildingId);
                     if (toStayBuilding != null) {
                         toStayPos = toStayBuilding.stayMapPositions;
                     }
-                    const toPosMoveData = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y), toStayPos);
+                    const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y), toStayPos);
                     if (toPosMoveData.canMove) {
                         movePaths = toPosMoveData.path;
                     } else {
                         let minMovePath = null;
                         for (const templePos of toStayBuilding.stayMapPositions) {
-                            const templePath = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(currentActionPioneer.stayPos, templePos, toStayPos);
+                            const templePath = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, templePos, toStayPos);
                             if (templePath.canMove) {
                                 if (minMovePath == null) {
                                     minMovePath = templePath.path;
@@ -779,10 +618,10 @@ export class MapBG extends Component {
     }
 
     private _fixCameraPos(pos: Vec3) {
-        const cameraSize = size(GameMain.inst.MainCamera.camera.width, GameMain.inst.MainCamera.camera.height);
-        const contentSize = this.node.parent.getComponent(UITransform).contentSize;
+        const cameraSize = GameMainHelper.instance.gameCameraSize;
+        const contentSize = this.node.getComponent(UITransform).contentSize;
         const visibleSize = view.getVisibleSize();
-        const scale = this.node.parent.scale;
+        const scale = this.node.scale;
         const cameraViewRate = visibleSize.width / cameraSize.width;
         const range = 0.2;
         const sc = 1;
@@ -794,21 +633,22 @@ export class MapBG extends Component {
         pos.x = Math.min(Math.max(minx, pos.x), maxx);
         pos.y = Math.min(Math.max(miny, pos.y), maxy);
 
-        GameMain.inst.MainCamera.node.setPosition(pos);
+        GameMainHelper.instance.changeGameCameraPosition(pos);
     }
 
     private _refreshFog(allClearedShadowPositions: TilePos[], newCleardPositons: TilePos[] = null, stayPos: Vec2 = null) {
         const getAllBoundLines: { startPos: Vec2, endPos: Vec2 }[] = [];
         const getAllBoundPos: Vec3[] = [];
 
-        const hexViewRadius = this._tiledhelper.tilewidth / 2 / 2;
+        const hexViewRadius = GameMainHelper.instance.tiledMapTilewidth * this.node.scale.x / 2;
         const sinValue = Math.sin(30 * Math.PI / 180);
         for (const pos of allClearedShadowPositions) {
             let isBound: boolean = false;
-            const centerPos = this._tiledhelper.getPosWorld(pos.x, pos.y);
+            const centerPos = GameMainHelper.instance.tiledMapGetPosWorld(pos.x, pos.y);
             // direction around no hex or hex is shadow, direction is bound.
-            const leftTop = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.LeftTop);
-            if (leftTop == null || this._tiledhelper.Shadow_IsAllBlack(leftTop.x, leftTop.y)) {
+            
+            const leftTop = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(pos.x, pos.y), TileHexDirection.LeftTop);
+            if (leftTop == null || GameMainHelper.instance.tiledMapIsAllBlackShadow(leftTop.x, leftTop.y)) {
                 getAllBoundLines.push({
                     startPos: v2(centerPos.x, hexViewRadius + centerPos.y),
                     endPos: v2(-hexViewRadius + centerPos.x, sinValue * hexViewRadius + centerPos.y)
@@ -816,8 +656,8 @@ export class MapBG extends Component {
                 isBound = true;
             }
 
-            const left = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.Left);
-            if (left == null || this._tiledhelper.Shadow_IsAllBlack(left.x, left.y)) {
+            const left = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(pos.x, pos.y), TileHexDirection.Left);
+            if (left == null || GameMainHelper.instance.tiledMapIsAllBlackShadow(left.x, left.y)) {
                 getAllBoundLines.push({
                     startPos: v2(-hexViewRadius + centerPos.x, sinValue * hexViewRadius + centerPos.y),
                     endPos: v2(-hexViewRadius + centerPos.x, -sinValue * hexViewRadius + centerPos.y)
@@ -825,8 +665,8 @@ export class MapBG extends Component {
                 isBound = true;
             }
 
-            const leftBottom = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.LeftBottom);
-            if (leftBottom == null || this._tiledhelper.Shadow_IsAllBlack(leftBottom.x, leftBottom.y)) {
+            const leftBottom = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(pos.x, pos.y), TileHexDirection.LeftBottom);
+            if (leftBottom == null || GameMainHelper.instance.tiledMapIsAllBlackShadow(leftBottom.x, leftBottom.y)) {
                 getAllBoundLines.push({
                     startPos: v2(-hexViewRadius + centerPos.x, -sinValue * hexViewRadius + centerPos.y),
                     endPos: v2(centerPos.x, -hexViewRadius + centerPos.y),
@@ -834,8 +674,8 @@ export class MapBG extends Component {
                 isBound = true;
             }
 
-            const rightbottom = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.RightBottom);
-            if (rightbottom == null || this._tiledhelper.Shadow_IsAllBlack(rightbottom.x, rightbottom.y)) {
+            const rightbottom = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(pos.x, pos.y), TileHexDirection.RightBottom);
+            if (rightbottom == null || GameMainHelper.instance.tiledMapIsAllBlackShadow(rightbottom.x, rightbottom.y)) {
                 getAllBoundLines.push({
                     startPos: v2(centerPos.x, -hexViewRadius + centerPos.y),
                     endPos: v2(hexViewRadius + centerPos.x, -sinValue * hexViewRadius + centerPos.y),
@@ -843,8 +683,8 @@ export class MapBG extends Component {
                 isBound = true;
             }
 
-            const right = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.Right);
-            if (right == null || this._tiledhelper.Shadow_IsAllBlack(right.x, right.y)) {
+            const right = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(pos.x, pos.y), TileHexDirection.Right);
+            if (right == null || GameMainHelper.instance.tiledMapIsAllBlackShadow(right.x, right.y)) {
                 getAllBoundLines.push({
                     startPos: v2(hexViewRadius + centerPos.x, -sinValue * hexViewRadius + centerPos.y),
                     endPos: v2(hexViewRadius + centerPos.x, sinValue * hexViewRadius + centerPos.y)
@@ -852,8 +692,8 @@ export class MapBG extends Component {
                 isBound = true;
             }
 
-            const rightTop = this._tiledhelper.Path_GetAroundByDirection(pos, TileHexDirection.RightTop);
-            if (rightTop == null || this._tiledhelper.Shadow_IsAllBlack(rightTop.x, rightTop.y)) {
+            const rightTop = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(pos.x, pos.y), TileHexDirection.RightTop);
+            if (rightTop == null || GameMainHelper.instance.tiledMapIsAllBlackShadow(rightTop.x, rightTop.y)) {
                 getAllBoundLines.push({
                     startPos: v2(hexViewRadius + centerPos.x, sinValue * hexViewRadius + centerPos.y),
                     endPos: v2(centerPos.x, hexViewRadius + centerPos.y)
@@ -936,10 +776,10 @@ export class MapBG extends Component {
         // draw bg fog
         // this._fogView.draw(allClearedTilePosions);
         // dismiss anim
-        const stayWorldPos = this._tiledhelper.getPosWorld(pioneerStayPos.x, pioneerStayPos.y);
+        const stayWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(pioneerStayPos.x, pioneerStayPos.y);
         for (const tilePos of animTilePostions) {
             const fogView = instantiate(this._fogItem);
-            const wp = this._tiledhelper.getPosWorld(tilePos.x, tilePos.y);
+            const wp = GameMainHelper.instance.tiledMapGetPosWorld(tilePos.x, tilePos.y);
             fogView.active = true;
             fogView.setParent(this.node);
             fogView.setWorldPosition(wp);

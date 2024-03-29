@@ -1,5 +1,4 @@
 import { _decorator, Component, Label, Node, tween } from 'cc';
-import { GameMain } from '../../GameMain';
 import { LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
