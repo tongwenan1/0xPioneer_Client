@@ -1,3 +1,5 @@
+import { AttrChangeType } from "../ConstDefine";
+
 export enum MapPioneerActionType {
     dead = "dead",
     wakeup = "wakeup",
@@ -33,11 +35,6 @@ export enum MapPioneerMoveDirection {
     bottom = "bottom",
 }
 
-export enum MapPioneerAttributesChangeType {
-    ADD = 1,
-    MUL = 2,
-}
-
 export enum MapPioneerEventStatus {
     None,
     Waiting,
@@ -45,6 +42,6 @@ export enum MapPioneerEventStatus {
 }
 
 export interface MapPioneerAttributesChangeModel {
-    type: MapPioneerAttributesChangeType;
+    type: AttrChangeType;
     value: number;
 }

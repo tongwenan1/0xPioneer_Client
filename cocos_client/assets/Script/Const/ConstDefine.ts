@@ -1,4 +1,13 @@
-import { ItemConfigType } from "./Item"
+import { ItemConfigType } from "./Item";
+
+export enum AttrType {
+    HP = 0,
+    ATTACK = 1,
+}
+export enum AttrChangeType {
+    ADD = 1,
+    MUL = 2,
+}
 
 export enum ResourceCorrespondingItem {
     Food = "8001",
@@ -6,7 +15,7 @@ export enum ResourceCorrespondingItem {
     Stone = "8003",
     Troop = "8004",
     Energy = "8005",
-    Gold = "8006"
+    Gold = "8006",
 }
 
 export enum NPCNameLangType {
@@ -16,9 +25,8 @@ export enum NPCNameLangType {
     Hunter = "502004",
     SecretGuard = "502005",
     DoomsdayGangBigTeam = "502006",
-    Artisan = "502007"
+    Artisan = "502007",
 }
-
 
 export const enum ECursorStyle {
     url = "url",
@@ -37,18 +45,18 @@ export const enum ECursorStyle {
     w_resize = "w-resize",
     text = "text",
     wait = "wait",
-    help = "help"
+    help = "help",
 }
 
 export interface GetPropData {
-    type: ItemConfigType,
-    propId: string,
-    num: number
+    type: ItemConfigType;
+    propId: string;
+    num: number;
 }
 
 export interface ResourceData {
-    type: ResourceCorrespondingItem,
-    num: number
+    type: ResourceCorrespondingItem;
+    num: number;
 }
 
 export enum GetPropRankColor {

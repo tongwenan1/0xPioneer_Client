@@ -1,19 +1,9 @@
+import { AttrChangeType, AttrType } from "./ConstDefine";
+
 export enum ArtifactArrangeType {
     Recently = "Recently",
     Rarity = "Rarity",
 }
-
-export enum ArtifactProp {
-    HP = 0,
-    ATTACK = 1,
-}
-
-export enum ArtifactPropValueType {
-    ADD = 1,
-    MUL = 2,
-}
-
-
 
 export enum ArtifactEffectType {
     BUILDING_LVUP_TIME = 1,
@@ -27,8 +17,8 @@ export class ArtifactConfigData {
     name: string;
     rank: number; // rank 1-5
     icon: string;
-    prop: number[];
-    prop_value: number[][];
+    prop: AttrType[];
+    prop_value: [AttrChangeType, number][];
     effect: string[];
     des: string;
 }
@@ -37,7 +27,7 @@ export class ArtifactEffectConfigData {
     effectId: string;
     name: string;
     rank: number; // rank 1-5
-    type: number;
+    type: ArtifactEffectType;
     para: number[];
     des: string;
     unlock: number; // require clv

@@ -1,8 +1,8 @@
 import { Vec2, Vec3, log, v2 } from "cc";
 import { TilePos } from "../../TiledMap/TileTool";
-import { MapPioneerAttributesChangeType, MapPioneerAttributesChangeModel, MapPioneerLogicType, MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerType } from "../../../Const/Model/MapPioneerModelDefine";
+import { MapPioneerAttributesChangeModel, MapPioneerLogicType, MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerType } from "../../../Const/Model/MapPioneerModelDefine";
 import { FinishedEvent } from "../../../Const/UserInfoDefine";
-import { GetPropData } from "../../../Const/ConstDefine";
+import { AttrChangeType, GetPropData } from "../../../Const/ConstDefine";
 
 export default class MapPioneerModel {
     // hp
@@ -11,9 +11,9 @@ export default class MapPioneerModel {
 
         this._hpMax = this._originalHpMax;
         for (const model of this._hpMaxChanges) {
-            if (model.type == MapPioneerAttributesChangeType.ADD) {
+            if (model.type == AttrChangeType.ADD) {
                 this._hpMax += model.value;
-            } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+            } else if (model.type == AttrChangeType.MUL) {
                 this._hpMax += (model.value * this._originalHpMax);
             }
         }
@@ -24,9 +24,9 @@ export default class MapPioneerModel {
     }
     public changeHpMax(model: MapPioneerAttributesChangeModel) {
         this._hpMaxChanges.push(model);
-        if (model.type == MapPioneerAttributesChangeType.ADD) {
+        if (model.type == AttrChangeType.ADD) {
             this._hpMax += model.value;
-        } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+        } else if (model.type == AttrChangeType.MUL) {
             this._hpMax += (model.value * this._originalHpMax);
         }
         this._hpMax = Math.max(1, this._hpMax);
@@ -45,9 +45,9 @@ export default class MapPioneerModel {
         this._originalAttack += value;
         this._attack = this._originalAttack;
         for (const model of this._attackChanges) {
-            if (model.type == MapPioneerAttributesChangeType.ADD) {
+            if (model.type == AttrChangeType.ADD) {
                 this._attack += model.value;
-            } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+            } else if (model.type == AttrChangeType.MUL) {
                 this._attack += (model.value * this._originalAttack);
             }
         }
@@ -56,9 +56,9 @@ export default class MapPioneerModel {
     
     public changeAttack(model: MapPioneerAttributesChangeModel) {
         this._attackChanges.push(model);
-        if (model.type == MapPioneerAttributesChangeType.ADD) {
+        if (model.type == AttrChangeType.ADD) {
             this._attack += model.value;
-        } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+        } else if (model.type == AttrChangeType.MUL) {
             this._attack += (model.value * this._originalAttack);
         }
         this._attack = Math.max(0, this._attack);
@@ -68,9 +68,9 @@ export default class MapPioneerModel {
         this._originalDefend += value;
         this._defend = this._originalDefend;
         for (const model of this._defendChanges) {
-            if (model.type == MapPioneerAttributesChangeType.ADD) {
+            if (model.type == AttrChangeType.ADD) {
                 this._defend += model.value;
-            } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+            } else if (model.type == AttrChangeType.MUL) {
                 this._defend += (model.value * this._originalDefend);
             }
         }
@@ -78,9 +78,9 @@ export default class MapPioneerModel {
     }
     public changeDefend(model: MapPioneerAttributesChangeModel) {
         this._defendChanges.push(model);
-        if (model.type == MapPioneerAttributesChangeType.ADD) {
+        if (model.type == AttrChangeType.ADD) {
             this._defend += model.value;
-        } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+        } else if (model.type == AttrChangeType.MUL) {
             this._defend += (model.value * this._originalDefend);
         }
         this._defend = Math.max(0, this._defend);

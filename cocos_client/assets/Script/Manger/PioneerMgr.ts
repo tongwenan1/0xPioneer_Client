@@ -2,11 +2,11 @@ import { Details, Vec2, builtinResMgr, log, math, nextPow2, pingPong, resources,
 import CommonTools from "../Tool/CommonTools";
 import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
-import { GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { AttrChangeType, GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { ArtifactMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
 import { PioneerMgrEvent } from "../Const/Manager/PioneerMgrDefine";
 import MapBuildingModel, { MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
-import { MapPioneerType, MapPioneerActionType, MapPioneerAttributesChangeModel, MapPioneerEventStatus, MapPioneerAttributesChangeType, MapPioneerLogicType } from "../Const/Model/MapPioneerModelDefine";
+import { MapPioneerType, MapPioneerActionType, MapPioneerAttributesChangeModel, MapPioneerEventStatus, MapPioneerLogicType } from "../Const/Model/MapPioneerModelDefine";
 import MapPioneerModel, { MapPlayerPioneerModel, MapNpcPioneerModel, MapPioneerLogicModel } from "../Game/Outer/Model/MapPioneerModel";
 import { UIHUDController } from "../UI/UIHUDController";
 import NotificationMgr from "../Basic/NotificationMgr";
@@ -438,26 +438,26 @@ export default class PioneerMgr {
                 if (id == enemyId) {
                     if (type == 1) {
                         // hp
-                        if (model.type == MapPioneerAttributesChangeType.ADD) {
+                        if (model.type == AttrChangeType.ADD) {
                             enemyHpMax += model.value;
-                        } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+                        } else if (model.type == AttrChangeType.MUL) {
                             enemyHpMax += enemy.originalHpMax * model.value;
                         }
                         enemyHpMax = Math.max(1, enemyHpMax);
                         enemyHp = enemyHpMax;
                     } else if (type == 2) {
                         // attack
-                        if (model.type == MapPioneerAttributesChangeType.ADD) {
+                        if (model.type == AttrChangeType.ADD) {
                             enemyAttack += model.value;
-                        } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+                        } else if (model.type == AttrChangeType.MUL) {
                             enemyAttack += enemy.originalAttack * model.value;
                         }
                     }
                 } else if (id == attackerId) {
                     if (type == 2) {
-                        if (model.type == MapPioneerAttributesChangeType.ADD) {
+                        if (model.type == AttrChangeType.ADD) {
                             attackerAttack += model.value;
-                        } else if (model.type == MapPioneerAttributesChangeType.MUL) {
+                        } else if (model.type == AttrChangeType.MUL) {
                             attackerAttack += attacker.originalAttack * model.value;
                         }
                     }
@@ -1350,7 +1350,7 @@ export default class PioneerMgr {
                         } else {
                             pioneer.loseHp(Math.floor(pioneer.hp / 2));
                             pioneer.changeAttack({
-                                type: MapPioneerAttributesChangeType.MUL,
+                                type: AttrChangeType.MUL,
                                 value: -0.5
                             });
                             tempAction = 1;

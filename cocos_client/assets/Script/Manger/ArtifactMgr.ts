@@ -4,9 +4,10 @@ import ArtifactData from "../Model/ArtifactData";
 import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import NotificationMgr from "../Basic/NotificationMgr";
-import { ArtifactArrangeType, ArtifactProp, ArtifactPropValueType } from "../Const/Artifact";
+import { ArtifactArrangeType } from "../Const/Artifact";
 import CLog from "../Utils/CLog";
 import { NotificationName } from "../Const/Notification";
+import { AttrChangeType, AttrType } from "../Const/ConstDefine";
 
 export default class ArtifactMgr {
     private _maxArtifactLength: number = 100;
@@ -81,9 +82,9 @@ export default class ArtifactMgr {
 
                     if (!r.prop[propType]) r.prop[propType] = { add: 0, mul: 0 };
 
-                    if (propValue[0] == ArtifactPropValueType.ADD) {
+                    if (propValue[0] == AttrChangeType.ADD) {
                         r.prop[propType].add += propValue[0] * artifact.count;
-                    } else if (propValue[0] == ArtifactPropValueType.MUL) {
+                    } else if (propValue[0] == AttrChangeType.MUL) {
                         r.prop[propType].mul += propValue[0] * artifact.count;
                     }
                 }
@@ -136,14 +137,14 @@ export default class ArtifactMgr {
             }
             if (artifactConfig.prop != null) {
                 for (let j = 0; j < artifactConfig.prop.length; j++) {
-                    const propType: ArtifactProp = artifactConfig.prop[j];
+                    const propType = artifactConfig.prop[j];
                     const propValue = artifactConfig.prop_value[j];
-                    if (propType == ArtifactProp.HP) {
+                    if (propType == AttrType.HP) {
                         PioneerMgr.pioneerChangeAllPlayerHpMax({
                             type: propValue[0],
                             value: propValue[1] * artifact.count,
                         });
-                    } else if (propType == ArtifactProp.ATTACK) {
+                    } else if (propType == AttrType.ATTACK) {
                         PioneerMgr.pioneerChangeAllPlayerAttack({
                             type: propValue[0],
                             value: propValue[1] * artifact.count,
