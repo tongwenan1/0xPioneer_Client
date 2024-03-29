@@ -48,7 +48,7 @@
     "lvlup_exp": "exp",
     "lvlup_cost": "cost_barr",
     "lvlup_time": "lvlup_time",
-    "prefab": "",
+    "prefab": "prefab_energy",
     "desc": "desc_energy"
   }
 }
