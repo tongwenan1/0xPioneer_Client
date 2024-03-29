@@ -37,6 +37,7 @@ export default class InnerBuildingLvlUpConfig {
             }
             this._confs[id] = d as ConfigInnerBuildingLevelUpData;
         }
+        CLog.debug("InnerBuildingLvlUpConfig init success", this._confs);
         return true;
     }
 

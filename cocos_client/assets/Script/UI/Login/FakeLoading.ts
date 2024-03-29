@@ -1,12 +1,12 @@
-import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, resources, Prefab, AssetManager } from 'cc';
-import { Web3Helper } from '../../Game/MetaMask/EthHelper';
-import { md5 } from '../../Utils/Md5';
-import { LocalDataLoader, ResourcesMgr, UserInfoMgr } from '../../Utils/Global';
-import ConfigConfig from '../../Config/ConfigConfig';
-import { ConfigType } from '../../Const/Config';
+import { _decorator, Component, Node, Label, director, Button, EventHandler, EditBox, AssetManager } from "cc";
+import { Web3Helper } from "../../Game/MetaMask/EthHelper";
+import { md5 } from "../../Utils/Md5";
+import { LocalDataLoader, ResourcesMgr, UserInfoMgr } from "../../Utils/Global";
+import ConfigConfig from "../../Config/ConfigConfig";
+import ConfigMgr from "../../Manger/ConfigMgr";
 const { ccclass, property } = _decorator;
 
-@ccclass('FakeLoading')
+@ccclass("FakeLoading")
 export class FakeLoading extends Component {
     private _loaded: boolean = false;
 
@@ -15,16 +15,22 @@ export class FakeLoading extends Component {
         this._loadingView = this.node.getChildByName("LoadingUI");
     }
     async start() {
+        
         this._loadingView.active = true;
+
         // load prefab
         let loadRate: number = 0;
         ResourcesMgr.Init(async (err: Error, bundle: AssetManager.Bundle) => {
             if (err != null) {
                 return;
             }
-            if (LocalDataLoader.loadStatus == 0) {
-                await LocalDataLoader.loadLocalDatas();
-            }
+
+            // load configs
+            if (!(await ConfigMgr.init())) return;
+
+            // load
+            await LocalDataLoader.loadLocalDatas();
+
             director.loadScene("main");
         });
         {
@@ -78,8 +84,7 @@ export class FakeLoading extends Component {
     OnEventNext(event: Event, customEventData: string) {
         if (customEventData == "guest") {
             UserInfoMgr.playerName = "guest";
-        }
-        else {
+        } else {
             if (Web3Helper.getPubAddr() == undefined || Web3Helper.getPubAddr() == "") {
                 return;
             }
@@ -90,9 +95,7 @@ export class FakeLoading extends Component {
         }
         director.loadScene("main");
     }
-    update(deltaTime: number) {
-
-    }
+    update(deltaTime: number) {}
 
     private onTapLogin() {
         const codeEditBox = this.node.getChildByName("CodeInput").getComponent(EditBox);
@@ -116,5 +119,3 @@ export class FakeLoading extends Component {
         }
     }
 }
-
-

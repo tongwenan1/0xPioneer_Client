@@ -22,6 +22,7 @@ export default class LanConfig {
 
         this._confs = obj;
         CLog.debug("LanConfig init success", this._confs);
+        return true;
     }
 
     public static getById(lanId: string): LanConfigData | null {

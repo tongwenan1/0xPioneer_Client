@@ -1,12 +1,12 @@
-import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, resources, AssetManager, Asset } from 'cc';
-import { Web3Helper } from '../../Game/MetaMask/EthHelper';
-import { md5 } from '../../Utils/Md5';
-import { LocalDataLoader, ResourcesMgr, UserInfoMgr } from '../../Utils/Global';
-import ConfigConfig from '../../Config/ConfigConfig';
-import { ConfigType } from '../../Const/Config';
+import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, AssetManager, Asset } from "cc";
+import { Web3Helper } from "../../Game/MetaMask/EthHelper";
+import { md5 } from "../../Utils/Md5";
+import { LocalDataLoader, ResourcesMgr, UserInfoMgr } from "../../Utils/Global";
+import ConfigConfig from "../../Config/ConfigConfig";
+import ConfigMgr from "../../Manger/ConfigMgr";
 const { ccclass, property } = _decorator;
 
-@ccclass('CompLogin')
+@ccclass("CompLogin")
 export class CompLogin extends Component {
     private _loaded: boolean = false;
 
@@ -15,42 +15,56 @@ export class CompLogin extends Component {
         this._loadingView = this.node.getChildByName("LoadingUI");
     }
     async start() {
-        //prepare main scene.
         this._loadingView.active = true;
-        this.node.getChildByName("label-info").getComponent(Label).string = "loading is done. can go next.";
+        // this.node.getChildByName("label-info").getComponent(Label).string = "loading is done. can go next.";
+
         let loadRate: number = 0;
         const preloadRate: number = 0.4;
+
         ResourcesMgr.Init(async (err: Error, bundle: AssetManager.Bundle) => {
             if (err != null) {
                 return;
             }
-            if (LocalDataLoader.loadStatus == 0) {
-                await LocalDataLoader.loadLocalDatas();
-            }
-            bundle.preloadDir("", (finished: number, total: number, item: AssetManager.RequestItem) => {
-                const currentRate = finished / total;
-                if (currentRate > loadRate) {
-                    loadRate = currentRate;
-                    this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
-                }
-            }, (err: Error, data: AssetManager.RequestItem[]) => {
-                if (err != null) {
-                    return;
-                }
-                bundle.loadDir("", (finished: number, total: number, item: AssetManager.RequestItem) => {
-                    const currentRate = preloadRate + finished / total * (1 - preloadRate);
+
+            bundle.preloadDir(
+                "",
+                (finished: number, total: number, item: AssetManager.RequestItem) => {
+                    const currentRate = finished / total;
                     if (currentRate > loadRate) {
                         loadRate = currentRate;
                         this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
                     }
-                }, (err: Error, data: Asset[]) => {
+                },
+                (err: Error, data: AssetManager.RequestItem[]) => {
                     if (err != null) {
                         return;
                     }
-                    this._loaded = true;
-                    this._loadingView.active = false;
-                });
-            });
+                    bundle.loadDir(
+                        "",
+                        (finished: number, total: number, item: AssetManager.RequestItem) => {
+                            const currentRate = preloadRate + (finished / total) * (1 - preloadRate);
+                            if (currentRate > loadRate) {
+                                loadRate = currentRate;
+                                this._loadingView.getChildByName("ProgressBar").getComponent(ProgressBar).progress = loadRate;
+                            }
+                        },
+                        async (err: Error, data: Asset[]) => {
+                            if (err != null) {
+                                return;
+                            }
+
+                            // load configs
+                            if (!(await ConfigMgr.init())) return;
+
+                            // load
+                            await LocalDataLoader.loadLocalDatas();
+
+                            this._loaded = true;
+                            this._loadingView.active = false;
+                        }
+                    );
+                }
+            );
         });
 
         {
@@ -104,8 +118,7 @@ export class CompLogin extends Component {
     OnEventNext(event: Event, customEventData: string) {
         if (customEventData == "guest") {
             UserInfoMgr.playerName = "guest";
-        }
-        else {
+        } else {
             if (Web3Helper.getPubAddr() == undefined || Web3Helper.getPubAddr() == "") {
                 return;
             }
@@ -116,9 +129,7 @@ export class CompLogin extends Component {
         }
         director.loadScene("main");
     }
-    update(deltaTime: number) {
-
-    }
+    update(deltaTime: number) {}
 
     private async onTapLogin() {
         const codeEditBox = this.node.getChildByPath("LoginView/CodeInput").getComponent(EditBox);
@@ -150,5 +161,3 @@ export class CompLogin extends Component {
         this.node.getChildByName("LoginView").active = true;
     }
 }
-
-

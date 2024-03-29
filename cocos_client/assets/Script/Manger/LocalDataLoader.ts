@@ -1,52 +1,16 @@
-import ArtifactConfig from "../Config/ArtifactConfig";
-import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
-import BoxInfoConfig from "../Config/BoxInfoConfig";
-import ConfigConfig from "../Config/ConfigConfig";
-import DropConfig from "../Config/DropConfig";
-import EvaluationConfig from "../Config/EvaluationConfig";
-import EventConfig from "../Config/EventConfig";
-import InnerBuildingConfig from "../Config/InnerBuildingConfig";
-import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
-import ItemConfig from "../Config/ItemConfig";
-import LanConfig from "../Config/LanConfig";
-import LvlupConfig from "../Config/LvlupConfig";
-import TalkConfig from "../Config/TalkConfig";
-import {
-    ArtifactMgr,
-    AudioMgr,
-    BattleReportsMgr,
-    BuildingMgr,
-    CountMgr,
-    ItemMgr,
-    LanMgr,
-    PioneerMgr,
-    TaskMgr,
-    UserInfoMgr,
-} from "../Utils/Global";
+import CLog from "../Utils/CLog";
+import { ArtifactMgr, AudioMgr, BattleReportsMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
+import ConfigMgr from "./ConfigMgr";
 
 export default class LocalDataLoader {
     public async loadLocalDatas() {
-        // load configs
-        await ArtifactConfig.init();
-        await ItemConfig.init();
-        await ArtifactEffectConfig.init();
-        await BoxInfoConfig.init();
-        await ConfigConfig.init();
-        await DropConfig.init();
-        await EvaluationConfig.init();
-        await EventConfig.init();
-        await LanConfig.init();
-        await LvlupConfig.init();
-        await InnerBuildingConfig.init();
-        await InnerBuildingLvlUpConfig.init();
-        await TalkConfig.init();
-
+        
         this._loadStatus = 1;
         this._importSaveOnStartIfExists();
 
-        await ArtifactMgr.initData();
-        await CountMgr.initData();
-        await LanMgr.initData();
+        if (!await ArtifactMgr.initData()) return;
+        if (!await CountMgr.initData()) return;
+        if (!await LanMgr.initData()) return;
 
         await UserInfoMgr.initData();
         await BuildingMgr.initData();
@@ -68,7 +32,7 @@ export default class LocalDataLoader {
             for (const k in saveObj) {
                 localStorage.setItem(k, saveObj[k]);
             }
-            console.log("Import save data done.");
+            CLog.debug("Import save data done.");
         }
     }
 
