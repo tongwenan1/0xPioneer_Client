@@ -5,7 +5,7 @@ import { OuterOtherPioneerView } from './View/OuterOtherPioneerView';
 import { MapItemMonster } from './View/MapItemMonster';
 import { MapPioneer } from './View/MapPioneer';
 import { OuterMapCursorView } from './View/OuterMapCursorView';
-import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import { PioneerGameTest, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
 import { ArtifactMgr, BuildingMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
@@ -354,8 +354,10 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     async update(deltaTime: number) {
         // default speed
         let defaultSpeed = 180;
-
-        // defaultSpeed = 600;
+        
+        if (PioneerGameTest) {
+            defaultSpeed = 600;
+        }
         const allPioneers = PioneerMgr.getAllPioneer();
 
         // artifact effect

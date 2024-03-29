@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3, Mask, tween, CCString, SpriteFrame, instantiate, Sprite, EventMouse, Color, TiledMap, size, RenderRoot2D, Widget, CCInteger, Animation, view, Canvas } from 'cc';
 import { MapBuildingType, BuildingFactionType } from '../../Const/BuildingDefine';
-import { ECursorType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import { ECursorType, PioneerGameTest, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType } from '../../Const/Model/MapPioneerModelDefine';
 import { UIHUDController } from '../../UI/UIHUDController';
 import { TilePos, TileHexDirection } from '../TiledMap/TileTool';
@@ -581,13 +581,17 @@ export class OuterTiledMapActionController extends ViewController {
 
             this._actionView.show(setWorldPosition, actionType, movePaths.length, (useActionType: number, costEnergy: number) => {
                 this["_actionViewActioned"] = true;
-                if (costEnergy > 0) {
-                    const ownEnergy: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Energy);
-                    if (ownEnergy < costEnergy) {
-                        UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
-                        return;
+                if (PioneerGameTest) {
+
+                } else {
+                    if (costEnergy > 0) {
+                        const ownEnergy: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Energy);
+                        if (ownEnergy < costEnergy) {
+                            UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
+                            return;
+                        }
+                        ItemMgr.subItem(ResourceCorrespondingItem.Energy, costEnergy);
                     }
-                    ItemMgr.subItem(ResourceCorrespondingItem.Energy, costEnergy);
                 }
                 if (useActionType == 6) {
                     // cancel camp
