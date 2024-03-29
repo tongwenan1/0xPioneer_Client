@@ -1,4 +1,4 @@
-import { ItemConfigType } from "./ConstDefine";
+import { ItemConfigType } from "./Item";
 
 export type EventSelectCondType = ItemConfigType;
 export type EventSelectCondId = string;
