@@ -1,6 +1,4 @@
 import { _decorator, Color, Component, Label, Node, Sprite, tween, v3, Animation, ParticleSystem2D } from 'cc';
-import { GameMain } from '../GameMain';
-import CommonTools from '../Tool/CommonTools';
 import { GetPropRankColor } from '../Const/ConstDefine';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';

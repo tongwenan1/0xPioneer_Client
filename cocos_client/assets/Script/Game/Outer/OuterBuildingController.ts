@@ -1,8 +1,6 @@
-import { _decorator, builtinResMgr, Component, instantiate, Node, Prefab, resources, UITransform, v2, v3, Vec2, Vec3, warn } from 'cc';
-import { GameMain } from '../../GameMain';
+import { _decorator, Component, instantiate, Node, Prefab, resources, UITransform, v2, v3, Vec2, Vec3, warn } from 'cc';
 import { TileHexDirection, TilePos } from '../TiledMap/TileTool';
 import { OuterBuildingView } from './View/OuterBuildingView';
-import { MapBG } from '../../Scene/MapBG';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
 import { BuildingMgr, PioneerMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
 import { MapDecoratePosMode } from '../../Const/Model/MapDecorateModelDefine';
@@ -13,6 +11,8 @@ import NotificationMgr from '../../Basic/NotificationMgr';
 import { BuildingMgrEvent, BuildingStayPosType, MapBuildingType, BuildingFactionType } from '../../Const/BuildingDefine';
 import { UserInfoEvent, FinishedEvent } from '../../Const/UserInfoDefine';
 import { NotificationName } from '../../Const/Notification';
+import GameMainHelper from '../Helper/GameMainHelper';
+import { OuterTiledMapActionController } from './OuterTiledMapActionController';
 
 
 const { ccclass, property } = _decorator;
@@ -64,9 +64,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     }
 
     private _startAction() {
-        if (this._started && this._dataLoaded) {
-
-            const mapBg = this.node.getComponent(MapBG);
+        if (this._started && this._dataLoaded) {            
             // buildingPos
             const allBuildings = BuildingMgr.getAllBuilding();
             for (const building of allBuildings) {
@@ -76,16 +74,16 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                     const newPos = [].concat(building.stayMapPositions);
                     const originalPos = newPos[0];
                     if (building.stayPosType == BuildingStayPosType.Three) {
-                        newPos.push(mapBg.getAroundByDirection(originalPos, TileHexDirection.LeftBottom));
-                        newPos.push(mapBg.getAroundByDirection(originalPos, TileHexDirection.RightBottom));
+                        newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.LeftBottom));
+                        newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.RightBottom));
 
                     } else if (building.stayPosType == BuildingStayPosType.Seven) {
-                        newPos.splice(0, 0, mapBg.getAroundByDirection(originalPos, TileHexDirection.LeftTop));
-                        newPos.splice(0, 0, mapBg.getAroundByDirection(originalPos, TileHexDirection.RightTop));
-                        newPos.splice(0, 0, mapBg.getAroundByDirection(originalPos, TileHexDirection.Left));
-                        newPos.push(mapBg.getAroundByDirection(originalPos, TileHexDirection.Right));
-                        newPos.push(mapBg.getAroundByDirection(originalPos, TileHexDirection.LeftBottom));
-                        newPos.push(mapBg.getAroundByDirection(originalPos, TileHexDirection.RightBottom));
+                        newPos.splice(0, 0, GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.LeftTop));
+                        newPos.splice(0, 0, GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.RightTop));
+                        newPos.splice(0, 0, GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.Left));
+                        newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.Right));
+                        newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.LeftBottom));
+                        newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.RightBottom));
                     }
                     BuildingMgr.fillBuildingStayPos(building.id, newPos);
                 }
@@ -104,7 +102,8 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                             worldPos.y,
                             0
                         ));
-                        const tilePos = mapBg.getTiledPos(tempwp);
+                        ;
+                        const tilePos = GameMainHelper.instance.tiledMapGetTiledPosByWorldPos(tempwp);
                         tiledPositions.push(v2(
                             tilePos.x,
                             tilePos.y
@@ -119,7 +118,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     }
 
     private _refreshUI() {
-        const decorationView = this.node.getComponent(MapBG).mapDecorationView();
+        const decorationView = this.node.getComponent(OuterTiledMapActionController).mapDecorationView();
         if (decorationView == null) {
             return;
         }
@@ -144,22 +143,23 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                     if (building.stayMapPositions.length > 0) {
                         let worldPos = null;
                         if (building.stayMapPositions.length == 7) {
-                            worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(building.stayMapPositions[3].x, building.stayMapPositions[3].y);
+                            
+                            worldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[3].x, building.stayMapPositions[3].y);
                         } else if (building.stayMapPositions.length == 3) {
-                            const beginWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
-                            const endWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(building.stayMapPositions[1].x, building.stayMapPositions[1].y);
+                            const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
+                            const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[1].x, building.stayMapPositions[1].y);
                             worldPos = v3(
                                 beginWorldPos.x,
                                 endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2,
                                 0
                             );
                         } else {
-                            worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
+                            worldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
                         }
                         temple.setWorldPosition(worldPos);
 
                         for (const pos of building.stayMapPositions) {
-                            GameMain.inst.outSceneMap.mapBG.addDynamicBlock(pos, true);
+                            GameMainHelper.instance.tiledMapAddDynamicBlock(pos, true);
                         }
                     }
                 }
@@ -169,7 +169,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                     const data = this._buildingMap.get(building.id);
                     data.node.destroy();
                     for (const pos of data.stayPositons) {
-                        GameMain.inst.outSceneMap.mapBG.removeDynamicBlock(pos);
+                        GameMainHelper.instance.tiledMapRemoveDynamicBlock(pos);
                     }
                     this._buildingMap.delete(building.id);
                 }
@@ -187,20 +187,19 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
             if (!isExsit) {
                 value.node.destroy();
                 for (const pos of value.stayPositons) {
-                    GameMain.inst.outSceneMap.mapBG.removeDynamicBlock(pos);
+                    GameMainHelper.instance.tiledMapRemoveDynamicBlock(pos);
                 }
                 this._buildingMap.delete(key);
             }
         });
 
         if (changed) {
-            this.node.getComponent(MapBG).sortMapItemSiblingIndex();
+            this.node.getComponent(OuterTiledMapActionController).sortMapItemSiblingIndex();
         }
     }
 
     private async _refreshDecorationUI() {
-        const mapBg = this.node.getComponent(MapBG);
-        const decorationView = mapBg.mapDecorationView();
+        const decorationView = this.node.getComponent(OuterTiledMapActionController).mapDecorationView();
         if (decorationView == null) {
             return;
         }
@@ -239,11 +238,11 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                         let yMaxTilePos = decorate.stayMapPositions[0];
                         let yMinTilePos = decorate.stayMapPositions[0];
                         for (const mapPos of decorate.stayMapPositions) {
-                            const wp = mapBg.getPosWorld(mapPos.x, mapPos.y);
-                            const xmaxwp = mapBg.getPosWorld(xMaxTilePos.x, xMaxTilePos.y);
-                            const xminwp = mapBg.getPosWorld(xMinTilePos.x, xMinTilePos.y);
-                            const ymaxwp = mapBg.getPosWorld(yMaxTilePos.x, yMaxTilePos.y);
-                            const yminwp = mapBg.getPosWorld(yMinTilePos.x, yMinTilePos.y);
+                            const wp = GameMainHelper.instance.tiledMapGetPosWorld(mapPos.x, mapPos.y);
+                            const xmaxwp = GameMainHelper.instance.tiledMapGetPosWorld(xMaxTilePos.x, xMaxTilePos.y);
+                            const xminwp = GameMainHelper.instance.tiledMapGetPosWorld(xMinTilePos.x, xMinTilePos.y);
+                            const ymaxwp = GameMainHelper.instance.tiledMapGetPosWorld(yMaxTilePos.x, yMaxTilePos.y);
+                            const yminwp = GameMainHelper.instance.tiledMapGetPosWorld(yMinTilePos.x, yMinTilePos.y);
 
                             if (wp.x > xmaxwp.x) {
                                 xMaxTilePos = mapPos;
@@ -258,14 +257,14 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                                 yMinTilePos = mapPos;
                             }
                             if (decorate.block) {
-                                mapBg.addDynamicBlock(mapPos);
+                                GameMainHelper.instance.tiledMapAddDynamicBlock(mapPos);
                             }
                         }
                         // get Accurate worldPos
-                        const xMaxAccurateWorldPos = mapBg.getPosWorld(xMaxTilePos.x, xMaxTilePos.y).x;
-                        const xMinAccurateWorldPos = mapBg.getPosWorld(xMinTilePos.x, xMinTilePos.y).x;
-                        const yMaxAccurateWorldPos = mapBg.getPosWorld(yMaxTilePos.x, yMaxTilePos.y).y;
-                        const yMinAccurateWorldPos = mapBg.getPosWorld(yMinTilePos.x, yMinTilePos.y).y;
+                        const xMaxAccurateWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(xMaxTilePos.x, xMaxTilePos.y).x;
+                        const xMinAccurateWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(xMinTilePos.x, xMinTilePos.y).x;
+                        const yMaxAccurateWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(yMaxTilePos.x, yMaxTilePos.y).y;
+                        const yMinAccurateWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(yMinTilePos.x, yMinTilePos.y).y;
 
                         const setWorldPos = v3(
                             xMinAccurateWorldPos + (xMaxAccurateWorldPos - xMinAccurateWorldPos) / 2,
@@ -281,7 +280,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                     const data = this._decorateMap.get(decorate.id);
                     data.node.destroy();
                     for (const pos of data.model.stayMapPositions) {
-                        mapBg.removeDynamicBlock(pos);
+                        GameMainHelper.instance.tiledMapRemoveDynamicBlock(pos);
                     }
                     this._decorateMap.delete(decorate.id);
                 }
@@ -299,14 +298,14 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
             if (!isExsit) {
                 value.node.destroy();
                 for (const pos of value.model.stayMapPositions) {
-                    mapBg.removeDynamicBlock(pos);
+                    GameMainHelper.instance.tiledMapRemoveDynamicBlock(pos);
                 }
                 this._decorateMap.delete(key);
             }
         });
 
         if (changed) {
-            mapBg.sortMapItemSiblingIndex();
+            this.node.getComponent(OuterTiledMapActionController).sortMapItemSiblingIndex();
         }
     }
 

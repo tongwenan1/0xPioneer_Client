@@ -1,11 +1,11 @@
 import { Vec2, math, resources, v2 } from "cc";
-import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
 import MapBuildingModel, { MapResourceBuildingModel, MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
 import { MapDecoratePosMode } from "../Const/Model/MapDecorateModelDefine";
 import MapDecorateModel from "../Game/Outer/Model/MapDecorateModel";
 import { BuildingMgrEvent, MapBuildingType, BuildingFactionType } from "../Const/BuildingDefine";
 import { ResourceModel } from "../Const/UserInfoDefine";
+import GameMainHelper from "../Game/Helper/GameMainHelper";
 
 export default class BuildingMgr {
 
@@ -80,7 +80,7 @@ export default class BuildingMgr {
             } else if (building.stayMapPositions.length == 7) {
                 centerPos = building.stayMapPositions[3];
             }
-            const visionPositions: TilePos[] = GameMain.inst.outSceneMap.mapBG.getExtAround(centerPos, range);
+            const visionPositions: TilePos[] = GameMainHelper.instance.tiledMapGetExtAround(centerPos, range);
             return visionPositions.some(pos => pos.x === stayPos.x && pos.y === stayPos.y);
         }
         return false;

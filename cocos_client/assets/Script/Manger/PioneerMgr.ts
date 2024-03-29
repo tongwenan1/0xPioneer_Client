@@ -1,6 +1,5 @@
 import { Details, Vec2, builtinResMgr, log, math, nextPow2, pingPong, resources, v2, v3 } from "cc";
 import CommonTools from "../Tool/CommonTools";
-import { GameMain } from "../GameMain";
 import { TilePos } from "../Game/TiledMap/TileTool";
 import { AttrChangeType, GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { ArtifactMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
@@ -17,6 +16,7 @@ import { CountType } from "../Const/Count";
 import { EventConfigData } from "../Const/Event";
 import EventConfig from "../Config/EventConfig";
 import { NotificationName } from "../Const/Notification";
+import GameMainHelper from "../Game/Helper/GameMainHelper";
 
 export default class PioneerMgr {
 
@@ -930,7 +930,7 @@ export default class PioneerMgr {
         this._originalActionPioneerId = "pioneer_0";
 
         setInterval(() => {
-            if (GameMain.inst == null) {
+            if (!GameMainHelper.instance.isTiledMapHelperInited) {
                 return;
             }
             for (const pioneer of this._pioneers) {
@@ -1015,7 +1015,8 @@ export default class PioneerMgr {
                                                 logic.patrolTargetPos = nextPos;
 
                                                 getNextPos = false;
-                                                if (GameMain.inst.outSceneMap.mapBG.isBlock(nextPos)) {
+                                                if (GameMainHelper.instance.tiledMapIsBlock(nextPos)) {
+                                                    // isblock
                                                     getNextPos = true;
                                                 } else {
                                                     const pioneers = this.getShowPioneersByMapPos(nextPos);

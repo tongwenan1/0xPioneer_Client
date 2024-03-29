@@ -2,7 +2,7 @@ import { CCBoolean, Component, ImageAsset, _decorator } from "cc";
 import { ItemMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import ViewController from "../BasicView/ViewController";
-import { ECursorStyle } from "../Const/ConstDefine";
+import { ECursorStyle, ECursorType } from "../Const/ConstDefine";
 import { MouseCursor } from "./MouseCursor";
 import NotificationMgr from "../Basic/NotificationMgr";
 import ItemData from "../Model/ItemData";
@@ -23,7 +23,7 @@ export class UIMainRootController extends ViewController {
     protected async viewDidLoad(): Promise<void> {
         super.viewDidLoad();
 
-        MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[0].nativeUrl);
+        MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[ECursorType.Common].nativeUrl);
 
         UIPanelMgr.setUIRootView(this.node);
 
@@ -46,10 +46,10 @@ export class UIMainRootController extends ViewController {
         NotificationMgr.removeListener(NotificationName.CHANGE_CURSOR, this.cursorChanged, this);
     }
 
-    private cursorChanged(data: { index: number }) {
-        if (data.index >= this.cursorImages.length) {
-            data.index = 0;
+    private cursorChanged(type: ECursorType) {
+        if (type >= this.cursorImages.length) {
+            type = 0;
         }
-        MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[data.index].nativeUrl);
+        MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[type].nativeUrl);
     }
 }

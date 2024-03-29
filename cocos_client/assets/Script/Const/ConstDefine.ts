@@ -28,6 +28,12 @@ export enum NPCNameLangType {
     Artisan = "502007",
 }
 
+export const enum ECursorType {
+    Common = 0,
+    Action = 1,
+    Error = 2
+}
+
 export const enum ECursorStyle {
     url = "url",
     default = "default",

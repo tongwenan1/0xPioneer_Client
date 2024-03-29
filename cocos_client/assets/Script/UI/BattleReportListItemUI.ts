@@ -1,13 +1,12 @@
 import {_decorator, Button, Component, Label, Node, ProgressBar, RichText, Sprite, SpriteFrame} from 'cc';
 import CommonTools from "db://assets/Script/Tool/CommonTools";
-import MapHelper from "db://assets/Script/Utils/MapHelper";
-import {GameMain} from "db://assets/Script/GameMain";
 import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, LocationInfo } from '../Const/Manager/BattleReportsMgrDefine';
 import { BuildingMgr, LanMgr, PioneerMgr, UIPanelMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { LootsPopup } from './LootsPopup';
 import { UIHUDController } from './UIHUDController';
 import EventConfig from '../Config/EventConfig';
+import GameMainHelper from '../Game/Helper/GameMainHelper';
 
 const {ccclass, property} = _decorator;
 
@@ -214,7 +213,7 @@ export class BattleReportListItemUI extends Component {
         }
 
         UIPanelMgr.removePanel(UIName.BattleReportUI);
-        MapHelper.highlightPosOnOuterMap(pos);
+        GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(pos.x, pos.y), true);
     }
 
     private async onClickLoots() {

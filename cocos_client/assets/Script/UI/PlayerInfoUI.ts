@@ -1,5 +1,4 @@
 import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ProgressBar, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
-import { GameMain } from '../GameMain';
 import { SettlementView } from './View/SettlementView';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactItem } from './ArtifactItem';

@@ -1,11 +1,9 @@
 import { _decorator, Color, Component, director, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
-import { GameMain } from '../../GameMain';
 import { TilePos } from '../TiledMap/TileTool';
 import { OuterFightView } from './View/OuterFightView';
 import { OuterOtherPioneerView } from './View/OuterOtherPioneerView';
 import { MapItemMonster } from './View/MapItemMonster';
 import { MapPioneer } from './View/MapPioneer';
-import { MapBG } from '../../Scene/MapBG';
 import { OuterMapCursorView } from './View/OuterMapCursorView';
 import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
@@ -32,6 +30,8 @@ import GlobalData from '../../Data/GlobalData';
 import { OuterFightResultView } from './View/OuterFightResultView';
 import ItemData from '../../Const/Item';
 import { NotificationName } from '../../Const/Notification';
+import { OuterTiledMapActionController } from './OuterTiledMapActionController';
+import GameMainHelper from '../Helper/GameMainHelper';
 
 
 const { ccclass, property } = _decorator;
@@ -51,7 +51,8 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             if (view.getComponent(MapItemMonster) != null) {
                 this._actionPioneerView = instantiate(view);
                 this._actionPioneerView.setParent(view.getParent());
-                this._actionPioneerView.worldPosition = GameMain.inst.outSceneMap.mapBG.getPosWorld(tilePos.x, tilePos.y);
+                this._actionPioneerView.worldPosition = GameMainHelper.instance.tiledMapGetPosWorld(tilePos.x, tilePos.y);
+                
                 this._actionPioneerView.setSiblingIndex(view.getSiblingIndex());
                 this._actionPioneerView.getComponent(MapItemMonster).shadowMode();
             }
@@ -68,7 +69,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 if (stepLogic != null) {
                     let nextTilePos = tilePos;
                     for (let i = 0; i < 15; i++) {
-                        nextTilePos = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(v2(nextTilePos.x, nextTilePos.y), stepLogic.direction);
+                        nextTilePos = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(nextTilePos.x, nextTilePos.y), stepLogic.direction);
                         path.push(nextTilePos);
                     }
                 } else {
@@ -153,31 +154,30 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         UserInfoMgr.removeObserver(this);
     }
 
-    private _cameraBeginOrthoHeight: number = 0;
     private _startAction() {
         if (this._started && this._dataLoaded) {
             this._refreshUI();
             // recover, set, task, getTaskDialogShow, etc
             PioneerMgr.recoverLocalState();
             // checkRookie
-            this._cameraBeginOrthoHeight = GameMain.inst.MainCamera.orthoHeight;
-
             const actionPioneer = PioneerMgr.getCurrentPlayerPioneer();
             if (actionPioneer != null) {
-                const currentWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(actionPioneer.stayPos.x, actionPioneer.stayPos.y);
-                GameMain.inst.MainCamera.node.worldPosition = currentWorldPos;
+                // game camera pos
+                const currentWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(actionPioneer.stayPos.x, actionPioneer.stayPos.y);
+                GameMainHelper.instance.changeGameCameraWorldPosition(currentWorldPos);
+                // game camera zoom
                 const localOuterMapScale = localStorage.getItem("local_outer_map_scale");
                 if (localOuterMapScale != null) {
-                    GameMain.inst.MainCamera.orthoHeight = this._cameraBeginOrthoHeight * parseFloat(localOuterMapScale);
+                    GameMainHelper.instance.changeGameCameraZoom(parseFloat(localOuterMapScale));
                 }
             }
-
             if (!UserInfoMgr.isFinishRookie) {
                 if (actionPioneer != null) {
                     this.scheduleOnce(() => {
-                        GameMain.inst.outSceneMap.mapBG.shadowErase(actionPioneer.stayPos);
+                        GameMainHelper.instance.tiledMapShadowErase(actionPioneer.stayPos);
                     }, 0.2);
-                    GameMain.inst.MainCamera.orthoHeight = 0.5 * this._cameraBeginOrthoHeight;
+                    GameMainHelper.instance.changeGameCameraZoom(0.5);
+                    // dead
                     actionPioneer.actionType = MapPioneerActionType.dead;
                     if (this._pioneerMap.has(actionPioneer.id)) {
                         this._pioneerMap.get(actionPioneer.id).getComponent(MapPioneer).refreshUI(actionPioneer);
@@ -188,7 +188,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     private _refreshUI() {
-        const decorationView = this.node.getComponent(MapBG).mapDecorationView();
+        const decorationView = this.node.getComponent(OuterTiledMapActionController).mapDecorationView();
         if (decorationView == null) {
             return;
         }
@@ -262,7 +262,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                         temple.getComponent(MapItemMonster).refreshUI(pioneer, UserInfoMgr.finishedEvents);
                     }
                     if (firstInit) {
-                        let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(pioneer.stayPos.x, pioneer.stayPos.y);
+                        let worldPos = GameMainHelper.instance.tiledMapGetPosWorld(pioneer.stayPos.x, pioneer.stayPos.y);
                         temple.setWorldPosition(worldPos);
                     }
                 }
@@ -290,7 +290,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         });
 
         if (changed) {
-            this.node.getComponent(MapBG).sortMapItemSiblingIndex();
+            this.node.getComponent(OuterTiledMapActionController).sortMapItemSiblingIndex();
         }
     }
 
@@ -307,9 +307,9 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
         let nexttile = pioneer.movePaths[0];
         pioneer.stayPos = v2(nexttile.x, nexttile.y);
-        var nextwpos = GameMain.inst.outSceneMap.mapBG.getPosWorld(nexttile.x, nexttile.y);
+        var nextwpos = GameMainHelper.instance.tiledMapGetPosWorld(nexttile.x, nexttile.y);
         var dist = Vec3.distance(pioneermap.worldPosition, nextwpos);
-        var add = speed * deltaTime * GameMain.inst.outSceneMap.node.scale.x / 0.5; // calc map scale
+        var add = speed * deltaTime * this.node.scale.x / 0.5; // calc map scale
         if (dist < add) //havemove 2 target
         {
             pioneermap.setWorldPosition(nextwpos);
@@ -423,9 +423,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         }
     }
     private onRookieGuideThirdEyes() {
-        tween(GameMain.inst.MainCamera)
-            .to(0.5, { orthoHeight: this._cameraBeginOrthoHeight })
-            .start();
+        GameMainHelper.instance.changeGameCameraZoom(1, true);
     }
 
     private _refreshFightView(fightId: string, attacker: { id: string; name: string; hp: number; hpMax: number; }, defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositons: Vec2[]) {
@@ -438,10 +436,10 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             fightView.refreshUI(attacker, defender, attackerIsSelf);
             fightView.node.setParent(this.node);
             if (fightPositons.length == 7) {
-                fightView.node.setWorldPosition(GameMain.inst.outSceneMap.mapBG.getPosWorld(fightPositons[3].x, fightPositons[3].y));
+                fightView.node.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(fightPositons[3].x, fightPositons[3].y));
             } else if (fightPositons.length == 3) {
-                const beginWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(fightPositons[0].x, fightPositons[0].y);
-                const endWorldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(fightPositons[1].x, fightPositons[1].y);
+                const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(fightPositons[0].x, fightPositons[0].y);
+                const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(fightPositons[1].x, fightPositons[1].y);
                 fightView.node.setWorldPosition(v3(
                     beginWorldPos.x,
                     endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2,
@@ -449,7 +447,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 ));
 
             } else if (fightPositons.length > 0) {
-                fightView.node.setWorldPosition(GameMain.inst.outSceneMap.mapBG.getPosWorld(fightPositons[0].x, fightPositons[0].y));
+                fightView.node.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(fightPositons[0].x, fightPositons[0].y));
             }
             this._fightViewMap.set(fightId, fightView);
         }
@@ -488,7 +486,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     }
 
     private _addFootSteps(path: TilePos[], isTargetPosShowFlag: boolean = false): Node[] {
-        const mapBottomView = this.node.getComponent(MapBG).mapBottomView();
+        const mapBottomView = this.node.getComponent(OuterTiledMapActionController).mapBottomView();
         if (mapBottomView == null) {
             return;
         }
@@ -499,7 +497,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     const footView = instantiate(this.footPathTargetPrefab);
                     footView.name = "footViewTarget";
                     mapBottomView.insertChild(footView, 0);
-                    let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(path[i].x, path[i].y);
+                    let worldPos = GameMainHelper.instance.tiledMapGetPosWorld(path[i].x, path[i].y);
                     footView.setWorldPosition(worldPos);
                     footViews.push(footView);
                 }
@@ -509,7 +507,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 const footView = instantiate(this.footPathPrefab);
                 footView.name = "footView";
                 mapBottomView.insertChild(footView, 0);
-                let worldPos = GameMain.inst.outSceneMap.mapBG.getPosWorld(currentPath.x, currentPath.y);
+                let worldPos = GameMainHelper.instance.tiledMapGetPosWorld(currentPath.x, currentPath.y);
                 footView.setWorldPosition(worldPos);
                 footViews.push(footView);
                 if (nextPath.calc_x - currentPath.calc_x == -1 &&
@@ -793,7 +791,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void {
         let targetMapPos: Vec2 = null;
         if (logic.type == MapPioneerLogicType.stepmove) {
-            const targetTiledPos = GameMain.inst.outSceneMap.mapBG.getAroundByDirection(pioneer.stayPos, logic.direction);
+            const targetTiledPos = GameMainHelper.instance.tiledMapGetAroundByDirection(pioneer.stayPos, logic.direction);
             if (targetTiledPos != null) {
                 targetMapPos = v2(targetTiledPos.x, targetTiledPos.y);
             }
@@ -803,7 +801,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             targetMapPos = logic.patrolTargetPos;
         }
         if (targetMapPos != null) {
-            PioneerMgr.pioneerBeginMove(pioneer.id, GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, targetMapPos).path);
+            PioneerMgr.pioneerBeginMove(pioneer.id, GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(pioneer.stayPos, targetMapPos).path);
         }
     }
     pioneerLogicMovePathPrepared(pioneer: MapPioneerModel, logic: MapPioneerLogicModel) {
@@ -815,7 +813,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 }
                 this._actionPioneerFootStepViews = null;
             }
-            const movePaths = GameMain.inst.outSceneMap.mapBG.getTiledMovePathByTiledPos(pioneer.stayPos, logic.patrolTargetPos).path;
+            const movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(pioneer.stayPos, logic.patrolTargetPos).path;
             const path = [];
             for (const temple of movePaths) {
                 path.push(temple);
@@ -842,7 +840,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 footView.destroy();
             }
         }
-        this.node.getComponent(MapBG).sortMapItemSiblingIndex();
+        this.node.getComponent(OuterTiledMapActionController).sortMapItemSiblingIndex();
 
         this._checkInMainCityRangeAndHealHpToMax(pioneerId);
     }
