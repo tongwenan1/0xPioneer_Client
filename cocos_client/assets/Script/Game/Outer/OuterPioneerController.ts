@@ -52,7 +52,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 this._actionPioneerView = instantiate(view);
                 this._actionPioneerView.setParent(view.getParent());
                 this._actionPioneerView.worldPosition = GameMainHelper.instance.tiledMapGetPosWorld(tilePos.x, tilePos.y);
-                
+
                 this._actionPioneerView.setSiblingIndex(view.getSiblingIndex());
                 this._actionPioneerView.getComponent(MapItemMonster).shadowMode();
             }
@@ -129,9 +129,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     private _actionUsedCursor: OuterMapCursorView = null;
     private _actionPioneerFootStepViews: Node[] = null;
 
-    private _started: boolean = false;
-    private _dataLoaded: boolean = false;
-
     private _actionShowPioneerId: string = null;
     protected onLoad(): void {
         PioneerMgr.addObserver(this);
@@ -139,27 +136,16 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
         this._pioneerMap = new Map();
 
-        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this.onLocalDataLoadOver, this);
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_BEGIN_EYES, this.onRookieGuideBeginEyes, this);
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_THIRD_EYES, this.onRookieGuideThirdEyes, this);
     }
 
     start() {
-        this._started = true;
-        this._startAction();
-    }
-
-    protected onDestroy(): void {
-        PioneerMgr.removeObserver(this);
-        UserInfoMgr.removeObserver(this);
-    }
-
-    private _startAction() {
-        if (this._started && this._dataLoaded) {
-            this._refreshUI();
-            // recover, set, task, getTaskDialogShow, etc
-            PioneerMgr.recoverLocalState();
-            // checkRookie
+        this._refreshUI();
+        // recover, set, task, getTaskDialogShow, etc
+        PioneerMgr.recoverLocalState();
+        // checkRookie
+        this.scheduleOnce(()=> {
             const actionPioneer = PioneerMgr.getCurrentPlayerPioneer();
             if (actionPioneer != null) {
                 // game camera pos
@@ -184,7 +170,12 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     }
                 }
             }
-        }
+        });
+    }
+
+    protected onDestroy(): void {
+        PioneerMgr.removeObserver(this);
+        UserInfoMgr.removeObserver(this);
     }
 
     private _refreshUI() {
@@ -354,7 +345,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     async update(deltaTime: number) {
         // default speed
         let defaultSpeed = 180;
-        
+
         if (PioneerGameTest) {
             defaultSpeed = 600;
         }
@@ -386,11 +377,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 this.updateMoveStep(usedSpeed, deltaTime, pioneer, pioneermap);
             }
         }
-    }
-
-    private onLocalDataLoadOver() {
-        this._dataLoaded = true;
-        this._startAction();
     }
 
     private onRookieGuideBeginEyes() {
@@ -661,7 +647,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             const resultView = instantiate(this.fightResultPrefab);
             resultView.setParent(fightView.node.parent);
             resultView.position = fightView.node.position;
-            resultView.getComponent(OuterFightResultView).showResult(isPlayerWin, ()=> {
+            resultView.getComponent(OuterFightResultView).showResult(isPlayerWin, () => {
                 resultView.destroy();
             });
             fightView.node.destroy();

@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Camera, EventHandler, Vec3, tween, inverseLerp } from 'cc';
+import { _decorator, Component, Node, Camera, EventHandler, Vec3, tween, inverseLerp, find } from 'cc';
 import NotificationMgr from '../Basic/NotificationMgr';
 import ViewController from '../BasicView/ViewController';
 import { NotificationName } from '../Const/Notification';
@@ -13,7 +13,7 @@ export class GameMain extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        GameMainHelper.instance.setGameCamera(this.node.getChildByPath("GameCamera").getComponent(Camera));
+        GameMainHelper.instance.setGameCamera(find("Main/Canvas/GameCamera").getComponent(Camera));
     }
 
     protected viewDidStart(): void {

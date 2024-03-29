@@ -20,7 +20,6 @@ export class InnerOutChangeBtn extends Component {
         this._label = this.node.getChildByPath("BgWord/Label").getComponent(Label);
 
         NotificationMgr.addListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onOutAndInnerChanged, this);
-        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this._onOutAndInnerChanged, this);
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._onOutAndInnerChanged, this);
     }
 
@@ -29,7 +28,6 @@ export class InnerOutChangeBtn extends Component {
 
     onDestroy(): void {
         NotificationMgr.removeListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onOutAndInnerChanged, this);
-        NotificationMgr.removeListener(NotificationName.LOADING_FINISH, this._onOutAndInnerChanged, this);
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._onOutAndInnerChanged, this);
     }
 

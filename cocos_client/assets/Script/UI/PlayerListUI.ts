@@ -21,8 +21,6 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
 
     private _pioneers: MapPlayerPioneerModel[] = [];
 
-    private _started: boolean = false;
-    private _dataLoaded: boolean = false;
     protected onLoad(): void {
         this._playerItem = this.playerLayout.children[0];
         {
@@ -35,26 +33,19 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
         }
         this._playerItem.active = false;
 
-        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this.loadOver, this);
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
     }
 
     start() {
         PioneerMgr.addObserver(this);
-        this._started = true;
-        this._startAction();
+        
+        this.refreshPlayerList();
+        this.changeLang();
     }
 
     protected onDestroy(): void {
         PioneerMgr.removeObserver(this);
-        NotificationMgr.removeListener(NotificationName.LOADING_FINISH, this.loadOver, this);
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.changeLang, this);
-    }
-
-    private loadOver() {
-        this._dataLoaded = true;
-        this.changeLang();
-        this._startAction();
     }
 
     private changeLang() {
@@ -62,12 +53,6 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
 
         // useLanMgr
         // this.node.getChildByName("title").getComponent(Label).string = LanMgr.getLanById("107549");
-    }
-
-    private _startAction() {
-        if (this._started && this._dataLoaded) {
-            this.refreshPlayerList();
-        }
     }
 
     refreshPlayerList() {

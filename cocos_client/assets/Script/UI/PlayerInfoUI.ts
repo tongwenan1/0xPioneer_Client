@@ -85,7 +85,6 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
         this._langSelectView = this.node.getChildByName("OptionContainer");
         this._langSelectView.active = false;
 
-        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this._loadOver, this);
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._onChangeLang, this);
 
         UserInfoMgr.addObserver(this);
@@ -93,6 +92,8 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
 
     protected viewDidStart(): void {
         super.viewDidStart();
+
+        this._selectLang = LanMgr.getLang();
     }
 
     protected viewDidAppear(): void {
@@ -104,7 +105,6 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(NotificationName.LOADING_FINISH, this._loadOver, this);
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._onChangeLang, this);
 
         UserInfoMgr.removeObserver(this);
@@ -157,11 +157,6 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
 
         localStorage.setItem("importSaveOnStart", saveText);
         location.reload();
-    }
-
-    private _loadOver() {
-        this._selectLang = LanMgr.getLang();
-        this._refreshUI();
     }
 
     private _onChangeLang() {

@@ -41,18 +41,33 @@ export default class UIPanelManger {
         this._uiMap.delete(name);
     }
 
-    public async openPanel(name: string): Promise<Node> {
-        if (this._uiRootView == null ||
-            !this._uiRootView.isValid) {
-            return;
-        }
-        let nd = this._uiMap.get(name);
-        if (nd != null && nd.isValid) {
+    public openPanelToNode(path: string, node: Node): Promise<Node> {
+        return new Promise(async (resolve)=> {
+            const prefab = await this._resourceMgr.LoadABResource(path, Prefab);
+            if (prefab != null) {
+                const nd = instantiate(prefab);
+                nd.setParent(node);
+                resolve(nd);
+            } else {
+                resolve(null);
+            }
+        });
+    }
 
-        } else {
-            nd = await this._open(name, this._uiRootView);
-        }
-        return nd;
+    public openPanel(name: string): Promise<Node> {
+        return new Promise(async (resolve)=> {
+            if (this._uiRootView == null ||
+                !this._uiRootView.isValid) {
+                resolve(null);
+            }
+            let nd = this._uiMap.get(name);
+            if (nd != null && nd.isValid) {
+    
+            } else {
+                nd = await this._open(name, this._uiRootView);
+            }
+            resolve(nd);
+        });
     }
 
     public async openHUDPanel(name: string): Promise<Node> {

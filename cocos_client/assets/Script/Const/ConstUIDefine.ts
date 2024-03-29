@@ -3,6 +3,7 @@ export enum UIName {
     ResourceGettedView = "ui/ResourceGettedView",
 
     MainUI = "ui/MainUI",
+    LoadingUI = "ui/LoadingUI",
     RookieGuide = "ui/RookieGuide",
     DialogueUI = "ui/DialogueUI",
     SecretGuardGettedUI = "ui/SecretGuardGettedUI",

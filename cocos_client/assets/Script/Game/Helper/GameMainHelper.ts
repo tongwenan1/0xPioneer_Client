@@ -35,6 +35,7 @@ export default class GameMainHelper {
         }
     }
     public changeGameCameraWorldPosition(position: Vec3, animation: boolean = false) {
+        console.log("exce gamcbefater:" + JSON.stringify(position));
         if (animation) {
             const distance = Vec3.distance(this._gameCamera.node.worldPosition.clone(), position.clone());
             tween()

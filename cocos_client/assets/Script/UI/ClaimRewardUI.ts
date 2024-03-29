@@ -37,16 +37,16 @@ export class ClaimRewardUI extends Component {
                             if (getStatus == 1) {
                                 if (treasureView["actiontween"] == null) {
                                     treasureView["actiontween"] = tween()
-                                    .target(treasureView)
-                                    .repeatForever(
-                                        tween().sequence(
-                                            tween().by(0.05, { position: v3(0, 10, 0) }),
-                                            tween().by(0.1, { position: v3(0, -20, 0) }),
-                                            tween().by(0.1, { position: v3(0, 20, 0) }),
-                                            tween().by(0.05, { position: v3(0, -10, 0) }),
-                                            tween().delay(1)
-                                        )
-                                    ).start();
+                                        .target(treasureView)
+                                        .repeatForever(
+                                            tween().sequence(
+                                                tween().by(0.05, { position: v3(0, 10, 0) }),
+                                                tween().by(0.1, { position: v3(0, -20, 0) }),
+                                                tween().by(0.1, { position: v3(0, 20, 0) }),
+                                                tween().by(0.05, { position: v3(0, -10, 0) }),
+                                                tween().delay(1)
+                                            )
+                                        ).start();
                                 }
                             } else {
                                 if (treasureView["actiontween"] != null) {
@@ -65,55 +65,41 @@ export class ClaimRewardUI extends Component {
         }
     }
 
-    private _started: boolean = false;
-    private _dataLoaded: boolean = false;
     private _boxDatas: BoxInfoConfigData[] = [];
     private _maxthreshold: number = 0;
 
     private _boxViews: Node[] = [];
 
     protected onLoad(): void {
-        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this.loadOver, this);
     }
     start() {
-        this._started = true;
-        this._startAction();
+        this._boxDatas = BoxInfoConfig.getAllBox();
+        let pre = this.RewardBoxArr.getChildByName("icon_treasure_box");
+        pre.active = false;
+
+        let beginThresholdValue: number = 0;
+        for (let i = 0; i < this._boxDatas.length; i++) {
+            let item = instantiate(pre);
+            item.active = true;
+            item.setParent(this.RewardBoxArr);
+            for (let j = 0; j < 3; j++) {
+                item.getChildByPath("Treasure/Treasure_box_" + j).active = j == this._boxDatas[i].icon;
+            }
+            item.getChildByName("Progress").getComponent(Label).string = this._boxDatas[i].threshold.toString();
+            item.getChildByName("Treasure").getComponent(Button).clickEvents[0].customEventData = i.toString();
+            this._boxViews.push(item);
+            item["__fromthreshold"] = beginThresholdValue + this._boxDatas[i].threshold;
+            this._maxthreshold = Math.max(this._maxthreshold, this._boxDatas[i].threshold);
+        }
+        const parentWidth = this.RewardBoxArr.getComponent(UITransform).width;
+        for (const boxItem of this._boxViews) {
+            boxItem.setPosition(v3(parentWidth * (boxItem["__fromthreshold"] / this._maxthreshold), boxItem.position.y, boxItem.position.z));
+        }
+        this.refreshUI();
     }
 
     update(deltaTime: number) { }
 
-    private loadOver() {
-        this._dataLoaded = true;
-        this._startAction();
-    }
-
-    private _startAction() {
-        if (this._started && this._dataLoaded) {
-            this._boxDatas = BoxInfoConfig.getAllBox();
-            let pre = this.RewardBoxArr.getChildByName("icon_treasure_box");
-            pre.active = false;
-
-            let beginThresholdValue: number = 0;
-            for (let i = 0; i < this._boxDatas.length; i++) {
-                let item = instantiate(pre);
-                item.active = true;
-                item.setParent(this.RewardBoxArr);
-                for (let j = 0; j < 3; j++) {
-                    item.getChildByPath("Treasure/Treasure_box_" + j).active = j == this._boxDatas[i].icon;
-                }
-                item.getChildByName("Progress").getComponent(Label).string = this._boxDatas[i].threshold.toString();
-                item.getChildByName("Treasure").getComponent(Button).clickEvents[0].customEventData = i.toString();
-                this._boxViews.push(item);
-                item["__fromthreshold"] = beginThresholdValue + this._boxDatas[i].threshold;
-                this._maxthreshold = Math.max(this._maxthreshold, this._boxDatas[i].threshold);
-            }
-            const parentWidth = this.RewardBoxArr.getComponent(UITransform).width;
-            for (const boxItem of this._boxViews) {
-                boxItem.setPosition(v3(parentWidth * (boxItem["__fromthreshold"] / this._maxthreshold), boxItem.position.y, boxItem.position.z));
-            }
-            this.refreshUI();
-        }
-    }
 
     //------------------------------------------ action
     private async onTapBoxItem(event: Event, customEventData: string) {
@@ -131,7 +117,7 @@ export class ClaimRewardUI extends Component {
         } else if (getStatus == 1) {
             const view = await UIPanelMgr.openPanel(UIName.TreasureGettedUI);
             if (view != null) {
-                view.getComponent(TreasureGettedUI).dialogShow(data, ()=> {
+                view.getComponent(TreasureGettedUI).dialogShow(data, () => {
                     this.refreshUI();
                 });
             }

@@ -50,11 +50,6 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
 
         this._claimRewardUI = this.node.getChildByName("reward_ui").getComponent(ClaimRewardUI);
 
-        if (LocalDataLoader.loadStatus == 0) {
-            await LocalDataLoader.loadLocalDatas();
-        }
-        NotificationMgr.triggerEvent(NotificationName.LOADING_FINISH);
-
         this.changeLang();
 
         const bigGanster = PioneerMgr.getPioneerById("gangster_3");

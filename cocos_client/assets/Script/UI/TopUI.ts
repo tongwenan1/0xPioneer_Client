@@ -35,9 +35,6 @@ export default class TopUI extends Component implements UserInfoEvent {
     @property(Sprite)
     sprPlayerHead: Sprite = null;
 
-    private _started: boolean = false;
-    private _dataLoaded: boolean = false;
-
     private _expAnimLabel: Label = null;
     protected onLoad(): void {
 
@@ -47,31 +44,17 @@ export default class TopUI extends Component implements UserInfoEvent {
         UserInfoMgr.addObserver(this);
 
 
-        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this.loadOver, this);
         NotificationMgr.addListener(NotificationName.ITEM_CHANGE, this.refreshTopUI, this);
     }
 
     start() {
-        this._started = true;
-        this._startAction();
+        this.refreshTopUI();
     }
 
     protected onDestroy(): void {
         UserInfoMgr.removeObserver(this);
 
-        NotificationMgr.removeListener(NotificationName.LOADING_FINISH, this.loadOver, this);
         NotificationMgr.removeListener(NotificationName.ITEM_CHANGE, this.refreshTopUI, this);
-    }
-
-    private loadOver() {
-        this._dataLoaded = true;
-        this._startAction();
-    }
-
-    private _startAction() {
-        if (this._started && this._dataLoaded) {
-            this.refreshTopUI();
-        }
     }
 
     refreshTopUI() {

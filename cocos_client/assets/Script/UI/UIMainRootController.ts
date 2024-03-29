@@ -13,6 +13,14 @@ const { ccclass, property } = _decorator;
 
 @ccclass('UIMainRootController')
 export class UIMainRootController extends ViewController {
+    public async showMain() {
+        const view = await UIPanelMgr.openPanel(UIName.MainUI);
+        view?.setSiblingIndex(0);
+        if (this.canShowRookieGuide && !UserInfoMgr.isFinishRookie) {
+            const rookieView = await UIPanelMgr.openPanel(UIName.RookieGuide);
+            rookieView?.setSiblingIndex(1);
+        }
+    }
 
     @property([ImageAsset])
     cursorImages: ImageAsset[] = [];
@@ -26,12 +34,6 @@ export class UIMainRootController extends ViewController {
         MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[ECursorType.Common].nativeUrl);
 
         UIPanelMgr.setUIRootView(this.node);
-
-        await UIPanelMgr.openPanel(UIName.MainUI);
-
-        if (this.canShowRookieGuide && !UserInfoMgr.isFinishRookie) {
-            await UIPanelMgr.openPanel(UIName.RookieGuide);
-        }
     }
 
     protected async viewDidStart(): Promise<void> {

@@ -34,18 +34,62 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     private _buildingMap: Map<string, { node: Node, stayPositons: Vec2[] }> = new Map();
     private _decorateMap: Map<string, { node: Node, model: MapDecorateModel }> = new Map();
 
-    private _started: boolean = false;
-    private _dataLoaded: boolean = false;
     protected onLoad() {
-        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this.onLocalDataLoadOver, this);
         UserInfoMgr.addObserver(this);
         BuildingMgr.addObserver(this);
         PioneerMgr.addObserver(this);
     }
 
     start() {
-        this._started = true;
-        this._startAction();
+        // buildingPos
+        const allBuildings = BuildingMgr.getAllBuilding();
+        for (const building of allBuildings) {
+            if (building.stayPosType == BuildingStayPosType.One) {
+                // no action
+            } else if (building.stayMapPositions.length == 1) {
+                const newPos = [].concat(building.stayMapPositions);
+                const originalPos = newPos[0];
+                if (building.stayPosType == BuildingStayPosType.Three) {
+                    newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.LeftBottom));
+                    newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.RightBottom));
+
+                } else if (building.stayPosType == BuildingStayPosType.Seven) {
+                    newPos.splice(0, 0, GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.LeftTop));
+                    newPos.splice(0, 0, GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.RightTop));
+                    newPos.splice(0, 0, GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.Left));
+                    newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.Right));
+                    newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.LeftBottom));
+                    newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.RightBottom));
+                }
+                BuildingMgr.fillBuildingStayPos(building.id, newPos);
+            }
+        }
+
+        this._refreshUI();
+
+        // decorations
+        const decorates = BuildingMgr.getAllDecorate();
+        for (const decorate of decorates) {
+            if (decorate.posMode == MapDecoratePosMode.World) {
+                const tiledPositions: Vec2[] = [];
+                for (const worldPos of decorate.stayMapPositions) {
+                    let tempwp = this.node.getComponent(UITransform).convertToWorldSpaceAR(v3(
+                        worldPos.x,
+                        worldPos.y,
+                        0
+                    ));
+                    ;
+                    const tilePos = GameMainHelper.instance.tiledMapGetTiledPosByWorldPos(tempwp);
+                    tiledPositions.push(v2(
+                        tilePos.x,
+                        tilePos.y
+                    ));
+                }
+                BuildingMgr.changeDecorateWorldPosToTiledPos(decorate.id, tiledPositions);
+            }
+        }
+
+        this._refreshDecorationUI();
     }
 
     update(deltaTime: number) {
@@ -56,65 +100,6 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
         UserInfoMgr.removeObserver(this);
         BuildingMgr.removeObserver(this);
         PioneerMgr.removeObserver(this);
-    }
-
-    private onLocalDataLoadOver() {
-        this._dataLoaded = true;
-        this._startAction();
-    }
-
-    private _startAction() {
-        if (this._started && this._dataLoaded) {            
-            // buildingPos
-            const allBuildings = BuildingMgr.getAllBuilding();
-            for (const building of allBuildings) {
-                if (building.stayPosType == BuildingStayPosType.One) {
-                    // no action
-                } else if (building.stayMapPositions.length == 1) {
-                    const newPos = [].concat(building.stayMapPositions);
-                    const originalPos = newPos[0];
-                    if (building.stayPosType == BuildingStayPosType.Three) {
-                        newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.LeftBottom));
-                        newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.RightBottom));
-
-                    } else if (building.stayPosType == BuildingStayPosType.Seven) {
-                        newPos.splice(0, 0, GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.LeftTop));
-                        newPos.splice(0, 0, GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.RightTop));
-                        newPos.splice(0, 0, GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.Left));
-                        newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.Right));
-                        newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.LeftBottom));
-                        newPos.push(GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.RightBottom));
-                    }
-                    BuildingMgr.fillBuildingStayPos(building.id, newPos);
-                }
-            }
-
-            this._refreshUI();
-
-            // decorations
-            const decorates = BuildingMgr.getAllDecorate();
-            for (const decorate of decorates) {
-                if (decorate.posMode == MapDecoratePosMode.World) {
-                    const tiledPositions: Vec2[] = [];
-                    for (const worldPos of decorate.stayMapPositions) {
-                        let tempwp = this.node.getComponent(UITransform).convertToWorldSpaceAR(v3(
-                            worldPos.x,
-                            worldPos.y,
-                            0
-                        ));
-                        ;
-                        const tilePos = GameMainHelper.instance.tiledMapGetTiledPosByWorldPos(tempwp);
-                        tiledPositions.push(v2(
-                            tilePos.x,
-                            tilePos.y
-                        ));
-                    }
-                    BuildingMgr.changeDecorateWorldPosToTiledPos(decorate.id, tiledPositions);
-                }
-            }
-
-            this._refreshDecorationUI();
-        }
     }
 
     private _refreshUI() {
@@ -143,7 +128,7 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                     if (building.stayMapPositions.length > 0) {
                         let worldPos = null;
                         if (building.stayMapPositions.length == 7) {
-                            
+
                             worldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[3].x, building.stayMapPositions[3].y);
                         } else if (building.stayMapPositions.length == 3) {
                             const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);

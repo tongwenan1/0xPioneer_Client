@@ -1,11 +1,8 @@
 import CLog from "../Utils/CLog";
-import { ArtifactMgr, AudioMgr, BattleReportsMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
-import ConfigMgr from "./ConfigMgr";
+import { ArtifactMgr, BattleReportsMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
 
 export default class LocalDataLoader {
     public async loadLocalDatas() {
-        
-        this._loadStatus = 1;
         this._importSaveOnStartIfExists();
 
         if (!await ArtifactMgr.initData()) return;
@@ -18,9 +15,6 @@ export default class LocalDataLoader {
         await PioneerMgr.initData();
         await ItemMgr.initData();
         await BattleReportsMgr.initData();
-
-        AudioMgr.prepareAudioSource();
-        this._loadStatus = 2;
     }
 
     private _importSaveOnStartIfExists() {
@@ -35,19 +29,4 @@ export default class LocalDataLoader {
             CLog.debug("Import save data done.");
         }
     }
-
-    /**
-     * 0-noload
-     * 1-loading
-     * 2-loaded
-     */
-    public get loadStatus() {
-        return this._loadStatus;
-    }
-
-    public set loadStatus(value) {
-        this._loadStatus = value;
-    }
-
-    private _loadStatus: number = 0;
 }
