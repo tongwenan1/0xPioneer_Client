@@ -1,5 +1,5 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node } from 'cc';
-import { EventName, NPCNameLangType } from '../../Const/ConstDefine';
+import { NPCNameLangType } from '../../Const/ConstDefine';
 import { CountMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
@@ -7,6 +7,7 @@ import { ItemInfoUI } from '../ItemInfoUI';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
 import { CountType } from '../../Const/Count';
+import { NotificationName } from '../../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -37,7 +38,7 @@ export class DialogueUI extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        NotificationMgr.addListener(EventName.CHANGE_LANG, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
 
         this._roleViewNameMap.set(NPCNameLangType.Artisan, "artisan");
         this._roleViewNameMap.set(NPCNameLangType.DoomsdayGangBigTeam, "doomsdayGangBigTeam");
@@ -50,7 +51,7 @@ export class DialogueUI extends ViewController {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
     }
 
     private _refreshUI() {

@@ -7,7 +7,7 @@ import { MapItemMonster } from './View/MapItemMonster';
 import { MapPioneer } from './View/MapPioneer';
 import { MapBG } from '../../Scene/MapBG';
 import { OuterMapCursorView } from './View/OuterMapCursorView';
-import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
 import { ArtifactMgr, BuildingMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
@@ -31,6 +31,7 @@ import EventConfig from '../../Config/EventConfig';
 import GlobalData from '../../Data/GlobalData';
 import { OuterFightResultView } from './View/OuterFightResultView';
 import ItemData from '../../Const/Item';
+import { NotificationName } from '../../Const/Notification';
 
 
 const { ccclass, property } = _decorator;
@@ -137,9 +138,9 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
         this._pioneerMap = new Map();
 
-        NotificationMgr.addListener(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
-        NotificationMgr.addListener(EventName.ROOKIE_GUIDE_BEGIN_EYES, this.onRookieGuideBeginEyes, this);
-        NotificationMgr.addListener(EventName.ROOKIE_GUIDE_THIRD_EYES, this.onRookieGuideThirdEyes, this);
+        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this.onLocalDataLoadOver, this);
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_BEGIN_EYES, this.onRookieGuideBeginEyes, this);
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_THIRD_EYES, this.onRookieGuideThirdEyes, this);
     }
 
     start() {
@@ -746,7 +747,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     });
                 }
 
-                NotificationMgr.triggerEvent(EventName.MINING_FINISHED, {
+                NotificationMgr.triggerEvent(NotificationName.MINING_FINISHED, {
                     buildingId: buildingId,
                     pioneerId: actionPioneerId,
                     duration: 3000, //todo see assets/Script/Manger/PioneerMgr.ts:1225

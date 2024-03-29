@@ -2,9 +2,8 @@ import { EventMouse, Node, UITransform, Vec3, _decorator } from "cc";
 import ViewController from "../../BasicView/ViewController";
 import { GameMain } from "../../GameMain";
 import NotificationMgr from "../../Basic/NotificationMgr";
-import { EventName } from "../../Const/ConstDefine";
 import ConfigConfig from "../../Config/ConfigConfig";
-import { ConfigType, MapScaleConfigData } from "../../Const/Config";
+import { NotificationName } from "../../Const/Notification";
 
 const { ccclass, property } = _decorator;
 
@@ -67,7 +66,7 @@ export default class InnerActionController extends ViewController {
             }
             GameMain.inst.MainCamera.orthoHeight = sc * GameMain.inst.outSceneMap.mapBG.cameraOriginalOrthoHeight;
             this._curCameraZoom = sc;
-            NotificationMgr.triggerEvent(EventName.MAP_SCALED, sc);
+            NotificationMgr.triggerEvent(NotificationName.MAP_SCALED, sc);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {

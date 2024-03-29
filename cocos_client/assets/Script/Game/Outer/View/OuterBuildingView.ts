@@ -5,10 +5,10 @@ import MapBuildingModel from '../Model/MapBuildingModel';
 import { MapBuildingType, BuildingFactionType, InnerBuildingType, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
 import ViewController from '../../../BasicView/ViewController';
 import NotificationMgr from '../../../Basic/NotificationMgr';
-import { EventName } from '../../../Const/ConstDefine';
 import ConfigConfig from '../../../Config/ConfigConfig';
 import InnerBuildingLvlUpConfig from '../../../Config/InnerBuildingLvlUpConfig';
 import InnerBuildingConfig from '../../../Config/InnerBuildingConfig';
+import { NotificationName } from '../../../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterBuildingView')
@@ -130,9 +130,9 @@ export class OuterBuildingView extends ViewController {
     protected viewDidStart(): void {
         super.viewDidStart();
 
-        NotificationMgr.addListener(EventName.GENERATE_ENERGY_NUM_CHANGED, this._onEnergyNumChanged, this);
-        NotificationMgr.addListener(EventName.RESOURCE_GETTED, this._onResourceChanged, this);
-        NotificationMgr.addListener(EventName.RESOURCE_CONSUMED, this._onResourceChanged, this);
+        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_CHANGED, this._onEnergyNumChanged, this);
+        NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
+        NotificationMgr.addListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
     }
 
     protected viewDidAppear(): void {
@@ -147,9 +147,9 @@ export class OuterBuildingView extends ViewController {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(EventName.GENERATE_ENERGY_NUM_CHANGED, this._onEnergyNumChanged, this);
-        NotificationMgr.removeListener(EventName.RESOURCE_GETTED, this._onResourceChanged, this);
-        NotificationMgr.removeListener(EventName.RESOURCE_CONSUMED, this._onResourceChanged, this);
+        NotificationMgr.removeListener(NotificationName.GENERATE_ENERGY_NUM_CHANGED, this._onEnergyNumChanged, this);
+        NotificationMgr.removeListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
+        NotificationMgr.removeListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
     }
 
     //-------------------------------- function

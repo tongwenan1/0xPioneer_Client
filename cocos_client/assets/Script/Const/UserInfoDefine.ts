@@ -22,12 +22,6 @@ export enum FinishedEvent {
     BecomeCityMaster = "BecomeCityMaster",
 }
 
-export enum UserInfoNotification {
-    
-
-    generateTroopTimeCountChanged = "generateTroopTimeCountChanged",
-    generateTroopNumChanged = "generateTroopNumChanged",
-}
 
 export interface UserInfoEvent {
     playerNameChanged?(value: string): void;

@@ -1,10 +1,11 @@
 import { _decorator, Component, Label, Layout, Node, ProgressBar, Slider } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
-import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
+import { NotificationName } from '../../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
@@ -94,13 +95,13 @@ export class RecruitUI extends ViewController {
         this._usedStone = this.node.getChildByPath("__ViewContent/footer/material/stone_bg/stone/num/left").getComponent(Label);
         this._maxStone = this.node.getChildByPath("__ViewContent/footer/material/stone_bg/stone/num/right").getComponent(Label);
 
-        NotificationMgr.addListener(EventName.CHANGE_LANG, this.changeLang, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(EventName.CHANGE_LANG, this.changeLang, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.changeLang, this);
     }
 
     protected viewPopAnimation(): boolean {

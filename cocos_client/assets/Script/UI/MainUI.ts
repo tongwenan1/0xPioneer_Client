@@ -1,7 +1,6 @@
 import { _decorator, Component, Node, Button, SpriteFrame, Sprite, Label, Prefab, instantiate, tiledLayerAssembler, Tween, v3, tween, math, randomRangeInt, Color, LabelOutline, ImageAsset } from 'cc';
 import { TilePos } from '../Game/TiledMap/TileTool';
 import { ClaimRewardUI } from './ClaimRewardUI';
-import { EventName } from '../Const/ConstDefine';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
 import { BattleReportsEvent } from '../Const/Manager/BattleReportsMgrDefine';
 import { BattleReportsMgr, LanMgr, LocalDataLoader, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
@@ -13,6 +12,7 @@ import { NewSettlementUI } from './NewSettlementUI';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { UserInfoEvent, FinishedEvent } from '../Const/UserInfoDefine';
+import { NotificationName } from '../Const/Notification';
 
 const { ccclass, property } = _decorator;
 
@@ -42,7 +42,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         UserInfoMgr.addObserver(this);
         BattleReportsMgr.addObserver(this);
 
-        NotificationMgr.addListener(EventName.CHANGE_LANG, this.changeLang, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
     }
     
     protected async viewDidStart(): Promise<void> {
@@ -53,7 +53,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         if (LocalDataLoader.loadStatus == 0) {
             await LocalDataLoader.loadLocalDatas();
         }
-        NotificationMgr.triggerEvent(EventName.LOADING_FINISH);
+        NotificationMgr.triggerEvent(NotificationName.LOADING_FINISH);
 
         this.changeLang();
 
@@ -83,7 +83,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         UserInfoMgr.removeObserver(this);
         BattleReportsMgr.removeObserver(this);
 
-        NotificationMgr.removeListener(EventName.CHANGE_LANG, this.changeLang, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.changeLang, this);
     }
     
     private updateBattleReportsUnreadCount() {

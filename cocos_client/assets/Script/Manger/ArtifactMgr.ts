@@ -4,9 +4,9 @@ import ArtifactData from "../Model/ArtifactData";
 import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import NotificationMgr from "../Basic/NotificationMgr";
-import { EventName } from "../Const/ConstDefine";
 import { ArtifactArrangeType, ArtifactProp, ArtifactPropValueType } from "../Const/Artifact";
 import CLog from "../Utils/CLog";
+import { NotificationName } from "../Const/Notification";
 
 export default class ArtifactMgr {
     private _maxArtifactLength: number = 100;
@@ -154,7 +154,7 @@ export default class ArtifactMgr {
         }
         if (changed) {
             sys.localStorage.setItem(this._localStorageKey, JSON.stringify(this._localArtifactDatas));
-            NotificationMgr.triggerEvent(EventName.ARTIFACT_CHANGE);
+            NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
         }
     }
 
@@ -183,7 +183,7 @@ export default class ArtifactMgr {
         }
 
         sys.localStorage.setItem(this._localStorageKey, JSON.stringify(this._localArtifactDatas));
-        NotificationMgr.triggerEvent(EventName.ARTIFACT_CHANGE);
+        NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
 
         return true;
     }
@@ -216,6 +216,6 @@ export default class ArtifactMgr {
             });
         }
 
-        NotificationMgr.triggerEvent(EventName.ARTIFACT_CHANGE);
+        NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
     }
 }

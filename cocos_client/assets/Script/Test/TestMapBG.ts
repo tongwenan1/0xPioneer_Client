@@ -1,11 +1,11 @@
 import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3 } from 'cc';
 import * as cc from "cc";
 import { TilePos, TileMapHelper, TileHexDirection } from '../Game/TiledMap/TileTool';
-import { EventName } from '../Const/ConstDefine';
 import { LocalDataLoader } from '../Utils/Global';
 import NotificationMgr from '../Basic/NotificationMgr';
 import ConfigConfig from '../Config/ConfigConfig';
 import { ConfigType } from '../Const/Config';
+import { NotificationName } from '../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('TestMapBG')
@@ -126,7 +126,7 @@ export class TestMapBG extends Component {
                 sc = useConf.para[0];
             }
             thisptr.node.parent.setScale(v3(sc, sc, sc));
-            NotificationMgr.triggerEvent(EventName.MAP_SCALED, sc);
+            NotificationMgr.triggerEvent(NotificationName.MAP_SCALED, sc);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: cc.EventMouse) => {
@@ -155,7 +155,7 @@ export class TestMapBG extends Component {
         this.InitTileMap();
 
         await LocalDataLoader.loadLocalDatas();
-        NotificationMgr.triggerEvent(EventName.LOADING_FINISH);
+        NotificationMgr.triggerEvent(NotificationName.LOADING_FINISH);
     }
     
     private _tiledhelper: TileMapHelper = null;

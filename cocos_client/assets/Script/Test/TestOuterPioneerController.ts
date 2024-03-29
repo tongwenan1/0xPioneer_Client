@@ -4,11 +4,11 @@ import { OuterOtherPioneerView } from '../Game/Outer/View/OuterOtherPioneerView'
 import { MapItemMonster } from '../Game/Outer/View/MapItemMonster';
 import { MapPioneer } from '../Game/Outer/View/MapPioneer';
 import { TestMapBG } from './TestMapBG';
-import { EventName } from '../Const/ConstDefine';
 import { PioneerMgr, TaskMgr, UserInfoMgr } from '../Utils/Global';
 import { MapPioneerType } from '../Const/Model/MapPioneerModelDefine';
 import { MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
 import NotificationMgr from '../Basic/NotificationMgr';
+import { NotificationName } from '../Const/Notification';
 
 
 const { ccclass, property } = _decorator;
@@ -43,7 +43,7 @@ export class TestOuterPioneerController extends Component {
     protected onLoad(): void {
         
         this._pioneerMap = new Map();
-        NotificationMgr.addListener(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
+        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this.onLocalDataLoadOver, this);
     }
 
     start() {

@@ -2,14 +2,14 @@ import { Label, Node, _decorator } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
 import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../../../Utils/Global";
-import { EventName, ResourceCorrespondingItem } from "../../../Const/ConstDefine";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
-import { UserInfoNotification } from "../../../Const/UserInfoDefine";
 import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
 import { UIName } from "../../../Const/ConstUIDefine";
 import { TransformToEnergyUI } from "../../../UI/Inner/TransformToEnergyUI";
 import ItemData from "../../../Const/Item";
+import { NotificationName } from "../../../Const/Notification";
+import { ResourceCorrespondingItem } from "../../../Const/ConstDefine";
 
 const { ccclass, property } = _decorator;
 
@@ -28,15 +28,15 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
         super.innerBuildingLoad();
         this._produceInfoView = this.node.getChildByName("InfoView");
 
-        NotificationMgr.addListener(EventName.GENERATE_ENERGY_TIME_COUNT_CHANGED, this._countingGenerate, this);
-        NotificationMgr.addListener(EventName.GENERATE_ENERGY_NUM_CHANGED, this._countingGenerate, this);
+        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_TIME_COUNT_CHANGED, this._countingGenerate, this);
+        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_CHANGED, this._countingGenerate, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.addListener(EventName.GENERATE_ENERGY_TIME_COUNT_CHANGED, this._countingGenerate, this);
-        NotificationMgr.addListener(EventName.GENERATE_ENERGY_NUM_CHANGED, this._countingGenerate, this);
+        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_TIME_COUNT_CHANGED, this._countingGenerate, this);
+        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_CHANGED, this._countingGenerate, this);
     }
 
 

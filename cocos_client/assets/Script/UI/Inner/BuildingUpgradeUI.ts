@@ -1,6 +1,6 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
-import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { ArtifactMgr, ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
@@ -9,6 +9,7 @@ import { ArtifactEffectType } from '../../Const/Artifact';
 import { InnerBuildingType, UserInnerBuildInfo } from '../../Const/BuildingDefine';
 import InnerBuildingConfig from '../../Config/InnerBuildingConfig';
 import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
+import { NotificationName } from '../../Const/Notification';
 const { ccclass } = _decorator;
 
 @ccclass('BuildingUpgradeUI')
@@ -56,15 +57,15 @@ export class BuildingUpgradeUI extends ViewController {
         this._levelInfoCostItem = this._levelInfoView.getChildByPath("UpgradeContent/Resource/Item");
         this._levelInfoCostItem.active = false;
 
-        NotificationMgr.addListener(EventName.CHANGE_LANG, this._onLangChang, this);
-        NotificationMgr.addListener(EventName.ITEM_CHANGE, this.onItemChanged, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._onLangChang, this);
+        NotificationMgr.addListener(NotificationName.ITEM_CHANGE, this.onItemChanged, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._onLangChang, this);
-        NotificationMgr.removeListener(EventName.ITEM_CHANGE, this.onItemChanged, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._onLangChang, this);
+        NotificationMgr.removeListener(NotificationName.ITEM_CHANGE, this.onItemChanged, this);
     }
     protected viewPopAnimation(): boolean {
         return true;

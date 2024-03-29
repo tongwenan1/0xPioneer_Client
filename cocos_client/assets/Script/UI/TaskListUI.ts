@@ -1,10 +1,10 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node } from 'cc';
 import CommonTools from '../Tool/CommonTools';
-import { EventName } from '../Const/ConstDefine';
 import MapHelper from "db://assets/Script/Utils/MapHelper";
 import { BuildingMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
+import { NotificationName } from '../Const/Notification';
 
 const { ccclass, property } = _decorator;
 
@@ -258,7 +258,7 @@ export class TaskListUI extends ViewController {
         this._toDoButton = this.node.getChildByPath("TaskDetailView/ToDoButton");
         this._completedButton = this.node.getChildByPath("TaskDetailView/CompletedButton");
 
-        NotificationMgr.addListener(EventName.CHANGE_LANG, this.refreshUI, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
     }
 
     protected viewDidStart(): void {
@@ -270,7 +270,7 @@ export class TaskListUI extends ViewController {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(EventName.CHANGE_LANG, this.refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
     }
     //---------------------------------------------------
     // action

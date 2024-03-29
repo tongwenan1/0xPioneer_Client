@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, ParticleSystem2D, v3 } from 'cc';
-import { EventName } from '../../../Const/ConstDefine';
 import NotificationMgr from '../../../Basic/NotificationMgr';
+import { NotificationName } from '../../../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterParticleView')
@@ -10,7 +10,7 @@ export class OuterParticleView extends Component {
     }
 
     start() {
-        NotificationMgr.addListener(EventName.MAP_SCALED, this.mapScaled, this);
+        NotificationMgr.addListener(NotificationName.MAP_SCALED, this.mapScaled, this);
     }
 
     update(deltaTime: number) {

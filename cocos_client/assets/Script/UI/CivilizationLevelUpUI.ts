@@ -1,5 +1,4 @@
 import { _decorator, Animation, Button, Component, instantiate, Label, Layout, Node, Sprite, tween, v3 } from 'cc';
-import { EventName } from '../Const/ConstDefine';
 import { BackpackItem } from './BackpackItem';
 import { ArtifactItem } from './ArtifactItem';
 import ArtifactData from '../Model/ArtifactData';
@@ -12,6 +11,7 @@ import { ArtifactInfoUI } from './ArtifactInfoUI';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { LvlupConfigData } from '../Const/Lvlup';
 import ItemData, { ItemConfigType } from '../Const/Item';
+import { NotificationName } from '../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('CivilizationLevelUpUI')
@@ -46,13 +46,13 @@ export class CivilizationLevelUpUI extends ViewController {
         this._finishLightAnimView = this.node.getChildByPath("Content/Video/Mask/FinishLight");
         this._finishLightAnimView.active = false;
 
-        NotificationMgr.addListener(EventName.CHANGE_LANG, this.refreshUI, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(EventName.CHANGE_LANG, this.refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
         
     }
 

@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3, Mask, tween, CCString, SpriteFrame, instantiate, Sprite, EventMouse, Color, TiledMap, size, RenderRoot2D, Widget, CCInteger, Animation, view, Canvas } from 'cc';
 import { GameMain } from '../GameMain';
 import { TilePos, TileMapHelper, TileHexDirection } from '../Game/TiledMap/TileTool';
-import { EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
+import { ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { OuterFogMask } from '../Game/Outer/View/OuterFogMask';
 import { ResOprView } from '../Game/Outer/View/ResOprView';
 import { OuterPioneerController } from '../Game/Outer/OuterPioneerController';
@@ -14,6 +14,7 @@ import { UIHUDController } from '../UI/UIHUDController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import ConfigConfig from '../Config/ConfigConfig';
 import { BuildingFactionType, MapBuildingType } from '../Const/BuildingDefine';
+import { NotificationName } from '../Const/Notification';
 
 
 const { ccclass, property } = _decorator;
@@ -273,11 +274,11 @@ export class MapBG extends Component {
             localStorage.setItem("local_outer_map_scale", sc.toString());
             this._fixCameraPos(GameMain.inst.MainCamera.node.position);
 
-            NotificationMgr.triggerEvent(EventName.MAP_SCALED, sc);
+            NotificationMgr.triggerEvent(NotificationName.MAP_SCALED, sc);
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {
-            NotificationMgr.triggerEvent(EventName.CHANGE_CURSOR, { index: 0 });
+            NotificationMgr.triggerEvent(NotificationName.CHANGE_CURSOR, { index: 0 });
             if (thisptr._mouseDown) {
                 let pos = GameMain.inst.MainCamera.node.position.add(new Vec3(-event.movementX, event.movementY, 0));
 
@@ -304,7 +305,7 @@ export class MapBG extends Component {
                                 } else {
                                     this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE);
                                 }
-                                NotificationMgr.triggerEvent(EventName.CHANGE_CURSOR, { index: 1 });
+                                NotificationMgr.triggerEvent(NotificationName.CHANGE_CURSOR, { index: 1 });
                             } else {
                                 const isBlock = this._tiledhelper.Path_IsBlock(tp.x, tp.y);
                                 if (isBlock) {
@@ -324,7 +325,7 @@ export class MapBG extends Component {
                                         }
                                     }
                                     this._mapCursorView.show(cursorShowTilePositions, Color.RED);
-                                    NotificationMgr.triggerEvent(EventName.CHANGE_CURSOR, { index: 2 });
+                                    NotificationMgr.triggerEvent(NotificationName.CHANGE_CURSOR, { index: 2 });
 
                                 } else {
                                     const stayPioneers = PioneerMgr.getShowPioneersByMapPos(v2(tp.x, tp.y));
@@ -336,7 +337,7 @@ export class MapBG extends Component {
                                         }
                                     }
                                     if (existOtherPioneer != null) {
-                                        NotificationMgr.triggerEvent(EventName.CHANGE_CURSOR, { index: 1 });
+                                        NotificationMgr.triggerEvent(NotificationName.CHANGE_CURSOR, { index: 1 });
                                     }
                                     this._mapCursorView.show([v2(tp.x, tp.y)], Color.WHITE);
                                 }
@@ -344,7 +345,7 @@ export class MapBG extends Component {
 
                         } else {
                             this._mapCursorView.hide();
-                            NotificationMgr.triggerEvent(EventName.CHANGE_CURSOR, { index: 2 });
+                            NotificationMgr.triggerEvent(NotificationName.CHANGE_CURSOR, { index: 2 });
                         }
                     } else {
                         this._mapCursorView.hide();

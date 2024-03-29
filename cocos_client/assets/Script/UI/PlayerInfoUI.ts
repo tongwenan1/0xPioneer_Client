@@ -1,6 +1,5 @@
 import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ProgressBar, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
 import { GameMain } from '../GameMain';
-import { EventName } from '../Const/ConstDefine';
 import { SettlementView } from './View/SettlementView';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactItem } from './ArtifactItem';
@@ -12,6 +11,7 @@ import NotificationMgr from '../Basic/NotificationMgr';
 import { UserInfoEvent } from '../Const/UserInfoDefine';
 import LvlupConfig from '../Config/LvlupConfig';
 import ItemData, { ItemConfigType } from '../Const/Item';
+import { NotificationName } from '../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfoUI')
@@ -86,8 +86,8 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
         this._langSelectView = this.node.getChildByName("OptionContainer");
         this._langSelectView.active = false;
 
-        NotificationMgr.addListener(EventName.LOADING_FINISH, this._loadOver, this);
-        NotificationMgr.addListener(EventName.CHANGE_LANG, this._onChangeLang, this);
+        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this._loadOver, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._onChangeLang, this);
 
         UserInfoMgr.addObserver(this);
     }
@@ -105,8 +105,8 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(EventName.LOADING_FINISH, this._loadOver, this);
-        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._onChangeLang, this);
+        NotificationMgr.removeListener(NotificationName.LOADING_FINISH, this._loadOver, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._onChangeLang, this);
 
         UserInfoMgr.removeObserver(this);
     }

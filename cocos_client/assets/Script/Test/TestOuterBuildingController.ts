@@ -1,9 +1,9 @@
 import { _decorator, builtinResMgr, Component, instantiate, Node, Prefab, v2, v3, Vec2, Vec3, warn } from 'cc';
 import { OuterBuildingView } from '../Game/Outer/View/OuterBuildingView';
 import { TestMapBG } from './TestMapBG';
-import { EventName } from '../Const/ConstDefine';
 import { BuildingMgr, PioneerMgr } from '../Utils/Global';
 import NotificationMgr from '../Basic/NotificationMgr';
+import { NotificationName } from '../Const/Notification';
 
 const { ccclass, property } = _decorator;
 
@@ -21,7 +21,7 @@ export class TestOuterBuildingController extends Component {
     private _started: boolean = false;
     private _dataLoaded: boolean = false;
     protected onLoad() {
-        NotificationMgr.addListener(EventName.LOADING_FINISH, this.onLocalDataLoadOver, this);
+        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this.onLocalDataLoadOver, this);
        
     }
 

@@ -1,5 +1,4 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
-import { EventName } from '../../Const/ConstDefine';
 import { BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import { MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import ViewController from '../../BasicView/ViewController';
@@ -13,6 +12,7 @@ import { EventConfigData } from '../../Const/Event';
 import GlobalData from '../../Data/GlobalData';
 import ItemData, { ItemConfigType, ItemType } from '../../Const/Item';
 import ItemConfig from '../../Config/ItemConfig';
+import { NotificationName } from '../../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -57,13 +57,13 @@ export class EventUI extends ViewController {
         this._selectItem = this._dialogSelectView.getChildByName("button");
         this._selectItem.active = false;
 
-        NotificationMgr.addListener(EventName.CHANGE_LANG, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
     }
 
     private async _refreshUI(event: EventConfigData) {
@@ -415,7 +415,7 @@ export class EventUI extends ViewController {
         const eventId = customEventData;
         const hasNextStep = eventId != "-1";
         // console.log(`eventStepEnd, source: onTapNext, eventId: ${this._event.id}, next: ${eventId}`);
-        NotificationMgr.triggerEvent(EventName.Event_StepEnd, [this._event.id, hasNextStep]);
+        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, [this._event.id, hasNextStep]);
 
         this._nextEvent(eventId);
     }
@@ -441,7 +441,7 @@ export class EventUI extends ViewController {
                 if (this._event) {
                     const hasNextStep = eventId != null && eventId != -1 && eventId != -2;
                     // console.log(`eventStepEnd, source: onTapFight, eventId: ${this._event.id}, next: ${eventId}`);
-                    NotificationMgr.triggerEvent(EventName.Event_StepEnd, [this._event.id, hasNextStep]);
+                    NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, [this._event.id, hasNextStep]);
                 }
                 if (eventId != null) {
                     this._nextEvent(eventId);
@@ -464,7 +464,7 @@ export class EventUI extends ViewController {
         let hasNextStep = event != null;
 
         // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}, next: ${eventId}`);
-        NotificationMgr.triggerEvent(EventName.Event_StepEnd, [this._event.id, hasNextStep]);
+        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, [this._event.id, hasNextStep]);
 
         this._nextEvent(eventId);
     }

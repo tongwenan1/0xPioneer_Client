@@ -2,10 +2,11 @@ import { CCBoolean, Component, ImageAsset, _decorator } from "cc";
 import { ItemMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import ViewController from "../BasicView/ViewController";
-import { ECursorStyle, EventName, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { ECursorStyle } from "../Const/ConstDefine";
 import { MouseCursor } from "./MouseCursor";
 import NotificationMgr from "../Basic/NotificationMgr";
 import ItemData from "../Model/ItemData";
+import { NotificationName } from "../Const/Notification";
 
 const { ccclass, property } = _decorator;
 
@@ -36,13 +37,13 @@ export class UIMainRootController extends ViewController {
     protected async viewDidStart(): Promise<void> {
         super.viewDidStart();
 
-        NotificationMgr.addListener(EventName.CHANGE_CURSOR, this.cursorChanged, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_CURSOR, this.cursorChanged, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(EventName.CHANGE_CURSOR, this.cursorChanged, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_CURSOR, this.cursorChanged, this);
     }
 
     private cursorChanged(data: { index: number }) {

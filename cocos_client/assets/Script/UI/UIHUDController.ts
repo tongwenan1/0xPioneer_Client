@@ -4,10 +4,10 @@ import { UIName } from '../Const/ConstUIDefine';
 import { HUDView } from './View/HUDView';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
-import { EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import ItemData from '../Model/ItemData';
 import { ResourceGettedView } from './View/ResourceGettedView';
 import { InnerBuildingType, UserInnerBuildInfo } from '../Const/BuildingDefine';
+import { NotificationName } from '../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIHUDController')
@@ -43,8 +43,8 @@ export class UIHUDController extends ViewController {
 
         this._resourceGettedView = (await UIPanelMgr.openHUDPanel(UIName.ResourceGettedView)).getComponent(ResourceGettedView);
 
-        NotificationMgr.addListener(EventName.RESOURCE_GETTED, this._resourceGetted, this);
-        NotificationMgr.addListener(EventName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
+        NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._resourceGetted, this);
+        NotificationMgr.addListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
 
         this._showResouceGettedView();
     }
@@ -56,8 +56,8 @@ export class UIHUDController extends ViewController {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(EventName.RESOURCE_GETTED, this._resourceGetted, this);
-        NotificationMgr.removeListener(EventName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
+        NotificationMgr.removeListener(NotificationName.RESOURCE_GETTED, this._resourceGetted, this);
+        NotificationMgr.removeListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
     }
 
     private _showResouceGettedView() {

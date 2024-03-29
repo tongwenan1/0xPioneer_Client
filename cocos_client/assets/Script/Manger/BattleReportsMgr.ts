@@ -1,8 +1,8 @@
 import NotificationMgr from "../Basic/NotificationMgr";
 import ConfigConfig from "../Config/ConfigConfig";
 import EventConfig from "../Config/EventConfig";
-import { EventName } from "../Const/ConstDefine";
 import { BattleReportRecord, BattleReportType, BattleReportsEvent } from "../Const/Manager/BattleReportsMgrDefine";
+import { NotificationName } from "../Const/Notification";
 import GlobalData from "../Data/GlobalData";
 
 export default class BattleReportsMgr {
@@ -44,9 +44,9 @@ export default class BattleReportsMgr {
     }
 
     private _registerEvents() { 
-        NotificationMgr.addListener(EventName.FIGHT_FINISHED, this.onFightFinished, this);
-        NotificationMgr.addListener(EventName.MINING_FINISHED, this.onMiningFinished, this);
-        NotificationMgr.addListener(EventName.Event_StepEnd, this.onEventStepEnd, this);
+        NotificationMgr.addListener(NotificationName.FIGHT_FINISHED, this.onFightFinished, this);
+        NotificationMgr.addListener(NotificationName.MINING_FINISHED, this.onMiningFinished, this);
+        NotificationMgr.addListener(NotificationName.EVENT_STEPEND, this.onEventStepEnd, this);
     }
 
     public deleteReadReports() {

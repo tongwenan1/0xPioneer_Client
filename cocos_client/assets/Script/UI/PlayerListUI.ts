@@ -2,12 +2,12 @@ import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout
 import { GameMain } from '../GameMain';
 import { PlayerItemUI } from './PlayerItemUI';
 import { TilePos } from '../Game/TiledMap/TileTool';
-import { EventName } from '../Const/ConstDefine';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
 import { BuildingMgr, PioneerMgr } from '../Utils/Global';
 import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPlayerPioneerModel, MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import NotificationMgr from '../Basic/NotificationMgr';
+import { NotificationName } from '../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerListUI')
@@ -35,8 +35,8 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
         }
         this._playerItem.active = false;
 
-        NotificationMgr.addListener(EventName.LOADING_FINISH, this.loadOver, this);
-        NotificationMgr.addListener(EventName.CHANGE_LANG, this.changeLang, this);
+        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this.loadOver, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
     }
 
     start() {
@@ -47,8 +47,8 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
 
     protected onDestroy(): void {
         PioneerMgr.removeObserver(this);
-        NotificationMgr.removeListener(EventName.LOADING_FINISH, this.loadOver, this);
-        NotificationMgr.removeListener(EventName.CHANGE_LANG, this.changeLang, this);
+        NotificationMgr.removeListener(NotificationName.LOADING_FINISH, this.loadOver, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.changeLang, this);
     }
 
     private loadOver() {

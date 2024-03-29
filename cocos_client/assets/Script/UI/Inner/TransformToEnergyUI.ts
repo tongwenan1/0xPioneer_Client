@@ -1,14 +1,14 @@
 import { _decorator, Color, Component, instantiate, Label, Layout, math, Node, ProgressBar, Slider } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
-import { EventName, ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
 import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 import { InnerBuildingType } from '../../Const/BuildingDefine';
-import { UserInfoNotification } from '../../Const/UserInfoDefine';
 import ItemData from '../../Const/Item';
+import { NotificationName } from '../../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('TransformToEnergyUI')
@@ -135,13 +135,13 @@ export class TransformToEnergyUI extends ViewController {
     protected viewDidAppear(): void {
         super.viewDidAppear();
 
-        NotificationMgr.addListener(UserInfoNotification.generateEnergyNumChanged, this._energyNumChanged, this);
+        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_CHANGED, this._energyNumChanged, this);
     }
 
     protected viewDidDisAppear(): void {
         super.viewDidDisAppear();
 
-        NotificationMgr.removeListener(UserInfoNotification.generateEnergyNumChanged, this._energyNumChanged, this);
+        NotificationMgr.removeListener(NotificationName.GENERATE_ENERGY_NUM_CHANGED, this._energyNumChanged, this);
 
     }
 

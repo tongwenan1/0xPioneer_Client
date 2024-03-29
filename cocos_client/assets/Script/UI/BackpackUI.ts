@@ -1,12 +1,12 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
 import { BackpackItem } from './BackpackItem';
-import { EventName } from '../Const/ConstDefine';
 import { ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import { ItemInfoUI } from './ItemInfoUI';
 import NotificationMgr from '../Basic/NotificationMgr';
 import ItemData, { ItemArrangeType } from '../Const/Item';
+import { NotificationName } from '../Const/Notification';
 const { ccclass, property } = _decorator;
 
 
@@ -38,8 +38,8 @@ export class BackpackUI extends ViewController {
 
         this._itemContent = this.node.getChildByPath("__ViewContent/Bg/ScrollView/View/Content");
 
-        NotificationMgr.addListener(EventName.CHANGE_LANG, this._refreshBackpackUI, this);
-        NotificationMgr.addListener(EventName.ITEM_CHANGE, this._refreshBackpackUI, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._refreshBackpackUI, this);
+        NotificationMgr.addListener(NotificationName.ITEM_CHANGE, this._refreshBackpackUI, this);
     }
     
     protected viewDidStart(): void {
@@ -70,8 +70,8 @@ export class BackpackUI extends ViewController {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._refreshBackpackUI, this);
-        NotificationMgr.removeListener(EventName.ITEM_CHANGE, this._refreshBackpackUI, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._refreshBackpackUI, this);
+        NotificationMgr.removeListener(NotificationName.ITEM_CHANGE, this._refreshBackpackUI, this);
     }
 
     protected viewPopAnimation(): boolean {

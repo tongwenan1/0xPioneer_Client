@@ -1,9 +1,9 @@
 import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
-import { EventName } from '../Const/ConstDefine';
 import { SettlementView } from './View/SettlementView';
 import { LanMgr, UIPanelMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
+import { NotificationName } from '../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('NewSettlementUI')
@@ -23,12 +23,12 @@ export class NewSettlementUI extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        NotificationMgr.addListener(EventName.CHANGE_LANG, this._onLangChanged, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._onLangChanged, this);
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._onLangChanged, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._onLangChanged, this);
     }
 
     private _onLangChanged() {

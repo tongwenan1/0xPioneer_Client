@@ -1,11 +1,12 @@
 import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt, UIOpacity, instantiate, tween } from 'cc';
-import { EventName, ResourceCorrespondingItem } from '../Const/ConstDefine';
+import { ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { ItemMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { UserInfoEvent, FinishedEvent } from '../Const/UserInfoDefine';
 import LvlupConfig from '../Config/LvlupConfig';
+import { NotificationName } from '../Const/Notification';
 const { ccclass, property } = _decorator;
 
 
@@ -46,8 +47,8 @@ export default class TopUI extends Component implements UserInfoEvent {
         UserInfoMgr.addObserver(this);
 
 
-        NotificationMgr.addListener(EventName.LOADING_FINISH, this.loadOver, this);
-        NotificationMgr.addListener(EventName.ITEM_CHANGE, this.refreshTopUI, this);
+        NotificationMgr.addListener(NotificationName.LOADING_FINISH, this.loadOver, this);
+        NotificationMgr.addListener(NotificationName.ITEM_CHANGE, this.refreshTopUI, this);
     }
 
     start() {
@@ -58,8 +59,8 @@ export default class TopUI extends Component implements UserInfoEvent {
     protected onDestroy(): void {
         UserInfoMgr.removeObserver(this);
 
-        NotificationMgr.removeListener(EventName.LOADING_FINISH, this.loadOver, this);
-        NotificationMgr.removeListener(EventName.ITEM_CHANGE, this.refreshTopUI, this);
+        NotificationMgr.removeListener(NotificationName.LOADING_FINISH, this.loadOver, this);
+        NotificationMgr.removeListener(NotificationName.ITEM_CHANGE, this.refreshTopUI, this);
     }
 
     private loadOver() {

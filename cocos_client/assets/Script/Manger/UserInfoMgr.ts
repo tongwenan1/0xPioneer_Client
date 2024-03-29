@@ -1,5 +1,5 @@
 import { Asset, __private, resources, sys } from "cc";
-import { EventName, GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
 import { BuildingMgr, CountMgr, ItemMgr, PioneerMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
@@ -7,7 +7,7 @@ import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
 import { UIName } from "../Const/ConstUIDefine";
 import { ItemInfoUI } from "../UI/ItemInfoUI";
 import NotificationMgr from "../Basic/NotificationMgr";
-import { UserInfoEvent, FinishedEvent, UserInfoNotification, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";
+import { UserInfoEvent, FinishedEvent, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";
 import { InnerBuildingType, UserInnerBuildInfo } from "../Const/BuildingDefine";
 import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
 import InnerBuildingConfig from "../Config/InnerBuildingConfig";
@@ -15,6 +15,8 @@ import { CountType } from "../Const/Count";
 import LvlupConfig from "../Config/LvlupConfig";
 import { LvlupConfigData } from "../Const/Lvlup";
 import ItemData from "../Const/Item";
+import { NotificationName } from "../Const/Notification";
+import ItemConfig from "../Config/ItemConfig";
 
 export default class UserInfoMgr {
 
@@ -190,7 +192,7 @@ export default class UserInfoMgr {
             this._localJsonData.innerBuildData[buildingType] = buildInfo;
             this._localDataChanged(this._localJsonData);
 
-            NotificationMgr.triggerEvent(EventName.INNER_BUILDING_BEGIN_UPGRADE, buildingType);
+            NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_BEGIN_UPGRADE, buildingType);
         }
     }
     public upgradeFinished(buildingType: InnerBuildingType) {
@@ -266,7 +268,7 @@ export default class UserInfoMgr {
             return;
         }
         this._generateEnergyInfo.totalEnergyNum = 0;
-        NotificationMgr.triggerEvent(EventName.GENERATE_ENERGY_NUM_CHANGED);
+        NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_NUM_CHANGED);
     }
 
     public get afterTalkItemGetData() {
@@ -471,14 +473,14 @@ export default class UserInfoMgr {
                         this._localJsonData.innerBuildData[key] = value;
                         this._localDataChanged(this._localJsonData);
 
-                        NotificationMgr.triggerEvent(EventName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED);
+                        NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED);
 
                         if (value.upgradeCountTime >= value.upgradeTotalTime) {
                             this.upgradeFinished(key);
                             this._localJsonData.innerBuildData[key] = value;
                             this._localDataChanged(this._localJsonData);
 
-                            NotificationMgr.triggerEvent(EventName.INNER_BUILDING_UPGRADE_FINISHED, key);
+                            NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, key);
                         }
                     }
                 });
@@ -492,7 +494,7 @@ export default class UserInfoMgr {
                 this._localJsonData.playerData.generateTroopInfo = this._generateTroopInfo;
                 this._localDataChanged(this._localJsonData);
 
-                NotificationMgr.triggerEvent(UserInfoNotification.generateTroopTimeCountChanged);
+                NotificationMgr.triggerEvent(NotificationName.GENERATE_TROOP_TIME_COUNT_ChANGED);
 
                 if (this._generateTroopInfo.countTime <= 0) {
                     ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Troop, this._generateTroopInfo.troopNum)]);
@@ -500,7 +502,7 @@ export default class UserInfoMgr {
                     this._localJsonData.playerData.generateTroopInfo = this._generateTroopInfo;
                     this._localDataChanged(this._localJsonData);
 
-                    NotificationMgr.triggerEvent(UserInfoNotification.generateTroopNumChanged);
+                    NotificationMgr.triggerEvent(NotificationName.GENERATE_TROOP_NUM_CHANGED);
                 }
             }
             // generate energy
@@ -527,7 +529,7 @@ export default class UserInfoMgr {
                     this._localJsonData.playerData.generateEnergyInfo = this._generateEnergyInfo;
                     this._localDataChanged(this._localJsonData);
 
-                    NotificationMgr.triggerEvent(EventName.GENERATE_ENERGY_TIME_COUNT_CHANGED);
+                    NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_TIME_COUNT_CHANGED);
 
                     if (this._generateEnergyInfo.countTime <= 0) {
 
@@ -538,7 +540,7 @@ export default class UserInfoMgr {
                         this._localJsonData.playerData.generateEnergyInfo = this._generateEnergyInfo;
                         this._localDataChanged(this._localJsonData);
 
-                        NotificationMgr.triggerEvent(EventName.GENERATE_ENERGY_NUM_CHANGED);
+                        NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_NUM_CHANGED);
                     }
                 }
             }
@@ -716,7 +718,7 @@ export default class UserInfoMgr {
             if (step.rewardBackpackItem != null) {
                 const addItems: ItemData[] = [];
                 for (const r of step.rewardBackpackItem) {
-                    let itemConf = ItemMgr.getItemConf(r.itemConfigId);
+                    let itemConf = ItemConfig.getById(r.itemConfigId);
                     if (!itemConf) {
                         continue;
                     }
@@ -759,7 +761,7 @@ export default class UserInfoMgr {
                 let talkId: string = null;
                 const addItems: ItemData[] = [];
                 for (const r of step.afterTalkRewardItem) {
-                    let itemConf = ItemMgr.getItemConf(r.itemConfigId);
+                    let itemConf = ItemConfig.getById(r.itemConfigId);
                     if (!itemConf) {
                         continue;
                     }

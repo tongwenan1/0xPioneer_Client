@@ -1,5 +1,4 @@
 import { _decorator, Label, Node, Button, EventHandler, Prefab, instantiate, Layout } from "cc";
-import { EventName } from "../Const/ConstDefine";
 import ArtifactData from "../Model/ArtifactData";
 import { ArtifactItem } from "./ArtifactItem";
 import { ArtifactMgr, LanMgr, UIPanelMgr } from "../Utils/Global";
@@ -8,6 +7,7 @@ import { UIName } from "../Const/ConstUIDefine";
 import { ArtifactInfoUI } from "./ArtifactInfoUI";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { ArtifactArrangeType } from "../Const/Artifact";
+import { NotificationName } from "../Const/Notification";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactUI")
@@ -35,8 +35,8 @@ export class ArtifactUI extends ViewController {
 
         this._itemContent = this.node.getChildByPath("__ViewContent/Bg/ScrollView/View/Content");
 
-        NotificationMgr.addListener(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
-        NotificationMgr.addListener(EventName.ARTIFACT_CHANGE, this._refreshArtifactUI, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._refreshArtifactUI, this);
+        NotificationMgr.addListener(NotificationName.ARTIFACT_CHANGE, this._refreshArtifactUI, this);
     }
 
     protected viewDidStart(): void {
@@ -71,8 +71,8 @@ export class ArtifactUI extends ViewController {
 
         // ArtifactMgr.removeObserver(this);
 
-        NotificationMgr.removeListener(EventName.CHANGE_LANG, this._refreshArtifactUI, this);
-        NotificationMgr.removeListener(EventName.ARTIFACT_CHANGE, this._refreshArtifactUI, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._refreshArtifactUI, this);
+        NotificationMgr.removeListener(NotificationName.ARTIFACT_CHANGE, this._refreshArtifactUI, this);
     }
 
     protected viewPopAnimation(): boolean {

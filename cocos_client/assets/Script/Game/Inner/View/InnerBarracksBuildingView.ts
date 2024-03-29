@@ -7,7 +7,7 @@ import { UIName } from "../../../Const/ConstUIDefine";
 import { RecruitUI } from "../../../UI/Inner/RecruitUI";
 import CommonTools from "../../../Tool/CommonTools";
 import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
-import { UserInfoNotification } from "../../../Const/UserInfoDefine";
+import { NotificationName } from "../../../Const/Notification";
 
 const { ccclass, property } = _decorator;
 
@@ -26,15 +26,15 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
         super.innerBuildingLoad();
         this._generateTime = this.node.getChildByPath("RecruitTime").getComponent(Label);
 
-        NotificationMgr.addListener(UserInfoNotification.generateTroopTimeCountChanged, this._countingGenerate, this);
-        NotificationMgr.addListener(UserInfoNotification.generateTroopNumChanged, this._countingGenerate, this);
+        NotificationMgr.addListener(NotificationName.GENERATE_TROOP_TIME_COUNT_ChANGED, this._countingGenerate, this);
+        NotificationMgr.addListener(NotificationName.GENERATE_TROOP_NUM_CHANGED, this._countingGenerate, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(UserInfoNotification.generateTroopTimeCountChanged, this._countingGenerate, this);
-        NotificationMgr.removeListener(UserInfoNotification.generateTroopNumChanged, this._countingGenerate, this);
+        NotificationMgr.removeListener(NotificationName.GENERATE_TROOP_TIME_COUNT_ChANGED, this._countingGenerate, this);
+        NotificationMgr.removeListener(NotificationName.GENERATE_TROOP_NUM_CHANGED, this._countingGenerate, this);
     }
 
 

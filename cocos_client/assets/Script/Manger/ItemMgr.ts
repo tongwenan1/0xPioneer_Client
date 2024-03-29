@@ -2,12 +2,13 @@ import { SpriteFrame, resources, sys } from "cc";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import { ResourcesMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
 import ItemData from "../Model/ItemData";
-import { EventName, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { FinishedEvent } from "../Const/UserInfoDefine";
 import NotificationMgr from "../Basic/NotificationMgr";
 import ItemConfig from "../Config/ItemConfig";
 import { ItemArrangeType, ItemType } from "../Const/Item";
 import CLog from "../Utils/CLog";
+import { NotificationName } from "../Const/Notification";
 
 export default class ItemMgr {
     private _maxItemLength: number = 100;
@@ -90,7 +91,7 @@ export default class ItemMgr {
             if (itemConfig == null) {
             } else {
                 if (itemConfig.itemType == ItemType.Resource) {
-                    NotificationMgr.triggerEvent(EventName.RESOURCE_GETTED, item);
+                    NotificationMgr.triggerEvent(NotificationName.RESOURCE_GETTED, item);
 
                 } else if (this.itemIsFull) {
                     continue;
@@ -163,7 +164,7 @@ export default class ItemMgr {
         }
         if (changed) {
             localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
-            NotificationMgr.triggerEvent(EventName.ITEM_CHANGE);
+            NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
         }
     }
 
@@ -232,7 +233,7 @@ export default class ItemMgr {
             isResource = true;
         }
         if (isResource) {
-            NotificationMgr.triggerEvent(EventName.RESOURCE_CONSUMED);
+            NotificationMgr.triggerEvent(NotificationName.RESOURCE_CONSUMED);
         }
 
         const itemConfig = ItemConfig.getById(itemConfigId);
@@ -254,7 +255,7 @@ export default class ItemMgr {
             this._localItemDatas.splice(idx, 1);
         }
         localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
-        NotificationMgr.triggerEvent(EventName.ITEM_CHANGE);
+        NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
 
         return true;
     }
@@ -294,6 +295,6 @@ export default class ItemMgr {
             });
         }
 
-        NotificationMgr.triggerEvent(EventName.ITEM_CHANGE);
+        NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
     }
 }
