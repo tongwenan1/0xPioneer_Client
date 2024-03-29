@@ -347,6 +347,10 @@
     "id": "200003",
     "eng": "Big Team Coming: %s"
   },
+  "200004": {
+    "id": "200004",
+    "eng": "Relic Choice"
+  },
   "201001": {
     "id": "201001",
     "eng": "The building is being upgraded, please wait."
