@@ -1,0 +1,65 @@
+{
+  "task0101": {
+    "id": "task0101",
+    "name": "501023",
+    "start_action": [
+      [
+        1,
+        0,
+        "npc_1",
+        1,
+        0
+      ],
+      [
+        1,
+        0,
+        "npc_3",
+        1,
+        0
+      ],
+      [
+        1,
+        0,
+        "gangster_1",
+        1,
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        3,
+        [
+          "gangster_1"
+        ],
+        1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "gangster_3",
+        1,
+        10
+      ],
+      [
+        1,
+        0,
+        "pioneer_3",
+        1,
+        0
+      ],
+      [
+        1,
+        0,
+        "npc_3",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": 5,
+    "exp": 10
+  }
+}

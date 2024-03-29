@@ -190,16 +190,16 @@
     "logics": [
       {
         "type": 1,
-        "posx": 20,
-        "posy": 45,
-        "cond": "",
+        "posx": 22,
+        "posy": 27,
         "step": null,
         "cd": null,
         "direction": null,
         "repeat": null,
         "interval": null,
         "range": null,
-        "speed": null
+        "speed": null,
+        "cond": ""
       }
     ]
   },
@@ -501,14 +501,14 @@
         "type": 2,
         "posx": null,
         "posy": null,
-        "cond": "KillDoomsDayGangTeam",
         "step": 1,
         "cd": 2,
         "direction": 5,
         "repeat": -1,
         "interval": null,
         "range": null,
-        "speed": null
+        "speed": null,
+        "cond": "KillDoomsDayGangTeam"
       }
     ]
   },
@@ -537,27 +537,27 @@
         "type": 2,
         "posx": null,
         "posy": null,
-        "cond": "",
         "step": 1,
         "cd": 2,
         "direction": 2,
         "repeat": 10,
         "interval": null,
         "range": null,
-        "speed": null
+        "speed": null,
+        "cond": ""
       },
       {
         "type": 3,
         "posx": null,
         "posy": null,
-        "cond": "",
         "step": null,
         "cd": null,
         "direction": null,
         "repeat": null,
         "interval": null,
         "range": null,
-        "speed": null
+        "speed": null,
+        "cond": ""
       }
     ]
   },
@@ -586,7 +586,6 @@
         "type": 4,
         "posx": null,
         "posy": null,
-        "cond": "",
         "step": null,
         "cd": null,
         "direction": null,
@@ -596,7 +595,8 @@
           3
         ],
         "range": 3,
-        "speed": 200
+        "speed": 200,
+        "cond": ""
       }
     ]
   },
@@ -694,7 +694,6 @@
         "type": 4,
         "posx": null,
         "posy": null,
-        "cond": "",
         "step": null,
         "cd": null,
         "direction": null,
@@ -704,7 +703,8 @@
           5
         ],
         "range": 2,
-        "speed": 180
+        "speed": 180,
+        "cond": ""
       }
     ]
   },
@@ -733,7 +733,6 @@
         "type": 4,
         "posx": null,
         "posy": null,
-        "cond": "",
         "step": null,
         "cd": null,
         "direction": null,
@@ -743,7 +742,8 @@
           6
         ],
         "range": 3,
-        "speed": 100
+        "speed": 100,
+        "cond": ""
       }
     ]
   },
@@ -772,7 +772,6 @@
         "type": 4,
         "posx": null,
         "posy": null,
-        "cond": "",
         "step": null,
         "cd": null,
         "direction": null,
@@ -782,7 +781,8 @@
           3
         ],
         "range": 2,
-        "speed": 150
+        "speed": 150,
+        "cond": ""
       }
     ]
   },
@@ -811,7 +811,6 @@
         "type": 4,
         "posx": null,
         "posy": null,
-        "cond": "",
         "step": null,
         "cd": null,
         "direction": null,
@@ -821,7 +820,8 @@
           3
         ],
         "range": 6,
-        "speed": 200
+        "speed": 200,
+        "cond": ""
       }
     ]
   },
@@ -861,7 +861,6 @@
         "type": 4,
         "posx": null,
         "posy": null,
-        "cond": "",
         "step": null,
         "cd": null,
         "direction": null,
@@ -871,7 +870,8 @@
           7
         ],
         "range": 2,
-        "speed": 100
+        "speed": 100,
+        "cond": ""
       }
     ]
   }
