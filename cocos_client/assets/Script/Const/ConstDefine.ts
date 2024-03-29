@@ -1,6 +1,6 @@
 import { ItemConfigType } from "./Item";
 
-export const PioneerGameTest = true;
+export const PioneerGameTest = false;
 
 export enum AttrType {
     HP = 0,

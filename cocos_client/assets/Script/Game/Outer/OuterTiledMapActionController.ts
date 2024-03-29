@@ -95,7 +95,7 @@ export class OuterTiledMapActionController extends ViewController {
         super.viewDidLoad()
 
         this._initTileMap();
-        
+
         // local shadow erase
         this._localEraseShadowWorldPos = [];
         const eraseShadowData: any = localStorage.getItem(this._localEraseDataKey);
@@ -229,13 +229,13 @@ export class OuterTiledMapActionController extends ViewController {
         // local fog
         this._refreshFog(GameMainHelper.instance.tiledMapGetShadowClearedTiledPositions());
     }
-    
+
     protected viewDidAppear(): void {
         super.viewDidAppear();
 
         GameMainHelper.instance.changeGameCameraPosition(this._showOuterCameraPosition.clone());
         GameMainHelper.instance.changeGameCameraZoom(this._showOuterCameraZoom);
-        
+
     }
 
     protected viewDidDisAppear(): void {
@@ -244,7 +244,7 @@ export class OuterTiledMapActionController extends ViewController {
         this._showOuterCameraPosition = GameMainHelper.instance.gameCameraPosition.clone();
         this._showOuterCameraZoom = GameMainHelper.instance.gameCameraZoom;
     }
-    
+
     protected viewUpdate(dt: number): void {
         super.viewUpdate(dt);
 
@@ -292,7 +292,7 @@ export class OuterTiledMapActionController extends ViewController {
 
         //init tiledmap by a helper class
         GameMainHelper.instance.initTiledMapHelper(_tilemap);
-        
+
         this._fogItem = instantiate(this.gridFogPrefab);
         this._fogItem.layer = this.node.layer;
         // this._fogItem.scale = v3(1.8, 1.8, 1);
@@ -548,7 +548,7 @@ export class OuterTiledMapActionController extends ViewController {
                     if (toStayPioneer != null) {
                         toStayPos = [toStayPioneer.stayPos];
                     }
-                    movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y)).path;
+                    movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y), toStayPos).path;
 
                 } else if (purchaseMovingBuildingId != null) {
                     const toStayBuilding = BuildingMgr.getBuildingById(purchaseMovingBuildingId);
@@ -598,14 +598,9 @@ export class OuterTiledMapActionController extends ViewController {
                     PioneerMgr.pioneerToIdle(currentActionPioneer.id);
 
                 } else {
-                    if (useActionType == 4) {
-                        // move to building
-                        currentActionPioneer.purchaseMovingBuildingId = purchaseMovingBuildingId;
-                    } else {
-                        // move to near building 
-                        currentActionPioneer.purchaseMovingPioneerId = purchaseMovingPioneerId;
-                        currentActionPioneer.purchaseMovingBuildingId = purchaseMovingBuildingId;
-                    }
+                    // move to near pioneer or building
+                    currentActionPioneer.purchaseMovingPioneerId = purchaseMovingPioneerId;
+                    currentActionPioneer.purchaseMovingBuildingId = purchaseMovingBuildingId;
                 }
                 PioneerMgr.pioneerBeginMove(currentActionPioneer.id, movePaths);
                 this._mapActionCursorView.hide();
@@ -650,7 +645,7 @@ export class OuterTiledMapActionController extends ViewController {
             let isBound: boolean = false;
             const centerPos = GameMainHelper.instance.tiledMapGetPosWorld(pos.x, pos.y);
             // direction around no hex or hex is shadow, direction is bound.
-            
+
             const leftTop = GameMainHelper.instance.tiledMapGetAroundByDirection(v2(pos.x, pos.y), TileHexDirection.LeftTop);
             if (leftTop == null || GameMainHelper.instance.tiledMapIsAllBlackShadow(leftTop.x, leftTop.y)) {
                 getAllBoundLines.push({
@@ -765,18 +760,11 @@ export class OuterTiledMapActionController extends ViewController {
         });
     }
 
-    private _lastpt: number = null;
     private _playFogAnim(
         allClearedTilePosions: { startPos: Vec2, endPos: Vec2 }[],
         animTilePostions: TilePos[],
         pioneerStayPos: Vec2,
     ) {
-        const time: number = Date.now();
-        if (this._lastpt == null) {
-            this._lastpt = time;
-        }
-        // console.log("exce delay: " + (time - this._lastpt));
-        this._lastpt = time;
         // draw bg fog
         // this._fogView.draw(allClearedTilePosions);
         // dismiss anim

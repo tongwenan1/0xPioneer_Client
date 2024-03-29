@@ -7,7 +7,7 @@ export default class EventConfig {
 
     public static async init(): Promise<boolean> {
         const obj: any = await new Promise((resolve) => {
-            resources.load("data_local/drop", (err: Error, data: any) => {
+            resources.load("data_local/event", (err: Error, data: any) => {
                 if (err) {
                     resolve(null);
                     return;

@@ -742,7 +742,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 for (const resource of building.resources) {
                     const resultNum: number = Math.floor(resource.num * (1 + LvlupConfig.getTotalExtraRateByLvl(UserInfoMgr.level)));
                     actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resultNum, () => {
-                        console.log("exce mining:", resource);
                         ItemMgr.addItem([new ItemData(resource.id, resultNum)]);
                     });
                 }

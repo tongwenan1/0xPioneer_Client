@@ -54,9 +54,7 @@ export class ResourceGettedView extends ViewController {
                 itemView.getChildByPath("Tip").getComponent(Label).string = LanMgr.replaceLanById("106003", [LanMgr.getLanById(config.itemName), item.count]);
 
             } else if (item instanceof UserInnerBuildInfo) {
-                console.log("exce buty: " + item.buildType);
                 const config = InnerBuildingConfig.getByBuildingType(item.buildType);
-                console.log("exce config: " + config);
                 if (config == null) {
                     return;
                 }

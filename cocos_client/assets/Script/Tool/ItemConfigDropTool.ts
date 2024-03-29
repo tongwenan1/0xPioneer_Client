@@ -44,9 +44,6 @@ export default class ItemConfigDropTool {
                 artifacts.push(tempArtifact);
             }
         }
-        console.log("exce datas: " + JSON.stringify(datas));
-        console.log("exce items:" + JSON.stringify(items));
-        console.log("exce artifacts:" + JSON.stringify(artifacts));
         if (items.length > 0) {
             ItemMgr.addItem(items);
             if (showDialog) {

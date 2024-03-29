@@ -1,4 +1,5 @@
 import { Asset, resources, assetManager, isValid, AssetManager, sys } from "cc";
+import CLog from "../Utils/CLog";
 
 export const ABResBundleName = "abresources";
 
@@ -12,7 +13,7 @@ export default class ResourcesManager {
             ABResBundleName,
             {
                 onFileProgress: (loaded: number, total: number) => {
-                    console.log("exce ResourcesManager loadBundle " + ABResBundleName + ":" + loaded + "/" + total);
+                    CLog.debug("ResourcesManager loadBundle " + ABResBundleName + ":" + loaded + "/" + total);
                 },
             },
             (err: Error | null, bundle: AssetManager.Bundle) => {
@@ -31,7 +32,7 @@ export default class ResourcesManager {
             if (!res) {
                 resources.load(path, type, (error, sf: T) => {
                     if (error) {
-                        console.warn("ResourcesManager LoadResource error: ", error);
+                        CLog.error("ResourcesManager LoadResource error: ", error)
                         resolve(null);
                     }
                     resolve(sf);
