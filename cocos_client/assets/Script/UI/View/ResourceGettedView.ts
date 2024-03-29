@@ -89,7 +89,7 @@ export class ResourceGettedView extends ViewController {
             this._playingNode = this._allShowItems.shift();
             tween()
                 .target(this._playingNode.getComponent(UIOpacity))
-                .delay(3)
+                .delay(1.5)
                 .to(0.3, { opacity: 0 })
                 .call(() => {
                     this._playingNode.destroy();
