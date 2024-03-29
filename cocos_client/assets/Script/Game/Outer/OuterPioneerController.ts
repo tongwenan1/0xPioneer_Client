@@ -1,4 +1,4 @@
-import { _decorator, Color, Component, director, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
+import { _decorator, Camera, Color, Component, director, find, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
 import { TilePos } from '../TiledMap/TileTool';
 import { OuterFightView } from './View/OuterFightView';
 import { OuterOtherPioneerView } from './View/OuterOtherPioneerView';

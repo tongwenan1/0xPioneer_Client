@@ -42,15 +42,10 @@ export class Main extends ViewController {
         if (GAME_ENV_IS_DEBUG) {
             this._loginView.destroy();
             const loadingView = await UIPanelMgr.openPanel(UIName.LoadingUI);
-            console.log("exce step1");
             await LocalDataLoader.loadLocalDatas();
-            console.log("exce step2");
             await this.node.getChildByPath("UI_Canvas/UI_ROOT").getComponent(UIMainRootController).showMain();
-            console.log("exce step3");
             await UIPanelMgr.openPanelToNode("prefab/game/Game", this.node.getChildByPath("Canvas/GameContent"));
-            console.log("exce step4");
             loadingView.destroy();
-            console.log("exce step5");
         }
     }
 

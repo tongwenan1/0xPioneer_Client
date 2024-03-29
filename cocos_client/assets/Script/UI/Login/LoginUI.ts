@@ -35,7 +35,6 @@ export class LoginUI extends ViewController {
         this.node.getChildByName("LoginView").active = true;
     }
     private async onTapLogin() {
-        console.log("exce confi: " + this._configLoaded);
         if (!this._configLoaded) {
             return;
         }
@@ -55,8 +54,7 @@ export class LoginUI extends ViewController {
                 }
             }
         }
-        if (canEnter || true) {
-            console.log("exce enter");
+        if (canEnter) {
             NotificationMgr.triggerEvent(NotificationName.USER_LOGIN_SUCCEED);
         }
     }

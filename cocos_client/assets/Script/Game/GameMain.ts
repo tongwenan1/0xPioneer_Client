@@ -12,7 +12,6 @@ export class GameMain extends ViewController {
 
     protected viewDidLoad(): void {
         super.viewDidLoad();
-
         GameMainHelper.instance.setGameCamera(find("Main/Canvas/GameCamera").getComponent(Camera));
     }
 
