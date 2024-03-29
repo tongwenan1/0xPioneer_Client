@@ -1,0 +1,121 @@
+{
+  "task01": {
+    "id": "task01",
+    "name": "501005",
+    "type": 1,
+    "pre_con": null,
+    "close_con": null,
+    "take_con": [
+      2,
+      [
+        1,
+        "talk01",
+        -1,
+        0
+      ]
+    ],
+    "fail_con": [
+      2,
+      [
+        3,
+        [
+          "npc_0"
+        ],
+        1
+      ]
+    ],
+    "steps": [
+      "task0101"
+    ]
+  },
+  "task02": {
+    "id": "task02",
+    "name": "501006",
+    "type": 1,
+    "pre_con": null,
+    "close_con": null,
+    "take_con": null,
+    "fail_con": null,
+    "steps": null
+  },
+  "task03": {
+    "id": "task03",
+    "name": "501001",
+    "type": 1,
+    "pre_con": null,
+    "close_con": null,
+    "take_con": null,
+    "fail_con": null,
+    "steps": null
+  },
+  "task04": {
+    "id": "task04",
+    "name": "501007",
+    "type": 1,
+    "pre_con": null,
+    "close_con": null,
+    "take_con": null,
+    "fail_con": null,
+    "steps": null
+  },
+  "task05": {
+    "id": "task05",
+    "name": "501002",
+    "type": 1,
+    "pre_con": null,
+    "close_con": null,
+    "take_con": null,
+    "fail_con": null,
+    "steps": null
+  },
+  "task06": {
+    "id": "task06",
+    "name": "501008",
+    "type": 1,
+    "pre_con": null,
+    "close_con": null,
+    "take_con": null,
+    "fail_con": null,
+    "steps": null
+  },
+  "task07": {
+    "id": "task07",
+    "name": "501004",
+    "type": 1,
+    "pre_con": null,
+    "close_con": null,
+    "take_con": null,
+    "fail_con": null,
+    "steps": null
+  },
+  "task08": {
+    "id": "task08",
+    "name": "501009",
+    "type": 1,
+    "pre_con": null,
+    "close_con": null,
+    "take_con": null,
+    "fail_con": null,
+    "steps": null
+  },
+  "task09": {
+    "id": "task09",
+    "name": "501010",
+    "type": 1,
+    "pre_con": null,
+    "close_con": null,
+    "take_con": null,
+    "fail_con": null,
+    "steps": null
+  },
+  "task10": {
+    "id": "task10",
+    "name": "501003",
+    "type": 1,
+    "pre_con": null,
+    "close_con": null,
+    "take_con": null,
+    "fail_con": null,
+    "steps": null
+  }
+}
