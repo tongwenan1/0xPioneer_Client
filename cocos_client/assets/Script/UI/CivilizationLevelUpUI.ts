@@ -12,6 +12,7 @@ import NotificationMgr from '../Basic/NotificationMgr';
 import { LvlupConfigData } from '../Const/Lvlup';
 import ItemData, { ItemConfigType } from '../Const/Item';
 import { NotificationName } from '../Const/Notification';
+import { ItemGettedUI } from './ItemGettedUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('CivilizationLevelUpUI')
@@ -199,9 +200,9 @@ export class CivilizationLevelUpUI extends ViewController {
             UserInfoMgr.afterCivilizationClosedShowPioneerDatas = [];
         } else {
             if (UserInfoMgr.afterCivilizationClosedShowItemDatas.length > 0) {
-                const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                const view = await UIPanelMgr.openPanel(UIName.ItemGettedUI);
                 if (view != null) {
-                    view.getComponent(ItemInfoUI).showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas, true);
+                    view.getComponent(ItemGettedUI).showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas);
                 }
                 UserInfoMgr.afterCivilizationClosedShowItemDatas = [];
             }

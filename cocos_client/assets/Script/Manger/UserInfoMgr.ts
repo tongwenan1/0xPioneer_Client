@@ -5,7 +5,6 @@ import ArtifactData from "../Model/ArtifactData";
 import { BuildingMgr, CountMgr, ItemMgr, PioneerMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
 import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
 import { UIName } from "../Const/ConstUIDefine";
-import { ItemInfoUI } from "../UI/ItemInfoUI";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { UserInfoEvent, FinishedEvent, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";
 import { InnerBuildingType, UserInnerBuildInfo } from "../Const/BuildingDefine";
@@ -17,6 +16,7 @@ import { LvlupConfigData } from "../Const/Lvlup";
 import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import ItemConfig from "../Config/ItemConfig";
+import { ItemGettedUI } from "../UI/ItemGettedUI";
 
 export default class UserInfoMgr {
 
@@ -748,9 +748,9 @@ export default class UserInfoMgr {
                             UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
                             this.afterCivilizationClosedShowItemDatas.push(...addItems);
                         } else {
-                            const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                            const view = await UIPanelMgr.openPanel(UIName.ItemGettedUI);
                             if (view != null) {
-                                view.getComponent(ItemInfoUI).showItem(addItems, true);
+                                view.getComponent(ItemGettedUI).showItem(addItems);
                             }
                         }
                     });

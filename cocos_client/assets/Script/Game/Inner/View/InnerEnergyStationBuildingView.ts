@@ -1,4 +1,4 @@
-import { Label, Node, _decorator } from "cc";
+import { Label, Node, _decorator, v3 } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
 import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../../../Utils/Global";
@@ -20,6 +20,9 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
         await super.refreshUI(building);
 
         this._countingGenerate();
+        if (this._buildingSize != null) {
+            this._produceInfoView.position = v3(0, this._buildingSize.height, 0);
+        }
     }
 
     private _produceInfoView: Node = null;
@@ -69,16 +72,18 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
             if (generateConfig != null) {
                 this._produceInfoView.active = true;
                 // userlanMgr
-                // this._produceInfoView.getChildByName("AlreadyProduced").getComponent(Label).string = LanMgr.getLanById("201003") + ":" + generateInfoData.totalEnergyNum + "/" + generateConfig.psyc_storage;
-                this._produceInfoView.getChildByName("AlreadyProduced").getComponent(Label).string = "Collectable PSYC:" + generateInfoData.totalEnergyNum + "/" + generateConfig.storage;
+                // this._produceInfoView.getChildByPath("TopContent/Title").getComponent(Label).string = LanMgr.getLanById("201003");
+                // this._produceInfoView.getChildByPath("BottomContent/Title").getComponent(Label).string = LanMgr.getLanById("201003");
+                // this._produceInfoView.getChildByPath("BottomContent/Gap").getComponent(Label).string = LanMgr.getLanById("201003");
+                this._produceInfoView.getChildByPath("TopContent/CurrentNum").getComponent(Label).string = generateInfoData.totalEnergyNum.toString();
+                this._produceInfoView.getChildByPath("TopContent/MaxNum").getComponent(Label).string = generateConfig.storage.toString();
 
                 if (generateInfoData.totalEnergyNum >= generateConfig.storage) {
-                    this._produceInfoView.getChildByName("NextProduceTime").active = false;
+                    this._produceInfoView.getChildByPath("BottomContent").active = false;
                 } else {
-                    this._produceInfoView.getChildByName("NextProduceTime").active = true;
-                    // userlanMgr
-                    // this._produceInfoView.getChildByName("NextProduceTime").getComponent(Label).string = LanMgr.getLanById("201003") + ": " + generateInfoData.countTime + "s " + LanMgr.getLanById("201003") + " " + generateConfig.psyc_output + " " + LanMgr.getLanById("201003");
-                    this._produceInfoView.getChildByName("NextProduceTime").getComponent(Label).string = "Next Output: " + generateInfoData.countTime + "s for " + generateConfig.output + " PSYC";
+                    this._produceInfoView.getChildByPath("BottomContent").active = true;
+                    this._produceInfoView.getChildByPath("BottomContent/CurrentTime").getComponent(Label).string = generateInfoData.countTime.toString();
+                    this._produceInfoView.getChildByPath("BottomContent/PerNum").getComponent(Label).string = generateConfig.output.toString();
                 }
             }
 

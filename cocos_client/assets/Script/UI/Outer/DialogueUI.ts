@@ -3,11 +3,11 @@ import { NPCNameLangType } from '../../Const/ConstDefine';
 import { CountMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
-import { ItemInfoUI } from '../ItemInfoUI';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
 import { CountType } from '../../Const/Count';
 import { NotificationName } from '../../Const/Notification';
+import { ItemGettedUI } from '../ItemGettedUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -127,18 +127,19 @@ export class DialogueUI extends ViewController {
 
     private _talkOver() {
         //talk over
-        if (UserInfoMgr.afterTalkItemGetData.has(this._talk.id)) {
+        const talkId = this._talk.id;
+        if (UserInfoMgr.afterTalkItemGetData.has(talkId)) {
             setTimeout(async () => {
                 if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
                     UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
-                    UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...UserInfoMgr.afterTalkItemGetData.get(this._talk.id));
+                    UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...UserInfoMgr.afterTalkItemGetData.get(talkId));
                 } else {
-                    const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                    const view = await UIPanelMgr.openPanel(UIName.ItemGettedUI);
                     if (view != null) {
-                        view.getComponent(ItemInfoUI).showItem(UserInfoMgr.afterTalkItemGetData.get(this._talk.id), true);
+                        view.getComponent(ItemGettedUI).showItem(UserInfoMgr.afterTalkItemGetData.get(talkId));
                     }
                 }
-                UserInfoMgr.afterTalkItemGetData.delete(this._talk.id);
+                UserInfoMgr.afterTalkItemGetData.delete(talkId);
             });
         }
         if (this._talkOverCallback != null) {

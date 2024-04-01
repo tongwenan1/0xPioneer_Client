@@ -11,7 +11,8 @@ import ItemConfig from "../Config/ItemConfig";
 import LanConfig from "../Config/LanConfig";
 import LvlupConfig from "../Config/LvlupConfig";
 import TalkConfig from "../Config/TalkConfig";
-import CLog from "../Utils/CLog";
+import TaskConfig from "../Config/TaskConfig";
+import TaskStepConfigData from "../Config/TaskStepConfig";
 
 export default class ConfigMgr {
     public static async init(): Promise<boolean> {
@@ -28,6 +29,8 @@ export default class ConfigMgr {
         if (!(await InnerBuildingConfig.init())) return false;
         if (!(await InnerBuildingLvlUpConfig.init())) return false;
         if (!(await TalkConfig.init())) return false;
+        if (!(await TaskConfig.init())) return false;
+        if (!(await TaskStepConfigData.init())) return false;
 
         return true;
     }

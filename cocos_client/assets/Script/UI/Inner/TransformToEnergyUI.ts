@@ -1,4 +1,4 @@
-import { _decorator, Color, Component, instantiate, Label, Layout, math, Node, ProgressBar, Slider } from 'cc';
+import { _decorator, Color, Component, instantiate, Label, Layers, Layout, math, Node, ProgressBar, Slider } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
 import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
@@ -34,7 +34,7 @@ export class TransformToEnergyUI extends ViewController {
         }
         if (initSelectGenerate) {
             this._selectGenerateNum = Math.min(maxGenerate, 1);
-        } 
+        }
         // else {
         //     if (this._selectGenerateNum > maxGenerate) {
         //         this._selectGenerateNum = maxGenerate;
@@ -42,15 +42,14 @@ export class TransformToEnergyUI extends ViewController {
         // }
         // useLanMgr
         // this.node.getChildByPath("__ViewContent/title").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByPath("__ViewContent/RightContent/title").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByPath("__ViewContent/LeftContent/OutputTitle").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByPath("__ViewContent/LeftContent/OutputTitle/Param/Unit").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByPath("__ViewContent/LeftContent/MaxStorageTitle").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/LeftContent/TitleBg/OutputTitle").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/RightContent/TitleBg/OutputTitle").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/footer/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/footer/Consume").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/footer/Convert").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
-        this._perMinOutputLabel.string = energyData.output.toString();
-        this._currentGeneratedNumLabel.string = userEnergyInfo.totalEnergyNum.toString();
-        this._maxGenerateNumLabel.string = energyData.storage.toString();
+        this._perMinOutputLabel.string = energyData.output.toString() + "/" + "min";
 
         if (maxGenerate <= 0) {
             this._generateProgress.node.active = false;
@@ -60,11 +59,15 @@ export class TransformToEnergyUI extends ViewController {
             this._generateSlider.progress = this._generateProgress.progress;
         }
 
-        // useLanMgr
-        // this._generateNumLabel.string = LanMgr.getLanById("107549") + " " + this._selectGenerateNum;
-        this._generateNumLabel.string = "Convert for PSYC" + " " + this._selectGenerateNum;
+        this._generateNumLabel.string = this._selectGenerateNum.toString();
+
+        const rightContent = this.node.getChildByPath("__ViewContent/RightContent/Param");
+        rightContent.getChildByPath("Max").getComponent(Label).string = energyData.storage.toString();
+        rightContent.getChildByPath("Num").getComponent(Label).string = userEnergyInfo.totalEnergyNum.toString();
+        rightContent.getComponent(Layout).updateLayout();
 
         // cost
+        console.log("exce cost =" + energyData.convert.length);
         if (this._costShowItems.length == energyData.convert.length) {
             for (let i = 0; i < this._costShowItems.length; i++) {
                 let currentCost = energyData.convert[i].num * this._selectGenerateNum;
@@ -74,9 +77,7 @@ export class TransformToEnergyUI extends ViewController {
                 const ownNum: number = ItemMgr.getOwnItemCount(energyData.convert[i].type);
 
                 const item = this._costShowItems[i];
-                item.getChildByPath("num/left").getComponent(Label).string = currentCost + "";
-                item.getChildByPath("num/right").getComponent(Label).string = ownNum.toString();
-                item.getChildByPath("num/right").getComponent(Label).color = ownNum >= currentCost ? new Color(142, 218, 97) : Color.RED;
+                item.getChildByPath("num/Value").getComponent(Label).string = currentCost + "";
                 item.getChildByPath("num").getComponent(Layout).updateLayout();
             }
         } else {
@@ -94,11 +95,8 @@ export class TransformToEnergyUI extends ViewController {
                 item.getChildByPath("Icon/8002").active = cost.type == ResourceCorrespondingItem.Wood;
                 item.getChildByPath("Icon/8003").active = cost.type == ResourceCorrespondingItem.Stone;
                 item.getChildByPath("Icon/8004").active = cost.type == ResourceCorrespondingItem.Troop;
-    
-                item.getChildByPath("num/left").getComponent(Label).string = currentCost + "";
-                item.getChildByPath("num/right").getComponent(Label).string = ownNum.toString();
-                item.getChildByPath("num/right").getComponent(Label).color = ownNum >= currentCost ? new Color(142, 218, 97) : Color.RED;
-                item.getChildByPath("num").getComponent(Layout).updateLayout();
+
+                item.getChildByPath("num/Value").getComponent(Label).string = currentCost + "";
                 this._costShowItems.push(item);
             }
         }
@@ -108,8 +106,6 @@ export class TransformToEnergyUI extends ViewController {
 
 
     private _perMinOutputLabel: Label = null;
-    private _currentGeneratedNumLabel: Label = null;
-    private _maxGenerateNumLabel: Label = null;
 
     private _generateProgress: ProgressBar = null;
     private _generateSlider: Slider = null;
@@ -119,14 +115,11 @@ export class TransformToEnergyUI extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
+        this._perMinOutputLabel = this.node.getChildByPath("__ViewContent/LeftContent/Param/Value").getComponent(Label);
 
-        this._perMinOutputLabel = this.node.getChildByPath("__ViewContent/LeftContent/OutputTitle/Param/Num").getComponent(Label);
-        this._currentGeneratedNumLabel = this.node.getChildByPath("__ViewContent/LeftContent/MaxStorageTitle/Param/Num").getComponent(Label);
-        this._maxGenerateNumLabel = this.node.getChildByPath("__ViewContent/LeftContent/MaxStorageTitle/Param/Max").getComponent(Label);
-
-        this._generateProgress = this.node.getChildByPath("__ViewContent/RightContent/scroll/ProgressBar").getComponent(ProgressBar);
-        this._generateSlider = this.node.getChildByPath("__ViewContent/RightContent/scroll/ProgressBar/Slider").getComponent(Slider);
-        this._generateNumLabel = this.node.getChildByPath("__ViewContent/RightContent/GenerateNum").getComponent(Label);
+        this._generateProgress = this.node.getChildByPath("__ViewContent/footer/scroll/ProgressBar").getComponent(ProgressBar);
+        this._generateSlider = this.node.getChildByPath("__ViewContent/footer/scroll/ProgressBar/Slider").getComponent(Slider);
+        this._generateNumLabel = this.node.getChildByPath("__ViewContent/footer/ConvertItem/num/Value").getComponent(Label);
 
         this._costItem = this.node.getChildByPath("__ViewContent/footer/Resource/Item");
         this._costItem.active = false;
@@ -187,7 +180,7 @@ export class TransformToEnergyUI extends ViewController {
         // maxGenerate = Math.min(maxGenerate, energyData.storage - userEnergyInfo.totalEnergyNum);
 
         // const currentSelectTroop: number = Math.max(1, Math.min(Math.floor(this._generateSlider.progress * (energyData.storage - userEnergyInfo.totalEnergyNum)), maxGenerate));
-        const currentSelectTroop: number = Math.max(1, Math.min(Math.floor(this._generateSlider.progress *maxGenerate)));
+        const currentSelectTroop: number = Math.max(1, Math.min(Math.floor(this._generateSlider.progress * maxGenerate)));
 
         this._generateSlider.progress = currentSelectTroop / maxGenerate;
         if (currentSelectTroop != this._selectGenerateNum) {
@@ -212,7 +205,7 @@ export class TransformToEnergyUI extends ViewController {
         }
         for (const cost of energyData.convert) {
             const currentCost = cost.num * this._selectGenerateNum;
-            ItemMgr.subItem(cost.type, currentCost);            
+            ItemMgr.subItem(cost.type, currentCost);
         }
         ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Energy, this._selectGenerateNum)]);
         this.refreshUI(true);

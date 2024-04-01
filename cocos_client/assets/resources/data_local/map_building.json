@@ -72,7 +72,7 @@
     "id": "building_4",
     "name": "110012",
     "type": 2,
-    "show": 0,
+    "show": 1,
     "pos_type": 0,
     "positions": [
       18,

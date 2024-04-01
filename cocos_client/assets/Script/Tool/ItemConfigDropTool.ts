@@ -4,7 +4,7 @@ import { UIName } from "../Const/ConstUIDefine";
 import ItemData, { ItemConfigType } from "../Const/Item";
 import ArtifactData from "../Model/ArtifactData";
 import { ArtifactInfoUI } from "../UI/ArtifactInfoUI";
-import { ItemInfoUI } from "../UI/ItemInfoUI";
+import { ItemGettedUI } from "../UI/ItemGettedUI";
 import { ArtifactMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import CommonTools from "./CommonTools";
 
@@ -52,9 +52,9 @@ export default class ItemConfigDropTool {
                         UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
                         UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...items);
                     } else {
-                        const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                        const view = await UIPanelMgr.openPanel(UIName.ItemGettedUI);
                         if (view != null) {
-                            view.getComponent(ItemInfoUI).showItem(items, true);
+                            view.getComponent(ItemGettedUI).showItem(items);
                         }
                     }
                 });

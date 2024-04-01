@@ -3,7 +3,6 @@ import { BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UIPa
 import { MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
-import { ItemInfoUI } from '../ItemInfoUI';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
 import { CountType } from '../../Const/Count';
@@ -13,6 +12,7 @@ import GlobalData from '../../Data/GlobalData';
 import ItemData, { ItemConfigType, ItemType } from '../../Const/Item';
 import ItemConfig from '../../Config/ItemConfig';
 import { NotificationName } from '../../Const/Notification';
+import { ItemGettedUI } from '../ItemGettedUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -341,9 +341,9 @@ export class EventUI extends ViewController {
             }
             if (hasItem) {
                 this._contentView.active = false;
-                const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
+                const view = await UIPanelMgr.openPanel(UIName.ItemGettedUI);
                 if (view != null) {
-                    view.getComponent(ItemInfoUI).showItem(itemDatas, true, () => {
+                    view.getComponent(ItemGettedUI).showItem(itemDatas, () => {
                         this._contentView.active = true;
                     });
                 }

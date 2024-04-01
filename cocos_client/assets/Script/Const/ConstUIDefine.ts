@@ -18,6 +18,7 @@ export enum UIName {
     NewSettlementUI = "ui/NewSettlementUI",
     Backpack = "ui/Backpack",
     ItemInfoUI = "ui/ItemInfoUI",
+    ItemGettedUI = "ui/ItemGettedUI",
     ItemSelectFromThreeUI = "ui/ItemSelectFromThreeUI",
     BattleReportUI = "ui/BattleReportUI",
     LootsPopup = "ui/LootsPopup",

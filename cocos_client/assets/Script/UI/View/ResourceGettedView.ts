@@ -39,28 +39,30 @@ export class ResourceGettedView extends ViewController {
         if (this._itemDatas.length > 0) {
             this._isAddingItem = true;
             const item = this._itemDatas.shift();
-            console.log("item: ", item);
             const itemView = instantiate(this._showItem);
             if (item instanceof ItemData) {
+                itemView.getChildByPath("IconTip").active = true;
+                itemView.getChildByPath("TextTip").active = false;
                 const config = ItemConfig.getById(item.itemConfigId);
                 if (config == null) {
                     return;
                 }
-                itemView.getChildByPath("Icon/8001").active = item.itemConfigId == ResourceCorrespondingItem.Food;
-                itemView.getChildByPath("Icon/8002").active = item.itemConfigId == ResourceCorrespondingItem.Wood;
-                itemView.getChildByPath("Icon/8003").active = item.itemConfigId == ResourceCorrespondingItem.Stone;
-                itemView.getChildByPath("Icon/8004").active = item.itemConfigId == ResourceCorrespondingItem.Troop;
-                itemView.getChildByPath("Icon/8005").active = item.itemConfigId == ResourceCorrespondingItem.Energy;
-                itemView.getChildByPath("Tip").getComponent(Label).string = LanMgr.replaceLanById("106003", [LanMgr.getLanById(config.itemName), item.count]);
+                itemView.getChildByPath("IconTip/Icon/8001").active = item.itemConfigId == ResourceCorrespondingItem.Food;
+                itemView.getChildByPath("IconTip/Icon/8002").active = item.itemConfigId == ResourceCorrespondingItem.Wood;
+                itemView.getChildByPath("IconTip/Icon/8003").active = item.itemConfigId == ResourceCorrespondingItem.Stone;
+                itemView.getChildByPath("IconTip/Icon/8004").active = item.itemConfigId == ResourceCorrespondingItem.Troop;
+                itemView.getChildByPath("IconTip/Icon/8005").active = item.itemConfigId == ResourceCorrespondingItem.Energy;
+                itemView.getChildByPath("IconTip/Name").getComponent(Label).string = LanMgr.getLanById(config.itemName);
+                itemView.getChildByPath("IconTip/Num").getComponent(Label).string = "+" + item.count;
 
             } else if (item instanceof UserInnerBuildInfo) {
+                itemView.getChildByPath("IconTip").active = false;
+                itemView.getChildByPath("TextTip").active = true;
                 const config = InnerBuildingConfig.getByBuildingType(item.buildType);
                 if (config == null) {
                     return;
                 }
-                itemView.getChildByPath("Icon").active = false;
-                itemView.getChildByPath("Tip").position = v3(0, 0, 0);
-                itemView.getChildByPath("Tip").getComponent(Label).string = LanMgr.replaceLanById("106004", [LanMgr.getLanById(config.name), item.buildLevel]);
+                itemView.getChildByPath("TextTip/Tip").getComponent(Label).string = LanMgr.replaceLanById("106004", [LanMgr.getLanById(config.name), item.buildLevel]);
             }
 
             itemView.setParent(this._showItem.parent);

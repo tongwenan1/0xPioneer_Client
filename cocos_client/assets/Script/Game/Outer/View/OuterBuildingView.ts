@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Layout, Node } from 'cc';
+import { _decorator, Component, instantiate, Label, Layout, Node } from 'cc';
 import { MapPlayerPioneerModel } from '../Model/MapPioneerModel';
 import { ItemMgr, LanMgr, UserInfoMgr } from '../../../Utils/Global';
 import MapBuildingModel from '../Model/MapBuildingModel';
@@ -52,6 +52,7 @@ export class OuterBuildingView extends ViewController {
 
         } else if (building.type == MapBuildingType.stronghold) {
             strongholdIcon.active = true;
+            strongholdView.active = true;
 
             let isSelf = false;
             for (const player of players) {
@@ -60,14 +61,24 @@ export class OuterBuildingView extends ViewController {
                     break;
                 }
             }
-            if (building.defendPioneerIds.length > 0) {
-                strongholdView.active = true;
-                strongholdView.getChildByPath("pioneer_default").active = building.defendPioneerIds.indexOf("pioneer_0") != -1;
-                strongholdView.getChildByPath("secretGuard").active = building.defendPioneerIds.indexOf("pioneer_1") != -1;
-                strongholdView.getChildByPath("doomsdayGangSpy").active = building.defendPioneerIds.indexOf("pioneer_2") != -1;
-                strongholdView.getChildByPath("rebels").active = building.defendPioneerIds.indexOf("pioneer_3") != -1;
-                strongholdView.getComponent(Layout).updateLayout();
+
+            for (const view of this._strongholdViews) {
+                view.destroy();
             }
+            this._strongholdViews = [];
+
+            for (const pioneerId of building.defendPioneerIds) {
+                const tempView = instantiate(this._strongholdItem);
+                tempView.active = true;
+                tempView.getChildByPath("pioneer_default").active = pioneerId == "pioneer_0";
+                tempView.getChildByPath("secretGuard").active = pioneerId == "pioneer_1";
+                tempView.getChildByPath("doomsdayGangSpy").active = pioneerId == "pioneer_2";
+                tempView.getChildByPath("rebels").active = pioneerId == "pioneer_3";
+                this._strongholdItem.parent.addChild(tempView);
+                this._strongholdViews.push(tempView);
+            }
+            this._strongholdItem.parent.getComponent(Layout).updateLayout();
+            
             if (isSelf) {
                 // this._selfView.active = true;
             } else {
@@ -117,6 +128,9 @@ export class OuterBuildingView extends ViewController {
     ];
     private _levelShowing: boolean = false;
     private _building: MapBuildingModel = null;
+
+    private _strongholdItem: Node = null;
+    private _strongholdViews: Node[] = [];
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
@@ -125,6 +139,9 @@ export class OuterBuildingView extends ViewController {
 
         this._toBuildBuildingTip = this.node.getChildByName("ToBuildBuildingTip");
         this._toBuildBuildingTip.active = false;
+
+        this._strongholdItem = this.node.getChildByPath("StrongholdContent/Item");
+        this._strongholdItem.active = false;
     }
 
     protected viewDidStart(): void {

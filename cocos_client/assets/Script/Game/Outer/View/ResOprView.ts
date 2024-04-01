@@ -39,7 +39,9 @@ export class ResOprView extends Component {
         this.btnGetRes.node.active = actionType == 2;
         this.btnAttack.node.active = actionType == 3;
         this.btnCamp.node.active = actionType == 4;
-        this.btnMove.node.active = actionType == 6 || actionType == -1;
+        this.btnMove.node.active = (actionType == 6 || actionType == -1);
+        this.node.getChildByPath("btnRemove").active = true;
+
         // action cost
         const oneStepCostEnergy = ConfigConfig.getEnergyCostConfig().para[0];
         this._cost = oneStepCostEnergy * moveStep;

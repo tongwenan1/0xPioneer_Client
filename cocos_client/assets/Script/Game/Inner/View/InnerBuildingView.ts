@@ -21,7 +21,7 @@ export class InnerBuildingView extends ViewController {
         // building
         if (this._building.buildLevel != this._currentLevel) {
             this._currentLevel = this._building.buildLevel;
-            let showedBuildingView = null;
+            let showedBuildingView: Node = null;
             let prefabName: string = null;
             const innerConfig = InnerBuildingConfig.getByBuildingType(this._building.buildType);
             if (this._building.buildLevel > 0 &&
@@ -37,7 +37,7 @@ export class InnerBuildingView extends ViewController {
                 const buildingPrb = await ResourcesMgr.LoadABResource("prefab/game/inner/building/" + prefabName, Prefab);
                 if (buildingPrb != null) {
                     const buildView = instantiate(buildingPrb);
-                    buildView.setPosition(Vec3.ZERO);
+                    // buildView.setPosition(Vec3.ZERO);
                     this.node.getChildByPath("BuildingContent").addChild(buildView);
                     this._showBuilding = buildView;
                     showedBuildingView = buildView;
@@ -71,7 +71,11 @@ export class InnerBuildingView extends ViewController {
                 const showedBuildingViewScale: Vec3 = showedBuildingView.scale;
                 buildingSize.width = (maxX - minX) * showedBuildingViewScale.x;
                 buildingSize.height = (maxY - minY) * showedBuildingViewScale.y;
+
+                buildingSize.width += showedBuildingViewScale.x * showedBuildingView.position.x;
+                buildingSize.height += showedBuildingViewScale.y * showedBuildingView.position.y;
             }
+            this._buildingSize = buildingSize;
             this.node.getChildByPath("clickNode").getComponent(UITransform).setContentSize(buildingSize);
         }
 
@@ -101,6 +105,7 @@ export class InnerBuildingView extends ViewController {
     private _infoView: InnerBuildUI = null;
 
     protected _building: UserInnerBuildInfo = null;
+    protected _buildingSize: Size = null;
     private _currentLevel: number = -1;
     protected viewDidLoad(): void {
         super.viewDidLoad();
