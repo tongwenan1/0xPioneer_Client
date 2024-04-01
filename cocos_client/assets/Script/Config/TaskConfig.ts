@@ -25,6 +25,9 @@ export default class TaskConfig {
         return true;
     }
 
+    public static getAll(): { [index: string]: TaskConfigData } {
+        return this._confs;
+    }
     public static getById(taskId: string): TaskConfigData | null {
         if (taskId in this._confs) {
             return this._confs[taskId];
