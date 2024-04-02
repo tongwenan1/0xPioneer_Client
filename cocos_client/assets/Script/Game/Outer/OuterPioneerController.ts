@@ -399,11 +399,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                         UserInfoMgr.isFinishRookie = true;
                         // init resource
                         ItemMgr.addItem([
-                            new ItemData(ResourceCorrespondingItem.Energy, 100),
-                            new ItemData(ResourceCorrespondingItem.Food, 100),
-                            new ItemData(ResourceCorrespondingItem.Stone, 100),
-                            new ItemData(ResourceCorrespondingItem.Wood, 100),
-                            new ItemData(ResourceCorrespondingItem.Troop, 500),
+                            new ItemData(ResourceCorrespondingItem.Energy, 2000),
+                            new ItemData(ResourceCorrespondingItem.Food, 2000),
+                            new ItemData(ResourceCorrespondingItem.Stone, 2000),
+                            new ItemData(ResourceCorrespondingItem.Wood, 2000),
+                            new ItemData(ResourceCorrespondingItem.Troop, 2000),
                         ]);
                     });
                 }
