@@ -1,6 +1,6 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node } from 'cc';
 import { NPCNameLangType } from '../../Const/ConstDefine';
-import { CountMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { CountMgr, LanMgr, PioneerMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
 import { UIHUDController } from '../UIHUDController';
@@ -8,11 +8,12 @@ import NotificationMgr from '../../Basic/NotificationMgr';
 import { CountType } from '../../Const/Count';
 import { NotificationName } from '../../Const/Notification';
 import { ItemGettedUI } from '../ItemGettedUI';
+import TaskModel, { TaskConditionType, TaskTalkCondition } from '../../Const/TaskDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
 export class DialogueUI extends ViewController {
-    public dialogShow(talk: any, task: any, talkOverCallback: () => void = null) {
+    public dialogShow(talk: any, task: TaskModel = null, talkOverCallback: () => void = null) {
         this._talk = talk;
         this._task = task;
         this._talkOverCallback = talkOverCallback;
@@ -21,7 +22,7 @@ export class DialogueUI extends ViewController {
     }
 
     private _talk: any = null;
-    private _task: any = null;
+    private _task: TaskModel = null;
     private _talkOverCallback: () => void;
     private _dialogStep: number = 0;
     private _roleNames: string[] = [
@@ -117,7 +118,7 @@ export class DialogueUI extends ViewController {
 
                     button.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById(currentMesssage.select[i]);
 
-                    button.getComponent(Button).clickEvents[0].customEventData = currentMesssage.select[i];
+                    button.getComponent(Button).clickEvents[0].customEventData = i.toString();
                 } else {
                     button.active = false;
                 }
@@ -162,23 +163,41 @@ export class DialogueUI extends ViewController {
         if (this._talk == null) {
             return;
         }
-        if (this._task != null) {
-            if (this._task.entrypoint.result.includes(customEventData)) {
-                // get task
-                UserInfoMgr.getNewTask(this._task);
+        TaskMgr
+        // if (this._task != null && this._task.takeCon != null) {
 
-                // useLanMgr
-                UIHUDController.showTaskTip(LanMgr.getLanById("202004"));
-                // UIHUDController.showTaskTip("New Task Taken");
+            // let talkCon: TaskTalkCondition = null;
+            // for (const con of this._task.takeCon.conditions) {
+            //     if (con.type == TaskConditionType.Talk) {
+            //         talkCon = con.talk;
+            //         break;
+            //     }
+            // }
+            // if (talkCon != null) {
+            //     const selectIndex: number = parseInt(customEventData);
+            //     if (talkCon.talkSelectCanGetTaskIndex == -1 ||
+            //         talkCon.talkSelectCanGetTaskIndex == selectIndex) {
+            //         UserInfoMgr.getNewTask(this._task.taskId);
+            //         UIHUDController.showTaskTip(LanMgr.getLanById("202004"));
+            //         // UIHUDController.showTaskTip("New Task Taken");
+            //     }
+            //     if (this._task.entrypoint.result.includes(customEventData)) {
+            //         // get task
+            //         UserInfoMgr.getNewTask(this._task);
 
-            } else if (this._task.exitpoint != null &&
-                this._task.exitpoint.result.includes(customEventData)) {
-                // reject task action
-                for (const temp of this._task.exitpoint.action) {
-                    PioneerMgr.dealWithTaskAction(temp.type, 0);
-                }
-            }
-        }
+            //         // useLanMgr
+            //         UIHUDController.showTaskTip(LanMgr.getLanById("202004"));
+            //         // UIHUDController.showTaskTip("New Task Taken");
+
+            //     } else if (this._task.exitpoint != null &&
+            //         this._task.exitpoint.result.includes(customEventData)) {
+            //         // reject task action
+            //         for (const temp of this._task.exitpoint.action) {
+            //             PioneerMgr.dealWithTaskAction(temp.type, 0);
+            //         }
+            //     }
+            // }
+        // }
 
         CountMgr.addNewCount({
             type: CountType.selectDialog,

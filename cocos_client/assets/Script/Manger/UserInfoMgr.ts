@@ -17,6 +17,7 @@ import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import ItemConfig from "../Config/ItemConfig";
 import { ItemGettedUI } from "../UI/ItemGettedUI";
+import TaskModel from "../Const/TaskDefine";
 
 export default class UserInfoMgr {
 
@@ -34,7 +35,7 @@ export default class UserInfoMgr {
         }
     }
 
-    public getNewTask(task: any) {
+    public getNewTask(task: TaskModel) {
         task.currentStep = 0;
         const step = task.steps[task.currentStep];
         for (const templeWinAction of step.startaction) {

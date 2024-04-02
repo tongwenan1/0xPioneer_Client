@@ -1,5 +1,6 @@
 import TaskConfig from "../Config/TaskConfig"
 import { ConfigType } from "./Config"
+import { GetPropData } from "./ConstDefine"
 import { ItemConfigType } from "./Item"
 
 export interface TaskConfigData {
@@ -7,6 +8,7 @@ export interface TaskConfigData {
     name: string,
     type: number,
     pre_con: [][],
+    pre_action: [][],
     close_con: [][],
     take_con: [][],
     fail_con: [][],
@@ -61,6 +63,7 @@ export enum TaskConditionType {
     Finish = 2,
     Kill = 3,
     ShowHide = 4,
+    GameStart = 5,
 }
 
 export interface TaskTalkCondition {
@@ -85,10 +88,10 @@ export interface TaskShowHideCondition {
 }
 export interface TaskCondition {
     type: TaskConditionType,
-    talk: TaskTalkCondition,
-    finish: TaskFinishCondition,
-    kill: TaskKillCondition,
-    showHide: TaskShowHideCondition,
+    talk?: TaskTalkCondition,
+    finish?: TaskFinishCondition,
+    kill?: TaskKillCondition,
+    showHide?: TaskShowHideCondition,
 }
 export interface TaskSatisfyCondition {
     satisfyType: TaskConditionSatisfyType,
@@ -99,7 +102,8 @@ export enum TaskActionType {
     ShowHide = 1,
     Faction = 2,
     Talk = 3,
-    GetProp = 4
+    GetProp = 4,
+    NpcGetNewTalk = 5,
 }
 
 export interface TaskShowHideAction {
@@ -116,17 +120,18 @@ export interface TaskFactionAction {
 export interface TaskTalkAction {
     talkId: string,
 }
-export interface TaskGetPropAction {
-    type: ItemConfigType,
-    id: string,
-    num: number
+export interface TaskNpcGetNewTalkAction {
+    talkId: string,
+    npcId: string
 }
+
 export interface TaskAction {
     type: TaskActionType,
-    showHide: TaskShowHideAction,
-    faction: TaskFactionAction,
-    talk: TaskTalkAction,
-    getProp: TaskGetPropAction
+    showHide?: TaskShowHideAction,
+    faction?: TaskFactionAction,
+    talk?: TaskTalkAction,
+    getProp?: GetPropData,
+    npcGetNewTalk?: TaskNpcGetNewTalkAction,
 }
 
 
@@ -192,7 +197,8 @@ export default class TaskModel {
         let showHide: TaskShowHideAction = null;
         let faction: TaskFactionAction = null;
         let talk: TaskTalkAction = null;
-        let getProp: TaskGetPropAction = null;
+        let getProp: GetPropData = null;
+        let npcGetNewTalk: TaskNpcGetNewTalkAction = null;
         if (actionType == TaskActionType.ShowHide) {
             showHide = {
                 type: actionConfig[1],
@@ -213,8 +219,13 @@ export default class TaskModel {
         } else if (actionType == TaskActionType.GetProp) {
             getProp = {
                 type: actionConfig[1],
-                id: actionConfig[2],
+                propId: actionConfig[2],
                 num: actionConfig[3]
+            }
+        } else if (actionType == TaskActionType.NpcGetNewTalk) {
+            npcGetNewTalk = {
+                talkId: actionConfig[1],
+                npcId: actionConfig[2]
             }
         }
 
@@ -223,7 +234,8 @@ export default class TaskModel {
             showHide: showHide,
             faction: faction,
             talk: talk,
-            getProp: getProp
+            getProp: getProp,
+            npcGetNewTalk: npcGetNewTalk
         }
     }
 
@@ -232,6 +244,12 @@ export default class TaskModel {
         this._name = config.name;
         this._type = config.type;
         this._preCon = TaskModel.convertToCondition(config.pre_con);
+        this._preAction = [];
+        if (config.pre_action != null) {
+            for (const action of config.pre_action) {
+                this._preAction.push(TaskModel.convertToAction(action));
+            }
+        }
         this._closeCon = TaskModel.convertToCondition(config.close_con);
         this._takeCon = TaskModel.convertToCondition(config.take_con);
         this._failCon = TaskModel.convertToCondition(config.fail_con);
@@ -242,11 +260,48 @@ export default class TaskModel {
         this._name = localData._name;
         this._type = localData._type;
         this._preCon = localData._preCon;
+        this._preAction = localData._preAction;
         this._closeCon = localData._closeCon;
         this._takeCon = localData._takeCon;
         this._failCon = localData._failCon;
         this._steps = localData._steps;
+        this._stepIndex = localData._stepIndex;
+        this._isFinished = localData._isFinished;
+        this._isFailed = localData._isFailed;
+        this._canGet = localData._canGet;
+        this._isGetted = localData._isGetted;
     }
+
+
+    public set preCon(value: TaskSatisfyCondition) {
+        this._preCon = value;
+    }
+    public set closeCon(value: TaskSatisfyCondition) {
+        this._closeCon = value;
+    }
+    public set takeCon(value: TaskSatisfyCondition) {
+        this._takeCon = value;
+    }
+    public set failCon(value: TaskSatisfyCondition) {
+        this._failCon = value;
+    }
+    
+    public set stepIndex(value: number) {
+        this._stepIndex = value;
+    }
+    public set isFinished(value: boolean) {
+        this._isFinished = value;
+    }
+    public set isFailed(value: boolean) {
+        this._isFailed = value;
+    }
+    public set canGet(value: boolean) {
+        this._canGet = value;
+    }
+    public set isGetted(value: boolean) {
+        this._isGetted = value;
+    }
+
     public get taskId(): string {
         return this._taskId;
     }
@@ -259,6 +314,9 @@ export default class TaskModel {
     public get preCon(): TaskSatisfyCondition {
         return this._preCon;
     }
+    public get preAction(): TaskAction[] {
+        return this._preAction;
+    }
     public get closeCon(): TaskSatisfyCondition {
         return this._closeCon;
     }
@@ -268,18 +326,48 @@ export default class TaskModel {
     public get failCon(): TaskSatisfyCondition {
         return this._failCon;
     }
+    
     public get steps(): string[] {
         return this._steps;
     }
+    public get stepIndex(): number {
+        return this._stepIndex;
+    }
+    public get isFinished(): boolean {
+        return this._isFinished;
+    }
+    public get isFailed(): boolean {
+        return this._isFailed;
+    }
+    public get canGet(): boolean {
+        return this._canGet;
+    }
+    public get isGetted(): boolean {
+        return this._isGetted;
+    }
 
+    public constructor() {
+        this._stepIndex = 0;
+        this._isFinished = false;
+        this._isFailed = false;
+        this._canGet = true;
+        this._isGetted = false;
+    }
     private _taskId: string;
     private _name: string;
     private _type: TaskUseTimeType;
     private _preCon: TaskSatisfyCondition;
+    private _preAction: TaskAction[];
     private _closeCon: TaskSatisfyCondition;
     private _takeCon: TaskSatisfyCondition;
     private _failCon: TaskSatisfyCondition;
     private _steps: string[];
+
+    private _stepIndex: number;
+    private _isFinished: boolean;
+    private _isFailed: boolean;
+    private _canGet: boolean;
+    private _isGetted: boolean;
 }
 
 

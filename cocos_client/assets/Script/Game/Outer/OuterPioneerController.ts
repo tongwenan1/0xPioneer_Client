@@ -32,6 +32,7 @@ import ItemData from '../../Const/Item';
 import { NotificationName } from '../../Const/Notification';
 import { OuterTiledMapActionController } from './OuterTiledMapActionController';
 import GameMainHelper from '../Helper/GameMainHelper';
+import TaskModel, { TaskConditionType, TaskTalkCondition } from '../../Const/TaskDefine';
 
 
 const { ccclass, property } = _decorator;
@@ -145,7 +146,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         // recover, set, task, getTaskDialogShow, etc
         PioneerMgr.recoverLocalState();
         // checkRookie
-        this.scheduleOnce(()=> {
+        this.scheduleOnce(() => {
             const actionPioneer = PioneerMgr.getCurrentPlayerPioneer();
             if (actionPioneer != null) {
                 // game camera pos
@@ -228,22 +229,11 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
 
                     } else if (pioneer.type == MapPioneerType.npc) {
                         const npcModel = pioneer as MapNpcPioneerModel;
-                        const task = TaskMgr.getTaskByNpcId(pioneer.id, npcModel.friendly, npcModel.hideTaskIds, UserInfoMgr.currentTaskIds, UserInfoMgr.finishedEvents);
-                        if (npcModel.taskObj == null &&
-                            task != null) {
-                            // npc get task
-                            npcModel.taskObj = task;
-                            if (task.entrypoint.hidetimecount != null) {
-                                npcModel.taskHideTime = task.entrypoint.hidetimecount;
-                            }
-                            if (task.entrypoint.cdtimecount != null) {
-                                npcModel.taskCdEndTime = task.entrypoint.cdtimecount;
-                            }
-                        } else if (task == null &&
-                            npcModel.taskObj != null) {
-                            // npc lose task
-                            npcModel.taskObj = null;
+                        let currentTask: TaskModel = null;
+                        if (npcModel.friendly && npcModel.taskCdEndTime <= 0) {
+                            currentTask = TaskMgr.getNpcTask(npcModel.id);
                         }
+                        npcModel.taskObj = currentTask;
                         temple.getComponent(OuterOtherPioneerView).refreshUI(pioneer);
 
                     } else if (pioneer.type == MapPioneerType.gangster) {
@@ -624,8 +614,20 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     pioneerTaskBeenGetted(pioneerId: string, taskId: string): void {
         this._refreshUI();
     }
-    async showGetTaskDialog(task: any): Promise<void> {
-        const talk = TalkConfig.getById(task.entrypoint.talk);
+    async showGetTaskDialog(task: TaskModel): Promise<void> {
+        let talkCon: TaskTalkCondition = null;
+        if (task.takeCon != null) {
+            for (const con of task.takeCon.conditions) {
+                if (con.type == TaskConditionType.Talk) {
+                    talkCon = con.talk;
+                    break;
+                }
+            }
+        }
+        if (talkCon == null) {
+            return;
+        }
+        const talk = TalkConfig.getById(talkCon.talkId);
         const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
         if (dialog != null) {
             dialog.getComponent(DialogueUI).dialogShow(talk, task);

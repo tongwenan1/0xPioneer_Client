@@ -1,6 +1,6 @@
 window.onProgress = null;
 window.onGameStarted = function(cc) {
-  var launchScene = "db://assets/scene/metamask_login.scene"; 
+  var launchScene = "db://assets/scene/main.scene"; 
   // load scene
   cc.director.preloadScene(launchScene,onProgress,function(){
     cc.game.run()

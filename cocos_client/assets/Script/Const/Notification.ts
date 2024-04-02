@@ -16,7 +16,7 @@ export enum NotificationName {
     INNER_BUILDING_BEGIN_UPGRADE,
     INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED,
     INNER_BUILDING_UPGRADE_FINISHED,
-    
+
     // language
     CHANGE_LANG,
 
@@ -42,4 +42,15 @@ export enum NotificationName {
 
     GENERATE_TROOP_TIME_COUNT_ChANGED,
     GENERATE_TROOP_NUM_CHANGED,
+
+    //---------------------- task
+    TASK_FAILED,
+    TASK_CANNOTGET,
+    TASK_GETTED_NEW,
+    //---------------------- map member
+    MAP_MEMBER_CHANGE_SHOW_HIDE,
+    MAP_MEMBER_CHANGE_FACTION,
+    MAP_PIONEER_GET_NEW_TALK,
+    //---------------------- dialog
+    DIALOG_SHOW,
 }
