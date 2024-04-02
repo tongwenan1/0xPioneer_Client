@@ -29,8 +29,8 @@
     "show": 0,
     "pos_type": 1,
     "positions": [
-      5,
-      44
+      23,
+      31
     ],
     "node": "ruin",
     "level": 1,
@@ -52,8 +52,8 @@
     "show": 0,
     "pos_type": 0,
     "positions": [
-      11,
-      53
+      29,
+      33
     ],
     "node": "treasure",
     "level": 1,
