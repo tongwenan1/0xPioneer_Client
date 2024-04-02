@@ -19,6 +19,7 @@
     </head>
     <body>
         <%- include(cocosToolBar, {config: config}) %>
+        <script src="./ethers.umd.min.js"></script>
         <div style="display: flex;flex: auto;align-items: center;">
             <%- include ./dist/index.html %>
             <div id="content" class="content">
@@ -40,9 +41,6 @@
                         </div>
                     </div>
                 </div>
-                <p class="footer">
-                    Created with <a href="https://www.cocos.com/products" target="_blank" title="Cocos Creator">Cocos Creator</a>
-                </p>
             </div>
         </div>
         <%- include(cocosTemplate, {}) %>

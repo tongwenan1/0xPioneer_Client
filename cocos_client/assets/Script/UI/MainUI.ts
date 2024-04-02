@@ -2,7 +2,6 @@ import { _decorator, Component, Node, Button, SpriteFrame, Sprite, Label, Prefab
 import { TilePos } from '../Game/TiledMap/TileTool';
 import { ClaimRewardUI } from './ClaimRewardUI';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
-import { BattleReportsEvent } from '../Const/Manager/BattleReportsMgrDefine';
 import { BattleReportsMgr, LanMgr, LocalDataLoader, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
@@ -17,13 +16,10 @@ import { NotificationName } from '../Const/Notification';
 const { ccclass, property } = _decorator;
 
 @ccclass('MainUI')
-export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoEvent, BattleReportsEvent {
+export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoEvent {
 
     @property(Button)
     backpackBtn: Button = null;
-
-    @property(Button)
-    public battleReportsBtn: Button = null;
 
     @property(Button)
     artifactBtn: Button = null;
@@ -40,7 +36,6 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         this._refreshSettlememntTip();
         PioneerMgr.addObserver(this);
         UserInfoMgr.addObserver(this);
-        BattleReportsMgr.addObserver(this);
 
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
     }
@@ -64,11 +59,6 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         this.artifactBtn.node.on(Button.EventType.CLICK, async () => {
             await UIPanelMgr.openPanel(UIName.Artifact);
         }, this);
-
-        this.battleReportsBtn.node.on(Button.EventType.CLICK, async () => {
-            await UIPanelMgr.openPanel(UIName.BattleReportUI);
-        }, this);
-        this.updateBattleReportsUnreadCount();
     }
 
     protected viewDidDestroy(): void {
@@ -76,23 +66,8 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
 
         PioneerMgr.removeObserver(this);
         UserInfoMgr.removeObserver(this);
-        BattleReportsMgr.removeObserver(this);
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.changeLang, this);
-    }
-    
-    private updateBattleReportsUnreadCount() {
-        const node = this.battleReportsBtn.node.getChildByName('unreadCount');
-        const label = node.getChildByName('unreadCountLabel').getComponent(Label);
-        if (node) {
-            const count = BattleReportsMgr.unreadCount;
-            if (count != 0) {
-                label.string = count.toString();
-                node.active = true;
-            } else {
-                node.active = false;
-            }
-        }
     }
 
     changeLang(): void {
@@ -278,9 +253,6 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     }
     taskFailed(taskId: string): void {
 
-    }
-    onBattleReportListChanged() {
-        this.updateBattleReportsUnreadCount();
     }
 }
 

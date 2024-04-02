@@ -122,8 +122,12 @@ export class BattleReportsUI extends ViewController implements BattleReportsEven
 
         BattleReportsMgr.addObserver(this);
 
-        // Select filter tab "All" every time enter the reports UI.
-        this._filterState.filterType = ReportsFilterType.None;
+        // Reset filter tab every time enter the reports UI.
+        if (BattleReportsMgr.emergencyCount > 0) {
+            this._filterState.filterType = ReportsFilterType.Pending;
+        } else {
+            this._filterState.filterType = ReportsFilterType.None;
+        }
         this.refreshUIAndResetScroll();
 
         this._autoMarkReadSkipFrames = 1;

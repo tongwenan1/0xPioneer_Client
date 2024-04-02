@@ -1,7 +1,7 @@
 import NotificationMgr from "../Basic/NotificationMgr";
 import ConfigConfig from "../Config/ConfigConfig";
 import EventConfig from "../Config/EventConfig";
-import { BattleReportRecord, BattleReportType, BattleReportsEvent } from "../Const/Manager/BattleReportsMgrDefine";
+import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, BattleReportsEvent } from "../Const/Manager/BattleReportsMgrDefine";
 import { NotificationName } from "../Const/Notification";
 import GlobalData from "../Data/GlobalData";
 
@@ -11,6 +11,12 @@ export default class BattleReportsMgr {
 
     public get unreadCount(): number {
         return this._storage.filter(record => record.unread).length;
+    }
+
+    public get emergencyCount(): number {
+        return this._storage
+            .filter(report => BattleReportsMgrDefine.isReportPending(report) && report.unread)
+            .length;
     }
 
     public getReports(): BattleReportRecord[] {
