@@ -147,13 +147,6 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
         this.refreshPlayerList();
     }
 
-    pioneerTaskBeenGetted(pioneerId: string, taskId: string): void {
-
-    }
-    showGetTaskDialog(taskId: string): void {
-
-    }
-
     exploredPioneer(pioneerId: string): void {
 
     }

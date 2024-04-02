@@ -1,11 +1,15 @@
 import { FinishedEvent } from "../Const/UserInfoDefine";
-import TaskModel, { TaskAction, TaskActionType, TaskCondition, TaskConditionSatisfyType, TaskConditionType, TaskSatisfyCondition, TaskTalkCondition } from "../Const/TaskDefine";
+import TaskModel, { TaskAction, TaskActionType, TaskCondition, TaskConditionSatisfyType, TaskConditionType, TaskSatisfyCondition, TaskStepConfigData, TaskStepModel, TaskTalkCondition } from "../Const/TaskDefine";
 import TaskConfig from "../Config/TaskConfig";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
+import TaskStepConfig from "../Config/TaskStepConfig";
 
 export default class TaskMgr {
+    public gameStart() {
+        this._checkTask({ type: TaskConditionType.GameStart });
+    }
     public talkSelected(talkId: string, talkSelectedIndex: number) {
         const con: TaskCondition = {
             type: TaskConditionType.Talk,
@@ -18,32 +22,27 @@ export default class TaskMgr {
         this._checkTask(con);
     }
 
-    public getNpcTask(npcId: string): TaskModel | null {
-        let useTask: TaskModel = null;
-        for (const task of this._taskInfos) {
-            if (task.preCon == null &&
-                task.takeCon != null) {
-                if (task.takeCon.satisfyType == TaskConditionSatisfyType.Any) {
-                    for (const cond of task.takeCon.conditions) {
-                        if (cond.type == TaskConditionType.Talk &&
-                            cond.talk.talkId == npcId) {
-                            useTask = task;
-                            break;
-                        }
-                    }
-                } else if (task.takeCon.satisfyType == TaskConditionSatisfyType.All) {
-                    if (task.takeCon.conditions.length == 1 &&
-                        task.takeCon.conditions[0].type == TaskConditionType.Talk &&
-                        task.takeCon.conditions[0].talk.talkId == npcId) {
-                        useTask = task;
-                    }
-                }
-            }
-            if (useTask != null) {
-                break;
+
+    public getTask(taskId: string): TaskModel | null {
+        const models = this._taskInfos.filter(temple=> temple.taskId == taskId);
+        if (models.length > 0) {
+            return models[0];
+        }
+        return null;
+    }
+    public getTaskStep(taskStepId: string): TaskStepModel | null {
+        let step: TaskStepModel = null;
+        if (this._taskStepMap.has(taskStepId)) {
+            step = this._taskStepMap.get(taskStepId);
+        }
+        if (step == null) {
+            const config: TaskStepConfigData = TaskStepConfig.getById(taskStepId);
+            if (config != null) {
+                step = new TaskStepModel();
+                step.convertConfigToModel(config);
             }
         }
-        return useTask;
+        return step;
     }
 
     public getTasks(taskIds: string[]): any[] {
@@ -99,48 +98,6 @@ export default class TaskMgr {
         // }
         return null;
     }
-    public getTaskByNpcId(npcid: string, npcIsFriend: boolean, npcHideTaskIds: string[], gettedTaskIds: string[], finishedEvents: FinishedEvent[]) {
-        // if (!npcIsFriend) {
-        //     return null;
-        // }
-        // for (const task of this._taskInfos) {
-        //     if (npcHideTaskIds.indexOf(task.id) != -1) {
-        //         continue;
-        //     }
-        //     if (gettedTaskIds.indexOf(task.id) != -1) {
-        //         continue;
-        //     }
-        //     if (task.entrypoint == null) {
-        //         continue;
-        //     }
-        //     const entry = task.entrypoint.type.split("|");
-        //     if (entry.length == 2 &&
-        //         entry[0] === "talkwithnpc" &&
-        //         entry[1] === npcid) {
-        //         let meetCond: boolean = true;
-        //         for (const cond of task.condshow) {
-        //             if (finishedEvents.indexOf(cond) == -1) {
-        //                 meetCond = false;
-        //                 break;
-        //             }
-        //         }
-        //         if (task.condhide != null) {
-        //             // force hide task
-        //             for (const cond of task.condhide) {
-        //                 if (finishedEvents.indexOf(cond) != -1) {
-        //                     meetCond = false;
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //         if (meetCond) {
-        //             return task;
-        //         }
-        //     }
-        // }
-        return null;
-    }
-
 
     public async initData() {
         await this._initData();
@@ -152,6 +109,7 @@ export default class TaskMgr {
 
     private _localKey: string = "local_task";
     private _taskInfos: TaskModel[] = [];
+    private _taskStepMap: Map<string, TaskStepModel> = new Map();
     private async _initData() {
         let localData = null;
         if (localStorage.getItem(this._localKey) != null) {
@@ -221,7 +179,7 @@ export default class TaskMgr {
                 if (this._checkConditionIsSatisfy(task.takeCon, checkCon)) {
                     task.takeCon = null;
                     this._localSave();
-                    NotificationMgr.triggerEvent(NotificationName.TASK_GETTED_NEW, task.taskId);
+                    NotificationMgr.triggerEvent(NotificationName.TASK_GET_NEW, task.taskId);
                     continue;
                 }
             }
@@ -231,6 +189,9 @@ export default class TaskMgr {
         let isSatisfy: boolean = false;
         for (let i = 0; i < satisfyCon.conditions.length; i++) {
             const temple = satisfyCon.conditions[i];
+            if (temple.isSatisfied) {
+                continue;
+            }
             if (temple.type == checkCon.type) {
                 if (temple.type == TaskConditionType.Talk) {
                     if (temple.talk.talkId == checkCon.talk.talkId &&
@@ -267,10 +228,12 @@ export default class TaskMgr {
                         temple.showHide.status == checkCon.showHide.status) {
                         isSatisfy = true;
                     }
+                } else if (temple.type == TaskConditionType.GameStart) {
+                    isSatisfy = true;
                 }
             }
             if (isSatisfy) {
-                satisfyCon.conditions.splice(i, 1);
+                temple.isSatisfied = true;
                 this._localSave();
                 break;
             }
@@ -279,9 +242,12 @@ export default class TaskMgr {
             if (satisfyCon.satisfyType == TaskConditionSatisfyType.Any) {
                 return true;
             } else if (satisfyCon.satisfyType == TaskConditionSatisfyType.All) {
-                if (satisfyCon.conditions.length == 0) {
-                    return true;
+                for (const condition of satisfyCon.conditions) {
+                    if (!condition.isSatisfied) {
+                        return false;
+                    }
                 }
+                return true;
             }
         }
         return false;
@@ -301,6 +267,7 @@ export default class TaskMgr {
             ItemConfigDropTool.getItemByConfig([action.getProp]);
 
         } else if (action.type == TaskActionType.NpcGetNewTalk) {
+            console.log("exce getnetalk: " + JSON.stringify(action))
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_NEW_TALK, action.npcGetNewTalk);
         
         }

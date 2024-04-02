@@ -1,8 +1,8 @@
 import { resources } from "cc";
 import CLog from "../Utils/CLog";
-import { TaskConfigData } from "../Const/TaskDefine";
+import { TaskConfigData, TaskStepConfigData } from "../Const/TaskDefine";
 
-export default class TaskStepConfigData {
+export default class TaskStepConfig {
     private static _confs: { [index: string]: TaskStepConfigData } = {};
 
     public static async init(): Promise<boolean> {

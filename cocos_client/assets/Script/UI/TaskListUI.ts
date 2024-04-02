@@ -1,10 +1,11 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node } from 'cc';
 import CommonTools from '../Tool/CommonTools';
-import { BuildingMgr, LanMgr, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { BuildingMgr, LanMgr, PioneerMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
+import TaskModel from '../Const/TaskDefine';
 
 const { ccclass, property } = _decorator;
 
@@ -36,25 +37,27 @@ export class TaskListUI extends ViewController {
         }
         this._detailProgressList = [];
 
-        const taskInfo = UserInfoMgr.currentTasks;
-
-        const finishedTasks = [];
-        const toDoTasks = [];
-        for (const task of taskInfo) {
-            if (task.finished ||
-                (task.fail != null && task.fail)) {
+        const finishedTasks: TaskModel[] = [];
+        const toDoTasks: TaskModel[] = [];
+        const taskIds = UserInfoMgr.dealTaskIds;
+        for (const taskId of taskIds) {
+            const task = TaskMgr.getTask(taskId);
+            if (task == null) {
+                continue;
+            }
+            if (task.isFinished || task.isFailed) {
                 finishedTasks.push(task);
             } else {
                 toDoTasks.push(task);
             }
         }
+
         let actionTaskShowCount: number = 0;
         for (let i = toDoTasks.length - 1; i >= 0; i--) {
             if (actionTaskShowCount >= 3) {
                 break;
             }
             actionTaskShowCount += 1;
-
             const curStep = toDoTasks[i].steps[toDoTasks[i].currentStep];
             const curStepCondIndex = curStep.condwinStep == null ? 0 : curStep.condwinStep;
             const action = instantiate(this._actionItem);

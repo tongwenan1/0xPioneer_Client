@@ -46,11 +46,16 @@ export enum NotificationName {
     //---------------------- task
     TASK_FAILED,
     TASK_CANNOTGET,
-    TASK_GETTED_NEW,
+    TASK_GET_NEW,
+    TASK_NEW_GETTED,
     //---------------------- map member
     MAP_MEMBER_CHANGE_SHOW_HIDE,
     MAP_MEMBER_CHANGE_FACTION,
+
     MAP_PIONEER_GET_NEW_TALK,
+    MAP_PIONEER_USE_NEW_TALK,
+    MPA_PIONEER_NEW_TALK_GETTED,
+    MPA_PIONEER_NEW_TALK_USED,
     //---------------------- dialog
     DIALOG_SHOW,
 }

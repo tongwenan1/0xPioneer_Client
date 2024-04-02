@@ -76,33 +76,34 @@ export class OuterOtherPioneerView extends Component {
       
         // taskhide
         if (pioneer instanceof MapNpcPioneerModel) {
-            if (pioneer.taskObj != null && pioneer.taskHideTime > 0) {
-                this._timeCountLabel.node.active = true;
+            this._hasTaskView.active = pioneer.talkId != null;
+            // if (pioneer.taskObj != null && pioneer.taskHideTime > 0) {
+            //     this._timeCountLabel.node.active = true;
                 
-                // useLanMgr
-                this._timeCountLabel.string =  LanMgr.replaceLanById("202001", [pioneer.taskHideTime]);
-                // this._timeCountLabel.string = "task hide:" + pioneer.taskHideTime + "s";
+            //     // useLanMgr
+            //     this._timeCountLabel.string =  LanMgr.replaceLanById("202001", [pioneer.taskHideTime]);
+            //     // this._timeCountLabel.string = "task hide:" + pioneer.taskHideTime + "s";
                 
-            } else {
-                this._timeCountLabel.node.active = false;
-            }
-            // hastask
-            this._hasTaskView.active = false;
-            this._taskPreparingView.active = false;
-            if (pioneer.taskObj == null) {
+            // } else {
+            //     this._timeCountLabel.node.active = false;
+            // }
+            // // hastask
+            // this._hasTaskView.active = false;
+            // this._taskPreparingView.active = false;
+            // if (pioneer.taskObj == null) {
     
-            } else {
-                if (pioneer.taskCdEndTime > 0) {
-                    this._taskPreparingView.active = true;
+            // } else {
+            //     if (pioneer.taskCdEndTime > 0) {
+            //         this._taskPreparingView.active = true;
 
-                    // useLanMgr
-                    this._taskPreparingView.getComponent(Label).string =  LanMgr.replaceLanById("202002", [pioneer.taskCdEndTime]);
-                    // this._taskPreparingView.getComponent(Label).string = "prepare task..." + pioneer.taskCdEndTime + "s";
+            //         // useLanMgr
+            //         this._taskPreparingView.getComponent(Label).string =  LanMgr.replaceLanById("202002", [pioneer.taskCdEndTime]);
+            //         // this._taskPreparingView.getComponent(Label).string = "prepare task..." + pioneer.taskCdEndTime + "s";
 
-                } else {
-                    this._hasTaskView.active = true;
-                }
-            }
+            //     } else {
+            //         this._hasTaskView.active = true;
+            //     }
+            // }
         }
     }
 

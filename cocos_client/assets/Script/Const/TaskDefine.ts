@@ -88,6 +88,7 @@ export interface TaskShowHideCondition {
 }
 export interface TaskCondition {
     type: TaskConditionType,
+    isSatisfied?: boolean,
     talk?: TaskTalkCondition,
     finish?: TaskFinishCondition,
     kill?: TaskKillCondition,
@@ -142,7 +143,7 @@ export default class TaskModel {
             return null;
         }
         const satisfyType = conditionConfig[0];
-        const conditions = [];
+        const conditions: TaskCondition[] = [];
         if (conditionConfig.length > 1) {
             for (let i = 1; i < conditionConfig.length; i++) {
                 const temple = conditionConfig[i];
@@ -179,11 +180,12 @@ export default class TaskModel {
                 }
                 conditions.push({
                     type: conditionType,
+                    isSatisfied: false,
                     talk: talk,
                     finish: finish,
                     kill: kill,
                     showHide: showHide
-                })
+                });
             }
         }
         return {
@@ -423,6 +425,9 @@ export class TaskStepModel {
         return this._exp;
     }
 
+    public constructor() {
+
+    }
     private _id: string;
     private _name: string;
     private _startAction: TaskAction[];
@@ -431,4 +436,5 @@ export class TaskStepModel {
     private _quitCon: TaskSatisfyCondition;
     private _progress: number;
     private _exp: number;
+
 }

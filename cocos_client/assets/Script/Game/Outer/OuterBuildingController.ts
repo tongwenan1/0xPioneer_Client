@@ -402,12 +402,6 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     destroyOnePioneer(pioneerId: string): void {
 
     }
-    pioneerTaskBeenGetted(pioneerId: string, taskId: string): void {
-
-    }
-    showGetTaskDialog(task: any): void {
-
-    }
     exploredPioneer(pioneerId: string): void {
 
     }

@@ -1,4 +1,4 @@
-import { Details, Vec2, builtinResMgr, log, math, nextPow2, pingPong, resources, v2, v3 } from "cc";
+import { Details, Vec2, builtinResMgr, find, log, math, nextPow2, pingPong, resources, v2, v3 } from "cc";
 import CommonTools from "../Tool/CommonTools";
 import { TilePos } from "../Game/TiledMap/TileTool";
 import { AttrChangeType, GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
@@ -17,11 +17,14 @@ import { EventConfigData } from "../Const/Event";
 import EventConfig from "../Config/EventConfig";
 import { NotificationName } from "../Const/Notification";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
+import { TaskNpcGetNewTalkAction, TaskTalkAction } from "../Const/TaskDefine";
 
 export default class PioneerMgr {
 
     public async initData() {
         await this._initData();
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_NEW_TALK, this._pioneerGetTalk, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_USE_NEW_TALK, this._pioneerUseTalk, this);
     }
 
     public pioneerIsForceMoving(pioneerId: string): boolean {
@@ -207,7 +210,6 @@ export default class PioneerMgr {
     public changeCurrentActionPioneer(pioneerId: string) {
         this._currentActionPioneerId = pioneerId;
     }
-
 
     public pioneerBeginMove(pioneerId: string, paths: TilePos[]) {
         const findPioneer = this.getPioneerById(pioneerId);
@@ -574,23 +576,6 @@ export default class PioneerMgr {
 
     //------------------------------------------------- 
     // task
-    public clearNpcTask(task: any) {
-        // npc getted task
-        for (const pioneer of this._pioneers) {
-            if (pioneer instanceof MapNpcPioneerModel) {
-                const npc = pioneer as MapNpcPioneerModel;
-                if (npc.taskObj != null &&
-                    npc.taskObj.id === task.id) {
-                    npc.taskObj = null;
-                    for (const observe of this._observers) {
-                        observe.pioneerTaskBeenGetted(npc.id, task.id);
-                    }
-                    this._savePioneerData();
-                    break;
-                }
-            }
-        }
-    }
     public dealWithTaskAction(action: string, delayTime: number): void {
         const temple = action.split("|");
 
@@ -838,7 +823,7 @@ export default class PioneerMgr {
                         temple._defend,
                         v2(temple._stayPos.x, temple._stayPos.y)
                     );
-                    (newModel as MapNpcPioneerModel).taskObj = temple._taskObj;
+                    (newModel as MapNpcPioneerModel).talkId = temple._talkId;
                     (newModel as MapNpcPioneerModel).hideTaskIds = temple._hideTaskIds;
                     (newModel as MapNpcPioneerModel).taskHideTime = temple._taskHideTime;
                     (newModel as MapNpcPioneerModel).taskCdEndTime = temple._taskCdEndTime;
@@ -1080,10 +1065,10 @@ export default class PioneerMgr {
                         const npc = pioneer as MapNpcPioneerModel;
                         if (npc.taskHideTime > 0) {
                             npc.taskHideTime -= 1;
-                            if (npc.taskHideTime == 0) {
-                                npc.hideTaskIds.push(npc.taskObj.id);
-                                npc.taskObj = null;
-                            }
+                            // if (npc.taskHideTime == 0) {
+                            //     npc.hideTaskIds.push(npc.taskObj.id);
+                            //     npc.taskObj = null;
+                            // }
                             this._savePioneerData();
                             for (const observe of this._observers) {
                                 observe.pioneerTaskHideTimeCountChanged(npc.id, npc.taskHideTime);
@@ -1175,20 +1160,14 @@ export default class PioneerMgr {
                     if (interactPioneer.type == MapPioneerType.npc) {
                         // get task
                         pioneer.actionType = MapPioneerActionType.idle;
+                        this._savePioneerData();
                         for (const observer of this._observers) {
                             observer.pioneerActionTypeChanged(pioneer.id, pioneer.actionType, pioneer.actionEndTimeStamp);
                         }
                         for (const observe of this._observers) {
                             observe.exploredPioneer(interactPioneer.id);
                         }
-                        this._savePioneerData();
-                        if ((interactPioneer as MapNpcPioneerModel).taskObj != null &&
-                            (interactPioneer as MapNpcPioneerModel).taskCdEndTime <= 0 &&
-                            (interactPioneer as MapNpcPioneerModel).taskObj.entrypoint.talk != null) {
-                            for (const observer of this._observers) {
-                                observer.showGetTaskDialog((interactPioneer as MapNpcPioneerModel).taskObj);
-                            }
-                        }
+                        
                     } else if (interactPioneer.type == MapPioneerType.gangster) {
                         // get more hp
                         const acionTime: number = 3000;
@@ -1275,9 +1254,9 @@ export default class PioneerMgr {
                                 pioneer.logics = [];
                                 this._savePioneerData();
                             }
-                            for (const observer of this._observers) {
-                                observer.showGetTaskDialog(cityBuilding.taskObj);
-                            }
+                            // for (const observer of this._observers) {
+                            //     observer.showGetTaskDialog(cityBuilding.taskObj);
+                            // }
                             BuildingMgr.buildingClearTask(cityBuilding.id);
                         }
                     } else {
@@ -1679,6 +1658,27 @@ export default class PioneerMgr {
 
             }
         }, 250);
+    }
+
+    private _pioneerGetTalk(action: TaskNpcGetNewTalkAction) {
+        const findPioneer = this.getPioneerById(action.npcId);
+        if (findPioneer != null && findPioneer.show && findPioneer.friendly) {
+            (findPioneer as MapNpcPioneerModel).talkId = action.talkId;
+            this._savePioneerData();
+            NotificationMgr.triggerEvent(NotificationName.MPA_PIONEER_NEW_TALK_GETTED);
+        }
+    }
+    public _pioneerUseTalk(talkId: string) {
+        for (const pioneer of this._pioneers) {
+            if (pioneer.type == MapPioneerType.npc) {
+                if ((pioneer as MapNpcPioneerModel).talkId == talkId) {
+                    (pioneer as MapNpcPioneerModel).talkId = null;
+                    this._savePioneerData();
+                    NotificationMgr.triggerEvent(NotificationName.MPA_PIONEER_NEW_TALK_USED);
+                    break;
+                }
+            }
+        }
     }
 
     private _savePioneerData() {

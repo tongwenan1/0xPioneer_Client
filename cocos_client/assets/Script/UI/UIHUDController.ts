@@ -1,5 +1,5 @@
 import { _decorator, Component, Node } from 'cc';
-import { ItemMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { HUDView } from './View/HUDView';
 import ViewController from '../BasicView/ViewController';
@@ -45,6 +45,7 @@ export class UIHUDController extends ViewController {
 
         NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._resourceGetted, this);
         NotificationMgr.addListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
+        NotificationMgr.addListener(NotificationName.TASK_NEW_GETTED, this._onGetNewTask, this);
 
         this._showResouceGettedView();
     }
@@ -58,6 +59,8 @@ export class UIHUDController extends ViewController {
 
         NotificationMgr.removeListener(NotificationName.RESOURCE_GETTED, this._resourceGetted, this);
         NotificationMgr.removeListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
+        NotificationMgr.removeListener(NotificationName.TASK_NEW_GETTED, this._onGetNewTask, this);
+
     }
 
     private _showResouceGettedView() {
@@ -77,6 +80,10 @@ export class UIHUDController extends ViewController {
             this._resoucesShowItems.push(UserInfoMgr.innerBuilds.get(buildingType));
             this._showResouceGettedView();
         }
+    }
+
+    private _onGetNewTask() {
+        UIHUDController.showTaskTip(LanMgr.getLanById("202004"));
     }
 }
 

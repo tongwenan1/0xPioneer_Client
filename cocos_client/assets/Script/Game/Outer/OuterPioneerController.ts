@@ -32,13 +32,13 @@ import ItemData from '../../Const/Item';
 import { NotificationName } from '../../Const/Notification';
 import { OuterTiledMapActionController } from './OuterTiledMapActionController';
 import GameMainHelper from '../Helper/GameMainHelper';
-import TaskModel, { TaskConditionType, TaskTalkCondition } from '../../Const/TaskDefine';
+import ViewController from '../../BasicView/ViewController';
 
 
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterPioneerController')
-export class OuterPioneerController extends Component implements PioneerMgrEvent, UserInfoEvent {
+export class OuterPioneerController extends ViewController implements PioneerMgrEvent, UserInfoEvent {
 
     public showMovingPioneerAction(tilePos: TilePos, movingPioneerId: string, usedCursor: OuterMapCursorView) {
         this._actionShowPioneerId = movingPioneerId;
@@ -131,17 +131,23 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     private _actionPioneerFootStepViews: Node[] = null;
 
     private _actionShowPioneerId: string = null;
-    protected onLoad(): void {
+    protected viewDidLoad(): void {
+        super.viewDidLoad();
+
         PioneerMgr.addObserver(this);
         UserInfoMgr.addObserver(this);
 
         this._pioneerMap = new Map();
 
-        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_BEGIN_EYES, this.onRookieGuideBeginEyes, this);
-        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_THIRD_EYES, this.onRookieGuideThirdEyes, this);
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_BEGIN_EYES, this._onRookieGuideBeginEyes, this);
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_THIRD_EYES, this._onRookieGuideThirdEyes, this);
+
+        NotificationMgr.addListener(NotificationName.MPA_PIONEER_NEW_TALK_GETTED, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.MPA_PIONEER_NEW_TALK_USED, this._refreshUI, this);
     }
 
-    start() {
+    protected viewDidStart() {
+        super.viewDidStart();
         this._refreshUI();
         // recover, set, task, getTaskDialogShow, etc
         PioneerMgr.recoverLocalState();
@@ -174,9 +180,56 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         });
     }
 
-    protected onDestroy(): void {
+    protected viewUpdate(dt: number): void {
+        super.viewUpdate(dt);
+
+        // default speed
+        let defaultSpeed = 180;
+
+        if (PioneerGameTest) {
+            defaultSpeed = 600;
+        }
+        const allPioneers = PioneerMgr.getAllPioneer();
+
+        // artifact effect
+        let artifactSpeed = 0;
+        const artifactEff = ArtifactMgr.getPropEffValue(UserInfoMgr.level);
+        if (artifactEff.eff[ArtifactEffectType.MOVE_SPEED]) {
+            artifactSpeed = artifactEff.eff[ArtifactEffectType.MOVE_SPEED];
+        }
+
+        for (var i = 0; i < allPioneers.length; i++) {
+            let pioneer = allPioneers[i];
+            let usedSpeed = defaultSpeed;
+            for (const logic of pioneer.logics) {
+                if (logic.moveSpeed > 0) {
+                    usedSpeed = logic.moveSpeed;
+                }
+            }
+
+            // artifact move speed
+            if (pioneer.type == MapPioneerType.player) {
+                usedSpeed = Math.floor(usedSpeed + usedSpeed * artifactSpeed);
+            }
+
+            if (this._movingPioneerIds.indexOf(pioneer.id) != -1 && this._pioneerMap.has(pioneer.id)) {
+                let pioneermap = this._pioneerMap.get(pioneer.id);
+                this._updateMoveStep(usedSpeed, dt, pioneer, pioneermap);
+            }
+        }
+    }
+
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
+
         PioneerMgr.removeObserver(this);
         UserInfoMgr.removeObserver(this);
+
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_BEGIN_EYES, this._onRookieGuideBeginEyes, this);
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_THIRD_EYES, this._onRookieGuideThirdEyes, this);
+
+        NotificationMgr.removeListener(NotificationName.MPA_PIONEER_NEW_TALK_GETTED, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.MPA_PIONEER_NEW_TALK_USED, this._refreshUI, this);
     }
 
     private _refreshUI() {
@@ -228,12 +281,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                         });
 
                     } else if (pioneer.type == MapPioneerType.npc) {
-                        const npcModel = pioneer as MapNpcPioneerModel;
-                        let currentTask: TaskModel = null;
-                        if (npcModel.friendly && npcModel.taskCdEndTime <= 0) {
-                            currentTask = TaskMgr.getNpcTask(npcModel.id);
-                        }
-                        npcModel.taskObj = currentTask;
                         temple.getComponent(OuterOtherPioneerView).refreshUI(pioneer);
 
                     } else if (pioneer.type == MapPioneerType.gangster) {
@@ -275,7 +322,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         }
     }
 
-    updateMoveStep(speed: number, deltaTime: number, pioneer: MapPioneerModel, pioneermap: Node) {
+    private _updateMoveStep(speed: number, deltaTime: number, pioneer: MapPioneerModel, pioneermap: Node) {
         if (pioneer.movePaths.length == 0) {
             return;
         }
@@ -330,78 +377,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                 }
             }
         }
-    }
-
-    async update(deltaTime: number) {
-        // default speed
-        let defaultSpeed = 180;
-
-        if (PioneerGameTest) {
-            defaultSpeed = 600;
-        }
-        const allPioneers = PioneerMgr.getAllPioneer();
-
-        // artifact effect
-        let artifactSpeed = 0;
-        const artifactEff = ArtifactMgr.getPropEffValue(UserInfoMgr.level);
-        if (artifactEff.eff[ArtifactEffectType.MOVE_SPEED]) {
-            artifactSpeed = artifactEff.eff[ArtifactEffectType.MOVE_SPEED];
-        }
-
-        for (var i = 0; i < allPioneers.length; i++) {
-            let pioneer = allPioneers[i];
-            let usedSpeed = defaultSpeed;
-            for (const logic of pioneer.logics) {
-                if (logic.moveSpeed > 0) {
-                    usedSpeed = logic.moveSpeed;
-                }
-            }
-
-            // artifact move speed
-            if (pioneer.type == MapPioneerType.player) {
-                usedSpeed = Math.floor(usedSpeed + usedSpeed * artifactSpeed);
-            }
-
-            if (this._movingPioneerIds.indexOf(pioneer.id) != -1 && this._pioneerMap.has(pioneer.id)) {
-                let pioneermap = this._pioneerMap.get(pioneer.id);
-                this.updateMoveStep(usedSpeed, deltaTime, pioneer, pioneermap);
-            }
-        }
-    }
-
-    private onRookieGuideBeginEyes() {
-        const actionPioneer = PioneerMgr.getCurrentPlayerPioneer();
-        if (actionPioneer != null) {
-            actionPioneer.actionType = MapPioneerActionType.wakeup;
-            let view: MapPioneer = null;
-            if (this._pioneerMap.has(actionPioneer.id)) {
-                view = this._pioneerMap.get(actionPioneer.id).getComponent(MapPioneer);
-            }
-            view.refreshUI(actionPioneer);
-            this.scheduleOnce(async () => {
-                actionPioneer.actionType = MapPioneerActionType.idle;
-                view.refreshUI(actionPioneer);
-                UIPanelMgr.removePanel(UIName.RookieGuide);
-
-                const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
-                if (dialog != null) {
-                    dialog.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), null, () => {
-                        UserInfoMgr.isFinishRookie = true;
-                        // init resource
-                        ItemMgr.addItem([
-                            new ItemData(ResourceCorrespondingItem.Energy, 100),
-                            new ItemData(ResourceCorrespondingItem.Food, 100),
-                            new ItemData(ResourceCorrespondingItem.Stone, 100),
-                            new ItemData(ResourceCorrespondingItem.Wood, 100),
-                            new ItemData(ResourceCorrespondingItem.Troop, 500),
-                        ]);
-                    });
-                }
-            }, 10);
-        }
-    }
-    private onRookieGuideThirdEyes() {
-        GameMainHelper.instance.changeGameCameraZoom(1, true);
     }
 
     private _refreshFightView(fightId: string, attacker: { id: string; name: string; hp: number; hpMax: number; }, defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositons: Vec2[]) {
@@ -531,6 +506,43 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
         }
     }
 
+    //--------------------------------------------- notification
+    private _onRookieGuideBeginEyes() {
+        const actionPioneer = PioneerMgr.getCurrentPlayerPioneer();
+        if (actionPioneer != null) {
+            actionPioneer.actionType = MapPioneerActionType.wakeup;
+            let view: MapPioneer = null;
+            if (this._pioneerMap.has(actionPioneer.id)) {
+                view = this._pioneerMap.get(actionPioneer.id).getComponent(MapPioneer);
+            }
+            view.refreshUI(actionPioneer);
+            this.scheduleOnce(async () => {
+                actionPioneer.actionType = MapPioneerActionType.idle;
+                view.refreshUI(actionPioneer);
+                UIPanelMgr.removePanel(UIName.RookieGuide);
+
+                const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
+                if (dialog != null) {
+                    dialog.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), () => {
+                        UserInfoMgr.isFinishRookie = true;
+                        TaskMgr.gameStart();
+                        // init resource
+                        ItemMgr.addItem([
+                            new ItemData(ResourceCorrespondingItem.Energy, 100),
+                            new ItemData(ResourceCorrespondingItem.Food, 100),
+                            new ItemData(ResourceCorrespondingItem.Stone, 100),
+                            new ItemData(ResourceCorrespondingItem.Wood, 100),
+                            new ItemData(ResourceCorrespondingItem.Troop, 500),
+                        ]);
+                    });
+                }
+            }, 10);
+        }
+    }
+    private _onRookieGuideThirdEyes() {
+        GameMainHelper.instance.changeGameCameraZoom(1, true);
+    }
+
     //---------------------------------------------
     //PioneerMgrEvent
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void {
@@ -611,28 +623,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     destroyOnePioneer(pioneerId: string): void {
         this._refreshUI();
     }
-    pioneerTaskBeenGetted(pioneerId: string, taskId: string): void {
-        this._refreshUI();
-    }
-    async showGetTaskDialog(task: TaskModel): Promise<void> {
-        let talkCon: TaskTalkCondition = null;
-        if (task.takeCon != null) {
-            for (const con of task.takeCon.conditions) {
-                if (con.type == TaskConditionType.Talk) {
-                    talkCon = con.talk;
-                    break;
-                }
-            }
-        }
-        if (talkCon == null) {
-            return;
-        }
-        const talk = TalkConfig.getById(talkCon.talkId);
-        const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
-        if (dialog != null) {
-            dialog.getComponent(DialogueUI).dialogShow(talk, task);
-        }
-    }
 
     beginFight(fightId: string, attacker: { id: string; name: string; hp: number; hpMax: number; }, defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositions: math.Vec2[]): void {
         this._refreshFightView(fightId, attacker, defender, attackerIsSelf, fightPositions);
@@ -696,10 +686,22 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             }
         }
     }
-    exploredPioneer(pioneerId: string): void {
+    async exploredPioneer(pioneerId: string): Promise<void> {
         const pioneer = PioneerMgr.getPioneerById(pioneerId);
-        if (pioneer != null && pioneer.type == MapPioneerType.gangster) {
-            ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Troop, pioneer.hpMax)]);
+        if (pioneer != null) {
+            if (pioneer.type == MapPioneerType.gangster) {
+                ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Troop, pioneer.hpMax)]);
+
+            } else if (pioneer.type == MapPioneerType.npc) {
+                const npcModel = pioneer as MapNpcPioneerModel;
+                if (npcModel.talkId != null) {
+                    const talk = TalkConfig.getById(npcModel.talkId);
+                    const view = await UIPanelMgr.openPanel(UIName.DialogueUI);
+                    if (view != null) {
+                        view.getComponent(DialogueUI).dialogShow(talk);
+                    }
+                }
+            }
         }
         UserInfoMgr.checkCanFinishedTask("explorewithpioneer", pioneerId);
     }
@@ -838,9 +840,6 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
     //UserInfoEvent
     playerNameChanged(value: string): void {
 
-    }
-    getNewTask(task: string): void {
-        PioneerMgr.clearNpcTask(task);
     }
     finishEvent(event: FinishedEvent): void {
         this._refreshUI();

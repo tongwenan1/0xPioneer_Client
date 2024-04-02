@@ -13,16 +13,14 @@ const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
 export class DialogueUI extends ViewController {
-    public dialogShow(talk: any, task: TaskModel = null, talkOverCallback: () => void = null) {
+    public dialogShow(talk: any, talkOverCallback: () => void = null) {
         this._talk = talk;
-        this._task = task;
         this._talkOverCallback = talkOverCallback;
         this._dialogStep = 0;
         this._refreshUI();
     }
 
     private _talk: any = null;
-    private _task: TaskModel = null;
     private _talkOverCallback: () => void;
     private _dialogStep: number = 0;
     private _roleNames: string[] = [
@@ -143,6 +141,8 @@ export class DialogueUI extends ViewController {
                 UserInfoMgr.afterTalkItemGetData.delete(talkId);
             });
         }
+        // talk used
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_USE_NEW_TALK, this._talk.id);
         if (this._talkOverCallback != null) {
             this._talkOverCallback();
         }
@@ -163,7 +163,7 @@ export class DialogueUI extends ViewController {
         if (this._talk == null) {
             return;
         }
-        TaskMgr
+        TaskMgr.talkSelected(this._talk.id, parseInt(customEventData));
         // if (this._task != null && this._task.takeCon != null) {
 
             // let talkCon: TaskTalkCondition = null;

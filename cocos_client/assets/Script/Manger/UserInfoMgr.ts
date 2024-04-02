@@ -17,12 +17,12 @@ import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import ItemConfig from "../Config/ItemConfig";
 import { ItemGettedUI } from "../UI/ItemGettedUI";
-import TaskModel from "../Const/TaskDefine";
 
 export default class UserInfoMgr {
 
     public async initData() {
         await this._initData();
+        NotificationMgr.addListener(NotificationName.TASK_GET_NEW, this._onGetNewTask, this);
     }
 
     public addObserver(observer: UserInfoEvent) {
@@ -35,28 +35,28 @@ export default class UserInfoMgr {
         }
     }
 
-    public getNewTask(task: TaskModel) {
-        task.currentStep = 0;
-        const step = task.steps[task.currentStep];
-        for (const templeWinAction of step.startaction) {
-            for (const observe of this._observers) {
-                if (observe.triggerTaskStepAction) {
-                    observe.triggerTaskStepAction(templeWinAction.type, templeWinAction.delaytime != null ? templeWinAction.delaytime : 0);
-                }
-            }
-        }
-        this._currentTasks.push(task);
-        this._localJsonData.playerData.currentTasks = this._currentTasks;
-        this._localDataChanged(this._localJsonData);
-        for (const observer of this._observers) {
-            if (observer.getNewTask) {
-                observer.getNewTask(task);
-            }
-        }
-        if (task.steps[task.currentStep].condwin.length <= 0) {
-            this.checkCanFinishedTask("", "");
-        }
-    }
+    // public getNewTask(task: TaskModel) {
+    //     task.currentStep = 0;
+    //     const step = task.steps[task.currentStep];
+    //     for (const templeWinAction of step.startaction) {
+    //         for (const observe of this._observers) {
+    //             if (observe.triggerTaskStepAction) {
+    //                 observe.triggerTaskStepAction(templeWinAction.type, templeWinAction.delaytime != null ? templeWinAction.delaytime : 0);
+    //             }
+    //         }
+    //     }
+    //     this._currentTasks.push(task);
+    //     this._localJsonData.playerData.currentTasks = this._currentTasks;
+    //     this._localDataChanged(this._localJsonData);
+    //     for (const observer of this._observers) {
+    //         if (observer.getNewTask) {
+    //             observer.getNewTask(task);
+    //         }
+    //     }
+    //     if (task.steps[task.currentStep].condwin.length <= 0) {
+    //         this.checkCanFinishedTask("", "");
+    //     }
+    // }
     public checkCanFinishedTask(actionType: string, pioneerId: string) {
         if (actionType == "killpioneer") {
             if (pioneerId == "gangster_1") {
@@ -293,6 +293,9 @@ export default class UserInfoMgr {
             ids.push(task.id);
         }
         return ids;
+    }
+    public get dealTaskIds(): string[] {
+        return this._dealTaskIds;
     }
     public get finishedEvents() {
         return this._finishedEvents;
@@ -555,6 +558,7 @@ export default class UserInfoMgr {
     private _afterCivilizationClosedShowPioneerDatas: MapPioneerModel[] = [];
 
     private _currentTasks: any[] = [];
+    private _dealTaskIds: string[] = [];
     private _finishedEvents: FinishedEvent[] = [];
     private _isFinishRookie: boolean = false;
 
@@ -610,8 +614,9 @@ export default class UserInfoMgr {
         this._level = this._localJsonData.playerData.level;
         this._exp = this._localJsonData.playerData.exp;
         this._cityVision = this._localJsonData.playerData.cityVision;
-        if (this._localJsonData.playerData.currentTasks != null) {
-            this._currentTasks = this._localJsonData.playerData.currentTasks;
+
+        if (this._localJsonData.playerData.dealTaskIds != null) {
+            this._dealTaskIds = this._localJsonData.playerData.dealTaskIds;
         }
         if (this._localJsonData.playerData.finishedEvents != null) {
             this._finishedEvents = this._localJsonData.playerData.finishedEvents;
@@ -698,7 +703,7 @@ export default class UserInfoMgr {
                 }
                 const splitDatas = templeWinAction.type.split("|");
                 if (splitDatas[0] == "gettask") {
-                    this.getNewTask(TaskMgr.getTaskById(splitDatas[1]));
+                    // this.getNewTask(TaskMgr.getTaskById(splitDatas[1]));
 
                 } else if (splitDatas[0] == "gameover") {
                     for (const observe of this._observers) {
@@ -808,6 +813,15 @@ export default class UserInfoMgr {
     private _localDataChanged(jsonObject: any) {
         if (jsonObject != null) {
             sys.localStorage.setItem(this._localStorageKey, JSON.stringify(jsonObject));
+        }
+    }
+
+    private _onGetNewTask(taskId: string) {
+        if (taskId != null) {
+            this._dealTaskIds.push(taskId);
+            this._localJsonData.playerData.dealTaskIds = this._dealTaskIds;
+            this._localDataChanged(this._localJsonData);
+            NotificationMgr.triggerEvent(NotificationName.TASK_NEW_GETTED);
         }
     }
 }

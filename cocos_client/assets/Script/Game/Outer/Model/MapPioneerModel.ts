@@ -370,9 +370,6 @@ export class MapPlayerPioneerModel extends MapPioneerModel {
 
 export class MapNpcPioneerModel extends MapPioneerModel {
 
-    public set taskObj(value: any) {
-        this._taskObj = value;
-    }
     public set hideTaskIds(value: string[]) {
         this._hideTaskIds = value;
     }
@@ -382,10 +379,10 @@ export class MapNpcPioneerModel extends MapPioneerModel {
     public set taskCdEndTime(value: number) {
         this._taskCdEndTime = value;
     }
-
-    public get taskObj(): any {
-        return this._taskObj;
+    public set talkId(value: string | null) {
+        this._talkId = value;
     }
+
     public get hideTaskIds(): string[] {
         return this._hideTaskIds;
     }
@@ -395,19 +392,22 @@ export class MapNpcPioneerModel extends MapPioneerModel {
     public get taskCdEndTime(): number {
         return this._taskCdEndTime;
     }
+    public get talkId(): string | null {
+        return this._talkId;
+    }
 
     public constructor(show: boolean, showCountTime: number, id: string, friendly: boolean, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
         super(show, showCountTime, id, friendly, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
-        this._taskObj = null;
         this._hideTaskIds = [];
         this._taskHideTime = -1;
         this._taskCdEndTime = 0;
+        this._talkId = null;
     }
 
-    private _taskObj: any;
     private _hideTaskIds: string[];
     private _taskHideTime: number;
     private _taskCdEndTime: number;
+    private _talkId: string;
 }
 
 
