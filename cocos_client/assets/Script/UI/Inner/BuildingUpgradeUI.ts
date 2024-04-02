@@ -30,6 +30,23 @@ export class BuildingUpgradeUI extends ViewController {
                     view.getChildByPath("Title/Label").getComponent(Label).string = LanMgr.getLanById(innerConfig.name);
                     view.getChildByPath("Level").getComponent(Label).string = "Lv." + value.buildLevel;
                     view.getComponent(Button).clickEvents[0].customEventData = value.buildType;
+
+                    const levelConfig = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel + 1, innerConfig.lvlup_cost);
+                    if (levelConfig != null) {
+                        let thisBuild: boolean = true;
+                        for (const cost of levelConfig) {
+                            const type = cost[0].toString();
+                            const num = cost[1];
+                            if (ItemMgr.getOwnItemCount(type) < num) {
+                                thisBuild = false;
+                                break;
+                            }
+                        }
+                        console.log("exce thisbu: " + thisBuild)
+                        view.getChildByPath("ToBuildBuildingTip").active = thisBuild;
+                    } else {
+                        view.getChildByPath("ToBuildBuildingTip").active = false;
+                    }
                 }
             }
         });
@@ -243,7 +260,7 @@ export class BuildingUpgradeUI extends ViewController {
                 }
             }
             UserInfoMgr.beginUpgrade(buildingType, time);
-            
+
             this._closeBuildingUpgradeUI();
             await this.playExitAnimation();
             UIPanelMgr.removePanelByNode(this.node);
