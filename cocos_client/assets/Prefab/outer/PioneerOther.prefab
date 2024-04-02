@@ -9819,7 +9819,7 @@
       "__id__": 668
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 670
@@ -10533,7 +10533,7 @@
     "node": {
       "__id__": 668
     },
-    "_enabled": true,
+    "_enabled": false,
     "__prefab": {
       "__id__": 702
     },
