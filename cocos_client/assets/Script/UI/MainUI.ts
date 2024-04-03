@@ -12,6 +12,7 @@ import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { UserInfoEvent, FinishedEvent } from '../Const/UserInfoDefine';
 import { NotificationName } from '../Const/Notification';
+import Config from '../Const/Config';
 
 const { ccclass, property } = _decorator;
 
@@ -226,7 +227,9 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
             const currentSettle: number = value / gap - 1;
             const beginLevel: number = currentSettle * gap + 1;
             const endLevel: number = (currentSettle + 1) * gap;
-            localStorage.setItem("local_newSettle", beginLevel + "|" + endLevel);
+            if (Config.canSaveLocalData) {
+                localStorage.setItem("local_newSettle", beginLevel + "|" + endLevel);
+            }
             this._refreshSettlememntTip();
         }
     }

@@ -8,6 +8,7 @@ import { ArtifactArrangeType } from "../Const/Artifact";
 import CLog from "../Utils/CLog";
 import { NotificationName } from "../Const/Notification";
 import { AttrChangeType, AttrType } from "../Const/ConstDefine";
+import Config from "../Const/Config";
 
 export default class ArtifactMgr {
     private _maxArtifactLength: number = 100;
@@ -26,7 +27,7 @@ export default class ArtifactMgr {
         return this._localArtifactDatas;
     }
 
-    public constructor() {}
+    public constructor() { }
 
     public async getItemIcon(iconName: string): Promise<SpriteFrame> {
         if (iconName in this._itemIconSpriteFrames) {
@@ -154,7 +155,7 @@ export default class ArtifactMgr {
             }
         }
         if (changed) {
-            sys.localStorage.setItem(this._localStorageKey, JSON.stringify(this._localArtifactDatas));
+            this._saveLocalData();
             NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
         }
     }
@@ -183,7 +184,7 @@ export default class ArtifactMgr {
             this._localArtifactDatas.splice(idx, 1);
         }
 
-        sys.localStorage.setItem(this._localStorageKey, JSON.stringify(this._localArtifactDatas));
+        this._saveLocalData();
         NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
 
         return true;
@@ -204,7 +205,7 @@ export default class ArtifactMgr {
                 singleItems.set(item.artifactConfigId, item);
             }
         }
-        localStorage.setItem(this._localStorageKey, JSON.stringify(this._localArtifactDatas));
+        this._saveLocalData();
 
         if (sortType == ArtifactArrangeType.Recently) {
             this._localArtifactDatas.sort((a, b) => {
@@ -218,5 +219,11 @@ export default class ArtifactMgr {
         }
 
         NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
+    }
+
+    private _saveLocalData() {
+        if (Config.canSaveLocalData) {
+            localStorage.setItem(this._localStorageKey, JSON.stringify(this._localArtifactDatas));
+        }
     }
 }

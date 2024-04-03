@@ -6,6 +6,7 @@ import MapDecorateModel from "../Game/Outer/Model/MapDecorateModel";
 import { BuildingMgrEvent, MapBuildingType, BuildingFactionType } from "../Const/BuildingDefine";
 import { ResourceModel } from "../Const/UserInfoDefine";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
+import Config from "../Const/Config";
 
 export default class BuildingMgr {
 
@@ -513,9 +514,13 @@ export default class BuildingMgr {
     }
 
     private _savePioneerData() {
-        localStorage.setItem(this._localStorageKey, JSON.stringify(this._buildings));
+        if (Config.canSaveLocalData) {
+            localStorage.setItem(this._localStorageKey, JSON.stringify(this._buildings));
+        }
     }
     private _saveDecorateData() {
-        localStorage.setItem(this._localDecorateKey, JSON.stringify(this._decorates));
+        if (Config.canSaveLocalData) {
+            localStorage.setItem(this._localDecorateKey, JSON.stringify(this._decorates));
+        }
     }
 }

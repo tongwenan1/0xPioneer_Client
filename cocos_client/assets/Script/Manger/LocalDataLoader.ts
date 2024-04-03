@@ -1,3 +1,4 @@
+import Config from "../Const/Config";
 import CLog from "../Utils/CLog";
 import { ArtifactMgr, BattleReportsMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
 
@@ -24,7 +25,9 @@ export default class LocalDataLoader {
             const saveObj: {} = JSON.parse(saveToImport);
             localStorage.clear();
             for (const k in saveObj) {
-                localStorage.setItem(k, saveObj[k]);
+                if (Config.canSaveLocalData) {
+                    localStorage.setItem(k, saveObj[k]);
+                }
             }
             CLog.debug("Import save data done.");
         }

@@ -9,6 +9,7 @@ import ItemConfig from "../Config/ItemConfig";
 import { ItemArrangeType, ItemType } from "../Const/Item";
 import CLog from "../Utils/CLog";
 import { NotificationName } from "../Const/Notification";
+import Config from "../Const/Config";
 
 export default class ItemMgr {
     private _maxItemLength: number = 100;
@@ -166,7 +167,7 @@ export default class ItemMgr {
             }
         }
         if (changed) {
-            localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+            this._saveLocalData();
             NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
         }
     }
@@ -257,7 +258,7 @@ export default class ItemMgr {
         if (this._localItemDatas[idx].count <= 0) {
             this._localItemDatas.splice(idx, 1);
         }
-        localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+        this._saveLocalData();
         NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
 
         return true;
@@ -279,7 +280,7 @@ export default class ItemMgr {
             }
         }
 
-        localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+        this._saveLocalData();
 
         // sort
         if (sortType == ItemArrangeType.Recently) {
@@ -299,5 +300,11 @@ export default class ItemMgr {
         }
 
         NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
+    }
+
+    private _saveLocalData() {
+        if (Config.canSaveLocalData) {
+            localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+        }
     }
 }

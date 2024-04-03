@@ -13,6 +13,8 @@ import { ResOprView } from './View/ResOprView';
 import { BuildingMgr, ItemMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../../Utils/Global';
 import GameMainHelper from '../Helper/GameMainHelper';
 import ViewController from '../../BasicView/ViewController';
+import EventConfig from '../../Config/EventConfig';
+import Config from '../../Const/Config';
 
 
 const { ccclass, property } = _decorator;
@@ -144,7 +146,9 @@ export class OuterTiledMapActionController extends ViewController {
                 zoom += 0.05;
             }
             GameMainHelper.instance.changeGameCameraZoom(zoom);
-            localStorage.setItem("local_outer_map_scale", zoom.toString());
+            if (Config.canSaveLocalData) {
+                localStorage.setItem("local_outer_map_scale", zoom.toString());
+            }
             this._fixCameraPos(GameMainHelper.instance.gameCameraPosition);
         }, this);
 
@@ -347,7 +351,9 @@ export class OuterTiledMapActionController extends ViewController {
                 const newCleardPositons = GameMainHelper.instance.tiledMapShadowErase(pioneer.stayPos, pioneer.id);
                 if (!isExsit) {
                     this._localEraseShadowWorldPos.push(pioneer.stayPos);
-                    localStorage.setItem(this._localEraseDataKey, JSON.stringify(this._localEraseShadowWorldPos));
+                    if (Config.canSaveLocalData) {
+                        localStorage.setItem(this._localEraseDataKey, JSON.stringify(this._localEraseShadowWorldPos));
+                    }
                 }
                 // has new, deal with fog
                 if (!this._lastPioneerStayPos.has(pioneer.id)) {
@@ -382,6 +388,10 @@ export class OuterTiledMapActionController extends ViewController {
         }
         if (this["_actionViewActioned"] == true) {
             this["_actionViewActioned"] = false;
+            return;
+        }
+        if (GameMainHelper.instance.isTapEventWaited) {
+            GameMainHelper.instance.isTapEventWaited = false;
             return;
         }
         const tiledPos = GameMainHelper.instance.tiledMapGetTiledPosByWorldPos(worldpos);
@@ -420,10 +430,15 @@ export class OuterTiledMapActionController extends ViewController {
                 stayPositons = stayBuilding.stayMapPositions;
 
             } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing) {
+                if (stayBuilding.eventId == currentActionPioneer.actionEventId) {
+                    const currentEvent = EventConfig.getById(stayBuilding.eventId);
+                    PioneerMgr.pioneerDealWithEvent(currentActionPioneer.id, stayBuilding.id, currentEvent);
+                } else {
+                    UIHUDController.showCenterTip(LanMgr.getLanById("203005"));
+                    // UIHUDController.showCenterTip("pioneer is processing event");
+                }
                 actionType = -2;
-                // useLanMgr
-                UIHUDController.showCenterTip(LanMgr.getLanById("203005"));
-                // UIHUDController.showCenterTip("pioneer is processing event");
+
             } else {
                 if (stayBuilding.type == MapBuildingType.city) {
                     if (stayBuilding.faction != BuildingFactionType.enemy) {

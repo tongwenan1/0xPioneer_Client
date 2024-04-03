@@ -316,6 +316,9 @@ export class TaskListUI extends ViewController {
                 }
             }
             if (currentMapPos != null) {
+                if (!GameMainHelper.instance.isGameShowOuter) {
+                    GameMainHelper.instance.changeInnerAndOuterShow();
+                }
                 GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y), true);
             }
         }

@@ -244,6 +244,16 @@ export default class GameMainHelper {
     public changeCursor(type: ECursorType) {
         NotificationMgr.triggerEvent(NotificationName.CHANGE_CURSOR, type);
     }
+    //------------------------------------------ eventWaitAction
+    public get isTapEventWaited(): boolean {
+        return this._isTapEventWaited;
+    }   
+    public set isTapEventWaited(value: boolean) {
+        this._isTapEventWaited = value;
+    }
+
+
+
 
     private static _instance: GameMainHelper;
 
@@ -252,6 +262,8 @@ export default class GameMainHelper {
     private _gameCameraZoom: number;
 
     private _isGameShowOuter: boolean = true;
+
+    private _isTapEventWaited: boolean = false;
 
     private _tiledMapHelper: TileMapHelper = null;
     public constructor() {
