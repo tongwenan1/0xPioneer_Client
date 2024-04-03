@@ -42,4 +42,8 @@ export enum NotificationName {
 
     GENERATE_TROOP_TIME_COUNT_ChANGED,
     GENERATE_TROOP_NUM_CHANGED,
+
+
+
+    CHOOSE_GANGSTER_ROUTE,
 }
