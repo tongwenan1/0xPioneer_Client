@@ -560,6 +560,9 @@ export class OuterTiledMapActionController extends ViewController {
                     taregtPos = v2(tiledPos.x, tiledPos.y);
                     sparePositions = targetFightBuildingModel.stayMapPositions;
                 }
+                else {
+                    taregtPos = v2(tiledPos.x, tiledPos.y);
+                }
             } else if (actionType == 6) {
                 // nothing
 
