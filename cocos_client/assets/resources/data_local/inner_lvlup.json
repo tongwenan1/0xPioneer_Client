@@ -30,7 +30,7 @@
     "desc_barr": "121002",
     "max_barr": 1500,
     "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8002,50]]",
+    "rec_cost_barr": "[[8001,100],[8003,50]]",
     "prefab_house": "Damage_house_A",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV1_Group",
@@ -44,8 +44,8 @@
         20
       ],
       [
-        8002,
-        20
+        8003,
+        10
       ]
     ]
   },
@@ -80,7 +80,7 @@
     "desc_barr": "121002",
     "max_barr": 2000,
     "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8002,50]]",
+    "rec_cost_barr": "[[8001,100],[8003,50]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV1_Group",
@@ -94,8 +94,8 @@
         20
       ],
       [
-        8002,
-        20
+        8003,
+        10
       ]
     ]
   },
@@ -130,7 +130,7 @@
     "desc_barr": "121002",
     "max_barr": 2500,
     "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8002,50]]",
+    "rec_cost_barr": "[[8001,100],[8003,50]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -144,8 +144,8 @@
         15
       ],
       [
-        8002,
-        15
+        8003,
+        7
       ]
     ]
   },
@@ -180,7 +180,7 @@
     "desc_barr": "121002",
     "max_barr": 3000,
     "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8002,50]]",
+    "rec_cost_barr": "[[8001,100],[8003,50]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -194,8 +194,8 @@
         15
       ],
       [
-        8002,
-        15
+        8003,
+        7
       ]
     ]
   },
@@ -230,7 +230,7 @@
     "desc_barr": "121002",
     "max_barr": 3500,
     "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8002,50]]",
+    "rec_cost_barr": "[[8001,100],[8003,50]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -244,8 +244,8 @@
         15
       ],
       [
-        8002,
-        15
+        8003,
+        7
       ]
     ]
   },
@@ -280,7 +280,7 @@
     "desc_barr": "121002",
     "max_barr": 4000,
     "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8002,50]]",
+    "rec_cost_barr": "[[8001,100],[8003,50]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -294,8 +294,8 @@
         15
       ],
       [
-        8002,
-        15
+        8003,
+        7
       ]
     ]
   },
@@ -330,7 +330,7 @@
     "desc_barr": "121002",
     "max_barr": 4500,
     "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8002,50]]",
+    "rec_cost_barr": "[[8001,100],[8003,50]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -344,8 +344,8 @@
         15
       ],
       [
-        8002,
-        15
+        8003,
+        7
       ]
     ]
   },
@@ -380,7 +380,7 @@
     "desc_barr": "121002",
     "max_barr": 5000,
     "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8002,50]]",
+    "rec_cost_barr": "[[8001,100],[8003,50]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -394,8 +394,8 @@
         15
       ],
       [
-        8002,
-        15
+        8003,
+        7
       ]
     ]
   },
@@ -430,7 +430,7 @@
     "desc_barr": "121002",
     "max_barr": 5500,
     "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8002,50]]",
+    "rec_cost_barr": "[[8001,100],[8003,50]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -444,8 +444,8 @@
         15
       ],
       [
-        8002,
-        15
+        8003,
+        7
       ]
     ]
   },
@@ -480,7 +480,7 @@
     "desc_barr": "121002",
     "max_barr": 6000,
     "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8002,50]]",
+    "rec_cost_barr": "[[8001,100],[8003,50]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -494,8 +494,8 @@
         15
       ],
       [
-        8002,
-        15
+        8003,
+        7
       ]
     ]
   }
