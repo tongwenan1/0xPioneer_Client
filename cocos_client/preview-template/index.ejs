@@ -13,12 +13,21 @@
         <meta name="force-rendering" content="webkit" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <link rel="stylesheet" type="text/css" href="./index.css" />
+
+        <!-- ccc-devtools -->
+        <script type="module" crossorigin src="./ccc-devtools/index.691dfd76.js"></script>
+        <link rel="stylesheet" href="./ccc-devtools/index.741f95c0.css" />
     </head>
     <body>
         <%- include(cocosToolBar, {config: config}) %>
+
+        <!-- ethers -->
         <script src="./lib/ethers.umd.min.js"></script>
+
         <div style="display: flex; flex: auto; align-items: center">
-            <%- include ./dist/index.html %>
+            <!-- ccc-devtools -->
+            <div id="dev-app" style="width: 400px; height: 100%; display: flex; flex-direction: column; justify-content: center"></div>
+
             <div id="content" class="content">
                 <div class="contentWrap">
                     <div id="GameDiv" class="wrapper">
@@ -72,7 +81,5 @@
         }
     }
 
-    window.hideLoading = () => {
-        
-    };
+    window.hideLoading = () => {};
 </script>
