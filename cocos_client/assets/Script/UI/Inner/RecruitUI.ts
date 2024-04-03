@@ -165,7 +165,7 @@ export class RecruitUI extends ViewController {
                 this._maxRecruitTroop
             );
         }
-        return tempUseNum;
+        return Math.floor(tempUseNum);
     }
 
     //---------------------------------- action
