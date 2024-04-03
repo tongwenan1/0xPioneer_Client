@@ -11,6 +11,9 @@ export class LoginUI extends ViewController {
 
     //--------------------------------------- lifeCyc
     private _configLoaded: boolean = false;
+
+    private _loginClicked: boolean = false;
+
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
@@ -38,10 +41,15 @@ export class LoginUI extends ViewController {
         if (!this._configLoaded) {
             return;
         }
+        
         const codeEditBox = this.node.getChildByPath("LoginView/CodeInput").getComponent(EditBox);
         if (codeEditBox.string.length <= 0) {
             return;
         }
+
+        if (this._loginClicked) return;
+        this._loginClicked = true;
+
         let canEnter: boolean = false;
         let config = ConfigConfig.getWhiteListConfig();
         if (config == null || config.para == null || config.para.length <= 0) {
