@@ -78,4 +78,7 @@ export default class LvlupConfig {
         const lvlStr = lvl.toString();
         return this._visions[lvlStr] != undefined ? this._visions[lvlStr] : 0;
     }
+    public static getMaxLevel() {
+        return this._confs.length;
+    }
 }

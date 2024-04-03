@@ -13,6 +13,7 @@ import ItemData, { ItemConfigType, ItemType } from '../../Const/Item';
 import ItemConfig from '../../Config/ItemConfig';
 import { NotificationName } from '../../Const/Notification';
 import { ItemGettedUI } from '../ItemGettedUI';
+import Config from '../../Const/Config';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -459,7 +460,9 @@ export class EventUI extends ViewController {
         const event = EventConfig.getById(eventId);
 
         if (this._triggerPioneerId != null) {
-            localStorage.setItem("local_event_last_title_" + this._triggerPioneerId, datas[1]);
+            if (Config.canSaveLocalData) {
+                localStorage.setItem("local_event_last_title_" + this._triggerPioneerId, datas[1]);
+            }
         }
         let hasNextStep = event != null;
 

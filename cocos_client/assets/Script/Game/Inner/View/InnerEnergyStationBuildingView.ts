@@ -10,6 +10,7 @@ import { TransformToEnergyUI } from "../../../UI/Inner/TransformToEnergyUI";
 import ItemData from "../../../Const/Item";
 import { NotificationName } from "../../../Const/Notification";
 import { ResourceCorrespondingItem } from "../../../Const/ConstDefine";
+import InnerBuildingConfig from "../../../Config/InnerBuildingConfig";
 
 const { ccclass, property } = _decorator;
 
@@ -20,8 +21,13 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
         await super.refreshUI(building);
 
         this._countingGenerate();
-        if (this._buildingSize != null) {
-            this._produceInfoView.position = v3(0, this._buildingSize.height, 0);
+
+        if (this._building.buildLevel > 0) {
+            const infoViewY = InnerBuildingLvlUpConfig.getBuildingLevelData(this._building.buildLevel, "info_y_energy");
+            if (infoViewY != null) {
+                console.log("exce iny: " + infoViewY);
+                this._produceInfoView.position = v3(0, infoViewY, 0);
+            }
         }
     }
 

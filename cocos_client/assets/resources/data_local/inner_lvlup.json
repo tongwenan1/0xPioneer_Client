@@ -3,7 +3,7 @@
     "id": "1",
     "progress": 5,
     "exp": 10,
-    "lvlup_time": 20,
+    "lvlup_time": 5,
     "cost_main": [
       [
         8002,
@@ -28,12 +28,14 @@
     ],
     "prefab_barr": "Damage_house_B",
     "desc_barr": "121002",
+    "max_barr": 1500,
     "prefab_house": "Damage_house_A",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV1_Group",
+    "info_y_energy": 270,
     "desc_energy": "121004",
-    "psyc_output": 2,
-    "psyc_storage": 50,
+    "psyc_output": 5,
+    "psyc_storage": 1500,
     "psyc_convert": [
       [
         8002,
@@ -49,7 +51,7 @@
     "id": "2",
     "progress": 5,
     "exp": 20,
-    "lvlup_time": 300,
+    "lvlup_time": 10,
     "cost_main": [
       [
         8002,
@@ -74,12 +76,14 @@
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
+    "max_barr": 2000,
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV1_Group",
+    "info_y_energy": 270,
     "desc_energy": "121004",
-    "psyc_output": 4,
-    "psyc_storage": 100,
+    "psyc_output": 10,
+    "psyc_storage": 2000,
     "psyc_convert": [
       [
         8002,
@@ -95,7 +99,7 @@
     "id": "3",
     "progress": 5,
     "exp": 30,
-    "lvlup_time": 1200,
+    "lvlup_time": 15,
     "cost_main": [
       [
         8002,
@@ -120,12 +124,14 @@
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
+    "max_barr": 2500,
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
+    "info_y_energy": 560,
     "desc_energy": "121004",
-    "psyc_output": 6,
-    "psyc_storage": 150,
+    "psyc_output": 15,
+    "psyc_storage": 2500,
     "psyc_convert": [
       [
         8002,
@@ -141,7 +147,7 @@
     "id": "4",
     "progress": 5,
     "exp": 40,
-    "lvlup_time": 1200,
+    "lvlup_time": 20,
     "cost_main": [
       [
         8002,
@@ -166,12 +172,14 @@
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
+    "max_barr": 3000,
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
+    "info_y_energy": 560,
     "desc_energy": "121004",
-    "psyc_output": 8,
-    "psyc_storage": 200,
+    "psyc_output": 20,
+    "psyc_storage": 3000,
     "psyc_convert": [
       [
         8002,
@@ -187,7 +195,7 @@
     "id": "5",
     "progress": 5,
     "exp": 50,
-    "lvlup_time": 1200,
+    "lvlup_time": 25,
     "cost_main": [
       [
         8002,
@@ -212,12 +220,14 @@
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
+    "max_barr": 3500,
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
+    "info_y_energy": 560,
     "desc_energy": "121004",
-    "psyc_output": 10,
-    "psyc_storage": 250,
+    "psyc_output": 25,
+    "psyc_storage": 3500,
     "psyc_convert": [
       [
         8002,
@@ -233,7 +243,7 @@
     "id": "6",
     "progress": 5,
     "exp": 60,
-    "lvlup_time": 1200,
+    "lvlup_time": 30,
     "cost_main": [
       [
         8002,
@@ -258,12 +268,14 @@
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
+    "max_barr": 4000,
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
+    "info_y_energy": 560,
     "desc_energy": "121004",
-    "psyc_output": 12,
-    "psyc_storage": 300,
+    "psyc_output": 30,
+    "psyc_storage": 4000,
     "psyc_convert": [
       [
         8002,
@@ -279,7 +291,7 @@
     "id": "7",
     "progress": 5,
     "exp": 70,
-    "lvlup_time": 1200,
+    "lvlup_time": 35,
     "cost_main": [
       [
         8002,
@@ -304,12 +316,14 @@
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
+    "max_barr": 4500,
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
+    "info_y_energy": 560,
     "desc_energy": "121004",
-    "psyc_output": 14,
-    "psyc_storage": 350,
+    "psyc_output": 35,
+    "psyc_storage": 4500,
     "psyc_convert": [
       [
         8002,
@@ -325,7 +339,7 @@
     "id": "8",
     "progress": 5,
     "exp": 80,
-    "lvlup_time": 1200,
+    "lvlup_time": 40,
     "cost_main": [
       [
         8002,
@@ -350,12 +364,14 @@
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
+    "max_barr": 5000,
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
+    "info_y_energy": 560,
     "desc_energy": "121004",
-    "psyc_output": 16,
-    "psyc_storage": 400,
+    "psyc_output": 40,
+    "psyc_storage": 5000,
     "psyc_convert": [
       [
         8002,
@@ -371,7 +387,7 @@
     "id": "9",
     "progress": 5,
     "exp": 90,
-    "lvlup_time": 1200,
+    "lvlup_time": 45,
     "cost_main": [
       [
         8002,
@@ -396,12 +412,14 @@
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
+    "max_barr": 5500,
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
+    "info_y_energy": 560,
     "desc_energy": "121004",
-    "psyc_output": 18,
-    "psyc_storage": 450,
+    "psyc_output": 45,
+    "psyc_storage": 5500,
     "psyc_convert": [
       [
         8002,
@@ -417,7 +435,7 @@
     "id": "10",
     "progress": 5,
     "exp": 100,
-    "lvlup_time": 1200,
+    "lvlup_time": 50,
     "cost_main": [
       [
         8002,
@@ -442,12 +460,14 @@
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
+    "max_barr": 6000,
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
+    "info_y_energy": 560,
     "desc_energy": "121004",
-    "psyc_output": 20,
-    "psyc_storage": 500,
+    "psyc_output": 50,
+    "psyc_storage": 6000,
     "psyc_convert": [
       [
         8002,

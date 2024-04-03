@@ -78,6 +78,7 @@ export interface ConfigInnerBuildingLevelUpData {
     desc_house: string,
 
     prefab_energy: string,
+    info_y_energy: number,
     desc_energy: string,
 
 

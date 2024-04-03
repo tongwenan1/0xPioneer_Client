@@ -1,5 +1,6 @@
 import NotificationMgr from "../Basic/NotificationMgr";
 import LanConfig from "../Config/LanConfig";
+import Config from "../Const/Config";
 import { NotificationName } from "../Const/Notification";
 
 export default class LanMgr {
@@ -18,7 +19,9 @@ export default class LanMgr {
     }
     public changeLang(lang: string) {
         this._language = lang;
-        localStorage.setItem(this._localLanKey, lang);
+        if (Config.canSaveLocalData) {
+            localStorage.setItem(this._localLanKey, lang);
+        }
         NotificationMgr.triggerEvent(NotificationName.CHANGE_LANG);
     }
 

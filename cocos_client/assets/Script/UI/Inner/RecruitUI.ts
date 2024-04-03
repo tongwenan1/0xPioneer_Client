@@ -6,6 +6,8 @@ import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
 import { NotificationName } from '../../Const/Notification';
+import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
+import { InnerBuildingType } from '../../Const/BuildingDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
@@ -30,12 +32,17 @@ export class RecruitUI extends ViewController {
 
         const currentTroops: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop);
 
-        const maxTroop: number = 9999999;
+        let maxTroop: number = 9999999;
+        const mainCityData = UserInfoMgr.innerBuilds.get(InnerBuildingType.Barrack);
+        const configMaxTroop = InnerBuildingLvlUpConfig.getBuildingLevelData(mainCityData.buildLevel, "max_barr");
+        if (configMaxTroop != null) {
+            maxTroop = configMaxTroop;
+        }
         this._totalTroop.string = maxTroop.toString();
         this._currentTroop.string = currentTroops.toString();
         this._totalTroopProgress.progress = currentTroops / maxTroop;
 
-        this._maxRecruitTroop = maxTroop - currentTroops;
+        this._maxRecruitTroop = Math.max(0, maxTroop - currentTroops);
         this.scheduleOnce(()=> {
             this._generateProgress.progress = this._selectGenerateNum / this._maxRecruitTroop;
         });

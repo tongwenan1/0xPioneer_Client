@@ -1,6 +1,7 @@
 import NotificationMgr from "../Basic/NotificationMgr";
 import ConfigConfig from "../Config/ConfigConfig";
 import EventConfig from "../Config/EventConfig";
+import Config from "../Const/Config";
 import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, BattleReportsEvent } from "../Const/Manager/BattleReportsMgrDefine";
 import { NotificationName } from "../Const/Notification";
 import GlobalData from "../Data/GlobalData";
@@ -40,7 +41,9 @@ export default class BattleReportsMgr {
     }
 
     saveData() {
-        localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this._storage));
+        if (Config.canSaveLocalData) {
+            localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this._storage));
+        }
         this._fireOnBattleReportListChanged();
     }
 

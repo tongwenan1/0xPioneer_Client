@@ -9,6 +9,7 @@ import ItemConfig from "../Config/ItemConfig";
 import { ItemArrangeType, ItemType } from "../Const/Item";
 import CLog from "../Utils/CLog";
 import { NotificationName } from "../Const/Notification";
+import Config from "../Const/Config";
 
 export default class ItemMgr {
     private _maxItemLength: number = 100;
@@ -43,7 +44,7 @@ export default class ItemMgr {
         });
     }
 
-    public constructor() {}
+    public constructor() { }
 
     public async getItemIcon(iconName: string): Promise<SpriteFrame> {
         if (iconName in this._itemIconSpriteFrames) {
@@ -81,7 +82,7 @@ export default class ItemMgr {
         return count;
     }
 
-    public addItem(items: ItemData[]): void {
+    public addItem(items: ItemData[], needSettlement: boolean = true): void {
         if (items.length <= 0) {
             return;
         }
@@ -112,49 +113,52 @@ export default class ItemMgr {
                         this._localItemDatas.push(item);
                     }
                     // settlementCount
-                    if (
-                        itemConfig.configId == ResourceCorrespondingItem.Food ||
-                        itemConfig.configId == ResourceCorrespondingItem.Wood ||
-                        itemConfig.configId == ResourceCorrespondingItem.Stone
-                    ) {
-                        SettlementMgr.insertSettlement({
-                            level: UserInfoMgr.level,
-                            newPioneerIds: [],
-                            killEnemies: 0,
-                            gainResources: item.count,
-                            consumeResources: 0,
-                            gainTroops: 0,
-                            consumeTroops: 0,
-                            gainEnergy: 0,
-                            consumeEnergy: 0,
-                            exploredEvents: 0,
-                        });
-                    } else if (itemConfig.configId == ResourceCorrespondingItem.Troop) {
-                        SettlementMgr.insertSettlement({
-                            level: UserInfoMgr.level,
-                            newPioneerIds: [],
-                            killEnemies: 0,
-                            gainResources: 0,
-                            consumeResources: 0,
-                            gainTroops: item.count,
-                            consumeTroops: 0,
-                            gainEnergy: 0,
-                            consumeEnergy: 0,
-                            exploredEvents: 0,
-                        });
-                    } else if (itemConfig.configId == ResourceCorrespondingItem.Energy) {
-                        SettlementMgr.insertSettlement({
-                            level: UserInfoMgr.level,
-                            newPioneerIds: [],
-                            killEnemies: 0,
-                            gainResources: 0,
-                            consumeResources: 0,
-                            gainTroops: 0,
-                            consumeTroops: 0,
-                            gainEnergy: item.count,
-                            consumeEnergy: 0,
-                            exploredEvents: 0,
-                        });
+                    if (needSettlement) {
+                        console.log("exce settle");
+                        if (
+                            itemConfig.configId == ResourceCorrespondingItem.Food ||
+                            itemConfig.configId == ResourceCorrespondingItem.Wood ||
+                            itemConfig.configId == ResourceCorrespondingItem.Stone
+                        ) {
+                            SettlementMgr.insertSettlement({
+                                level: UserInfoMgr.level,
+                                newPioneerIds: [],
+                                killEnemies: 0,
+                                gainResources: item.count,
+                                consumeResources: 0,
+                                gainTroops: 0,
+                                consumeTroops: 0,
+                                gainEnergy: 0,
+                                consumeEnergy: 0,
+                                exploredEvents: 0,
+                            });
+                        } else if (itemConfig.configId == ResourceCorrespondingItem.Troop) {
+                            SettlementMgr.insertSettlement({
+                                level: UserInfoMgr.level,
+                                newPioneerIds: [],
+                                killEnemies: 0,
+                                gainResources: 0,
+                                consumeResources: 0,
+                                gainTroops: item.count,
+                                consumeTroops: 0,
+                                gainEnergy: 0,
+                                consumeEnergy: 0,
+                                exploredEvents: 0,
+                            });
+                        } else if (itemConfig.configId == ResourceCorrespondingItem.Energy) {
+                            SettlementMgr.insertSettlement({
+                                level: UserInfoMgr.level,
+                                newPioneerIds: [],
+                                killEnemies: 0,
+                                gainResources: 0,
+                                consumeResources: 0,
+                                gainTroops: 0,
+                                consumeTroops: 0,
+                                gainEnergy: item.count,
+                                consumeEnergy: 0,
+                                exploredEvents: 0,
+                            });
+                        }
                     }
                 } else {
                     item.addTimeStamp = new Date().getTime();
@@ -163,7 +167,7 @@ export default class ItemMgr {
             }
         }
         if (changed) {
-            localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+            this._saveLocalData();
             NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
         }
     }
@@ -254,7 +258,7 @@ export default class ItemMgr {
         if (this._localItemDatas[idx].count <= 0) {
             this._localItemDatas.splice(idx, 1);
         }
-        localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+        this._saveLocalData();
         NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
 
         return true;
@@ -276,7 +280,7 @@ export default class ItemMgr {
             }
         }
 
-        localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+        this._saveLocalData();
 
         // sort
         if (sortType == ItemArrangeType.Recently) {
@@ -296,5 +300,11 @@ export default class ItemMgr {
         }
 
         NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
+    }
+
+    private _saveLocalData() {
+        if (Config.canSaveLocalData) {
+            localStorage.setItem(this._localStorageKey, JSON.stringify(this._localItemDatas));
+        }
     }
 }

@@ -268,6 +268,7 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
                     if (pioneer.type == MapPioneerType.player) {
                         temple.getComponent(MapPioneer).refreshUI(pioneer);
                         temple.getComponent(MapPioneer).setEventWaitedCallback(() => {
+                            GameMainHelper.instance.isTapEventWaited = true;
                             const allBuildings = BuildingMgr.getAllBuilding();
                             for (const building of allBuildings) {
                                 if (building.eventId == pioneer.actionEventId) {
@@ -378,7 +379,7 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
             }
         }
     }
-
+    
     private _refreshFightView(fightId: string, attacker: { id: string; name: string; hp: number; hpMax: number; }, defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositons: Vec2[]) {
         if (this._fightViewMap.has(fightId)) {
             this._fightViewMap.get(fightId).refreshUI(attacker, defender, attackerIsSelf);
@@ -528,12 +529,12 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
                         TaskMgr.gameStart();
                         // init resource
                         ItemMgr.addItem([
-                            new ItemData(ResourceCorrespondingItem.Energy, 100),
-                            new ItemData(ResourceCorrespondingItem.Food, 100),
-                            new ItemData(ResourceCorrespondingItem.Stone, 100),
-                            new ItemData(ResourceCorrespondingItem.Wood, 100),
-                            new ItemData(ResourceCorrespondingItem.Troop, 500),
-                        ]);
+                            new ItemData(ResourceCorrespondingItem.Energy, 2000),
+                            new ItemData(ResourceCorrespondingItem.Food, 2000),
+                            new ItemData(ResourceCorrespondingItem.Stone, 2000),
+                            new ItemData(ResourceCorrespondingItem.Wood, 2000),
+                            new ItemData(ResourceCorrespondingItem.Troop, 2000),
+                        ], false);
                     });
                 }
             }, 10);
@@ -762,8 +763,10 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
             const view = await UIPanelMgr.openPanel(UIName.BrachEventUI);
             if (view != null) {
                 view.getComponent(EventUI).eventUIShow(actionPioneerId, buildingId, event, (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
+                    PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
                     PioneerMgr.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
                 }, (nextEvent: any) => {
+                    PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
                     PioneerMgr.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
                 });
             }

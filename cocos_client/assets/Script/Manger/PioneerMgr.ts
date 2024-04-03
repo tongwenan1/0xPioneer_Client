@@ -18,6 +18,7 @@ import EventConfig from "../Config/EventConfig";
 import { NotificationName } from "../Const/Notification";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import { TaskNpcGetNewTalkAction, TaskTalkAction } from "../Const/TaskDefine";
+import Config from "../Const/Config";
 
 export default class PioneerMgr {
 
@@ -360,6 +361,16 @@ export default class PioneerMgr {
             this._savePioneerData();
         }
     }
+    public pioneerEventStatusToNone(pioneerId: string) {
+        const findPioneer = this.getPioneerById(pioneerId);
+        if (findPioneer != null) {
+            findPioneer.eventStatus = MapPioneerEventStatus.None;
+            this._savePioneerData();
+            for (const observer of this._observers) {
+                observer.pioneerActionTypeChanged(findPioneer.id, findPioneer.actionType, findPioneer.actionEndTimeStamp);
+            }
+        }
+    }
     public pioneerDealWithEvent(pioneerId: string, buildingId: string, currentEvent: EventConfigData) {
         const pioneer = this.getPioneerById(pioneerId);
         if (pioneer == null) {
@@ -402,11 +413,6 @@ export default class PioneerMgr {
             }
         }
         if (canShowDialog) {
-            pioneer.eventStatus = MapPioneerEventStatus.None;
-            this._savePioneerData();
-            for (const observer of this._observers) {
-                observer.pioneerActionTypeChanged(pioneer.id, pioneer.actionType, pioneer.actionEndTimeStamp);
-            }
             for (const observe of this._observers) {
                 observe.eventBuilding(pioneer.id, buildingId, currentEvent.id);
             }
@@ -1682,6 +1688,8 @@ export default class PioneerMgr {
     }
 
     private _savePioneerData() {
-        localStorage.setItem(this._localStorageKey, JSON.stringify(this._pioneers));
+        if (Config.canSaveLocalData) {
+            localStorage.setItem(this._localStorageKey, JSON.stringify(this._pioneers));
+        }
     }
 }

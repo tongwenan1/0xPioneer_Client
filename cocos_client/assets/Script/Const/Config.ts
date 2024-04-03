@@ -1,3 +1,7 @@
+export default class Config {
+    public static canSaveLocalData: boolean = true;
+}
+
 export enum ConfigType {
     MapScaleMaxAndMin = "10001",
     LoginWhiteList = "10002",
@@ -6,7 +10,6 @@ export enum ConfigType {
     BattleReportMaxKeepDays = "110000",
     BattleReportMaxKeepRecords = "110002"
 }
-
 
 export interface ConfigConfigData {
     id: ConfigType;

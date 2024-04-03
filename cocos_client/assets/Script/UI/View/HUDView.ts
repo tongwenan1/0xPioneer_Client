@@ -24,7 +24,7 @@ export class HUDView extends ViewController {
         this._taskTip.node.active = true;
         tween()
         .target(this._taskTip.node)
-        .by(0.2, { position: v3(-200, 0, 0) })
+        .by(0.2, { position: v3(200, 0, 0) })
         .delay(1.5)
         .call(() => {
             this._taskTip.node.active = false;
