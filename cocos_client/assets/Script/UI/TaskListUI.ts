@@ -5,7 +5,7 @@ import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
-import TaskModel from '../Const/TaskDefine';
+import TaskModel, { TaskStepModel } from '../Const/TaskDefine';
 
 const { ccclass, property } = _decorator;
 
@@ -58,44 +58,36 @@ export class TaskListUI extends ViewController {
                 break;
             }
             actionTaskShowCount += 1;
-            const curStep = toDoTasks[i].steps[toDoTasks[i].currentStep];
-            const curStepCondIndex = curStep.condwinStep == null ? 0 : curStep.condwinStep;
+            const currentTask: TaskModel = toDoTasks[i];
+            const currentStep: TaskStepModel = TaskMgr.getTaskStep(currentTask.steps[currentTask.stepIndex]);
+
             const action = instantiate(this._actionItem);
             action.active = true;
-
-            // useLanMgr
             action.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(toDoTasks[i].name);
-            action.getChildByName("SubTitle").getComponent(Label).string = LanMgr.getLanById(curStep.name);
-            // action.getChildByName("Title").getComponent(Label).string = toDoTasks[i].name;
-            // action.getChildByName("SubTitle").getComponent(Label).string = curStep.name;
-
-            action.getChildByName("Progress").getComponent(Label).string = curStepCondIndex + "/" + curStep.condwin.length;
-            action.getComponent(Button).clickEvents[0].customEventData = JSON.stringify(curStep);
+            action.getChildByName("SubTitle").getComponent(Label).string = LanMgr.getLanById(currentStep.name);
+            action.getChildByName("Progress").getComponent(Label).string = currentTask.stepIndex + "/" + currentTask.steps.length;
+            action.getComponent(Button).clickEvents[0].customEventData = JSON.stringify(currentStep);
             action.setParent(this._actionItem.getParent());
             this._actionTaskList.push(action);
         }
 
-        // useLanMgr
-        this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = LanMgr.replaceLanById("202003", [taskInfo.length]) + " >>";
+        this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = LanMgr.replaceLanById("202003", [taskIds.length]) + " >>";
         // this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = "All " + taskInfo.length + " Tasks";
 
         this._detailTaskView.active = this._isDetailShow;
         if (this._isDetailShow) {
-            let showTasks = null;
+            let showTasks: TaskModel[] = null;
             if (this._isDetailToDoShow) {
                 showTasks = toDoTasks;
             } else {
                 showTasks = finishedTasks;
             }
-            showTasks.sort((a, b) => a.id.localeCompare(b.id));
+            showTasks.sort((a: TaskModel, b: TaskModel) => a.taskId.localeCompare(b.taskId));
             for (let i = 0; i < showTasks.length; i++) {
                 const detail = instantiate(this._detailTaskItem);
                 detail.active = true;
 
-                // useLanMgr
                 detail.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById(showTasks[i].name);
-                // detail.getChildByName("Label").getComponent(Label).string = showTasks[i].name;
-
                 detail.getChildByName("Selected").active = i == this._detailSelectedIndex;
                 detail.getComponent(Button).clickEvents[0].customEventData = i.toString();
                 detail.setParent(this._detailTaskItem.getParent());
