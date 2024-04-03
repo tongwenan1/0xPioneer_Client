@@ -350,22 +350,30 @@ export class MapPlayerPioneerModel extends MapPioneerModel {
             this.stayPos = stayPos;
         }
     }
-
     public get rebirthCountTime() {
         return this._rebirthCountTime;
     }
+    public get killerId() {
+        return this._killerId;
+    }
+    
 
 
     public set rebirthCountTime(value: number) {
         this._rebirthCountTime = value;
     }
+    public set killerId(value: string) {
+        this._killerId = value;
+    }
 
     public constructor(show: boolean, showCountTime: number, id: string, friendly: boolean, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
         super(show, showCountTime, id, friendly, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
         this._rebirthCountTime = 0;
+        this._killerId = null;
     }
 
     private _rebirthCountTime: number;
+    private _killerId: string; 
 }
 
 export class MapNpcPioneerModel extends MapPioneerModel {

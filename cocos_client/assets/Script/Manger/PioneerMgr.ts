@@ -484,6 +484,7 @@ export default class PioneerMgr {
             const intervalId = setInterval(() => {
                 let fightOver: boolean = false;
                 let deadPioneer = null;
+                let killer = null;
                 if (selfAttack) {
                     const damage = Math.max(1, attackerAttack - enemyDefend);
                     if (damage > 0) {
@@ -491,6 +492,7 @@ export default class PioneerMgr {
                         if (enemyHp <= 0) {
                             fightOver = true;
                             deadPioneer = enemy;
+                            killer = attacker;
                         }
                     }
                 } else {
@@ -504,6 +506,7 @@ export default class PioneerMgr {
                             this.hidePioneer(attacker.id);
                             fightOver = true;
                             deadPioneer = attacker;
+                            killer = enemy;
                         }
                     }
                 }
@@ -562,6 +565,7 @@ export default class PioneerMgr {
                     if (deadPioneer instanceof MapPlayerPioneerModel) {
                         // player dead
                         deadPioneer.rebirthCountTime = 10;
+                        deadPioneer.killerId = killer.id;
                         this._savePioneerData();
 
                         // useLanMgr
@@ -866,6 +870,7 @@ export default class PioneerMgr {
                         v2(temple._stayPos.x, temple._stayPos.y)
                     );
                     (newModel as MapPlayerPioneerModel).rebirthCountTime = temple._rebirthCountTime;
+                    (newModel as MapPlayerPioneerModel).killerId = temple._killerId;
                 } else {
                     newModel = new MapPioneerModel(
                         temple._show,
@@ -1117,7 +1122,15 @@ export default class PioneerMgr {
                                 if (mainCity != null && mainCity.faction != BuildingFactionType.enemy) {
                                     rebirthMapPos = mainCity.stayMapPositions[1];
                                 } else {
-                                    rebirthMapPos = v2(pioneer.stayPos.x - 1, pioneer.stayPos.y);
+                                    if (pioneer.killerId != null && pioneer.killerId.includes("building")) {
+                                        const killerBuilding = BuildingMgr.getBuildingById(pioneer.killerId);
+                                        if (killerBuilding != null) {
+                                            rebirthMapPos = v2(killerBuilding.stayMapPositions[0].x - 1, killerBuilding.stayMapPositions[0].y);
+                                        }
+                                        pioneer.killerId = null;
+                                    } else {
+                                        rebirthMapPos = v2(pioneer.stayPos.x - 1, pioneer.stayPos.y);
+                                    }
                                 }
                                 let rebirthHp: number = Math.max(1, Math.min(ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop), pioneer.hpMax));
                                 ItemMgr.subItem(ResourceCorrespondingItem.Troop, rebirthHp);
@@ -1538,6 +1551,7 @@ export default class PioneerMgr {
         const intervalId = setInterval(() => {
             let fightOver: boolean = false;
             let deadPioneer = null;
+            let killer = null;
             if (selfAttack) {
                 const damage: number = Math.max(1, attacker.attack - defenderDefned);
                 if (damage > 0) {
@@ -1551,6 +1565,7 @@ export default class PioneerMgr {
                             this.hidePioneer(defender.id);
                             fightOver = true;
                             deadPioneer = defender;
+                            killer = attacker;
                         }
 
                     } else if (defender instanceof MapBuildingModel) {
@@ -1559,6 +1574,7 @@ export default class PioneerMgr {
                             if ((defender as MapMainCityBuildingModel).hp <= 0) {
                                 fightOver = true;
                                 deadPioneer = defender;
+                                killer = attacker;
                             }
                         } else if (defender.type == MapBuildingType.stronghold) {
                             for (const pioneerId of defender.defendPioneerIds) {
@@ -1578,6 +1594,7 @@ export default class PioneerMgr {
                                 BuildingMgr.hideBuilding(defender.id, attacker.id);
                                 fightOver = true;
                                 deadPioneer = defender;
+                                killer = attacker;
                             }
                         }
                     }
@@ -1593,6 +1610,7 @@ export default class PioneerMgr {
                         this.hidePioneer(attacker.id);
                         fightOver = true;
                         deadPioneer = attacker;
+                        killer = defender;
                     }
                 }
             }
@@ -1674,6 +1692,7 @@ export default class PioneerMgr {
                 if (deadPioneer instanceof MapPlayerPioneerModel) {
                     // player dead
                     deadPioneer.rebirthCountTime = 10;
+                    deadPioneer.killerId = killer.id;
                     this._savePioneerData();
 
                     // useLanMgr

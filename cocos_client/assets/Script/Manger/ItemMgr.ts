@@ -114,7 +114,6 @@ export default class ItemMgr {
                     }
                     // settlementCount
                     if (needSettlement) {
-                        console.log("exce settle");
                         if (
                             itemConfig.configId == ResourceCorrespondingItem.Food ||
                             itemConfig.configId == ResourceCorrespondingItem.Wood ||

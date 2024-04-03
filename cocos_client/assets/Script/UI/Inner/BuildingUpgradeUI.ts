@@ -42,7 +42,6 @@ export class BuildingUpgradeUI extends ViewController {
                                 break;
                             }
                         }
-                        console.log("exce thisbu: " + thisBuild)
                         view.getChildByPath("ToBuildBuildingTip").active = thisBuild;
                     } else {
                         view.getChildByPath("ToBuildBuildingTip").active = false;
