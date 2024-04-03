@@ -39,6 +39,8 @@ export class Main extends ViewController {
     protected async viewDidStart(): Promise<void> {
         super.viewDidStart();
 
+        (window as any).hideLoading();
+
         if (GAME_ENV_IS_DEBUG) {
             this._loginView.destroy();
             const loadingView = await UIPanelMgr.openPanel(UIName.LoadingUI);
