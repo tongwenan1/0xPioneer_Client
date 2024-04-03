@@ -15,11 +15,11 @@ export class ShakeAnim extends ViewController {
             .target(this.node)
             .repeatForever(
                 tween().sequence(
-                    tween().by(0.05, { position: v3(0, this.shakeRange, 0) }),
-                    tween().by(0.1, { position: v3(0, -this.shakeRange, 0) }),
-                    tween().by(0.1, { position: v3(0, this.shakeRange, 0) }),
-                    tween().by(0.05, { position: v3(0, -this.shakeRange, 0) }),
-                    tween().delay(1)
+                    tween().by(0.65, { position: v3(0, this.shakeRange, 0) }),
+                    tween().by(0.35, { position: v3(0, -this.shakeRange, 0) }),
+                    tween().by(0.65, { position: v3(0, this.shakeRange, 0) }),
+                    tween().by(0.35, { position: v3(0, -this.shakeRange, 0) }),
+                    tween().delay(0)
                 )
             ).start();
     }
