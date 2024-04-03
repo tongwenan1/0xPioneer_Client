@@ -17,6 +17,7 @@ import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import ItemConfig from "../Config/ItemConfig";
 import { ItemGettedUI } from "../UI/ItemGettedUI";
+import Config from "../Const/Config";
 
 export default class UserInfoMgr {
 
@@ -806,7 +807,9 @@ export default class UserInfoMgr {
 
     private _localDataChanged(jsonObject: any) {
         if (jsonObject != null) {
-            sys.localStorage.setItem(this._localStorageKey, JSON.stringify(jsonObject));
+            if (Config.canSaveLocalData) {
+                sys.localStorage.setItem(this._localStorageKey, JSON.stringify(jsonObject));
+            }
         }
     }
 }

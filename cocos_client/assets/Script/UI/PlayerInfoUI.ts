@@ -11,6 +11,7 @@ import { UserInfoEvent } from '../Const/UserInfoDefine';
 import LvlupConfig from '../Config/LvlupConfig';
 import ItemData, { ItemConfigType } from '../Const/Item';
 import { NotificationName } from '../Const/Notification';
+import Config from '../Const/Config';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfoUI')
@@ -119,6 +120,7 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
     //-------------------------------- function
     private clearReset(): void {
         localStorage.clear();
+        Config.canSaveLocalData = false;
         window.location.reload();
     }
 
@@ -155,7 +157,9 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
             }
         }
 
-        localStorage.setItem("importSaveOnStart", saveText);
+        if (Config.canSaveLocalData) {
+            localStorage.setItem("importSaveOnStart", saveText);
+        }
         location.reload();
     }
 
@@ -258,7 +262,7 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
 
             let currentLevel: number = UserInfoMgr.level;
             const gap: number = 4;
-            const settleCount: number = Math.floor(currentLevel / gap);
+            const settleCount: number = Math.floor(currentLevel / gap) + 1;
             if (settleCount <= 0) {
                 currentShowView.getChildByName("PeriodicSettlement").active = false;
                 currentShowView.getChildByName("SettlementList").active = false;
@@ -271,6 +275,9 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
                 currentShowView.getChildByName("EmptyTip").active = false;
                 for (let i = 0; i < settleCount; i++) {
                     const beginLevel: number = i * gap + 1;
+                    if (beginLevel > LvlupConfig.getMaxLevel()) {
+                        break;
+                    }
                     const endLevel: number = (i + 1) * gap;
                     //view
                     const view = instantiate(this._settlementItem);

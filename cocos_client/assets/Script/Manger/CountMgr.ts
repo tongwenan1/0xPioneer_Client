@@ -1,3 +1,4 @@
+import Config from "../Const/Config";
 import { CountModel } from "../Const/Count";
 import CLog from "../Utils/CLog";
 
@@ -5,7 +6,7 @@ export default class CountMgr {
     private _localStorageKey = "localCount";
     private _counts: CountModel[] = [];
 
-    public constructor() {}
+    public constructor() { }
 
     public initData() {
         const jsonStr = localStorage.getItem(this._localStorageKey);
@@ -23,6 +24,8 @@ export default class CountMgr {
 
     public addNewCount(count: CountModel) {
         this._counts.push(count);
-        localStorage.setItem(this._localStorageKey, JSON.stringify(this._counts));
+        if (Config.canSaveLocalData) {
+            localStorage.setItem(this._localStorageKey, JSON.stringify(this._counts));
+        }
     }
 }

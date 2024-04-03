@@ -1,4 +1,5 @@
 import { AudioClip, AudioSource, Node, Scene, director, resources } from "cc";
+import Config from "../Const/Config";
 
 export default class AudioMgr {
 
@@ -44,7 +45,9 @@ export default class AudioMgr {
     public changeMusicVolume(volume: number) {
         this._musicVolume = volume;
         this._musicSource.volume = volume;
-        localStorage.setItem("localMusicVolume", volume.toString());
+        if (Config.canSaveLocalData) {
+            localStorage.setItem("localMusicVolume", volume.toString());
+        }
     }
 
     public playEffect(path: string) {
@@ -61,10 +64,12 @@ export default class AudioMgr {
     public changeEffectVolume(volume: number) {
         this._effectVolume = volume;
         this._effectSource.volume = volume;
-        localStorage.setItem("localEffectVolume", volume.toString());
+        if (Config.canSaveLocalData) {
+            localStorage.setItem("localEffectVolume", volume.toString());
+        }
     }
 
-    public get musicVolume(): number {    
+    public get musicVolume(): number {
         return this._musicVolume
     }
     public get effectVolume(): number {
@@ -78,7 +83,7 @@ export default class AudioMgr {
     private _effectVolume: number = 1.0;
 
 
-    constructor() {        
+    constructor() {
     }
 }
 

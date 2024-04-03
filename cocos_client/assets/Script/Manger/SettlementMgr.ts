@@ -1,3 +1,4 @@
+import Config from "../Const/Config";
 import { SettlementModel } from "../Const/Manager/SettlementMgrDefine";
 
 export default class SettlementMgr {
@@ -17,7 +18,9 @@ export default class SettlementMgr {
         } else {
             this._settlements.push(newSettlement);
         }
-        localStorage.setItem(this._localSettleKey, JSON.stringify(this._settlements));
+        if (Config.canSaveLocalData) {
+            localStorage.setItem(this._localSettleKey, JSON.stringify(this._settlements));
+        }
     }
     public getSettlement(beginLevel: number, endLevel: number) {
         const newSettlement: SettlementModel = {

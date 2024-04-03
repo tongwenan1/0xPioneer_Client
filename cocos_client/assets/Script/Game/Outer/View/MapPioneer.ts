@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, instantiate, Sprite, Quat, UITransform, misc, Label, ProgressBar, log, v3, color } from 'cc';
+import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, instantiate, Sprite, Quat, UITransform, misc, Label, ProgressBar, log, v3, color, Event } from 'cc';
 import { LanMgr } from '../../../Utils/Global';
 import { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection } from '../../../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel from '../Model/MapPioneerModel';
@@ -288,7 +288,7 @@ export class MapPioneer extends Component {
     }
 
     //----------------- event
-    private onTapEventWaited() {
+    private onTapEventWaited(event: Event) {
         if (this._eventWaitedCallback != null) {
             this._eventWaitedCallback();
         }

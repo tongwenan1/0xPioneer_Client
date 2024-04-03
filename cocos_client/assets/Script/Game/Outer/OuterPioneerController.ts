@@ -214,6 +214,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                     if (pioneer.type == MapPioneerType.player) {
                         temple.getComponent(MapPioneer).refreshUI(pioneer);
                         temple.getComponent(MapPioneer).setEventWaitedCallback(() => {
+                            GameMainHelper.instance.isTapEventWaited = true;
                             const allBuildings = BuildingMgr.getAllBuilding();
                             for (const building of allBuildings) {
                                 if (building.eventId == pioneer.actionEventId) {
@@ -758,8 +759,10 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
             const view = await UIPanelMgr.openPanel(UIName.BrachEventUI);
             if (view != null) {
                 view.getComponent(EventUI).eventUIShow(actionPioneerId, buildingId, event, (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
+                    PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
                     PioneerMgr.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
                 }, (nextEvent: any) => {
+                    PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
                     PioneerMgr.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
                 });
             }
