@@ -321,6 +321,8 @@ export class OuterTiledMapActionController extends ViewController {
 
         this._mapCursorView.initData(this._hexViewRadius, this.node.scale.x);
         this._mapActionCursorView.initData(this._hexViewRadius, this.node.scale.x);
+
+        mapView.getChildByPath("BorderMask").setSiblingIndex(999);
     }
 
     private _lastPioneerStayPos: Map<string, Vec2> = new Map();

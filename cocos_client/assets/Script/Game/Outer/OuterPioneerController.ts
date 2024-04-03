@@ -404,7 +404,7 @@ export class OuterPioneerController extends Component implements PioneerMgrEvent
                             new ItemData(ResourceCorrespondingItem.Stone, 2000),
                             new ItemData(ResourceCorrespondingItem.Wood, 2000),
                             new ItemData(ResourceCorrespondingItem.Troop, 2000),
-                        ]);
+                        ], false);
                     });
                 }
             }, 10);
