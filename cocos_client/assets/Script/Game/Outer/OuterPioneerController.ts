@@ -143,6 +143,7 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
 
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_NEW_TALK_GETTED, this._refreshUI, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_NEW_TALK_USED, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_TALK_COUNT_CHANGED, this._refreshUI, this);
     }
 
     protected viewDidStart() {
@@ -229,6 +230,7 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
 
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_NEW_TALK_GETTED, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_NEW_TALK_USED, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_GET_TALK_COUNT_CHANGED, this._refreshUI, this);
     }
 
     private _refreshUI() {
@@ -766,13 +768,6 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
                 });
             }
         }
-    }
-
-    pioneerTaskHideTimeCountChanged(pioneerId: string, timeCount: number) {
-        this._refreshUI();
-    }
-    pioneerTaskCdTimeCountChanged(pioneerId: string, timeCount: number): void {
-        this._refreshUI();
     }
     pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void {
         this._refreshUI();

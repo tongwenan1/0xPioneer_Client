@@ -86,3 +86,7 @@ export interface MapMemberShowHideCountStruct {
     countTime: number,
     isShow: boolean
 }
+export interface MapMemberGetTalkCountStruct {
+    countTime: number,
+    talkId: string
+}

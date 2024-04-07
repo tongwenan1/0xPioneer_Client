@@ -61,6 +61,7 @@ export enum NotificationName {
     MAP_PIONEER_NEW_TALK_GETTED,
     MAP_PIONEER_NEW_TALK_USED,
     MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED,
+    MAP_PIONEER_GET_TALK_COUNT_CHANGED,
     //---------------------- dialog
     DIALOG_SHOW,
 

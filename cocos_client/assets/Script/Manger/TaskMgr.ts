@@ -13,7 +13,6 @@ export default class TaskMgr {
             talk: {
                 talkId: talkId,
                 talkSelectCanGetTaskIndex: talkSelectedIndex,
-                cdTime: 0
             }
         }
         this._checkTask(con);

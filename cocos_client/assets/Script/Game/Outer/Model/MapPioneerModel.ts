@@ -1,7 +1,7 @@
 import { Vec2, Vec3, log, v2 } from "cc";
 import { TilePos } from "../../TiledMap/TileTool";
 import { MapPioneerAttributesChangeModel, MapPioneerLogicType, MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerType } from "../../../Const/Model/MapPioneerModelDefine";
-import { AttrChangeType, GetPropData, MapMemberFactionType, MapMemberShowHideCountStruct } from "../../../Const/ConstDefine";
+import { AttrChangeType, GetPropData, MapMemberFactionType, MapMemberGetTalkCountStruct, MapMemberShowHideCountStruct } from "../../../Const/ConstDefine";
 
 export default class MapPioneerModel {
     // hp
@@ -376,27 +376,15 @@ export class MapPlayerPioneerModel extends MapPioneerModel {
 
 export class MapNpcPioneerModel extends MapPioneerModel {
 
-    public set hideTaskIds(value: string[]) {
-        this._hideTaskIds = value;
-    }
-    public set taskHideTime(value: number) {
-        this._taskHideTime = value;
-    }
-    public set taskCdEndTime(value: number) {
-        this._taskCdEndTime = value;
+    public set talkCountStruct(value: MapMemberGetTalkCountStruct) {
+        this._talkCountStruct = value;
     }
     public set talkId(value: string | null) {
         this._talkId = value;
     }
 
-    public get hideTaskIds(): string[] {
-        return this._hideTaskIds;
-    }
-    public get taskHideTime(): number {
-        return this._taskHideTime;
-    }
-    public get taskCdEndTime(): number {
-        return this._taskCdEndTime;
+    public get talkCountStruct(): MapMemberGetTalkCountStruct {
+        return this._talkCountStruct;
     }
     public get talkId(): string | null {
         return this._talkId;
@@ -404,16 +392,11 @@ export class MapNpcPioneerModel extends MapPioneerModel {
 
     public constructor(show: boolean, id: string, faction: MapMemberFactionType, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
         super(show, id, faction, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
-        this._hideTaskIds = [];
-        this._taskHideTime = -1;
-        this._taskCdEndTime = 0;
         this._talkId = null;
     }
-
-    private _hideTaskIds: string[];
-    private _taskHideTime: number;
-    private _taskCdEndTime: number;
+    
     private _talkId: string;
+    private _talkCountStruct: MapMemberGetTalkCountStruct;
 }
 
 

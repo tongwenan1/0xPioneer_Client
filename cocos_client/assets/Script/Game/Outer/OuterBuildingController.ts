@@ -372,12 +372,6 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
 
     }
-    pioneerTaskHideTimeCountChanged(pioneerId: string, timeCount: number): void {
-
-    }
-    pioneerTaskCdTimeCountChanged(pioneerId: string, timeCount: number): void {
-
-    }
     pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void {
 
     }

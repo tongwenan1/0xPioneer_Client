@@ -64,7 +64,6 @@ export enum TaskConditionType {
 export interface TaskTalkCondition {
     talkId: string,
     talkSelectCanGetTaskIndex: number,
-    cdTime: number
 }
 export interface TaskFinishCondition {
     type: TaskParentChildType,
@@ -118,7 +117,8 @@ export interface TaskTalkAction {
 }
 export interface TaskNpcGetNewTalkAction {
     talkId: string,
-    npcId: string
+    npcId: string,
+    delayTime: number
 }
 
 export interface TaskAction {
@@ -152,7 +152,6 @@ export default class TaskModel {
                     talk = {
                         talkId: temple[1],
                         talkSelectCanGetTaskIndex: temple[2],
-                        cdTime: temple[3]
                     }
                 } else if (conditionType == TaskConditionType.Finish) {
                     finish = {
@@ -222,7 +221,8 @@ export default class TaskModel {
         } else if (actionType == TaskActionType.NpcGetNewTalk) {
             npcGetNewTalk = {
                 talkId: actionConfig[1],
-                npcId: actionConfig[2]
+                npcId: actionConfig[2],
+                delayTime: actionConfig[3]
             }
         }
 

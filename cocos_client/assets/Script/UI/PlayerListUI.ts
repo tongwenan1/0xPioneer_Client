@@ -153,12 +153,6 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
     eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
         
     }
-    pioneerTaskHideTimeCountChanged(pioneerId: string, timeCount: number): void {
-
-    }
-    pioneerTaskCdTimeCountChanged(pioneerId: string, timeCount: number): void {
-
-    }
     pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void {
 
     }

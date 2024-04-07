@@ -357,6 +357,14 @@ export default class PioneerMgr {
             }
         }
     }
+    public npcGetNewTalk(pioneerId: string, talkId: string) {
+        const findPioneer = this.getPioneerById(pioneerId);
+        if (findPioneer != null && findPioneer instanceof MapNpcPioneerModel) {
+            findPioneer.talkId = talkId;
+            this._savePioneerData();
+            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_NEW_TALK_GETTED);
+        }
+    }
     public pioneerToIdle(pioneerId: string) {
         const findPioneer = this.getPioneerById(pioneerId);
         if (findPioneer != null) {
@@ -782,10 +790,8 @@ export default class PioneerMgr {
                         temple._defend,
                         v2(temple._stayPos.x, temple._stayPos.y)
                     );
+                    (newModel as MapNpcPioneerModel).talkCountStruct = temple._talkCountStruct;
                     (newModel as MapNpcPioneerModel).talkId = temple._talkId;
-                    (newModel as MapNpcPioneerModel).hideTaskIds = temple._hideTaskIds;
-                    (newModel as MapNpcPioneerModel).taskHideTime = temple._taskHideTime;
-                    (newModel as MapNpcPioneerModel).taskCdEndTime = temple._taskCdEndTime;
                 } else if (temple._type == MapPioneerType.player) {
                     newModel = new MapPlayerPioneerModel(
                         temple._show,
@@ -1017,25 +1023,18 @@ export default class PioneerMgr {
                         }
                     }
 
-                    // task time count
+                    // get new talk time count
                     if (pioneer instanceof MapNpcPioneerModel) {
-                        const npc = pioneer as MapNpcPioneerModel;
-                        if (npc.taskHideTime > 0) {
-                            npc.taskHideTime -= 1;
-                            // if (npc.taskHideTime == 0) {
-                            //     npc.hideTaskIds.push(npc.taskObj.id);
-                            //     npc.taskObj = null;
-                            // }
-                            this._savePioneerData();
-                            for (const observe of this._observers) {
-                                observe.pioneerTaskHideTimeCountChanged(npc.id, npc.taskHideTime);
-                            }
-                        }
-                        if (npc.taskCdEndTime > 0) {
-                            npc.taskCdEndTime -= 1;
-                            this._savePioneerData();
-                            for (const observe of this._observers) {
-                                observe.pioneerTaskCdTimeCountChanged(npc.id, npc.taskCdEndTime);
+                        if (pioneer.talkCountStruct != null) {
+                            if (pioneer.talkCountStruct.countTime > 0) {
+                                pioneer.talkCountStruct.countTime -= 1;
+                                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_TALK_COUNT_CHANGED, pioneer);
+                                this._savePioneerData();
+                                if (pioneer.talkCountStruct.countTime == 0) {
+                                    this.npcGetNewTalk(pioneer.id, pioneer.talkCountStruct.talkId);
+                                    pioneer.talkCountStruct = null;
+                                    this._savePioneerData();
+                                }
                             }
                         }
                     }
@@ -1240,7 +1239,7 @@ export default class PioneerMgr {
                 }
 
             } else if (stayBuilding.type == MapBuildingType.explore) {
-                if (pioneer.type == MapPioneerType.player && 
+                if (pioneer.type == MapPioneerType.player &&
                     pioneer.faction == MapMemberFactionType.friend) {
                     const acionTime: number = 3000;
                     pioneer.actionType = MapPioneerActionType.exploring;
@@ -1277,7 +1276,7 @@ export default class PioneerMgr {
             } else if (stayBuilding.type == MapBuildingType.stronghold) {
                 // 0-idle 1-fight 2-defend
                 let tempAction: number = 0;
-                if (pioneer.type == MapPioneerType.player && 
+                if (pioneer.type == MapPioneerType.player &&
                     pioneer.faction == MapMemberFactionType.friend) {
                     if (stayBuilding.faction != MapMemberFactionType.enemy) {
                         tempAction = 2;
@@ -1328,7 +1327,7 @@ export default class PioneerMgr {
                 }
 
             } else if (stayBuilding.type == MapBuildingType.resource) {
-                if (pioneer.type == MapPioneerType.player && 
+                if (pioneer.type == MapPioneerType.player &&
                     pioneer.faction == MapMemberFactionType.friend) {
 
                     // artifact
@@ -1644,12 +1643,17 @@ export default class PioneerMgr {
 
     //------------------------------- notification
     private _onPioneerGetTalk(action: TaskNpcGetNewTalkAction) {
-        const findPioneer = this.getPioneerById(action.npcId);
-        if (findPioneer != null && findPioneer.show && 
-            findPioneer.faction == MapMemberFactionType.friend) {
-            (findPioneer as MapNpcPioneerModel).talkId = action.talkId;
-            this._savePioneerData();
-            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_NEW_TALK_GETTED);
+        if (action.delayTime <= 0) {
+            this.npcGetNewTalk(action.npcId, action.talkId);
+        } else {
+            const findPioneer = this.getPioneerById(action.npcId);
+            if (findPioneer != null && findPioneer instanceof MapNpcPioneerModel) {
+                findPioneer.talkCountStruct = {
+                    talkId: action.talkId,
+                    countTime: action.delayTime,
+                }
+                this._savePioneerData();
+            }
         }
     }
     private _onPioneerUseTalk(talkId: string) {

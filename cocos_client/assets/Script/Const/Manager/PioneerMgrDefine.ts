@@ -30,8 +30,6 @@ export interface PioneerMgrEvent {
     miningBuilding(actionPioneerId: string, buildingId: string): void;
     eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void;
 
-    pioneerTaskHideTimeCountChanged(pioneerId: string, timeCount: number): void;
-    pioneerTaskCdTimeCountChanged(pioneerId: string, timeCount: number): void;
     pioneerLogicMovePathPrepared?(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void;
     pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void;
     pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void;

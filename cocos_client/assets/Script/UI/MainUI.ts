@@ -191,12 +191,6 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
 
     }
-    pioneerTaskHideTimeCountChanged(pioneerId: string, timeCount: number): void {
-
-    }
-    pioneerTaskCdTimeCountChanged(pioneerId: string, timeCount: number): void {
-
-    }
     pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void {
 
     }
