@@ -131,16 +131,6 @@ export default class UserInfoMgr {
     public get afterCivilizationClosedShowPioneerDatas() {
         return this._afterCivilizationClosedShowPioneerDatas;
     }
-    public get currentTasks() {
-        return this._currentTasks;
-    }
-    public get currentTaskIds() {
-        const ids = [];
-        for (const task of this._currentTasks) {
-            ids.push(task.id);
-        }
-        return ids;
-    }
     public get isFinishRookie() {
         return this._isFinishRookie;
     }
@@ -395,7 +385,6 @@ export default class UserInfoMgr {
     private _afterCivilizationClosedShowArtifactDatas: ArtifactData[] = [];
     private _afterCivilizationClosedShowPioneerDatas: MapPioneerModel[] = [];
 
-    private _currentTasks: any[] = [];
     private _isFinishRookie: boolean = false;
 
     private _playerID: string = null;

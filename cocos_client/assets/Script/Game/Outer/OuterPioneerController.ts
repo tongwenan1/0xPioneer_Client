@@ -32,6 +32,7 @@ import { OuterTiledMapActionController } from './OuterTiledMapActionController';
 import GameMainHelper from '../Helper/GameMainHelper';
 import ViewController from '../../BasicView/ViewController';
 import { TaskShowHideStatus, TaskTargetType } from '../../Const/TaskDefine';
+import { EventConfigData } from '../../Const/Event';
 
 
 const { ccclass, property } = _decorator;
@@ -762,7 +763,7 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
                 view.getComponent(EventUI).eventUIShow(actionPioneerId, buildingId, event, (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
                     PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
                     PioneerMgr.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
-                }, (nextEvent: any) => {
+                }, (nextEvent: EventConfigData) => {
                     PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
                     PioneerMgr.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
                 });

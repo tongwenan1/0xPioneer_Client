@@ -10,11 +10,12 @@ import DropConfig from '../Config/DropConfig';
 import ItemConfigDropTool from '../Tool/ItemConfigDropTool';
 import ItemConfig from '../Config/ItemConfig';
 import ItemData, { ItemConfigType } from '../Const/Item';
+import { BoxInfoConfigData } from '../Const/BoxInfo';
 const { ccclass, property } = _decorator;
 
 @ccclass('TreasureGettedUI')
 export class TreasureGettedUI extends ViewController {
-    public async dialogShow(box: any, gettedCallback: () => void) {
+    public async dialogShow(box: BoxInfoConfigData, gettedCallback: () => void) {
         for (let i = 0; i < 3; i++) {
             this.node.getChildByPath("Content/Treasure_box_" + i).active = i == box.icon;
         }

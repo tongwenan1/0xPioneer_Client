@@ -8,6 +8,5 @@ export interface SettlementModel {
     consumeTroops: number,
     gainEnergy: number,
     consumeEnergy: number,
-    eventAchievements?: any[],
     exploredEvents: number
 }

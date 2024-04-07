@@ -1,26 +1,25 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node } from 'cc';
 import { NPCNameLangType } from '../../Const/ConstDefine';
-import { CountMgr, LanMgr, PioneerMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { CountMgr, LanMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
-import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
 import { CountType } from '../../Const/Count';
 import { NotificationName } from '../../Const/Notification';
 import { ItemGettedUI } from '../ItemGettedUI';
-import TaskModel, { TaskConditionType, TaskTalkCondition } from '../../Const/TaskDefine';
+import { TalkConfigData } from '../../Const/Talk';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
 export class DialogueUI extends ViewController {
-    public dialogShow(talk: any, talkOverCallback: () => void = null) {
+    public dialogShow(talk: TalkConfigData, talkOverCallback: () => void = null) {
         this._talk = talk;
         this._talkOverCallback = talkOverCallback;
         this._dialogStep = 0;
         this._refreshUI();
     }
 
-    private _talk: any = null;
+    private _talk: TalkConfigData = null;
     private _talkOverCallback: () => void;
     private _dialogStep: number = 0;
     private _roleNames: string[] = [
@@ -69,7 +68,7 @@ export class DialogueUI extends ViewController {
         dialogView.getChildByName("dialog_bg").getComponent(Button).interactable = true;
 
         const currentMesssage = this._talk.messsages[this._dialogStep];
-        if (currentMesssage.type == null || currentMesssage.type == 0) {
+        if (currentMesssage.type == null || currentMesssage.type == "0") {
             dialogView.active = true;
             selectView.active = false;
             dialogView.getChildByName("name_bg").active = false;
@@ -90,7 +89,7 @@ export class DialogueUI extends ViewController {
                 if (this._roleViewNameMap)
                     dialogView.getChildByName(roleName).active = roleName == this._roleViewNameMap.get(currentMesssage.name);
             }
-        } else if (currentMesssage.type == 1) {
+        } else if (currentMesssage.type == "1") {
             if (currentMesssage.text != undefined) {
                 dialogView.active = true;
                 dialogView.getChildByName("name_bg").active = false;

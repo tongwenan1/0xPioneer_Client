@@ -7,7 +7,7 @@ import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
 import { CountType } from '../../Const/Count';
 import EventConfig from '../../Config/EventConfig';
-import { EventConfigData } from '../../Const/Event';
+import { EventConfigData, EventCost, EventReward, EventSelectCond, EventSelectCondId, EventSelectCondNum } from '../../Const/Event';
 import GlobalData from '../../Data/GlobalData';
 import ItemData, { ItemConfigType, ItemType } from '../../Const/Item';
 import ItemConfig from '../../Config/ItemConfig';
@@ -19,7 +19,7 @@ const { ccclass, property } = _decorator;
 @ccclass('EventUI')
 export class EventUI extends ViewController {
 
-    public eventUIShow(triggerPioneerId: string, eventBuildingId: string, event: EventConfigData, fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => void, dealWithNextEvent: (event: any) => void) {
+    public eventUIShow(triggerPioneerId: string, eventBuildingId: string, event: EventConfigData, fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => void, dealWithNextEvent: (event: EventConfigData) => void) {
         this._triggerPioneerId = triggerPioneerId;
         this._eventBuildingId = eventBuildingId;
         this._fightCallback = fightCallback;
@@ -236,97 +236,93 @@ export class EventUI extends ViewController {
         }
     }
 
-    private _checkIsSatisfiedCondition(condition: any[]): { satisfy: boolean, tipText: string } {
+    private _checkIsSatisfiedCondition(condition: EventSelectCond): { satisfy: boolean, tipText: string } {
         const temple: { satisfy: boolean, tipText: string } = { satisfy: true, tipText: "" };
-        if (condition.length == 3) {
-            const type: number = condition[0];
-            const id: string = condition[1];
-            const num: number = condition[2];
+        const type: ItemConfigType = condition[0];
+        const id: EventSelectCondId = condition[1];
+        const num: EventSelectCondNum = condition[2];
 
-            if (type == ItemConfigType.Item) {
-                const currentNum = ItemMgr.getOwnItemCount(id);
-                if (currentNum >= num) {
-                    temple.satisfy = true;
-                } else {
-                    temple.satisfy = false;
-                    const itemConf = ItemConfig.getById(id);
-                    if (itemConf != null) {
-                        // useLanMgr
-                        temple.tipText = LanMgr.replaceLanById("207007", [num]) + LanMgr.getLanById(itemConf.itemName);
-                        // temple.tipText = "you need AT LEAST " + num + " " + itemConf.itemName;
-                    }
+        if (type == ItemConfigType.Item) {
+            const currentNum = ItemMgr.getOwnItemCount(id);
+            if (currentNum >= num) {
+                temple.satisfy = true;
+            } else {
+                temple.satisfy = false;
+                const itemConf = ItemConfig.getById(id);
+                if (itemConf != null) {
+                    // useLanMgr
+                    temple.tipText = LanMgr.replaceLanById("207007", [num]) + LanMgr.getLanById(itemConf.itemName);
+                    // temple.tipText = "you need AT LEAST " + num + " " + itemConf.itemName;
                 }
-            } else if (type == ItemConfigType.Artifact) {
-                // xx wait artifact
             }
-            // reserved for later
-            // } else if (type == 3) {
-            //     if (this._triggerPioneerId != null) {
-            //         const pioneer = PioneerMgr.getPioneerById(this._triggerPioneerId);
-            //         if (id == 1) {
-            //             // hp
-            //             if (pioneer.hp > num) {
-            //                 // only hp need left 1
-            //                 temple.satisfy = true;
-            //             } else {
-            //                 temple.satisfy = false;
-
-            //                 // useLanMgr
-            //                 // temple.tipText = LanMgr.replaceLanById("107549", [num+1]);
-            //                 temple.tipText = "you need AT LEAST " + (num + 1) + " HP";
-            //             }
-
-            //         } else if (id == 2) {
-            //             // attack
-            //             if (pioneer.attack >= num) {
-            //                 temple.satisfy = true;
-            //             } else {
-            //                 temple.satisfy = false;
-
-            //                 // useLanMgr
-            //                 // temple.tipText = LanMgr.replaceLanById("107549", [num]);
-            //                 temple.tipText = "you need AT LEAST " + num + " Attack";
-            //             }
-            //         }
-            //     }
-            // }
+        } else if (type == ItemConfigType.Artifact) {
+            // xx wait artifact
         }
+        // reserved for later
+        // } else if (type == 3) {
+        //     if (this._triggerPioneerId != null) {
+        //         const pioneer = PioneerMgr.getPioneerById(this._triggerPioneerId);
+        //         if (id == 1) {
+        //             // hp
+        //             if (pioneer.hp > num) {
+        //                 // only hp need left 1
+        //                 temple.satisfy = true;
+        //             } else {
+        //                 temple.satisfy = false;
+
+        //                 // useLanMgr
+        //                 // temple.tipText = LanMgr.replaceLanById("107549", [num+1]);
+        //                 temple.tipText = "you need AT LEAST " + (num + 1) + " HP";
+        //             }
+
+        //         } else if (id == 2) {
+        //             // attack
+        //             if (pioneer.attack >= num) {
+        //                 temple.satisfy = true;
+        //             } else {
+        //                 temple.satisfy = false;
+
+        //                 // useLanMgr
+        //                 // temple.tipText = LanMgr.replaceLanById("107549", [num]);
+        //                 temple.tipText = "you need AT LEAST " + num + " Attack";
+        //             }
+        //         }
+        //     }
+        // }
         return temple;
     }
 
-    private async _loseOrGainItemAndResource(datas: any[], cost: boolean): Promise<string> {
+    private async _loseOrGainItemAndResource(datas: (EventReward | EventCost)[], cost: boolean): Promise<string> {
         let showTip: string = "";
         const itemDatas: ItemData[] = [];
         for (const temple of datas) {
-            if (temple.length == 3) {
-                const type: number = temple[0];
-                const id: string = temple[1];
-                const num = temple[2];
-                if (type == ItemConfigType.Item) {
-                    // item
-                    if (cost) {
-                        for (const item of ItemMgr.localItemDatas) {
-                            if (item.itemConfigId == id) {
-                                const itemConf = ItemConfig.getById(id);
-                                ItemMgr.subItem(item.itemConfigId, num);
+            const type: ItemConfigType = temple[0];
+            const id: string = temple[1];
+            const num: number = temple[2];
+            if (type == ItemConfigType.Item) {
+                // item
+                if (cost) {
+                    for (const item of ItemMgr.localItemDatas) {
+                        if (item.itemConfigId == id) {
+                            const itemConf = ItemConfig.getById(id);
+                            ItemMgr.subItem(item.itemConfigId, num);
 
-                                // useLanMgr
-                                showTip += LanMgr.replaceLanById("207008", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
-                                // showTip += ("You lost" + num + " " + itemConf.itemName + "\n");
+                            // useLanMgr
+                            showTip += LanMgr.replaceLanById("207008", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
+                            // showTip += ("You lost" + num + " " + itemConf.itemName + "\n");
 
-                                break;
-                            }
+                            break;
                         }
-                    } else {
-                        itemDatas.push(new ItemData(id, num));
-                        const itemConf = ItemConfig.getById(id);
-                        // useLanMgr
-                        showTip += LanMgr.replaceLanById("207009", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
-                        // showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
                     }
-                } else if (type == ItemConfigType.Artifact) {
-                    // donn't need support wait function 
+                } else {
+                    itemDatas.push(new ItemData(id, num));
+                    const itemConf = ItemConfig.getById(id);
+                    // useLanMgr
+                    showTip += LanMgr.replaceLanById("207009", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
+                    // showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
                 }
+            } else if (type == ItemConfigType.Artifact) {
+                // donn't need support wait function 
             }
         }
         if (itemDatas.length > 0) {

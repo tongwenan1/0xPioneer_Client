@@ -101,7 +101,7 @@ export class OuterTiledMapActionController extends ViewController {
 
         // local shadow erase
         this._localEraseShadowWorldPos = [];
-        const eraseShadowData: any = localStorage.getItem(this._localEraseDataKey);
+        const eraseShadowData: string = localStorage.getItem(this._localEraseDataKey);
         if (eraseShadowData != null) {
             for (const temple of JSON.parse(eraseShadowData)) {
                 this._localEraseShadowWorldPos.push(v2(temple.x, temple.y));

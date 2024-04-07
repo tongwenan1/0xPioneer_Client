@@ -3,10 +3,8 @@ import { LanMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TreasureGettedUI } from "./TreasureGettedUI";
 import { UIHUDController } from "./UIHUDController";
-import NotificationMgr from "../Basic/NotificationMgr";
 import BoxInfoConfig from "../Config/BoxInfoConfig";
 import { BoxInfoConfigData } from "../Const/BoxInfo";
-import { NotificationName } from "../Const/Notification";
 const { ccclass, property } = _decorator;
 
 @ccclass("ClaimRewardUI")

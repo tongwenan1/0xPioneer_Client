@@ -134,7 +134,7 @@ export class ItemSelectFromThreeUI extends ViewController {
         UIPanelMgr.removePanelByNode(this.node);
     }
 
-    private async onTapGet(event: Event, customEventData: any) {
+    private async onTapGet(event: Event, customEventData: string) {
         const index: number = parseInt(customEventData);
         const item = this._items[index];
         ArtifactMgr.addArtifact([item]);

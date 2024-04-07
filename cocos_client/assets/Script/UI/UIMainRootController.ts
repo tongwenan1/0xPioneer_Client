@@ -9,6 +9,7 @@ import ItemData from "../Model/ItemData";
 import { NotificationName } from "../Const/Notification";
 import { DialogueUI } from "./Outer/DialogueUI";
 import TaskConfig from "../Config/TaskConfig";
+import TalkConfig from "../Config/TalkConfig";
 
 const { ccclass, property } = _decorator;
 
@@ -60,7 +61,7 @@ export class UIMainRootController extends ViewController {
         MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[type].nativeUrl);
     }
     private async _onDialogShow(talkId: string) {
-        const talkData = TaskConfig.getById(talkId);
+        const talkData = TalkConfig.getById(talkId);
         if (talkData == null) {
             return;
         }

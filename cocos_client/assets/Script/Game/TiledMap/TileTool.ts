@@ -64,7 +64,7 @@ export interface IDynamicBlock {
 export class MyTile extends cc.TiledTile {
     fall: number = -1;
     timer: number = 0;
-    owner: any = null;
+    owner: string = null;
     //zhege update only call when layer change. not good.
     // update(deltaTime: number) {
     //     if (this.grid != this.fall && this.fall > 0) {
@@ -336,7 +336,7 @@ export class TileMapHelper {
             this._tilemap.getLayer("shadow").updateViewPort(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
         }
     }
-    Shadow_Earse(pos: TilePos, owner: any, extlen: number = 1, fall: boolean = false): TilePos[] {
+    Shadow_Earse(pos: TilePos, owner: string, extlen: number = 1, fall: boolean = false): TilePos[] {
         //console.log("pos=" + pos.x + "," + pos.y + ":" + pos.worldx + "," + pos.worldy);
         //for (var z = pos.calc_z - extlen; z <= pos.calc_z + extlen; z++) {
         const newCleardPositons = [];
