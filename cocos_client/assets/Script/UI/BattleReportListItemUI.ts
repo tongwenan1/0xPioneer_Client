@@ -1,6 +1,6 @@
 import {_decorator, Button, Component, Label, Node, ProgressBar, RichText, Sprite, SpriteFrame} from 'cc';
 import CommonTools from "db://assets/Script/Tool/CommonTools";
-import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, LocationInfo } from '../Const/Manager/BattleReportsMgrDefine';
+import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, LocationInfo } from '../Const/BattleReport';
 import { BuildingMgr, LanMgr, PioneerMgr, UIPanelMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { LootsPopup } from './LootsPopup';
