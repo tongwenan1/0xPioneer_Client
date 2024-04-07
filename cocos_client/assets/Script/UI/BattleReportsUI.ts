@@ -1,14 +1,16 @@
 import {_decorator, Button, Color, instantiate, Label, Layout, Mask, Node, ScrollView, UITransform} from 'cc';
 import {BattleReportListItemUI} from "./BattleReportListItemUI";
 import {ButtonEx, ButtonExEventType} from "db://assets/Script/UI/Common/ButtonEx";
-import BattleReportsMgrDefine, { BattleReportsEvent, BattleReportType, ReportFilterState, ReportsFilterType } from '../Const/Manager/BattleReportsMgrDefine';
+import BattleReportsMgrDefine, { BattleReportType, ReportFilterState, ReportsFilterType } from '../Const/BattleReport';
 import { BattleReportsMgr, UIPanelMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
+import NotificationMgr from '../Basic/NotificationMgr';
+import { NotificationName } from '../Const/Notification';
 
 const {ccclass} = _decorator;
 
 @ccclass('BattleReportListUI')
-export class BattleReportsUI extends ViewController implements BattleReportsEvent {
+export class BattleReportsUI extends ViewController {
 
     private _reportUiItems: BattleReportListItemUI[] = [];
     private _fightTypeItemTemplate: Node = null;
@@ -115,12 +117,12 @@ export class BattleReportsUI extends ViewController implements BattleReportsEven
         this._markAllAsReadButton.node.on(Button.EventType.CLICK, this._onClickMarkAllAsRead, this);
 
         this._reportListScrollView = this.node.getChildByPath('frame/ScrollView').getComponent(ScrollView);
+
+        NotificationMgr.addListener(NotificationName.BATTLE_REPORT_LIST_CHANGED, this.onBattleReportListChanged, this);
     }
 
     protected viewDidAppear(): void {
         super.viewDidAppear();
-
-        BattleReportsMgr.addObserver(this);
 
         // Reset filter tab every time enter the reports UI.
         if (BattleReportsMgr.emergencyCount > 0) {
@@ -138,12 +140,9 @@ export class BattleReportsUI extends ViewController implements BattleReportsEven
         this._autoMarkRead();
     }
 
-    protected viewDidDisAppear(): void {
-        super.viewDidDisAppear();
-
-        BattleReportsMgr.removeObserver(this);
+    protected viewDidDestroy(): void {
+        NotificationMgr.removeListener(NotificationName.BATTLE_REPORT_LIST_CHANGED, this.onBattleReportListChanged, this);
     }
-    
 
     private _autoMarkRead() {
         // Extra spare frame for engine to doing the layout correctly,

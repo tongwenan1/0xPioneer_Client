@@ -2,7 +2,7 @@ import NotificationMgr from "../Basic/NotificationMgr";
 import ConfigConfig from "../Config/ConfigConfig";
 import EventConfig from "../Config/EventConfig";
 import Config from "../Const/Config";
-import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, BattleReportsEvent } from "../Const/Manager/BattleReportsMgrDefine";
+import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType } from "../Const/BattleReport";
 import { NotificationName } from "../Const/Notification";
 import GlobalData from "../Data/GlobalData";
 
@@ -44,7 +44,7 @@ export default class BattleReportsMgr {
         if (Config.canSaveLocalData) {
             localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this._storage));
         }
-        this._fireOnBattleReportListChanged();
+        NotificationMgr.triggerEvent(NotificationName.BATTLE_REPORT_LIST_CHANGED);
     }
 
     private _loadData() {
@@ -145,28 +145,6 @@ export default class BattleReportsMgr {
     }
     //#endregion
 
-    //#region BattleReportsEvent stub
-    private _observers: BattleReportsEvent[] = [];
-
-    public addObserver(observer: BattleReportsEvent) {
-        this._observers.push(observer);
-    }
-
-    public removeObserver(observer: BattleReportsEvent) {
-        const index: number = this._observers.indexOf(observer);
-        if (index != -1) {
-            this._observers.splice(index, 1);
-        }
-    }
-
-    private _fireOnBattleReportListChanged() {
-        for (const observe of this._observers) {
-            if (observe.onBattleReportListChanged != null) {
-                observe.onBattleReportListChanged();
-            }
-        }
-    }
-    //#endregion
     public constructor() {
         this._registerEvents();
     }

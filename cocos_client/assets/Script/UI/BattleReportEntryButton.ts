@@ -1,22 +1,24 @@
 import {_decorator, Button, Component, Label} from 'cc';
-import {BattleReportsEvent} from '../Const/Manager/BattleReportsMgrDefine';
 import {BattleReportsMgr, UIPanelMgr} from '../Utils/Global';
 import {UIName} from '../Const/ConstUIDefine';
+import NotificationMgr from '../Basic/NotificationMgr';
+import { NotificationName } from '../Const/Notification';
 
 const {ccclass} = _decorator;
 
 
 @ccclass('BattleReportEntryButton')
-export class BattleReportEntryButton extends Component implements BattleReportsEvent {
+export class BattleReportEntryButton extends Component {
     protected onEnable() {
-        BattleReportsMgr.addObserver(this);
         this.node.on(Button.EventType.CLICK, this.onClickButton, this);
         this.updateBattleReportsUnreadCount();
+
+        NotificationMgr.addListener(NotificationName.BATTLE_REPORT_LIST_CHANGED, this.onBattleReportListChanged, this);
     }
 
     protected onDisable() {
         this.node.off(Button.EventType.CLICK, this.onClickButton, this);
-        BattleReportsMgr.removeObserver(this);
+        NotificationMgr.removeListener(NotificationName.BATTLE_REPORT_LIST_CHANGED, this.onBattleReportListChanged, this);
     }
 
     private async onClickButton() {

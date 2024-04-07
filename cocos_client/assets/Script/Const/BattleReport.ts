@@ -11,10 +11,6 @@ export class BattleReportRecord {
     unread: boolean;
 }
 
-export interface BattleReportsEvent {
-    onBattleReportListChanged?(): void;
-}
-
 export class LocationInfo {
     type: "pos" | "building";
     buildingId?: string;

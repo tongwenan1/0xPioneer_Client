@@ -40,6 +40,9 @@ export enum NotificationName {
     // event
     EVENT_STEPEND,
 
+    // BattleReport
+    BATTLE_REPORT_LIST_CHANGED,
+
     GENERATE_TROOP_TIME_COUNT_ChANGED,
     GENERATE_TROOP_NUM_CHANGED,
 
