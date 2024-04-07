@@ -67,7 +67,6 @@ export class TransformToEnergyUI extends ViewController {
         rightContent.getComponent(Layout).updateLayout();
 
         // cost
-        console.log("exce cost =" + energyData.convert.length);
         if (this._costShowItems.length == energyData.convert.length) {
             for (let i = 0; i < this._costShowItems.length; i++) {
                 let currentCost = energyData.convert[i].num * this._selectGenerateNum;

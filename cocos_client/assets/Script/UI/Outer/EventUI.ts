@@ -349,8 +349,8 @@ export class EventUI extends ViewController {
                     });
                 }
             }
-            return showTip;
         }
+        return showTip;
     }
 
     private _nextEvent(eventId: string) {

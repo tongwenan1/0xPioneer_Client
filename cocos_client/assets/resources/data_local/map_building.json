@@ -34,7 +34,7 @@
     ],
     "node": "ruin",
     "level": 1,
-    "progress": 50,
+    "progress": 5,
     "resources": null,
     "quota": null,
     "exp": null,
@@ -57,7 +57,7 @@
     ],
     "node": "treasure",
     "level": 1,
-    "progress": 50,
+    "progress": 30,
     "resources": null,
     "quota": null,
     "exp": null,
@@ -410,8 +410,8 @@
     "show": 1,
     "pos_type": 1,
     "positions": [
-      34,
-      37
+      49,
+      47
     ],
     "node": "Pyramid_Group",
     "level": 2,

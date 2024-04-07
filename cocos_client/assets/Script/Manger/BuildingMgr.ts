@@ -7,6 +7,8 @@ import { BuildingMgrEvent, MapBuildingType, BuildingFactionType } from "../Const
 import { ResourceModel } from "../Const/UserInfoDefine";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import Config from "../Const/Config";
+import NotificationMgr from "../Basic/NotificationMgr";
+import { NotificationName } from "../Const/Notification";
 
 export default class BuildingMgr {
 
@@ -211,6 +213,10 @@ export default class BuildingMgr {
             if (findBuilding.faction != faction) {
                 findBuilding.faction = faction;
                 this._savePioneerData();
+                if (findBuilding.id == "building_1" &&
+                    findBuilding.faction == BuildingFactionType.enemy) {
+                    NotificationMgr.triggerEvent(NotificationName.CHOOSE_GANGSTER_ROUTE);
+                }
                 for (const observer of this._observers) {
                     observer.buildingFacitonChanged(buildingId, faction);
                 }
@@ -270,20 +276,12 @@ export default class BuildingMgr {
         }
         switch (temple[0]) {
             case "buildingtoenemy": {
-                actionTargetBuilding.faction = BuildingFactionType.enemy;
-                this._savePioneerData();
-                for (const observer of this._observers) {
-                    observer.buildingFacitonChanged(actionTargetBuilding.id, actionTargetBuilding.faction);
-                }
+                this.changeBuildingFaction(actionTargetBuilding.id, BuildingFactionType.enemy);
             }
                 break;
 
             case "buildingtoself": {
-                actionTargetBuilding.faction = BuildingFactionType.self;
-                this._savePioneerData();
-                for (const observer of this._observers) {
-                    observer.buildingFacitonChanged(actionTargetBuilding.id, actionTargetBuilding.faction);
-                }
+                this.changeBuildingFaction(actionTargetBuilding.id, BuildingFactionType.self);
             }
                 break;
 

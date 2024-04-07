@@ -71,6 +71,7 @@
 
         <script>
             (function () {
+                resize();
                 let supportWebGL = true;
                 try {
                     const canvas = document.createElement("canvas");
@@ -86,6 +87,36 @@
             window.hideLoading = () => {
                 document.getElementById("splash").style.display = "none";
             };
+
+            function resize() {
+                const baseHeight = 1080;
+                const baseWidth = 1920;
+                const clientWidth = document.documentElement.clientWidth;
+                const clientHeight = document.documentElement.clientHeight - 10;
+
+                if (clientHeight < baseHeight) {
+                    const heightRate = clientHeight / baseHeight;
+
+                    const height = Math.floor(baseHeight * heightRate);
+                    const width = Math.floor(baseWidth * heightRate);
+
+                    const gameDivObj = document.getElementById("GameDiv");
+                    gameDivObj.style.width = width + "px";
+                    gameDivObj.style.height = height + "px";
+
+                    const GameCanvasObj = document.getElementById("GameCanvas");
+                    GameCanvasObj.style.width = width + "px";
+                    GameCanvasObj.style.height = height + "px";
+
+                    const splashObj = document.getElementById("splash");
+                    splashObj.style.width = width + "px";
+                    splashObj.style.height = height + "px";
+
+                    // console.log("clientWidth:" + clientWidth + ", clientHeight:" + clientHeight);
+                }
+            }
+
+            window.addEventListener("resize", resize);
         </script>
         <%- include(cocosTemplate, {}) %>
         <script src="./lib/ethers.umd.min.js"></script>

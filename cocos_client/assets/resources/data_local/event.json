@@ -567,7 +567,7 @@
     "enemy_result": null,
     "cost": [
       [
-        2,
+        1,
         "8002",
         50
       ]
@@ -706,7 +706,7 @@
     ],
     "select_cond": [
       [
-        2,
+        1,
         "18",
         1
       ],
@@ -733,7 +733,13 @@
     "select_cond": null,
     "enemy": "",
     "enemy_result": null,
-    "cost": null,
+    "cost": [
+      [
+        1,
+        "18",
+        1
+      ]
+    ],
     "reward": [
       [
         1,
@@ -913,7 +919,7 @@
     "enemy_result": null,
     "cost": [
       [
-        2,
+        1,
         "8003",
         50
       ]
@@ -1051,7 +1057,7 @@
     ],
     "select_cond": [
       [
-        2,
+        1,
         "19",
         1
       ],

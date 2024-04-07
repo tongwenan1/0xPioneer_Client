@@ -15,6 +15,7 @@ import GameMainHelper from '../Helper/GameMainHelper';
 import ViewController from '../../BasicView/ViewController';
 import EventConfig from '../../Config/EventConfig';
 import Config from '../../Const/Config';
+import MapBuildingModel from './Model/MapBuildingModel';
 
 
 const { ccclass, property } = _decorator;
@@ -418,6 +419,7 @@ export class OuterTiledMapActionController extends ViewController {
         // -2 no action
         let actionType: number = -1;
         let actionMovingPioneerId: string = null;
+        let targetFightBuildingModel: MapBuildingModel = null;
         let stayPositons: Vec2[] = [];
         let purchaseMovingPioneerId = null;
         let purchaseMovingBuildingId = null;
@@ -446,6 +448,7 @@ export class OuterTiledMapActionController extends ViewController {
                         actionType = -2;
                     } else {
                         actionType = 3;
+                        targetFightBuildingModel = stayBuilding;
                     }
                 } else if (stayBuilding.type == MapBuildingType.explore) {
                     actionType = 1;
@@ -542,56 +545,66 @@ export class OuterTiledMapActionController extends ViewController {
             }
             // cacluate will movePath
             // -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel
-            let movePaths = [];
+            let taregtPos: Vec2 = null;
+            let sparePositions: Vec2[] = [];
+            let targetStayPositions: Vec2[] = [];
             if (actionType == -1) {
-                movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y)).path;
+                taregtPos = v2(tiledPos.x, tiledPos.y);
 
             } else if (actionType == 3) {
                 if (actionMovingPioneerId != null) {
                     // to moving enemy
-                    movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, PioneerMgr.getPioneerById(actionMovingPioneerId).stayPos).path;
+                    taregtPos = PioneerMgr.getPioneerById(actionMovingPioneerId).stayPos;
 
-                } else {
-                    movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y)).path;
+                } else if (targetFightBuildingModel != null) {
+                    taregtPos = v2(tiledPos.x, tiledPos.y);
+                    sparePositions = targetFightBuildingModel.stayMapPositions;
+                }
+                else {
+                    taregtPos = v2(tiledPos.x, tiledPos.y);
                 }
             } else if (actionType == 6) {
                 // nothing
 
             } else {
                 // to pioneer or building
-                let toStayPos = [];
                 if (purchaseMovingPioneerId != null) {
+                    taregtPos = v2(tiledPos.x, tiledPos.y);
                     const toStayPioneer = PioneerMgr.getPioneerById(purchaseMovingPioneerId);
                     if (toStayPioneer != null) {
-                        toStayPos = [toStayPioneer.stayPos];
+                        targetStayPositions = [toStayPioneer.stayPos];
                     }
-                    movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y), toStayPos).path;
 
                 } else if (purchaseMovingBuildingId != null) {
+                    taregtPos = v2(tiledPos.x, tiledPos.y);
                     const toStayBuilding = BuildingMgr.getBuildingById(purchaseMovingBuildingId);
                     if (toStayBuilding != null) {
-                        toStayPos = toStayBuilding.stayMapPositions;
+                        targetStayPositions = toStayBuilding.stayMapPositions;
+                        sparePositions = toStayBuilding.stayMapPositions;
                     }
-                    const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, v2(tiledPos.x, tiledPos.y), toStayPos);
-                    if (toPosMoveData.canMove) {
-                        movePaths = toPosMoveData.path;
-                    } else {
-                        let minMovePath = null;
-                        for (const templePos of toStayBuilding.stayMapPositions) {
-                            const templePath = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, templePos, toStayPos);
-                            if (templePath.canMove) {
-                                if (minMovePath == null) {
+                }
+            }
+            let movePaths = [];
+            if (taregtPos != null) {
+                const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, taregtPos, targetStayPositions);
+                if (toPosMoveData.canMove) {
+                    movePaths = toPosMoveData.path;
+                } else if (sparePositions.length > 0) {
+                    let minMovePath = null;
+                    for (const templePos of sparePositions) {
+                        const templePath = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, templePos, targetStayPositions);
+                        if (templePath.canMove) {
+                            if (minMovePath == null) {
+                                minMovePath = templePath.path;
+                            } else {
+                                if (minMovePath.length > templePath.path.length) {
                                     minMovePath = templePath.path;
-                                } else {
-                                    if (minMovePath.length > templePath.path.length) {
-                                        minMovePath = templePath.path;
-                                    }
                                 }
                             }
                         }
-                        if (minMovePath != null) {
-                            movePaths = minMovePath;
-                        }
+                    }
+                    if (minMovePath != null) {
+                        movePaths = minMovePath;
                     }
                 }
             }

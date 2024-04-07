@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Layout, Node, ProgressBar, Slider } from 'cc';
+import { _decorator, Component, instantiate, Label, Layout, Node, ProgressBar, Slider } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
 import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
@@ -8,19 +8,20 @@ import NotificationMgr from '../../Basic/NotificationMgr';
 import { NotificationName } from '../../Const/Notification';
 import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 import { InnerBuildingType } from '../../Const/BuildingDefine';
+import ItemData from '../../Const/Item';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
 export class RecruitUI extends ViewController {
 
     public refreshUI(initSelectGenerate: boolean = false) {
+        const barrackBuildingData = UserInfoMgr.innerBuilds.get(InnerBuildingType.Barrack);
+        if (barrackBuildingData == null) {
+            return;
+        }
+
         if (initSelectGenerate) {
-            const maxTroop: number = Math.min(
-                ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
-                ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
-                this._maxRecruitTroop
-            );
-            this._selectGenerateNum = Math.min(maxTroop, 1);
+            this._selectGenerateNum = Math.min(this._currentGenerateMaxNum(), 1);
         }
 
         // useLanMgr
@@ -31,19 +32,13 @@ export class RecruitUI extends ViewController {
         // this.node.getChildByPath("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
         const currentTroops: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop);
+        
 
-        let maxTroop: number = 9999999;
-        const mainCityData = UserInfoMgr.innerBuilds.get(InnerBuildingType.Barrack);
-        const configMaxTroop = InnerBuildingLvlUpConfig.getBuildingLevelData(mainCityData.buildLevel, "max_barr");
-        if (configMaxTroop != null) {
-            maxTroop = configMaxTroop;
-        }
-        this._totalTroop.string = maxTroop.toString();
+        this._totalTroop.string = this._maxTroop.toString();
         this._currentTroop.string = currentTroops.toString();
-        this._totalTroopProgress.progress = currentTroops / maxTroop;
+        this._totalTroopProgress.progress = currentTroops / this._maxTroop;
 
-        this._maxRecruitTroop = Math.max(0, maxTroop - currentTroops);
-        this.scheduleOnce(()=> {
+        this.scheduleOnce(() => {
             this._generateProgress.progress = this._selectGenerateNum / this._maxRecruitTroop;
         });
         this._generateSlider.progress = this._selectGenerateNum / this._maxRecruitTroop;
@@ -54,15 +49,32 @@ export class RecruitUI extends ViewController {
         this._generateTimeNum = Math.ceil(this._perTroopTime * this._selectGenerateNum);
         this._generateTime.string = CommonTools.formatSeconds(this._generateTimeNum);
 
-        this._usedWood.string = Math.ceil(this._perTroopWood * this._selectGenerateNum).toString();
-        this._maxWood.string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood).toString();
-        this._usedStone.string = Math.ceil(this._perTroopStone * this._selectGenerateNum).toString();
-        this._maxStone.string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone).toString();
+        if (this._costShowItems.length == this._costDatas.length) {
+            for (let i = 0; i < this._costShowItems.length; i++) {
+                const view = this._costShowItems[i];
+                view.getChildByPath("Num/left").getComponent(Label).string = (this._costDatas[i].count * this._selectGenerateNum).toString();
+                view.getChildByPath("Num/right").getComponent(Label).string = ItemMgr.getOwnItemCount(this._costDatas[i].itemConfigId).toString();
+            }
+        } else {
+            for (const cost of this._costDatas) {
+                console.log("exce cost: " + JSON.stringify(cost));
+                const view = instantiate(this._costItem);
+                view.active = true;
+                view.setParent(this._costItem.parent);
+                view.getChildByPath("Icon/8001").active = cost.itemConfigId == ResourceCorrespondingItem.Food;
+                view.getChildByPath("Icon/8002").active = cost.itemConfigId == ResourceCorrespondingItem.Wood;
+                view.getChildByPath("Icon/8003").active = cost.itemConfigId == ResourceCorrespondingItem.Stone;
+                view.getChildByPath("Icon/8004").active = cost.itemConfigId == ResourceCorrespondingItem.Troop;
+                view.getChildByPath("Num/right").getComponent(Label).string = (cost.count * this._selectGenerateNum).toString();
+                view.getChildByPath("Num/left").getComponent(Label).string = ItemMgr.getOwnItemCount(cost.itemConfigId).toString();
+                this._costShowItems.push(view);
+            }
+        }
     }
 
     private _perTroopTime: number = 0.001;
-    private _perTroopWood: number = 0.01;
-    private _perTroopStone: number = 0.01;
+    private _costDatas: ItemData[] = [];
+    private _maxTroop: number = 0;
     private _maxRecruitTroop: number = 0;
 
     private _selectGenerateNum: number = 0;
@@ -78,13 +90,35 @@ export class RecruitUI extends ViewController {
     private _generateSelectTroop: Label = null;
 
     private _generateTime: Label = null;
-    private _usedWood: Label = null;
-    private _maxWood: Label = null;
-    private _usedStone: Label = null;
-    private _maxStone: Label = null;
-
+    private _costItem: Node = null;
+    private _costShowItems: Node[] = [];
     protected viewDidLoad(): void {
         super.viewDidLoad();
+
+        const barrackBuildingData = UserInfoMgr.innerBuilds.get(InnerBuildingType.Barrack);
+        if (barrackBuildingData == null) {
+            return;
+        }
+        this._costDatas = [];
+        const configCost = InnerBuildingLvlUpConfig.getBuildingLevelData(barrackBuildingData.buildLevel, "rec_cost_barr");
+        if (configCost != null) {
+            const temple = JSON.parse(configCost);
+            for (const data of temple) {
+                this._costDatas.push(new ItemData(data[0].toString(), data[1]));
+            }
+        }
+        // maxNum
+        this._maxTroop = 9999999;
+        const configMaxTroop = InnerBuildingLvlUpConfig.getBuildingLevelData(barrackBuildingData.buildLevel, "max_barr");
+        if (configMaxTroop != null) {
+            this._maxTroop = configMaxTroop;
+        }
+        // perGenerateNum
+        const configPerGenerateNum = InnerBuildingLvlUpConfig.getBuildingLevelData(barrackBuildingData.buildLevel, "time_barr");
+        if (configPerGenerateNum != null) {
+            this._perTroopTime = configPerGenerateNum;
+        }
+        this._maxRecruitTroop = this._maxTroop - ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop);
 
         this._totalTroopProgress = this.node.getChildByPath("__ViewContent/ProgressBar").getComponent(ProgressBar);
         this._currentTroop = this.node.getChildByPath("__ViewContent/current_res/num/cur").getComponent(Label);
@@ -97,10 +131,8 @@ export class RecruitUI extends ViewController {
 
 
         this._generateTime = this.node.getChildByPath("__ViewContent/footer/time/txt-001").getComponent(Label);
-        this._usedWood = this.node.getChildByPath("__ViewContent/footer/material/wood_bg/wood/num/left").getComponent(Label);
-        this._maxWood = this.node.getChildByPath("__ViewContent/footer/material/wood_bg/wood/num/right").getComponent(Label);
-        this._usedStone = this.node.getChildByPath("__ViewContent/footer/material/stone_bg/stone/num/left").getComponent(Label);
-        this._maxStone = this.node.getChildByPath("__ViewContent/footer/material/stone_bg/stone/num/right").getComponent(Label);
+        this._costItem = this.node.getChildByPath("__ViewContent/footer/material/Item");
+        this._costItem.active = false;
 
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
     }
@@ -124,6 +156,18 @@ export class RecruitUI extends ViewController {
         this.refreshUI();
     }
 
+    private _currentGenerateMaxNum(): number {
+        let tempUseNum: number = 999999999;
+        for (const cost of this._costDatas) {
+            tempUseNum = Math.min(
+                tempUseNum,
+                ItemMgr.getOwnItemCount(cost.itemConfigId) / cost.count,
+                this._maxRecruitTroop
+            );
+        }
+        return Math.floor(tempUseNum);
+    }
+
     //---------------------------------- action
 
     private async onTapClose() {
@@ -132,22 +176,14 @@ export class RecruitUI extends ViewController {
     }
 
     private onTapGenerateMax() {
-        const maxTroop: number = Math.min(
-            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
-            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
-            this._maxRecruitTroop
-        );
+        const maxTroop: number = this._currentGenerateMaxNum();
         if (maxTroop != this._selectGenerateNum) {
             this._selectGenerateNum = maxTroop;
             this.refreshUI();
         }
     }
     private onTapGenerateSub() {
-        const maxTroop: number = Math.min(
-            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
-            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
-            this._maxRecruitTroop
-        );
+        const maxTroop: number = this._currentGenerateMaxNum();
         const minNum: number = Math.min(1, maxTroop);
         let changedNum = Math.max(minNum, this._selectGenerateNum - 100);
         if (changedNum != this._selectGenerateNum) {
@@ -156,11 +192,7 @@ export class RecruitUI extends ViewController {
         }
     }
     private onTapGenerateAdd() {
-        const maxTroop: number = Math.min(
-            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
-            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
-            this._maxRecruitTroop
-        );
+        const maxTroop: number = this._currentGenerateMaxNum();
         const changedNum = Math.min(this._selectGenerateNum + 100, maxTroop);
         if (changedNum != this._selectGenerateNum) {
             this._selectGenerateNum = changedNum;
@@ -168,11 +200,7 @@ export class RecruitUI extends ViewController {
         }
     }
     private onGenerateSlided(event: Event, customEventData: string) {
-        const maxTroop: number = Math.min(
-            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood) / this._perTroopWood,
-            ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone) / this._perTroopStone,
-            this._maxRecruitTroop
-        );
+        const maxTroop: number = this._currentGenerateMaxNum();
         const currentSelectTroop: number = Math.max(1, Math.min(Math.floor(this._generateSlider.progress * this._maxRecruitTroop), maxTroop));
 
         this._generateSlider.progress = currentSelectTroop / this._maxRecruitTroop;
@@ -181,7 +209,7 @@ export class RecruitUI extends ViewController {
             this.refreshUI();
         }
     }
-    
+
     private async onTapGenerate() {
         if (this._generateTimeNum <= 0) {
             // useLanMgr
@@ -189,10 +217,11 @@ export class RecruitUI extends ViewController {
             UIHUDController.showCenterTip("Unable to produce");
             return;
         }
-        ItemMgr.subItem(ResourceCorrespondingItem.Wood, parseInt(this._usedWood.string));
-        ItemMgr.subItem(ResourceCorrespondingItem.Stone, parseInt(this._usedStone.string));
+        for (const cost of this._costDatas) {
+            ItemMgr.subItem(cost.itemConfigId, cost.count * this._selectGenerateNum);
+        }
         UserInfoMgr.beginGenerateTroop(this._generateTimeNum, this._selectGenerateNum);
-        
+
         await this.playExitAnimation();
         UIPanelMgr.removePanelByNode(this.node);
     }

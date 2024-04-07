@@ -2,7 +2,7 @@ import { _decorator, Component, Node, Button, SpriteFrame, Sprite, Label, Prefab
 import { TilePos } from '../Game/TiledMap/TileTool';
 import { ClaimRewardUI } from './ClaimRewardUI';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
-import { BattleReportsMgr, LanMgr, LocalDataLoader, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { BattleReportsMgr, BuildingMgr, LanMgr, LocalDataLoader, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import { UIName } from '../Const/ConstUIDefine';
@@ -13,6 +13,7 @@ import NotificationMgr from '../Basic/NotificationMgr';
 import { UserInfoEvent, FinishedEvent } from '../Const/UserInfoDefine';
 import { NotificationName } from '../Const/Notification';
 import Config from '../Const/Config';
+import { BuildingFactionType } from '../Const/BuildingDefine';
 
 const { ccclass, property } = _decorator;
 
@@ -34,11 +35,11 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         this._gangsterComingTipView = this.node.getChildByName("GangsterTipView");
         this._gangsterComingTipView.active = false;
 
-        this._refreshSettlememntTip();
         PioneerMgr.addObserver(this);
         UserInfoMgr.addObserver(this);
 
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
+        NotificationMgr.addListener(NotificationName.CHOOSE_GANGSTER_ROUTE, this._refreshInnerOuterChange, this);
     }
     
     protected async viewDidStart(): Promise<void> {
@@ -46,6 +47,8 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
 
         this._claimRewardUI = this.node.getChildByName("reward_ui").getComponent(ClaimRewardUI);
 
+        this._refreshSettlememntTip();
+        this._refreshInnerOuterChange();
         this.changeLang();
 
         const bigGanster = PioneerMgr.getPioneerById("gangster_3");
@@ -69,6 +72,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         UserInfoMgr.removeObserver(this);
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.changeLang, this);
+        NotificationMgr.removeListener(NotificationName.CHOOSE_GANGSTER_ROUTE, this._refreshInnerOuterChange, this);
     }
 
     changeLang(): void {
@@ -82,6 +86,14 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         const newSettle = localStorage.getItem("local_newSettle");
         const view = this.node.getChildByName("NewSettlementTipView");
         view.active = newSettle != null;
+    }
+    private _refreshInnerOuterChange() {
+        let isEnemy: boolean = false;
+        const building = BuildingMgr.getBuildingById("building_1");
+        if (building != null && building.faction == BuildingFactionType.enemy) {
+            isEnemy = true;
+        }
+        this.node.getChildByName("InnerOutChangeBtnBg").active = !isEnemy;
     }
 
     onBuliClick() {

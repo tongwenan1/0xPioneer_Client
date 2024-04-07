@@ -25,7 +25,6 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
         if (this._building.buildLevel > 0) {
             const infoViewY = InnerBuildingLvlUpConfig.getBuildingLevelData(this._building.buildLevel, "info_y_energy");
             if (infoViewY != null) {
-                console.log("exce iny: " + infoViewY);
                 this._produceInfoView.position = v3(0, infoViewY, 0);
             }
         }

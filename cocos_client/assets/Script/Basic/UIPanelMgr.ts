@@ -28,9 +28,12 @@ export default class UIPanelManger {
     }
 
     public removePanelByNode(node: Node) {
+        node.destroy();
         for (const [key, value] of this._uiMap) {
             if (node == value) {
-                this.removePanel(key);
+                if (this._uiMap.has(key)) {
+                    this._uiMap.delete(key);
+                }
                 break;
             }
         }

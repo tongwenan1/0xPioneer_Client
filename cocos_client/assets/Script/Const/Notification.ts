@@ -58,4 +58,6 @@ export enum NotificationName {
     MPA_PIONEER_NEW_TALK_USED,
     //---------------------- dialog
     DIALOG_SHOW,
+
+    CHOOSE_GANGSTER_ROUTE,
 }
