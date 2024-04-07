@@ -36,8 +36,6 @@ export interface PioneerMgrEvent {
     pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void;
     pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void;
 
-    pioneerShowCount(pioneerId: string, count: number): void;
-
     playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void;
 
     playerPioneerDidMoveOneStep?(pioneerId: string): void;

@@ -114,7 +114,6 @@ export default class TaskMgr {
                 }
             }
         }
-        console.log("exce taskData:", this._taskInfos);
     }
 
     private _checkTask(checkCon: TaskCondition) {

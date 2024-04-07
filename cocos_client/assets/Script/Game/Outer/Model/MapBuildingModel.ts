@@ -3,12 +3,15 @@ import CommonTools from "db://assets/Script/Tool/CommonTools";
 import { LanMgr } from "../../../Utils/Global";
 import { BuildingStayPosType, MapBuildingType } from "../../../Const/BuildingDefine";
 import { ResourceModel } from "../../../Const/UserInfoDefine";
-import { MapMemberFactionType } from "../../../Const/ConstDefine";
+import { MapMemberFactionType, MapMemberShowHideCountStruct } from "../../../Const/ConstDefine";
 
 export default class MapBuildingModel {
 
     public set show(value: boolean) {
         this._show = value;
+    }
+    public set showHideStruct(value: MapMemberShowHideCountStruct) {
+        this._showHideStruct = value;
     }
     public set faction(value: MapMemberFactionType) {
         this._faction = value;
@@ -41,6 +44,9 @@ export default class MapBuildingModel {
 
     public get show(): boolean {
         return this._show;
+    }
+    public get showHideStruct(): MapMemberShowHideCountStruct {
+        return this._showHideStruct;
     }
     public get id(): string {
         return this._id;
@@ -101,6 +107,7 @@ export default class MapBuildingModel {
     }
 
     private _show: boolean;
+    private _showHideStruct: MapMemberShowHideCountStruct;
     private _id: string;
     private _name: string;
     private _type: MapBuildingType;

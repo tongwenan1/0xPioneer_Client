@@ -1,7 +1,7 @@
 import { Vec2, Vec3, log, v2 } from "cc";
 import { TilePos } from "../../TiledMap/TileTool";
 import { MapPioneerAttributesChangeModel, MapPioneerLogicType, MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerType } from "../../../Const/Model/MapPioneerModelDefine";
-import { AttrChangeType, GetPropData, MapMemberFactionType } from "../../../Const/ConstDefine";
+import { AttrChangeType, GetPropData, MapMemberFactionType, MapMemberShowHideCountStruct } from "../../../Const/ConstDefine";
 
 export default class MapPioneerModel {
     // hp
@@ -114,8 +114,8 @@ export default class MapPioneerModel {
     public set show(value: boolean) {
         this._show = value;
     }
-    public set showCountTime(value: number) {
-        this._showCountTime = value;
+    public set showHideStruct(value: MapMemberShowHideCountStruct) {
+        this._showHideStruct = value;
     }
     public set stayPos(value: Vec2) {
         this._stayPos = value;
@@ -167,8 +167,8 @@ export default class MapPioneerModel {
     public get show(): boolean {
         return this._show;
     }
-    public get showCountTime(): number {
-        return this._showCountTime;
+    public get showHideStruct(): MapMemberShowHideCountStruct {
+        return this._showHideStruct;
     }
     public get id(): string {
         return this._id;
@@ -265,9 +265,8 @@ export default class MapPioneerModel {
     }
 
 
-    public constructor(show: boolean, showCountTime: number, id: string, faction: MapMemberFactionType, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
+    public constructor(show: boolean, id: string, faction: MapMemberFactionType, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
         this._show = show;
-        this._showCountTime = showCountTime;
         this._id = id;
         this._faction = faction;
         this._type = type;
@@ -302,7 +301,7 @@ export default class MapPioneerModel {
     }
 
     private _show: boolean;
-    private _showCountTime: number;
+    private _showHideStruct: MapMemberShowHideCountStruct;
     private _id: string;
     private _faction: MapMemberFactionType;
     private _type: MapPioneerType;
@@ -365,8 +364,8 @@ export class MapPlayerPioneerModel extends MapPioneerModel {
         this._killerId = value;
     }
 
-    public constructor(show: boolean, showCountTime: number, id: string, faction: MapMemberFactionType, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
-        super(show, showCountTime, id, faction, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
+    public constructor(show: boolean, id: string, faction: MapMemberFactionType, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
+        super(show, id, faction, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
         this._rebirthCountTime = 0;
         this._killerId = null;
     }
@@ -403,8 +402,8 @@ export class MapNpcPioneerModel extends MapPioneerModel {
         return this._talkId;
     }
 
-    public constructor(show: boolean, showCountTime: number, id: string, faction: MapMemberFactionType, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
-        super(show, showCountTime, id, faction, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
+    public constructor(show: boolean, id: string, faction: MapMemberFactionType, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
+        super(show, id, faction, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
         this._hideTaskIds = [];
         this._taskHideTime = -1;
         this._taskCdEndTime = 0;

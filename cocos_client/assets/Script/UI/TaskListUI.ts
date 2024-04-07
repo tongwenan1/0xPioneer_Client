@@ -1,9 +1,12 @@
-import { _decorator, Button, Color, instantiate, Label, Layout, Node } from 'cc';
-import { BuildingMgr, LanMgr, PioneerMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { _decorator, Button, Color, instantiate, Label, Layout, Node, Vec2 } from 'cc';
+import { LanMgr, PioneerMgr, TaskMgr, UIPanelMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
-import TaskModel, { TaskStepModel } from '../Const/TaskDefine';
+import TaskModel, { TaskCondition, TaskConditionType, TaskStepModel } from '../Const/TaskDefine';
+import MapPioneerModel, { MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
+import GameMainHelper from '../Game/Helper/GameMainHelper';
+import CommonTools from '../Tool/CommonTools';
 
 const { ccclass, property } = _decorator;
 
@@ -258,7 +261,7 @@ export class TaskListUI extends ViewController {
     }
     private onTapActionItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
-        if (index < this._toDoTaskList.length) {
+        if (index >= this._toDoTaskList.length) {
             return;
         }
         const templeTask: TaskModel = this._toDoTaskList[index];
@@ -266,44 +269,44 @@ export class TaskListUI extends ViewController {
         if (currentStepTask == null) {
             return;
         }
-        // const curCondwinStep = actionTaskCurStep.condwinStep == null ? 0 : actionTaskCurStep.condwinStep;
-        // if (actionTaskCurStep.condwin != null && curCondwinStep < actionTaskCurStep.condwin.length) {
-        //     const curCond = actionTaskCurStep.condwin[curCondwinStep];
-        //     let currentMapPos = null;
-        //     if (curCond.type == "buildhouse") {
-        //         // not action
-        //     } else if (curCond.type == "getresourcereached") {
-        //         // resource
-        //         const resourceBuildings = BuildingMgr.getResourceBuildings();
-        //         const randomResourceBuilding = resourceBuildings[CommonTools.getRandomInt(0, resourceBuildings.length - 1)];
-        //         currentMapPos = randomResourceBuilding.stayMapPositions[0];
+        let condition: TaskCondition = null;
+        if (currentStepTask.completeCon != null && currentStepTask.completeCon.conditions.length > 0) {
+            condition = currentStepTask.completeCon.conditions[0];
+        }
+        if (condition == null) {
+            return;
+        }
+        let currentMapPos: Vec2 = null;
+        if (condition.type == TaskConditionType.Talk) {
+            let targetPioneer: MapNpcPioneerModel = null;
+            const allPioneers = PioneerMgr.getAllPioneer();
+            for (const pioneer of allPioneers) {
+                if (pioneer instanceof MapNpcPioneerModel &&
+                    pioneer.talkId == condition.talk.talkId) {
+                    targetPioneer = pioneer;
+                    break;
+                }
+            }
+            if (targetPioneer != null) {
+                currentMapPos = targetPioneer.stayPos;
+            }
 
-        //     } else if (curCond.type.includes("|") && curCond.type.includes("building")) {
-        //         // building
-        //         const buildingId = curCond.type.split("|")[1];
-        //         const currentBuilding = BuildingMgr.getBuildingById(buildingId);
-        //         if (currentBuilding != null) {
-        //             currentMapPos = currentBuilding.stayMapPositions[0];
-        //         }
-
-        //     } else if (curCond.type.includes("|")) {
-        //         // pioneer
-        //         const pioneerId = curCond.type.split("|")[1];
-        //         const currentPioneer = PioneerMgr.getPioneerById(pioneerId);
-        //         if (currentPioneer != null) {
-        //             currentMapPos = currentPioneer.stayPos;
-        //         }
-        //     }
-        //     if (currentMapPos != null) {
-        //         if (!GameMainHelper.instance.isGameShowOuter) {
-        //             GameMainHelper.instance.changeInnerAndOuterShow();
-        //         }
-        //         GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y), true);
-        //     }
-        // }
+        } else if (condition.type == TaskConditionType.Kill) {
+            let targetPioneer: MapPioneerModel = null;
+            if (condition.kill.enemyIds.length > 0) {
+                targetPioneer = PioneerMgr.getPioneerById(condition.kill.enemyIds[CommonTools.getRandomInt(0, condition.kill.enemyIds.length - 1)]);
+            }
+            if (targetPioneer != null) {
+                currentMapPos = targetPioneer.stayPos;
+            }
+        }
+        if (currentMapPos != null) {
+            if (!GameMainHelper.instance.isGameShowOuter) {
+                GameMainHelper.instance.changeInnerAndOuterShow();
+            }
+            GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y), true);
+        }
     }
-
-
     private onTapCloseDetail() {
         if (!this._isDetailShow) {
             return;

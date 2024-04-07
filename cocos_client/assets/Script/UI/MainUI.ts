@@ -40,8 +40,9 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
 
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
         NotificationMgr.addListener(NotificationName.CHOOSE_GANGSTER_ROUTE, this._refreshInnerOuterChange, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, this._onPioneerShowHideCountChanged, this);
     }
-    
+
     protected async viewDidStart(): Promise<void> {
         super.viewDidStart();
 
@@ -73,6 +74,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.changeLang, this);
         NotificationMgr.removeListener(NotificationName.CHOOSE_GANGSTER_ROUTE, this._refreshInnerOuterChange, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, this._onPioneerShowHideCountChanged, this);
     }
 
     changeLang(): void {
@@ -201,17 +203,6 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void {
 
     }
-    pioneerShowCount(pioneerId: string, count: number): void {
-        if (pioneerId == "gangster_3" && count > 0) {
-            this._gangsterComingTipView.active = true;
-            this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = false;
-            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
-
-            // useLanMgr
-            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.replaceLanById("200003", [this.secondsToTime(count)]);
-            // this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = "Big Team Coming: " + this.secondsToTime(count);
-        }
-    }
     playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {
 
     }
@@ -238,6 +229,20 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     }
     getProp(propId: string, num: number): void {
 
+    }
+
+    //----------------------------------------------------- notification
+    private _onPioneerShowHideCountChanged(pioneer: MapPioneerModel) {
+        if (pioneer.id == "gangster_3" &&
+            pioneer.showHideStruct != null &&
+            pioneer.showHideStruct.countTime > 0 &&
+            pioneer.showHideStruct.isShow) {
+
+            this._gangsterComingTipView.active = true;
+            this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = false;
+            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
+            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.replaceLanById("200003", [this.secondsToTime(pioneer.showHideStruct.countTime)]);
+        }
     }
 }
 

@@ -177,9 +177,6 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
     pioneerRebirth(pioneerId: string): void {
         this.refreshPlayerList();
     }
-    pioneerShowCount(pioneerId: string, count: number): void {
-
-    }
     playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {
         
     }

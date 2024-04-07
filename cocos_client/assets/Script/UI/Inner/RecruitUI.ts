@@ -57,7 +57,6 @@ export class RecruitUI extends ViewController {
             }
         } else {
             for (const cost of this._costDatas) {
-                console.log("exce cost: " + JSON.stringify(cost));
                 const view = instantiate(this._costItem);
                 view.active = true;
                 view.setParent(this._costItem.parent);

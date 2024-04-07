@@ -450,6 +450,7 @@ export default class BuildingMgr {
                         temple._stayPosType,
                     );
                 }
+                newModel.showHideStruct = temple._showHideStruct;
                 newModel.progress = temple._progress;
                 newModel.winprogress = temple._winprogress;
                 newModel.eventId = temple._eventId;
@@ -480,6 +481,27 @@ export default class BuildingMgr {
                 this._decorates.push(newModel);
             }
         }
+
+
+        setInterval(() => {
+            for (const building of this._buildings) {
+                if (building.showHideStruct != null) {
+                    if (building.showHideStruct.countTime > 0) {
+                        building.showHideStruct.countTime -= 1;
+                        this._savePioneerData();
+                        if (building.showHideStruct.countTime == 0) {
+                            if (building.showHideStruct.isShow) {
+                                this.showBuilding(building.id);
+                            } else {
+                                this.hideBuilding(building.id);
+                            }
+                            building.showHideStruct = null;
+                            this._savePioneerData();
+                        }
+                    }
+                }
+            }
+        }, 1000);
     }
 
     private _savePioneerData() {
@@ -497,10 +519,21 @@ export default class BuildingMgr {
     //---------------------------------- notification
     private _onBuildingChangeShowHide(action: TaskShowHideAction) {
         if (action.type == TaskTargetType.building) {
-            if (action.status == TaskShowHideStatus.show) {
-                this.showBuilding(action.id);
-            } else if (action.status == TaskShowHideStatus.hide) {
-                this.hideBuilding(action.id);
+            if (action.delayTime <= 0) {
+                if (action.status == TaskShowHideStatus.show) {
+                    this.showBuilding(action.id);
+                } else if (action.status == TaskShowHideStatus.hide) {
+                    this.hideBuilding(action.id);
+                }
+            } else {
+                const findBuilding = this.getBuildingById(action.id);
+                if (findBuilding != null) {
+                    findBuilding.showHideStruct = {
+                        countTime: action.delayTime,
+                        isShow: action.status == TaskShowHideStatus.show,
+                    }
+                    this._savePioneerData();
+                }
             }
         }
     }

@@ -664,7 +664,6 @@ export default class PioneerMgr {
                     if (temple.type == MapPioneerType.npc) {
                         pioneer = new MapNpcPioneerModel(
                             temple.show == 1,
-                            0,
                             temple.id,
                             temple.friendly == 1 ? MapMemberFactionType.friend : MapMemberFactionType.enemy,
                             temple.type,
@@ -681,7 +680,6 @@ export default class PioneerMgr {
                     } else if (temple.type == MapPioneerType.player) {
                         pioneer = new MapPlayerPioneerModel(
                             temple.show == 1,
-                            0,
                             temple.id,
                             temple.friendly == 1 ? MapMemberFactionType.friend : MapMemberFactionType.enemy,
                             temple.type,
@@ -698,7 +696,6 @@ export default class PioneerMgr {
                     } else {
                         pioneer = new MapPioneerModel(
                             temple.show == 1,
-                            0,
                             temple.id,
                             temple.friendly == 1 ? MapMemberFactionType.friend : MapMemberFactionType.enemy,
                             temple.type,
@@ -772,7 +769,6 @@ export default class PioneerMgr {
                 if (temple._type == MapPioneerType.npc) {
                     newModel = new MapNpcPioneerModel(
                         temple._show,
-                        temple._showCountTime,
                         temple._id,
                         temple._friendly,
                         temple._type,
@@ -793,7 +789,6 @@ export default class PioneerMgr {
                 } else if (temple._type == MapPioneerType.player) {
                     newModel = new MapPlayerPioneerModel(
                         temple._show,
-                        temple._showCountTime,
                         temple._id,
                         temple._friendly,
                         temple._type,
@@ -812,7 +807,6 @@ export default class PioneerMgr {
                 } else {
                     newModel = new MapPioneerModel(
                         temple._show,
-                        temple._showCountTime,
                         temple._id,
                         temple._friendly,
                         temple._type,
@@ -833,6 +827,7 @@ export default class PioneerMgr {
                 } else {
                     newModel.actionType = temple._actionType;
                 }
+                newModel.showHideStruct = temple._showHideStruct;
                 newModel.actionEventId = temple._actionEventId;
                 newModel.eventStatus = temple._eventStatus;
                 // movepath
@@ -882,14 +877,20 @@ export default class PioneerMgr {
                 return;
             }
             for (const pioneer of this._pioneers) {
-                if (pioneer.showCountTime > 0) {
-                    pioneer.showCountTime -= 1;
-                    for (const observe of this._observers) {
-                        observe.pioneerShowCount(pioneer.id, pioneer.showCountTime);
-                    }
-                    this._savePioneerData();
-                    if (pioneer.showCountTime == 0) {
-                        this.showPioneer(pioneer.id);
+                if (pioneer.showHideStruct != null) {
+                    if (pioneer.showHideStruct.countTime > 0) {
+                        pioneer.showHideStruct.countTime -= 1;
+                        this._savePioneerData();
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, pioneer);
+                        if (pioneer.showHideStruct.countTime == 0) {
+                            if (pioneer.showHideStruct.isShow) {
+                                this.showPioneer(pioneer.id);
+                            } else {
+                                this.hidePioneer(pioneer.id);
+                            }
+                            pioneer.showHideStruct = null;
+                            this._savePioneerData();
+                        }
                     }
                 }
                 if (pioneer.show) {
@@ -1648,7 +1649,7 @@ export default class PioneerMgr {
             findPioneer.faction == MapMemberFactionType.friend) {
             (findPioneer as MapNpcPioneerModel).talkId = action.talkId;
             this._savePioneerData();
-            NotificationMgr.triggerEvent(NotificationName.MPA_PIONEER_NEW_TALK_GETTED);
+            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_NEW_TALK_GETTED);
         }
     }
     private _onPioneerUseTalk(talkId: string) {
@@ -1657,7 +1658,7 @@ export default class PioneerMgr {
                 if ((pioneer as MapNpcPioneerModel).talkId == talkId) {
                     (pioneer as MapNpcPioneerModel).talkId = null;
                     this._savePioneerData();
-                    NotificationMgr.triggerEvent(NotificationName.MPA_PIONEER_NEW_TALK_USED);
+                    NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_NEW_TALK_USED);
                     break;
                 }
             }
@@ -1665,10 +1666,21 @@ export default class PioneerMgr {
     }
     private _onPioneerChangeShowHide(action: TaskShowHideAction) {
         if (action.type == TaskTargetType.pioneer) {
-            if (action.status == TaskShowHideStatus.show) {
-                this.showPioneer(action.id);
-            } else if (action.status == TaskShowHideStatus.hide) {
-                this.hidePioneer(action.id);
+            if (action.delayTime <= 0) {
+                if (action.status == TaskShowHideStatus.show) {
+                    this.showPioneer(action.id);
+                } else if (action.status == TaskShowHideStatus.hide) {
+                    this.hidePioneer(action.id);
+                }
+            } else {
+                const findPioneer = this.getPioneerById(action.id);
+                if (findPioneer != null) {
+                    findPioneer.showHideStruct = {
+                        countTime: action.delayTime,
+                        isShow: action.status == TaskShowHideStatus.show,
+                    }
+                    this._savePioneerData();
+                }
             }
         }
     }

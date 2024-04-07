@@ -82,6 +82,7 @@ export enum MapMemberFactionType {
     neutral = 2,
 }
 
-export interface MapMemberShowHideCount {
-
+export interface MapMemberShowHideCountStruct {
+    countTime: number,
+    isShow: boolean
 }

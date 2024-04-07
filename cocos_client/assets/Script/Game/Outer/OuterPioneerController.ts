@@ -141,8 +141,8 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_BEGIN_EYES, this._onRookieGuideBeginEyes, this);
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_THIRD_EYES, this._onRookieGuideThirdEyes, this);
 
-        NotificationMgr.addListener(NotificationName.MPA_PIONEER_NEW_TALK_GETTED, this._refreshUI, this);
-        NotificationMgr.addListener(NotificationName.MPA_PIONEER_NEW_TALK_USED, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_NEW_TALK_GETTED, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_NEW_TALK_USED, this._refreshUI, this);
     }
 
     protected viewDidStart() {
@@ -227,8 +227,8 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
         NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_BEGIN_EYES, this._onRookieGuideBeginEyes, this);
         NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_THIRD_EYES, this._onRookieGuideThirdEyes, this);
 
-        NotificationMgr.removeListener(NotificationName.MPA_PIONEER_NEW_TALK_GETTED, this._refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.MPA_PIONEER_NEW_TALK_USED, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_NEW_TALK_GETTED, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_NEW_TALK_USED, this._refreshUI, this);
     }
 
     private _refreshUI() {
@@ -812,10 +812,6 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
             }
         }
     }
-    pioneerShowCount(pioneerId: string, count: number): void {
-
-    }
-
     playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {
         const footViews = this._addFootSteps(path);
         this._footPathMap.set(pioneerId, footViews);
