@@ -1,4 +1,4 @@
-import { ResourceData } from "./ConstDefine";
+import { MapMemberFactionType, ResourceData } from "./ConstDefine";
 
 export enum MapBuildingType {
     resource = 3,
@@ -7,12 +7,6 @@ export enum MapBuildingType {
     city = 0,
     event = 4,
     decorate = 5
-}
-
-export enum BuildingFactionType {
-    netural = 0,
-    self = 1,
-    enemy = 2,
 }
 
 export enum BuildingStayPosType {
@@ -25,7 +19,7 @@ export interface BuildingMgrEvent {
     buildingDidHide(buildingId: string, beacusePioneerId: string): void;
     buildingDidShow(buildingId: string): void;
 
-    buildingFacitonChanged(buildingId: string, faction: BuildingFactionType): void;
+    buildingFacitonChanged(buildingId: string, faction: MapMemberFactionType): void;
     buildingInsertDefendPioneer(buildingId: string, pioneerId: string): void;
     buildingRemoveDefendPioneer(buildingId: string, pioneerId: string): void;
 }

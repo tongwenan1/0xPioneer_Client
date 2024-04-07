@@ -4,9 +4,8 @@ import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
 import { BuildingMgr, CountMgr, ItemMgr, PioneerMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
 import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
-import { UIName } from "../Const/ConstUIDefine";
 import NotificationMgr from "../Basic/NotificationMgr";
-import { UserInfoEvent, FinishedEvent, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";
+import { UserInfoEvent, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";
 import { InnerBuildingType, UserInnerBuildInfo } from "../Const/BuildingDefine";
 import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
 import InnerBuildingConfig from "../Config/InnerBuildingConfig";
@@ -15,15 +14,13 @@ import LvlupConfig from "../Config/LvlupConfig";
 import { LvlupConfigData } from "../Const/Lvlup";
 import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
-import ItemConfig from "../Config/ItemConfig";
-import { ItemGettedUI } from "../UI/ItemGettedUI";
 import Config from "../Const/Config";
 
 export default class UserInfoMgr {
 
-    public async initData() {
+    public async initData() { 
         await this._initData();
-        NotificationMgr.addListener(NotificationName.TASK_GET_NEW, this._onGetNewTask, this);
+        NotificationMgr.addListener(NotificationName.TASK_STEP_FINISHED, this._onTaskStepFinished, this);
     }
 
     public addObserver(observer: UserInfoEvent) {
@@ -33,156 +30,6 @@ export default class UserInfoMgr {
         const index: number = this._observers.indexOf(observer);
         if (index != -1) {
             this._observers.splice(index, 1);
-        }
-    }
-
-    // public getNewTask(task: TaskModel) {
-    //     task.currentStep = 0;
-    //     const step = task.steps[task.currentStep];
-    //     for (const templeWinAction of step.startaction) {
-    //         for (const observe of this._observers) {
-    //             if (observe.triggerTaskStepAction) {
-    //                 observe.triggerTaskStepAction(templeWinAction.type, templeWinAction.delaytime != null ? templeWinAction.delaytime : 0);
-    //             }
-    //         }
-    //     }
-    //     this._currentTasks.push(task);
-    //     this._localJsonData.playerData.currentTasks = this._currentTasks;
-    //     this._localDataChanged(this._localJsonData);
-    //     for (const observer of this._observers) {
-    //         if (observer.getNewTask) {
-    //             observer.getNewTask(task);
-    //         }
-    //     }
-    //     if (task.steps[task.currentStep].condwin.length <= 0) {
-    //         this.checkCanFinishedTask("", "");
-    //     }
-    // }
-    public checkCanFinishedTask(actionType: string, pioneerId: string) {
-        if (actionType == "killpioneer") {
-            if (pioneerId == "gangster_1") {
-                this.finishEvent(FinishedEvent.KillDoomsDayGangTeam);
-            } else if (pioneerId == "npc_0") {
-                this.finishEvent(FinishedEvent.KillProphetess);
-            }
-        }
-        for (const task of this._currentTasks) {
-            if (task.finished != null && task.finished) {
-                continue;
-            }
-            if (task.fail != null && task.fail) {
-                continue;
-            }
-            const step = task.steps[task.currentStep];
-            if (step.condwinStep == null) {
-                step.condwinStep = 0;
-            }
-            let taskStepForward: boolean = false;
-            // deal with addition task
-            for (const templeStep of task.steps) {
-                if (templeStep.addition == true) {
-                    if (this._dealWithTaskStepProgress(task, templeStep, actionType, pioneerId)) {
-                        // each addition task first done will add taskstepindex
-                        task.currentStep += 1;
-                        taskStepForward = true;
-                    }
-                }
-            }
-            // deal with cur not addition step
-            if (step.addition != true && step.condwin != null && step.over != true) {
-                if (this._dealWithTaskStepProgress(task, step, actionType, pioneerId)) {
-                    task.currentStep += 1;
-                    taskStepForward = true;
-                }
-            }
-            if (taskStepForward) {
-                if (task.currentStep > task.steps.length - 1) {
-                    // task over
-                    task.finished = true;
-                } else {
-                    // next step startaction
-                    for (const templeStartAction of task.steps[task.currentStep].startaction) {
-                        for (const observe of this._observers) {
-                            if (observe.triggerTaskStepAction) {
-                                observe.triggerTaskStepAction(templeStartAction.type, templeStartAction.delaytime != null ? templeStartAction.delaytime : 0);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        this._localJsonData.playerData.currentTasks = this._currentTasks;
-        this._localDataChanged(this._localJsonData);
-    }
-
-    public pioneerHideBuildingCheckTaskFail(pioneerid: string, buildingid: string) {
-        for (const task of this._currentTasks) {
-            if (task.finished != null && task.finished) {
-                continue;
-            }
-            if (task.fail != null && task.fail) {
-                continue;
-            }
-            const step = task.steps[task.currentStep];
-            if (step.condfail == null) {
-                continue;
-            }
-            for (let i = 0; i < step.condfail.length; i++) {
-                const temple = step.condfail[i];
-                if (temple.type == "pioneerhidebuilding" &&
-                    temple.pioneerid == pioneerid &&
-                    temple.buildingid == buildingid) {
-                    task.fail = true;
-                    for (const observe of this._observers) {
-                        if (observe.taskFailed) {
-                            observe.taskFailed(task.id);
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-        this._localJsonData.playerData.currentTasks = this._currentTasks;
-        this._localDataChanged(this._localJsonData);
-    }
-    public hidePioneerCheckTaskFail(pioneerid: string) {
-        for (const task of this._currentTasks) {
-            if (task.finished != null && task.finished) {
-                continue;
-            }
-            if (task.fail != null && task.fail) {
-                continue;
-            }
-            const step = task.steps[task.currentStep];
-            if (step.condfail == null) {
-                continue;
-            }
-            for (let i = 0; i < step.condfail.length; i++) {
-                const temple = step.condfail[i];
-                if (temple.type == "pioneerhide" &&
-                    temple.pioneerid == pioneerid) {
-                    task.fail = true;
-                    for (const observe of this._observers) {
-                        if (observe.taskFailed) {
-                            observe.taskFailed(task.id);
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    public finishEvent(step: FinishedEvent) {
-        if (this._finishedEvents.indexOf(step) == -1) {
-            this._finishedEvents.push(step);
-            this._localJsonData.playerData.finishedEvents = this._finishedEvents;
-            this._localDataChanged(this._localJsonData);
-            for (const observer of this._observers) {
-                if (observer.finishEvent) {
-                    observer.finishEvent(step);
-                }
-            }
         }
     }
     public beginUpgrade(buildingType: InnerBuildingType, upgradeTime: number) {
@@ -221,9 +68,8 @@ export default class UserInfoMgr {
 
             if (buildInfo.buildType == InnerBuildingType.House) {
                 // build house
-                this.checkCanFinishedTask("buildhouse", "-1");
+                
             }
-
             CountMgr.addNewCount({
                 type: CountType.buildInnerBuilding,
                 timeStamp: new Date().getTime(),
@@ -295,12 +141,6 @@ export default class UserInfoMgr {
         }
         return ids;
     }
-    public get dealTaskIds(): string[] {
-        return this._dealTaskIds;
-    }
-    public get finishedEvents() {
-        return this._finishedEvents;
-    }
     public get isFinishRookie() {
         return this._isFinishRookie;
     }
@@ -341,9 +181,6 @@ export default class UserInfoMgr {
     public set isFinishRookie(value: boolean) {
         this._isFinishRookie = value;
         this._localJsonData.playerData.isFinishRookie = value;
-        if (value) {
-            this.finishEvent(FinishedEvent.FirstTalkToProphetess);
-        }
         this._localDataChanged(this._localJsonData);
     }
     public set playerName(value: string) {
@@ -559,8 +396,6 @@ export default class UserInfoMgr {
     private _afterCivilizationClosedShowPioneerDatas: MapPioneerModel[] = [];
 
     private _currentTasks: any[] = [];
-    private _dealTaskIds: string[] = [];
-    private _finishedEvents: FinishedEvent[] = [];
     private _isFinishRookie: boolean = false;
 
     private _playerID: string = null;
@@ -616,12 +451,6 @@ export default class UserInfoMgr {
         this._exp = this._localJsonData.playerData.exp;
         this._cityVision = this._localJsonData.playerData.cityVision;
 
-        if (this._localJsonData.playerData.dealTaskIds != null) {
-            this._dealTaskIds = this._localJsonData.playerData.dealTaskIds;
-        }
-        if (this._localJsonData.playerData.finishedEvents != null) {
-            this._finishedEvents = this._localJsonData.playerData.finishedEvents;
-        }
         if (this._localJsonData.playerData.isFinishRookie != null) {
             this._isFinishRookie = this._localJsonData.playerData.isFinishRookie;
         }
@@ -648,169 +477,6 @@ export default class UserInfoMgr {
         }
     }
 
-
-    private _dealWithTaskStepProgress(task: any, step: any, actionType: string, pioneerId: string): boolean {
-        // step progress changed
-        let taskForceOver: boolean = step.condwin.length == 0;
-        if (!taskForceOver) {
-            const temple = step.condwin[step.condwinStep].type.split("|");
-            if (temple.length == 1) {
-                if (temple[0] == actionType) {
-                    step.condwinStep += 1;
-                }
-            } else if (temple.length == 2) {
-                if (temple[0] == actionType &&
-                    temple[1] == pioneerId) {
-                    step.condwinStep += 1;
-                }
-            }
-            for (const observe of this._observers) {
-                if (observe.taskProgressChanged) {
-                    observe.taskProgressChanged(task.id);
-                }
-            }
-        }
-        if (taskForceOver ||
-            (step.condwinStep > step.condwin.length - 1)) {
-            // step over
-            step.over = true;
-            // progress
-            if (step.progress != null) {
-                this.explorationValue += step.progress;
-            }
-            // task exp
-            if (step.exp != null) {
-                this.exp += step.exp;
-            }
-
-            // winaction
-            for (const templeWinAction of step.winaction) {
-                let canUseAction: boolean = true;
-                if (step.winActionAndRewardAdditionStepAlias != null &&
-                    templeWinAction.condi != null) {
-                    let additionStepProgress: number = 0;
-                    for (const templeStep of task.steps) {
-                        if (templeStep.alias == step.winActionAndRewardAdditionStepAlias) {
-                            additionStepProgress = templeStep.condwinStep;
-                            break;
-                        }
-                    }
-                    if (templeWinAction.condi.limitcount != additionStepProgress) {
-                        canUseAction = false;
-                    }
-                }
-                if (!canUseAction) {
-                    continue;
-                }
-                const splitDatas = templeWinAction.type.split("|");
-                if (splitDatas[0] == "gettask") {
-                    // this.getNewTask(TaskMgr.getTaskById(splitDatas[1]));
-
-                } else if (splitDatas[0] == "gameover") {
-                    for (const observe of this._observers) {
-                        if (observe.gameTaskOver) {
-                            observe.gameTaskOver();
-                        }
-                    }
-                } else {
-                    for (const observe of this._observers) {
-                        if (observe.triggerTaskStepAction) {
-                            observe.triggerTaskStepAction(templeWinAction.type, templeWinAction.delaytime != null ? templeWinAction.delaytime : 0);
-                        }
-                    }
-                }
-            }
-
-            // reward backpack item
-            if (step.rewardBackpackItem != null) {
-                const addItems: ItemData[] = [];
-                for (const r of step.rewardBackpackItem) {
-                    let itemConf = ItemConfig.getById(r.itemConfigId);
-                    if (!itemConf) {
-                        continue;
-                    }
-                    let canUseAction: boolean = true;
-                    if (step.winActionAndRewardAdditionStepAlias != null &&
-                        r.condi != null) {
-                        let additionStepProgress: number = 0;
-                        for (const templeStep of task.steps) {
-                            if (templeStep.alias == step.winActionAndRewardAdditionStepAlias) {
-                                additionStepProgress = templeStep.condwinStep;
-                                break;
-                            }
-                        }
-                        if (r.condi.limitcount != additionStepProgress) {
-                            canUseAction = false;
-                        }
-                    }
-                    if (!canUseAction) {
-                        continue;
-                    }
-                    addItems.push(new ItemData(r.itemConfigId, r.num));
-                }
-                if (addItems.length > 0) {
-                    ItemMgr.addItem(addItems);
-                    setTimeout(async () => {
-                        if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
-                            UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
-                            this.afterCivilizationClosedShowItemDatas.push(...addItems);
-                        } else {
-                            const view = await UIPanelMgr.openPanel(UIName.ItemGettedUI);
-                            if (view != null) {
-                                view.getComponent(ItemGettedUI).showItem(addItems);
-                            }
-                        }
-                    });
-                }
-            }
-
-            if (step.afterTalkRewardItem != null) {
-                let talkId: string = null;
-                const addItems: ItemData[] = [];
-                for (const r of step.afterTalkRewardItem) {
-                    let itemConf = ItemConfig.getById(r.itemConfigId);
-                    if (!itemConf) {
-                        continue;
-                    }
-                    let canUseAction: boolean = true;
-                    if (step.winActionAndRewardAdditionStepAlias != null &&
-                        r.condi != null) {
-                        let additionStepProgress: number = 0;
-                        for (const templeStep of task.steps) {
-                            if (templeStep.alias == step.winActionAndRewardAdditionStepAlias) {
-                                additionStepProgress = templeStep.condwinStep;
-                                break;
-                            }
-                        }
-                        if (r.condi.limitcount != additionStepProgress) {
-                            canUseAction = false;
-                        }
-                    }
-                    if (!canUseAction) {
-                        continue;
-                    }
-                    talkId = r.talkId;
-                    addItems.push(new ItemData(r.itemConfigId, r.num));
-                }
-                ItemMgr.addItem(addItems);
-                if (talkId != null) {
-                    this._afterTalkItemGetData.set(talkId, addItems);
-                }
-            }
-        }
-        let canStepForward: boolean = false;
-        if (step.addition) {
-            // first change progress add condwinstep
-            if (step.condwinStep == 1) {
-                canStepForward = true;
-            }
-        } else {
-            canStepForward = step.over == true;
-        }
-        // step can forward
-        return canStepForward;
-    }
-
     private _localDataChanged(jsonObject: any) {
         if (jsonObject != null) {
             if (Config.canSaveLocalData) {
@@ -819,12 +485,19 @@ export default class UserInfoMgr {
         }
     }
 
-    private _onGetNewTask(taskId: string) {
-        if (taskId != null) {
-            this._dealTaskIds.push(taskId);
-            this._localJsonData.playerData.dealTaskIds = this._dealTaskIds;
-            this._localDataChanged(this._localJsonData);
-            NotificationMgr.triggerEvent(NotificationName.TASK_NEW_GETTED);
+    private _onTaskStepFinished(taskId: string) {
+        const task = TaskMgr.getTask(taskId);
+        if (task != null) {
+            const finishedStepIndex: number = task.stepIndex - 1;
+            if (finishedStepIndex >= 0 && finishedStepIndex < task.steps.length) {
+                const finishedStep = TaskMgr.getTaskStep(task.steps[finishedStepIndex]);
+                if (finishedStep.progress != null && finishedStep.progress > 0) {
+                    this.explorationValue += finishedStep.progress;
+                }
+                if (finishedStep.exp != null && finishedStep.exp > 0) {
+                    this.exp += finishedStep.exp;
+                }
+            }
         }
     }
 }

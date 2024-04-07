@@ -75,3 +75,13 @@ export enum GetPropRankColor {
     RANK4 = "#ff9e40",
     RANK5 = "#ff4040",
 }
+
+export enum MapMemberFactionType {
+    enemy = 0,
+    friend = 1,
+    neutral = 2,
+}
+
+export interface MapMemberShowHideCount {
+
+}

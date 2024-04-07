@@ -44,10 +44,11 @@ export enum NotificationName {
     GENERATE_TROOP_NUM_CHANGED,
 
     //---------------------- task
-    TASK_FAILED,
     TASK_CANNOTGET,
-    TASK_GET_NEW,
     TASK_NEW_GETTED,
+    TASK_FAILED,
+    TASK_STEP_FINISHED,
+    TASK_FINISHED,
     //---------------------- map member
     MAP_MEMBER_CHANGE_SHOW_HIDE,
     MAP_MEMBER_CHANGE_FACTION,

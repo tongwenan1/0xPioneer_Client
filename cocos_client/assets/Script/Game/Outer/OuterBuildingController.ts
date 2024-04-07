@@ -7,12 +7,12 @@ import { MapDecoratePosMode } from '../../Const/Model/MapDecorateModelDefine';
 import MapDecorateModel from './Model/MapDecorateModel';
 import { MapPioneerActionType } from '../../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPioneerLogicModel } from './Model/MapPioneerModel';
-import NotificationMgr from '../../Basic/NotificationMgr';
-import { BuildingMgrEvent, BuildingStayPosType, MapBuildingType, BuildingFactionType } from '../../Const/BuildingDefine';
-import { UserInfoEvent, FinishedEvent } from '../../Const/UserInfoDefine';
-import { NotificationName } from '../../Const/Notification';
+import { BuildingMgrEvent, BuildingStayPosType } from '../../Const/BuildingDefine';
+import { UserInfoEvent } from '../../Const/UserInfoDefine';
 import GameMainHelper from '../Helper/GameMainHelper';
 import { OuterTiledMapActionController } from './OuterTiledMapActionController';
+import { TaskShowHideStatus, TaskTargetType } from '../../Const/TaskDefine';
+import { MapMemberFactionType } from '../../Const/ConstDefine';
 
 
 const { ccclass, property } = _decorator;
@@ -299,60 +299,24 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     playerNameChanged(value: string): void {
 
     }
-
-    getNewTask(taskId: string): void {
-
-    }
-    triggerTaskStepAction(action: string): void {
-        const temp = action.split("|");
-        if (temp[0] == "buildingtoenemy" ||
-            temp[0] == "buildingtoself" ||
-            temp[0] == "buildinghide" ||
-            temp[0] == "buildingshow") {
-            BuildingMgr.dealWithTaskAction(action);
-        }
-    }
-    finishEvent(event: FinishedEvent): void {
-        if (event == FinishedEvent.KillDoomsDayGangTeam) {
-            const allBuildings = BuildingMgr.getAllBuilding();
-            for (const building of allBuildings) {
-                if (building.type == MapBuildingType.city) {
-                    const task = TaskMgr.getTaskByBuilding(building.id, UserInfoMgr.currentTaskIds, UserInfoMgr.finishedEvents);
-                    BuildingMgr.buildingGetTask(building.id, task);
-                }
-            }
-        }
-        this._refreshUI();
-    }
-    taskProgressChanged(taskId: string): void {
-
-    }
-    taskFailed(taskId: string): void {
-
-    }
-
     getProp(propId: string, num: number): void {
 
     }
-
-    gameTaskOver(): void {
-
-    }
-
     //-----------------------------------------------------------
     //BuildingMgrEvent
-    buildingFacitonChanged(buildingId: string, faction: BuildingFactionType): void {
+    buildingFacitonChanged(buildingId: string, faction: MapMemberFactionType): void {
         this._refreshUI();
     }
     buildingDefendPioneerChanged(buildingId: string, pioneerId: string): void {
         this._refreshUI();
     }
     buildingDidHide(buildingId: string, beacusePioneerId): void {
+        TaskMgr.showHideChanged(TaskTargetType.building, buildingId, TaskShowHideStatus.hide);
         this._refreshUI();
         this._refreshDecorationUI();
-        UserInfoMgr.pioneerHideBuildingCheckTaskFail(beacusePioneerId, buildingId);
     }
     buildingDidShow(buildingId: string): void {
+        TaskMgr.showHideChanged(TaskTargetType.building, buildingId, TaskShowHideStatus.show);
         this._refreshUI();
         this._refreshDecorationUI();
     }
@@ -388,12 +352,6 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
 
     }
     pioneerDidHide(pioneerId: string): void {
-
-    }
-    pioneerDidNonFriendly(pioneerId: string): void {
-
-    }
-    pioneerDidFriendly(pioneerId: string): void {
 
     }
     addNewOnePioneer(newPioneer: MapPioneerModel): void {

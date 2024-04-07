@@ -2,13 +2,14 @@ import { _decorator, Component, instantiate, Label, Layout, Node } from 'cc';
 import { MapPlayerPioneerModel } from '../Model/MapPioneerModel';
 import { ItemMgr, LanMgr, UserInfoMgr } from '../../../Utils/Global';
 import MapBuildingModel from '../Model/MapBuildingModel';
-import { MapBuildingType, BuildingFactionType, InnerBuildingType, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
+import { MapBuildingType, InnerBuildingType, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
 import ViewController from '../../../BasicView/ViewController';
 import NotificationMgr from '../../../Basic/NotificationMgr';
 import ConfigConfig from '../../../Config/ConfigConfig';
 import InnerBuildingLvlUpConfig from '../../../Config/InnerBuildingLvlUpConfig';
 import InnerBuildingConfig from '../../../Config/InnerBuildingConfig';
 import { NotificationName } from '../../../Const/Notification';
+import { MapMemberFactionType } from '../../../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterBuildingView')
@@ -40,7 +41,7 @@ export class OuterBuildingView extends ViewController {
 
         this.node.getChildByPath("Level").active = true;
         if (building.type == MapBuildingType.city) {
-            if (building.faction == BuildingFactionType.enemy) {
+            if (building.faction == MapMemberFactionType.enemy) {
                 this.node.getChildByPath("Level").active = true;
                 battleIcon.active = true;
             } else {
@@ -172,7 +173,7 @@ export class OuterBuildingView extends ViewController {
     //-------------------------------- function
     private _refreshEnergyTipShow() {
         this._toGetEnergyTip.active = false;
-        if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != BuildingFactionType.enemy) {
+        if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != MapMemberFactionType.enemy) {
             const energyInfo = UserInfoMgr.generateEnergyInfo;
             if (energyInfo != null) {
                 const threshold = ConfigConfig.getEnergyTipThresholdConfig().para[0];
@@ -188,7 +189,7 @@ export class OuterBuildingView extends ViewController {
     }
     private _refreshBuildTipShow() {
         this._toBuildBuildingTip.active = false;
-        if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != BuildingFactionType.enemy) {
+        if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != MapMemberFactionType.enemy) {
             let canBuild: boolean = false;
             UserInfoMgr.innerBuilds.forEach((value: UserInnerBuildInfo, key: InnerBuildingType) => {
                 const innerConfig = InnerBuildingConfig.getByBuildingType(key);

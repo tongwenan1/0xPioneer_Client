@@ -3,7 +3,6 @@ import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import { ResourcesMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
 import ItemData from "../Model/ItemData";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
-import { FinishedEvent } from "../Const/UserInfoDefine";
 import NotificationMgr from "../Basic/NotificationMgr";
 import ItemConfig from "../Config/ItemConfig";
 import { ItemArrangeType, ItemType } from "../Const/Item";
@@ -98,10 +97,6 @@ export default class ItemMgr {
                     continue;
                 }
                 changed = true;
-                if (item.itemConfigId == "9") {
-                    //get master key
-                    UserInfoMgr.finishEvent(FinishedEvent.BecomeCityMaster);
-                }
                 // add timestamp
                 if (itemConfig.itemType == ItemType.Resource) {
                     const exsitItems = this._localItemDatas.filter((v) => v.itemConfigId == item.itemConfigId);

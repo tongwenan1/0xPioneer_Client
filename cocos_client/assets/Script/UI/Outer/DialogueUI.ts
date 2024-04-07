@@ -164,41 +164,6 @@ export class DialogueUI extends ViewController {
             return;
         }
         TaskMgr.talkSelected(this._talk.id, parseInt(customEventData));
-        // if (this._task != null && this._task.takeCon != null) {
-
-            // let talkCon: TaskTalkCondition = null;
-            // for (const con of this._task.takeCon.conditions) {
-            //     if (con.type == TaskConditionType.Talk) {
-            //         talkCon = con.talk;
-            //         break;
-            //     }
-            // }
-            // if (talkCon != null) {
-            //     const selectIndex: number = parseInt(customEventData);
-            //     if (talkCon.talkSelectCanGetTaskIndex == -1 ||
-            //         talkCon.talkSelectCanGetTaskIndex == selectIndex) {
-            //         UserInfoMgr.getNewTask(this._task.taskId);
-            //         UIHUDController.showTaskTip(LanMgr.getLanById("202004"));
-            //         // UIHUDController.showTaskTip("New Task Taken");
-            //     }
-            //     if (this._task.entrypoint.result.includes(customEventData)) {
-            //         // get task
-            //         UserInfoMgr.getNewTask(this._task);
-
-            //         // useLanMgr
-            //         UIHUDController.showTaskTip(LanMgr.getLanById("202004"));
-            //         // UIHUDController.showTaskTip("New Task Taken");
-
-            //     } else if (this._task.exitpoint != null &&
-            //         this._task.exitpoint.result.includes(customEventData)) {
-            //         // reject task action
-            //         for (const temp of this._task.exitpoint.action) {
-            //             PioneerMgr.dealWithTaskAction(temp.type, 0);
-            //         }
-            //     }
-            // }
-        // }
-
         CountMgr.addNewCount({
             type: CountType.selectDialog,
             timeStamp: new Date().getTime(),

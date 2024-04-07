@@ -26,12 +26,12 @@ export default class GameMainHelper {
                 .target(this._gameCamera)
                 .to(0.5, { orthoHeight: this._gameCameraOriginalOrthoHeight * this._gameCameraZoom })
                 .call(() => {
-                    NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_ZOOM_CHANGED);
+                    NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_ZOOM_CHANGED, this._gameCameraZoom);
                 })
                 .start();
         } else {
             this._gameCamera.orthoHeight = this._gameCameraOriginalOrthoHeight * this._gameCameraZoom;
-            NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_ZOOM_CHANGED);
+            NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_ZOOM_CHANGED, this._gameCameraZoom);
         }
     }
     public changeGameCameraWorldPosition(position: Vec3, animation: boolean = false) {

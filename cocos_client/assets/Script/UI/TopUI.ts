@@ -4,7 +4,7 @@ import { ItemMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
 import NotificationMgr from '../Basic/NotificationMgr';
-import { UserInfoEvent, FinishedEvent } from '../Const/UserInfoDefine';
+import { UserInfoEvent } from '../Const/UserInfoDefine';
 import LvlupConfig from '../Config/LvlupConfig';
 import { NotificationName } from '../Const/Notification';
 const { ccclass, property } = _decorator;
@@ -124,26 +124,7 @@ export default class TopUI extends Component implements UserInfoEvent {
             }
         }
     }
-
-    getNewTask(taskId: string): void {
-
-    }
-    triggerTaskStepAction(action: string, delayTime: number): void {
-
-    }
-    finishEvent(event: FinishedEvent): void {
-
-    }
     getProp(propId: string, num: number): void {
-
-    }
-    gameTaskOver(): void {
-
-    }
-    taskProgressChanged(taskId: string): void {
-
-    }
-    taskFailed(taskId: string): void {
 
     }
 }

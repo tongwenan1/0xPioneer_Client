@@ -1,6 +1,6 @@
 import TaskConfig from "../Config/TaskConfig"
 import { ConfigType } from "./Config"
-import { GetPropData } from "./ConstDefine"
+import { GetPropData, MapMemberFactionType } from "./ConstDefine"
 import { ItemConfigType } from "./Item"
 
 export interface TaskConfigData {
@@ -43,11 +43,6 @@ export enum TaskFinishResultType {
 export enum TaskTargetType {
     pioneer = 0,
     building = 1
-}
-export enum TaskFaction {
-    enemy = 0,
-    friend = 1,
-    neutral = 2,
 }
 export enum TaskShowHideStatus {
     hide = 0,
@@ -116,7 +111,7 @@ export interface TaskShowHideAction {
 export interface TaskFactionAction {
     type: TaskTargetType,
     id: string,
-    faction: TaskFaction
+    faction: MapMemberFactionType
 }
 export interface TaskTalkAction {
     talkId: string,
@@ -400,6 +395,16 @@ export class TaskStepModel {
         this._exp = config.exp;
     }
 
+    public set completeCon(value: TaskSatisfyCondition) {
+        this._completeCon = value;
+    }
+    public set completeIndex(value: number) {
+        this._completeIndex = value;
+    }
+    public set quitCon(value: TaskSatisfyCondition) {
+        this._quitCon = value;
+    }
+
     public get id(): string {
         return this._id;
     }
@@ -411,6 +416,9 @@ export class TaskStepModel {
     }
     public get completeCon(): TaskSatisfyCondition {
         return this._completeCon;
+    }
+    public get completeIndex(): number {
+        return this._completeIndex;
     }
     public get completeAction(): TaskAction[] {
         return this._completeAction
@@ -426,12 +434,13 @@ export class TaskStepModel {
     }
 
     public constructor() {
-
+        this._completeIndex = 0;
     }
     private _id: string;
     private _name: string;
     private _startAction: TaskAction[];
     private _completeCon: TaskSatisfyCondition;
+    private _completeIndex: number;
     private _completeAction: TaskAction[];
     private _quitCon: TaskSatisfyCondition;
     private _progress: number;

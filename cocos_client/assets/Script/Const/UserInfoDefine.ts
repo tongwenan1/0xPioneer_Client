@@ -14,27 +14,9 @@ export interface GenerateEnergyInfo {
     totalEnergyNum: number
 }
 
-export enum FinishedEvent {
-    NoCondition = "",
-    FirstTalkToProphetess = "FirstTalkToProphetess",
-    KillDoomsDayGangTeam = "KillDoomsDayGangTeam",
-    KillProphetess = "KillProphetess",
-    BecomeCityMaster = "BecomeCityMaster",
-}
-
-
 export interface UserInfoEvent {
     playerNameChanged?(value: string): void;
     playerExpChanged?(value: number): void;
     playerLvlupChanged?(value: number): void;
-
     playerExplorationValueChanged?(value: number): void;
-
-    getNewTask?(taskId: string): void;
-    triggerTaskStepAction?(action: string, delayTime: number): void;
-    finishEvent?(event: FinishedEvent): void;
-    taskProgressChanged?(taskId: string): void;
-    taskFailed?(taskId: string): void;
-
-    gameTaskOver?(): void;
 }

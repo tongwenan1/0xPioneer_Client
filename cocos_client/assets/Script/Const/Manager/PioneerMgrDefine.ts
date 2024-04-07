@@ -16,8 +16,7 @@ export interface PioneerMgrEvent {
     pioneerDidShow(pioneerId: string): void;
     pioneerDidHide(pioneerId: string): void;
 
-    pioneerDidNonFriendly(pioneerId: string): void;
-    pioneerDidFriendly(pioneerId: string): void;
+    pioneerFactionChanged?(pioneerId: string): void;
 
     addNewOnePioneer(newPioneer: MapPioneerModel): void;
     destroyOnePioneer(pioneerId: string): void;

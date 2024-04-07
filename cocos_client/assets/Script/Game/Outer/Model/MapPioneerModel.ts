@@ -1,8 +1,7 @@
 import { Vec2, Vec3, log, v2 } from "cc";
 import { TilePos } from "../../TiledMap/TileTool";
 import { MapPioneerAttributesChangeModel, MapPioneerLogicType, MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerType } from "../../../Const/Model/MapPioneerModelDefine";
-import { FinishedEvent } from "../../../Const/UserInfoDefine";
-import { AttrChangeType, GetPropData } from "../../../Const/ConstDefine";
+import { AttrChangeType, GetPropData, MapMemberFactionType } from "../../../Const/ConstDefine";
 
 export default class MapPioneerModel {
     // hp
@@ -106,8 +105,8 @@ export default class MapPioneerModel {
         return false;
     }
 
-    public set friendly(value: boolean) {
-        this._friendly = value;
+    public set faction(value: MapMemberFactionType) {
+        this._faction = value;
     }
     public set animType(value: string) {
         this._animType = value;
@@ -174,8 +173,8 @@ export default class MapPioneerModel {
     public get id(): string {
         return this._id;
     }
-    public get friendly(): boolean {
-        return this._friendly;
+    public get faction(): MapMemberFactionType {
+        return this._faction;
     }
     public get type(): MapPioneerType {
         return this._type;
@@ -266,11 +265,11 @@ export default class MapPioneerModel {
     }
 
 
-    public constructor(show: boolean, showCountTime: number, id: string, friendly: boolean, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
+    public constructor(show: boolean, showCountTime: number, id: string, faction: MapMemberFactionType, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
         this._show = show;
         this._showCountTime = showCountTime;
         this._id = id;
-        this._friendly = friendly;
+        this._faction = faction;
         this._type = type;
         this._name = name;
         this._stayPos = stayPos;
@@ -305,7 +304,7 @@ export default class MapPioneerModel {
     private _show: boolean;
     private _showCountTime: number;
     private _id: string;
-    private _friendly: boolean;
+    private _faction: MapMemberFactionType;
     private _type: MapPioneerType;
     private _animType: string;
     private _moveDirection: MapPioneerMoveDirection;
@@ -366,8 +365,8 @@ export class MapPlayerPioneerModel extends MapPioneerModel {
         this._killerId = value;
     }
 
-    public constructor(show: boolean, showCountTime: number, id: string, friendly: boolean, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
-        super(show, showCountTime, id, friendly, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
+    public constructor(show: boolean, showCountTime: number, id: string, faction: MapMemberFactionType, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
+        super(show, showCountTime, id, faction, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
         this._rebirthCountTime = 0;
         this._killerId = null;
     }
@@ -404,8 +403,8 @@ export class MapNpcPioneerModel extends MapPioneerModel {
         return this._talkId;
     }
 
-    public constructor(show: boolean, showCountTime: number, id: string, friendly: boolean, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
-        super(show, showCountTime, id, friendly, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
+    public constructor(show: boolean, showCountTime: number, id: string, faction: MapMemberFactionType, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
+        super(show, showCountTime, id, faction, type, name, originalHpMax, hpMax, hp, originalAttack, attack, originalDefend, defend, stayPos);
         this._hideTaskIds = [];
         this._taskHideTime = -1;
         this._taskCdEndTime = 0;
@@ -438,9 +437,6 @@ export class MapPioneerLogicModel {
         this._patrolTargetPos = patrolTargetPos;
     }
 
-    public set condition(value: FinishedEvent) {
-        this._condition = value;
-    }
     public set currentCd(value: number) {
         this._currentCd = value;
     }
@@ -463,9 +459,6 @@ export class MapPioneerLogicModel {
 
     public get type(): MapPioneerLogicType {
         return this._type;
-    }
-    public get condition(): FinishedEvent {
-        return this._condition;
     }
     public get step(): number {
         return this._step;
@@ -514,7 +507,6 @@ export class MapPioneerLogicModel {
     }
 
     private _type: MapPioneerLogicType;
-    private _condition: FinishedEvent;
     private _step: number;
     private _cd: number;
     private _currentCd: number;

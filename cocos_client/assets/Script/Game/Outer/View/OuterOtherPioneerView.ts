@@ -2,6 +2,7 @@ import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat,
 import { LanMgr } from '../../../Utils/Global';
 import { MapPioneerActionType, MapPioneerMoveDirection, MapPioneerType } from '../../../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapNpcPioneerModel } from '../Model/MapPioneerModel';
+import { MapMemberFactionType } from '../../../Const/ConstDefine';
 
 const { ccclass, property } = _decorator;
 
@@ -55,7 +56,7 @@ export class OuterOtherPioneerView extends Component {
         // friendly
         const statusView = this.node.getChildByPath("StatusView");
         statusView.active = false;
-        if (!pioneer.friendly) {
+        if (pioneer.faction == MapMemberFactionType.enemy) {
             statusView.active = true;
             // useLanMgr
             // statusView.getChildByName("Text").getComponent(Label).string = LanMgr.getLanById("201001");
@@ -64,7 +65,7 @@ export class OuterOtherPioneerView extends Component {
             statusView.getChildByPath("Icon/Search").active = false;
             statusView.getChildByName("Level").getComponent(Label).string = "Lv.1";
 
-        } else if (pioneer.type == MapPioneerType.gangster && pioneer.friendly) {
+        } else if (pioneer.type == MapPioneerType.gangster && pioneer.faction == MapMemberFactionType.friend) {
             statusView.active = true;
             // useLanMgr
             // statusView.getChildByName("Text").getComponent(Label).string = LanMgr.getLanById("201001");

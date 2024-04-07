@@ -7,6 +7,8 @@ import { MouseCursor } from "./MouseCursor";
 import NotificationMgr from "../Basic/NotificationMgr";
 import ItemData from "../Model/ItemData";
 import { NotificationName } from "../Const/Notification";
+import { DialogueUI } from "./Outer/DialogueUI";
+import TaskConfig from "../Config/TaskConfig";
 
 const { ccclass, property } = _decorator;
 
@@ -39,19 +41,32 @@ export class UIMainRootController extends ViewController {
     protected async viewDidStart(): Promise<void> {
         super.viewDidStart();
 
-        NotificationMgr.addListener(NotificationName.CHANGE_CURSOR, this.cursorChanged, this);
+        NotificationMgr.addListener(NotificationName.CHANGE_CURSOR, this._onCursorChanged, this);
+        NotificationMgr.addListener(NotificationName.DIALOG_SHOW, this._onDialogShow, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(NotificationName.CHANGE_CURSOR, this.cursorChanged, this);
+        NotificationMgr.removeListener(NotificationName.CHANGE_CURSOR, this._onCursorChanged, this);
+        NotificationMgr.removeListener(NotificationName.DIALOG_SHOW, this._onDialogShow, this);
     }
 
-    private cursorChanged(type: ECursorType) {
+    //------------------------------------------ notification
+    private _onCursorChanged(type: ECursorType) {
         if (type >= this.cursorImages.length) {
             type = 0;
         }
         MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[type].nativeUrl);
+    }
+    private async _onDialogShow(talkId: string) {
+        const talkData = TaskConfig.getById(talkId);
+        if (talkData == null) {
+            return;
+        }
+        const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
+        if (dialog != null) {
+            dialog.getComponent(DialogueUI).dialogShow(talkData, null);
+        }
     }
 }

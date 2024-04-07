@@ -1,10 +1,8 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node } from 'cc';
-import CommonTools from '../Tool/CommonTools';
 import { BuildingMgr, LanMgr, PioneerMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
-import GameMainHelper from '../Game/Helper/GameMainHelper';
 import TaskModel, { TaskStepModel } from '../Const/TaskDefine';
 
 const { ccclass, property } = _decorator;
@@ -39,18 +37,16 @@ export class TaskListUI extends ViewController {
 
         const finishedTasks: TaskModel[] = [];
         const toDoTasks: TaskModel[] = [];
-        const taskIds = UserInfoMgr.dealTaskIds;
-        for (const taskId of taskIds) {
-            const task = TaskMgr.getTask(taskId);
-            if (task == null) {
-                continue;
-            }
+        const allGettedTasks = TaskMgr.getAllGettedTasks();
+        for (const task of allGettedTasks) {
             if (task.isFinished || task.isFailed) {
                 finishedTasks.push(task);
+
             } else {
                 toDoTasks.push(task);
             }
         }
+        this._toDoTaskList = toDoTasks;
 
         let actionTaskShowCount: number = 0;
         for (let i = toDoTasks.length - 1; i >= 0; i--) {
@@ -66,12 +62,12 @@ export class TaskListUI extends ViewController {
             action.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(toDoTasks[i].name);
             action.getChildByName("SubTitle").getComponent(Label).string = LanMgr.getLanById(currentStep.name);
             action.getChildByName("Progress").getComponent(Label).string = currentTask.stepIndex + "/" + currentTask.steps.length;
-            action.getComponent(Button).clickEvents[0].customEventData = JSON.stringify(currentStep);
+            action.getComponent(Button).clickEvents[0].customEventData = i.toString();
             action.setParent(this._actionItem.getParent());
             this._actionTaskList.push(action);
         }
 
-        this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = LanMgr.replaceLanById("202003", [taskIds.length]) + " >>";
+        this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = LanMgr.replaceLanById("202003", [allGettedTasks.length]) + " >>";
         // this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = "All " + taskInfo.length + " Tasks";
 
         this._detailTaskView.active = this._isDetailShow;
@@ -97,8 +93,8 @@ export class TaskListUI extends ViewController {
 
             if (this._detailSelectedIndex < showTasks.length) {
                 this._detailTaskView.getChildByName("ProgressList").active = true;
-                const curTask = showTasks[this._detailSelectedIndex];
-                if (curTask.fail != null && curTask.fail) {
+                const currentTask: TaskModel = showTasks[this._detailSelectedIndex];
+                if (currentTask.isFailed) {
                     const unDoneTitleItem = instantiate(this._detailProgressUndoneTitleItem);
                     unDoneTitleItem.active = true;
                     unDoneTitleItem.setParent(this._detailProgressFinishTitleItem.getParent());
@@ -109,45 +105,25 @@ export class TaskListUI extends ViewController {
                     // 2- finished task
                     // 3- todo title
                     // 4- todo task
-                    const finishedDatas: { status: number, stepData: any }[] = [];
-                    const todoDatas: { status: number, stepData: any }[] = [];
+                    const finishedDatas: { status: number, stepData: TaskStepModel }[] = [];
+                    const todoDatas: { status: number, stepData: TaskStepModel }[] = [];
                     let hasFinishedTitle: boolean = false;
                     let hasToDoTitle: boolean = false;
-                    for (let i = 0; i < curTask.steps.length; i++) {
-                        const curStep = curTask.steps[i];
-                        if (curStep.over == true) {
+                    for (let i = 0; i < currentTask.steps.length; i++) {
+                        const currentStep = TaskMgr.getTaskStep(currentTask.steps[currentTask.stepIndex]);
+                        if (i < currentTask.stepIndex) {
+                            // step finished
                             if (!hasFinishedTitle) {
                                 hasFinishedTitle = true;
                                 finishedDatas.push({ status: 1, stepData: null });
                             }
-                            finishedDatas.push({ status: 2, stepData: curStep });
-
+                            finishedDatas.push({ status: 2, stepData: currentStep });
                         } else {
-                            let additionStepBelongStepFinished: boolean = false;
-                            if (curStep.addition) {
-                                for (let j = 0; j < curTask.steps.length; j++) {
-                                    const tempcurstep = curTask.steps[j];
-                                    if (tempcurstep.alias != null &&
-                                        tempcurstep.alias == curStep.belong &&
-                                        tempcurstep.over) {
-                                        additionStepBelongStepFinished = true;
-                                        break;
-                                    }
-                                }
+                            if (!hasToDoTitle) {
+                                hasToDoTitle = true;
+                                todoDatas.push({ status: 3, stepData: null });
                             }
-                            if (additionStepBelongStepFinished) {
-                                if (!hasFinishedTitle) {
-                                    hasFinishedTitle = true;
-                                    finishedDatas.push({ status: 1, stepData: null });
-                                }
-                                finishedDatas.push({ status: 2, stepData: curStep });
-                            } else {
-                                if (!hasToDoTitle) {
-                                    hasToDoTitle = true;
-                                    todoDatas.push({ status: 3, stepData: null });
-                                }
-                                todoDatas.push({ status: 4, stepData: curStep });
-                            }
+                            todoDatas.push({ status: 4, stepData: currentStep });
                         }
                     }
                     for (const temple of [...finishedDatas, ...todoDatas]) {
@@ -158,16 +134,11 @@ export class TaskListUI extends ViewController {
                             this._detailProgressList.push(finishTitleItem);
 
                         } else if (temple.status == 2) {
-                            const curStepCondIndex = temple.stepData.condwinStep == null ? 0 : temple.stepData.condwinStep;
                             const finish = instantiate(this._detailProgressFinishItem);
                             finish.active = true;
                             finish.setParent(this._detailProgressFinishItem.getParent());
-
-                            // useLanMgr
                             finish.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(temple.stepData.name);
-                            // finish.getChildByName("Title").getComponent(Label).string = temple.stepData.name;
-
-                            finish.getChildByName("Progress").getComponent(Label).string = curStepCondIndex + "/" + temple.stepData.condwin.length;
+                            finish.getChildByName("Progress").getComponent(Label).string = temple.stepData.completeIndex + "/" + temple.stepData.completeCon.conditions.length;
                             this._detailProgressList.push(finish);
 
                         } else if (temple.status == 3) {
@@ -177,16 +148,11 @@ export class TaskListUI extends ViewController {
                             this._detailProgressList.push(toDoTitleItem);
 
                         } else if (temple.status == 4) {
-                            const curStepCondIndex = temple.stepData.condwinStep == null ? 0 : temple.stepData.condwinStep;
                             const finish = instantiate(this._detailProgressToDoItem);
                             finish.active = true;
                             finish.setParent(this._detailProgressToDoItem.getParent());
-
-                            // useLanMgr
                             finish.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(temple.stepData.name);
-                            // finish.getChildByName("Title").getComponent(Label).string = temple.stepData.name;
-
-                            finish.getChildByName("Progress").getComponent(Label).string = curStepCondIndex + "/" + temple.stepData.condwin.length;
+                            finish.getChildByName("Progress").getComponent(Label).string = temple.stepData.completeIndex + "/" + temple.stepData.completeCon.conditions.length;
                             this._detailProgressList.push(finish);
                         }
                     }
@@ -208,6 +174,7 @@ export class TaskListUI extends ViewController {
 
     private _isDetailShow: boolean = false;
     private _isDetailToDoShow: boolean = true;
+    private _toDoTaskList: TaskModel[] = [];
     private _detailSelectedIndex: number = 0;
 
     private _actionTaskList: Node[] = [];
@@ -253,11 +220,16 @@ export class TaskListUI extends ViewController {
         this._toDoButton = this.node.getChildByPath("TaskDetailView/ToDoButton");
         this._completedButton = this.node.getChildByPath("TaskDetailView/CompletedButton");
 
-        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
     }
 
     protected viewDidStart(): void {
         super.viewDidStart();
+
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
+        NotificationMgr.addListener(NotificationName.TASK_NEW_GETTED, this.refreshUI, this);
+        NotificationMgr.addListener(NotificationName.TASK_FAILED, this.refreshUI, this);
+        NotificationMgr.addListener(NotificationName.TASK_STEP_FINISHED, this.refreshUI, this);
+        NotificationMgr.addListener(NotificationName.TASK_FINISHED, this.refreshUI, this);
 
         this.refreshUI();
     }
@@ -266,6 +238,10 @@ export class TaskListUI extends ViewController {
         super.viewDidDestroy();
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.TASK_NEW_GETTED, this.refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.TASK_FAILED, this.refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.TASK_STEP_FINISHED, this.refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.TASK_FINISHED, this.refreshUI, this);
     }
     //---------------------------------------------------
     // action
@@ -281,42 +257,50 @@ export class TaskListUI extends ViewController {
         this.refreshUI();
     }
     private onTapActionItem(event: Event, customEventData: string) {
-        const actionTaskCurStep = JSON.parse(customEventData);
-        const curCondwinStep = actionTaskCurStep.condwinStep == null ? 0 : actionTaskCurStep.condwinStep;
-        if (actionTaskCurStep.condwin != null && curCondwinStep < actionTaskCurStep.condwin.length) {
-            const curCond = actionTaskCurStep.condwin[curCondwinStep];
-            let currentMapPos = null;
-            if (curCond.type == "buildhouse") {
-                // not action
-            } else if (curCond.type == "getresourcereached") {
-                // resource
-                const resourceBuildings = BuildingMgr.getResourceBuildings();
-                const randomResourceBuilding = resourceBuildings[CommonTools.getRandomInt(0, resourceBuildings.length - 1)];
-                currentMapPos = randomResourceBuilding.stayMapPositions[0];
-
-            } else if (curCond.type.includes("|") && curCond.type.includes("building")) {
-                // building
-                const buildingId = curCond.type.split("|")[1];
-                const currentBuilding = BuildingMgr.getBuildingById(buildingId);
-                if (currentBuilding != null) {
-                    currentMapPos = currentBuilding.stayMapPositions[0];
-                }
-
-            } else if (curCond.type.includes("|")) {
-                // pioneer
-                const pioneerId = curCond.type.split("|")[1];
-                const currentPioneer = PioneerMgr.getPioneerById(pioneerId);
-                if (currentPioneer != null) {
-                    currentMapPos = currentPioneer.stayPos;
-                }
-            }
-            if (currentMapPos != null) {
-                if (!GameMainHelper.instance.isGameShowOuter) {
-                    GameMainHelper.instance.changeInnerAndOuterShow();
-                }
-                GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y), true);
-            }
+        const index = parseInt(customEventData);
+        if (index < this._toDoTaskList.length) {
+            return;
         }
+        const templeTask: TaskModel = this._toDoTaskList[index];
+        const currentStepTask: TaskStepModel = TaskMgr.getTaskStep(templeTask.steps[templeTask.stepIndex]);
+        if (currentStepTask == null) {
+            return;
+        }
+        // const curCondwinStep = actionTaskCurStep.condwinStep == null ? 0 : actionTaskCurStep.condwinStep;
+        // if (actionTaskCurStep.condwin != null && curCondwinStep < actionTaskCurStep.condwin.length) {
+        //     const curCond = actionTaskCurStep.condwin[curCondwinStep];
+        //     let currentMapPos = null;
+        //     if (curCond.type == "buildhouse") {
+        //         // not action
+        //     } else if (curCond.type == "getresourcereached") {
+        //         // resource
+        //         const resourceBuildings = BuildingMgr.getResourceBuildings();
+        //         const randomResourceBuilding = resourceBuildings[CommonTools.getRandomInt(0, resourceBuildings.length - 1)];
+        //         currentMapPos = randomResourceBuilding.stayMapPositions[0];
+
+        //     } else if (curCond.type.includes("|") && curCond.type.includes("building")) {
+        //         // building
+        //         const buildingId = curCond.type.split("|")[1];
+        //         const currentBuilding = BuildingMgr.getBuildingById(buildingId);
+        //         if (currentBuilding != null) {
+        //             currentMapPos = currentBuilding.stayMapPositions[0];
+        //         }
+
+        //     } else if (curCond.type.includes("|")) {
+        //         // pioneer
+        //         const pioneerId = curCond.type.split("|")[1];
+        //         const currentPioneer = PioneerMgr.getPioneerById(pioneerId);
+        //         if (currentPioneer != null) {
+        //             currentMapPos = currentPioneer.stayPos;
+        //         }
+        //     }
+        //     if (currentMapPos != null) {
+        //         if (!GameMainHelper.instance.isGameShowOuter) {
+        //             GameMainHelper.instance.changeInnerAndOuterShow();
+        //         }
+        //         GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y), true);
+        //     }
+        // }
     }
 
 

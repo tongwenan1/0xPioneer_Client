@@ -1,15 +1,16 @@
 import { Vec2 } from "cc";
 import CommonTools from "db://assets/Script/Tool/CommonTools";
 import { LanMgr } from "../../../Utils/Global";
-import { BuildingFactionType, BuildingStayPosType, MapBuildingType } from "../../../Const/BuildingDefine";
+import { BuildingStayPosType, MapBuildingType } from "../../../Const/BuildingDefine";
 import { ResourceModel } from "../../../Const/UserInfoDefine";
+import { MapMemberFactionType } from "../../../Const/ConstDefine";
 
 export default class MapBuildingModel {
 
     public set show(value: boolean) {
         this._show = value;
     }
-    public set faction(value: BuildingFactionType) {
+    public set faction(value: MapMemberFactionType) {
         this._faction = value;
     }
     public set defendPioneerIds(value: string[]) {
@@ -50,7 +51,7 @@ export default class MapBuildingModel {
     public get type(): MapBuildingType {
         return this._type;
     }
-    public get faction(): BuildingFactionType {
+    public get faction(): MapMemberFactionType {
         return this._faction;
     }
     public get defendPioneerIds(): string[] {
@@ -84,7 +85,7 @@ export default class MapBuildingModel {
         return this._animType;
     }
 
-    public constructor(show: boolean, id: string, type: MapBuildingType, name: string, faction: BuildingFactionType, defendPioneerIds: string[], level: number, stayMapPositions: Vec2[], posType: BuildingStayPosType) {
+    public constructor(show: boolean, id: string, type: MapBuildingType, name: string, faction: MapMemberFactionType, defendPioneerIds: string[], level: number, stayMapPositions: Vec2[], posType: BuildingStayPosType) {
         this._show = show;
         this._id = id;
         this._type = type;
@@ -103,7 +104,7 @@ export default class MapBuildingModel {
     private _id: string;
     private _name: string;
     private _type: MapBuildingType;
-    private _faction: BuildingFactionType;
+    private _faction: MapMemberFactionType;
     private _defendPioneerIds: string[];
     private _level: number;
     private _stayMapPositions: Vec2[];
@@ -146,7 +147,7 @@ export class MapMainCityBuildingModel extends MapBuildingModel {
     }
 
 
-    public constructor(show: boolean, id: string, type: MapBuildingType, name: string, faction: BuildingFactionType, defendPioneerIds: string[], level: number, stayMapPositions: Vec2[], posType: BuildingStayPosType, hpMax: number, hp: number, attack: number) {
+    public constructor(show: boolean, id: string, type: MapBuildingType, name: string, faction: MapMemberFactionType, defendPioneerIds: string[], level: number, stayMapPositions: Vec2[], posType: BuildingStayPosType, hpMax: number, hp: number, attack: number) {
         super(show, id, type, name, faction, defendPioneerIds, level, stayMapPositions, posType);
         this._hpMax = hpMax;
         this._hp = hp;
@@ -176,7 +177,7 @@ export class MapResourceBuildingModel extends MapBuildingModel {
         return this._quota;
     }
 
-    public constructor(show: boolean, id: string, type: MapBuildingType, name: string, faction: BuildingFactionType, defendPioneerIds: string[], level: number, stayMapPositions: Vec2[], posType: BuildingStayPosType, resources: ResourceModel[], quota: number) {
+    public constructor(show: boolean, id: string, type: MapBuildingType, name: string, faction: MapMemberFactionType, defendPioneerIds: string[], level: number, stayMapPositions: Vec2[], posType: BuildingStayPosType, resources: ResourceModel[], quota: number) {
         super(show, id, type, name, faction, defendPioneerIds, level, stayMapPositions, posType);
         this._resources = resources;
         this._quota = quota;

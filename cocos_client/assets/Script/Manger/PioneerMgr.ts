@@ -1,7 +1,7 @@
 import { Details, Vec2, builtinResMgr, find, log, math, nextPow2, pingPong, resources, v2, v3 } from "cc";
 import CommonTools from "../Tool/CommonTools";
 import { TilePos } from "../Game/TiledMap/TileTool";
-import { AttrChangeType, GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { AttrChangeType, GetPropData, MapMemberFactionType, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { ArtifactMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
 import { PioneerMgrEvent } from "../Const/Manager/PioneerMgrDefine";
 import MapBuildingModel, { MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
@@ -10,22 +10,23 @@ import MapPioneerModel, { MapPlayerPioneerModel, MapNpcPioneerModel, MapPioneerL
 import { UIHUDController } from "../UI/UIHUDController";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { ArtifactEffectType } from "../Const/Artifact";
-import { BuildingFactionType, MapBuildingType } from "../Const/BuildingDefine";
-import { FinishedEvent } from "../Const/UserInfoDefine";
+import { MapBuildingType } from "../Const/BuildingDefine";
 import { CountType } from "../Const/Count";
 import { EventConfigData } from "../Const/Event";
 import EventConfig from "../Config/EventConfig";
 import { NotificationName } from "../Const/Notification";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
-import { TaskNpcGetNewTalkAction, TaskTalkAction } from "../Const/TaskDefine";
+import { TaskFactionAction, TaskNpcGetNewTalkAction, TaskShowHideAction, TaskShowHideStatus, TaskTalkAction, TaskTargetType } from "../Const/TaskDefine";
 import Config from "../Const/Config";
 
 export default class PioneerMgr {
 
     public async initData() {
         await this._initData();
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_NEW_TALK, this._pioneerGetTalk, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_USE_NEW_TALK, this._pioneerUseTalk, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_NEW_TALK, this._onPioneerGetTalk, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_USE_NEW_TALK, this._onPioneerUseTalk, this);
+        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, this._onPioneerChangeShowHide, this);
+        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_FACTION, this._onPioneerChangeFaction, this);
     }
 
     public pioneerIsForceMoving(pioneerId: string): boolean {
@@ -218,7 +219,7 @@ export default class PioneerMgr {
             if (paths.length > 0) {
                 findPioneer.actionType = MapPioneerActionType.moving;
                 findPioneer.movePaths = paths;
-                
+
                 for (const observer of this._observers) {
                     observer.pioneerActionTypeChanged(pioneerId, MapPioneerActionType.moving, 0);
                 }
@@ -247,7 +248,7 @@ export default class PioneerMgr {
             const allBuildings = BuildingMgr.getAllBuilding();
             for (const building of allBuildings) {
                 if (building.show &&
-                    building.faction != BuildingFactionType.netural &&
+                    building.faction != MapMemberFactionType.neutral &&
                     building.defendPioneerIds.indexOf(pioneerId) != -1) {
                     BuildingMgr.removeDefendPioneer(building.id, pioneerId);
                     break;
@@ -256,7 +257,8 @@ export default class PioneerMgr {
 
             if (findPioneer.movePaths.length > 0) {
                 findPioneer.movePaths.splice(0, 1);
-                if (findPioneer.type != MapPioneerType.player && !findPioneer.friendly) {
+                if (findPioneer.type != MapPioneerType.player &&
+                    findPioneer.faction == MapMemberFactionType.enemy) {
                     // enemy one step over to check will fight
                     this._pioneerActionTypeChangedByMeetTrigger(findPioneer, false);
                 }
@@ -340,6 +342,18 @@ export default class PioneerMgr {
                     observe.pioneerDidShow(findPioneer.id);
                 }
                 this._savePioneerData();
+            }
+        }
+    }
+    public changePioneerFaction(pioneerId: string, faction: MapMemberFactionType) {
+        const findPioneer = this.getPioneerById(pioneerId);
+        if (findPioneer != null) {
+            if (findPioneer.faction != faction) {
+                findPioneer.faction = faction;
+                this._savePioneerData();
+                for (const observer of this._observers) {
+                    observer.pioneerFactionChanged(pioneerId);
+                }
             }
         }
     }
@@ -477,7 +491,7 @@ export default class PioneerMgr {
                         fightId,
                         { id: attacker.id, name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
                         { id: enemyId, isBuilding: isBuilding, name: enemyName, hp: enemyHp, hpMax: enemyHpMax },
-                        attacker.friendly,
+                        attacker.faction == MapMemberFactionType.friend,
                         [attacker.stayPos]
                     );
                 }
@@ -519,7 +533,7 @@ export default class PioneerMgr {
                             fightId,
                             { id: attacker.id, name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
                             { id: attacker.id, isBuilding: isBuilding, name: enemyName, hp: enemyHp, hpMax: enemyHpMax },
-                            attacker.friendly,
+                            attacker.faction == MapMemberFactionType.friend,
                             [attacker.stayPos]
                         );
                     }
@@ -549,7 +563,7 @@ export default class PioneerMgr {
                             hp: enemyHp,
                             hpMax: enemyHpMax,
                         },
-                        attackerIsSelf: attacker.friendly,
+                        attackerIsSelf: attacker.faction == MapMemberFactionType.friend,
                         buildingId: null,
                         position: attacker.stayPos,
                         fightResult: attacker.hp != 0 ? "win" : "lose",
@@ -581,66 +595,6 @@ export default class PioneerMgr {
                     }
                 }
             }, 250);
-        }
-    }
-
-    //------------------------------------------------- 
-    // task
-    public dealWithTaskAction(action: string, delayTime: number): void {
-        const temple = action.split("|");
-
-        const actionTargetPioneer = this.getPioneerById(temple[1]);
-        if (actionTargetPioneer == null) {
-            return;
-        }
-        switch (temple[0]) {
-            case "pioneershow": {
-                if (delayTime > 0) {
-                    actionTargetPioneer.showCountTime = delayTime;
-                    this._savePioneerData();
-                } else {
-                    this.showPioneer(actionTargetPioneer.id);
-                }
-            }
-                break;
-
-            case "pioneerhide": {
-                this.hidePioneer(actionTargetPioneer.id);
-            }
-                break;
-
-            case "pioneernonfriendly": {
-                actionTargetPioneer.friendly = false;
-                this._savePioneerData();
-                for (const observer of this._observers) {
-                    observer.pioneerDidNonFriendly(actionTargetPioneer.id);
-                }
-            }
-                break;
-
-            case "pioneerfriendly": {
-                actionTargetPioneer.friendly = true;
-                this._savePioneerData();
-                for (const observer of this._observers) {
-                    observer.pioneerDidFriendly(actionTargetPioneer.id);
-                }
-            }
-                break;
-
-            case "fightwithpioneer": {
-                actionTargetPioneer.friendly = false;
-                this._savePioneerData();
-                this._pioneerActionTypeChangedByMeetTrigger(this.getCurrentPlayerPioneer());
-            }
-                break;
-
-            case "maincityfightwithpioneer": {
-                this._pioneerActionTypeChangedByMeetTrigger(actionTargetPioneer);
-            }
-                break;
-
-            default:
-                break;
         }
     }
 
@@ -712,7 +666,7 @@ export default class PioneerMgr {
                             temple.show == 1,
                             0,
                             temple.id,
-                            temple.friendly == 1,
+                            temple.friendly == 1 ? MapMemberFactionType.friend : MapMemberFactionType.enemy,
                             temple.type,
                             temple.name,
                             temple.hp,
@@ -729,7 +683,7 @@ export default class PioneerMgr {
                             temple.show == 1,
                             0,
                             temple.id,
-                            temple.friendly == 1,
+                            temple.friendly == 1 ? MapMemberFactionType.friend : MapMemberFactionType.enemy,
                             temple.type,
                             temple.name,
                             temple.hp,
@@ -746,7 +700,7 @@ export default class PioneerMgr {
                             temple.show == 1,
                             0,
                             temple.id,
-                            temple.friendly == 1,
+                            temple.friendly == 1 ? MapMemberFactionType.friend : MapMemberFactionType.enemy,
                             temple.type,
                             temple.name,
                             temple.hp,
@@ -778,7 +732,6 @@ export default class PioneerMgr {
                             } else if (logic.type == MapPioneerLogicType.commonmove) {
                                 checkLogicUseful = false;
                             }
-                            model.condition = logic.cond;
                             model.moveSpeed = logic.speed;
                             if (checkLogicUseful) {
                                 logics.push(model);
@@ -907,7 +860,6 @@ export default class PioneerMgr {
                     } else if (logic._type == MapPioneerLogicType.commonmove) {
                         checkLogicUseful = false;
                     }
-                    model.condition = logic._condition;
                     model.moveSpeed = logic._moveSpeed;
                     if (checkLogicUseful) {
                         logics.push(model);
@@ -944,14 +896,7 @@ export default class PioneerMgr {
                     if (pioneer.actionType == MapPioneerActionType.idle) {
                         if (pioneer.logics.length > 0) {
                             const logic = pioneer.logics[0];
-                            let canAction: boolean = false;
-                            if (logic.condition != null && logic.condition != FinishedEvent.NoCondition) {
-                                if (UserInfoMgr.finishedEvents.indexOf(logic.condition) != -1) {
-                                    canAction = true;
-                                }
-                            } else {
-                                canAction = true;
-                            }
+                            let canAction: boolean = true;
                             if (canAction) {
                                 //all move logic change to move one step by step
                                 if (logic.type == MapPioneerLogicType.stepmove) {
@@ -1104,7 +1049,7 @@ export default class PioneerMgr {
                             if (pioneer.rebirthCountTime == 0) {
                                 let rebirthMapPos = null;
                                 const mainCity = BuildingMgr.getBuildingById("building_1");
-                                if (mainCity != null && mainCity.faction != BuildingFactionType.enemy) {
+                                if (mainCity != null && mainCity.faction != MapMemberFactionType.enemy) {
                                     rebirthMapPos = mainCity.stayMapPositions[1];
                                 } else {
                                     if (pioneer.killerId != null && pioneer.killerId.includes("building")) {
@@ -1175,7 +1120,7 @@ export default class PioneerMgr {
                         }
                     });
                 }
-                if (pioneer.friendly && interactPioneer.friendly) {
+                if (pioneer.faction == MapMemberFactionType.friend && interactPioneer.faction == MapMemberFactionType.friend) {
                     if (interactPioneer.type == MapPioneerType.npc) {
                         // get task
                         pioneer.actionType = MapPioneerActionType.idle;
@@ -1186,7 +1131,7 @@ export default class PioneerMgr {
                         for (const observe of this._observers) {
                             observe.exploredPioneer(interactPioneer.id);
                         }
-                        
+
                     } else if (interactPioneer.type == MapPioneerType.gangster) {
                         // get more hp
                         const acionTime: number = 3000;
@@ -1217,7 +1162,7 @@ export default class PioneerMgr {
                         }
                         this._savePioneerData();
                     }
-                } else if (!pioneer.friendly && !interactPioneer.friendly) {
+                } else if (pioneer.faction == MapMemberFactionType.enemy && interactPioneer.faction == MapMemberFactionType.enemy) {
                     if (isStay) {
                         pioneer.actionType = MapPioneerActionType.idle;
                         pioneer.actionEndTimeStamp = 0;
@@ -1255,8 +1200,9 @@ export default class PioneerMgr {
             }
             if (stayBuilding.type == MapBuildingType.city) {
                 if (
-                    (pioneer.type == MapPioneerType.player && pioneer.friendly && stayBuilding.faction == BuildingFactionType.enemy) ||
-                    (pioneer.id == "gangster_3" && !pioneer.friendly && stayBuilding.faction != BuildingFactionType.enemy)
+                    (pioneer.type == MapPioneerType.player && pioneer.faction == MapMemberFactionType.friend &&
+                        stayBuilding.faction == MapMemberFactionType.enemy) ||
+                    (pioneer.id == "gangster_3" && pioneer.faction == MapMemberFactionType.enemy && stayBuilding.faction != MapMemberFactionType.enemy)
                 ) {
                     const cityBuilding = stayBuilding as MapMainCityBuildingModel;
                     if (cityBuilding.taskObj != null) {
@@ -1293,7 +1239,8 @@ export default class PioneerMgr {
                 }
 
             } else if (stayBuilding.type == MapBuildingType.explore) {
-                if (pioneer.type == MapPioneerType.player && pioneer.friendly) {
+                if (pioneer.type == MapPioneerType.player && 
+                    pioneer.faction == MapMemberFactionType.friend) {
                     const acionTime: number = 3000;
                     pioneer.actionType = MapPioneerActionType.exploring;
                     pioneer.actionEndTimeStamp = currentTimeStamp + acionTime;
@@ -1329,10 +1276,11 @@ export default class PioneerMgr {
             } else if (stayBuilding.type == MapBuildingType.stronghold) {
                 // 0-idle 1-fight 2-defend
                 let tempAction: number = 0;
-                if (pioneer.type == MapPioneerType.player && pioneer.friendly) {
-                    if (stayBuilding.faction != BuildingFactionType.enemy) {
+                if (pioneer.type == MapPioneerType.player && 
+                    pioneer.faction == MapMemberFactionType.friend) {
+                    if (stayBuilding.faction != MapMemberFactionType.enemy) {
                         tempAction = 2;
-                        BuildingMgr.changeBuildingFaction(stayBuilding.id, BuildingFactionType.self);
+                        BuildingMgr.changeBuildingFaction(stayBuilding.id, MapMemberFactionType.friend);
                         BuildingMgr.insertDefendPioneer(stayBuilding.id, pioneer.id);
                         for (const observe of this._observers) {
                             observe.exploredBuilding(stayBuilding.id);
@@ -1342,7 +1290,7 @@ export default class PioneerMgr {
                     }
                 } else {
                     if (pioneer.id == "gangster_3" && stayBuilding.id == "building_4") {
-                        if (stayBuilding.faction != BuildingFactionType.self ||
+                        if (stayBuilding.faction != MapMemberFactionType.friend ||
                             stayBuilding.defendPioneerIds.length <= 0) {
                             tempAction = 0;
                             BuildingMgr.hideBuilding(stayBuilding.id, pioneer.id);
@@ -1379,7 +1327,8 @@ export default class PioneerMgr {
                 }
 
             } else if (stayBuilding.type == MapBuildingType.resource) {
-                if (pioneer.type == MapPioneerType.player && pioneer.friendly) {
+                if (pioneer.type == MapPioneerType.player && 
+                    pioneer.faction == MapMemberFactionType.friend) {
 
                     // artifact
                     const artifactEff = ArtifactMgr.getPropEffValue(UserInfoMgr.level);
@@ -1521,7 +1470,7 @@ export default class PioneerMgr {
                     fightId,
                     { id: attacker.id, name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
                     { id: defenderId, isBuilding: defenderIsBuilding, name: defenderName, hp: defenderHp, hpMax: defenderHpMax },
-                    attacker.friendly,
+                    attacker.faction == MapMemberFactionType.friend,
                     defenderCenterPositions
                 );
             }
@@ -1600,7 +1549,7 @@ export default class PioneerMgr {
                         fightId,
                         { id: attacker.id, name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
                         { id: defenderId, isBuilding: defenderIsBuilding, name: defenderName, hp: defenderHp, hpMax: defenderHpMax },
-                        attacker.friendly,
+                        attacker.faction == MapMemberFactionType.friend,
                         defenderCenterPositions
                     );
                 }
@@ -1609,7 +1558,7 @@ export default class PioneerMgr {
                 // fight end
                 if (deadPioneer.id == "npc_0") {
                     //after killed prophetess, city become enemy
-                    BuildingMgr.changeBuildingFaction("building_1", BuildingFactionType.enemy);
+                    BuildingMgr.changeBuildingFaction("building_1", MapMemberFactionType.enemy);
                 }
 
                 let isSelfWin: boolean = false;
@@ -1647,7 +1596,7 @@ export default class PioneerMgr {
                         hp: defenderHp,
                         hpMax: defenderHpMax,
                     },
-                    attackerIsSelf: attacker.friendly,
+                    attackerIsSelf: attacker.faction == MapMemberFactionType.friend,
                     buildingId: defender instanceof MapBuildingModel ?? (defender as MapBuildingModel).id,
                     position: defenderCenterPositions[0],
                     fightResult: attacker.hp != 0 ? "win" : "lose",
@@ -1685,15 +1634,24 @@ export default class PioneerMgr {
         }, 250);
     }
 
-    private _pioneerGetTalk(action: TaskNpcGetNewTalkAction) {
+    private _savePioneerData() {
+        if (Config.canSaveLocalData) {
+            localStorage.setItem(this._localStorageKey, JSON.stringify(this._pioneers));
+        }
+    }
+
+
+    //------------------------------- notification
+    private _onPioneerGetTalk(action: TaskNpcGetNewTalkAction) {
         const findPioneer = this.getPioneerById(action.npcId);
-        if (findPioneer != null && findPioneer.show && findPioneer.friendly) {
+        if (findPioneer != null && findPioneer.show && 
+            findPioneer.faction == MapMemberFactionType.friend) {
             (findPioneer as MapNpcPioneerModel).talkId = action.talkId;
             this._savePioneerData();
             NotificationMgr.triggerEvent(NotificationName.MPA_PIONEER_NEW_TALK_GETTED);
         }
     }
-    public _pioneerUseTalk(talkId: string) {
+    private _onPioneerUseTalk(talkId: string) {
         for (const pioneer of this._pioneers) {
             if (pioneer.type == MapPioneerType.npc) {
                 if ((pioneer as MapNpcPioneerModel).talkId == talkId) {
@@ -1705,10 +1663,18 @@ export default class PioneerMgr {
             }
         }
     }
-
-    private _savePioneerData() {
-        if (Config.canSaveLocalData) {
-            localStorage.setItem(this._localStorageKey, JSON.stringify(this._pioneers));
+    private _onPioneerChangeShowHide(action: TaskShowHideAction) {
+        if (action.type == TaskTargetType.pioneer) {
+            if (action.status == TaskShowHideStatus.show) {
+                this.showPioneer(action.id);
+            } else if (action.status == TaskShowHideStatus.hide) {
+                this.hidePioneer(action.id);
+            }
+        }
+    }
+    private _onPioneerChangeFaction(action: TaskFactionAction) {
+        if (action.type == TaskTargetType.pioneer) {
+            this.changePioneerFaction(action.id, action.faction);
         }
     }
 }

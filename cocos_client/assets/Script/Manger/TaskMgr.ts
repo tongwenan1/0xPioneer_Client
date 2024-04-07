@@ -1,5 +1,4 @@
-import { FinishedEvent } from "../Const/UserInfoDefine";
-import TaskModel, { TaskAction, TaskActionType, TaskCondition, TaskConditionSatisfyType, TaskConditionType, TaskSatisfyCondition, TaskStepConfigData, TaskStepModel, TaskTalkCondition } from "../Const/TaskDefine";
+import TaskModel, { TaskAction, TaskActionType, TaskCondition, TaskConditionSatisfyType, TaskConditionType, TaskFinishResultType, TaskParentChildType, TaskSatisfyCondition, TaskShowHideStatus, TaskStepConfigData, TaskStepModel, TaskTalkCondition, TaskTargetType } from "../Const/TaskDefine";
 import TaskConfig from "../Config/TaskConfig";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
@@ -7,9 +6,7 @@ import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import TaskStepConfig from "../Config/TaskStepConfig";
 
 export default class TaskMgr {
-    public gameStart() {
-        this._checkTask({ type: TaskConditionType.GameStart });
-    }
+
     public talkSelected(talkId: string, talkSelectedIndex: number) {
         const con: TaskCondition = {
             type: TaskConditionType.Talk,
@@ -21,10 +18,49 @@ export default class TaskMgr {
         }
         this._checkTask(con);
     }
+    public finishStatusChanged(type: TaskParentChildType, id: string, result: TaskFinishResultType) {
+        this._checkTask({
+            type: TaskConditionType.Finish,
+            finish: {
+                type: type,
+                taskId: id,
+                taskResult: result,
+                finishTime: 1
+            }
+        });
+    }
+    public pioneerKilled(pioneerId: string) {
+        this._checkTask({
+            type: TaskConditionType.Kill,
+            kill: {
+                enemyIds: [pioneerId],
+                killTime: 1,
+            }
+        });
+    }
+    public showHideChanged(target: TaskTargetType, id: string, status: TaskShowHideStatus) {
+        this._checkTask({
+            type: TaskConditionType.ShowHide,
+            showHide: {
+                type: target,
+                id: id,
+                status: status
+            }
+        });
+    }
+    public gameStarted() {
+        this._checkTask({ type: TaskConditionType.GameStart });
+    }
 
 
+    public getAllTasks(): TaskModel[] {
+        return this._taskInfos;
+    }
+    public getAllGettedTasks(): TaskModel[] {
+        return this._taskInfos.filter(task => task.isGetted);
+    }
     public getTask(taskId: string): TaskModel | null {
-        const models = this._taskInfos.filter(temple=> temple.taskId == taskId);
+        const models = this._taskInfos.filter(temple => temple.taskId == taskId);
         if (models.length > 0) {
             return models[0];
         }
@@ -45,64 +81,10 @@ export default class TaskMgr {
         return step;
     }
 
-    public getTasks(taskIds: string[]): any[] {
-        // const taskInfos = [];
-        // for (const temple of this._taskInfos) {
-        //     if (taskIds.indexOf(temple.id) != -1) {
-        //         taskInfos.push(temple);
-        //     }
-        // }
-        // return taskInfos;
-        return [];
-    }
-    public getTaskById(id: string) {
-        // for (const task of this._taskInfos) {
-        //     if (task.id == id) {
-        //         return task;
-        //     }
-        // }
-        return null;
-    }
-    public getTaskByBuilding(buildingId: string, gettedTaskIds: string[], finishedEvents: FinishedEvent[]): void {
-        // for (const task of this._taskInfos) {
-        //     if (gettedTaskIds.indexOf(task.id) != -1) {
-        //         continue;
-        //     }
-        //     if (task.entrypoint == null) {
-        //         continue;
-        //     }
-        //     const entry = task.entrypoint.type.split("|");
-        //     if (entry.length == 2 &&
-        //         entry[0] === "talkwithbuilding" &&
-        //         entry[1] === buildingId) {
-        //         let meetCond: boolean = true;
-        //         for (const cond of task.condshow) {
-        //             if (finishedEvents.indexOf(cond) == -1) {
-        //                 meetCond = false;
-        //                 break;
-        //             }
-        //         }
-        //         if (task.condhide != null) {
-        //             // force hide task
-        //             for (const cond of task.condhide) {
-        //                 if (finishedEvents.indexOf(cond) != -1) {
-        //                     meetCond = false;
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //         if (meetCond) {
-        //             return task;
-        //         }
-        //     }
-        // }
-        return null;
-    }
-
     public async initData() {
         await this._initData();
     }
-
+    
     public constructor() {
 
     }
@@ -148,15 +130,19 @@ export default class TaskMgr {
             }
             if (task.failCon != null) {
                 if (this._checkConditionIsSatisfy(task.failCon, checkCon)) {
+                    // task failed
                     task.isFailed = true;
                     task.failCon = null;
                     this._localSave();
                     NotificationMgr.triggerEvent(NotificationName.TASK_FAILED, task.taskId);
+
+                    this.finishStatusChanged(TaskParentChildType.Parent, task.taskId, TaskFinishResultType.Fail);
                     continue;
                 }
             }
             if (task.closeCon != null) {
                 if (this._checkConditionIsSatisfy(task.closeCon, checkCon)) {
+                    // task closed
                     task.canGet = false;
                     task.closeCon = null;
                     this._localSave();
@@ -172,15 +158,55 @@ export default class TaskMgr {
                     for (const action of task.preAction) {
                         this._doAction(action);
                     }
-                    continue;
                 }
             }
             if (task.takeCon != null) {
                 if (this._checkConditionIsSatisfy(task.takeCon, checkCon)) {
                     task.takeCon = null;
+                    task.isGetted = true;
                     this._localSave();
-                    NotificationMgr.triggerEvent(NotificationName.TASK_GET_NEW, task.taskId);
-                    continue;
+                    NotificationMgr.triggerEvent(NotificationName.TASK_NEW_GETTED, task.taskId);
+
+                    const takeStep = this.getTaskStep(task.steps[task.stepIndex]);
+                    for (const action of takeStep.startAction) {
+                        this._doAction(action);
+                    }
+                }
+            }
+            if (task.isGetted) {
+                const currentStep = this.getTaskStep(task.steps[task.stepIndex]);
+                if (currentStep.quitCon != null) {
+                    // step fail lead to task failed
+                    if (this._checkConditionIsSatisfy(currentStep.quitCon, checkCon)) {
+                        currentStep.quitCon = null;
+                        task.isFailed = true;
+                        this._localSave();
+                        NotificationMgr.triggerEvent(NotificationName.TASK_FAILED, task.taskId);
+                        this.finishStatusChanged(TaskParentChildType.Child, currentStep.id, TaskFinishResultType.Fail);
+                        continue;
+                    }
+                }
+                if (currentStep.completeCon != null) {
+                    if (this._checkConditionIsSatisfy(currentStep.completeCon, checkCon)) {
+                        currentStep.completeCon = null;
+                        task.stepIndex += 1;
+                        this._localSave();
+                        for (const action of currentStep.completeAction) {
+                            this._doAction(action);
+                        }
+                        NotificationMgr.triggerEvent(NotificationName.TASK_STEP_FINISHED, task.taskId);
+                        this.finishStatusChanged(TaskParentChildType.Child, currentStep.id, TaskFinishResultType.Success);
+
+                        if (task.stepIndex >= task.steps.length) {
+                            // step finished lead to task finished
+                            task.isFinished = true;
+                            this._localSave();
+                            NotificationMgr.triggerEvent(NotificationName.TASK_FINISHED, task.taskId);
+
+                            this.finishStatusChanged(TaskParentChildType.Parent, task.taskId, TaskFinishResultType.Success);
+                            continue;
+                        }
+                    }
                 }
             }
         }
@@ -253,6 +279,8 @@ export default class TaskMgr {
         return false;
     }
 
+
+
     private _doAction(action: TaskAction) {
         if (action.type == TaskActionType.ShowHide) {
             NotificationMgr.triggerEvent(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, action.showHide);
@@ -267,9 +295,7 @@ export default class TaskMgr {
             ItemConfigDropTool.getItemByConfig([action.getProp]);
 
         } else if (action.type == TaskActionType.NpcGetNewTalk) {
-            console.log("exce getnetalk: " + JSON.stringify(action))
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_NEW_TALK, action.npcGetNewTalk);
-        
         }
     }
 

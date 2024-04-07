@@ -3,17 +3,21 @@ import { TilePos } from "../Game/TiledMap/TileTool";
 import MapBuildingModel, { MapResourceBuildingModel, MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
 import { MapDecoratePosMode } from "../Const/Model/MapDecorateModelDefine";
 import MapDecorateModel from "../Game/Outer/Model/MapDecorateModel";
-import { BuildingMgrEvent, MapBuildingType, BuildingFactionType } from "../Const/BuildingDefine";
+import { BuildingMgrEvent, MapBuildingType } from "../Const/BuildingDefine";
 import { ResourceModel } from "../Const/UserInfoDefine";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import Config from "../Const/Config";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
+import { TaskFactionAction, TaskShowHideAction, TaskShowHideStatus, TaskTargetType } from "../Const/TaskDefine";
+import { MapMemberFactionType } from "../Const/ConstDefine";
 
 export default class BuildingMgr {
 
     public async initData() {
         await this._initData();
+        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, this._onBuildingChangeShowHide, this);
+        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_FACTION, this._onBuildingChangeFaction, this);
     }
 
     public addObserver(observer: BuildingMgrEvent) {
@@ -207,14 +211,14 @@ export default class BuildingMgr {
             observer.buildingDidHide(temple.id, beacusePioneerId);
         }
     }
-    public changeBuildingFaction(buildingId: string, faction: BuildingFactionType) {
+    public changeBuildingFaction(buildingId: string, faction: MapMemberFactionType) {
         const findBuilding = this.getBuildingById(buildingId);
         if (findBuilding != null) {
             if (findBuilding.faction != faction) {
                 findBuilding.faction = faction;
                 this._savePioneerData();
                 if (findBuilding.id == "building_1" &&
-                    findBuilding.faction == BuildingFactionType.enemy) {
+                    findBuilding.faction == MapMemberFactionType.enemy) {
                     NotificationMgr.triggerEvent(NotificationName.CHOOSE_GANGSTER_ROUTE);
                 }
                 for (const observer of this._observers) {
@@ -265,39 +269,6 @@ export default class BuildingMgr {
         if (findBuilding != null && findBuilding.type == MapBuildingType.city) {
             (findBuilding as MapMainCityBuildingModel).taskObj = null;
             this._savePioneerData();
-        }
-    }
-
-    public dealWithTaskAction(action: string): void {
-        const temple = action.split("|");
-        const actionTargetBuilding = this.getBuildingById(temple[1]);
-        if (actionTargetBuilding == null) {
-            return;
-        }
-        switch (temple[0]) {
-            case "buildingtoenemy": {
-                this.changeBuildingFaction(actionTargetBuilding.id, BuildingFactionType.enemy);
-            }
-                break;
-
-            case "buildingtoself": {
-                this.changeBuildingFaction(actionTargetBuilding.id, BuildingFactionType.self);
-            }
-                break;
-
-            case "buildinghide": {
-                this.hideBuilding(actionTargetBuilding.id);
-            }
-                break;
-
-            case "buildingshow": {
-                this.showBuilding(actionTargetBuilding.id);
-            }
-                break;
-
-
-            default:
-                break;
         }
     }
 
@@ -353,7 +324,7 @@ export default class BuildingMgr {
                                 temple.id,
                                 temple.type,
                                 temple.name,
-                                temple.faction,
+                                MapMemberFactionType.neutral,
                                 temple.defendPioneerIds,
                                 temple.level,
                                 mapPositions,
@@ -375,7 +346,7 @@ export default class BuildingMgr {
                                 temple.id,
                                 temple.type,
                                 temple.name,
-                                temple.faction,
+                                MapMemberFactionType.neutral,
                                 temple.defendPioneerIds,
                                 temple.level,
                                 mapPositions,
@@ -389,7 +360,7 @@ export default class BuildingMgr {
                                 temple.id,
                                 temple.type,
                                 temple.name,
-                                temple.faction,
+                                MapMemberFactionType.neutral,
                                 temple.defendPioneerIds,
                                 temple.level,
                                 mapPositions,
@@ -519,6 +490,23 @@ export default class BuildingMgr {
     private _saveDecorateData() {
         if (Config.canSaveLocalData) {
             localStorage.setItem(this._localDecorateKey, JSON.stringify(this._decorates));
+        }
+    }
+
+
+    //---------------------------------- notification
+    private _onBuildingChangeShowHide(action: TaskShowHideAction) {
+        if (action.type == TaskTargetType.building) {
+            if (action.status == TaskShowHideStatus.show) {
+                this.showBuilding(action.id);
+            } else if (action.status == TaskShowHideStatus.hide) {
+                this.hideBuilding(action.id);
+            }
+        }
+    }
+    private _onBuildingChangeFaction(action: TaskFactionAction) {
+        if (action.type == TaskTargetType.building) {
+            this.changeBuildingFaction(action.id, action.faction);
         }
     }
 }

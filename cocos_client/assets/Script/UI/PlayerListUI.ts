@@ -134,12 +134,6 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
     pioneerDidHide(pioneerId: string): void {
 
     }
-    pioneerDidNonFriendly(pioneerId: string): void {
-
-    }
-    pioneerDidFriendly(pioneerId: string): void {
-
-    }
     addNewOnePioneer(newPioneer: MapPioneerModel): void {
         this.refreshPlayerList();
     }

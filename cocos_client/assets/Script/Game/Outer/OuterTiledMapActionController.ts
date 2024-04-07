@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, Vec2, Vec3, Camera, UITransform, Input, input, Prefab, v2, v3, Mask, tween, CCString, SpriteFrame, instantiate, Sprite, EventMouse, Color, TiledMap, size, RenderRoot2D, Widget, CCInteger, Animation, view, Canvas } from 'cc';
-import { MapBuildingType, BuildingFactionType } from '../../Const/BuildingDefine';
-import { ECursorType, PioneerGameTest, ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import { MapBuildingType } from '../../Const/BuildingDefine';
+import { ECursorType, MapMemberFactionType, PioneerGameTest, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType } from '../../Const/Model/MapPioneerModelDefine';
 import { UIHUDController } from '../../UI/UIHUDController';
 import { TilePos, TileHexDirection } from '../TiledMap/TileTool';
@@ -170,7 +170,7 @@ export class OuterTiledMapActionController extends ViewController {
                             const stayBuilding = BuildingMgr.getShowBuildingByMapPos(v2(tp.x, tp.y));
                             if (stayBuilding != null && stayBuilding.show) {
                                 if (stayBuilding.type == MapBuildingType.city &&
-                                    stayBuilding.faction != BuildingFactionType.enemy) {
+                                    stayBuilding.faction != MapMemberFactionType.enemy) {
                                     const centerPos = stayBuilding.stayMapPositions[3];
                                     const visionPositions = [];
                                     const extAround = GameMainHelper.instance.tiledMapGetExtAround(centerPos, UserInfoMgr.cityVision - 1);
@@ -443,7 +443,7 @@ export class OuterTiledMapActionController extends ViewController {
 
             } else {
                 if (stayBuilding.type == MapBuildingType.city) {
-                    if (stayBuilding.faction != BuildingFactionType.enemy) {
+                    if (stayBuilding.faction != MapMemberFactionType.enemy) {
                         GameMainHelper.instance.changeInnerAndOuterShow();
                         actionType = -2;
                     } else {
@@ -493,7 +493,7 @@ export class OuterTiledMapActionController extends ViewController {
                     }
                 }
                 if (currentPioneer != null) {
-                    if (currentPioneer.friendly) {
+                    if (currentPioneer.faction == MapMemberFactionType.friend) {
                         if (currentPioneer.type == MapPioneerType.npc) {
                             actionType = 0;
                         } else if (currentPioneer.type == MapPioneerType.gangster) {

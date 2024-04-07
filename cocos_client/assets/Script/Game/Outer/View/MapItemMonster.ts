@@ -2,22 +2,20 @@ import { _decorator, Component, Node, Vec2, Vec3, CCString, UITransform, Label, 
 import { LanMgr } from '../../../Utils/Global';
 import { MapPioneerLogicType, MapPioneerActionType, MapPioneerMoveDirection } from '../../../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel from '../Model/MapPioneerModel';
-import { FinishedEvent } from '../../../Const/UserInfoDefine';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('MapItemMonster')
 export class MapItemMonster extends Component {
 
-    public refreshUI(model: MapPioneerModel, finishEvent: FinishedEvent[]) {
+    public refreshUI(model: MapPioneerModel) {
         this._nameLabel.string = LanMgr.getLanById(model.name);
 
         let moveCounting: boolean = false;
         if (model.logics.length > 0) {
             const logic = model.logics[0];
             if (logic.type == MapPioneerLogicType.stepmove &&
-                logic.currentCd > 0 &&
-                (logic.condition == null || finishEvent.indexOf(logic.condition) != -1)) {
+                logic.currentCd > 0) {
                 moveCounting = true;
                 this._moveCountLabel.string = "movecount:" + logic.currentCd + "s";
             }

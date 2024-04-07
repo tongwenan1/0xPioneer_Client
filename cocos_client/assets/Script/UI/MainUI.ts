@@ -10,10 +10,10 @@ import { TaskListUI } from './TaskListUI';
 import { NewSettlementUI } from './NewSettlementUI';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
-import { UserInfoEvent, FinishedEvent } from '../Const/UserInfoDefine';
+import { UserInfoEvent } from '../Const/UserInfoDefine';
 import { NotificationName } from '../Const/Notification';
 import Config from '../Const/Config';
-import { BuildingFactionType } from '../Const/BuildingDefine';
+import { MapMemberFactionType } from '../Const/ConstDefine';
 
 const { ccclass, property } = _decorator;
 
@@ -90,7 +90,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     private _refreshInnerOuterChange() {
         let isEnemy: boolean = false;
         const building = BuildingMgr.getBuildingById("building_1");
-        if (building != null && building.faction == BuildingFactionType.enemy) {
+        if (building != null && building.faction == MapMemberFactionType.enemy) {
             isEnemy = true;
         }
         this.node.getChildByName("InnerOutChangeBtnBg").active = !isEnemy;
@@ -121,7 +121,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     }
 
     private checkCanShowGansterComingTip(pioneerId: string) {
-        if (pioneerId == "gangster_3" && UserInfoMgr.finishedEvents.indexOf(FinishedEvent.KillDoomsDayGangTeam) != -1) {
+        if (pioneerId == "gangster_3") {
             this._gangsterComingTipView.active = true;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = true;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = false;
@@ -168,12 +168,6 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         this.checkCanShowGansterComingTip(pioneerId);
     }
     pioneerDidHide(pioneerId: string): void {
-
-    }
-    pioneerDidNonFriendly(pioneerId: string): void {
-
-    }
-    pioneerDidFriendly(pioneerId: string): void {
 
     }
     addNewOnePioneer(newPioneer: MapPioneerModel): void {
@@ -242,25 +236,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     playerExplorationValueChanged?(value: number): void {
         this._claimRewardUI.refreshUI();
     }
-    getNewTask(taskId: string): void {
-
-    }
-    triggerTaskStepAction(action: string, delayTime: number): void {
-
-    }
-    finishEvent(event: FinishedEvent): void {
-
-    }
     getProp(propId: string, num: number): void {
-
-    }
-    gameTaskOver(): void {
-        this._gangsterComingTipView.active = false;
-    }
-    taskProgressChanged(taskId: string): void {
-
-    }
-    taskFailed(taskId: string): void {
 
     }
 }

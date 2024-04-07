@@ -10,7 +10,7 @@ export class OuterParticleView extends Component {
     }
 
     start() {
-        NotificationMgr.addListener(NotificationName.MAP_SCALED, this.mapScaled, this);
+        NotificationMgr.addListener(NotificationName.GAME_CAMERA_ZOOM_CHANGED, this.mapScaled, this);
     }
 
     update(deltaTime: number) {
