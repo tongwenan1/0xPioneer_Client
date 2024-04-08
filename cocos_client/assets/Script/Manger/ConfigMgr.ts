@@ -1,6 +1,8 @@
+import AbiConfig from "../Config/AbiConfig";
 import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import BoxInfoConfig from "../Config/BoxInfoConfig";
+import ChainConfig from "../Config/ChainConfig";
 import ConfigConfig from "../Config/ConfigConfig";
 import DropConfig from "../Config/DropConfig";
 import EvaluationConfig from "../Config/EvaluationConfig";
@@ -17,13 +19,14 @@ import TaskStepConfigData from "../Config/TaskStepConfig";
 export default class ConfigMgr {
     public static async init(): Promise<boolean> {
         if (!(await ArtifactConfig.init())) return false;
-        if (!(await ItemConfig.init())) return false;
         if (!(await ArtifactEffectConfig.init())) return false;
         if (!(await BoxInfoConfig.init())) return false;
+        if (!(await ChainConfig.init())) return false;
         if (!(await ConfigConfig.init())) return false;
         if (!(await DropConfig.init())) return false;
         if (!(await EvaluationConfig.init())) return false;
         if (!(await EventConfig.init())) return false;
+        if (!(await ItemConfig.init())) return false;
         if (!(await LanConfig.init())) return false;
         if (!(await LvlupConfig.init())) return false;
         if (!(await InnerBuildingConfig.init())) return false;
@@ -31,6 +34,13 @@ export default class ConfigMgr {
         if (!(await TalkConfig.init())) return false;
         if (!(await TaskConfig.init())) return false;
         if (!(await TaskStepConfigData.init())) return false;
+
+        // read abi
+        const chainId = ChainConfig.getCurrentChainId();
+        if (Number(chainId) > 0) {
+            const chainConf = ChainConfig.getByChainId(chainId);
+            if (!(await AbiConfig.init(chainConf.abi))) return false;
+        }
 
         return true;
     }
