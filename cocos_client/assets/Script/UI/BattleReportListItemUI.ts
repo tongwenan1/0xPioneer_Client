@@ -1,12 +1,13 @@
 import {_decorator, Button, Component, Label, Node, ProgressBar, RichText, Sprite, SpriteFrame} from 'cc';
 import CommonTools from "db://assets/Script/Tool/CommonTools";
 import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, LocationInfo } from '../Const/BattleReport';
-import { BuildingMgr, LanMgr, PioneerMgr, UIPanelMgr } from '../Utils/Global';
+import { BuildingMgr, LanMgr, PioneerMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { LootsPopup } from './LootsPopup';
 import { UIHUDController } from './UIHUDController';
 import EventConfig from '../Config/EventConfig';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
+import UIPanelManger from '../Basic/UIPanelMgr';
 
 const {ccclass, property} = _decorator;
 
@@ -212,7 +213,8 @@ export class BattleReportListItemUI extends Component {
                 return;
         }
 
-        UIPanelMgr.removePanel(UIName.BattleReportUI);
+        // UIPanelMgr.popPanel(UIName.BattleReportUI);
+        UIPanelManger.inst.popPanel();
         GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(pos.x, pos.y), true);
     }
 
@@ -221,9 +223,9 @@ export class BattleReportListItemUI extends Component {
             console.error("BattleReportListItemUI._loots empty");
             return;
         }
-        const view = await UIPanelMgr.openPanel(UIName.LootsPopup);
-        if (view != null) {
-            view.getComponent(LootsPopup).showItems(this._loots);
+        const result = await UIPanelManger.inst.pushPanel(UIName.LootsPopup);
+        if (result.success) {
+            result.node.getComponent(LootsPopup).showItems(this._loots);
         }
     }
 
@@ -235,7 +237,8 @@ export class BattleReportListItemUI extends Component {
             UIHUDController.showCenterTip("Error");
             return;
         }
-        UIPanelMgr.removePanel(UIName.BattleReportUI);
+        // UIPanelMgr.popPanel(UIName.BattleReportUI);
+        UIPanelManger.inst.popPanel();
         PioneerMgr.pioneerDealWithEvent(reportData.pioneerId, reportData.buildingId, currentEvent);
     }
 

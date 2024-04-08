@@ -1,7 +1,7 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
 import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ArtifactMgr, ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
@@ -10,6 +10,7 @@ import { InnerBuildingType, UserInnerBuildInfo } from '../../Const/BuildingDefin
 import InnerBuildingConfig from '../../Config/InnerBuildingConfig';
 import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 import { NotificationName } from '../../Const/Notification';
+import UIPanelManger from '../../Basic/UIPanelMgr';
 const { ccclass } = _decorator;
 
 @ccclass('BuildingUpgradeUI')
@@ -262,13 +263,13 @@ export class BuildingUpgradeUI extends ViewController {
 
             this._closeBuildingUpgradeUI();
             await this.playExitAnimation();
-            UIPanelMgr.removePanelByNode(this.node);
+            UIPanelManger.inst.popPanel();
         }
     }
 
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
     }
 
     //------------------- ItemMgrEvent

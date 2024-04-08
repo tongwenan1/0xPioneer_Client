@@ -1,3 +1,4 @@
+import UIPanelManger from "../Basic/UIPanelMgr";
 import DropConfig from "../Config/DropConfig";
 import { GetPropData } from "../Const/ConstDefine";
 import { UIName } from "../Const/ConstUIDefine";
@@ -5,7 +6,7 @@ import ItemData, { ItemConfigType } from "../Const/Item";
 import ArtifactData from "../Model/ArtifactData";
 import { ArtifactInfoUI } from "../UI/ArtifactInfoUI";
 import { ItemGettedUI } from "../UI/ItemGettedUI";
-import { ArtifactMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
+import { ArtifactMgr, ItemMgr, UserInfoMgr } from "../Utils/Global";
 import CommonTools from "./CommonTools";
 
 export default class ItemConfigDropTool {
@@ -48,13 +49,13 @@ export default class ItemConfigDropTool {
             ItemMgr.addItem(items);
             if (showDialog) {
                 setTimeout(async () => {
-                    if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
-                        UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
+                    if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI) ||
+                        UIPanelManger.inst.panelIsShow(UIName.SecretGuardGettedUI)) {
                         UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...items);
                     } else {
-                        const view = await UIPanelMgr.openPanel(UIName.ItemGettedUI);
-                        if (view != null) {
-                            view.getComponent(ItemGettedUI).showItem(items);
+                        const result = await UIPanelManger.inst.pushPanel(UIName.ItemGettedUI);
+                        if (result.success) {
+                            result.node.getComponent(ItemGettedUI).showItem(items);
                         }
                     }
                 });
@@ -64,13 +65,13 @@ export default class ItemConfigDropTool {
             ArtifactMgr.addArtifact(artifacts);
             if (showDialog) {
                 setTimeout(async () => {
-                    if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
-                        UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
+                    if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI) ||
+                        UIPanelManger.inst.panelIsShow(UIName.SecretGuardGettedUI)) {
                         UserInfoMgr.afterCivilizationClosedShowArtifactDatas.push(...artifacts);
                     } else {
-                        const view = await UIPanelMgr.openPanel(UIName.ArtifactInfoUI);
-                        if (view != null) {
-                            view.getComponent(ArtifactInfoUI).showItem(artifacts);
+                        const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+                        if (result.success) {
+                            result.node.getComponent(ArtifactInfoUI).showItem(artifacts);
                         }
                     }
                 });

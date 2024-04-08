@@ -1,7 +1,7 @@
 import { Label, Node, UITransform, _decorator, v3 } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
-import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../../../Utils/Global";
+import { ItemMgr, LanMgr, UserInfoMgr } from "../../../Utils/Global";
 import { UIName } from "../../../Const/ConstUIDefine";
 import { InnerBuildingType, UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import { BuildingUpgradeUI } from "../../../UI/Inner/BuildingUpgradeUI";
@@ -9,6 +9,7 @@ import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
 import InnerBuildingConfig from "../../../Config/InnerBuildingConfig";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { NotificationName } from "../../../Const/Notification";
+import UIPanelManger from "../../../Basic/UIPanelMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -74,9 +75,9 @@ export class InnerMainCityBuildingView extends InnerBuildingView {
             // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
             return;
         }
-        const view = UIPanelMgr.openPanel(UIName.BuildingUpgradeUI);
-        if (view != null) {
-            (await view).getComponent(BuildingUpgradeUI).refreshUI();
+        const result = await UIPanelManger.inst.pushPanel(UIName.BuildingUpgradeUI);
+        if (result.success) {
+            result.node.getComponent(BuildingUpgradeUI).refreshUI();
         }
     }
 

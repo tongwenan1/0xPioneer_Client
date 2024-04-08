@@ -2,10 +2,11 @@ import {_decorator, Button, Color, instantiate, Label, Layout, Mask, Node, Scrol
 import {BattleReportListItemUI} from "./BattleReportListItemUI";
 import {ButtonEx, ButtonExEventType} from "db://assets/Script/UI/Common/ButtonEx";
 import BattleReportsMgrDefine, { BattleReportType, ReportFilterState, ReportsFilterType } from '../Const/BattleReport';
-import { BattleReportsMgr, UIPanelMgr } from '../Utils/Global';
+import { BattleReportsMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
+import UIPanelManger from '../Basic/UIPanelMgr';
 
 const {ccclass} = _decorator;
 
@@ -259,7 +260,7 @@ export class BattleReportsUI extends ViewController {
     //---------------------------------------------------
     // action
     onTapClose() {
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
     }
 
     public onBattleReportListChanged() {

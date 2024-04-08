@@ -118,7 +118,7 @@ export interface TaskTalkAction {
 export interface TaskNpcGetNewTalkAction {
     talkId: string,
     npcId: string,
-    delayTime: number
+    delayTime?: number
 }
 
 export interface TaskAction {

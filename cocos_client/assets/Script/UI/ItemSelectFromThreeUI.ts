@@ -1,7 +1,7 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt, Layout, Color } from 'cc';
 import { GetPropRankColor, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import { ArtifactItem } from './ArtifactItem';
-import { ArtifactMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
+import { ArtifactMgr, ItemMgr, LanMgr } from '../Utils/Global';
 import ArtifactData from '../Model/ArtifactData';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
@@ -12,6 +12,7 @@ import ArtifactEffectConfig from '../Config/ArtifactEffectConfig';
 import DropConfig from '../Config/DropConfig';
 import { DropConfigData } from '../Const/Drop';
 import { ItemConfigType } from '../Const/Item';
+import UIPanelManger from '../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemSelectFromThreeUI')
@@ -131,22 +132,22 @@ export class ItemSelectFromThreeUI extends ViewController {
     //---------------------------------------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
     }
 
     private async onTapGet(event: Event, customEventData: string) {
         const index: number = parseInt(customEventData);
         const item = this._items[index];
         ArtifactMgr.addArtifact([item]);
-        const view = await UIPanelMgr.openPanel(UIName.ArtifactInfoUI);
-        if (view != null) {
-            view.getComponent(ArtifactInfoUI).showItem([item]);
+        const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+        if (result.success) {
+            result.node.getComponent(ArtifactInfoUI).showItem([item]);
         }
         if (this._selectedCallback != null) {
             this._selectedCallback();
         }
         await this.playExitAnimation();
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
     }
 
     private async onTapGetAll() {
@@ -156,15 +157,15 @@ export class ItemSelectFromThreeUI extends ViewController {
             ArtifactMgr.addArtifact(this._items);
             ItemMgr.subItem(ResourceCorrespondingItem.Energy, needNum);
 
-            const view = await UIPanelMgr.openPanel(UIName.ArtifactInfoUI);
-            if (view != null) {
-                view.getComponent(ArtifactInfoUI).showItem(this._items);
+            const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+            if (result.success) {
+                result.node.getComponent(ArtifactInfoUI).showItem(this._items);
             }
             if (this._selectedCallback != null) {
                 this._selectedCallback();
             }
             await this.playExitAnimation();
-            UIPanelMgr.removePanelByNode(this.node);
+            UIPanelManger.inst.popPanel();
         } else {
             // useLanMgr
             // UIHUDController.showCenterTip(LanMgr.getLanById("201004"));

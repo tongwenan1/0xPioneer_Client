@@ -8,7 +8,7 @@ import { OuterMapCursorView } from './View/OuterMapCursorView';
 import { MapMemberFactionType, PioneerGameTest, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
 import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
-import { ArtifactMgr, BuildingMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, BuildingMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
 import { MapPioneerLogicType, MapPioneerActionType, MapPioneerType, MapPioneerMoveDirection, MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import { MapResourceBuildingModel } from './Model/MapBuildingModel';
 import MapPioneerModel, { MapPioneerLogicModel, MapNpcPioneerModel } from './Model/MapPioneerModel';
@@ -33,6 +33,7 @@ import GameMainHelper from '../Helper/GameMainHelper';
 import ViewController from '../../BasicView/ViewController';
 import { TaskShowHideStatus, TaskTargetType } from '../../Const/TaskDefine';
 import { EventConfigData } from '../../Const/Event';
+import UIPanelManger from '../../Basic/UIPanelMgr';
 
 
 const { ccclass, property } = _decorator;
@@ -522,11 +523,10 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
             this.scheduleOnce(async () => {
                 actionPioneer.actionType = MapPioneerActionType.idle;
                 view.refreshUI(actionPioneer);
-                UIPanelMgr.removePanel(UIName.RookieGuide);
-
-                const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
-                if (dialog != null) {
-                    dialog.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), () => {
+                UIPanelManger.inst.popPanel();
+                const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
+                if (result.success) {
+                    result.node.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), () => {
                         UserInfoMgr.isFinishRookie = true;
                         TaskMgr.gameStarted();
                         // init resource
@@ -598,12 +598,12 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
             const pioneer = PioneerMgr.getPioneerById(pioneerId);
             if (pioneer != null) {
                 setTimeout(async () => {
-                    if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI)) {
+                    if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI)) {
                         UserInfoMgr.afterCivilizationClosedShowPioneerDatas.push(pioneer);
                     } else {
-                        const view = await UIPanelMgr.openPanel(UIName.SecretGuardGettedUI);
-                        if (view != null) {
-                            view.getComponent(SecretGuardGettedUI).dialogShow(pioneer.animType);
+                        const result = await UIPanelManger.inst.pushPanel(UIName.SecretGuardGettedUI);
+                        if (result.success) {
+                            result.node.getComponent(SecretGuardGettedUI).dialogShow(pioneer.animType);
                         }
                     }
                 });
@@ -698,9 +698,9 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
                 const npcModel = pioneer as MapNpcPioneerModel;
                 if (npcModel.talkId != null) {
                     const talk = TalkConfig.getById(npcModel.talkId);
-                    const view = await UIPanelMgr.openPanel(UIName.DialogueUI);
-                    if (view != null) {
-                        view.getComponent(DialogueUI).dialogShow(talk);
+                    const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
+                    if (result.success) {
+                        result.node.getComponent(DialogueUI).dialogShow(talk);
                     }
                 }
             }
@@ -758,9 +758,9 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
 
         const event = EventConfig.getById(eventId);
         if (event != null) {
-            const view = await UIPanelMgr.openPanel(UIName.BrachEventUI);
-            if (view != null) {
-                view.getComponent(EventUI).eventUIShow(actionPioneerId, buildingId, event, (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
+            const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
+            if (result.success) {
+                result.node.getComponent(EventUI).eventUIShow(actionPioneerId, buildingId, event, (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
                     PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
                     PioneerMgr.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
                 }, (nextEvent: EventConfigData) => {

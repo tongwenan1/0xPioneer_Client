@@ -7,12 +7,13 @@ import {
     Color,
 } from "cc";
 import { ArtifactItem } from "./ArtifactItem";
-import { ArtifactMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
+import { ArtifactMgr, LanMgr, UserInfoMgr } from "../Utils/Global";
 import ArtifactData from "../Model/ArtifactData";
 import ViewController from "../BasicView/ViewController";
 import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import { GetPropRankColor } from "../Const/ConstDefine";
+import UIPanelManger from "../Basic/UIPanelMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactInfoUI")
@@ -146,7 +147,7 @@ export class ArtifactInfoUI extends ViewController {
     private async onTapClose() {
         if (this._artifacts.length <= 0) {
             await this.playExitAnimation();
-            UIPanelMgr.removePanelByNode(this.node);
+            UIPanelManger.inst.popPanel();
             if (this._closeCallback != null) {
                 this._closeCallback();
             }

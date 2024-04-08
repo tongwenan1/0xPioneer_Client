@@ -1,11 +1,12 @@
 import { _decorator, Component, Label, tween, v3 } from "cc";
 import ViewController from "../../BasicView/ViewController";
+import UIPanelManger, { UIPanelLayerType } from "../../Basic/UIPanelMgr";
 
 const { ccclass, property } = _decorator;
 
 @ccclass('HUDView')
 export class HUDView extends ViewController {
-    public showCenterTip(tip: string, playOverCallback: ()=> void) {
+    public showCenterTip(tip: string, playOverCallback: ()=> void = null) {
         this._centerTip.string = tip;
         this._centerTip.node.active = true;
         tween()
@@ -13,13 +14,15 @@ export class HUDView extends ViewController {
         .to(0.2, { position: v3(0, 200, 0) })
         .delay(1.5)
         .call(() => {
-            this._centerTip.node.active = false;
-            playOverCallback();
+            UIPanelManger.inst.popPanel(this.node, UIPanelLayerType.HUD);
+            if (playOverCallback != null) {
+                playOverCallback();
+            }
         })
         .start();
     }
 
-    public showTaskTip(tip: string, playOverCallback: ()=> void) {
+    public showTaskTip(tip: string, playOverCallback: ()=> void = null) {
         this._taskTip.string = tip;
         this._taskTip.node.active = true;
         tween()
@@ -27,8 +30,10 @@ export class HUDView extends ViewController {
         .by(0.2, { position: v3(200, 0, 0) })
         .delay(1.5)
         .call(() => {
-            this._taskTip.node.active = false;
-            playOverCallback();
+            UIPanelManger.inst.popPanel(this.node, UIPanelLayerType.HUD);
+            if (playOverCallback != null) {
+                playOverCallback();
+            }
         })
         .start();
     }

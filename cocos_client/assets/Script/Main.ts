@@ -1,12 +1,13 @@
 import { _decorator, Asset, AssetManager, Component, Node } from 'cc';
 import ViewController from './BasicView/ViewController';
-import { AudioMgr, LocalDataLoader, ResourcesMgr, UIPanelMgr } from './Utils/Global';
+import { AudioMgr, LocalDataLoader, ResourcesMgr } from './Utils/Global';
 import ConfigMgr from './Manger/ConfigMgr';
 import NotificationMgr from './Basic/NotificationMgr';
 import { NotificationName } from './Const/Notification';
-import { UIName } from './Const/ConstUIDefine';
+import { GameName, HUDName, UIName } from './Const/ConstUIDefine';
 import { LoadingUI } from './UI/Loading/LoadingUI';
 import { GAME_ENV_IS_DEBUG, PioneerGameTest } from './Const/ConstDefine';
+import UIPanelManger, { UIPanelLayerType } from './Basic/UIPanelMgr';
 import { UIMainRootController } from './UI/UIMainRootController';
 const { ccclass, property } = _decorator;
 
@@ -14,21 +15,15 @@ const { ccclass, property } = _decorator;
 export class Main extends ViewController {
 
     //--------------------------------------- lifeCyc
-    private _loginView: Node = null;
     protected async viewDidLoad(): Promise<void> {
         super.viewDidLoad();
-
-        this._loginView = this.node.getChildByPath("UI_Canvas/UI_ROOT/LoginUI");
-
         // debug mode
         if (GAME_ENV_IS_DEBUG) {
-            this._loginView.active = false;
+
         } else {
-            this._loginView.active = true;
+            await UIPanelManger.inst.pushPanel(UIName.LoginUI);
         }
-
         NotificationMgr.addListener(NotificationName.USER_LOGIN_SUCCEED, this._onUserLoginSucceed, this);
-
         // audio prepare
         AudioMgr.prepareAudioSource();
         // config init
@@ -42,12 +37,14 @@ export class Main extends ViewController {
         (window as any).hideLoading();
 
         if (GAME_ENV_IS_DEBUG) {
-            this._loginView.destroy();
-            const loadingView = await UIPanelMgr.openPanel(UIName.LoadingUI);
+            const result = await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.HUD);
             await LocalDataLoader.loadLocalDatas();
-            await this.node.getChildByPath("UI_Canvas/UI_ROOT").getComponent(UIMainRootController).showMain();
-            await UIPanelMgr.openPanelToNode("prefab/game/Game", this.node.getChildByPath("Canvas/GameContent"));
-            loadingView.destroy();
+            await UIPanelManger.inst.pushPanel(UIName.MainUI);
+            await this.node.getChildByPath("UI_Canvas/UI_ROOT").getComponent(UIMainRootController).checkShowRookieGuide();
+            await UIPanelManger.inst.pushPanel(GameName.GameMain, UIPanelLayerType.Game);
+            if (result.success) {
+                UIPanelManger.inst.popPanel(result.node, UIPanelLayerType.HUD);
+            }
         }
     }
 
@@ -69,11 +66,11 @@ export class Main extends ViewController {
                 return;
             }
             // show loading
+            UIPanelManger.inst.popPanel();
             let loadingView: LoadingUI = null;
-            const view = await UIPanelMgr.openPanel(UIName.LoadingUI);
-            this._loginView.destroy();
-            if (view != null) {
-                loadingView = view.getComponent(LoadingUI);
+            const result = await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.HUD);
+            if (result.success) {
+                loadingView = result.node.getComponent(LoadingUI);
             }
             bundle.preloadDir(
                 "",
@@ -103,9 +100,10 @@ export class Main extends ViewController {
                             }
                             // load
                             await LocalDataLoader.loadLocalDatas();
-                            await this.node.getChildByPath("UI_Canvas/UI_ROOT").getComponent(UIMainRootController).showMain();
-                            await UIPanelMgr.openPanelToNode("prefab/game/Game", this.node.getChildByPath("Canvas/GameContent"));
-                            loadingView.node.destroy();
+                            await UIPanelManger.inst.pushPanel(UIName.MainUI);
+                            await this.node.getChildByPath("UI_Canvas/UI_ROOT").getComponent(UIMainRootController).checkShowRookieGuide();
+                            await UIPanelManger.inst.pushPanel(GameName.GameMain, UIPanelLayerType.Game);
+                            UIPanelManger.inst.popPanel(loadingView.node, UIPanelLayerType.HUD);
                         }
                     );
                 }

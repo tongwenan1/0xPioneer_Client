@@ -1,13 +1,14 @@
 import { _decorator, Label, Node, Button, EventHandler, Prefab, instantiate, Layout } from "cc";
 import ArtifactData from "../Model/ArtifactData";
 import { ArtifactItem } from "./ArtifactItem";
-import { ArtifactMgr, LanMgr, UIPanelMgr } from "../Utils/Global";
+import { ArtifactMgr, LanMgr } from "../Utils/Global";
 import ViewController from "../BasicView/ViewController";
 import { UIName } from "../Const/ConstUIDefine";
 import { ArtifactInfoUI } from "./ArtifactInfoUI";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { ArtifactArrangeType } from "../Const/Artifact";
 import { NotificationName } from "../Const/Notification";
+import UIPanelManger from "../Basic/UIPanelMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactUI")
@@ -118,15 +119,15 @@ export class ArtifactUI extends ViewController {
         this._selectSortMenuShow = false;
         this._refreshMenu();
         await this.playExitAnimation();
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
     }
     private async onTapItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
         if (index < this._itemDatas.length) {
             const itemData = this._itemDatas[index];
-            const view = await UIPanelMgr.openPanel(UIName.ArtifactInfoUI);
-            if (view != null) {
-                view.getComponent(ArtifactInfoUI).showItem([itemData]);
+            const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+            if (result.success) {
+                result.node.getComponent(ArtifactInfoUI).showItem([itemData]);
             }
         }
     }

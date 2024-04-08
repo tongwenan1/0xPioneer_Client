@@ -1,7 +1,7 @@
 import { _decorator, Component, instantiate, Label, Layout, Node, ProgressBar, Slider } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
 import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
@@ -9,6 +9,7 @@ import { NotificationName } from '../../Const/Notification';
 import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 import { InnerBuildingType } from '../../Const/BuildingDefine';
 import ItemData from '../../Const/Item';
+import UIPanelManger from '../../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
@@ -171,7 +172,7 @@ export class RecruitUI extends ViewController {
 
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
     }
 
     private onTapGenerateMax() {
@@ -222,7 +223,7 @@ export class RecruitUI extends ViewController {
         UserInfoMgr.beginGenerateTroop(this._generateTimeNum, this._selectGenerateNum);
 
         await this.playExitAnimation();
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
     }
 }
 

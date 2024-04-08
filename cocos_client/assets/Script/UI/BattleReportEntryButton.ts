@@ -1,8 +1,9 @@
 import {_decorator, Button, Component, Label} from 'cc';
-import {BattleReportsMgr, UIPanelMgr} from '../Utils/Global';
+import {BattleReportsMgr} from '../Utils/Global';
 import {UIName} from '../Const/ConstUIDefine';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
+import UIPanelManger from '../Basic/UIPanelMgr';
 
 const {ccclass} = _decorator;
 
@@ -22,7 +23,7 @@ export class BattleReportEntryButton extends Component {
     }
 
     private async onClickButton() {
-        await UIPanelMgr.openPanel(UIName.BattleReportUI);
+        await UIPanelManger.inst.pushPanel(UIName.BattleReportUI);
     }
 
     private updateBattleReportsUnreadCount() {

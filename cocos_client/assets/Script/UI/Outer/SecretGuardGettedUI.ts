@@ -1,10 +1,11 @@
 import { _decorator, Component, Label, Node, tween } from 'cc';
-import { LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { LanMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
 import { ItemInfoUI } from '../ItemInfoUI';
 import { ArtifactInfoUI } from '../ArtifactInfoUI';
 import { ItemGettedUI } from '../ItemGettedUI';
+import UIPanelManger from '../../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('SecretGuardGettedUI')
@@ -44,18 +45,18 @@ export class SecretGuardGettedUI extends ViewController {
         tween(this.node)
             .delay(2)
             .call(async () => {
-                UIPanelMgr.removePanelByNode(this.node);
+                UIPanelManger.inst.popPanel();
                 if (UserInfoMgr.afterCivilizationClosedShowItemDatas.length > 0) {
-                    const view = await UIPanelMgr.openPanel(UIName.ItemGettedUI);
-                    if (view != null) {
-                        view.getComponent(ItemGettedUI).showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas);
+                    const result = await UIPanelManger.inst.pushPanel(UIName.ItemGettedUI);
+                    if (result.success) {
+                        result.node.getComponent(ItemGettedUI).showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas);
                     }
                     UserInfoMgr.afterCivilizationClosedShowItemDatas = [];
                 }
                 if (UserInfoMgr.afterCivilizationClosedShowArtifactDatas.length > 0) {
-                    const view = await UIPanelMgr.openPanel(UIName.ArtifactInfoUI);
-                    if (view != null) {
-                        view.getComponent(ArtifactInfoUI).showItem(UserInfoMgr.afterCivilizationClosedShowArtifactDatas);
+                    const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+                    if (result.success) {
+                        result.node.getComponent(ArtifactInfoUI).showItem(UserInfoMgr.afterCivilizationClosedShowArtifactDatas);
                     }
                     UserInfoMgr.afterCivilizationClosedShowArtifactDatas = [];
                 }

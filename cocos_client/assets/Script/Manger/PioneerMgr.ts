@@ -1643,7 +1643,7 @@ export default class PioneerMgr {
 
     //------------------------------- notification
     private _onPioneerGetTalk(action: TaskNpcGetNewTalkAction) {
-        if (action.delayTime <= 0) {
+        if (action.delayTime == null || action.delayTime <= 0) {
             this.npcGetNewTalk(action.npcId, action.talkId);
         } else {
             const findPioneer = this.getPioneerById(action.npcId);

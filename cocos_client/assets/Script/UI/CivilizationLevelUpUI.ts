@@ -2,7 +2,7 @@ import { _decorator, Animation, Button, Component, instantiate, Label, Layout, N
 import { BackpackItem } from './BackpackItem';
 import { ArtifactItem } from './ArtifactItem';
 import ArtifactData from '../Model/ArtifactData';
-import { LanMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { LanMgr, UserInfoMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { SecretGuardGettedUI } from './Outer/SecretGuardGettedUI';
 import ViewController from '../BasicView/ViewController';
@@ -13,6 +13,7 @@ import { LvlupConfigData } from '../Const/Lvlup';
 import ItemData, { ItemConfigType } from '../Const/Item';
 import { NotificationName } from '../Const/Notification';
 import { ItemGettedUI } from './ItemGettedUI';
+import UIPanelManger from '../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('CivilizationLevelUpUI')
@@ -191,25 +192,25 @@ export class CivilizationLevelUpUI extends ViewController {
     }
 
     private async onTapClose() {
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
         if (UserInfoMgr.afterCivilizationClosedShowPioneerDatas.length > 0) {
-            const view = await UIPanelMgr.openPanel(UIName.SecretGuardGettedUI);
-            if (view != null) {
-                view.getComponent(SecretGuardGettedUI).dialogShow(UserInfoMgr.afterCivilizationClosedShowPioneerDatas[0].animType);
+            const result = await UIPanelManger.inst.pushPanel(UIName.SecretGuardGettedUI);
+            if (result.success) {
+                result.node.getComponent(SecretGuardGettedUI).dialogShow(UserInfoMgr.afterCivilizationClosedShowPioneerDatas[0].animType);
             }
             UserInfoMgr.afterCivilizationClosedShowPioneerDatas = [];
         } else {
             if (UserInfoMgr.afterCivilizationClosedShowItemDatas.length > 0) {
-                const view = await UIPanelMgr.openPanel(UIName.ItemGettedUI);
-                if (view != null) {
-                    view.getComponent(ItemGettedUI).showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas);
+                const result = await UIPanelManger.inst.pushPanel(UIName.ItemGettedUI);
+                if (result.success) {
+                    result.node.getComponent(ItemGettedUI).showItem(UserInfoMgr.afterCivilizationClosedShowItemDatas);
                 }
                 UserInfoMgr.afterCivilizationClosedShowItemDatas = [];
             }
             if (UserInfoMgr.afterCivilizationClosedShowArtifactDatas.length > 0) {
-                const view = await UIPanelMgr.openPanel(UIName.ArtifactInfoUI);
-                if (view != null) {
-                    view.getComponent(ArtifactInfoUI).showItem(UserInfoMgr.afterCivilizationClosedShowArtifactDatas);
+                const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+                if (result.success) {
+                    result.node.getComponent(ArtifactInfoUI).showItem(UserInfoMgr.afterCivilizationClosedShowArtifactDatas);
                 }
                 UserInfoMgr.afterCivilizationClosedShowArtifactDatas = [];
             }

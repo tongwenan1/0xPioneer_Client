@@ -1,119 +1,122 @@
-import { _decorator, Prefab, instantiate, Node } from "cc";
+import { _decorator, Prefab, instantiate, Node, Component } from "cc";
 import ResourcesManager from "./ResourcesMgr";
+import { ResourcesMgr } from "../Utils/Global";
 
+export enum UIPanelLayerType {
+    Game,
+    UI,
+    HUD
+}
 
-export default class UIPanelManger {
+export interface UIPanelQueueItem {
+    name: string;
+    node: Node;
+}
 
-    public setUIRootView(rootView: Node) {
-        this._uiRootView = rootView;
+export interface UIPanelPushResult {
+    success: boolean;
+    node: Node;
+}
+
+const { ccclass, property } = _decorator;
+
+@ccclass('UIPanelManger')
+export default class UIPanelManger extends Component {
+
+    public static get inst() {
+        return this._inst;
     }
-    public setHUDRootView(rootView: Node) {
-        this._hudRootView = rootView;
-    }
-
-    public getPanelIsShow(name: string): boolean {
-        const nd = this._uiMap.get(name);
-        if (nd != null && nd.isValid && nd.active) {
-            return true;
-        }
-    }
-
-    public getPanel(name: string) {
-        const nd = this._uiMap.get(name);
-        return nd && nd.isValid ? nd : null;
-    }
-    public getHUDPanel(name: string) {
-        const nd = this._hudQueue.find(nd => nd.name == name);
-        return nd && nd.isValid ? nd : null;
-    }
-
-    public removePanelByNode(node: Node) {
-        node.destroy();
-        for (const [key, value] of this._uiMap) {
-            if (node == value) {
-                if (this._uiMap.has(key)) {
-                    this._uiMap.delete(key);
+    public async pushPanel(name: string, layer: UIPanelLayerType = UIPanelLayerType.UI): Promise<UIPanelPushResult> {
+        return new Promise<UIPanelPushResult>(async (resolve) => {
+            const newNode: Node = await this._loadPrefab(name);
+            if (newNode != null) {
+                if (layer == UIPanelLayerType.Game) {
+                    newNode.parent = this._gameLayer;
+                    this._gameQueue.push({ name: name, node: newNode });
+                } else if (layer == UIPanelLayerType.UI) {
+                    newNode.parent = this._uiLayer;
+                    this._uiQueue.push({ name: name, node: newNode });
+                } else if (layer == UIPanelLayerType.HUD) {
+                    newNode.parent = this._hudLayer;
+                    this._hudQueue.push({ name: name, node: newNode });
                 }
-                break;
-            }
-        }
-    }
-    public removePanel(name: string) {
-        const nd = this._uiMap.get(name);
-        nd && nd.isValid && nd.destroy();
-        this._uiMap.delete(name);
-    }
-
-    public openPanelToNode(path: string, node: Node): Promise<Node> {
-        return new Promise(async (resolve)=> {
-            const prefab = await this._resourceMgr.LoadABResource(path, Prefab);
-            if (prefab != null) {
-                const nd = instantiate(prefab);
-                nd.setParent(node);
-                resolve(nd);
+                resolve({ success: true, node: newNode });
             } else {
-                resolve(null);
+                resolve({ success: false, node: null });
             }
         });
     }
-
-    public openPanel(name: string): Promise<Node> {
-        return new Promise(async (resolve)=> {
-            if (this._uiRootView == null ||
-                !this._uiRootView.isValid) {
-                resolve(null);
-            }
-            let nd = this._uiMap.get(name);
-            if (nd != null && nd.isValid) {
-    
-            } else {
-                nd = await this._open(name, this._uiRootView);
-            }
-            resolve(nd);
-        });
-    }
-
-    public async openHUDPanel(name: string): Promise<Node> {
-        if (this._hudRootView == null ||
-            !this._hudRootView.isValid) {
-            return;
+    public popPanel(node: Node = null, layer: UIPanelLayerType = UIPanelLayerType.UI) {
+        let currentQueue: UIPanelQueueItem[] = null;
+        if (layer == UIPanelLayerType.Game) {
+            currentQueue = this._gameQueue;
+        } else if (layer == UIPanelLayerType.UI) {
+            currentQueue = this._uiQueue;
+        } else if (layer == UIPanelLayerType.HUD) {
+            currentQueue = this._hudQueue;
         }
-        const nd = await this._open(name, this._hudRootView);
-        return nd;
-    }
-    public closeHUDPanel(node: Node) {
-        for (let i = 0; i < this._hudQueue.length; i++) {
-            if (node == this._hudQueue[i]) {
-                const deleteNode = this._hudQueue.splice(i, 1);
-                deleteNode[0].destroy();
-                break;
+        if (node == null) {
+            if (currentQueue != null && currentQueue.length > 0) {
+                const lastNode: Node = currentQueue.pop().node;
+                lastNode.destroy();
+            }
+        } else {
+            node.destroy();
+            if (currentQueue != null) {
+                for (let i = 0; i < currentQueue.length; i++) {
+                    if (currentQueue[i].node == node) {
+                        currentQueue.splice(i, 1);
+                        break;
+                    }
+                }
             }
         }
     }
+    public panelIsShow(name: string, layer: UIPanelLayerType = UIPanelLayerType.UI): boolean {
+        let currentQueue: UIPanelQueueItem[] = null;
+        if (layer == UIPanelLayerType.Game) {
+            currentQueue = this._gameQueue;
+        } else if (layer == UIPanelLayerType.UI) {
+            currentQueue = this._uiQueue;
+        } else if (layer == UIPanelLayerType.HUD) {
+            currentQueue = this._hudQueue;
+        }
+        let isShow: boolean = false;
+        if (currentQueue != null) {
+            for (const item of currentQueue) {
+                if (item.name == name) {
+                    isShow = true;
+                    break;
+                }
+            }
+        }
+        return isShow;
+    }
+
+    private static _inst: UIPanelManger = null;
+    private _gameLayer: Node = null;
+    private _uiLayer: Node = null;
+    private _hudLayer: Node = null;
+
     private _resourceMgr: ResourcesManager = null;
 
-    private _uiMap: Map<string, Node> = new Map();
-    private _uiRootView: Node = null;
-
-    private _hudRootView: Node = null;
-    private _hudQueue: Node[] = [];
-    public constructor(resourceMgr) {
-        this._resourceMgr = resourceMgr;
+    private _gameQueue: UIPanelQueueItem[] = [];
+    private _uiQueue: UIPanelQueueItem[] = [];
+    private _hudQueue: UIPanelQueueItem[] = [];
+    protected onLoad(): void {
+        this._resourceMgr = ResourcesMgr;
+        UIPanelManger._inst = this;
+        this._gameLayer = this.node.getChildByPath("Canvas/GameContent");
+        this._uiLayer = this.node.getChildByPath("UI_Canvas/UI_ROOT");
+        this._hudLayer = this.node.getChildByPath("UI_Canvas/UIHUD");
     }
 
-    private async _open(name: string, rootView: Node, path: string = "prefab/"): Promise<Node | null> {
-        const prefab = await this._resourceMgr.LoadABResource(path + name, Prefab);
+    private async _loadPrefab(path: string): Promise<Node | null> {
+        let useNode: Node = null;
+        let prefab: Prefab = await this._resourceMgr.LoadABResource(path, Prefab);
         if (prefab != null) {
-            const nd = instantiate(prefab);
-            nd.setParent(rootView);
-            if (rootView == this._uiRootView) {
-                this._uiMap.set(name, nd);
-
-            } else if (rootView == this._hudRootView) {
-                this._hudQueue.push(nd);
-            }
-            return nd;
+            useNode = instantiate(prefab);
         }
-        return null;
+        return useNode;
     }
 }

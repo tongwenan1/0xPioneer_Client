@@ -1,13 +1,14 @@
 import { Label, Node, _decorator } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
-import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../../../Utils/Global";
+import { ItemMgr, LanMgr, UserInfoMgr } from "../../../Utils/Global";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { UIName } from "../../../Const/ConstUIDefine";
 import { RecruitUI } from "../../../UI/Inner/RecruitUI";
 import CommonTools from "../../../Tool/CommonTools";
 import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import { NotificationName } from "../../../Const/Notification";
+import UIPanelManger from "../../../Basic/UIPanelMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -55,9 +56,9 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
                 // UIHUDController.showCenterTip("Recruiting…Please wait…");
                 return;
             }
-            const view = await UIPanelMgr.openPanel(UIName.RecruitUI);
-            if (view != null) {
-                view.getComponent(RecruitUI).refreshUI(true);
+            const result = await UIPanelManger.inst.pushPanel(UIName.RecruitUI);
+            if (result.success) {
+                result.node.getComponent(RecruitUI).refreshUI(true);
             }
         }
     }

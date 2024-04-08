@@ -3,7 +3,7 @@ import { SettlementView } from './View/SettlementView';
 import ArtifactData from '../Model/ArtifactData';
 import { ArtifactItem } from './ArtifactItem';
 import { BackpackItem } from './BackpackItem';
-import { LanMgr, UserInfoMgr, AudioMgr, UIPanelMgr } from '../Utils/Global';
+import { LanMgr, UserInfoMgr, AudioMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import { UIHUDController } from './UIHUDController';
 import NotificationMgr from '../Basic/NotificationMgr';
@@ -12,6 +12,7 @@ import LvlupConfig from '../Config/LvlupConfig';
 import ItemData, { ItemConfigType } from '../Const/Item';
 import { NotificationName } from '../Const/Notification';
 import Config from '../Const/Config';
+import UIPanelManger from '../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfoUI')
@@ -506,7 +507,7 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
 
 
     private onTapClose() {
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
     }
 }
 

@@ -1,7 +1,6 @@
 import { _decorator, Color, Component, instantiate, Label, Layers, Layout, math, Node, ProgressBar, Slider } from 'cc';
-import CommonTools from '../../Tool/CommonTools';
 import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
@@ -9,6 +8,7 @@ import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 import { InnerBuildingType } from '../../Const/BuildingDefine';
 import ItemData from '../../Const/Item';
 import { NotificationName } from '../../Const/Notification';
+import UIPanelManger from '../../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('TransformToEnergyUI')
@@ -157,7 +157,7 @@ export class TransformToEnergyUI extends ViewController {
     //---------------------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
     }
     private onGenerateSlided(event: Event, customEventData: string) {
         const userEnergyInfo = UserInfoMgr.generateEnergyInfo;

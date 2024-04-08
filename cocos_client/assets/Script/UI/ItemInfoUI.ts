@@ -1,10 +1,11 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt } from 'cc';
 import { BackpackItem } from './BackpackItem';
-import { CountMgr, ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
+import { CountMgr, ItemMgr, LanMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import { CountType } from '../Const/Count';
 import ItemConfig from '../Config/ItemConfig';
 import ItemData, { ItemType } from '../Const/Item';
+import UIPanelManger from '../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemInfoUI')
@@ -57,7 +58,7 @@ export class ItemInfoUI extends ViewController {
                 }
             }
         } else {
-            UIPanelMgr.removePanelByNode(this.node);
+            UIPanelManger.inst.popPanel();
             if (closeCallback != null) {
                 closeCallback();
             }
@@ -80,7 +81,7 @@ export class ItemInfoUI extends ViewController {
     private async onTapClose() {
         if (this._items.length <= 0) {
             await this.playExitAnimation();
-            UIPanelMgr.removePanelByNode(this.node);
+            UIPanelManger.inst.popPanel();
             if (this._closeCallback != null) {
                 this._closeCallback();
             }

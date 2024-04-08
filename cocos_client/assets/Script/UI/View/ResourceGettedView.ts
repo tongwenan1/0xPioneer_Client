@@ -1,7 +1,7 @@
 import { _decorator, Component, Details, instantiate, Label, Layout, Node, Tween, tween, UIOpacity, v3 } from "cc";
 import ViewController from "../../BasicView/ViewController";
 import { ResourceCorrespondingItem } from "../../Const/ConstDefine";
-import { ItemMgr, LanMgr, UIPanelMgr } from "../../Utils/Global";
+import { ItemMgr, LanMgr } from "../../Utils/Global";
 import ItemConfig from "../../Config/ItemConfig";
 import ItemData from "../../Const/Item";
 import { UserInnerBuildInfo } from "../../Const/BuildingDefine";

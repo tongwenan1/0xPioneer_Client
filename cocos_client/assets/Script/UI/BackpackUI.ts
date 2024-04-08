@@ -1,12 +1,13 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
 import { BackpackItem } from './BackpackItem';
-import { ItemMgr, LanMgr, UIPanelMgr } from '../Utils/Global';
+import { ItemMgr, LanMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import { ItemInfoUI } from './ItemInfoUI';
 import NotificationMgr from '../Basic/NotificationMgr';
 import ItemData, { ItemArrangeType } from '../Const/Item';
 import { NotificationName } from '../Const/Notification';
+import UIPanelManger from '../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 
@@ -120,15 +121,15 @@ export class BackpackUI extends ViewController {
         this._selectSortMenuShow = false;
         this._refreshMenu();
         await this.playExitAnimation();
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
     }
     private async onTapItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
         if (index < this._itemDatas.length) {
             const itemData = this._itemDatas[index];
-            const view = await UIPanelMgr.openPanel(UIName.ItemInfoUI);
-            if (view != null) {
-                view.getComponent(ItemInfoUI).showItem([itemData]);
+            const result = await UIPanelManger.inst.pushPanel(UIName.ItemInfoUI);
+            if (result.success) {
+                result.node.getComponent(ItemInfoUI).showItem([itemData]);
             }
         }
     }

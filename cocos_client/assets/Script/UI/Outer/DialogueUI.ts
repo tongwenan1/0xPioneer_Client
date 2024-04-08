@@ -1,6 +1,6 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node } from 'cc';
 import { NPCNameLangType } from '../../Const/ConstDefine';
-import { CountMgr, LanMgr, TaskMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { CountMgr, LanMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
 import NotificationMgr from '../../Basic/NotificationMgr';
@@ -8,6 +8,7 @@ import { CountType } from '../../Const/Count';
 import { NotificationName } from '../../Const/Notification';
 import { ItemGettedUI } from '../ItemGettedUI';
 import { TalkConfigData } from '../../Const/Talk';
+import UIPanelManger from '../../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('DialogueUI')
@@ -128,13 +129,13 @@ export class DialogueUI extends ViewController {
         const talkId = this._talk.id;
         if (UserInfoMgr.afterTalkItemGetData.has(talkId)) {
             setTimeout(async () => {
-                if (UIPanelMgr.getPanelIsShow(UIName.CivilizationLevelUpUI) ||
-                    UIPanelMgr.getPanelIsShow(UIName.SecretGuardGettedUI)) {
+                if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI) ||
+                    UIPanelManger.inst.panelIsShow(UIName.SecretGuardGettedUI)) {
                     UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...UserInfoMgr.afterTalkItemGetData.get(talkId));
                 } else {
-                    const view = await UIPanelMgr.openPanel(UIName.ItemGettedUI);
-                    if (view != null) {
-                        view.getComponent(ItemGettedUI).showItem(UserInfoMgr.afterTalkItemGetData.get(talkId));
+                    const result = await UIPanelManger.inst.pushPanel(UIName.ItemGettedUI);
+                    if (result.success) {
+                        result.node.getComponent(ItemGettedUI).showItem(UserInfoMgr.afterTalkItemGetData.get(talkId));
                     }
                 }
                 UserInfoMgr.afterTalkItemGetData.delete(talkId);
@@ -151,7 +152,7 @@ export class DialogueUI extends ViewController {
     private onTapNext() {
         this._dialogStep += 1;
         if (this._dialogStep > this._talk.messsages.length - 1) {
-            UIPanelMgr.removePanelByNode(this.node);
+            UIPanelManger.inst.popPanel();
             this._talkOver();
         } else {
             this._refreshUI();
@@ -173,7 +174,7 @@ export class DialogueUI extends ViewController {
 
         this._dialogStep += 1;
         if (this._dialogStep > this._talk.messsages.length - 1) {
-            UIPanelMgr.removePanelByNode(this.node);
+            UIPanelManger.inst.popPanel();
             this._talkOver();
         } else {
             this._refreshUI();

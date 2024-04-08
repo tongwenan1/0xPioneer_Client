@@ -12,7 +12,6 @@ import tk from "../Manger/TaskMgr";
 import user from "../Manger/UserInfoMgr";
 
 import audio from "../Basic/AudioMgr";
-import uip from "../Basic/UIPanelMgr";
 import res from "../Basic/ResourcesMgr";
 
 const ArtifactMgr = new af();
@@ -30,7 +29,6 @@ const BattleReportsMgr = new br();
 
 const AudioMgr = new audio();
 const ResourcesMgr = new res();
-const UIPanelMgr = new uip(ResourcesMgr);
 
 export {
     // game
@@ -49,6 +47,5 @@ export {
 
     // system
     AudioMgr,
-    UIPanelMgr,
     ResourcesMgr
 };

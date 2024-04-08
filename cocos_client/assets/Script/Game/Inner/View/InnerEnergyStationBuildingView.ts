@@ -1,7 +1,7 @@
 import { Label, Node, _decorator, v3 } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
-import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from "../../../Utils/Global";
+import { ItemMgr, LanMgr, UserInfoMgr } from "../../../Utils/Global";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
@@ -11,6 +11,7 @@ import ItemData from "../../../Const/Item";
 import { NotificationName } from "../../../Const/Notification";
 import { ResourceCorrespondingItem } from "../../../Const/ConstDefine";
 import InnerBuildingConfig from "../../../Config/InnerBuildingConfig";
+import UIPanelManger from "../../../Basic/UIPanelMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -59,9 +60,9 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
             return;
         }
         if (this._building.buildLevel > 0) {
-            const view = await UIPanelMgr.openPanel(UIName.TransformToEnergyUI);
-            if (view != null) {
-                view.getComponent(TransformToEnergyUI).refreshUI(true);
+            const result = await UIPanelManger.inst.pushPanel(UIName.TransformToEnergyUI);
+            if (result.success) {
+                result.node.getComponent(TransformToEnergyUI).refreshUI(true);
             }
         }
     }

@@ -2,7 +2,7 @@ import { Asset, __private, resources, sys } from "cc";
 import { GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
-import { BuildingMgr, CountMgr, ItemMgr, PioneerMgr, TaskMgr, UIPanelMgr } from "../Utils/Global";
+import { BuildingMgr, CountMgr, ItemMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
 import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { UserInfoEvent, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";

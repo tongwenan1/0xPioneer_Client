@@ -1,12 +1,13 @@
 import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt, UIOpacity, instantiate, tween } from 'cc';
 import { ResourceCorrespondingItem } from '../Const/ConstDefine';
-import { ItemMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { ItemMgr, UserInfoMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { UserInfoEvent } from '../Const/UserInfoDefine';
 import LvlupConfig from '../Config/LvlupConfig';
 import { NotificationName } from '../Const/Notification';
+import UIPanelManger from '../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 
@@ -103,7 +104,7 @@ export default class TopUI extends Component implements UserInfoEvent {
 
     //------------------------------------------------ action
     private async onTapPlayerInfo() {
-        await UIPanelMgr.openPanel(UIName.PlayerInfoUI);
+        await UIPanelManger.inst.pushPanel(UIName.PlayerInfoUI);
     }
     //-----------------------------------------------
     // userinfoevent
@@ -118,9 +119,9 @@ export default class TopUI extends Component implements UserInfoEvent {
     async playerLvlupChanged(value: number): Promise<void> {
         const levelConfig = LvlupConfig.getById(value.toString());
         if (levelConfig != null) {
-            const view = await UIPanelMgr.openPanel(UIName.CivilizationLevelUpUI);
-            if (view != null) {
-                view.getComponent(CivilizationLevelUpUI).refreshUI(levelConfig);
+            const result = await UIPanelManger.inst.pushPanel(UIName.CivilizationLevelUpUI);
+            if (result.success) {
+                result.node.getComponent(CivilizationLevelUpUI).refreshUI(levelConfig);
             }
         }
     }

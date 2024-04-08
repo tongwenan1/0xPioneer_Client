@@ -1,10 +1,11 @@
 import { _decorator, Component, Node, instantiate, director, BoxCharacterController, Label, Layout, UITransform, ProgressBar, Button, tween, v3, } from "cc";
-import { LanMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
+import { LanMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TreasureGettedUI } from "./TreasureGettedUI";
 import { UIHUDController } from "./UIHUDController";
 import BoxInfoConfig from "../Config/BoxInfoConfig";
 import { BoxInfoConfigData } from "../Const/BoxInfo";
+import UIPanelManger from "../Basic/UIPanelMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("ClaimRewardUI")
@@ -113,9 +114,9 @@ export class ClaimRewardUI extends Component {
         if (getStatus == 2) {
 
         } else if (getStatus == 1) {
-            const view = await UIPanelMgr.openPanel(UIName.TreasureGettedUI);
-            if (view != null) {
-                view.getComponent(TreasureGettedUI).dialogShow(data, () => {
+            const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);
+            if (result.success) {
+                result.node.getComponent(TreasureGettedUI).dialogShow(data, () => {
                     this.refreshUI();
                 });
             }

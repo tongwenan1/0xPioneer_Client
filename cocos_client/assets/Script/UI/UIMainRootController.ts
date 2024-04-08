@@ -1,27 +1,23 @@
 import { CCBoolean, Component, ImageAsset, _decorator } from "cc";
-import { ItemMgr, UIPanelMgr, UserInfoMgr } from "../Utils/Global";
+import { ItemMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import ViewController from "../BasicView/ViewController";
 import { ECursorStyle, ECursorType } from "../Const/ConstDefine";
 import { MouseCursor } from "./MouseCursor";
 import NotificationMgr from "../Basic/NotificationMgr";
-import ItemData from "../Model/ItemData";
 import { NotificationName } from "../Const/Notification";
 import { DialogueUI } from "./Outer/DialogueUI";
-import TaskConfig from "../Config/TaskConfig";
 import TalkConfig from "../Config/TalkConfig";
+import UIPanelManger from "../Basic/UIPanelMgr";
 
 const { ccclass, property } = _decorator;
 
 
 @ccclass('UIMainRootController')
 export class UIMainRootController extends ViewController {
-    public async showMain() {
-        const view = await UIPanelMgr.openPanel(UIName.MainUI);
-        view?.setSiblingIndex(0);
+    public async checkShowRookieGuide() {
         if (this.canShowRookieGuide && !UserInfoMgr.isFinishRookie) {
-            const rookieView = await UIPanelMgr.openPanel(UIName.RookieGuide);
-            rookieView?.setSiblingIndex(1);
+            await UIPanelManger.inst.pushPanel(UIName.RookieGuide);
         }
     }
 
@@ -35,8 +31,6 @@ export class UIMainRootController extends ViewController {
         super.viewDidLoad();
 
         MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[ECursorType.Common].nativeUrl);
-
-        UIPanelMgr.setUIRootView(this.node);
     }
 
     protected async viewDidStart(): Promise<void> {
@@ -65,9 +59,9 @@ export class UIMainRootController extends ViewController {
         if (talkData == null) {
             return;
         }
-        const dialog = await UIPanelMgr.openPanel(UIName.DialogueUI);
-        if (dialog != null) {
-            dialog.getComponent(DialogueUI).dialogShow(talkData, null);
+        const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
+        if (result.success) {
+            result.node.getComponent(DialogueUI).dialogShow(talkData, null);
         }
     }
 }

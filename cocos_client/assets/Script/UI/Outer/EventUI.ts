@@ -1,5 +1,5 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
-import { BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UIPanelMgr, UserInfoMgr } from '../../Utils/Global';
+import { BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UserInfoMgr } from '../../Utils/Global';
 import { MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
@@ -14,6 +14,7 @@ import ItemConfig from '../../Config/ItemConfig';
 import { NotificationName } from '../../Const/Notification';
 import { ItemGettedUI } from '../ItemGettedUI';
 import Config from '../../Const/Config';
+import UIPanelManger from '../../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -338,9 +339,9 @@ export class EventUI extends ViewController {
             }
             if (hasItem) {
                 this._contentView.active = false;
-                const view = await UIPanelMgr.openPanel(UIName.ItemGettedUI);
-                if (view != null) {
-                    view.getComponent(ItemGettedUI).showItem(itemDatas, () => {
+                const result = await UIPanelManger.inst.pushPanel(UIName.ItemGettedUI);
+                if (result.success) {
+                    result.node.getComponent(ItemGettedUI).showItem(itemDatas, () => {
                         this._contentView.active = true;
                     });
                 }
@@ -394,12 +395,12 @@ export class EventUI extends ViewController {
             // useLanMgr
             UIHUDController.showCenterTip(LanMgr.getLanById("207010"));
             // UIHUDController.showCenterTip("Event Ended");
-            UIPanelMgr.removePanelByNode(this.node);
+            UIPanelManger.inst.popPanel();
         } else {
             const event = EventConfig.getById(eventId);
             if (event != null) {
                 BuildingMgr.changeBuildingEventId(this._eventBuildingId, event.id);
-                UIPanelMgr.removePanelByNode(this.node);
+                UIPanelManger.inst.popPanel();
                 if (this._dealWithNextEvent != null) {
                     this._dealWithNextEvent(event);
                 }

@@ -1,6 +1,6 @@
 import { _decorator, Component, Node } from 'cc';
-import { ItemMgr, LanMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
-import { UIName } from '../Const/ConstUIDefine';
+import { ItemMgr, LanMgr, UserInfoMgr } from '../Utils/Global';
+import { HUDName, UIName } from '../Const/ConstUIDefine';
 import { HUDView } from './View/HUDView';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
@@ -8,40 +8,36 @@ import ItemData from '../Model/ItemData';
 import { ResourceGettedView } from './View/ResourceGettedView';
 import { InnerBuildingType, UserInnerBuildInfo } from '../Const/BuildingDefine';
 import { NotificationName } from '../Const/Notification';
+import UIPanelManger, { UIPanelLayerType } from '../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIHUDController')
 export class UIHUDController extends ViewController {
-    // public static instance() {
-    //     return this._instance;
-    // }
+   
     public static async showCenterTip(tip: string) {
-        const hud = await UIPanelMgr.openHUDPanel(UIName.HUDView);
-        if (hud != null) {
-            hud.getComponent(HUDView).showCenterTip(tip, () => {
-                UIPanelMgr.closeHUDPanel(hud);
-            });
+        const result = await UIPanelManger.inst.pushPanel(HUDName.CommonTip, UIPanelLayerType.HUD);
+        if (result.success) {
+            result.node.getComponent(HUDView).showCenterTip(tip);
         }
     }
 
     public static async showTaskTip(tip: string) {
-        const hud = await UIPanelMgr.openHUDPanel(UIName.HUDView);
-        if (hud != null) {
-            hud.getComponent(HUDView).showTaskTip(tip, () => {
-                UIPanelMgr.closeHUDPanel(hud);
-            });
+        const result = await UIPanelManger.inst.pushPanel(HUDName.CommonTip, UIPanelLayerType.HUD);
+        if (result.success) {
+            result.node.getComponent(HUDView).showTaskTip(tip);
         }
     }
 
-    // private static _instance: UIHUDController;
     private _resourceGettedView: ResourceGettedView = null;
 
     private _resoucesShowItems: (ItemData | UserInnerBuildInfo)[] = [];
     protected async viewDidLoad(): Promise<void> {
         super.viewDidLoad();
-        UIPanelMgr.setHUDRootView(this.node);
 
-        this._resourceGettedView = (await UIPanelMgr.openHUDPanel(UIName.ResourceGettedView)).getComponent(ResourceGettedView);
+        const result = await UIPanelManger.inst.pushPanel(HUDName.ResourceGetted, UIPanelLayerType.HUD);
+        if (result.success) {
+            this._resourceGettedView = result.node.getComponent(ResourceGettedView);
+        }
 
         NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._resourceGetted, this);
         NotificationMgr.addListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
@@ -51,7 +47,7 @@ export class UIHUDController extends ViewController {
     }
 
     protected viewDidStart(): void {
-    
+
     }
 
     protected viewDidDestroy(): void {

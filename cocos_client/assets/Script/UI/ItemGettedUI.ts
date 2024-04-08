@@ -1,9 +1,10 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt } from 'cc';
 import { BackpackItem } from './BackpackItem';
-import { LanMgr, UIPanelMgr } from '../Utils/Global';
+import { LanMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import ItemData, { ItemType } from '../Const/Item';
 import ItemConfig from '../Config/ItemConfig';
+import UIPanelManger from '../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemGettedUI')
@@ -36,7 +37,7 @@ export class ItemGettedUI extends ViewController {
                 itemNode.getChildByPath("Count").getComponent(Label).string = item.count.toString();
             }
         } else {
-            UIPanelMgr.removePanelByNode(this.node);
+            UIPanelManger.inst.popPanel();
             if (closeCallback != null) {
                 closeCallback();
             }
@@ -66,7 +67,7 @@ export class ItemGettedUI extends ViewController {
     //---------------------------------------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
         if (this._closeCallback != null) {
             this._closeCallback();
         }

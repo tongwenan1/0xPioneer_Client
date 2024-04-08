@@ -1,5 +1,5 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node, Vec2 } from 'cc';
-import { LanMgr, PioneerMgr, TaskMgr, UIPanelMgr } from '../Utils/Global';
+import { LanMgr, PioneerMgr, TaskMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
@@ -7,6 +7,7 @@ import TaskModel, { TaskCondition, TaskConditionType, TaskStepModel } from '../C
 import MapPioneerModel, { MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
 import CommonTools from '../Tool/CommonTools';
+import UIPanelManger from '../Basic/UIPanelMgr';
 
 const { ccclass, property } = _decorator;
 
@@ -249,7 +250,7 @@ export class TaskListUI extends ViewController {
     //---------------------------------------------------
     // action
     private onTapClose() {
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
     }
     private onTapShowDetail() {
         if (this._isDetailShow) {

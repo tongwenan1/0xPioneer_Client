@@ -1,7 +1,7 @@
 import { _decorator, Color, Component, Label, Node, Sprite, tween, v3, Animation, ParticleSystem2D } from 'cc';
 import { GetPropRankColor } from '../Const/ConstDefine';
 import ArtifactData from '../Model/ArtifactData';
-import { ArtifactMgr, ItemMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { ArtifactMgr, ItemMgr, UserInfoMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import { ItemSelectFromThreeUI } from './ItemSelectFromThreeUI';
@@ -11,6 +11,7 @@ import ItemConfigDropTool from '../Tool/ItemConfigDropTool';
 import ItemConfig from '../Config/ItemConfig';
 import ItemData, { ItemConfigType } from '../Const/Item';
 import { BoxInfoConfigData } from '../Const/BoxInfo';
+import UIPanelManger from '../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('TreasureGettedUI')
@@ -46,16 +47,16 @@ export class TreasureGettedUI extends ViewController {
             if (drop.type == 2) {
                 // 1/3 select
                 this.scheduleOnce(async () => {
-                    const view = await UIPanelMgr.openPanel(UIName.ItemSelectFromThreeUI);
-                    if (view != null) {
-                        view.getComponent(ItemSelectFromThreeUI).showItem(drop.id, () => {
+                    const result = await UIPanelManger.inst.pushPanel(UIName.ItemSelectFromThreeUI);
+                    if (result.success) {
+                        result.node.getComponent(ItemSelectFromThreeUI).showItem(drop.id, () => {
                             UserInfoMgr.getExplorationReward(box.id);
                             if (gettedCallback) {
                                 gettedCallback();
                             }
                         });
                     }
-                    UIPanelMgr.removePanelByNode(this.node);
+                    UIPanelManger.inst.popPanel();
                 }, (5.5 + 1.1));
             } else {
                 const dropResultProp = ItemConfigDropTool.getItemByDropConfig(drop.id);
@@ -112,7 +113,7 @@ export class TreasureGettedUI extends ViewController {
                                 ArtifactMgr.addArtifact([new ArtifactData(dropResultProp.propId, dropResultProp.num)])
                             }
                             UserInfoMgr.getExplorationReward(box.id);
-                            UIPanelMgr.removePanelByNode(this.node);
+                            UIPanelManger.inst.popPanel();
                             if (gettedCallback) {
                                 gettedCallback();
                             }

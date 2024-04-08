@@ -2,7 +2,7 @@ import { _decorator, Component, Node, Button, SpriteFrame, Sprite, Label, Prefab
 import { TilePos } from '../Game/TiledMap/TileTool';
 import { ClaimRewardUI } from './ClaimRewardUI';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
-import { BattleReportsMgr, BuildingMgr, LanMgr, LocalDataLoader, PioneerMgr, UIPanelMgr, UserInfoMgr } from '../Utils/Global';
+import { BattleReportsMgr, BuildingMgr, LanMgr, LocalDataLoader, PioneerMgr, UserInfoMgr } from '../Utils/Global';
 import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import { UIName } from '../Const/ConstUIDefine';
@@ -14,6 +14,7 @@ import { UserInfoEvent } from '../Const/UserInfoDefine';
 import { NotificationName } from '../Const/Notification';
 import Config from '../Const/Config';
 import { MapMemberFactionType } from '../Const/ConstDefine';
+import UIPanelManger from '../Basic/UIPanelMgr';
 
 const { ccclass, property } = _decorator;
 
@@ -58,11 +59,11 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         }
 
         this.backpackBtn.node.on(Button.EventType.CLICK, async () => {
-            await UIPanelMgr.openPanel(UIName.Backpack);
+            await UIPanelManger.inst.pushPanel(UIName.Backpack);
         }, this);
 
         this.artifactBtn.node.on(Button.EventType.CLICK, async () => {
-            await UIPanelMgr.openPanel(UIName.Artifact);
+            await UIPanelManger.inst.pushPanel(UIName.Artifact);
         }, this);
     }
 
@@ -107,18 +108,18 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         if (currentData != null) {
             const beginLevel = parseInt(currentData.split("|")[0]);
             const endLevel = parseInt(currentData.split("|")[1]);
-            const view = await UIPanelMgr.openPanel(UIName.NewSettlementUI);
-            if (view != null) {
-                view.getComponent(NewSettlementUI).refreshUI(beginLevel, endLevel);
+            const result = await UIPanelManger.inst.pushPanel(UIName.NewSettlementUI);
+            if (result.success) {
+                result.node.getComponent(NewSettlementUI).refreshUI(beginLevel, endLevel);
             }
             localStorage.removeItem("local_newSettle");
             this._refreshSettlememntTip();
         }
     }
     private async onTapTaskList() {
-        const view = await UIPanelMgr.openPanel(UIName.TaskListUI);
-        if (view != null) {
-            view.getComponent(TaskListUI).refreshUI();
+        const result = await UIPanelManger.inst.pushPanel(UIName.TaskListUI);
+        if (result.success) {
+            result.node.getComponent(TaskListUI).refreshUI();
         }
     }
 

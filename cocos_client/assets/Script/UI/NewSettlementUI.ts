@@ -1,9 +1,10 @@
 import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
 import { SettlementView } from './View/SettlementView';
-import { LanMgr, UIPanelMgr } from '../Utils/Global';
+import { LanMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
+import UIPanelManger from '../Basic/UIPanelMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('NewSettlementUI')
@@ -40,7 +41,7 @@ export class NewSettlementUI extends ViewController {
     //----------------------------------------------------------------------
     // action
     private onTapClose() {
-        UIPanelMgr.removePanelByNode(this.node);
+        UIPanelManger.inst.popPanel();
     }
 }
 
