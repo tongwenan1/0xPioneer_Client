@@ -15,6 +15,7 @@ import { NotificationName } from '../Const/Notification';
 import Config from '../Const/Config';
 import { MapMemberFactionType } from '../Const/ConstDefine';
 import UIPanelManger from '../Basic/UIPanelMgr';
+import GameMainHelper from '../Game/Helper/GameMainHelper';
 
 const { ccclass, property } = _decorator;
 
@@ -33,7 +34,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        this._gangsterComingTipView = this.node.getChildByName("GangsterTipView");
+        this._gangsterComingTipView = this.node.getChildByPath("CommonContent/GangsterTipView");
         this._gangsterComingTipView.active = false;
 
         PioneerMgr.addObserver(this);
@@ -41,16 +42,19 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
 
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
         NotificationMgr.addListener(NotificationName.CHOOSE_GANGSTER_ROUTE, this._refreshInnerOuterChange, this);
+        NotificationMgr.addListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
+        NotificationMgr.addListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onInnerOuterChanged, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, this._onPioneerShowHideCountChanged, this);
     }
 
     protected async viewDidStart(): Promise<void> {
         super.viewDidStart();
 
-        this._claimRewardUI = this.node.getChildByName("reward_ui").getComponent(ClaimRewardUI);
+        this._claimRewardUI = this.node.getChildByPath("CommonContent/reward_ui").getComponent(ClaimRewardUI);
 
         this._refreshSettlememntTip();
         this._refreshInnerOuterChange();
+        this._onInnerOuterChanged();
         this.changeLang();
 
         const bigGanster = PioneerMgr.getPioneerById("gangster_3");
@@ -75,19 +79,21 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.changeLang, this);
         NotificationMgr.removeListener(NotificationName.CHOOSE_GANGSTER_ROUTE, this._refreshInnerOuterChange, this);
+        NotificationMgr.removeListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
+        NotificationMgr.removeListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onInnerOuterChanged, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, this._onPioneerShowHideCountChanged, this);
     }
 
     changeLang(): void {
         // useLanMgr
-        // this.node.getChildByPath("LeftNode/title").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByPath("icon_treasure_box/Label").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByPath("icon_artifact/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("CommonContent/LeftNode/title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("CommonContent/icon_treasure_box/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("CommonContent/icon_artifact/Label").getComponent(Label).string = LanMgr.getLanById("107549");
     }
 
     private _refreshSettlememntTip() {
         const newSettle = localStorage.getItem("local_newSettle");
-        const view = this.node.getChildByName("NewSettlementTipView");
+        const view = this.node.getChildByPath("CommonContent/NewSettlementTipView");
         view.active = newSettle != null;
     }
     private _refreshInnerOuterChange() {
@@ -96,11 +102,7 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         if (building != null && building.faction == MapMemberFactionType.enemy) {
             isEnemy = true;
         }
-        this.node.getChildByName("InnerOutChangeBtnBg").active = !isEnemy;
-    }
-
-    onBuliClick() {
-
+        this.node.getChildByPath("CommonContent/InnerOutChangeBtnBg").active = !isEnemy;
     }
 
     private async onTapNewSettlementTip() {
@@ -121,6 +123,9 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         if (result.success) {
             result.node.getComponent(TaskListUI).refreshUI();
         }
+    }
+    private onTapChangeBuildingSetPos() {
+        GameMainHelper.instance.changeInnerBuildingLatticeEdit();
     }
 
     private checkCanShowGansterComingTip(pioneerId: string) {
@@ -238,6 +243,15 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.replaceLanById("200003", [this.secondsToTime(pioneer.showHideStruct.countTime)]);
         }
+    }
+
+    private _onInnerBuildingLatticeEditChanged() {
+        const edit: boolean = GameMainHelper.instance.isEditInnerBuildingLattice;
+        this.node.getChildByPath("CommonContent").active = !edit;
+    }
+    private _onInnerOuterChanged() {
+        const isOuter: boolean = GameMainHelper.instance.isGameShowOuter;
+        this.node.getChildByPath("btnBuild").active = !isOuter;
     }
 }
 

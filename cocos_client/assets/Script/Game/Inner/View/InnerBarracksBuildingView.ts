@@ -15,8 +15,8 @@ const { ccclass, property } = _decorator;
 @ccclass('InnerBarracksBuildingView')
 export class InnerBarracksBuildingView extends InnerBuildingView {
 
-    public async refreshUI(building: UserInnerBuildInfo) {
-        await super.refreshUI(building);
+    public async refreshUI(building: UserInnerBuildInfo, canAction: boolean = true) {
+        await super.refreshUI(building, canAction);
 
         this._countingGenerate();
     }

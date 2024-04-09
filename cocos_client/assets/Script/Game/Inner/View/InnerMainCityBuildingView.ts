@@ -16,8 +16,8 @@ const { ccclass, property } = _decorator;
 @ccclass('InnerMainCityBuildingView')
 export class InnerMainCityBuildingView extends InnerBuildingView {
 
-    public async refreshUI(building: UserInnerBuildInfo) {
-        await super.refreshUI(building);
+    public async refreshUI(building: UserInnerBuildInfo, canAction: boolean = true) {
+        await super.refreshUI(building, canAction);
 
         if (this._buildingSize != null) {
             this._buildingUpView.position = v3(0, this._buildingSize.height, 0);

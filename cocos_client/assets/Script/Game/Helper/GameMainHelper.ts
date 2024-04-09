@@ -247,12 +247,18 @@ export default class GameMainHelper {
     //------------------------------------------ eventWaitAction
     public get isTapEventWaited(): boolean {
         return this._isTapEventWaited;
-    }   
+    }
     public set isTapEventWaited(value: boolean) {
         this._isTapEventWaited = value;
     }
-
-
+    //------------------------------------------ BuildingLattice
+    public get isEditInnerBuildingLattice(): boolean {
+        return this._isEditInnerBuildingLattice;
+    }
+    public changeInnerBuildingLatticeEdit() {
+        this._isEditInnerBuildingLattice = !this._isEditInnerBuildingLattice;
+        NotificationMgr.triggerEvent(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED);
+    }
 
 
     private static _instance: GameMainHelper;
@@ -266,6 +272,9 @@ export default class GameMainHelper {
     private _isTapEventWaited: boolean = false;
 
     private _tiledMapHelper: TileMapHelper = null;
+
+
+    private _isEditInnerBuildingLattice: boolean = false;
     public constructor() {
 
     }

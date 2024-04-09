@@ -80,6 +80,14 @@ export default class UserInfoMgr {
             });
         }
     }
+    public changeBuildingLatticeBeginIndex(buildingType: InnerBuildingType, beginIndex: number) {
+        const buildInfo = this._innerBuilds.get(buildingType);
+        if (buildInfo != null) {
+            buildInfo.buildBeginLatticeIndex = beginIndex;
+            this._localJsonData.innerBuildData[buildingType] = buildInfo;
+            this._localDataChanged(this._localJsonData);
+        }
+    }
     public getExplorationReward(boxId: string) {
         this._gettedExplorationRewardIds.push(boxId);
         this._localJsonData.playerData.gettedExplorationRewardIds = this._gettedExplorationRewardIds;
@@ -426,6 +434,7 @@ export default class UserInfoMgr {
             const buildingInfo = InnerBuildingConfig.getConfs();
             for (const key in buildingInfo) {
                 this._localJsonData.innerBuildData[key] = {
+                    buildBeginLatticeIndex: null,
                     buildType: buildingInfo[key].id,
                     buildLevel: 0,
                     upgradeCountTime: 0,
@@ -458,6 +467,7 @@ export default class UserInfoMgr {
         this._innerBuilds = new Map();
         for (let id in this._localJsonData.innerBuildData) {
             const innerBuildInfo: UserInnerBuildInfo = new UserInnerBuildInfo();
+            innerBuildInfo.buildBeginLatticeIndex = this._localJsonData.innerBuildData[id].buildBeginLatticeIndex;
             innerBuildInfo.buildType = this._localJsonData.innerBuildData[id].buildType;
             innerBuildInfo.buildLevel = this._localJsonData.innerBuildData[id].buildLevel;
             innerBuildInfo.upgradeCountTime = this._localJsonData.innerBuildData[id].upgradeCountTime;

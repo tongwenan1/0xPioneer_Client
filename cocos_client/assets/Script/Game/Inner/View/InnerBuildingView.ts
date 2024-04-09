@@ -1,4 +1,4 @@
-import { _decorator, CCInteger, Component, instantiate, Node, Prefab, size, Size, UITransform, v3, Vec3 } from 'cc';
+import { _decorator, Button, CCInteger, Component, instantiate, Node, Prefab, size, Size, UITransform, v3, Vec3 } from 'cc';
 import ViewController from '../../../BasicView/ViewController';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import NotificationMgr from '../../../Basic/NotificationMgr';
@@ -12,7 +12,7 @@ const { ccclass, property } = _decorator;
 @ccclass('InnerBuildingView')
 export class InnerBuildingView extends ViewController {
 
-    public async refreshUI(building: UserInnerBuildInfo) {
+    public async refreshUI(building: UserInnerBuildInfo, canAction: boolean = true) {
         if (building == null) {
             return;
         }
@@ -89,6 +89,9 @@ export class InnerBuildingView extends ViewController {
         } else {
             this._buildingAnim.active = false;
         }
+
+        // can action
+        this.node.getChildByPath("clickNode").getComponent(Button).interactable = canAction;
     }
 
     @property(Prefab)

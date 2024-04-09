@@ -1,3 +1,4 @@
+import { Node } from "cc";
 import { MapMemberFactionType, ResourceData } from "./ConstDefine";
 
 export enum MapBuildingType {
@@ -32,6 +33,7 @@ export enum InnerBuildingType {
 }
 
 export class UserInnerBuildInfo {
+    buildBeginLatticeIndex: number;
     buildType: InnerBuildingType;
     buildLevel: number;
     upgradeCountTime: number;
@@ -50,7 +52,8 @@ export interface ConfigInnerBuildingData {
     lvlup_cost: string,
     lvlup_time: string,
     prefab: string,
-    desc: string
+    desc: string,
+    size: number
 }
 
 export interface ConfigInnerBuildingLevelUpData {
@@ -85,4 +88,16 @@ export interface InnerBuildingPsycData {
     output: number,
     storage: number,
     convert: ResourceData[]
+}
+
+export enum InnerBuildingLatticeShowType {
+    None,
+    Error,
+    Clean
+}
+export interface InnerBuildingLatticeStruct {
+    node: Node,
+    isEmpty: boolean,
+    showType: InnerBuildingLatticeShowType,
+    stayBuilding: Node
 }

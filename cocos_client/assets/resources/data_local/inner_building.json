@@ -10,7 +10,8 @@
     "lvlup_cost": "cost_main",
     "lvlup_time": "lvlup_time",
     "prefab": "prefab_main",
-    "desc": "desc_main"
+    "desc": "desc_main",
+    "size": 2
   },
   "30002": {
     "id": "30002",
@@ -23,7 +24,8 @@
     "lvlup_cost": "cost_barr",
     "lvlup_time": "lvlup_time",
     "prefab": "prefab_barr",
-    "desc": "desc_barr"
+    "desc": "desc_barr",
+    "size": 1
   },
   "30003": {
     "id": "30003",
@@ -36,7 +38,8 @@
     "lvlup_cost": "cost_barr",
     "lvlup_time": "lvlup_time",
     "prefab": "prefab_house",
-    "desc": "desc_house"
+    "desc": "desc_house",
+    "size": 1
   },
   "30004": {
     "id": "30004",
@@ -49,6 +52,7 @@
     "lvlup_cost": "cost_barr",
     "lvlup_time": "lvlup_time",
     "prefab": "prefab_energy",
-    "desc": "desc_energy"
+    "desc": "desc_energy",
+    "size": 1
   }
 }

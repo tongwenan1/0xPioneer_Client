@@ -150,13 +150,13 @@ export class OuterTiledMapActionController extends ViewController {
             if (Config.canSaveLocalData) {
                 localStorage.setItem("local_outer_map_scale", zoom.toString());
             }
-            this._fixCameraPos(GameMainHelper.instance.gameCameraPosition);
+            this._fixCameraPos(GameMainHelper.instance.gameCameraPosition.clone());
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {
             GameMainHelper.instance.changeCursor(ECursorType.Common);
             if (this._mouseDown) {
-                let pos = GameMainHelper.instance.gameCameraPosition.add(new Vec3(-event.movementX, event.movementY, 0));
+                let pos = GameMainHelper.instance.gameCameraPosition.clone().add(new Vec3(-event.movementX, event.movementY, 0));
                 this._fixCameraPos(pos);
 
             } else {
