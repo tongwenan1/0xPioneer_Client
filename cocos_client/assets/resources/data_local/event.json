@@ -1,0 +1,2023 @@
+{
+  "910101": {
+    "id": "910101",
+    "type": 1,
+    "result": "910102",
+    "text": "310101",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": [
+      [
+        "building_17",
+        1
+      ]
+    ]
+  },
+  "910102": {
+    "id": "910102",
+    "type": 3,
+    "result": "",
+    "text": "310102",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "gangster_2",
+    "enemy_result": [
+      "910103",
+      "910104"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": [
+      [
+        "building_17",
+        1
+      ]
+    ]
+  },
+  "910103": {
+    "id": "910103",
+    "type": 2,
+    "result": "",
+    "text": "310103",
+    "select": [
+      "910105",
+      "910106"
+    ],
+    "select_txt": [
+      "310401",
+      "310408"
+    ],
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": [
+      [
+        "building_17",
+        1
+      ]
+    ]
+  },
+  "910104": {
+    "id": "910104",
+    "type": 1,
+    "result": "-1",
+    "text": "310104",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": [
+      [
+        "building_17",
+        1
+      ]
+    ]
+  },
+  "910105": {
+    "id": "910105",
+    "type": 1,
+    "result": "910107",
+    "text": "310105",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": [
+      [
+        "building_17",
+        1
+      ]
+    ]
+  },
+  "910106": {
+    "id": "910106",
+    "type": 1,
+    "result": "910109",
+    "text": "310106",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": [
+      [
+        "building_17",
+        1
+      ]
+    ]
+  },
+  "910107": {
+    "id": "910107",
+    "type": 5,
+    "result": "910108",
+    "text": "310107",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": [
+      [
+        -1,
+        1,
+        1,
+        20
+      ]
+    ],
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": [
+      [
+        "building_17",
+        1
+      ]
+    ]
+  },
+  "910108": {
+    "id": "910108",
+    "type": 4,
+    "result": "910112",
+    "text": "310108",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "8002",
+        20
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910109": {
+    "id": "910109",
+    "type": 3,
+    "result": "",
+    "text": "310109",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "gangster_2",
+    "enemy_result": [
+      "910110",
+      "910111"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910110": {
+    "id": "910110",
+    "type": 4,
+    "result": "910112",
+    "text": "310110",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "8002",
+        20
+      ],
+      [
+        1,
+        "8003",
+        20
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910111": {
+    "id": "910111",
+    "type": 1,
+    "result": "-1",
+    "text": "310111",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910112": {
+    "id": "910112",
+    "type": 3,
+    "result": "",
+    "text": "310112",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "gangster_2",
+    "enemy_result": [
+      "910113",
+      "910114"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910113": {
+    "id": "910113",
+    "type": 4,
+    "result": "-1",
+    "text": "310113",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "5",
+        1
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910114": {
+    "id": "910114",
+    "type": 1,
+    "result": "-1",
+    "text": "310114",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910201": {
+    "id": "910201",
+    "type": 2,
+    "result": "",
+    "text": "310201",
+    "select": [
+      "910202",
+      "910209"
+    ],
+    "select_txt": [
+      "310402",
+      "310409"
+    ],
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910202": {
+    "id": "910202",
+    "type": 1,
+    "result": "910203",
+    "text": "310202",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910203": {
+    "id": "910203",
+    "type": 2,
+    "result": "",
+    "text": "310203",
+    "select": [
+      "910204",
+      "910207"
+    ],
+    "select_txt": [
+      "310403",
+      "310410"
+    ],
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910204": {
+    "id": "910204",
+    "type": 3,
+    "result": "",
+    "text": "310204",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "gangster_2",
+    "enemy_result": [
+      "910205",
+      "910206"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910205": {
+    "id": "910205",
+    "type": 4,
+    "result": "910215",
+    "text": "310205",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "18",
+        1
+      ],
+      [
+        1,
+        "8003",
+        20
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910206": {
+    "id": "910206",
+    "type": 1,
+    "result": "-1",
+    "text": "310206",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910207": {
+    "id": "910207",
+    "type": 1,
+    "result": "910208",
+    "text": "310207",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910208": {
+    "id": "910208",
+    "type": 1,
+    "result": "910215",
+    "text": "310208",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910209": {
+    "id": "910209",
+    "type": 2,
+    "result": "",
+    "text": "310209",
+    "select": [
+      "910210",
+      "910211"
+    ],
+    "select_txt": [
+      "310404",
+      "310411"
+    ],
+    "select_cond": [
+      [
+        1,
+        "8002",
+        50
+      ],
+      []
+    ],
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910210": {
+    "id": "910210",
+    "type": 4,
+    "result": "910212",
+    "text": "310210",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": [
+      [
+        1,
+        "8002",
+        50
+      ]
+    ],
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910211": {
+    "id": "910211",
+    "type": 5,
+    "result": "910212",
+    "text": "310211",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": [
+      [
+        -1,
+        1,
+        1,
+        -50
+      ]
+    ],
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910212": {
+    "id": "910212",
+    "type": 3,
+    "result": "",
+    "text": "310212",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "gangster_2",
+    "enemy_result": [
+      "910213",
+      "910214"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910213": {
+    "id": "910213",
+    "type": 4,
+    "result": "910215",
+    "text": "310213",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "18",
+        1
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910214": {
+    "id": "910214",
+    "type": 1,
+    "result": "-1",
+    "text": "310214",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910215": {
+    "id": "910215",
+    "type": 1,
+    "result": "910216",
+    "text": "310215",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910216": {
+    "id": "910216",
+    "type": 2,
+    "result": "",
+    "text": "310216",
+    "select": [
+      "910217",
+      "910218"
+    ],
+    "select_txt": [
+      "310405",
+      "310412"
+    ],
+    "select_cond": [
+      [
+        1,
+        "18",
+        1
+      ],
+      []
+    ],
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910217": {
+    "id": "910217",
+    "type": 4,
+    "result": "-1",
+    "text": "310217",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": [
+      [
+        1,
+        "18",
+        1
+      ]
+    ],
+    "reward": [
+      [
+        1,
+        "8002",
+        100
+      ],
+      [
+        1,
+        "8003",
+        100
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910218": {
+    "id": "910218",
+    "type": 4,
+    "result": "-1",
+    "text": "310218",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "8003",
+        50
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910301": {
+    "id": "910301",
+    "type": 3,
+    "result": "",
+    "text": "310301",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "gangster_2",
+    "enemy_result": [
+      "910302",
+      "910303"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910302": {
+    "id": "910302",
+    "type": 2,
+    "result": "",
+    "text": "310302",
+    "select": [
+      "910304",
+      "910305"
+    ],
+    "select_txt": [
+      "310406",
+      "310413"
+    ],
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910303": {
+    "id": "910303",
+    "type": 1,
+    "result": "-1",
+    "text": "310303",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910304": {
+    "id": "910304",
+    "type": 4,
+    "result": "-1",
+    "text": "310304",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "8003",
+        30
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910305": {
+    "id": "910305",
+    "type": 2,
+    "result": "",
+    "text": "310305",
+    "select": [
+      "910306",
+      "910308"
+    ],
+    "select_txt": [
+      "310407",
+      "310414"
+    ],
+    "select_cond": [
+      [
+        1,
+        "8003",
+        50
+      ],
+      []
+    ],
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910306": {
+    "id": "910306",
+    "type": 4,
+    "result": "910307",
+    "text": "310306",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": [
+      [
+        1,
+        "8003",
+        50
+      ]
+    ],
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910307": {
+    "id": "910307",
+    "type": 4,
+    "result": "-1",
+    "text": "310307",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "8005",
+        100
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910308": {
+    "id": "910308",
+    "type": 4,
+    "result": "-1",
+    "text": "310308",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "8005",
+        40
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910401": {
+    "id": "910401",
+    "type": 3,
+    "result": "",
+    "text": "310309",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "104001",
+    "enemy_result": [
+      "910402",
+      "910403"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910402": {
+    "id": "910402",
+    "type": 1,
+    "result": "910404",
+    "text": "310310",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910403": {
+    "id": "910403",
+    "type": 1,
+    "result": "-2",
+    "text": "310311",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910404": {
+    "id": "910404",
+    "type": 2,
+    "result": "",
+    "text": "310312",
+    "select": [
+      "910405",
+      "910411"
+    ],
+    "select_txt": [
+      "310415",
+      "310420"
+    ],
+    "select_cond": [
+      [
+        1,
+        "19",
+        1
+      ],
+      []
+    ],
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910405": {
+    "id": "910405",
+    "type": 1,
+    "result": "910406",
+    "text": "310313",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910406": {
+    "id": "910406",
+    "type": 2,
+    "result": "",
+    "text": "310314",
+    "select": [
+      "910407",
+      "910408"
+    ],
+    "select_txt": [
+      "310416",
+      "310421"
+    ],
+    "select_cond": [
+      [],
+      [
+        1,
+        "8005",
+        100
+      ]
+    ],
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910407": {
+    "id": "910407",
+    "type": 1,
+    "result": "910409",
+    "text": "310315",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910408": {
+    "id": "910408",
+    "type": 4,
+    "result": "910410",
+    "text": "310316",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": [
+      [
+        1,
+        "8005",
+        100
+      ]
+    ],
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910409": {
+    "id": "910409",
+    "type": 4,
+    "result": "-1",
+    "text": "310317",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        4,
+        "7009",
+        1
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910410": {
+    "id": "910410",
+    "type": 1,
+    "result": "-1",
+    "text": "310318",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910411": {
+    "id": "910411",
+    "type": 3,
+    "result": "",
+    "text": "310319",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "104002",
+    "enemy_result": [
+      "910413",
+      "910412"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910412": {
+    "id": "910412",
+    "type": 1,
+    "result": "-2",
+    "text": "310320",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910413": {
+    "id": "910413",
+    "type": 1,
+    "result": "910414",
+    "text": "310321",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910414": {
+    "id": "910414",
+    "type": 4,
+    "result": "910415",
+    "text": "310322",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        4,
+        "7009",
+        1
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910415": {
+    "id": "910415",
+    "type": 1,
+    "result": "-1",
+    "text": "310323",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910501": {
+    "id": "910501",
+    "type": 3,
+    "result": "",
+    "text": "310324",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "104004",
+    "enemy_result": [
+      "910502",
+      "910515"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910502": {
+    "id": "910502",
+    "type": 2,
+    "result": "",
+    "text": "310325",
+    "select": [
+      "910503",
+      "910507"
+    ],
+    "select_txt": [
+      "310417",
+      "310422"
+    ],
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910503": {
+    "id": "910503",
+    "type": 1,
+    "result": "910504",
+    "text": "310326",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910504": {
+    "id": "910504",
+    "type": 3,
+    "result": "",
+    "text": "310327",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "104005",
+    "enemy_result": [
+      "910505",
+      "910506"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910505": {
+    "id": "910505",
+    "type": 4,
+    "result": "-1",
+    "text": "310328",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "8005",
+        30
+      ],
+      [
+        1,
+        "8003",
+        100
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910506": {
+    "id": "910506",
+    "type": 1,
+    "result": "-1",
+    "text": "310329",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910507": {
+    "id": "910507",
+    "type": 1,
+    "result": "910508",
+    "text": "310330",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910508": {
+    "id": "910508",
+    "type": 4,
+    "result": "910509",
+    "text": "310331",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        1,
+        "8001",
+        30
+      ],
+      [
+        1,
+        "8002",
+        30
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910509": {
+    "id": "910509",
+    "type": 2,
+    "result": "",
+    "text": "310332",
+    "select": [
+      "910510",
+      "910511",
+      "910512"
+    ],
+    "select_txt": [
+      "310418",
+      "310423",
+      "310425"
+    ],
+    "select_cond": [
+      [],
+      [
+        1,
+        "8001",
+        50
+      ],
+      [
+        1,
+        "8001",
+        100
+      ]
+    ],
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910510": {
+    "id": "910510",
+    "type": 1,
+    "result": "-1",
+    "text": "310333",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910511": {
+    "id": "910511",
+    "type": 4,
+    "result": "-1",
+    "text": "310334",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": [
+      [
+        1,
+        "8001",
+        50
+      ]
+    ],
+    "reward": [
+      [
+        1,
+        "8001",
+        200
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910512": {
+    "id": "910512",
+    "type": 4,
+    "result": "910516",
+    "text": "310335",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": [
+      [
+        1,
+        "8001",
+        100
+      ]
+    ],
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910513": {
+    "id": "910513",
+    "type": 4,
+    "result": "-1",
+    "text": "310336",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        4,
+        "7003",
+        1
+      ],
+      [
+        1,
+        "8001",
+        300
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910514": {
+    "id": "910514",
+    "type": 1,
+    "result": "-1",
+    "text": "310337",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910515": {
+    "id": "910515",
+    "type": 1,
+    "result": "-2",
+    "text": "310338",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910516": {
+    "id": "910516",
+    "type": 3,
+    "result": "",
+    "text": "310339",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "104006",
+    "enemy_result": [
+      "910513",
+      "910514"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910601": {
+    "id": "910601",
+    "type": 1,
+    "result": "910602",
+    "text": "310340",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910602": {
+    "id": "910602",
+    "type": 2,
+    "result": "",
+    "text": "310341",
+    "select": [
+      "910603",
+      "910604"
+    ],
+    "select_txt": [
+      "310419",
+      "310424"
+    ],
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910603": {
+    "id": "910603",
+    "type": 2,
+    "result": "",
+    "text": "310342",
+    "select": [
+      "910606",
+      "910605"
+    ],
+    "select_txt": [
+      "310419",
+      "310424"
+    ],
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910604": {
+    "id": "910604",
+    "type": 2,
+    "result": "",
+    "text": "310343",
+    "select": [
+      "910612",
+      "910607"
+    ],
+    "select_txt": [
+      "310419",
+      "310424"
+    ],
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910605": {
+    "id": "910605",
+    "type": 1,
+    "result": "910602",
+    "text": "310344",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910606": {
+    "id": "910606",
+    "type": 2,
+    "result": "",
+    "text": "310345",
+    "select": [
+      "910609",
+      "910608"
+    ],
+    "select_txt": [
+      "310419",
+      "310424"
+    ],
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910607": {
+    "id": "910607",
+    "type": 2,
+    "result": "",
+    "text": "310346",
+    "select": [
+      "910613",
+      "910614"
+    ],
+    "select_txt": [
+      "310419",
+      "310424"
+    ],
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910608": {
+    "id": "910608",
+    "type": 1,
+    "result": "910602",
+    "text": "310347",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910609": {
+    "id": "910609",
+    "type": 3,
+    "result": "",
+    "text": "310348",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "104007",
+    "enemy_result": [
+      "910610",
+      "910611"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910610": {
+    "id": "910610",
+    "type": 4,
+    "result": "-1",
+    "text": "310349",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": [
+      [
+        4,
+        "7001",
+        1
+      ],
+      [
+        1,
+        "8003",
+        200
+      ]
+    ],
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910611": {
+    "id": "910611",
+    "type": 1,
+    "result": "-2",
+    "text": "310350",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 0,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910612": {
+    "id": "910612",
+    "type": 1,
+    "result": "910602",
+    "text": "310351",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910613": {
+    "id": "910613",
+    "type": 1,
+    "result": "910602",
+    "text": "310352",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "",
+    "enemy_result": null,
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  },
+  "910614": {
+    "id": "910614",
+    "type": 3,
+    "result": "",
+    "text": "310353",
+    "select": null,
+    "select_txt": null,
+    "select_cond": null,
+    "enemy": "104007",
+    "enemy_result": [
+      "910610",
+      "910611"
+    ],
+    "cost": null,
+    "reward": null,
+    "change": null,
+    "judge": null,
+    "judge_result": null,
+    "wait_time": 5,
+    "map_pioneer_unlock": null,
+    "map_building_refresh": null
+  }
+}
