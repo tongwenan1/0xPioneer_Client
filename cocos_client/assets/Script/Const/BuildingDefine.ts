@@ -30,6 +30,7 @@ export enum InnerBuildingType {
     Barrack = "30002",
     House = "30003",
     EnergyStation = "30004",
+    ArtifactStore = "30005",
 }
 
 export class UserInnerBuildInfo {
@@ -96,6 +97,7 @@ export enum InnerBuildingLatticeShowType {
     Clean
 }
 export interface InnerBuildingLatticeStruct {
+    routerIndex: number,
     node: Node,
     isEmpty: boolean,
     showType: InnerBuildingLatticeShowType,

@@ -58,15 +58,15 @@
   "30005": {
     "id": "30005",
     "name": "120005",
-    "anim": "",
+    "anim": "ArtifactStore",
     "unlock": 1,
     "maxlevel": 10,
     "lvlup_progress": "progress",
     "lvlup_exp": "exp",
     "lvlup_cost": "cost_barr",
     "lvlup_time": "lvlup_time",
-    "prefab": "",
-    "desc": "",
+    "prefab": "prefab_energy",
+    "desc": "desc_energy",
     "size": 2
   }
 }

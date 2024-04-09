@@ -2,7 +2,7 @@ import { _decorator, Button, CCInteger, Component, instantiate, Node, Prefab, si
 import ViewController from '../../../BasicView/ViewController';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import NotificationMgr from '../../../Basic/NotificationMgr';
-import { UserInnerBuildInfo } from '../../../Const/BuildingDefine';
+import { InnerBuildingType, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
 import { ResourcesMgr } from '../../../Utils/Global';
 import InnerBuildingLvlUpConfig from '../../../Config/InnerBuildingLvlUpConfig';
 import InnerBuildingConfig from '../../../Config/InnerBuildingConfig';
@@ -163,6 +163,9 @@ export class InnerBuildingView extends ViewController {
     private onTapBuilding() {
         if (this._building == null) {
             return;
+        }
+        if (this._building.buildType == InnerBuildingType.ArtifactStore) {
+            
         }
         this.innerBuildingTaped();
     }

@@ -79,6 +79,7 @@ export class InnerBuildingController extends ViewController {
             this._latticeContents.push(item);
             for (const lattice of item.children) {
                 this._allLatticeItems.push({
+                    routerIndex: i,
                     node: lattice,
                     isEmpty: true,
                     showType: InnerBuildingLatticeShowType.None,
@@ -113,7 +114,24 @@ export class InnerBuildingController extends ViewController {
                         for (let i = 0; i < size; i++) {
                             let beginIndex: number = innerBuilding.get(key).buildBeginLatticeIndex;
                             if (beginIndex == null) {
-                                beginIndex = index;
+                                let inSameRouter: boolean = true;
+                                let beginRouter: number = this._allLatticeItems[index].routerIndex;
+                                for (let j = 1; j < size; j++) {
+                                    if (beginRouter != this._allLatticeItems[index + j].routerIndex) {
+                                        inSameRouter = false;
+                                        break;
+                                    }
+                                }
+                                if (inSameRouter) {
+                                    beginIndex = index;
+                                } else {
+                                    for (const templeItem of this._allLatticeItems) {
+                                        if (templeItem.routerIndex == beginRouter + 1) {
+                                            beginIndex = this._allLatticeItems.indexOf(templeItem);
+                                            break;
+                                        }
+                                    }
+                                }
                                 UserInfoMgr.changeBuildingLatticeBeginIndex(key, beginIndex);
                             }
                             if (beginIndex + i < this._allLatticeItems.length) {
@@ -229,14 +247,21 @@ export class InnerBuildingController extends ViewController {
                 i--;
             }
         }
+        // delete the same element
+        currentUseItems = currentUseItems.reduce((accumulator: InnerBuildingLatticeStruct[], current: InnerBuildingLatticeStruct) => {
+            if (!accumulator.some(temple => temple == current)) {
+                accumulator.push(current);
+            }
+            return accumulator;
+        }, []);
         let isAllIntersectItemClean: boolean = true;
         for (const item of currentUseItems) {
             if (!item.isEmpty) {
                 isAllIntersectItemClean = false;
+                break;
             }
-            break;
         }
-        const canSet: boolean = isAllIntersectItemClean && editBuildingBoxes.length <= 0;
+        const canSet: boolean = (isAllIntersectItemClean && editBuildingBoxes.length <= 0 && currentUseItems.length == buildingSize);
         for (const item of currentUseItems) {
             item.showType = canSet ? InnerBuildingLatticeShowType.Clean : InnerBuildingLatticeShowType.Error;
         }
@@ -291,7 +316,7 @@ export class InnerBuildingController extends ViewController {
                         minIndex = Math.min(minIndex, templeIndex);
                     }
                 }
-                this._buildingMap.forEach((value: InnerBuildingView, key: InnerBuildingType)=> {
+                this._buildingMap.forEach((value: InnerBuildingView, key: InnerBuildingType) => {
                     if (value.node == this._latticeEditBuildingView) {
                         UserInfoMgr.changeBuildingLatticeBeginIndex(key, minIndex)
                     }
