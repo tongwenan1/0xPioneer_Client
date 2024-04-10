@@ -1,5 +1,6 @@
 export enum NotificationName {
     CONFIG_LOADED = 100,
+    GAME_INITED,
     USER_LOGIN_SUCCEED,
 
     CHANGE_CURSOR,

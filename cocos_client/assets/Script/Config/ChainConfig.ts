@@ -28,6 +28,9 @@ export default class ChainConfig {
     public static getCurrentChainId(): string {
         return this._confs.currentChainId;
     }
+    public static getCurrentChainConfig(): ChainConfigsConfigData | null {
+        return this.getByChainId(this.getCurrentChainId());
+    }
 
     public static getByChainId(chainId: string): ChainConfigsConfigData | null {
         if (chainId in this._confs.configs) {

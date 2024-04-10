@@ -24,4 +24,15 @@ export default class AbiConfig {
         CLog.debug("AbiConfig init success", this._confs);
         return true;
     }
+
+    public static getAll() {
+        return this._confs;
+    }
+
+    public static getAbiByContract(contractName: string) {
+        if (contractName in this._confs.contracts) {
+            return this._confs.contracts[contractName];
+        }
+        return null;
+    }
 }

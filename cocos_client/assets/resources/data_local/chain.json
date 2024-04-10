@@ -1,5 +1,5 @@
 {
-    "currentChainId": "0",
+    "currentChainId": "42161",
     "configs": {
         "42161": {
             "chainId": "42161",
@@ -11,7 +11,33 @@
             },
             "rpcUrls": ["https://arb1.arbitrum.io/rpc"],
             "blockExplorerUrls": ["https://arbiscan.io"],
-            "abi": "deployresult_arbitrumOne"
+            "abi": "deployresult_arbitrumOne",
+            "api": {
+                "ws_host": "",
+                "http_host": "",
+                "init_ws": 0,
+                "init_http": 0,
+                "init_ethereum": 0
+            }
+        },
+        "534351": {
+            "chainId": "534351",
+            "chainName": "Scroll Sepolia",
+            "nativeCurrency": {
+                "name": "ETH",
+                "symbol": "ETH",
+                "decimals": 18
+            },
+            "rpcUrls": ["https://sepolia-rpc.scroll.io"],
+            "blockExplorerUrls": ["https://sepolia.scrollscan.com"],
+            "abi": "deployresult_scrollTestnet",
+            "api": {
+                "ws_host": "wss://testapi.0xpioneerdev.com/wss",
+                "http_host": "https://testapi.0xpioneerdev.com/api",
+                "init_ws": 1,
+                "init_http": 1,
+                "init_ethereum": 1
+            }
         }
     }
 }

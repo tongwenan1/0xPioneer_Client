@@ -12,6 +12,7 @@ import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
 import ItemConfig from "../Config/ItemConfig";
 import LanConfig from "../Config/LanConfig";
 import LvlupConfig from "../Config/LvlupConfig";
+import ProtobufConfig from "../Config/ProtobufConfig";
 import TalkConfig from "../Config/TalkConfig";
 import TaskConfig from "../Config/TaskConfig";
 import TaskStepConfigData from "../Config/TaskStepConfig";
@@ -35,12 +36,15 @@ export default class ConfigMgr {
         if (!(await TaskConfig.init())) return false;
         if (!(await TaskStepConfigData.init())) return false;
 
-        // read abi
+        // abi
         const chainId = ChainConfig.getCurrentChainId();
         if (Number(chainId) > 0) {
             const chainConf = ChainConfig.getByChainId(chainId);
             if (!(await AbiConfig.init(chainConf.abi))) return false;
         }
+
+        // protobuf
+        if (!(await ProtobufConfig.init())) return false;
 
         return true;
     }

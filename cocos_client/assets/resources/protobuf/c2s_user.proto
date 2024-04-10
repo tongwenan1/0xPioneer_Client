@@ -1,0 +1,22 @@
+package c2s_user;
+syntax = "proto3";
+
+import "./share_structure.proto";
+
+// login
+message login {
+    required string name = 1;  // name, ommited
+    required string uid = 2; // uid from verify result
+    required string token = 3; // token from verify result
+}
+
+// create player, only 1 plyaer per user
+message create_player {
+    required string pname = 1;  // player name
+    required uint32 gender = 2; // player gender, 0=unknown, 1=male, 2=female
+}
+
+// enter game
+message enter_game {
+
+}

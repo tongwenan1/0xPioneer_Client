@@ -1,0 +1,31 @@
+package share;
+syntax = "proto3";
+
+// ----------------------------------------------------------------------------
+
+// user data
+message user_data {
+    required string name = 1; // user name, ommited
+    required string uid = 2; // user id
+    required string wallet = 3; // wallet address
+    required uint64 lastlogintm = 4; // last login time, unix time stamp in ms
+}
+
+// self player data
+message player_data {
+    required player_info info = 2; // player info
+}
+
+message player_info {
+    required player_sinfo sinfo = 1; // player simple info
+    required uint32 level = 2; // user level
+    required uint32 exp = 3; // user exp
+}
+
+message player_sinfo {
+    required uint32 instid = 1; // map instance id (player/monster/other obj...)
+    required uint32 playerid = 2; // player id
+    required uint32 gender = 4; // gender
+    required string pname = 5; // player name
+    required uint32 level = 6; // user level
+}

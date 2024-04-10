@@ -1,0 +1,28 @@
+package s2c_user;
+syntax = "proto3";
+
+import "./share_structure.proto";
+
+// server error
+message server_error {
+    required int32 res = 1; // error code see {ServerErrorCode}
+}
+
+// login res
+message login_res {
+    required int32 res = 1;  // error code see {ServerErrorCode}
+    optional bool isNew = 2; // =ture need create_player, else enter_game
+    optional share.user_data data = 3; // user data
+}
+
+// create player
+message create_player_res {
+    required int32 res = 1; // error code see {ServerErrorCode}
+    optional player_sinfo sinfo = 2; // simple info of player
+}
+
+// enter game
+message enter_game_res {
+    required int32 res = 1; // error code see {ServerErrorCode}
+    optional share.player_data data = 2; // full player data of self
+}
