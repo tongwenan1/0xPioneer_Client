@@ -14,6 +14,7 @@ import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import { GetPropRankColor } from "../Const/ConstDefine";
 import UIPanelManger from "../Basic/UIPanelMgr";
+import { InnerBuildingType } from "../Const/BuildingDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactInfoUI")
@@ -65,8 +66,7 @@ export class ArtifactInfoUI extends ViewController {
                 content.getChildByName("Title").getComponent(Label).color = useColor;
     
                 // effect
-                const effectContent = content.getChildByName("EffectContent");
-                effectContent
+                const buildingLevel = UserInfoMgr.innerBuilds.get(InnerBuildingType.ArtifactStore).buildLevel;
                 if (config.effect.length > 0) {
                     const numStrings: string[] = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
                     let effectIndex: number = 0;
@@ -86,15 +86,15 @@ export class ArtifactInfoUI extends ViewController {
     
                         } else {
                             effectIndex += 1;
-                            if (effectConfig.unlock > UserInfoMgr.level) {
+                            if (effectConfig.unlock > buildingLevel) {
                                 const unlock = instantiate(this._unlockEffectItem);
                                 unlock.active = true;
                                 unlock.parent = this._unlockEffectItem.parent;
                                 unlock.getChildByPath("LockIcon/No").getComponent(Label).string = numStrings[effectIndex];
                                 unlock.getChildByPath("Title").getComponent(Label).string = LanMgr.getLanById(effectConfig.des);
                                 // useLanMgr
-                                // unlock.getChildByPath("Title/Unlock").getComponent(Label).string = "(" + LanMgr.getLanById("107549") + "C.LV " + effectConfig.unlock + ")";
-                                unlock.getChildByPath("Title/Unlock").getComponent(Label).string = "(" + "Unlocked at" + "C.LV " + effectConfig.unlock + ")";
+                                // unlock.getChildByPath("Title/Unlock").getComponent(Label).string = "(" + LanMgr.getLanById("107549") + " Building.LV " + effectConfig.unlock + ")";
+                                unlock.getChildByPath("Title/Unlock").getComponent(Label).string = "(" + "Unlocked at" + " Building.LV " + effectConfig.unlock + ")";
                                 this._allEffectViews.push(unlock);
     
                             } else {

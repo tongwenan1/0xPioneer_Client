@@ -2,7 +2,7 @@ import { Asset, __private, resources, sys } from "cc";
 import { GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
-import { BuildingMgr, CountMgr, ItemMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
+import { ArtifactMgr, BuildingMgr, CountMgr, ItemMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
 import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { UserInfoEvent, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";
@@ -15,10 +15,11 @@ import { LvlupConfigData } from "../Const/Lvlup";
 import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import Config from "../Const/Config";
+import { ArtifactEffectType } from "../Const/Artifact";
 
 export default class UserInfoMgr {
 
-    public async initData() { 
+    public async initData() {
         await this._initData();
         NotificationMgr.addListener(NotificationName.TASK_STEP_FINISHED, this._onTaskStepFinished, this);
     }
@@ -68,7 +69,7 @@ export default class UserInfoMgr {
 
             if (buildInfo.buildType == InnerBuildingType.House) {
                 // build house
-                
+
             }
             CountMgr.addNewCount({
                 type: CountType.buildInnerBuilding,
@@ -160,6 +161,13 @@ export default class UserInfoMgr {
     }
     public get innerBuilds(): Map<InnerBuildingType, UserInnerBuildInfo> {
         return this._innerBuilds;
+    }
+    public get artifactStoreLevel(): number {
+        let level: number = 0;
+        if (this._innerBuilds != null && this._innerBuilds.has(InnerBuildingType.ArtifactStore)) {
+            level = this._innerBuilds.get(InnerBuildingType.ArtifactStore).buildLevel;
+        }
+        return level;
     }
     public get explorationValue() {
         return this._explorationValue;
@@ -281,8 +289,14 @@ export default class UserInfoMgr {
     }
     public set explorationValue(value: number) {
         const original = this._explorationValue;
-        this._explorationValue = value;
-        this._localJsonData.playerData.explorationValue = value;
+        let addNum = value - original;
+        const effect = ArtifactMgr.getEffectiveEffect(this.artifactStoreLevel);
+        if (effect != null && effect.has(ArtifactEffectType.TREASURE_PROGRESS)) {
+            addNum = Math.floor(addNum + addNum * effect.get(ArtifactEffectType.TREASURE_PROGRESS));
+        }
+        this._explorationValue = original + addNum;
+
+        this._localJsonData.playerData.explorationValue = this._explorationValue;
         this._localDataChanged(this._localJsonData);
 
         if (this._explorationValue != original) {
@@ -372,8 +386,13 @@ export default class UserInfoMgr {
                     NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_TIME_COUNT_CHANGED);
 
                     if (this._generateEnergyInfo.countTime <= 0) {
-
-                        const generateNumPerMin: number = generateConfig.output;
+                        let generateNumPerMin: number = generateConfig.output;
+                        let effectNum: number = 0;
+                        const artifactEffect = ArtifactMgr.getEffectiveEffect(this.artifactStoreLevel);
+                        if (artifactEffect != null && artifactEffect.has(ArtifactEffectType.ENERGY_GENERATE)) {
+                            effectNum = artifactEffect.get(ArtifactEffectType.ENERGY_GENERATE);
+                        }
+                        generateNumPerMin = Math.floor(generateNumPerMin + generateNumPerMin * effectNum);
                         this._generateEnergyInfo.totalEnergyNum = Math.min(generateConfig.storage, this._generateEnergyInfo.totalEnergyNum + generateNumPerMin);
                         this._generateEnergyInfo.countTime = perGenerateTime;
 
@@ -472,6 +491,12 @@ export default class UserInfoMgr {
             innerBuildInfo.buildLevel = this._localJsonData.innerBuildData[id].buildLevel;
             innerBuildInfo.upgradeCountTime = this._localJsonData.innerBuildData[id].upgradeCountTime;
             innerBuildInfo.upgradeTotalTime = this._localJsonData.innerBuildData[id].upgradeTotalTime;
+
+            // test
+            // if (innerBuildInfo.buildType == InnerBuildingType.ArtifactStore) {
+            //     innerBuildInfo.buildLevel = 20;
+            // }
+
             this._innerBuilds.set(innerBuildInfo.buildType, innerBuildInfo);
         }
     }

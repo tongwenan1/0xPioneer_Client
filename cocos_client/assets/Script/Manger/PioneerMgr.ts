@@ -1331,10 +1331,10 @@ export default class PioneerMgr {
                     pioneer.faction == MapMemberFactionType.friend) {
 
                     // artifact
-                    const artifactEff = ArtifactMgr.getPropEffValue(UserInfoMgr.level);
+                    const artifactEff = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
                     let artifactGather = 0;
-                    if (artifactEff.eff[ArtifactEffectType.GATHER_TIME]) {
-                        artifactGather = artifactEff.eff[ArtifactEffectType.GATHER_TIME];
+                    if (artifactEff.has(ArtifactEffectType.GATHER_TIME)) {
+                        artifactGather = artifactEff.get(ArtifactEffectType.GATHER_TIME);
                     }
 
                     let acionTime: number = 3000;

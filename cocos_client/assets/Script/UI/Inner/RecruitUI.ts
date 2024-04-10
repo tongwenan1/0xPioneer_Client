@@ -1,7 +1,7 @@
 import { _decorator, Component, instantiate, Label, Layout, Node, ProgressBar, Slider } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
 import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
@@ -10,6 +10,7 @@ import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 import { InnerBuildingType } from '../../Const/BuildingDefine';
 import ItemData from '../../Const/Item';
 import UIPanelManger from '../../Basic/UIPanelMgr';
+import { ArtifactEffectType } from '../../Const/Artifact';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
@@ -48,6 +49,7 @@ export class RecruitUI extends ViewController {
         this._generateMaxTroop.node.getParent().getComponent(Layout).updateLayout();
 
         this._generateTimeNum = Math.ceil(this._perTroopTime * this._selectGenerateNum);
+        this._generateTimeNum = Math.floor(this._generateTimeNum - this._generateTimeNum * this._artifactEffect);
         this._generateTime.string = CommonTools.formatSeconds(this._generateTimeNum);
 
         if (this._costShowItems.length == this._costDatas.length) {
@@ -92,6 +94,8 @@ export class RecruitUI extends ViewController {
     private _generateTime: Label = null;
     private _costItem: Node = null;
     private _costShowItems: Node[] = [];
+
+    private _artifactEffect: number = 0;
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
@@ -99,6 +103,7 @@ export class RecruitUI extends ViewController {
         if (barrackBuildingData == null) {
             return;
         }
+
         this._costDatas = [];
         const configCost = InnerBuildingLvlUpConfig.getBuildingLevelData(barrackBuildingData.buildLevel, "rec_cost_barr");
         if (configCost != null) {
@@ -118,7 +123,13 @@ export class RecruitUI extends ViewController {
         if (configPerGenerateNum != null) {
             this._perTroopTime = configPerGenerateNum;
         }
-        this._maxRecruitTroop = this._maxTroop - ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop);
+        this._maxRecruitTroop = Math.max(0, this._maxTroop - ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop));
+
+
+        const effectData = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+        if (effectData != null && effectData.has(ArtifactEffectType.TROOP_GENERATE_TIME)) {
+            this._artifactEffect = effectData.get(ArtifactEffectType.TROOP_GENERATE_TIME);
+        }
 
         this._totalTroopProgress = this.node.getChildByPath("__ViewContent/ProgressBar").getComponent(ProgressBar);
         this._currentTroop = this.node.getChildByPath("__ViewContent/current_res/num/cur").getComponent(Label);

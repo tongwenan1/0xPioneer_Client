@@ -4,6 +4,8 @@ import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import { ECursorType } from "../../Const/ConstDefine";
 import { TileHexDirection, TileMapHelper, TilePos } from "../TiledMap/TileTool";
+import { ArtifactMgr, UserInfoMgr } from "../../Utils/Global";
+import { ArtifactEffectType } from "../../Const/Artifact";
 
 export default class GameMainHelper {
     public static get instance() {
@@ -226,7 +228,17 @@ export default class GameMainHelper {
         if (!this.isTiledMapHelperInited) {
             return [];
         }
-        return this._tiledMapHelper.Shadow_Earse(this._tiledMapHelper.getPos(mapPos.x, mapPos.y), ownerId, 6, false);
+        let vision: number = 6;
+        const effectData = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+        if (effectData != null) {
+            if (effectData.has(ArtifactEffectType.PIONEER_ONLY_VISION_RANGE)) {
+                vision += effectData.get(ArtifactEffectType.PIONEER_ONLY_VISION_RANGE);
+            }
+            if (effectData.has(ArtifactEffectType.CITY_AND_PIONEER_VISION_RANGE)) {
+                vision += effectData.get(ArtifactEffectType.CITY_AND_PIONEER_VISION_RANGE);
+            }
+        }
+        return this._tiledMapHelper.Shadow_Earse(this._tiledMapHelper.getPos(mapPos.x, mapPos.y), ownerId, vision, false);
     }
     public tiledMapGetShadowClearedTiledPositions(): TilePos[] {
         if (!this.isTiledMapHelperInited) {

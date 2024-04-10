@@ -4,7 +4,7 @@ import ArtifactData from "../Model/ArtifactData";
 import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import NotificationMgr from "../Basic/NotificationMgr";
-import { ArtifactArrangeType } from "../Const/Artifact";
+import { ArtifactArrangeType, ArtifactEffectType } from "../Const/Artifact";
 import CLog from "../Utils/CLog";
 import { NotificationName } from "../Const/Notification";
 import { AttrChangeType, AttrType } from "../Const/ConstDefine";
@@ -70,51 +70,94 @@ export default class ArtifactMgr {
         return count;
     }
 
-    public getPropEffValue(cLv: number) {
-        const r = {
-            prop: {}, // propType => { add: 0, mul: 0}
-            eff: {}, // effectType => 0
-        };
-
-        for (let i = 0; i < this._localArtifactDatas.length; i++) {
-            const artifact = this._localArtifactDatas[i];
-            const artifactConfig = ArtifactConfig.getById(artifact.artifactConfigId);
-
-            // prop
-            if (artifactConfig.prop.length > 0) {
-                for (let j = 0; j < artifactConfig.prop.length; j++) {
-                    const propType = artifactConfig.prop[j];
-                    const propValue = artifactConfig.prop_value[j];
-
-                    if (!r.prop[propType]) r.prop[propType] = { add: 0, mul: 0 };
-
-                    if (propValue[0] == AttrChangeType.ADD) {
-                        r.prop[propType].add += propValue[0] * artifact.count;
-                    } else if (propValue[0] == AttrChangeType.MUL) {
-                        r.prop[propType].mul += propValue[0] * artifact.count;
-                    }
-                }
+    public getEffectiveEffect(artifactStoreLevel: number): Map<ArtifactEffectType, number> {
+        const effectMap: Map<ArtifactEffectType, number> = new Map();
+        for (const artifact of this._localArtifactDatas) {
+            if (artifact.effectIndex < 0) {
+                continue;
             }
-
-            // effect
-            if (artifactConfig.effect.length > 0) {
+            const artifactConfig = ArtifactConfig.getById(artifact.artifactConfigId);
+            if (artifactConfig.effect != null) {
                 for (let j = 0; j < artifactConfig.effect.length; j++) {
                     const effectId = artifactConfig.effect[j];
                     const effConfig = ArtifactEffectConfig.getById(effectId);
-                    const effectType = effConfig.type;
-
-                    if (effConfig.unlock && effConfig.unlock > cLv) {
+                    let effectType = effConfig.type;
+                    if (effectType == ArtifactEffectType.VISION_RANGE) {
+                        if (effConfig.para[0] == 0) {
+                            effectType = ArtifactEffectType.CITY_ONLY_VISION_RANGE;
+                        } else if (effConfig.para[0] == 1) {
+                            effectType = ArtifactEffectType.PIONEER_ONLY_VISION_RANGE;
+                        } else if (effConfig.para[0] == 2) {
+                            effectType = ArtifactEffectType.CITY_AND_PIONEER_VISION_RANGE;
+                        }
+                    }
+                    if (effConfig.unlock && effConfig.unlock > artifactStoreLevel) {
                         continue;
                     }
-
-                    if (!r.eff[effectType]) r.eff[effectType] = 0;
-                    r.eff[effectType] += effConfig.para[0] * artifact.count;
+                    if (!effectMap.has(effectType)) {
+                        effectMap.set(effectType, 0);
+                    }
+                    let lastNum: number = effectMap.get(effectType);
+                    if (effectType == ArtifactEffectType.VISION_RANGE ||
+                        effectType == ArtifactEffectType.PIONEER_ONLY_VISION_RANGE ||
+                        effectType == ArtifactEffectType.CITY_AND_PIONEER_VISION_RANGE) {
+                        lastNum += effConfig.para[1];
+                    } else {
+                        lastNum += effConfig.para[0];
+                    }
+                    effectMap.set(effectType, lastNum);
                 }
             }
         }
-
-        return r;
+        return effectMap;
     }
+
+    // public getPropEffValue(buildingLv: number) {
+    //     const r = {
+    //         prop: {}, // propType => { add: 0, mul: 0}
+    //         eff: {}, // effectType => 0
+    //     };
+    //     for (let i = 0; i < this._localArtifactDatas.length; i++) {
+    //         const artifact = this._localArtifactDatas[i];
+    //         if (artifact.effectIndex < 0) {
+    //             continue;
+    //         }
+    //         const artifactConfig = ArtifactConfig.getById(artifact.artifactConfigId);
+    //         // prop
+    //         if (artifactConfig.prop.length > 0) {
+    //             for (let j = 0; j < artifactConfig.prop.length; j++) {
+    //                 const propType = artifactConfig.prop[j];
+    //                 const propValue = artifactConfig.prop_value[j];
+
+    //                 if (!r.prop[propType]) r.prop[propType] = { add: 0, mul: 0 };
+
+    //                 if (propValue[0] == AttrChangeType.ADD) {
+    //                     r.prop[propType].add += propValue[0] * artifact.count;
+    //                 } else if (propValue[0] == AttrChangeType.MUL) {
+    //                     r.prop[propType].mul += propValue[0] * artifact.count;
+    //                 }
+    //             }
+    //         }
+
+    //         // effect
+    //         if (artifactConfig.effect.length > 0) {
+    //             for (let j = 0; j < artifactConfig.effect.length; j++) {
+    //                 const effectId = artifactConfig.effect[j];
+    //                 const effConfig = ArtifactEffectConfig.getById(effectId);
+    //                 const effectType = effConfig.type;
+
+    //                 if (effConfig.unlock && effConfig.unlock > cLv) {
+    //                     continue;
+    //                 }
+
+    //                 if (!r.eff[effectType]) r.eff[effectType] = 0;
+    //                 r.eff[effectType] += effConfig.para[0] * artifact.count;
+    //             }
+    //         }
+    //     }
+
+    //     return r;
+    // }
 
     public addArtifact(artifacts: ArtifactData[]): void {
         if (artifacts.length <= 0) {
@@ -127,7 +170,7 @@ export default class ArtifactMgr {
             if (this.artifactIsFull) continue;
 
             changed = true;
-            
+
             artifact.addTimeStamp = new Date().getTime();
             this._localArtifactDatas.push(artifact);
 

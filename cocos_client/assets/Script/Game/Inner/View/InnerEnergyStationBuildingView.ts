@@ -1,7 +1,7 @@
 import { Label, Node, _decorator, v3 } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
-import { ItemMgr, LanMgr, UserInfoMgr } from "../../../Utils/Global";
+import { ArtifactMgr, ItemMgr, LanMgr, UserInfoMgr } from "../../../Utils/Global";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
@@ -12,6 +12,7 @@ import { NotificationName } from "../../../Const/Notification";
 import { ResourceCorrespondingItem } from "../../../Const/ConstDefine";
 import InnerBuildingConfig from "../../../Config/InnerBuildingConfig";
 import UIPanelManger from "../../../Basic/UIPanelMgr";
+import { ArtifactEffectType } from "../../../Const/Artifact";
 
 const { ccclass, property } = _decorator;
 
@@ -84,7 +85,16 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
                 } else {
                     this._produceInfoView.getChildByPath("BottomContent").active = true;
                     this._produceInfoView.getChildByPath("BottomContent/CurrentTime").getComponent(Label).string = generateInfoData.countTime.toString();
-                    this._produceInfoView.getChildByPath("BottomContent/PerNum").getComponent(Label).string = generateConfig.output.toString();
+
+                    let showOutput: string = generateConfig.output.toString();
+                    const artifactEffect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+                    if (artifactEffect != null && artifactEffect.has(ArtifactEffectType.ENERGY_GENERATE)) {
+                        const effectNum = Math.floor(generateConfig.output * artifactEffect.get(ArtifactEffectType.ENERGY_GENERATE));
+                        if (effectNum > 0) {
+                            showOutput += ("+" + effectNum);
+                        }
+                    }
+                    this._produceInfoView.getChildByPath("BottomContent/PerNum").getComponent(Label).string = showOutput;
                 }
             }
 

@@ -195,9 +195,9 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
 
         // artifact effect
         let artifactSpeed = 0;
-        const artifactEff = ArtifactMgr.getPropEffValue(UserInfoMgr.level);
-        if (artifactEff.eff[ArtifactEffectType.MOVE_SPEED]) {
-            artifactSpeed = artifactEff.eff[ArtifactEffectType.MOVE_SPEED];
+        const artifactEff = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+        if (artifactEff.has(ArtifactEffectType.MOVE_SPEED)) {
+            artifactSpeed = artifactEff.get(ArtifactEffectType.MOVE_SPEED);
         }
 
         for (var i = 0; i < allPioneers.length; i++) {
@@ -503,7 +503,12 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
         const mainCity = BuildingMgr.getBuildingById(mainCityId);
         if (mainCity != null && mainCity.faction != MapMemberFactionType.enemy &&
             pioneer != null && pioneer.show) {
-            const isInCityRange: boolean = BuildingMgr.checkMapPosIsInBuilingRange(pioneer.stayPos, mainCityId, UserInfoMgr.cityVision);
+            let radialRange = UserInfoMgr.cityVision;
+            const artifactEffect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+            if (artifactEffect != null && artifactEffect.has(ArtifactEffectType.CITY_RADIAL_RANGE)) {
+                radialRange += artifactEffect.get(ArtifactEffectType.CITY_RADIAL_RANGE);
+            }
+            const isInCityRange: boolean = BuildingMgr.checkMapPosIsInBuilingRange(pioneer.stayPos, mainCityId, radialRange);
             if (isInCityRange && pioneer.hp < pioneer.hpMax) {
                 PioneerMgr.pioneerHealHpToMax(pioneerId);
             }

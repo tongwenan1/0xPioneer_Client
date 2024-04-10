@@ -60,8 +60,21 @@ export class BuildingUpgradeUI extends ViewController {
     private _levelInfoShowCostItems: Node[] = [];
 
     private _curBuildingType: InnerBuildingType = null;
+    private _artifactTimeEffectNum: number = 0;
+    private _artifactResourceEffectNum: number = 0;
     protected viewDidLoad(): void {
         super.viewDidLoad();
+
+
+        const effect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+        if (effect != null) {
+            if (effect.has(ArtifactEffectType.BUILDING_LVUP_TIME)) {
+                this._artifactTimeEffectNum = effect.get(ArtifactEffectType.BUILDING_LVUP_TIME);
+            }
+            if (effect.has(ArtifactEffectType.BUILDING_LVLUP_RESOURCE)) {
+                this._artifactResourceEffectNum = effect.get(ArtifactEffectType.BUILDING_LVLUP_RESOURCE);
+            }
+        }
 
         this._buildingMap = new Map();
         this._buildingMap.set(InnerBuildingType.MainCity, this.node.getChildByPath("__ViewContent/BuildingInfoView/MainCity"));
@@ -136,12 +149,13 @@ export class BuildingUpgradeUI extends ViewController {
             }
 
             // useTime
-            const time = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_time);
-            if (time != null) {
-                upgradeView.getChildByPath("Time/Label-001").getComponent(Label).string = CommonTools.formatSeconds(time);
-            } else {
-                upgradeView.getChildByPath("Time/Label-001").getComponent(Label).string = CommonTools.formatSeconds(5);
+            let time = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_time);
+            if (time == null) {
+                time = 5;
             }
+            time = Math.floor(time - time * this._artifactTimeEffectNum);
+            upgradeView.getChildByPath("Time/Label-001").getComponent(Label).string = CommonTools.formatSeconds(time);
+
 
             // cost
             // upgradeView.getChildByName("CostTitle").getComponent(Label).string = LanMgr.getLanById("107549"); 
@@ -152,7 +166,7 @@ export class BuildingUpgradeUI extends ViewController {
             if (costData != null) {
                 for (const cost of costData) {
                     const type = cost[0].toString();
-                    const num = cost[1];
+                    let num = Math.floor(cost[1] - cost[1] * this._artifactResourceEffectNum);
                     const ownNum: number = ItemMgr.getOwnItemCount(type);
 
                     const item = instantiate(this._levelInfoCostItem);
@@ -221,18 +235,8 @@ export class BuildingUpgradeUI extends ViewController {
             return;
         }
         const costData = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_cost);
-        const time = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_time);
+        let time = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_time);
         if (costData != null && time != null) {
-            // artifact effect
-            const artifactPropEff = ArtifactMgr.getPropEffValue(UserInfoMgr.level);
-            let artifactTime = 0;
-            if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME]) {
-                artifactTime = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVUP_TIME];
-            }
-            let artifactResource = 0;
-            if (artifactPropEff.eff[ArtifactEffectType.BUILDING_LVLUP_RESOURCE]) {
-                artifactResource = artifactPropEff.eff[ArtifactEffectType.BUILDING_LVLUP_RESOURCE];
-            }
             let canUpgrade: boolean = true;
             for (const resource of costData) {
                 if (resource.length != 2) {
@@ -241,7 +245,7 @@ export class BuildingUpgradeUI extends ViewController {
                 const type = resource[0].toString();
                 let needNum = resource[1];
                 // total num
-                needNum = Math.floor(needNum - (needNum * artifactResource));
+                needNum = Math.floor(needNum - (needNum * this._artifactResourceEffectNum));
 
                 if (ItemMgr.getOwnItemCount(type) < needNum) {
                     canUpgrade = false;
@@ -260,6 +264,10 @@ export class BuildingUpgradeUI extends ViewController {
                     ItemMgr.subItem(cost[0].toString(), cost[1]);
                 }
             }
+            if (time == null) {
+                time = 5;
+            }
+            time = Math.floor(time - (time * this._artifactTimeEffectNum));
             UserInfoMgr.beginUpgrade(buildingType, time);
 
             this._closeBuildingUpgradeUI();

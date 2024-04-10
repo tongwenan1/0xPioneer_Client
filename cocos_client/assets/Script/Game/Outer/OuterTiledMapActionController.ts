@@ -10,12 +10,13 @@ import { OuterFogAnimShapMask } from './View/OuterFogAnimShapMask';
 import { OuterFogMask } from './View/OuterFogMask';
 import { OuterMapCursorView } from './View/OuterMapCursorView';
 import { ResOprView } from './View/ResOprView';
-import { BuildingMgr, ItemMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, BuildingMgr, ItemMgr, LanMgr, PioneerMgr, UserInfoMgr } from '../../Utils/Global';
 import GameMainHelper from '../Helper/GameMainHelper';
 import ViewController from '../../BasicView/ViewController';
 import EventConfig from '../../Config/EventConfig';
 import Config from '../../Const/Config';
 import MapBuildingModel from './Model/MapBuildingModel';
+import { ArtifactEffectType } from '../../Const/Artifact';
 
 
 const { ccclass, property } = _decorator;
@@ -173,7 +174,12 @@ export class OuterTiledMapActionController extends ViewController {
                                     stayBuilding.faction != MapMemberFactionType.enemy) {
                                     const centerPos = stayBuilding.stayMapPositions[3];
                                     const visionPositions = [];
-                                    const extAround = GameMainHelper.instance.tiledMapGetExtAround(centerPos, UserInfoMgr.cityVision - 1);
+                                    let radialRange = UserInfoMgr.cityVision;
+                                    const artifactEffect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+                                    if (artifactEffect != null && artifactEffect.has(ArtifactEffectType.CITY_RADIAL_RANGE)) {
+                                        radialRange += artifactEffect.get(ArtifactEffectType.CITY_RADIAL_RANGE);
+                                    }
+                                    const extAround = GameMainHelper.instance.tiledMapGetExtAround(centerPos, radialRange - 1);
                                     for (const temple of extAround) {
                                         visionPositions.push(v2(temple.x, temple.y));
                                     }

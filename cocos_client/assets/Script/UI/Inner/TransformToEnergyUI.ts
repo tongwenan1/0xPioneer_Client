@@ -1,6 +1,6 @@
 import { _decorator, Color, Component, instantiate, Label, Layers, Layout, math, Node, ProgressBar, Slider } from 'cc';
 import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
@@ -9,6 +9,7 @@ import { InnerBuildingType } from '../../Const/BuildingDefine';
 import ItemData from '../../Const/Item';
 import { NotificationName } from '../../Const/Notification';
 import UIPanelManger from '../../Basic/UIPanelMgr';
+import { ArtifactEffectType } from '../../Const/Artifact';
 const { ccclass, property } = _decorator;
 
 @ccclass('TransformToEnergyUI')
@@ -48,8 +49,15 @@ export class TransformToEnergyUI extends ViewController {
         // this.node.getChildByPath("__ViewContent/footer/Consume").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/footer/Convert").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.getLanById("107549");
-
-        this._perMinOutputLabel.string = energyData.output.toString() + "/" + "min";
+        let showOutput: string = energyData.output.toString();
+        const artifactEffect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+        if (artifactEffect != null && artifactEffect.has(ArtifactEffectType.ENERGY_GENERATE)) {
+            const effectNum = Math.floor(energyData.output * artifactEffect.get(ArtifactEffectType.ENERGY_GENERATE));
+            if (effectNum > 0) {
+                showOutput += ("+" + effectNum);
+            }
+        }
+        this._perMinOutputLabel.string = showOutput + "/" + "min";
 
         if (maxGenerate <= 0) {
             this._generateProgress.node.active = false;
