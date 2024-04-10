@@ -11,6 +11,11 @@ import { AttrChangeType, AttrType } from "../Const/ConstDefine";
 import Config from "../Const/Config";
 
 export default class ArtifactMgr {
+
+    public saveLocalData() {
+        this._saveLocalData();
+    }
+
     private _maxArtifactLength: number = 100;
     private _localStorageKey: string = "artifact_data";
     private _localArtifactDatas: ArtifactData[] = [];
@@ -122,14 +127,9 @@ export default class ArtifactMgr {
             if (this.artifactIsFull) continue;
 
             changed = true;
-            const exsitArtifacts = this._localArtifactDatas.filter((v) => v.artifactConfigId == artifact.artifactConfigId);
-            if (exsitArtifacts.length > 0) {
-                exsitArtifacts[0].count += artifact.count;
-                exsitArtifacts[0].addTimeStamp = new Date().getTime();
-            } else {
-                artifact.addTimeStamp = new Date().getTime();
-                this._localArtifactDatas.push(artifact);
-            }
+            
+            artifact.addTimeStamp = new Date().getTime();
+            this._localArtifactDatas.push(artifact);
 
             if (artifactConfig.effect != null) {
                 for (const temple of artifactConfig.effect) {
@@ -154,6 +154,7 @@ export default class ArtifactMgr {
                 }
             }
         }
+        this.arrange(ArtifactArrangeType.Rarity);
         if (changed) {
             this._saveLocalData();
             NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
@@ -191,22 +192,22 @@ export default class ArtifactMgr {
     }
 
     public arrange(sortType: ArtifactArrangeType): void {
+        // 2024-4-10 no merge
         // merge same item
-        const singleItems: Map<string, ArtifactData> = new Map();
-        for (let i = 0; i < this._localArtifactDatas.length; i++) {
-            const item = this._localArtifactDatas[i];
-            if (singleItems.has(item.artifactConfigId)) {
-                const savedItem = singleItems.get(item.artifactConfigId);
-                savedItem.count += item.count;
-                savedItem.addTimeStamp = Math.max(savedItem.addTimeStamp, item.addTimeStamp);
-                this._localArtifactDatas.splice(i, 1);
-                i--;
-            } else {
-                singleItems.set(item.artifactConfigId, item);
-            }
-        }
-        this._saveLocalData();
-
+        // const singleItems: Map<string, ArtifactData> = new Map();
+        // for (let i = 0; i < this._localArtifactDatas.length; i++) {
+        //     const item = this._localArtifactDatas[i];
+        //     if (singleItems.has(item.artifactConfigId)) {
+        //         const savedItem = singleItems.get(item.artifactConfigId);
+        //         savedItem.count += item.count;
+        //         savedItem.addTimeStamp = Math.max(savedItem.addTimeStamp, item.addTimeStamp);
+        //         this._localArtifactDatas.splice(i, 1);
+        //         i--;
+        //     } else {
+        //         singleItems.set(item.artifactConfigId, item);
+        //     }
+        // }
+        // this._saveLocalData();
         if (sortType == ArtifactArrangeType.Recently) {
             this._localArtifactDatas.sort((a, b) => {
                 return b.addTimeStamp - a.addTimeStamp;

@@ -3,10 +3,13 @@ import ViewController from '../../../BasicView/ViewController';
 import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
 import NotificationMgr from '../../../Basic/NotificationMgr';
 import { InnerBuildingType, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
-import { ResourcesMgr } from '../../../Utils/Global';
+import { LanMgr, ResourcesMgr } from '../../../Utils/Global';
 import InnerBuildingLvlUpConfig from '../../../Config/InnerBuildingLvlUpConfig';
 import InnerBuildingConfig from '../../../Config/InnerBuildingConfig';
 import { NotificationName } from '../../../Const/Notification';
+import UIPanelManger from '../../../Basic/UIPanelMgr';
+import { UIName } from '../../../Const/ConstUIDefine';
+import { UIHUDController } from '../../../UI/UIHUDController';
 const { ccclass, property } = _decorator;
 
 @ccclass('InnerBuildingView')
@@ -164,8 +167,14 @@ export class InnerBuildingView extends ViewController {
         if (this._building == null) {
             return;
         }
-        if (this._building.buildType == InnerBuildingType.ArtifactStore) {
-            
+        if (this._building.upgradeTotalTime > 0) {
+            UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
+            // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
+            return;
+        }
+        if (this._building.buildLevel > 0 &&
+            this._building.buildType == InnerBuildingType.ArtifactStore) {
+            UIPanelManger.inst.pushPanel(UIName.ArtifactStore);
         }
         this.innerBuildingTaped();
     }

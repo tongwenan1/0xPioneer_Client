@@ -68,6 +68,7 @@ export class BuildingUpgradeUI extends ViewController {
         this._buildingMap.set(InnerBuildingType.Barrack, this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/Barracks"));
         this._buildingMap.set(InnerBuildingType.House, this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/House"));
         this._buildingMap.set(InnerBuildingType.EnergyStation, this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/EnergyStation"));
+        this._buildingMap.set(InnerBuildingType.ArtifactStore, this.node.getChildByPath("__ViewContent/BuildingInfoView/Buildings/ArtifactStore"));
 
         this._levelInfoView = this.node.getChildByPath("__ViewContent/LevelInfoView");
         this._levelInfoView.active = false;

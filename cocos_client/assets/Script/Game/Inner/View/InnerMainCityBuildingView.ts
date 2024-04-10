@@ -70,11 +70,6 @@ export class InnerMainCityBuildingView extends InnerBuildingView {
         if (this._building == null) {
             return;
         }
-        if (this._building.upgradeTotalTime > 0) {
-            UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
-            // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
-            return;
-        }
         const result = await UIPanelManger.inst.pushPanel(UIName.BuildingUpgradeUI);
         if (result.success) {
             result.node.getComponent(BuildingUpgradeUI).refreshUI();

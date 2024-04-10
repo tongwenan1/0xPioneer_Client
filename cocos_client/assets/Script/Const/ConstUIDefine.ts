@@ -21,6 +21,7 @@ export enum UIName {
     LootsPopup = "prefab/ui/LootsPopup",
     Artifact = "prefab/ui/Artifact",
     ArtifactInfoUI = "prefab/ui/ArtifactInfoUI",
+    ArtifactStore = "prefab/ui/ArtifactStore"
 }
 
 export enum GameName {

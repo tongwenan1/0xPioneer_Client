@@ -1,4 +1,4 @@
-import { BaseNode, CCString, Color, Component, EventMouse, Layout, Node, Prefab, Rect, Sprite, SpriteFrame, UIOpacity, UITransform, Vec2, Vec3, _decorator, color, instantiate, rect, v2, v3 } from "cc";
+import { CCString, Color, Component, EventMouse, Layout, Node, Prefab, Rect, Sprite, SpriteFrame, UIOpacity, UITransform, Vec2, Vec3, _decorator, color, instantiate, rect, v2, v3 } from "cc";
 import ViewController from "../../BasicView/ViewController";
 import { InnerBuildingLatticeShowType, InnerBuildingLatticeStruct, InnerBuildingType, UserInnerBuildInfo } from "../../Const/BuildingDefine";
 import { InnerBuildingView } from "./View/InnerBuildingView";

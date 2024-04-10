@@ -2,7 +2,7 @@ import { _decorator, Component, Node, Button, SpriteFrame, Sprite, Label, Prefab
 import { TilePos } from '../Game/TiledMap/TileTool';
 import { ClaimRewardUI } from './ClaimRewardUI';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
-import { BattleReportsMgr, BuildingMgr, LanMgr, LocalDataLoader, PioneerMgr, UserInfoMgr } from '../Utils/Global';
+import { ArtifactMgr, BattleReportsMgr, BuildingMgr, LanMgr, LocalDataLoader, PioneerMgr, UserInfoMgr } from '../Utils/Global';
 import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import { UIName } from '../Const/ConstUIDefine';
@@ -16,6 +16,7 @@ import Config from '../Const/Config';
 import { MapMemberFactionType } from '../Const/ConstDefine';
 import UIPanelManger from '../Basic/UIPanelMgr';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
+import ArtifactData from '../Model/ArtifactData';
 
 const { ccclass, property } = _decorator;
 
@@ -69,6 +70,11 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         this.artifactBtn.node.on(Button.EventType.CLICK, async () => {
             await UIPanelManger.inst.pushPanel(UIName.Artifact);
         }, this);
+
+        //test data
+        // for (let i = 1; i <= 10; i++) {
+        //     ArtifactMgr.addArtifact([new ArtifactData("700" + i, 1)]);
+        // }
     }
 
     protected viewDidDestroy(): void {
