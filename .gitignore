@@ -1,3 +1,4 @@
 /cocos_client/outinfo.json
 node_modules
 @types
+cocos_client/package-lock.json
