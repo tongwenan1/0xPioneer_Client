@@ -4,10 +4,7 @@
     "name": "501005",
     "type": 1,
     "pre_con": [
-      2,
-      [
-        5
-      ]
+      null
     ],
     "pre_action": [
       [

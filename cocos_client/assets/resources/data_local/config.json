@@ -38,6 +38,11 @@
       0.05
     ]
   },
+  "20001": {
+    "id": "20001",
+    "**NOTES**": "Planar Shift condition",
+    "para": null
+  },
   "110000": {
     "id": "110000",
     "**NOTES**": "battle report max keep days",

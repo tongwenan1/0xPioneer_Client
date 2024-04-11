@@ -11,7 +11,9 @@
     "lvlup_time": "lvlup_time",
     "prefab": "prefab_main",
     "desc": "desc_main",
-    "size": 3
+    "size": 3,
+    "staff_effect": null,
+    "staff_des": ""
   },
   "30002": {
     "id": "30002",
@@ -25,7 +27,9 @@
     "lvlup_time": "lvlup_time",
     "prefab": "prefab_barr",
     "desc": "desc_barr",
-    "size": 2
+    "size": 2,
+    "staff_effect": null,
+    "staff_des": ""
   },
   "30003": {
     "id": "30003",
@@ -39,7 +43,9 @@
     "lvlup_time": "lvlup_time",
     "prefab": "prefab_house",
     "desc": "desc_house",
-    "size": 2
+    "size": 2,
+    "staff_effect": null,
+    "staff_des": ""
   },
   "30004": {
     "id": "30004",
@@ -53,20 +59,24 @@
     "lvlup_time": "lvlup_time",
     "prefab": "prefab_energy",
     "desc": "desc_energy",
-    "size": 2
+    "size": 2,
+    "staff_effect": null,
+    "staff_des": ""
   },
   "30005": {
     "id": "30005",
     "name": "120005",
-    "anim": "ArtifactStore",
+    "anim": "",
     "unlock": 1,
     "maxlevel": 10,
     "lvlup_progress": "progress",
     "lvlup_exp": "exp",
     "lvlup_cost": "cost_barr",
     "lvlup_time": "lvlup_time",
-    "prefab": "prefab_energy",
-    "desc": "desc_energy",
-    "size": 2
+    "prefab": "",
+    "desc": "",
+    "size": 2,
+    "staff_effect": null,
+    "staff_des": ""
   }
 }
