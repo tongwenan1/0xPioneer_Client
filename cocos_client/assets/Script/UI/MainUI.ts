@@ -17,6 +17,7 @@ import { MapMemberFactionType, ResourceCorrespondingItem } from '../Const/ConstD
 import UIPanelManger from '../Basic/UIPanelMgr';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
 import ArtifactData from '../Model/ArtifactData';
+import { DataMgr } from '../Data/DataMgr';
 
 const { ccclass, property } = _decorator;
 
@@ -46,6 +47,8 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         NotificationMgr.addListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
         NotificationMgr.addListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onInnerOuterChanged, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, this._onPioneerShowHideCountChanged, this);
+
+        // DataMgr.n.websocket.on("get_pioneers_res", this._get_pioneers_res);
     }
 
     protected async viewDidStart(): Promise<void> {
@@ -75,6 +78,10 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         // for (let i = 1; i <= 10; i++) {
         //     ArtifactMgr.addArtifact([new ArtifactData("700" + i, 1)]);
         // }
+
+        //DataMgr.n.websocketMsg.create_pioneer({
+        //    type: "0"
+        //});
     }
 
     protected viewDidDestroy(): void {
@@ -88,6 +95,8 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         NotificationMgr.removeListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
         NotificationMgr.removeListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onInnerOuterChanged, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, this._onPioneerShowHideCountChanged, this);
+
+        //DataMgr.n.websocket.off("get_pioneers_res", this._get_pioneers_res);
     }
 
     changeLang(): void {
@@ -258,6 +267,13 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     private _onInnerOuterChanged() {
         const isOuter: boolean = GameMainHelper.instance.isGameShowOuter;
         this.node.getChildByPath("btnBuild").active = !isOuter;
+    }
+
+
+    // res
+    private _get_pioneers_res() {
+        let pioneers = DataMgr.s.pioneers.getAll;
+        console.log("Pioneers info: ", pioneers);
     }
 }
 

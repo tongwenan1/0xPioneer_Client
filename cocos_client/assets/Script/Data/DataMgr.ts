@@ -3,13 +3,15 @@ import ChainConfig from "../Config/ChainConfig";
 import { NotificationName } from "../Const/Notification";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import { EthereumEventData_accountChanged, EthereumEventData_chainChanged, EthereumEventData_init, EthereumEventType } from "../Net/ethers/Ethereum";
-import { s2c_user } from "../Net/msg/WebsocketMsg";
+import { s2c_user, share } from "../Net/msg/WebsocketMsg";
 import CLog from "../Utils/CLog";
 import { RunData } from "./RunData";
+import { SaveData } from "./SaveData";
 
 export class DataMgr {
     public static n: NetworkMgr;
     public static r: RunData;
+    public static s: SaveData;
 
     public static async init(): Promise<boolean> {
         const chainConfig = ChainConfig.getCurrentChainConfig();
@@ -19,6 +21,7 @@ export class DataMgr {
 
         DataMgr.n = new NetworkMgr();
         DataMgr.r = new RunData();
+        DataMgr.s = new SaveData();
 
         // init ethereum
         if (init_ethereum) {
@@ -57,6 +60,10 @@ export class DataMgr {
             DataMgr.n.websocket.on("login_res", this.login_res);
             DataMgr.n.websocket.on("create_player_res", this.create_player_res);
             DataMgr.n.websocket.on("enter_game_res", this.enter_game_res);
+
+            // pioneernft func
+            DataMgr.n.websocket.on("mark_data_dirty", this.mark_data_dirty);
+            DataMgr.n.websocket.on("get_pioneers_res", this.get_pioneers_res);
 
             DataMgr.n.websocketConnect(); // async
         } else {
@@ -161,4 +168,23 @@ export class DataMgr {
             }
         }
     };
+
+    private static mark_data_dirty = (e: any) => {
+        let p: s2c_user.Imark_data_dirty = e.data;
+        switch (p.type) {
+            case "pioneer":
+                // TODO: refetch pioneer data
+                DataMgr.n.websocketMsg.get_pioneers({});
+                break;
+        }
+    };
+
+    private static get_pioneers_res = (e: any) => {
+        let p: s2c_user.Iget_pioneers_res = e.data;
+        // TODO: update all pioneers data
+
+        // pioneernft func
+        let testpioneer: share.Ipioneer_info = { type: "1"};
+        DataMgr.s.pioneers.add(testpioneer);
+    }
 }

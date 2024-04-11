@@ -1,3 +1,4 @@
+import NotificationMgr from "../../Basic/NotificationMgr";
 import ProtobufConfig from "../../Config/ProtobufConfig";
 import { natrium_ws } from "../../natrium/client/natrium_ws";
 import { registermsg } from "../../natrium/share/msgs/registermsg";
@@ -75,6 +76,20 @@ export class WebsocketMsg {
     public enter_game(d: c2s_user.Ienter_game): void {
         this.send_packet("enter_game", d);
     }
+
+    public create_pioneer(d: c2s_user.Icreate_pioneer): void {
+        //this.send_packet("create_pioneer", d);
+
+        // pioneernft func
+        this._websocket.emit("mark_data_dirty", { type: "pioneer" });
+    }
+
+    public get_pioneers(d: c2s_user.Iget_pioneers): void {
+        // this.send_packet("get_pioneers", d);
+
+        // pioneernft func
+        this._websocket.emit("get_pioneers_res", {});
+    }
 }
 
 export const WebsocketEvent = {
@@ -105,6 +120,12 @@ export namespace c2s_user {
     }
 
     export interface Ienter_game {}
+
+    export interface Icreate_pioneer {
+        type: string;
+    }
+
+    export interface Iget_pioneers {}
 }
 
 export namespace s2c_user {
@@ -138,6 +159,15 @@ export namespace s2c_user {
 
         /** enter_game_res data */
         data?: share.Iplayer_data | null;
+    }
+
+    export interface Imark_data_dirty {
+        type: string;
+    }
+
+    export interface Iget_pioneers_res {
+        res: number;
+        data?: share.Ipioneer_info | null;
     }
 }
 
@@ -175,5 +205,9 @@ export namespace share {
     export interface Iplayer_info {
         /** player_info sinfo */
         sinfo: share.Iplayer_sinfo;
+    }
+
+    export interface Ipioneer_info {
+        type: string;
     }
 }

@@ -15,10 +15,6 @@ export class NetworkMgr {
     private _websocketMsg: WebsocketMsg;
     private _ethereumMsg: EthereumMsg;
 
-    private _init_ws: boolean;
-    private _init_http: boolean;
-    private _init_ethereum: boolean;
-
     public get websocketMsg(): WebsocketMsg {
         return this._websocketMsg;
     }
