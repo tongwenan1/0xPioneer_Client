@@ -3,12 +3,13 @@ import ChainConfig from "../Config/ChainConfig";
 import { NotificationName } from "../Const/Notification";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import { EthereumEventData_accountChanged, EthereumEventData_chainChanged, EthereumEventData_init, EthereumEventType } from "../Net/ethers/Ethereum";
-import { c2s_user, s2c_user, share } from "../Net/msg/WebsocketMsg";
+import { s2c_user } from "../Net/msg/WebsocketMsg";
 import CLog from "../Utils/CLog";
+import { RunData } from "./RunData";
 
 export class DataMgr {
     public static n: NetworkMgr;
-    public static s: StoreData;
+    public static r: RunData;
 
     public static async init(): Promise<boolean> {
         const chainConfig = ChainConfig.getCurrentChainConfig();
@@ -17,7 +18,7 @@ export class DataMgr {
         const init_ethereum = !!chainConfig.api.init_ethereum;
 
         DataMgr.n = new NetworkMgr();
-        DataMgr.s = new StoreData();
+        DataMgr.r = new RunData();
 
         // init ethereum
         if (init_ethereum) {
@@ -68,8 +69,8 @@ export class DataMgr {
     public static async loginServer(account: string, walletType: string) {
         let r = await DataMgr.n.LoginServer(account, walletType);
         if (r?.token) {
-            DataMgr.s.wallet.type = walletType;
-            DataMgr.s.loginInfo = r;
+            DataMgr.r.wallet.type = walletType;
+            DataMgr.r.loginInfo = r;
         }
     }
 
@@ -79,35 +80,35 @@ export class DataMgr {
         let d: EthereumEventData_accountChanged = e.data;
         let newAccount = d.changedAccount;
 
-        DataMgr.s.wallet.addr = "";
-        DataMgr.s.wallet.type = "";
+        DataMgr.r.wallet.addr = "";
+        DataMgr.r.wallet.type = "";
     };
     private static chainChanged_res = (e: any) => {
         CLog.error("chainChanged", e);
         let d: EthereumEventData_chainChanged = e.data;
         let newChainId = d.changedChainId;
 
-        DataMgr.s.wallet.addr = "";
-        DataMgr.s.wallet.type = "";
+        DataMgr.r.wallet.addr = "";
+        DataMgr.r.wallet.type = "";
     };
 
     ///////////////// websocket
     private static onmsg = (e: any) => {
         CLog.debug("DataMgr/onmsg: e => " + JSON.stringify(e));
-    }
+    };
     public static async logout() {
-        DataMgr.s = new StoreData();
+        DataMgr.r = new RunData();
         DataMgr.n.websocket.disconnect();
     }
     public static async reconnect() {
-        DataMgr.s.reconnects++;
-        CLog.info(`DataMgr, reconnect, count: ${DataMgr.s.reconnects}`);
+        DataMgr.r.reconnects++;
+        CLog.info(`DataMgr, reconnect, count: ${DataMgr.r.reconnects}`);
         let r = await DataMgr.n.websocketConnect();
         if (r) {
-            CLog.info(`DataMgr, reconnect success [${DataMgr.s.reconnects}]`);
-            if (DataMgr.s.wallet.addr) {
+            CLog.info(`DataMgr, reconnect success [${DataMgr.r.reconnects}]`);
+            if (DataMgr.r.wallet.addr) {
                 CLog.info(`DataMgr, reconnect login`);
-                DataMgr.n.websocketMsg.login(DataMgr.s.loginInfo);
+                DataMgr.n.websocketMsg.login(DataMgr.r.loginInfo);
             }
         }
     }
@@ -116,13 +117,12 @@ export class DataMgr {
     };
     private static disconnected = (e: any) => {
         CLog.error("DataMgr, disconnected, e: ", e);
-        if (DataMgr.s.reconnects < 3) {
+        if (DataMgr.r.reconnects < 3) {
             DataMgr.reconnect();
         } else {
             CLog.error("DataMgr: try connecting failed");
         }
     };
-
 
     private static init_res = (e: any) => {
         let d: EthereumEventData_init = e.data;
@@ -134,7 +134,7 @@ export class DataMgr {
         let p: s2c_user.Ilogin_res = e.data;
         if (p.res === 1) {
             if (!p.data?.uid) return;
-            DataMgr.s.wallet.addr = p.data.wallet;
+            DataMgr.r.wallet.addr = p.data.wallet;
             if (p.isNew) {
                 DataMgr.n.websocketMsg.create_player({ pname: `Pioneer${p.data.uid}`, gender: 0 });
             } else {
@@ -152,45 +152,13 @@ export class DataMgr {
         let p: s2c_user.Ienter_game_res = e.data;
         if (p.res === 1) {
             if (p.data) {
-                DataMgr.s.userInfo = p.data.info.sinfo;
+                DataMgr.r.userInfo = p.data.info.sinfo;
                 NotificationMgr.triggerEvent(NotificationName.USER_LOGIN_SUCCEED);
             }
             // reconnect
-            if (DataMgr.s.reconnects > 0) {
-                DataMgr.s.reconnects = 0;
+            if (DataMgr.r.reconnects > 0) {
+                DataMgr.r.reconnects = 0;
             }
         }
     };
-}
-
-export class StoreData {
-    wallet: walletData = {
-        addr: "",
-        type: "",
-    };
-
-    reconnects: number = 0;
-
-    loginInfo: c2s_user.Ilogin = {
-        name: "",
-        uid: "",
-        token: "",
-    };
-
-    userInfo: share.Iplayer_sinfo = {
-        playerid: 0,
-        pname: "",
-        gender: 0
-    };
-
-    // pending: share.Itran_data[];
-    // pendingHistory: pendingHistoryData;
-
-    height: number = 0;
-    l1height: number = 0;
-}
-
-export interface walletData {
-    addr: string;
-    type: string;
 }
