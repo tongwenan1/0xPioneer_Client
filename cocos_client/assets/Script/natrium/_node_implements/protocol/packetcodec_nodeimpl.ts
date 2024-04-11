@@ -127,7 +127,7 @@ export class packetcodec_nodeimpl implements packetcodec {
                     offset += 2;
                     const msgcmd = _protobuf_mgr.get_msgcmd_byid(msgid);
                     if (!msgcmd) {
-                        console.error(`packetcodec_nodeimpl: _read_protocol_frombuf msgid[${msgid}] not exist!!`);
+                        console.error(`[natrium] packetcodec_nodeimpl/_read_protocol_frombuf: msgid[${msgid}] not exist!!`);
                     }
                     const data = _protobuf_mgr.msgs[msgcmd].decode(buffer.subarray(offset));
                     p.data = {
@@ -185,8 +185,9 @@ export class packetcodec_nodeimpl implements packetcodec {
         } else {
             // TO DO : too big
             // err
-            console.error(`encode_packet protodata.length[${protodata.length}] too big`);
-            throw new Error(`Natrium: encode_packet length[${protodata.length}] too big`);
+            const err = `[natrium] packetcodec_nodeimpl/encode_packet: protodata.length[${protodata.length}] too big`;
+            console.error(err);
+            throw new Error(err);
         }
 
         (p as packet_nodeimpl).set_bitszipped(bodylenbit, isZiped);
@@ -228,8 +229,9 @@ export class packetcodec_nodeimpl implements packetcodec {
 
         let bufferLenLeft = buf.length - offset;
         if (len != bufferLenLeft) {
-            console.error(`decode_packet len[${len}] != buffer len[${bufferLenLeft}]`);
-            throw new Error(`Natrium: decode_packet len[${len}] != buffer len[${bufferLenLeft}]`);
+            const err = `[natrium] packetcodec_nodeimpl/decode_packet: len[${len}] != buffer len[${bufferLenLeft}]`;
+            console.error(err);
+            throw new Error(err);
         }
 
         // TO DO : do unzip in thread

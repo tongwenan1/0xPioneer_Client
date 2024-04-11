@@ -3,6 +3,7 @@
 // author : Sean Chen
 
 import { httpconnecter } from "../interface/network/httpconnecter";
+import { Log } from "../util/Log";
 
 export class natrium_http {
     protected _connecter: httpconnecter | null = null;
@@ -20,6 +21,7 @@ export class natrium_http {
 
 export class Http implements httpconnecter {
     public async post(url: string, data: any): Promise<any> {
+        Log.debug("[natrium] natrium_http/Http: url-> " + url + ", data->" + JSON.stringify(data));
         return new Promise<any>((resolve, reject) => {
             var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance
             xmlhttp.open("POST", `${url}`);

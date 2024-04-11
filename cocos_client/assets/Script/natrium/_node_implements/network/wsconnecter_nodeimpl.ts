@@ -44,18 +44,18 @@ export class wsconnecter_nodeimpl implements wsconnecter {
 
     public connect(host: string): boolean {
         if (this._pcodec == null) {
-            Log.error(`wsconnecter_nodeimpl _pcodec is null`);
+            Log.error("[natrium] wsconnecter_nodeimpl/connect: _pcodec is null");
             return false;
         }
         if (this._handler == null) {
-            Log.error(`wsconnecter_nodeimpl _handler is null`);
+            Log.error("[natrium] wsconnecter_nodeimpl/connect: _handler is null");
             return false;
         }
 
         this._host = host;
         // this._heartbeatCheck = 0;
 
-        Log.debug(`wsconnecter_nodeimpl try connect to [${host}]`);
+        Log.debug(`[natrium] wsconnecter_nodeimpl/connect: try connect to [${host}]`);
 
         this._ws = new WebSocket(host);
         this._ws.binaryType = "arraybuffer";
@@ -77,7 +77,7 @@ export class wsconnecter_nodeimpl implements wsconnecter {
                 thisptr._on_socket_message(binary);
             } catch (e) {
                 let err: Error = e as Error;
-                Log.error(`wsconnecter_nodeimpl _on_socket_message error:${err.message}\r\n${err.stack}`);
+                Log.error(`[natrium] wsconnecter_nodeimpl/connect: _on_socket_message error:${err.message}\r\n${err.stack}`);
             }
         };
 
@@ -86,16 +86,16 @@ export class wsconnecter_nodeimpl implements wsconnecter {
     public disconnect(reason: string): void {
         this._handler.stop_heartbeat();
         if (this._ws == null) {
-            Log.error(`wsconnecter_nodeimpl disconnect when ws not connect`);
+            Log.error(`[natrium] wsconnecter_nodeimpl/disconnect: ws not connect`);
             return;
         }
 
-        Log.debug(`wsconnecter_nodeimpl disconnect`);
+        Log.debug(`[natrium] wsconnecter_nodeimpl/disconnect: disconnected`);
         this._ws.close(connection_close_code.client_close, reason);
     }
     public send_packet(p: packet): void {
         if (this._ws == null) {
-            Log.error(`wsconnecter_nodeimpl send when ws not connect`);
+            Log.error(`[natrium] wsconnecter_nodeimpl/send_packet: ws not connect`);
             return;
         }
 
@@ -119,7 +119,6 @@ export class wsconnecter_nodeimpl implements wsconnecter {
         // 	NetWorkManager.Disconnect();
         // 	return;
         // }
-        // Log.debug('ping')
         let p = this._pcodec.create_pingpongpkt(this.server_tick);
 
         this._lastpingtm = Date.now();
@@ -129,7 +128,7 @@ export class wsconnecter_nodeimpl implements wsconnecter {
     public login(uid: string, token: string): void {}
 
     protected _on_socket_connected(): void {
-        Log.debug(`wsconnecter_nodeimpl [${this._host}] connected`);
+        Log.debug(`[natrium] wsconnecter_nodeimpl/_on_socket_connected, [${this._host}] connected`);
 
         this._handler.on_connected();
     }
@@ -140,7 +139,7 @@ export class wsconnecter_nodeimpl implements wsconnecter {
                 {
                     // TO DO : check shakehand msg
                     if (p.data.mark == shakehand_mark) {
-                        Log.debug(`wsconnecter_nodeimpl shakehand over`);
+                        Log.debug(`[natrium] wsconnecter_nodeimpl/_handle_sys_cmd: shakehand over`);
 
                         this._lastpongtm = Date.now();
                         this._latency = this._lastpongtm - this._lastpingtm;
@@ -149,7 +148,7 @@ export class wsconnecter_nodeimpl implements wsconnecter {
                         this._handler.on_shakehand();
                     } else {
                         // Endian not same
-                        Log.debug(`wsconnecter_nodeimpl shakehand edian wrong`);
+                        Log.debug(`[natrium] wsconnecter_nodeimpl/_handle_sys_cmd: shakehand edian wrong`);
                     }
                 }
                 break;
@@ -159,6 +158,8 @@ export class wsconnecter_nodeimpl implements wsconnecter {
                     this._lastpongtm = Date.now();
                     this._latency = this._lastpongtm - this._lastpingtm;
                     this._servertickfromstart = p.data.time;
+
+                    Log.debug(`[natrium] wsconnecter_nodeimpl/_handle_sys_cmd: pingpong`);
                 }
                 break;
         }
@@ -174,7 +175,7 @@ export class wsconnecter_nodeimpl implements wsconnecter {
     }
 
     protected async _on_socket_error(err: Event): Promise<void> {
-        Log.error(`wsconnecter_nodeimpl err:[${err.type}]`);
+        Log.error("[natrium] wsconnecter_nodeimpl/_on_socket_error: err ", err);
     }
 
     protected _on_socket_close(): void {

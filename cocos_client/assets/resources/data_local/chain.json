@@ -32,8 +32,8 @@
             "blockExplorerUrls": ["https://sepolia.scrollscan.com"],
             "abi": "deployresult_scrollTestnet",
             "api": {
-                "ws_host": "wss://testapi.0xpioneerdev.com/wss",
-                "http_host": "https://testapi.0xpioneerdev.com/api",
+                "ws_host": "wss://apitest.0xpioneerdev.com/wss",
+                "http_host": "https://apitest.0xpioneerdev.com/api",
                 "init_ws": 1,
                 "init_http": 1,
                 "init_ethereum": 1

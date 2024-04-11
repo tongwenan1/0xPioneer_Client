@@ -20,10 +20,10 @@ export class WebsocketMsg {
         try {
             await this._websocket.connect(this._websocket_host);
         } catch (e) {
-            CLog.error("WebsocketMsg, wsConnect, exception:", e);
+            CLog.error("WebsocketMsg: websocketConnect exception:", e);
             return false;
         }
-        CLog.debug("websocketConnect success");
+        CLog.debug("WebsocketMsg: websocketConnect success");
         return true;
     }
 
@@ -58,7 +58,7 @@ export class WebsocketMsg {
         if (this._websocket.connecter == null) {
             return;
         }
-        CLog.info(`WebsocketMsg, send_packet, cmd:${cmd}, data:`, data);
+        CLog.debug(`WebsocketMsg, send_packet, cmd:${cmd}, data:`, data);
 
         let pkt = this._websocket.connecter.pcodec.create_protopkt(cmd, data);
         this._websocket.connecter.send_packet(pkt);

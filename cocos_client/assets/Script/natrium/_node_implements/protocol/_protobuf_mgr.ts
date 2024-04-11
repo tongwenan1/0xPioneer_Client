@@ -32,7 +32,7 @@ export class _protobuf_mgr {
             let thisptr = this;
             protobuf.load(filenames, (err, root) => {
                 if (root == undefined) {
-                    Log.error(`loadProtobufFiles filenames[${filenames}] error:${err.message}`);
+                    Log.error(`[natrium] _protobuf_mgr/loadProtobufFiles: load filenames[${filenames}] error:${err.message}`);
                     reject();
                 } else {
                     thisptr._root = root;
@@ -45,12 +45,12 @@ export class _protobuf_mgr {
     // msgid not bigger than 65535, in 2byte
     public static registerMsg(msgid: number, msgcmd: string, path: string): void {
         if (msgcmd in this._msgs) {
-            Log.error(`registerMsg msgcmd[${msgcmd}] with msgid[${msgid}] already exist`);
+            Log.error(`[natrium] _protobuf_mgr/registerMsg: msgcmd[${msgcmd}] with msgid[${msgid}] already exist`);
             return;
         }
 
         if (msgid in this._msgid2cmd) {
-            Log.error(`registerMsg msgid[${msgid}] with msgcmd[${msgcmd}] already exist`);
+            Log.error(`[natrium] _protobuf_mgr/registerMsg: msgid[${msgid}] with msgcmd[${msgcmd}] already exist`);
             return;
         }
 

@@ -55,7 +55,7 @@ export class natrium_ws extends EventEmitter implements wsconnecter_handler {
     }
 
     on_connected(): void {
-        Log.info(`natrium_ws on_connected`);
+        Log.debug(`[natrium] natrium_ws/on_connected: connected`);
 
         this.stop_reconnect();
         this._connecter?.shakehand();
@@ -97,7 +97,7 @@ export class natrium_ws extends EventEmitter implements wsconnecter_handler {
     }
 
     on_shakehand(): void {
-        Log.info(`natrium_ws on_shakehand`);
+        Log.debug(`[natrium] natrium_ws/on_shakehand: on_shakehand`);
 
         this.start_heartbeat();
 
@@ -111,7 +111,7 @@ export class natrium_ws extends EventEmitter implements wsconnecter_handler {
         }
     }
     on_disconnected(reason: string): void {
-        Log.info(`natrium_ws on_disconnected reason:${reason}`);
+        Log.debug(`[natrium] natrium_ws/on_disconnected: reason->${reason}`);
 
         if (this._connect_reject != null) {
             this._connect_reject();
@@ -124,10 +124,10 @@ export class natrium_ws extends EventEmitter implements wsconnecter_handler {
     }
     on_packet(p: packet): void {
         this.emit("onmsg", p);
-        Log.debug("on_packet", p);
         // server did not use heartbeat so we use it to judge the server connection
         // this.reset_heartbeat();
         if (p.prototp == prototype.proto_json || p.prototp == prototype.proto_grpc) {
+            Log.debug("[natrium] natrium_ws/on_packet: data->" + JSON.stringify(p.data));
             this.emit(p.data.c, p.data.d);
         }
     }

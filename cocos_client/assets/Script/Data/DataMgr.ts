@@ -49,6 +49,7 @@ export class DataMgr {
             }
 
             // add websocket listener
+            DataMgr.n.websocket.on("onmsg", this.onmsg);
             DataMgr.n.websocket.on("disconnected", this.disconnected);
             DataMgr.n.websocket.on("connected", this.connected);
 
@@ -91,16 +92,19 @@ export class DataMgr {
     };
 
     ///////////////// websocket
+    private static onmsg = (e: any) => {
+        CLog.debug("DataMgr/onmsg: e => " + JSON.stringify(e));
+    }
     public static async logout() {
         DataMgr.s = new StoreData();
         DataMgr.n.websocket.disconnect();
     }
     public static async reconnect() {
-        CLog.info(`DataMgr, reconnect, count: ${DataMgr.s.reconnects++}`);
         DataMgr.s.reconnects++;
+        CLog.info(`DataMgr, reconnect, count: ${DataMgr.s.reconnects}`);
         let r = await DataMgr.n.websocketConnect();
         if (r) {
-            CLog.info(`DataMgr, reconnect success`);
+            CLog.info(`DataMgr, reconnect success [${DataMgr.s.reconnects}]`);
             if (DataMgr.s.wallet.addr) {
                 CLog.info(`DataMgr, reconnect login`);
                 DataMgr.n.websocketMsg.login(DataMgr.s.loginInfo);
@@ -115,9 +119,11 @@ export class DataMgr {
         if (DataMgr.s.reconnects < 3) {
             DataMgr.reconnect();
         } else {
-            CLog.error("Connecting Failed!!!");
+            CLog.error("DataMgr: try connecting failed");
         }
     };
+
+
     private static init_res = (e: any) => {
         let d: EthereumEventData_init = e.data;
         if (d.res === 0) {
@@ -130,7 +136,7 @@ export class DataMgr {
             if (!p.data?.uid) return;
             DataMgr.s.wallet.addr = p.data.wallet;
             if (p.isNew) {
-                DataMgr.n.websocketMsg.create_player({ pname: `Pioneer_${p.data.uid}`, gender: 0 });
+                DataMgr.n.websocketMsg.create_player({ pname: `Pioneer${p.data.uid}`, gender: 0 });
             } else {
                 DataMgr.n.websocketMsg.enter_game({});
             }
