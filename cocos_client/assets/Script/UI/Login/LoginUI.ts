@@ -7,19 +7,16 @@ import { NotificationName } from "../../Const/Notification";
 import ChainConfig from "../../Config/ChainConfig";
 import CLog from "../../Utils/CLog";
 import { DataMgr } from "../../Data/DataMgr";
+import { NetworkMgr } from "../../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("CompLogin")
 export class LoginUI extends ViewController {
     //--------------------------------------- lifeCyc
-    private _gameInited: boolean = false;
-
     private _loginClicked: boolean = false;
 
     protected viewDidLoad(): void {
         super.viewDidLoad();
-
-        NotificationMgr.addListener(NotificationName.GAME_INITED, this._onGameInited, this);
     }
     protected viewDidStart(): void {
         super.viewDidStart();
@@ -27,17 +24,12 @@ export class LoginUI extends ViewController {
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
-        NotificationMgr.removeListener(NotificationName.GAME_INITED, this._onGameInited, this);
     }
 
-    //--------------------------------------- notification
-    private _onGameInited() {
-        this._gameInited = true;
-    }
     //--------------------------------------- action
     private onTapStart() {
         const chainConf = ChainConfig.getCurrentChainConfig();
-        if (chainConf.api.init_ethereum) {
+        if (chainConf.api.init) {
             this.onTapStart_chain();
             return;
         }
@@ -45,8 +37,17 @@ export class LoginUI extends ViewController {
         this.node.getChildByName("StartView").active = false;
         this.node.getChildByName("LoginView").active = true;
     }
+    private onTapStart_chain() {
+        if (!DataMgr.r.inited) {
+            CLog.warn("LoginUI: game init failed");
+            return;
+        }
+        NetworkMgr.ethereum.init();
+    }
+
     private async onTapLogin() {
-        if (!this._gameInited) {
+        if (!DataMgr.r.inited) {
+            CLog.warn("LoginUI: Game inited failed");
             return;
         }
 
@@ -73,13 +74,5 @@ export class LoginUI extends ViewController {
         if (canEnter) {
             NotificationMgr.triggerEvent(NotificationName.USER_LOGIN_SUCCEED);
         }
-    }
-
-    private onTapStart_chain() {
-        if (!this._gameInited) {
-            CLog.warn("LoginUI: game init failed");
-            return;
-        }
-        DataMgr.n.ethereum.init();
     }
 }

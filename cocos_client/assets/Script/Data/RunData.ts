@@ -1,6 +1,8 @@
 import { c2s_user, share } from "../Net/msg/WebsocketMsg";
 
 export class RunData {
+    inited: boolean = false;
+
     wallet: walletData = {
         addr: "",
         type: "",

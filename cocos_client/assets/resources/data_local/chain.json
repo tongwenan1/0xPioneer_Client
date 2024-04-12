@@ -15,9 +15,7 @@
             "api": {
                 "ws_host": "",
                 "http_host": "",
-                "init_ws": 0,
-                "init_http": 0,
-                "init_ethereum": 0
+                "init": false
             }
         },
         "534351": {
@@ -34,9 +32,7 @@
             "api": {
                 "ws_host": "wss://apitest.0xpioneerdev.com/wss",
                 "http_host": "https://apitest.0xpioneerdev.com/api",
-                "init_ws": 1,
-                "init_http": 1,
-                "init_ethereum": 1
+                "init": true
             }
         }
     }

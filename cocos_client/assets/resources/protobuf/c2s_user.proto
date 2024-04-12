@@ -20,3 +20,7 @@ message create_player {
 message enter_game {
 
 }
+
+message save_archives {
+    required string archives = 1;
+}

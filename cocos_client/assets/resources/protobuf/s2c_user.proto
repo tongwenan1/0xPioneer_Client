@@ -26,3 +26,7 @@ message enter_game_res {
     required int32 res = 1; // error code see {ServerErrorCode}
     optional share.player_data data = 2; // full player data of self
 }
+
+message save_archives_res {
+    required int32 res = 1;
+}

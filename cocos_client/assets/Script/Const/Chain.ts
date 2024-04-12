@@ -19,8 +19,6 @@ export interface ChainConfigsConfigData {
     api: {
         ws_host: string;
         http_host: string;
-        init_ws: number;
-        init_http: number;
-        init_ethereum: number;
+        init: boolean;
     }
 }

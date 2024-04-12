@@ -10,6 +10,11 @@ import { GAME_ENV_IS_DEBUG, PioneerGameTest } from "./Const/ConstDefine";
 import UIPanelManger, { UIPanelLayerType } from "./Basic/UIPanelMgr";
 import { UIMainRootController } from "./UI/UIMainRootController";
 import { DataMgr } from "./Data/DataMgr";
+import { NetworkMgr } from "./Net/NetworkMgr";
+import ChainConfig from "./Config/ChainConfig";
+import CLog from "./Utils/CLog";
+import { EthereumEventData_accountChanged, EthereumEventData_chainChanged, EthereumEventData_init, EthereumEventType } from "./Net/ethers/Ethereum";
+import { s2c_user } from "./Net/msg/WebsocketMsg";
 const { ccclass, property } = _decorator;
 
 @ccclass("Main")
@@ -21,12 +26,24 @@ export class Main extends ViewController {
         NotificationMgr.addListener(NotificationName.GAME_INITED, this._onGameInited, this);
         NotificationMgr.addListener(NotificationName.USER_LOGIN_SUCCEED, this._onUserLoginSucceed, this);
 
-        // audio prepare
-        AudioMgr.prepareAudioSource();
+        // DataMgr init
+        if (!(await DataMgr.init())) return;
 
-        // config init
+        // ConfigMgr init
         if (!(await ConfigMgr.init())) return;
         NotificationMgr.triggerEvent(NotificationName.CONFIG_LOADED);
+
+        // NetworkMgr init
+        const chainConfig = ChainConfig.getCurrentChainConfig();
+        if (chainConfig.api.init) {
+            if (!NetworkMgr.init(chainConfig.api.http_host, chainConfig.api.ws_host)) {
+                CLog.error("Main: NetworkMgr init failed");
+                return;
+            }
+        }
+
+        // audio prepare
+        AudioMgr.prepareAudioSource();
 
         // debug mode
         if (GAME_ENV_IS_DEBUG) {
@@ -34,7 +51,13 @@ export class Main extends ViewController {
             NotificationMgr.triggerEvent(NotificationName.GAME_INITED);
         } else {
             await UIPanelManger.inst.pushPanel(UIName.LoginUI);
-            if (!(await DataMgr.init())) return;
+            if (chainConfig.api.init) {
+                this._addListener();
+                NetworkMgr.websocketConnect();
+            }
+            else {
+                NotificationMgr.triggerEvent(NotificationName.GAME_INITED);
+            }
         }
     }
 
@@ -52,6 +75,8 @@ export class Main extends ViewController {
     //--------------------------------------- notification
 
     private async _onGameInited() {
+        DataMgr.r.inited = true;
+
         (window as any).hideLoading();
 
         if (GAME_ENV_IS_DEBUG) {
@@ -60,6 +85,9 @@ export class Main extends ViewController {
     }
 
     private async _onUserLoginSucceed() {
+
+        await DataMgr.load();
+
         if (GAME_ENV_IS_DEBUG) {
             await this._showGameMain();
             UIPanelManger.inst.popPanel(null, UIPanelLayerType.HUD);
@@ -122,4 +150,106 @@ export class Main extends ViewController {
         await this.node.getChildByPath("UI_Canvas/UI_ROOT").getComponent(UIMainRootController).checkShowRookieGuide();
         await UIPanelManger.inst.pushPanel(GameName.GameMain, UIPanelLayerType.Game);
     }
+
+    private _addListener() {
+        // main listener
+        // --- ethereum
+        NetworkMgr.ethereum.on(EthereumEventType.accountChanged, this.accountChanged_res);
+        NetworkMgr.ethereum.on(EthereumEventType.chainChanged, this.chainChanged_res);
+        NetworkMgr.ethereum.on(EthereumEventType.init, this.init_res);
+        // --- websocket connection
+        NetworkMgr.websocket.on("disconnected", this.disconnected);
+        NetworkMgr.websocket.on("connected", this.connected);
+        // --- websocket common
+        NetworkMgr.websocket.on("login_res", this.login_res);
+        NetworkMgr.websocket.on("create_player_res", this.create_player_res);
+        NetworkMgr.websocket.on("mark_data_dirty", this.mark_data_dirty);
+
+        // DataMgr listener
+        // websocket
+        NetworkMgr.websocket.on("onmsg", DataMgr.onmsg);
+        NetworkMgr.websocket.on("enter_game_res", DataMgr.enter_game_res);
+
+        // pioneernft func
+        NetworkMgr.websocket.on("get_pioneers_res", DataMgr.get_pioneers_res);
+    }
+
+    private async reconnect() {
+        DataMgr.r.reconnects++;
+        CLog.info(`Main/reconnect, count: ${DataMgr.r.reconnects}`);
+        let r = await NetworkMgr.websocketConnect();
+        if (r) {
+            CLog.info(`Main/reconnect success [${DataMgr.r.reconnects}]`);
+            if (DataMgr.r.wallet.addr) {
+                CLog.info(`Main/reconnect: websocket login starting`);
+                NetworkMgr.websocketMsg.login(DataMgr.r.loginInfo);
+            }
+        }
+    }
+    private connected = (e: any) => {
+        NotificationMgr.triggerEvent(NotificationName.GAME_INITED);
+    };
+    private disconnected = (e: any) => {
+        CLog.error("Main/disconnected, e: ", e);
+        if (DataMgr.r.reconnects < 3) {
+            this.reconnect();
+        } else {
+            CLog.error("Main/disconnected: retry connecting failed");
+        }
+    };
+
+    private init_res = async (e: any) => {
+        let d: EthereumEventData_init = e.data;
+        if (d.res === 0) {
+            let r = await NetworkMgr.LoginServer(d.account, d.walletType);
+            if (r?.token) {
+                DataMgr.r.wallet.type = d.walletType;
+                DataMgr.r.loginInfo = r;
+            }
+        }
+    };
+    private accountChanged_res = (e: any) => {
+        CLog.error("accountChanged", e);
+        let d: EthereumEventData_accountChanged = e.data;
+        let newAccount = d.changedAccount;
+
+        DataMgr.r.wallet.addr = "";
+        DataMgr.r.wallet.type = "";
+    };
+    private chainChanged_res = (e: any) => {
+        CLog.error("chainChanged", e);
+        let d: EthereumEventData_chainChanged = e.data;
+        let newChainId = d.changedChainId;
+
+        DataMgr.r.wallet.addr = "";
+        DataMgr.r.wallet.type = "";
+    };
+
+    private login_res = (e: any) => {
+        let p: s2c_user.Ilogin_res = e.data;
+        if (p.res === 1) {
+            if (!p.data?.uid) return;
+            DataMgr.r.wallet.addr = p.data.wallet;
+            if (p.isNew) {
+                NetworkMgr.websocketMsg.create_player({ pname: `Pioneer${p.data.uid}`, gender: 0 });
+            } else {
+                NetworkMgr.websocketMsg.enter_game({});
+            }
+        }
+    };
+    private create_player_res = (e: any) => {
+        let p: s2c_user.Icreate_player_res = e.data;
+        if (p.res === 1) {
+            NetworkMgr.websocketMsg.enter_game({});
+        }
+    };
+    private mark_data_dirty = (e: any) => {
+        let p: s2c_user.Imark_data_dirty = e.data;
+        switch (p.type) {
+            case "pioneer":
+                // TODO: refetch pioneer data
+                NetworkMgr.websocketMsg.get_pioneers({});
+                break;
+        }
+    };
 }

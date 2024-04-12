@@ -1,4 +1,3 @@
-import NotificationMgr from "../../Basic/NotificationMgr";
 import ProtobufConfig from "../../Config/ProtobufConfig";
 import { natrium_ws } from "../../natrium/client/natrium_ws";
 import { registermsg } from "../../natrium/share/msgs/registermsg";

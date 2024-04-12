@@ -2,62 +2,60 @@ import { natrium_http } from "../natrium/client/natrium_http";
 import { natrium_ws } from "../natrium/client/natrium_ws";
 
 import { HttpMsg } from "./msg/HttpMsg";
+import { WebsocketMsg, c2s_user } from "./msg/WebsocketMsg";
+import { EthereumMsg } from "./msg/EthereumMsg";
 
-import { Ethereum, EthereumEventType, WalletType } from "./ethers/Ethereum";
+import { Ethereum, WalletType } from "./ethers/Ethereum";
 
 import CLog from "../Utils/CLog";
 import ChainConfig from "../Config/ChainConfig";
-import { WebsocketEvent, WebsocketMsg, c2s_user } from "./msg/WebsocketMsg";
-import { EthereumMsg } from "./msg/EthereumMsg";
 
 export class NetworkMgr {
-    private _httpmsg: HttpMsg;
-    private _websocketMsg: WebsocketMsg;
-    private _ethereumMsg: EthereumMsg;
+    private static _httpmsg: HttpMsg;
+    private static _websocketMsg: WebsocketMsg;
+    private static _ethereumMsg: EthereumMsg;
 
-    public get websocketMsg(): WebsocketMsg {
+    public static get websocketMsg(): WebsocketMsg {
         return this._websocketMsg;
     }
-    public get websocket(): natrium_ws {
+    public static get websocket(): natrium_ws {
         return this._websocketMsg.websocket;
     }
 
-    public get ethereumMsg(): EthereumMsg {
+    public static get ethereumMsg(): EthereumMsg {
         return this._ethereumMsg;
     }
-    public get ethereum(): Ethereum {
+    public static get ethereum(): Ethereum {
         return this._ethereumMsg.ethereum;
     }
 
-    public get httpMsg(): HttpMsg {
+    public static get httpMsg(): HttpMsg {
         return this._httpmsg;
     }
-    public get http(): natrium_http {
+    public static get http(): natrium_http {
         return this._httpmsg.http;
     }
 
-    public init_http(http_host: string): boolean {
+    public static init(http_host: string, ws_host: string): boolean {
         this._httpmsg = new HttpMsg(http_host);
-        return this._httpmsg.init();
-    }
-    public init_ws(ws_host: string): boolean {
         this._websocketMsg = new WebsocketMsg(ws_host);
-        return this._websocketMsg.init();
-    }
-    public init_ethereum(): boolean {
         this._ethereumMsg = new EthereumMsg();
+
+        if (!this._httpmsg.init() || !this._websocketMsg.init()) {
+            return false;
+        }
         return true;
     }
 
-    public async websocketConnect(): Promise<boolean> {
+    public static async websocketConnect(): Promise<boolean> {
         return await this.websocketMsg.websocketConnect();
     }
 
-    public async walletInit(walletType: WalletType = WalletType.ethereum): Promise<void> {
+    public static async walletInit(walletType: WalletType = WalletType.ethereum): Promise<void> {
         await this.ethereum.init(walletType);
     }
 
-    public async LoginServer(account: string, walletType: string): Promise<c2s_user.Ilogin | null> {
+    public static async LoginServer(account: string, walletType: string): Promise<c2s_user.Ilogin | null> {
         const signMessage = "Ethereum Signed Message:\n    Welcome to 0xPioneer\n    Login by address\n" + Math.floor(Date.now() / 1000);
         const signature = await this.ethereumMsg.signMessage(signMessage);
 
@@ -72,9 +70,5 @@ export class NetworkMgr {
             return d;
         }
         return null;
-    }
-
-    private _onerror() {
-        CLog.error("websocket error ...");
     }
 }
