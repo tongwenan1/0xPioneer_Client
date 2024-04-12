@@ -11,6 +11,7 @@ import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import { TaskFactionAction, TaskShowHideAction, TaskShowHideStatus, TaskTargetType } from "../Const/TaskDefine";
 import { MapMemberFactionType } from "../Const/ConstDefine";
+import MapBuildingConfig from "../Config/MapBuildingConfig";
 
 export default class BuildingMgr {
 
@@ -287,15 +288,16 @@ export default class BuildingMgr {
         const localDatas = localStorage.getItem(this._localStorageKey);
         const localDecorateDatas = localStorage.getItem(this._localDecorateKey);
         if (localDatas == null) {
-            resultData = await new Promise((resolve, reject) => {
-                resources.load("data_local/map_building", (err: Error, data: any) => {
-                    if (err) {
-                        resolve(null);
-                        return;
-                    }
-                    resolve(data.json);
-                });
-            });
+            // resultData = await new Promise((resolve, reject) => {
+            //     resources.load("data_local/map_building", (err: Error, data: any) => {
+            //         if (err) {
+            //             resolve(null);
+            //             return;
+            //         }
+            //         resolve(data.json);
+            //     });
+            // });
+            resultData = MapBuildingConfig.getAll();
             if (resultData != null) {
                 for (const temple of resultData) {
                     let newModel = null;
