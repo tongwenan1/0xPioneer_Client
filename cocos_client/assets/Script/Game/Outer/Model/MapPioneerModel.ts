@@ -162,6 +162,12 @@ export default class MapPioneerModel {
     public set drop(value: GetPropData[]) {
         this._drop = value;
     }
+    public set NFTLinkdId(value: string) {
+        this._NFTLinkedId = value;
+    }
+    public set NFTId(value: string) {
+        this._NFTId = value;
+    }
 
 
     public get show(): boolean {
@@ -263,6 +269,12 @@ export default class MapPioneerModel {
     public get drop(): GetPropData[] {
         return this._drop;
     }
+    public get NFTLinkdId(): string {
+        return this._NFTLinkedId;
+    }
+    public get NFTId(): string {
+        return this._NFTId;
+    }
 
 
     public constructor(show: boolean, id: string, faction: MapMemberFactionType, type: MapPioneerType, name: string, originalHpMax: number, hpMax: number, hp: number, originalAttack: number, attack: number, originalDefend: number, defend: number, stayPos: Vec2) {
@@ -336,6 +348,9 @@ export default class MapPioneerModel {
     private _winprogress: number;
     private _winexp: number;
     private _drop: GetPropData[];
+
+    private _NFTLinkedId: string;
+    private _NFTId: string;
 }
 
 export class MapPlayerPioneerModel extends MapPioneerModel {

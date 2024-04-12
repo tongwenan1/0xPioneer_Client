@@ -6,6 +6,7 @@ import { ECursorType } from "../../Const/ConstDefine";
 import { TileHexDirection, TileMapHelper, TilePos } from "../TiledMap/TileTool";
 import { ArtifactMgr, UserInfoMgr } from "../../Utils/Global";
 import { ArtifactEffectType } from "../../Const/Artifact";
+import { ConfigType, MapScaleParam } from "../../Const/Config";
 
 export default class GameMainHelper {
     public static get instance() {
@@ -21,8 +22,8 @@ export default class GameMainHelper {
         this._gameCameraZoom = 1;
     }
     public changeGameCameraZoom(zoom: number, animation: boolean = false) {
-        const zoomConfig = ConfigConfig.getMapScaleConfig();
-        this._gameCameraZoom = Math.max(zoomConfig.para[0], Math.min(zoom, zoomConfig.para[1]));
+        const zoomConfig = ConfigConfig.getConfig(ConfigType.MapScaleMaxAndMin) as MapScaleParam;
+        this._gameCameraZoom = Math.max(zoomConfig.scaleMin, Math.min(zoom, zoomConfig.scaleMax));
         if (animation) {
             tween()
                 .target(this._gameCamera)

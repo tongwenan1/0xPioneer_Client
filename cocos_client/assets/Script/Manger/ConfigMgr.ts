@@ -12,6 +12,8 @@ import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
 import ItemConfig from "../Config/ItemConfig";
 import LanConfig from "../Config/LanConfig";
 import LvlupConfig from "../Config/LvlupConfig";
+import NFTPioneerConfig from "../Config/NFTPioneerConfig";
+import NFTPioneerNameConfig from "../Config/NFTPioneerNameConfig";
 import ProtobufConfig from "../Config/ProtobufConfig";
 import TalkConfig from "../Config/TalkConfig";
 import TaskConfig from "../Config/TaskConfig";
@@ -35,6 +37,9 @@ export default class ConfigMgr {
         if (!(await TalkConfig.init())) return false;
         if (!(await TaskConfig.init())) return false;
         if (!(await TaskStepConfigData.init())) return false;
+        if (!(await NFTPioneerConfig.init())) return false;
+        if (!(await NFTPioneerNameConfig.init())) return false;
+
 
         // abi
         const chainId = ChainConfig.getCurrentChainId();

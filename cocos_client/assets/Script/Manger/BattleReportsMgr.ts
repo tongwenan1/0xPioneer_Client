@@ -1,7 +1,7 @@
 import NotificationMgr from "../Basic/NotificationMgr";
 import ConfigConfig from "../Config/ConfigConfig";
 import EventConfig from "../Config/EventConfig";
-import Config from "../Const/Config";
+import Config, { BattleReportMaxKeepDaysParam, BattleReportMaxKeepRecordsParam, ConfigType } from "../Const/Config";
 import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType } from "../Const/BattleReport";
 import { NotificationName } from "../Const/Notification";
 import GlobalData from "../Data/GlobalData";
@@ -76,7 +76,7 @@ export default class BattleReportsMgr {
     }
 
     private _autoDeleteWithMaxKeepRecords(save: boolean = true) {
-        const maxKeepRecords = ConfigConfig.getBattleReportMaxKeepRecordsConfig().para[0];
+        const maxKeepRecords = (ConfigConfig.getConfig(ConfigType.BattleReportMaxKeepRecords) as BattleReportMaxKeepRecordsParam).maxKeepRecords;
         if (this._storage.length > maxKeepRecords) {
             console.log(`BattleReport: auto delete ${this._storage.length - maxKeepRecords} records, reason: maxKeepRecords`);
             this._storage = this._storage.slice(this._storage.length - maxKeepRecords);
@@ -87,7 +87,7 @@ export default class BattleReportsMgr {
     }
 
     private _autoDeleteWithMaxKeepDays(save: boolean = true) {
-        const maxKeepDays = ConfigConfig.getBattleReportMaxKeepDaysConfig().para[0];
+        const maxKeepDays = (ConfigConfig.getConfig(ConfigType.BattleReportMaxKeepDays) as BattleReportMaxKeepDaysParam).maxKeepDays;
         const expireBeforeThisTime = Date.now() - (maxKeepDays * 86400 * 1000);
         // find first index to keep.
         // requires data in array in ascending order

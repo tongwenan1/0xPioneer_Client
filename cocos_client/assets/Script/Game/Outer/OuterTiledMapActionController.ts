@@ -104,8 +104,11 @@ export class OuterTiledMapActionController extends ViewController {
     private _fogAnimOriginalPos: Vec3 = null;
 
     private _fogAnimPlaying: boolean = false;
-    private _fogAnimDatas: { allClearedTilePosions: { startPos: Vec2; endPos: Vec2 }[]; animTilePostions: TilePos[]; direciton: TileHexDirection }[] =
-        [];
+    private _fogAnimDatas: {
+        allClearedTilePosions: { startPos: Vec2; endPos: Vec2 }[];
+        animTilePostions: TilePos[];
+        direciton: TileHexDirection;
+    }[] = [];
 
     private _togetherBlockPositons: Vec2[][] = [];
 
@@ -147,8 +150,6 @@ export class OuterTiledMapActionController extends ViewController {
         for (const pos of DataMgr.s.eraseShadow.getObj()) {
             GameMainHelper.instance.tiledMapShadowErase(pos);
         }
-
-
     }
     protected viewDidStart(): void {
         super.viewDidStart();
@@ -634,11 +635,7 @@ export class OuterTiledMapActionController extends ViewController {
             }
             let movePaths = [];
             if (taregtPos != null) {
-                const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(
-                    currentActionPioneer.stayPos,
-                    taregtPos,
-                    targetStayPositions
-                );
+                const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, taregtPos, targetStayPositions);
                 if (toPosMoveData.canMove) {
                     movePaths = toPosMoveData.path;
                 } else if (sparePositions.length > 0) {

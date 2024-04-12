@@ -2,10 +2,23 @@
 
 export default class CommonTools {
 
+    public static getOneDecimalNum(num: number): number {
+        return Math.floor(num * 10) / 10;
+    }
+
     public static getRandomInt(min: number, max: number): number {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    public static getRandomNumberWithOneDecimal(min: number, max: number): number {
+        const randomNumber = Math.floor((Math.random() * (max * 10 - min * 10 + 1)) + min * 10) / 10;
+        return randomNumber;
+    }
+    public static getRandomItem<T>(items: T[]): T | undefined {
+        if (items.length === 0) return undefined;
+        const randomIndex = Math.floor(Math.random() * items.length);
+        return items[randomIndex];
     }
 
     /**
@@ -30,11 +43,11 @@ export default class CommonTools {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const remainingSeconds = seconds % 60;
-    
+
         const formattedHours = (hours < 10 ? '0' : '') + hours;
         const formattedMinutes = (minutes < 10 ? '0' : '') + minutes;
         const formattedSeconds = (remainingSeconds < 10 ? '0' : '') + remainingSeconds;
-    
+
         return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
     }
 

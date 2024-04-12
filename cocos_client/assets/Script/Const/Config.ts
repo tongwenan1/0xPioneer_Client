@@ -8,41 +8,57 @@ export enum ConfigType {
     OneStepCostEnergy = "10004",
     MainCityEnergyTipThreshold = "10005",
     BattleReportMaxKeepDays = "110000",
-    BattleReportMaxKeepRecords = "110002"
+    BattleReportMaxKeepRecords = "110002",
+
+    NFTRaritySkillInitNum = "210001",
+    NFTRaritySkillLimitNum = "210002",
+    NFTLevelInitLimitNum = "210003",
+    NFTLevelLimitPerRankAddNum = "210004",
+    NFTRankLimitNum = "210005"
 }
 
-export interface ConfigConfigData {
-    id: ConfigType;
-    para: any[];
+export interface ConfigData {
+    type: ConfigType;
 }
 
-export type MapScaleMax = number;
-export type MapScaleMin = number;
-export interface MapScaleConfigData extends ConfigConfigData {
-    id: ConfigType.MapScaleMaxAndMin;
-    para: [MapScaleMax, MapScaleMin];
+export interface MapScaleParam extends ConfigData {
+    scaleMax: number;
+    scaleMin: number;
 }
 
-export type EnergyCost = number;
-export interface OneStepCostEnergyConfigData extends ConfigConfigData {
-    id: ConfigType.OneStepCostEnergy;
-    para: [EnergyCost];
+export interface LoginWhiteListParam extends ConfigData {
+    whiteList: string[];
 }
 
-export type EnergyTipThreshold = number;
-export interface MainCityEnergyTipThresholdConfigData extends ConfigConfigData {
-    id: ConfigType.MainCityEnergyTipThreshold;
-    para: [EnergyTipThreshold];
+export interface OneStepCostEnergyParam extends ConfigData {
+    cost: number;
 }
 
-export type BattleReportMaxKeepDays = number;
-export interface BattleReportMaxKeepDaysConfigData extends ConfigConfigData {
-    id: ConfigType.BattleReportMaxKeepDays;
-    para: [BattleReportMaxKeepDays];
+export interface EnergyTipThresholdParam extends ConfigData {
+    threshold: number;
 }
 
-export type BattleReportMaxKeepRecords = number;
-export interface BattleReportMaxKeepRecordsConfigData extends ConfigConfigData {
-    id: ConfigType.BattleReportMaxKeepRecords;
-    para: [BattleReportMaxKeepRecords];
+export interface BattleReportMaxKeepDaysParam extends ConfigData {
+    maxKeepDays: number;
+}
+
+export interface BattleReportMaxKeepRecordsParam extends ConfigData {
+    maxKeepRecords: number;
+}
+
+export interface NFTRaritySkillInitNumParam extends ConfigData {
+    initNumMap: Map<number, number>;
+}
+
+export interface NFTRaritySkillLimitNumParam extends ConfigData {
+    limitNumMap: Map<number, number>;
+}
+export interface NFTLevelInitLimitNumParam extends ConfigData {
+    limit: number;
+}
+export interface NFTLevelLimitPerRankAddNumParam extends ConfigData {
+    value: number;
+}
+export interface NFTRankLimitNumParam extends ConfigData {
+    limit: number;
 }

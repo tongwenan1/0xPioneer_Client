@@ -15,6 +15,7 @@ import ChainConfig from "./Config/ChainConfig";
 import CLog from "./Utils/CLog";
 import { EthereumEventData_accountChanged, EthereumEventData_chainChanged, EthereumEventData_init, EthereumEventType } from "./Net/ethers/Ethereum";
 import { s2c_user } from "./Net/msg/WebsocketMsg";
+import DataTransferMgr from "./Manger/DataTransferMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("Main")
@@ -28,6 +29,10 @@ export class Main extends ViewController {
 
         // DataMgr init
         if (!(await DataMgr.init())) return;
+
+
+        // data transfer
+        new DataTransferMgr();
 
         // ConfigMgr init
         if (!(await ConfigMgr.init())) return;

@@ -2,7 +2,7 @@ import { _decorator, Component, Node, Button, SpriteFrame, Sprite, Label, Prefab
 import { TilePos } from '../Game/TiledMap/TileTool';
 import { ClaimRewardUI } from './ClaimRewardUI';
 import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
-import { ArtifactMgr, BattleReportsMgr, BuildingMgr, ItemMgr, LanMgr, LocalDataLoader, PioneerMgr, UserInfoMgr } from '../Utils/Global';
+import { ArtifactMgr, BattleReportsMgr, BuildingMgr, ItemMgr, LanMgr, LocalDataLoader, PioneerDevelopMgr, PioneerMgr, UserInfoMgr } from '../Utils/Global';
 import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
 import MapPioneerModel, { MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import { UIName } from '../Const/ConstUIDefine';
@@ -16,8 +16,9 @@ import Config from '../Const/Config';
 import { MapMemberFactionType, ResourceCorrespondingItem } from '../Const/ConstDefine';
 import UIPanelManger from '../Basic/UIPanelMgr';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
-import ArtifactData from '../Model/ArtifactData';
 import { DataMgr } from '../Data/DataMgr';
+import { NFTBackpackUI } from './NFTBackpackUI';
+import ItemData from '../Model/ItemData';
 
 const { ccclass, property } = _decorator;
 
@@ -78,10 +79,15 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         // for (let i = 1; i <= 10; i++) {
         //     ArtifactMgr.addArtifact([new ArtifactData("700" + i, 1)]);
         // }
-
         //DataMgr.n.websocketMsg.create_pioneer({
         //    type: "0"
         //});
+        // ItemMgr.addItem([new ItemData("7", 1)]);
+        // ItemMgr.addItem([new ItemData("8", 1)]);
+        // ItemMgr.addItem([new ItemData("9", 1)]);
+        // ItemMgr.addItem([new ItemData("10", 1)]);
+        // ItemMgr.addItem([new ItemData("11", 1)]);
+        // PioneerDevelopMgr.generateNewNFT();
     }
 
     protected viewDidDestroy(): void {
@@ -137,6 +143,12 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         const result = await UIPanelManger.inst.pushPanel(UIName.TaskListUI);
         if (result.success) {
             result.node.getComponent(TaskListUI).refreshUI();
+        }
+    }
+    private async onTapNFT() {
+        const result = await UIPanelManger.inst.pushPanel(UIName.NFTBackpackUI);
+        if (result.success) {
+            result.node.getComponent(NFTBackpackUI);
         }
     }
     private onTapChangeBuildingSetPos() {

@@ -21,7 +21,11 @@ export enum UIName {
     LootsPopup = "prefab/ui/LootsPopup",
     Artifact = "prefab/ui/Artifact",
     ArtifactInfoUI = "prefab/ui/ArtifactInfoUI",
-    ArtifactStore = "prefab/ui/ArtifactStore"
+    ArtifactStore = "prefab/ui/ArtifactStore",
+    NFTBackpackUI = "prefab/ui/NFTBackpack",
+    NFTInfoUI = "prefab/ui/NFTInfoUI",
+    NFTLevelUpUI = "prefab/ui/NFTLevelUpUI",
+    NFTRankUpUI = "prefab/ui/NFTRankUpUI",
 }
 
 export enum GameName {

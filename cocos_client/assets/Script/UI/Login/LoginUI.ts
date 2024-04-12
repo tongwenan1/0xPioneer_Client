@@ -8,6 +8,7 @@ import ChainConfig from "../../Config/ChainConfig";
 import CLog from "../../Utils/CLog";
 import { DataMgr } from "../../Data/DataMgr";
 import { NetworkMgr } from "../../Net/NetworkMgr";
+import { ConfigType, LoginWhiteListParam } from "../../Const/Config";
 const { ccclass, property } = _decorator;
 
 @ccclass("CompLogin")
@@ -60,11 +61,11 @@ export class LoginUI extends ViewController {
         this._loginClicked = true;
 
         let canEnter: boolean = false;
-        let config = ConfigConfig.getWhiteListConfig();
-        if (config == null || config.para == null || config.para.length <= 0) {
+        const whiteList = ConfigConfig.getConfig(ConfigType.LoginWhiteList) as LoginWhiteListParam;
+        if (whiteList == null || whiteList.whiteList == null || whiteList.whiteList.length <= 0) {
             canEnter = true;
         } else {
-            for (const temple of config.para) {
+            for (const temple of whiteList.whiteList) {
                 if (temple.toUpperCase() === md5(codeEditBox.string).toUpperCase()) {
                     canEnter = true;
                     break;

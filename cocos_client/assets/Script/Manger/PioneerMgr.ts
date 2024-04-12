@@ -324,6 +324,8 @@ export default class PioneerMgr {
                     consumeEnergy: 0,
                     exploredEvents: 0
                 });
+
+                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_NEW_PIONEER, findPioneer);
             }
             if (pioneerId == "pioneer_3") {
                 let serectGuardShow: boolean = false;
@@ -363,6 +365,13 @@ export default class PioneerMgr {
             findPioneer.talkId = talkId;
             this._savePioneerData();
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_NEW_TALK_GETTED);
+        }
+    }
+    public linkNFTToPioneer(pioneerId: string, NFTId: string) {
+        const findPioneer = this.getPioneerById(pioneerId);
+        if (findPioneer != null) {
+            findPioneer.NFTId = NFTId;
+            this._savePioneerData();
         }
     }
     public pioneerToIdle(pioneerId: string) {
@@ -767,6 +776,7 @@ export default class PioneerMgr {
                     if (temple.animType != null) {
                         pioneer.animType = temple.animType;
                     }
+                    pioneer.NFTLinkdId = temple.nft_pioneer;
                     this._pioneers.push(pioneer);
                 }
             }
@@ -871,12 +881,18 @@ export default class PioneerMgr {
                 newModel.winexp = temple._winexp;
                 newModel.drop = temple._drop;
                 newModel.animType = temple._animType;
+                newModel.NFTLinkdId = temple._NFTLinkdId;
+                newModel.NFTId = temple._NFTId;
                 this._pioneers.push(newModel);
             }
         }
         // default player id is "0"
         this._currentActionPioneerId = "pioneer_0";
         this._originalActionPioneerId = "pioneer_0";
+        const originalPioneer = this.getPioneerById(this._originalActionPioneerId);
+        if (originalPioneer != null && originalPioneer.NFTId == null) {
+            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_NEW_PIONEER, originalPioneer);
+        }
 
         setInterval(() => {
             if (!GameMainHelper.instance.isTiledMapHelperInited) {

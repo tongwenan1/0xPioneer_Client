@@ -19,6 +19,7 @@ export enum ResourceCorrespondingItem {
     Troop = "8004",
     Energy = "8005",
     Gold = "8006",
+    NFTExp = "8007"
 }
 
 export enum NPCNameLangType {

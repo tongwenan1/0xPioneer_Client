@@ -10,6 +10,7 @@ import InnerBuildingLvlUpConfig from '../../../Config/InnerBuildingLvlUpConfig';
 import InnerBuildingConfig from '../../../Config/InnerBuildingConfig';
 import { NotificationName } from '../../../Const/Notification';
 import { MapMemberFactionType } from '../../../Const/ConstDefine';
+import { ConfigType, EnergyTipThresholdParam } from '../../../Const/Config';
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterBuildingView')
@@ -176,7 +177,7 @@ export class OuterBuildingView extends ViewController {
         if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != MapMemberFactionType.enemy) {
             const energyInfo = UserInfoMgr.generateEnergyInfo;
             if (energyInfo != null) {
-                const threshold = ConfigConfig.getEnergyTipThresholdConfig().para[0];
+                const threshold = (ConfigConfig.getConfig(ConfigType.MainCityEnergyTipThreshold) as EnergyTipThresholdParam).threshold;
                 const energyStationData = UserInfoMgr.innerBuilds.get(InnerBuildingType.EnergyStation);
                 const psycData = InnerBuildingLvlUpConfig.getEnergyLevelData(energyStationData.buildLevel);
                 if (psycData != null) {
