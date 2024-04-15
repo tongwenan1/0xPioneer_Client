@@ -1,19 +1,10 @@
-import { Vec2, math, resources, v2 } from "cc";
+import { Vec2 } from "cc";
 import { TilePos } from "../Game/TiledMap/TileTool";
-// import MapBuildingModel, { MapResourceBuildingModel, MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
-import { MapDecoratePosMode } from "../Const/Model/MapDecorateModelDefine";
-import MapDecorateModel from "../Game/Outer/Model/MapDecorateModel";
-import { MapBuildingType } from "../Const/BuildingDefine";
-import { ResourceModel } from "../Const/UserInfoDefine";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
-import Config from "../Const/Config";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import { TaskFactionAction, TaskShowHideAction, TaskShowHideStatus, TaskTargetType } from "../Const/TaskDefine";
-import { MapMemberFactionType } from "../Const/ConstDefine";
-import MapBuildingConfig from "../Config/MapBuildingConfig";
 import { DataMgr } from "../Data/DataMgr";
-import { MapBuildingMainCityObject, MapBuildingObject, MapBuildingResourceObject } from "../Const/MapBuilding";
 
 export default class BuildingMgr {
     public constructor() {}
