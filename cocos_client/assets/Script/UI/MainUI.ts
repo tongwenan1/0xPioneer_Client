@@ -119,7 +119,9 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     }
     private _refreshInnerOuterChange() {
         let isEnemy: boolean = false;
-        const building = BuildingMgr.getBuildingById("building_1");
+        // const building = BuildingMgr.getBuildingById("building_1");
+        const building = DataMgr.s.mapBuilding.getBuildingById("building_1");
+
         if (building != null && building.faction == MapMemberFactionType.enemy) {
             isEnemy = true;
         }

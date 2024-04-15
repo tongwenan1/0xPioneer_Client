@@ -16,6 +16,7 @@ import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import Config from "../Const/Config";
 import { ArtifactEffectType } from "../Const/Artifact";
+import { DataMgr } from "../Data/DataMgr";
 
 export default class UserInfoMgr {
 
@@ -259,7 +260,8 @@ export default class UserInfoMgr {
                 // event_building
                 if (nextLvConfig.event_building != null) {
                     for (const buidingId of nextLvConfig.event_building) {
-                        BuildingMgr.showBuilding(buidingId);
+                        // BuildingMgr.showBuilding(buidingId);
+                        DataMgr.s.mapBuilding.showBuilding(buidingId);
                     }
                 }
 

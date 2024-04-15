@@ -8,6 +8,7 @@ import MapPioneerModel, { MapPlayerPioneerModel, MapPioneerLogicModel } from '..
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
+import { DataMgr } from '../Data/DataMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerListUI')
@@ -91,7 +92,8 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
 
     private onTapPlayerItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
-        BuildingMgr.hideBuilding("decorate_2");
+        // BuildingMgr.hideBuilding("decorate_2");
+        DataMgr.s.mapBuilding.hideBuilding("decorate_2");
         if (GameMainHelper.instance.isGameShowOuter) {
             if (index < this._pioneers.length) {
                 const currentMapPos = this._pioneers[index].stayPos;

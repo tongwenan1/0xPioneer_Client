@@ -1,7 +1,6 @@
 import { _decorator, Component, instantiate, Label, Layout, Node } from 'cc';
 import { MapPlayerPioneerModel } from '../Model/MapPioneerModel';
 import { ItemMgr, LanMgr, UserInfoMgr } from '../../../Utils/Global';
-import MapBuildingModel from '../Model/MapBuildingModel';
 import { MapBuildingType, InnerBuildingType, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
 import ViewController from '../../../BasicView/ViewController';
 import NotificationMgr from '../../../Basic/NotificationMgr';
@@ -11,12 +10,13 @@ import InnerBuildingConfig from '../../../Config/InnerBuildingConfig';
 import { NotificationName } from '../../../Const/Notification';
 import { MapMemberFactionType } from '../../../Const/ConstDefine';
 import { ConfigType, EnergyTipThresholdParam } from '../../../Const/Config';
+import { MapBuildingObject } from '../../../Const/MapBuilding';
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterBuildingView')
 export class OuterBuildingView extends ViewController {
 
-    public refreshUI(building: MapBuildingModel, players: MapPlayerPioneerModel[]) {
+    public refreshUI(building: MapBuildingObject, players: MapPlayerPioneerModel[]) {
 
         this._building = building;
 
@@ -129,7 +129,7 @@ export class OuterBuildingView extends ViewController {
         "Pyramid_Group"
     ];
     private _levelShowing: boolean = false;
-    private _building: MapBuildingModel = null;
+    private _building: MapBuildingObject = null;
 
     private _strongholdItem: Node = null;
     private _strongholdViews: Node[] = [];

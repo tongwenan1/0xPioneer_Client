@@ -15,6 +15,7 @@ import { NotificationName } from '../../Const/Notification';
 import { ItemGettedUI } from '../ItemGettedUI';
 import Config from '../../Const/Config';
 import UIPanelManger from '../../Basic/UIPanelMgr';
+import { DataMgr } from '../../Data/DataMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -220,9 +221,11 @@ export class EventUI extends ViewController {
         if (event.map_building_refresh != null) {
             for (const [buidingId, type] of event.map_building_refresh) {
                 if (type == 1) {
-                    BuildingMgr.showBuilding(buidingId);
+                    // BuildingMgr.showBuilding(buidingId);
+                    DataMgr.s.mapBuilding.showBuilding(buidingId);
                 } else {
-                    BuildingMgr.hideBuilding(buidingId);
+                    // BuildingMgr.hideBuilding(buidingId);
+                    DataMgr.s.mapBuilding.hideBuilding(buidingId);
                 }
             }
         }
@@ -365,14 +368,18 @@ export class EventUI extends ViewController {
             }
             if (this._eventBuildingId != null) {
                 if (eventId == "-1") {
-                    BuildingMgr.changeBuildingEventId(this._eventBuildingId, null);
-                    BuildingMgr.hideBuilding(this._eventBuildingId);
+                    // BuildingMgr.changeBuildingEventId(this._eventBuildingId, null);
+                    // BuildingMgr.hideBuilding(this._eventBuildingId);
+                    DataMgr.s.mapBuilding.changeBuildingEventId(this._eventBuildingId, null);
+                    DataMgr.s.mapBuilding.hideBuilding(this._eventBuildingId);
 
                 } else if (eventId == "-2") {
-                    const building = BuildingMgr.getBuildingById(this._eventBuildingId);
+                    // const building = BuildingMgr.getBuildingById(this._eventBuildingId);
+                    const building = DataMgr.s.mapBuilding.getBuildingById(this._eventBuildingId);
 
                     if (building != null) {
-                        BuildingMgr.changeBuildingEventId(this._eventBuildingId, building.originalEventId);
+                        // BuildingMgr.changeBuildingEventId(this._eventBuildingId, building.originalEventId);
+                        DataMgr.s.mapBuilding.changeBuildingEventId(this._eventBuildingId, building.originalEventId);
                     }
                 }
             }
@@ -399,7 +406,8 @@ export class EventUI extends ViewController {
         } else {
             const event = EventConfig.getById(eventId);
             if (event != null) {
-                BuildingMgr.changeBuildingEventId(this._eventBuildingId, event.id);
+                // BuildingMgr.changeBuildingEventId(this._eventBuildingId, event.id);
+                DataMgr.s.mapBuilding.changeBuildingEventId(this._eventBuildingId, event.id);
                 UIPanelManger.inst.popPanel();
                 if (this._dealWithNextEvent != null) {
                     this._dealWithNextEvent(event);

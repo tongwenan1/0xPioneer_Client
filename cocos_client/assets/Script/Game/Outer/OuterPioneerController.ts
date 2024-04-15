@@ -1,46 +1,74 @@
-import { _decorator, Camera, Color, Component, director, find, instantiate, math, misc, Node, pingPong, Prefab, Quat, quat, sp, tween, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
-import { TilePos } from '../TiledMap/TileTool';
-import { OuterFightView } from './View/OuterFightView';
-import { OuterOtherPioneerView } from './View/OuterOtherPioneerView';
-import { MapItemMonster } from './View/MapItemMonster';
-import { MapPioneer } from './View/MapPioneer';
-import { OuterMapCursorView } from './View/OuterMapCursorView';
-import { MapMemberFactionType, PioneerGameTest, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import ItemConfigDropTool from '../../Tool/ItemConfigDropTool';
-import { PioneerMgrEvent } from '../../Const/Manager/PioneerMgrDefine';
-import { ArtifactMgr, BuildingMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
-import { MapPioneerLogicType, MapPioneerActionType, MapPioneerType, MapPioneerMoveDirection, MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
-import { MapResourceBuildingModel } from './Model/MapBuildingModel';
-import MapPioneerModel, { MapPioneerLogicModel, MapNpcPioneerModel } from './Model/MapPioneerModel';
-import { OuterBuildingController } from './OuterBuildingController';
-import { UIName } from '../../Const/ConstUIDefine';
-import { DialogueUI } from '../../UI/Outer/DialogueUI';
-import { SecretGuardGettedUI } from '../../UI/Outer/SecretGuardGettedUI';
-import { TaskListUI } from '../../UI/TaskListUI';
-import { EventUI } from '../../UI/Outer/EventUI';
-import NotificationMgr from '../../Basic/NotificationMgr';
-import { ArtifactEffectType } from '../../Const/Artifact';
-import { UserInfoEvent } from '../../Const/UserInfoDefine';
-import TalkConfig from '../../Config/TalkConfig';
-import LvlupConfig from '../../Config/LvlupConfig';
-import EventConfig from '../../Config/EventConfig';
-import GlobalData from '../../Data/GlobalData';
-import { OuterFightResultView } from './View/OuterFightResultView';
-import ItemData from '../../Const/Item';
-import { NotificationName } from '../../Const/Notification';
-import { OuterTiledMapActionController } from './OuterTiledMapActionController';
-import GameMainHelper from '../Helper/GameMainHelper';
-import ViewController from '../../BasicView/ViewController';
-import { TaskShowHideStatus, TaskTargetType } from '../../Const/TaskDefine';
-import { EventConfigData } from '../../Const/Event';
-import UIPanelManger from '../../Basic/UIPanelMgr';
-
+import {
+    _decorator,
+    Camera,
+    Color,
+    Component,
+    director,
+    find,
+    instantiate,
+    math,
+    misc,
+    Node,
+    pingPong,
+    Prefab,
+    Quat,
+    quat,
+    sp,
+    tween,
+    UITransform,
+    v2,
+    v3,
+    Vec2,
+    Vec3,
+} from "cc";
+import { TilePos } from "../TiledMap/TileTool";
+import { OuterFightView } from "./View/OuterFightView";
+import { OuterOtherPioneerView } from "./View/OuterOtherPioneerView";
+import { MapItemMonster } from "./View/MapItemMonster";
+import { MapPioneer } from "./View/MapPioneer";
+import { OuterMapCursorView } from "./View/OuterMapCursorView";
+import { MapMemberFactionType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
+import ItemConfigDropTool from "../../Tool/ItemConfigDropTool";
+import { PioneerMgrEvent } from "../../Const/Manager/PioneerMgrDefine";
+import { ArtifactMgr, BuildingMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, TaskMgr, UserInfoMgr } from "../../Utils/Global";
+import {
+    MapPioneerLogicType,
+    MapPioneerActionType,
+    MapPioneerType,
+    MapPioneerMoveDirection,
+    MapPioneerAttributesChangeModel,
+} from "../../Const/Model/MapPioneerModelDefine";
+import MapPioneerModel, { MapPioneerLogicModel, MapNpcPioneerModel } from "./Model/MapPioneerModel";
+import { OuterBuildingController } from "./OuterBuildingController";
+import { UIName } from "../../Const/ConstUIDefine";
+import { DialogueUI } from "../../UI/Outer/DialogueUI";
+import { SecretGuardGettedUI } from "../../UI/Outer/SecretGuardGettedUI";
+import { TaskListUI } from "../../UI/TaskListUI";
+import { EventUI } from "../../UI/Outer/EventUI";
+import NotificationMgr from "../../Basic/NotificationMgr";
+import { ArtifactEffectType } from "../../Const/Artifact";
+import { UserInfoEvent } from "../../Const/UserInfoDefine";
+import TalkConfig from "../../Config/TalkConfig";
+import LvlupConfig from "../../Config/LvlupConfig";
+import EventConfig from "../../Config/EventConfig";
+import GlobalData from "../../Data/GlobalData";
+import { OuterFightResultView } from "./View/OuterFightResultView";
+import ItemData from "../../Const/Item";
+import { NotificationName } from "../../Const/Notification";
+import { OuterTiledMapActionController } from "./OuterTiledMapActionController";
+import GameMainHelper from "../Helper/GameMainHelper";
+import ViewController from "../../BasicView/ViewController";
+import { TaskShowHideStatus, TaskTargetType } from "../../Const/TaskDefine";
+import { EventConfigData } from "../../Const/Event";
+import UIPanelManger from "../../Basic/UIPanelMgr";
+import { MapBuildingObject, MapBuildingResourceObject } from "../../Const/MapBuilding";
+import { MapBuildingType } from "../../Const/BuildingDefine";
+import { DataMgr } from "../../Data/DataMgr";
 
 const { ccclass, property } = _decorator;
 
-@ccclass('OuterPioneerController')
+@ccclass("OuterPioneerController")
 export class OuterPioneerController extends ViewController implements PioneerMgrEvent, UserInfoEvent {
-
     public showMovingPioneerAction(tilePos: TilePos, movingPioneerId: string, usedCursor: OuterMapCursorView) {
         this._actionShowPioneerId = movingPioneerId;
         this._actionUsedCursor = usedCursor;
@@ -101,7 +129,6 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
         this._actionShowPioneerId = null;
         this._actionUsedCursor = null;
     }
-
 
     @property(Prefab)
     private selfPioneer: Prefab;
@@ -248,16 +275,12 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
                 let temple = null;
                 if (this._pioneerMap.has(pioneer.id)) {
                     temple = this._pioneerMap.get(pioneer.id);
-
                 } else {
                     // new
                     if (pioneer.type == MapPioneerType.player) {
                         temple = instantiate(this.selfPioneer);
-
-                    } else if (pioneer.type == MapPioneerType.npc ||
-                        pioneer.type == MapPioneerType.gangster) {
+                    } else if (pioneer.type == MapPioneerType.npc || pioneer.type == MapPioneerType.gangster) {
                         temple = instantiate(this.otherPioneer);
-
                     } else if (pioneer.type == MapPioneerType.hred) {
                         temple = instantiate(this.battleSmall);
                     }
@@ -272,7 +295,8 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
                         temple.getComponent(MapPioneer).refreshUI(pioneer);
                         temple.getComponent(MapPioneer).setEventWaitedCallback(() => {
                             GameMainHelper.instance.isTapEventWaited = true;
-                            const allBuildings = BuildingMgr.getAllBuilding();
+                            // const allBuildings = BuildingMgr.getAllBuilding();
+                            const allBuildings = DataMgr.s.mapBuilding.getObj_building();
                             for (const building of allBuildings) {
                                 if (building.eventId == pioneer.actionEventId) {
                                     const currentEvent = EventConfig.getById(building.eventId);
@@ -283,13 +307,10 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
                                 }
                             }
                         });
-
                     } else if (pioneer.type == MapPioneerType.npc) {
                         temple.getComponent(OuterOtherPioneerView).refreshUI(pioneer);
-
                     } else if (pioneer.type == MapPioneerType.gangster) {
                         temple.getComponent(OuterOtherPioneerView).refreshUI(pioneer);
-
                     } else if (pioneer.type == MapPioneerType.hred) {
                         temple.getComponent(MapItemMonster).refreshUI(pioneer);
                     }
@@ -306,7 +327,7 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
             }
         }
 
-        // destroy 
+        // destroy
         this._pioneerMap.forEach((value: Node, key: string) => {
             let isExsit: boolean = false;
             for (const pioneer of allPioneers) {
@@ -341,9 +362,9 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
         pioneer.stayPos = v2(nexttile.x, nexttile.y);
         var nextwpos = GameMainHelper.instance.tiledMapGetPosWorld(nexttile.x, nexttile.y);
         var dist = Vec3.distance(pioneermap.worldPosition, nextwpos);
-        var add = speed * deltaTime * this.node.scale.x / 0.5; // calc map scale
-        if (dist < add) //havemove 2 target
-        {
+        var add = (speed * deltaTime * this.node.scale.x) / 0.5; // calc map scale
+        if (dist < add) {
+            //havemove 2 target
             pioneermap.setWorldPosition(nextwpos);
             PioneerMgr.pioneerDidMoveOneStep(pioneer.id);
             if (pioneer.id == this._actionShowPioneerId && this._actionUsedCursor != null) {
@@ -351,8 +372,7 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
                 this._actionUsedCursor.show([pioneer.stayPos], Color.WHITE);
             }
             return;
-        }
-        else {
+        } else {
             var dir = new Vec3();
             Vec3.subtract(dir, nextwpos, pioneermap.worldPosition);
             dir = dir.normalize();
@@ -383,10 +403,15 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
         }
     }
 
-    private _refreshFightView(fightId: string, attacker: { id: string; name: string; hp: number; hpMax: number; }, defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositons: Vec2[]) {
+    private _refreshFightView(
+        fightId: string,
+        attacker: { id: string; name: string; hp: number; hpMax: number },
+        defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number },
+        attackerIsSelf: boolean,
+        fightPositons: Vec2[]
+    ) {
         if (this._fightViewMap.has(fightId)) {
             this._fightViewMap.get(fightId).refreshUI(attacker, defender, attackerIsSelf);
-
         } else {
             const fightView = instantiate(this.fightPrefab).getComponent(OuterFightView);
             fightView.node.active = true;
@@ -397,12 +422,7 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
             } else if (fightPositons.length == 3) {
                 const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(fightPositons[0].x, fightPositons[0].y);
                 const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(fightPositons[1].x, fightPositons[1].y);
-                fightView.node.setWorldPosition(v3(
-                    beginWorldPos.x,
-                    endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2,
-                    0
-                ));
-
+                fightView.node.setWorldPosition(v3(beginWorldPos.x, endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2, 0));
             } else if (fightPositons.length > 0) {
                 fightView.node.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(fightPositons[0].x, fightPositons[0].y));
             }
@@ -467,29 +487,41 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
                 let worldPos = GameMainHelper.instance.tiledMapGetPosWorld(currentPath.x, currentPath.y);
                 footView.setWorldPosition(worldPos);
                 footViews.push(footView);
-                if (nextPath.calc_x - currentPath.calc_x == -1 &&
+                if (
+                    nextPath.calc_x - currentPath.calc_x == -1 &&
                     nextPath.calc_y - currentPath.calc_y == 0 &&
-                    nextPath.calc_z - currentPath.calc_z == 1) {
+                    nextPath.calc_z - currentPath.calc_z == 1
+                ) {
                     footView.angle = 90;
-                } else if (nextPath.calc_x - currentPath.calc_x == 1 &&
+                } else if (
+                    nextPath.calc_x - currentPath.calc_x == 1 &&
                     nextPath.calc_y - currentPath.calc_y == 0 &&
-                    nextPath.calc_z - currentPath.calc_z == -1) {
+                    nextPath.calc_z - currentPath.calc_z == -1
+                ) {
                     footView.angle = 270;
-                } else if (nextPath.calc_x - currentPath.calc_x == 1 &&
+                } else if (
+                    nextPath.calc_x - currentPath.calc_x == 1 &&
                     nextPath.calc_y - currentPath.calc_y == -1 &&
-                    nextPath.calc_z - currentPath.calc_z == 0) {
+                    nextPath.calc_z - currentPath.calc_z == 0
+                ) {
                     footView.angle = 330;
-                } else if (nextPath.calc_x - currentPath.calc_x == -1 &&
+                } else if (
+                    nextPath.calc_x - currentPath.calc_x == -1 &&
                     nextPath.calc_y - currentPath.calc_y == 1 &&
-                    nextPath.calc_z - currentPath.calc_z == 0) {
+                    nextPath.calc_z - currentPath.calc_z == 0
+                ) {
                     footView.angle = 150;
-                } else if (nextPath.calc_x - currentPath.calc_x == 0 &&
+                } else if (
+                    nextPath.calc_x - currentPath.calc_x == 0 &&
                     nextPath.calc_y - currentPath.calc_y == 1 &&
-                    nextPath.calc_z - currentPath.calc_z == -1) {
+                    nextPath.calc_z - currentPath.calc_z == -1
+                ) {
                     footView.angle = 210;
-                } else if (nextPath.calc_x - currentPath.calc_x == 0 &&
+                } else if (
+                    nextPath.calc_x - currentPath.calc_x == 0 &&
                     nextPath.calc_y - currentPath.calc_y == -1 &&
-                    nextPath.calc_z - currentPath.calc_z == 1) {
+                    nextPath.calc_z - currentPath.calc_z == 1
+                ) {
                     footView.angle = 390;
                 }
             }
@@ -500,9 +532,11 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
     private _checkInMainCityRangeAndHealHpToMax(pioneerId: string) {
         const mainCityId = "building_1";
         const pioneer = PioneerMgr.getPioneerById(pioneerId);
-        const mainCity = BuildingMgr.getBuildingById(mainCityId);
-        if (mainCity != null && mainCity.faction != MapMemberFactionType.enemy &&
-            pioneer != null && pioneer.show) {
+
+        // const mainCity = BuildingMgr.getBuildingById(mainCityId);
+        const mainCity = DataMgr.s.mapBuilding.getBuildingById(mainCityId);
+
+        if (mainCity != null && mainCity.faction != MapMemberFactionType.enemy && pioneer != null && pioneer.show) {
             let radialRange = UserInfoMgr.cityVision;
             const artifactEffect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
             if (artifactEffect != null && artifactEffect.has(ArtifactEffectType.CITY_RADIAL_RANGE)) {
@@ -535,13 +569,16 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
                         UserInfoMgr.isFinishRookie = true;
                         TaskMgr.gameStarted();
                         // init resource
-                        ItemMgr.addItem([
-                            new ItemData(ResourceCorrespondingItem.Energy, 2000),
-                            new ItemData(ResourceCorrespondingItem.Food, 2000),
-                            new ItemData(ResourceCorrespondingItem.Stone, 2000),
-                            new ItemData(ResourceCorrespondingItem.Wood, 2000),
-                            new ItemData(ResourceCorrespondingItem.Troop, 2000),
-                        ], false);
+                        ItemMgr.addItem(
+                            [
+                                new ItemData(ResourceCorrespondingItem.Energy, 2000),
+                                new ItemData(ResourceCorrespondingItem.Food, 2000),
+                                new ItemData(ResourceCorrespondingItem.Stone, 2000),
+                                new ItemData(ResourceCorrespondingItem.Wood, 2000),
+                                new ItemData(ResourceCorrespondingItem.Troop, 2000),
+                            ],
+                            false
+                        );
                     });
                 }
             }, 10);
@@ -556,7 +593,6 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
     pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void {
         if (actionType == MapPioneerActionType.moving) {
             this._movingPioneerIds.push(pioneerId);
-
         } else {
             const index = this._movingPioneerIds.indexOf(pioneerId);
             if (index >= 0) {
@@ -578,27 +614,21 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
     pioneerAttackChanged(pioneerId: string): void {
         this._refreshUI();
     }
-    pioneerLoseHp(pioneerId: string, value: number): void {
-
-    }
+    pioneerLoseHp(pioneerId: string, value: number): void {}
     pioneerGainHp(pioneerId: string, value: number): void {
         const actionView = this._pioneerMap.get(pioneerId);
         if (actionView != null && actionView.getComponent(MapPioneer) != null) {
             actionView.getComponent(MapPioneer).playGetResourceAnim(ResourceCorrespondingItem.Troop, value, null);
         }
     }
-    pionerrRebirthCount(pioneerId: string, count: number): void {
-
-    }
+    pionerrRebirthCount(pioneerId: string, count: number): void {}
     pioneerRebirth(pioneerId: string): void {
         this._refreshUI();
     }
 
     pioneerDidShow(pioneerId: string): void {
         TaskMgr.showHideChanged(TaskTargetType.pioneer, pioneerId, TaskShowHideStatus.show);
-        if (pioneerId == "pioneer_1" ||
-            pioneerId == "pioneer_2" ||
-            pioneerId == "pioneer_3") {
+        if (pioneerId == "pioneer_1" || pioneerId == "pioneer_2" || pioneerId == "pioneer_3") {
             // get secret guard
             const pioneer = PioneerMgr.getPioneerById(pioneerId);
             if (pioneer != null) {
@@ -630,11 +660,23 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
         this._refreshUI();
     }
 
-    beginFight(fightId: string, attacker: { id: string; name: string; hp: number; hpMax: number; }, defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositions: math.Vec2[]): void {
+    beginFight(
+        fightId: string,
+        attacker: { id: string; name: string; hp: number; hpMax: number },
+        defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number },
+        attackerIsSelf: boolean,
+        fightPositions: math.Vec2[]
+    ): void {
         this._refreshFightView(fightId, attacker, defender, attackerIsSelf, fightPositions);
     }
 
-    fightDidAttack(fightId: string, attacker: { id: string; name: string; hp: number; hpMax: number; }, defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number; }, attackerIsSelf: boolean, fightPositions: math.Vec2[]): void {
+    fightDidAttack(
+        fightId: string,
+        attacker: { id: string; name: string; hp: number; hpMax: number },
+        defender: { id: string; isBuilding: boolean; name: string; hp: number; hpMax: number },
+        attackerIsSelf: boolean,
+        fightPositions: math.Vec2[]
+    ): void {
         this._refreshFightView(fightId, attacker, defender, attackerIsSelf, fightPositions);
     }
 
@@ -662,7 +704,7 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
         // find task to finish
         if (isPlayerWin) {
             if (isDeadPionner) {
-                // task 
+                // task
                 TaskMgr.pioneerKilled(deadId);
                 // pioneer win reward
                 const deadPioneer = PioneerMgr.getPioneerById(deadId);
@@ -683,10 +725,11 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
                     consumeTroops: 0,
                     gainEnergy: 0,
                     consumeEnergy: 0,
-                    exploredEvents: 0
+                    exploredEvents: 0,
                 });
             } else {
-                const deadBuilding = BuildingMgr.getBuildingById(deadId);
+                // const deadBuilding = BuildingMgr.getBuildingById(deadId);
+                const deadBuilding = DataMgr.s.mapBuilding.getBuildingById(deadId);
                 if (deadBuilding != null) {
                     UserInfoMgr.explorationValue += deadBuilding.winprogress;
                 }
@@ -698,7 +741,6 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
         if (pioneer != null) {
             if (pioneer.type == MapPioneerType.gangster) {
                 ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Troop, pioneer.hpMax)]);
-
             } else if (pioneer.type == MapPioneerType.npc) {
                 const npcModel = pioneer as MapNpcPioneerModel;
                 if (npcModel.talkId != null) {
@@ -712,46 +754,51 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
         }
     }
     exploredBuilding(buildingId: string): void {
-        const building = BuildingMgr.getBuildingById(buildingId);
+        // const building = BuildingMgr.getBuildingById(buildingId);
+        const building = DataMgr.s.mapBuilding.getBuildingById(buildingId);
         if (building != null) {
             if (building.progress > 0) UserInfoMgr.explorationValue += building.progress;
             if (building.exp > 0) UserInfoMgr.exp += building.exp;
         }
     }
     miningBuilding(actionPioneerId: string, buildingId: string): void {
-        const building = BuildingMgr.getBuildingById(buildingId);
-        if (building != null && building instanceof MapResourceBuildingModel) {
-            if (building.resources != null && building.resources.length > 0) {
-                let isPlayer: boolean = false;
-                for (const temple of PioneerMgr.getPlayerPioneer()) {
-                    if (temple.id == actionPioneerId) {
-                        isPlayer = true;
-                        break;
-                    }
-                }
-                let actionView = null;
-                if (isPlayer && this._pioneerMap.has(actionPioneerId)) {
-                    actionView = this._pioneerMap.get(actionPioneerId);
-                }
-                for (const resource of building.resources) {
-                    const resultNum: number = Math.floor(resource.num * (1 + LvlupConfig.getTotalExtraRateByLvl(UserInfoMgr.level)));
-                    actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resultNum, () => {
-                        ItemMgr.addItem([new ItemData(resource.id, resultNum)]);
-                    });
-                }
+        // const buildingObj: MapBuildingObject = BuildingMgr.getBuildingById(buildingId);
+        const buildingObj: MapBuildingObject = DataMgr.s.mapBuilding.getBuildingById(buildingId);
 
-                NotificationMgr.triggerEvent(NotificationName.MINING_FINISHED, {
-                    buildingId: buildingId,
-                    pioneerId: actionPioneerId,
-                    duration: 3000, //todo see assets/Script/Manger/PioneerMgr.ts:1225
-                    rewards: [], // no item loots by now
+        if (buildingObj == null) return;
+        if (buildingObj.type != MapBuildingType.resource) return;
+
+        const building = buildingObj as MapBuildingResourceObject;
+
+        if (building.resources != null && building.resources.length > 0) {
+            let isPlayer: boolean = false;
+            for (const temple of PioneerMgr.getPlayerPioneer()) {
+                if (temple.id == actionPioneerId) {
+                    isPlayer = true;
+                    break;
+                }
+            }
+            let actionView = null;
+            if (isPlayer && this._pioneerMap.has(actionPioneerId)) {
+                actionView = this._pioneerMap.get(actionPioneerId);
+            }
+            for (const resource of building.resources) {
+                const resultNum: number = Math.floor(resource.num * (1 + LvlupConfig.getTotalExtraRateByLvl(UserInfoMgr.level)));
+                actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resultNum, () => {
+                    ItemMgr.addItem([new ItemData(resource.id, resultNum)]);
                 });
             }
+
+            NotificationMgr.triggerEvent(NotificationName.MINING_FINISHED, {
+                buildingId: buildingId,
+                pioneerId: actionPioneerId,
+                duration: 3000, //todo see assets/Script/Manger/PioneerMgr.ts:1225
+                rewards: [], // no item loots by now
+            });
         }
-        if (building != null) {
-            if (building.progress > 0) UserInfoMgr.explorationValue += building.progress;
-            if (building.exp > 0) UserInfoMgr.exp += building.exp;
-        }
+
+        if (building.progress > 0) UserInfoMgr.explorationValue += building.progress;
+        if (building.exp > 0) UserInfoMgr.exp += building.exp;
     }
     async eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): Promise<void> {
         GlobalData.latestActiveEventState = {
@@ -759,19 +806,30 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
             buildingId: buildingId,
             eventId: eventId,
             prevEventId: null,
-        }
+        };
 
         const event = EventConfig.getById(eventId);
         if (event != null) {
             const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
             if (result.success) {
-                result.node.getComponent(EventUI).eventUIShow(actionPioneerId, buildingId, event, (attackerPioneerId: string, enemyPioneerId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => {
-                    PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
-                    PioneerMgr.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
-                }, (nextEvent: EventConfigData) => {
-                    PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
-                    PioneerMgr.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
-                });
+                result.node.getComponent(EventUI).eventUIShow(
+                    actionPioneerId,
+                    buildingId,
+                    event,
+                    (
+                        attackerPioneerId: string,
+                        enemyPioneerId: string,
+                        temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>,
+                        fightOver: (succeed: boolean) => void
+                    ) => {
+                        PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
+                        PioneerMgr.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
+                    },
+                    (nextEvent: EventConfigData) => {
+                        PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
+                        PioneerMgr.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
+                    }
+                );
             }
         }
     }
@@ -795,8 +853,7 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
         }
     }
     pioneerLogicMovePathPrepared(pioneer: MapPioneerModel, logic: MapPioneerLogicModel) {
-        if (this._actionShowPioneerId == pioneer.id &&
-            logic.type == MapPioneerLogicType.patrol) {
+        if (this._actionShowPioneerId == pioneer.id && logic.type == MapPioneerLogicType.patrol) {
             if (this._actionPioneerFootStepViews != null) {
                 for (const view of this._actionPioneerFootStepViews) {
                     view.destroy();
@@ -833,10 +890,6 @@ export class OuterPioneerController extends ViewController implements PioneerMgr
 
     //---------------------------------------------
     //UserInfoEvent
-    playerNameChanged(value: string): void {
-
-    }
-    getProp(propId: string, num: number): void {
-
-    }
+    playerNameChanged(value: string): void {}
+    getProp(propId: string, num: number): void {}
 }

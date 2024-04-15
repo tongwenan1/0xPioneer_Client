@@ -4,7 +4,6 @@ import { TilePos } from "../Game/TiledMap/TileTool";
 import { AttrChangeType, GetPropData, MapMemberFactionType, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { ArtifactMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
 import { PioneerMgrEvent } from "../Const/Manager/PioneerMgrDefine";
-import MapBuildingModel, { MapMainCityBuildingModel } from "../Game/Outer/Model/MapBuildingModel";
 import { MapPioneerType, MapPioneerActionType, MapPioneerAttributesChangeModel, MapPioneerEventStatus, MapPioneerLogicType } from "../Const/Model/MapPioneerModelDefine";
 import MapPioneerModel, { MapPlayerPioneerModel, MapNpcPioneerModel, MapPioneerLogicModel } from "../Game/Outer/Model/MapPioneerModel";
 import { UIHUDController } from "../UI/UIHUDController";
@@ -18,6 +17,7 @@ import { NotificationName } from "../Const/Notification";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import { TaskFactionAction, TaskNpcGetNewTalkAction, TaskShowHideAction, TaskShowHideStatus, TaskTalkAction, TaskTargetType } from "../Const/TaskDefine";
 import Config from "../Const/Config";
+import { MapBuildingMainCityObject, MapBuildingObject } from "../Const/MapBuilding";
 
 export default class PioneerMgr {
 
@@ -1096,7 +1096,7 @@ export default class PioneerMgr {
     }
 
     private _pioneerActionTypeChangedByMeetTrigger(pioneer: MapPioneerModel, isStay: boolean = true) {
-        let stayBuilding: MapBuildingModel = null;
+        let stayBuilding: MapBuildingObject = null;
         if (pioneer.purchaseMovingBuildingId != null) {
             const templeBuildings = BuildingMgr.getShowBuildingsNearMapPos(pioneer.stayPos, 2);
             if (templeBuildings.length > 0) {
@@ -1220,7 +1220,7 @@ export default class PioneerMgr {
                         stayBuilding.faction == MapMemberFactionType.enemy) ||
                     (pioneer.id == "gangster_3" && pioneer.faction == MapMemberFactionType.enemy && stayBuilding.faction != MapMemberFactionType.enemy)
                 ) {
-                    const cityBuilding = stayBuilding as MapMainCityBuildingModel;
+                    const cityBuilding = stayBuilding as MapBuildingMainCityObject;
                     if (cityBuilding.taskObj != null) {
                         pioneer.actionType = MapPioneerActionType.idle;
                         for (const observer of this._observers) {

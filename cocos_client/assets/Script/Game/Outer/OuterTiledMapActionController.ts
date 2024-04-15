@@ -44,9 +44,9 @@ import GameMainHelper from "../Helper/GameMainHelper";
 import ViewController from "../../BasicView/ViewController";
 import EventConfig from "../../Config/EventConfig";
 import Config from "../../Const/Config";
-import MapBuildingModel from "./Model/MapBuildingModel";
 import { ArtifactEffectType } from "../../Const/Artifact";
 import { DataMgr } from "../../Data/DataMgr";
+import { MapBuildingObject } from "../../Const/MapBuilding";
 
 const { ccclass, property } = _decorator;
 
@@ -223,7 +223,9 @@ export class OuterTiledMapActionController extends ViewController {
                         if (tp != null) {
                             if (!GameMainHelper.instance.tiledMapIsAllBlackShadow(tp.x, tp.y)) {
                                 // check building first, because of building is block
-                                const stayBuilding = BuildingMgr.getShowBuildingByMapPos(v2(tp.x, tp.y));
+                                // const stayBuilding = BuildingMgr.getShowBuildingByMapPos(v2(tp.x, tp.y));
+                                const stayBuilding = DataMgr.s.mapBuilding.getShowBuildingByMapPos(v2(tp.x, tp.y));
+
                                 if (stayBuilding != null && stayBuilding.show) {
                                     if (stayBuilding.type == MapBuildingType.city && stayBuilding.faction != MapMemberFactionType.enemy) {
                                         const centerPos = stayBuilding.stayMapPositions[3];
@@ -253,12 +255,12 @@ export class OuterTiledMapActionController extends ViewController {
                                             }
                                         }
                                         if (cursorShowTilePositions == null) {
-                                            const decorate = BuildingMgr.getDecorateByMapPos(v2(tp.x, tp.y));
-                                            if (decorate != null) {
-                                                cursorShowTilePositions = decorate.stayMapPositions;
-                                            } else {
+                                            // const decorate = BuildingMgr.getDecorateByMapPos(v2(tp.x, tp.y));
+                                            // if (decorate != null) {
+                                            //     cursorShowTilePositions = decorate.stayMapPositions;
+                                            // } else {
                                                 cursorShowTilePositions = [v2(tp.x, tp.y)];
-                                            }
+                                            // }
                                         }
                                         this._mapCursorView.show(cursorShowTilePositions, Color.RED);
                                         GameMainHelper.instance.changeCursor(ECursorType.Error);
@@ -481,12 +483,14 @@ export class OuterTiledMapActionController extends ViewController {
         // -2 no action
         let actionType: number = -1;
         let actionMovingPioneerId: string = null;
-        let targetFightBuildingModel: MapBuildingModel = null;
+        let targetFightBuildingModel: MapBuildingObject = null;
         let stayPositons: Vec2[] = [];
         let purchaseMovingPioneerId = null;
         let purchaseMovingBuildingId = null;
         // check is building first
-        const stayBuilding = BuildingMgr.getShowBuildingByMapPos(v2(tiledPos.x, tiledPos.y));
+        // const stayBuilding = BuildingMgr.getShowBuildingByMapPos(v2(tiledPos.x, tiledPos.y));
+        const stayBuilding = DataMgr.s.mapBuilding.getShowBuildingByMapPos(v2(tiledPos.x, tiledPos.y));
+
         if (stayBuilding != null) {
             if (currentActionPioneer.actionType == MapPioneerActionType.defend && stayBuilding.type == MapBuildingType.stronghold) {
                 actionType = 6;
@@ -626,7 +630,8 @@ export class OuterTiledMapActionController extends ViewController {
                     }
                 } else if (purchaseMovingBuildingId != null) {
                     taregtPos = v2(tiledPos.x, tiledPos.y);
-                    const toStayBuilding = BuildingMgr.getBuildingById(purchaseMovingBuildingId);
+                    // const toStayBuilding = BuildingMgr.getBuildingById(purchaseMovingBuildingId);
+                    const toStayBuilding = DataMgr.s.mapBuilding.getBuildingById(purchaseMovingBuildingId);
                     if (toStayBuilding != null) {
                         targetStayPositions = toStayBuilding.stayMapPositions;
                         sparePositions = toStayBuilding.stayMapPositions;

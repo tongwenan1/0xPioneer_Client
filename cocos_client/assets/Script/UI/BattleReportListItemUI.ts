@@ -8,6 +8,7 @@ import { UIHUDController } from './UIHUDController';
 import EventConfig from '../Config/EventConfig';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
 import UIPanelManger from '../Basic/UIPanelMgr';
+import { DataMgr } from '../Data/DataMgr';
 
 const {ccclass, property} = _decorator;
 
@@ -146,7 +147,9 @@ export class BattleReportListItemUI extends Component {
     }
 
     private _initWithMiningReport(report: BattleReportRecord): void {
-        let buildingInfo = BuildingMgr.getBuildingById(report.data.buildingId);
+        // let buildingInfo = BuildingMgr.getBuildingById(report.data.buildingId);
+        let buildingInfo = DataMgr.s.mapBuilding.getBuildingById(report.data.buildingId);
+
         let pioneerInfo = PioneerMgr.getPioneerById(report.data.pioneerId);
 
         const roleName = LanMgr.getLanById(pioneerInfo.name);
@@ -168,7 +171,9 @@ export class BattleReportListItemUI extends Component {
     }
 
     private _initWithExploreReport(report: BattleReportRecord): void {
-        let buildingInfo = BuildingMgr.getBuildingById(report.data.buildingId);
+        // let buildingInfo = BuildingMgr.getBuildingById(report.data.buildingId);
+        let buildingInfo = DataMgr.s.mapBuilding.getBuildingById(report.data.buildingId);
+
         let pioneerInfo = PioneerMgr.getPioneerById(report.data.pioneerId);
 
         const roleName = LanMgr.getLanById(pioneerInfo.name);
@@ -205,7 +210,8 @@ export class BattleReportListItemUI extends Component {
                 pos = this._locationInfo.pos;
                 break;
             case "building":
-                let building = BuildingMgr.getBuildingById(this._locationInfo.buildingId);
+                // let building = BuildingMgr.getBuildingById(this._locationInfo.buildingId);
+                let building = DataMgr.s.mapBuilding.getBuildingById(this._locationInfo.buildingId);
                 pos = building.stayMapPositions[0];
                 break;
             default:
@@ -231,7 +237,9 @@ export class BattleReportListItemUI extends Component {
 
     onClickBranchSelection() {
         const reportData = this.report.data;
-        const building = BuildingMgr.getBuildingById(reportData.buildingId);
+        // const building = BuildingMgr.getBuildingById(reportData.buildingId);
+        const building = DataMgr.s.mapBuilding.getBuildingById(reportData.buildingId);
+
         const currentEvent = EventConfig.getById(building.eventId);
         if (currentEvent == null) {
             UIHUDController.showCenterTip("Error");
@@ -244,7 +252,8 @@ export class BattleReportListItemUI extends Component {
 
     private _locationString(locationInfo: LocationInfo): string {
         if (locationInfo.type === "building") {
-            const building = BuildingMgr.getBuildingById(locationInfo.buildingId);
+            // const building = BuildingMgr.getBuildingById(locationInfo.buildingId);
+            const building = DataMgr.s.mapBuilding.getBuildingById(locationInfo.buildingId);
             return `${LanMgr.getLanById(building.name)} <color=#a1cb7f>${CommonTools.formatMapPosition(building.stayMapPositions[0])}</color>`;
         } else {
             return `${LanMgr.getLanById("701002")} <color=#a1cb7f>${CommonTools.formatMapPosition(locationInfo.pos)}</color>`;
