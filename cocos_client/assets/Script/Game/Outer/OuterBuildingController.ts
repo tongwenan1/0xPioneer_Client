@@ -1,27 +1,21 @@
-import { _decorator, Component, instantiate, Node, Prefab, resources, UITransform, v2, v3, Vec2, Vec3, warn } from "cc";
+import { _decorator, Component, instantiate, Node, Prefab, v3, Vec2, Vec3 } from "cc";
 import { TileHexDirection, TilePos } from "../TiledMap/TileTool";
 import { OuterBuildingView } from "./View/OuterBuildingView";
-import { PioneerMgrEvent } from "../../Const/Manager/PioneerMgrDefine";
-import { BuildingMgr, PioneerMgr, TaskMgr, UserInfoMgr } from "../../Utils/Global";
-import { MapDecoratePosMode } from "../../Const/Model/MapDecorateModelDefine";
-import MapDecorateModel from "./Model/MapDecorateModel";
-import { MapPioneerActionType } from "../../Const/Model/MapPioneerModelDefine";
-import MapPioneerModel, { MapPioneerLogicModel } from "./Model/MapPioneerModel";
-import { BuildingStayPosType } from "../../Const/BuildingDefine";
+import { TaskMgr, UserInfoMgr } from "../../Utils/Global";
 import { UserInfoEvent } from "../../Const/UserInfoDefine";
 import GameMainHelper from "../Helper/GameMainHelper";
 import { OuterTiledMapActionController } from "./OuterTiledMapActionController";
-import { TaskShowHideStatus, TaskTargetType } from "../../Const/TaskDefine";
-import { MapMemberFactionType } from "../../Const/ConstDefine";
-import { DataMgr } from "../../Data/DataMgr";
-import { NetworkMgr } from "../../Net/NetworkMgr";
+import { TaskShowHideStatus } from "../../Const/TaskDefine";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
+import { DataMgr } from "../../Data/DataMgr";
+import { MapMemberTargetType } from "../../Const/ConstDefine";
+import { BuildingStayPosType } from "../../Const/BuildingDefine";
 
 const { ccclass, property } = _decorator;
 
 @ccclass("OuterBuildingController")
-export class OuterBuildingController extends Component implements UserInfoEvent, PioneerMgrEvent {
+export class OuterBuildingController extends Component implements UserInfoEvent {
     public getBuildingView(buildingId: string): OuterBuildingView {
         if (this._buildingMap.has(buildingId)) {
             const view = this._buildingMap.get(buildingId).node.getComponent(OuterBuildingView);
@@ -34,11 +28,9 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     private buildingPrefab;
 
     private _buildingMap: Map<string, { node: Node; stayPositons: Vec2[] }> = new Map();
-    private _decorateMap: Map<string, { node: Node; model: MapDecorateModel }> = new Map();
 
     protected onLoad() {
         UserInfoMgr.addObserver(this);
-        PioneerMgr.addObserver(this);
 
         NotificationMgr.addListener(NotificationName.BUILDING_DID_HIDE, this.buildingDidHide, this);
         NotificationMgr.addListener(NotificationName.BUILDING_DID_SHOW, this.buildingDidShow, this);
@@ -105,7 +97,6 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
 
     protected onDestroy(): void {
         UserInfoMgr.removeObserver(this);
-        PioneerMgr.removeObserver(this);
 
         NotificationMgr.removeListener(NotificationName.BUILDING_DID_HIDE, this.buildingDidHide, this);
         NotificationMgr.removeListener(NotificationName.BUILDING_DID_SHOW, this.buildingDidShow, this);
@@ -136,20 +127,14 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
                     changed = true;
                 }
                 if (temple != null) {
-                    temple.getComponent(OuterBuildingView).refreshUI(building, PioneerMgr.getPlayerPioneer());
+                    temple.getComponent(OuterBuildingView).refreshUI(building);
                     if (building.stayMapPositions.length > 0) {
                         let worldPos = null;
                         if (building.stayMapPositions.length == 7) {
                             worldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[3].x, building.stayMapPositions[3].y);
                         } else if (building.stayMapPositions.length == 3) {
-                            const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(
-                                building.stayMapPositions[0].x,
-                                building.stayMapPositions[0].y
-                            );
-                            const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(
-                                building.stayMapPositions[1].x,
-                                building.stayMapPositions[1].y
-                            );
+                            const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
+                            const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[1].x, building.stayMapPositions[1].y);
                             worldPos = v3(beginWorldPos.x, endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2, 0);
                         } else {
                             worldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
@@ -319,12 +304,12 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
         this._refreshUI();
     }
     buildingDidHide(buildingId: string): void {
-        TaskMgr.showHideChanged(TaskTargetType.building, buildingId, TaskShowHideStatus.hide);
+        TaskMgr.showHideChanged(MapMemberTargetType.building, buildingId, TaskShowHideStatus.hide);
         this._refreshUI();
         // this._refreshDecorationUI();
     }
     buildingDidShow(buildingId: string): void {
-        TaskMgr.showHideChanged(TaskTargetType.building, buildingId, TaskShowHideStatus.show);
+        TaskMgr.showHideChanged(MapMemberTargetType.building, buildingId, TaskShowHideStatus.show);
         this._refreshUI();
         // this._refreshDecorationUI();
     }
@@ -333,25 +318,5 @@ export class OuterBuildingController extends Component implements UserInfoEvent,
     }
     buildingRemoveDefendPioneer(): void {
         this._refreshUI();
-    }
-
-    //-----------------------------------------------------------
-    //PioneerMgrEvent
-    pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void {}
-    pioneerHpMaxChanged(pioneerId: string): void {}
-    pioneerAttackChanged(pioneerId: string): void {}
-    pioneerLoseHp(pioneerId: string, value: number): void {}
-    pionerrRebirthCount(pioneerId: string, count: number): void {}
-    pioneerRebirth(pioneerId: string): void {}
-    pioneerDidShow(pioneerId: string): void {}
-    pioneerDidHide(pioneerId: string): void {}
-    addNewOnePioneer(newPioneer: MapPioneerModel): void {}
-    destroyOnePioneer(pioneerId: string): void {}
-    exploredPioneer(pioneerId: string): void {}
-    exploredBuilding(buildingId: string): void {}
-    miningBuilding(actionPioneerId: string, buildingId: string): void {}
-    eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {}
-    pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void {}
-    pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void {}
-    playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {}
+    }   
 }

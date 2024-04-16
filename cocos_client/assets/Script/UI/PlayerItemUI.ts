@@ -1,13 +1,13 @@
 import { _decorator, Component, Label, log, Node, Sprite, SpriteFrame, Button, ProgressBar } from 'cc';
 import { LanMgr, PioneerMgr } from '../Utils/Global';
-import { MapPioneerActionType, MapPioneerEventStatus } from '../Const/Model/MapPioneerModelDefine';
-import { MapPlayerPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
+import { MapPioneerActionType, MapPioneerEventStatus, MapPlayerPioneerObject } from '../Const/PioneerDefine';
+import { DataMgr } from '../Data/DataMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerItemUI')
 export class PlayerItemUI extends Component {
 
-    refreshUI(model: MapPlayerPioneerModel) {
+    refreshUI(model: MapPlayerPioneerObject) {
         //name
         this._nameLabel.string = LanMgr.getLanById(model.name);
         //role
@@ -39,7 +39,7 @@ export class PlayerItemUI extends Component {
         // eventremind
         this.node.getChildByName("EventRemind").active = model.actionType == MapPioneerActionType.eventing && model.eventStatus == MapPioneerEventStatus.Waited;
         //selected
-        this._selectedView.active = PioneerMgr.getCurrentPlayerPioneer().id == model.id;
+        this._selectedView.active = DataMgr.s.pioneer.getCurrentPlayer().id == model.id;
         //rebirth
         this._rebirthCountView.active = model.rebirthCountTime > 0;
         this._rebirthCountView.getChildByName("Label").getComponent(Label).string = model.rebirthCountTime + "s";

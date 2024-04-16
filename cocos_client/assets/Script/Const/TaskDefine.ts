@@ -1,7 +1,4 @@
-import TaskConfig from "../Config/TaskConfig";
-import { ConfigType } from "./Config";
-import { GetPropData, MapMemberFactionType } from "./ConstDefine";
-import { ItemConfigType } from "./Item";
+import { GetPropData, MapMemberFactionType, MapMemberTargetType } from "./ConstDefine";
 
 export interface TaskConfigData {
   id: string;
@@ -40,10 +37,6 @@ export enum TaskFinishResultType {
   Success = 0,
   Fail = 1,
 }
-export enum TaskTargetType {
-  pioneer = 0,
-  building = 1,
-}
 export enum TaskShowHideStatus {
   hide = 0,
   show = 1,
@@ -76,7 +69,7 @@ export interface TaskKillCondition {
   killTime: number;
 }
 export interface TaskShowHideCondition {
-  type: TaskTargetType;
+  type: MapMemberTargetType;
   id: string;
   status: TaskShowHideStatus;
 }
@@ -102,13 +95,13 @@ export enum TaskActionType {
 }
 
 export interface TaskShowHideAction {
-  type: TaskTargetType;
+  type: MapMemberTargetType;
   id: string;
   status: TaskShowHideStatus;
   delayTime: number;
 }
 export interface TaskFactionAction {
-  type: TaskTargetType;
+  type: MapMemberTargetType;
   id: string;
   faction: MapMemberFactionType;
 }

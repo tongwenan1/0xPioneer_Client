@@ -1,7 +1,10 @@
+import { Vec2 } from "cc";
 import ProtobufConfig from "../../Config/ProtobufConfig";
+import { MapPioneerActionType, MapPioneerObject } from "../../Const/PioneerDefine";
 import { natrium_ws } from "../../natrium/client/natrium_ws";
 import { registermsg } from "../../natrium/share/msgs/registermsg";
 import CLog from "../../Utils/CLog";
+import { TilePos } from "../../Game/TiledMap/TileTool";
 
 export class WebsocketMsg {
     private _websocket_host: string;
@@ -89,6 +92,13 @@ export class WebsocketMsg {
         // pioneernft func
         this._websocket.emit("get_pioneers_res", {});
     }
+
+    public change_pioneer(d: c2s_user.Ichange_pioneer) {
+        this._websocket.emit("change_pioneer_res", d);
+    }
+    public begin_pioneer_move(d: c2s_user.Ibegin_pioneer_move) {
+        this._websocket.emit("begin_pioneer_move_res", d);
+    }
 }
 
 export const WebsocketEvent = {
@@ -97,6 +107,21 @@ export const WebsocketEvent = {
     shakehand: "shakehand",
     error: "error",
 };
+
+export enum Ichange_pioneer_type {
+    showHide,
+    GetNewTalk,
+    actionType
+}
+export interface Ichange_pioneer_showHide {
+    show: boolean;
+}
+export interface Ichange_pioneer_actionType {
+    type: MapPioneerActionType;
+}
+export interface Ichange_pioneer_newTalk {
+    talkId: string;
+}
 
 export namespace c2s_user {
     export interface Ilogin {
@@ -125,6 +150,20 @@ export namespace c2s_user {
     }
 
     export interface Iget_pioneers {}
+
+    
+    
+    export interface Ichange_pioneer { 
+        type: Ichange_pioneer_type, 
+        pioneerId: string, 
+        showHide?: Ichange_pioneer_showHide,
+        actionType?: Ichange_pioneer_actionType,
+        newTalk?: Ichange_pioneer_newTalk,
+    }
+    export interface Ibegin_pioneer_move {
+        pioneerId: string;
+        targetPos: Vec2;
+    }
 }
 
 export namespace s2c_user {
@@ -167,6 +206,21 @@ export namespace s2c_user {
     export interface Iget_pioneers_res {
         res: number;
         data?: share.Ipioneer_info | null;
+    }
+
+    export interface Ichange_pioneer_res {
+        res: number;
+        type: Ichange_pioneer_type;
+        pioneerId: string;
+        showHide?: Ichange_pioneer_showHide,
+        actionType?: Ichange_pioneer_actionType,
+        newTalk: Ichange_pioneer_newTalk,
+    }
+
+    export interface Ibegin_pioneer_move_res {
+        res: number;
+        pioneerId: string;
+        targetPos: Vec2;
     }
 }
 

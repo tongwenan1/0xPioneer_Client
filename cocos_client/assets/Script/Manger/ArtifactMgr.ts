@@ -1,5 +1,5 @@
 import { SpriteFrame, sys } from "cc";
-import { PioneerMgr, ResourcesMgr } from "../Utils/Global";
+import { ResourcesMgr } from "../Utils/Global";
 import ArtifactData from "../Model/ArtifactData";
 import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
@@ -7,7 +7,6 @@ import NotificationMgr from "../Basic/NotificationMgr";
 import { ArtifactArrangeType, ArtifactEffectType } from "../Const/Artifact";
 import CLog from "../Utils/CLog";
 import { NotificationName } from "../Const/Notification";
-import { AttrChangeType, AttrType } from "../Const/ConstDefine";
 import Config from "../Const/Config";
 
 export default class ArtifactMgr {
@@ -183,17 +182,18 @@ export default class ArtifactMgr {
                 for (let j = 0; j < artifactConfig.prop.length; j++) {
                     const propType = artifactConfig.prop[j];
                     const propValue = artifactConfig.prop_value[j];
-                    if (propType == AttrType.HP) {
-                        PioneerMgr.pioneerChangeAllPlayerHpMax({
-                            type: propValue[0],
-                            value: propValue[1] * artifact.count,
-                        });
-                    } else if (propType == AttrType.ATTACK) {
-                        PioneerMgr.pioneerChangeAllPlayerAttack({
-                            type: propValue[0],
-                            value: propValue[1] * artifact.count,
-                        });
-                    }
+                    // wait xx
+                    // if (propType == AttrType.HP) {
+                    //     PioneerMgr.pioneerChangeAllPlayerHpMax({
+                    //         type: propValue[0],
+                    //         value: propValue[1] * artifact.count,
+                    //     });
+                    // } else if (propType == AttrType.ATTACK) {
+                    //     PioneerMgr.pioneerChangeAllPlayerAttack({
+                    //         type: propValue[0],
+                    //         value: propValue[1] * artifact.count,
+                    //     });
+                    // }
                 }
             }
         }

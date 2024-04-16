@@ -1,6 +1,5 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
-import { BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UserInfoMgr } from '../../Utils/Global';
-import { MapPioneerAttributesChangeModel } from '../../Const/Model/MapPioneerModelDefine';
+import { CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIName } from '../../Const/ConstUIDefine';
 import { UIHUDController } from '../UIHUDController';
@@ -16,6 +15,7 @@ import { ItemGettedUI } from '../ItemGettedUI';
 import Config from '../../Const/Config';
 import UIPanelManger from '../../Basic/UIPanelMgr';
 import { DataMgr } from '../../Data/DataMgr';
+import { MapPioneerAttributesChangeModel } from '../../Const/PioneerDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('EventUI')
@@ -160,7 +160,8 @@ export class EventUI extends ViewController {
                         const changedValue: number = tempChange[3];
 
                         if (isPlayer && changedType == 1) {
-                            PioneerMgr.pioneerChangeHpMax(pioneerId, { type: changeMethod, value: changedValue });
+                            // wait xx
+                            // PioneerMgr.pioneerChangeHpMax(pioneerId, { type: changeMethod, value: changedValue });
                         } else {
                             this._temporaryAttributes.set(pioneerId + "|" + changedType, { type: changeMethod, value: changedValue });
                         }
@@ -178,7 +179,7 @@ export class EventUI extends ViewController {
                             }
                         }
                         else {
-                            const pioneerInfo = PioneerMgr.getPioneerById(pioneerId);
+                            const pioneerInfo = DataMgr.s.pioneer.getById(pioneerId);
                             if (pioneerInfo == null) {
                                 if (changedType == 1) {
                                     // useLanMgr
@@ -234,7 +235,7 @@ export class EventUI extends ViewController {
                 if (type == 1) {
                     PioneerMgr.showPioneer(pioneerId);
                 } else {
-                    PioneerMgr.hidePioneer(pioneerId);
+                    DataMgr.s.pioneer.changeShow(pioneerId, false);
                 }
             }
         }
@@ -265,7 +266,7 @@ export class EventUI extends ViewController {
         // reserved for later
         // } else if (type == 3) {
         //     if (this._triggerPioneerId != null) {
-        //         const pioneer = PioneerMgr.getPioneerById(this._triggerPioneerId);
+        //         const pioneer = DataMgr.s.pioneer.getById(this._triggerPioneerId);
         //         if (id == 1) {
         //             // hp
         //             if (pioneer.hp > num) {

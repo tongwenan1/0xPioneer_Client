@@ -15,6 +15,7 @@ import LvlupConfig from "../Config/LvlupConfig";
 import MapBuildingConfig from "../Config/MapBuildingConfig";
 import NFTPioneerConfig from "../Config/NFTPioneerConfig";
 import NFTPioneerNameConfig from "../Config/NFTPioneerNameConfig";
+import PioneerConfig from "../Config/PioneerConfig";
 import ProtobufConfig from "../Config/ProtobufConfig";
 import TalkConfig from "../Config/TalkConfig";
 import TaskConfig from "../Config/TaskConfig";
@@ -41,7 +42,7 @@ export default class ConfigMgr {
         if (!(await TaskStepConfigData.init())) return false;
         if (!(await NFTPioneerConfig.init())) return false;
         if (!(await NFTPioneerNameConfig.init())) return false;
-
+        if (!(await PioneerConfig.init())) return false;
 
         // abi
         const chainId = ChainConfig.getCurrentChainId();

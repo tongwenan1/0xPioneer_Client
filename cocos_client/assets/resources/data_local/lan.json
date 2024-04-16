@@ -35,6 +35,14 @@
     "id": "106004",
     "eng": "%s Lv%s completed!"
   },
+  "106005": {
+    "id": "106005",
+    "eng": "Let %s learn %s, confirm?"
+  },
+  "106006": {
+    "id": "106006",
+    "eng": "Let %s LOSS %s, and NO skill book returned, confirm?"
+  },
   "107001": {
     "id": "107001",
     "eng": "Eye of Pharaoh"
@@ -78,6 +86,10 @@
   "107549": {
     "id": "107549",
     "eng": "text for English version"
+  },
+  "108001": {
+    "id": "108001",
+    "eng": "Skill Name"
   },
   "109001": {
     "id": "109001",
@@ -1818,6 +1830,10 @@
   "1070055": {
     "id": "1070055",
     "eng": "Troop Attack +5"
+  },
+  "1080011": {
+    "id": "1080011",
+    "eng": "Skill Des"
   },
   "null": {
     "id": null,

@@ -1,14 +1,13 @@
 import { _decorator, Component, Node, Vec2, Vec3, CCString, UITransform, Label, UIOpacity } from 'cc';
 import { LanMgr } from '../../../Utils/Global';
-import { MapPioneerLogicType, MapPioneerActionType, MapPioneerMoveDirection } from '../../../Const/Model/MapPioneerModelDefine';
-import MapPioneerModel from '../Model/MapPioneerModel';
+import { MapPioneerLogicType, MapPioneerActionType, MapPioneerMoveDirection, MapPioneerObject } from '../../../Const/PioneerDefine';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('MapItemMonster')
 export class MapItemMonster extends Component {
 
-    public refreshUI(model: MapPioneerModel) {
+    public refreshUI(model: MapPioneerObject) {
         this._nameLabel.string = LanMgr.getLanById(model.name);
 
         let moveCounting: boolean = false;
@@ -27,7 +26,7 @@ export class MapItemMonster extends Component {
         for (const type of this._monsterTypeNames) {
             const view = this.node.getChildByPath("role/" + type);
             view.active = type == model.animType;
-            if (view.active) {
+            if (view.active) {  
                 this._currentShowMonster = view;
                 view.getChildByPath("idle").active = model.actionType == MapPioneerActionType.idle;
                 view.getChildByPath("walk_left").active = model.actionType == MapPioneerActionType.moving && model.moveDirection == MapPioneerMoveDirection.left;

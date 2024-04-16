@@ -4,15 +4,11 @@ import {
     Node,
     Vec2,
     Vec3,
-    Camera,
     UITransform,
-    Input,
-    input,
     Prefab,
     v2,
     v3,
     Mask,
-    tween,
     CCString,
     SpriteFrame,
     instantiate,
@@ -20,32 +16,26 @@ import {
     EventMouse,
     Color,
     TiledMap,
-    size,
-    RenderRoot2D,
-    Widget,
-    CCInteger,
     Animation,
     view,
-    Canvas,
 } from "cc";
 import { MapBuildingType } from "../../Const/BuildingDefine";
 import { ECursorType, MapMemberFactionType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
-import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType } from "../../Const/Model/MapPioneerModelDefine";
 import { UIHUDController } from "../../UI/UIHUDController";
 import { TilePos, TileHexDirection } from "../TiledMap/TileTool";
-import MapPioneerModel from "./Model/MapPioneerModel";
 import { OuterPioneerController } from "./OuterPioneerController";
 import { OuterFogAnimShapMask } from "./View/OuterFogAnimShapMask";
 import { OuterFogMask } from "./View/OuterFogMask";
 import { OuterMapCursorView } from "./View/OuterMapCursorView";
 import { ResOprView } from "./View/ResOprView";
-import { ArtifactMgr, BuildingMgr, ItemMgr, LanMgr, PioneerMgr, UserInfoMgr } from "../../Utils/Global";
+import { ArtifactMgr, ItemMgr, LanMgr, PioneerMgr, UserInfoMgr } from "../../Utils/Global";
 import GameMainHelper from "../Helper/GameMainHelper";
 import ViewController from "../../BasicView/ViewController";
 import EventConfig from "../../Config/EventConfig";
 import Config from "../../Const/Config";
 import { ArtifactEffectType } from "../../Const/Artifact";
 import { DataMgr } from "../../Data/DataMgr";
+import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType, MapPioneerObject } from "../../Const/PioneerDefine";
 import { MapBuildingObject } from "../../Const/MapBuilding";
 
 const { ccclass, property } = _decorator;
@@ -259,14 +249,14 @@ export class OuterTiledMapActionController extends ViewController {
                                             // if (decorate != null) {
                                             //     cursorShowTilePositions = decorate.stayMapPositions;
                                             // } else {
-                                                cursorShowTilePositions = [v2(tp.x, tp.y)];
+                                            cursorShowTilePositions = [v2(tp.x, tp.y)];
                                             // }
                                         }
                                         this._mapCursorView.show(cursorShowTilePositions, Color.RED);
                                         GameMainHelper.instance.changeCursor(ECursorType.Error);
                                     } else {
-                                        const stayPioneers = PioneerMgr.getShowPioneersByMapPos(v2(tp.x, tp.y));
-                                        let existOtherPioneer: MapPioneerModel = null;
+                                        const stayPioneers = DataMgr.s.pioneer.getByStayPos(v2(tp.x, tp.y), true);
+                                        let existOtherPioneer: MapPioneerObject = null;
                                         for (const templePioneer of stayPioneers) {
                                             if (templePioneer.type != MapPioneerType.player) {
                                                 existOtherPioneer = templePioneer;
@@ -397,46 +387,44 @@ export class OuterTiledMapActionController extends ViewController {
         }
         GameMainHelper.instance.tiledMapShadowUpdate(delta);
         //clean pioneer view
-        const selfPioneer = await PioneerMgr.getPlayerPioneer();
+        const selfPioneers = await DataMgr.s.pioneer.getAllPlayers(true);
         let eraseShadowWorldPosChange = false;
         let eraseShadowWorldPos = DataMgr.s.eraseShadow.getObj();
-        for (const pioneer of selfPioneer) {
-            if (pioneer.show) {
-                let isExsit: boolean = false;
-                for (const localErase of eraseShadowWorldPos) {
-                    if (pioneer.stayPos.x === localErase.x && pioneer.stayPos.y === localErase.y) {
-                        isExsit = true;
-                        break;
-                    }
+        for (const pioneer of selfPioneers) {
+            let isExsit: boolean = false;
+            for (const localErase of eraseShadowWorldPos) {
+                if (pioneer.stayPos.x === localErase.x && pioneer.stayPos.y === localErase.y) {
+                    isExsit = true;
+                    break;
                 }
-                const newCleardPositons = GameMainHelper.instance.tiledMapShadowErase(pioneer.stayPos, pioneer.id);
-                if (!isExsit) {
-                    // this._localEraseShadowWorldPos.push(pioneer.stayPos);
-                    // if (Config.canSaveLocalData) {
-                    //     localStorage.setItem(this._localEraseDataKey, JSON.stringify(this._localEraseShadowWorldPos));
-                    // }
-                    eraseShadowWorldPos.push(pioneer.stayPos);
-                    eraseShadowWorldPosChange = true;
-                }
-                // has new, deal with fog
-                if (!this._lastPioneerStayPos.has(pioneer.id)) {
-                    this._lastPioneerStayPos.set(pioneer.id, pioneer.stayPos);
-                }
-                const lastStayPos = this._lastPioneerStayPos.get(pioneer.id);
-                if (lastStayPos.x != pioneer.stayPos.x || lastStayPos.y != pioneer.stayPos.y) {
-                    // let currentMoveDirection = null;
-                    // const direction = [TileHexDirection.Left, TileHexDirection.LeftBottom, TileHexDirection.LeftTop, TileHexDirection.Right, TileHexDirection.RightBottom, TileHexDirection.RightTop];
-                    // for (const d of direction) {
-                    //     const around = GameMainHelper.instance.tiledMapGetAroundByDirection(this._tiledhelper.getPos(lastStayPos.x, lastStayPos.y), d);
-                    //     if (around.x == pioneer.stayPos.x &&
-                    //         around.y == pioneer.stayPos.y) {
-                    //         currentMoveDirection = d;
-                    //         break;
-                    //     }
-                    // }
-                    this._lastPioneerStayPos.set(pioneer.id, pioneer.stayPos);
-                    this._refreshFog(GameMainHelper.instance.tiledMapGetShadowClearedTiledPositions(), newCleardPositons, pioneer.stayPos);
-                }
+            }
+            const newCleardPositons = GameMainHelper.instance.tiledMapShadowErase(pioneer.stayPos, pioneer.id);
+            if (!isExsit) {
+                // this._localEraseShadowWorldPos.push(pioneer.stayPos);
+                // if (Config.canSaveLocalData) {
+                //     localStorage.setItem(this._localEraseDataKey, JSON.stringify(this._localEraseShadowWorldPos));
+                // }
+                eraseShadowWorldPos.push(pioneer.stayPos);
+                eraseShadowWorldPosChange = true;
+            }
+            // has new, deal with fog
+            if (!this._lastPioneerStayPos.has(pioneer.id)) {
+                this._lastPioneerStayPos.set(pioneer.id, pioneer.stayPos);
+            }
+            const lastStayPos = this._lastPioneerStayPos.get(pioneer.id);
+            if (lastStayPos.x != pioneer.stayPos.x || lastStayPos.y != pioneer.stayPos.y) {
+                // let currentMoveDirection = null;
+                // const direction = [TileHexDirection.Left, TileHexDirection.LeftBottom, TileHexDirection.LeftTop, TileHexDirection.Right, TileHexDirection.RightBottom, TileHexDirection.RightTop];
+                // for (const d of direction) {
+                //     const around = GameMainHelper.instance.tiledMapGetAroundByDirection(this._tiledhelper.getPos(lastStayPos.x, lastStayPos.y), d);
+                //     if (around.x == pioneer.stayPos.x &&
+                //         around.y == pioneer.stayPos.y) {
+                //         currentMoveDirection = d;
+                //         break;
+                //     }
+                // }
+                this._lastPioneerStayPos.set(pioneer.id, pioneer.stayPos);
+                this._refreshFog(GameMainHelper.instance.tiledMapGetShadowClearedTiledPositions(), newCleardPositons, pioneer.stayPos);
             }
         }
         if (eraseShadowWorldPosChange) {
@@ -464,14 +452,14 @@ export class OuterTiledMapActionController extends ViewController {
             return;
         }
         // check is busy
-        if (PioneerMgr.currentActionPioneerIsBusy()) {
+        if (DataMgr.s.pioneer.getCurrentActionIsBusy()) {
             // useLanMgr
             // UIHUDController.showCenterTip(LanMgr.getLanById("203002"));
             // UIHUDController.showCenterTip("pioneer is busy");
             return;
         }
         // check is dead
-        const currentActionPioneer = PioneerMgr.getCurrentPlayerPioneer();
+        const currentActionPioneer = DataMgr.s.pioneer.getCurrentPlayer();
         if (!currentActionPioneer.show && currentActionPioneer.rebirthCountTime > 0) {
             // useLanMgr
             UIHUDController.showCenterTip(LanMgr.getLanById("203003"));
@@ -546,8 +534,8 @@ export class OuterTiledMapActionController extends ViewController {
                 UIHUDController.showCenterTip(LanMgr.getLanById("203005"));
                 // UIHUDController.showCenterTip("pioneer is processing event");
             } else {
-                const stayPioneers = PioneerMgr.getShowPioneersByMapPos(v2(tiledPos.x, tiledPos.y));
-                let currentPioneer: MapPioneerModel = null;
+                const stayPioneers = DataMgr.s.pioneer.getByStayPos(v2(tiledPos.x, tiledPos.y), true);
+                let currentPioneer: MapPioneerObject = null;
                 for (const tempPioneer of stayPioneers) {
                     if (tempPioneer.id != currentActionPioneer.id) {
                         currentPioneer = tempPioneer;
@@ -568,9 +556,7 @@ export class OuterTiledMapActionController extends ViewController {
                             if (
                                 logic.type == MapPioneerLogicType.targetmove ||
                                 logic.type == MapPioneerLogicType.stepmove ||
-                                logic.type == MapPioneerLogicType.patrol ||
-                                logic.type == MapPioneerLogicType.commonmove
-                            ) {
+                                logic.type == MapPioneerLogicType.patrol) {
                                 isMoving = true;
                                 break;
                             }
@@ -611,7 +597,7 @@ export class OuterTiledMapActionController extends ViewController {
             } else if (actionType == 3) {
                 if (actionMovingPioneerId != null) {
                     // to moving enemy
-                    taregtPos = PioneerMgr.getPioneerById(actionMovingPioneerId).stayPos;
+                    taregtPos = DataMgr.s.pioneer.getById(actionMovingPioneerId).stayPos;
                 } else if (targetFightBuildingModel != null) {
                     taregtPos = v2(tiledPos.x, tiledPos.y);
                     sparePositions = targetFightBuildingModel.stayMapPositions;
@@ -624,7 +610,7 @@ export class OuterTiledMapActionController extends ViewController {
                 // to pioneer or building
                 if (purchaseMovingPioneerId != null) {
                     taregtPos = v2(tiledPos.x, tiledPos.y);
-                    const toStayPioneer = PioneerMgr.getPioneerById(purchaseMovingPioneerId);
+                    const toStayPioneer = DataMgr.s.pioneer.getById(purchaseMovingPioneerId);
                     if (toStayPioneer != null) {
                         targetStayPositions = [toStayPioneer.stayPos];
                     }
@@ -692,7 +678,7 @@ export class OuterTiledMapActionController extends ViewController {
                         currentActionPioneer.purchaseMovingPioneerId = purchaseMovingPioneerId;
                         currentActionPioneer.purchaseMovingBuildingId = purchaseMovingBuildingId;
                     }
-                    PioneerMgr.pioneerBeginMove(currentActionPioneer.id, movePaths);
+                    DataMgr.s.pioneer.beginMove(currentActionPioneer.id, movePaths);
                     this._mapActionCursorView.hide();
                     this.node.getComponent(OuterPioneerController).hideMovingPioneerAction();
                 },

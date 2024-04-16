@@ -1,7 +1,6 @@
 import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, instantiate, Sprite, Quat, UITransform, misc, Label, ProgressBar, log, v3, color, Event } from 'cc';
 import { LanMgr } from '../../../Utils/Global';
-import { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection } from '../../../Const/Model/MapPioneerModelDefine';
-import MapPioneerModel from '../Model/MapPioneerModel';
+import { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerObject } from '../../../Const/PioneerDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapPioneer')
@@ -13,7 +12,7 @@ export class MapPioneer extends Component {
     @property(Node)
     speedUpTag: Node;
 
-    private _model: MapPioneerModel = null;
+    private _model: MapPioneerObject = null;
     private _lastStatus: MapPioneerActionType = null;
     private _lastEventStatus: MapPioneerEventStatus = null;
     private _actionTimeStamp: number = 0;
@@ -26,7 +25,7 @@ export class MapPioneer extends Component {
     private _timeCountProgress: ProgressBar = null;
     private _timeCountLabel: Label = null;
 
-    public refreshUI(model: MapPioneerModel) {
+    public refreshUI(model: MapPioneerObject) {
         this._model = model;
         this.nameLabel.string = LanMgr.getLanById(this._model.name);
         this._actionTimeStamp = this._model.actionEndTimeStamp;

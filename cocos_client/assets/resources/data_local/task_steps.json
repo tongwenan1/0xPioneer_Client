@@ -61,5 +61,66 @@
     "quit_con": null,
     "progress": 5,
     "exp": 10
+  },
+  "task0201": {
+    "id": "task0201",
+    "name": "501024",
+    "start_action": [
+      [
+        2,
+        0,
+        "npc_0",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      0,
+      "gangster_1",
+      0,
+      0
+    ],
+    "complete_action": [
+      3,
+      0,
+      [
+        "npc_0"
+      ],
+      1
+    ],
+    "quit_con": [
+      3,
+      0,
+      [
+        "gangster_1"
+      ],
+      1
+    ],
+    "progress": 5,
+    "exp": 10
+  },
+  "null": {
+    "id": null,
+    "name": "501020",
+    "start_action": [],
+    "complete_con": [
+      3,
+      0,
+      [
+        "npc_0"
+      ],
+      1
+    ],
+    "complete_action": null,
+    "quit_con": [
+      3,
+      0,
+      [
+        "npc_0"
+      ],
+      1
+    ],
+    "progress": 5,
+    "exp": 10
   }
 }

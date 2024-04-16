@@ -1,15 +1,14 @@
 import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, instantiate, Sprite, Quat, UITransform, misc, Label, ProgressBar, log, v3 } from 'cc';
 import { LanMgr } from '../../../Utils/Global';
-import { MapPioneerActionType, MapPioneerMoveDirection, MapPioneerType } from '../../../Const/Model/MapPioneerModelDefine';
-import MapPioneerModel, { MapNpcPioneerModel } from '../Model/MapPioneerModel';
 import { MapMemberFactionType } from '../../../Const/ConstDefine';
+import { MapNpcPioneerObject, MapPioneerActionType, MapPioneerMoveDirection, MapPioneerObject, MapPioneerType } from '../../../Const/PioneerDefine';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterOtherPioneerView')
 export class OuterOtherPioneerView extends Component {
 
-    public refreshUI(pioneer: MapPioneerModel) {
+    public refreshUI(pioneer: MapPioneerObject) {
         // name
         this.node.getChildByPath("name").getComponent(Label).string = LanMgr.getLanById(pioneer.name);
         // role
@@ -76,11 +75,12 @@ export class OuterOtherPioneerView extends Component {
         }
 
         // taskhide
-        if (pioneer instanceof MapNpcPioneerModel) {
-            this._hasTaskView.active = pioneer.talkId != null;
-            if (pioneer.talkCountStruct != null && pioneer.talkCountStruct.countTime > 0) {
+        const npcPioneer: MapNpcPioneerObject = pioneer as MapNpcPioneerObject;
+        if (!!npcPioneer) {
+            this._hasTaskView.active = npcPioneer.talkId != null;
+            if (npcPioneer.talkCountStruct != null && npcPioneer.talkCountStruct.countTime > 0) {
                 this._taskPreparingView.active = true;
-                this._taskPreparingView.getComponent(Label).string = LanMgr.replaceLanById("202002", [pioneer.talkCountStruct.countTime]);
+                this._taskPreparingView.getComponent(Label).string = LanMgr.replaceLanById("202002", [npcPioneer.talkCountStruct.countTime]);
             } else {
                 this._taskPreparingView.active = false;
             }

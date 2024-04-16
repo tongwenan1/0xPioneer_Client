@@ -1,9 +1,10 @@
-import TaskModel, { TaskAction, TaskActionType, TaskCondition, TaskConditionSatisfyType, TaskConditionType, TaskFinishResultType, TaskParentChildType, TaskSatisfyCondition, TaskShowHideStatus, TaskStepConfigData, TaskStepModel, TaskTalkCondition, TaskTargetType } from "../Const/TaskDefine";
+import TaskModel, { TaskAction, TaskActionType, TaskCondition, TaskConditionSatisfyType, TaskConditionType, TaskFinishResultType, TaskParentChildType, TaskSatisfyCondition, TaskShowHideStatus, TaskStepConfigData, TaskStepModel, TaskTalkCondition,  } from "../Const/TaskDefine";
 import TaskConfig from "../Config/TaskConfig";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import TaskStepConfig from "../Config/TaskStepConfig";
+import { MapMemberTargetType } from "../Const/ConstDefine";
 
 export default class TaskMgr {
 
@@ -37,7 +38,7 @@ export default class TaskMgr {
             }
         });
     }
-    public showHideChanged(target: TaskTargetType, id: string, status: TaskShowHideStatus) {
+    public showHideChanged(target: MapMemberTargetType, id: string, status: TaskShowHideStatus) {
         this._checkTask({
             type: TaskConditionType.ShowHide,
             showHide: {

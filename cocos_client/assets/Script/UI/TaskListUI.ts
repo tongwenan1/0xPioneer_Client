@@ -4,10 +4,11 @@ import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
 import TaskModel, { TaskCondition, TaskConditionType, TaskStepModel } from '../Const/TaskDefine';
-import MapPioneerModel, { MapNpcPioneerModel } from '../Game/Outer/Model/MapPioneerModel';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
 import CommonTools from '../Tool/CommonTools';
 import UIPanelManger from '../Basic/UIPanelMgr';
+import { DataMgr } from '../Data/DataMgr';
+import { MapNpcPioneerObject, MapPioneerObject } from '../Const/PioneerDefine';
 
 const { ccclass, property } = _decorator;
 
@@ -279,12 +280,11 @@ export class TaskListUI extends ViewController {
         }
         let currentMapPos: Vec2 = null;
         if (condition.type == TaskConditionType.Talk) {
-            let targetPioneer: MapNpcPioneerModel = null;
-            const allPioneers = PioneerMgr.getAllPioneer();
-            for (const pioneer of allPioneers) {
-                if (pioneer instanceof MapNpcPioneerModel &&
-                    pioneer.talkId == condition.talk.talkId) {
-                    targetPioneer = pioneer;
+            let targetPioneer: MapNpcPioneerObject = null;
+            const allNpcs = DataMgr.s.pioneer.getAllNpcs();
+            for (const npc of allNpcs) {
+                if (npc.talkId == condition.talk.talkId) {
+                    targetPioneer = npc;
                     break;
                 }
             }
@@ -293,9 +293,9 @@ export class TaskListUI extends ViewController {
             }
 
         } else if (condition.type == TaskConditionType.Kill) {
-            let targetPioneer: MapPioneerModel = null;
+            let targetPioneer: MapPioneerObject = null;
             if (condition.kill.enemyIds.length > 0) {
-                targetPioneer = PioneerMgr.getPioneerById(condition.kill.enemyIds[CommonTools.getRandomInt(0, condition.kill.enemyIds.length - 1)]);
+                targetPioneer = DataMgr.s.pioneer.getById(condition.kill.enemyIds[CommonTools.getRandomInt(0, condition.kill.enemyIds.length - 1)]);
             }
             if (targetPioneer != null) {
                 currentMapPos = targetPioneer.stayPos;

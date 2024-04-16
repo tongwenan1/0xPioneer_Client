@@ -1,5 +1,4 @@
 import { _decorator, Component, instantiate, Label, Layout, Node } from 'cc';
-import { MapPlayerPioneerModel } from '../Model/MapPioneerModel';
 import { ItemMgr, LanMgr, UserInfoMgr } from '../../../Utils/Global';
 import { MapBuildingType, InnerBuildingType, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
 import ViewController from '../../../BasicView/ViewController';
@@ -16,7 +15,7 @@ const { ccclass, property } = _decorator;
 @ccclass('OuterBuildingView')
 export class OuterBuildingView extends ViewController {
 
-    public refreshUI(building: MapBuildingObject, players: MapPlayerPioneerModel[]) {
+    public refreshUI(building: MapBuildingObject) {
 
         this._building = building;
 
@@ -56,13 +55,13 @@ export class OuterBuildingView extends ViewController {
             strongholdIcon.active = true;
             strongholdView.active = true;
 
-            let isSelf = false;
-            for (const player of players) {
-                if (building.defendPioneerIds.indexOf(player.id) != -1) {
-                    isSelf = true;
-                    break;
-                }
-            }
+            // let isSelf = false;
+            // for (const player of players) {
+            //     if (building.defendPioneerIds.indexOf(player.id) != -1) {
+            //         isSelf = true;
+            //         break;
+            //     }
+            // }
 
             for (const view of this._strongholdViews) {
                 view.destroy();
@@ -81,11 +80,11 @@ export class OuterBuildingView extends ViewController {
             }
             this._strongholdItem.parent.getComponent(Layout).updateLayout();
             
-            if (isSelf) {
+            // if (isSelf) {
                 // this._selfView.active = true;
-            } else {
+            // } else {
                 // this._neturalView.active = true;
-            }
+            // }
 
         } else if (building.type == MapBuildingType.resource) {
             collectIcon.active = true;

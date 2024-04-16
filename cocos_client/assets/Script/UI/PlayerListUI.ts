@@ -1,18 +1,14 @@
-import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, math, Node } from 'cc';
+import { _decorator, Button, Component, EventHandler, instantiate, Layout, Node } from 'cc';
 import { PlayerItemUI } from './PlayerItemUI';
-import { TilePos } from '../Game/TiledMap/TileTool';
-import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
-import { BuildingMgr, PioneerMgr } from '../Utils/Global';
-import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
-import MapPioneerModel, { MapPlayerPioneerModel, MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
 import { DataMgr } from '../Data/DataMgr';
+import { MapPlayerPioneerObject } from '../Const/PioneerDefine';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerListUI')
-export class PlayerListUI extends Component implements PioneerMgrEvent {
+export class PlayerListUI extends Component {
 
     @property(Node)
     playerLayout: Node = null;
@@ -20,7 +16,7 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
     private _playerItem: Node = null;
     private _playerItems: Node[] = [];
 
-    private _pioneers: MapPlayerPioneerModel[] = [];
+    private _pioneers: MapPlayerPioneerObject[] = [];
 
     protected onLoad(): void {
         this._playerItem = this.playerLayout.children[0];
@@ -35,18 +31,31 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
         this._playerItem.active = false;
 
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
+
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_SHOW_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENTSTATUS_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_HP_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_HPMAX_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_REBIRTH_COUNT_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_REBIRTH_FINISHED, this._refreshPlayerList, this);
     }
 
     start() {
-        PioneerMgr.addObserver(this);
-        
-        this.refreshPlayerList();
+        this._refreshPlayerList();
         this.changeLang();
     }
 
     protected onDestroy(): void {
-        PioneerMgr.removeObserver(this);
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.changeLang, this);
+
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_SHOW_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENTSTATUS_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_HP_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_HPMAX_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_REBIRTH_COUNT_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_REBIRTH_FINISHED, this._refreshPlayerList, this);
     }
 
     private changeLang() {
@@ -56,9 +65,10 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
         // this.node.getChildByName("title").getComponent(Label).string = LanMgr.getLanById("107549");
     }
 
-    refreshPlayerList() {
+    private _refreshPlayerList() {
         this._pioneers = [];
-        for (const temple of PioneerMgr.getPlayerPioneer()) {
+        ;
+        for (const temple of DataMgr.s.pioneer.getAllPlayers()) {
             if (temple.show ||
                 (!temple.show && temple.rebirthCountTime > 0)) {
                 this._pioneers.push(temple);
@@ -101,80 +111,10 @@ export class PlayerListUI extends Component implements PioneerMgrEvent {
                     const currentWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y);
                     GameMainHelper.instance.changeGameCameraWorldPosition(currentWorldPos, true);
                 }
-                PioneerMgr.changeCurrentActionPioneer(this._pioneers[index].id);
-                this.refreshPlayerList();
+                DataMgr.s.pioneer.changeCurrentAction(this._pioneers[index].id);
+                this._refreshPlayerList();
             }
         }
-    }
-
-    clsoelick() {
-
-    }
-    private async onTapForceStop() {
-        const selfPioneer = await PioneerMgr.getPlayerPioneer();
-        for (const pioneer of selfPioneer) {
-            if (pioneer.show) {
-                PioneerMgr.pioneerForceStopMove(pioneer.id);
-            }
-        }
-    }
-    //------------------------------------
-    //PioneerMgrEvent
-    pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void {
-        this.refreshPlayerList();
-    }
-    pioneerHpMaxChanged(pioneerId: string): void {
-        this.refreshPlayerList();
-    }
-    pioneerAttackChanged(pioneerId: string): void {
-        this.refreshPlayerList();
-    }
-
-    pioneerDidShow(pioneerId: string): void {
-
-    }
-    pioneerDidHide(pioneerId: string): void {
-
-    }
-    addNewOnePioneer(newPioneer: MapPioneerModel): void {
-        this.refreshPlayerList();
-    }
-    destroyOnePioneer(pioneerId: string): void {
-        this.refreshPlayerList();
-    }
-
-    exploredPioneer(pioneerId: string): void {
-
-    }
-    exploredBuilding(buildingId: string): void {
-
-    }
-    miningBuilding(actionPioneerId: string, buildingId: string): void {
-        
-    }
-    eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
-        
-    }
-    pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void {
-
-    }
-    pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void {
-
-    }
-    pioneerLoseHp(pioneerId: string, value: number): void {
-        this.refreshPlayerList();
-    }
-    pioneerGainHp(pioneerId: string, value: number): void {
-        this.refreshPlayerList();
-    }
-    pionerrRebirthCount(pioneerId: string, count: number): void {
-        this.refreshPlayerList();
-    }
-    pioneerRebirth(pioneerId: string): void {
-        this.refreshPlayerList();
-    }
-    playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {
-        
     }
 }
 

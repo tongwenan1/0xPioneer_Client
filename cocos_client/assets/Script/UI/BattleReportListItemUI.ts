@@ -1,7 +1,7 @@
 import {_decorator, Button, Component, Label, Node, ProgressBar, RichText, Sprite, SpriteFrame} from 'cc';
 import CommonTools from "db://assets/Script/Tool/CommonTools";
 import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, LocationInfo } from '../Const/BattleReport';
-import { BuildingMgr, LanMgr, PioneerMgr } from '../Utils/Global';
+import { LanMgr, PioneerMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { LootsPopup } from './LootsPopup';
 import { UIHUDController } from './UIHUDController';
@@ -150,7 +150,7 @@ export class BattleReportListItemUI extends Component {
         // let buildingInfo = BuildingMgr.getBuildingById(report.data.buildingId);
         let buildingInfo = DataMgr.s.mapBuilding.getBuildingById(report.data.buildingId);
 
-        let pioneerInfo = PioneerMgr.getPioneerById(report.data.pioneerId);
+        let pioneerInfo = DataMgr.s.pioneer.getById(report.data.pioneerId);
 
         const roleName = LanMgr.getLanById(pioneerInfo.name);
         const duration = report.data.duration; // in milliseconds
@@ -174,7 +174,7 @@ export class BattleReportListItemUI extends Component {
         // let buildingInfo = BuildingMgr.getBuildingById(report.data.buildingId);
         let buildingInfo = DataMgr.s.mapBuilding.getBuildingById(report.data.buildingId);
 
-        let pioneerInfo = PioneerMgr.getPioneerById(report.data.pioneerId);
+        let pioneerInfo = DataMgr.s.pioneer.getById(report.data.pioneerId);
 
         const roleName = LanMgr.getLanById(pioneerInfo.name);
         const rewards = report.data.rewards;

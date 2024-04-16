@@ -1,7 +1,7 @@
 import { ItemConfigType } from "./Item";
 
-export const GAME_ENV_IS_DEBUG = false;
-export const PioneerGameTest = false;
+export const GAME_ENV_IS_DEBUG = true;
+export const PioneerGameTest = true;
 
 export enum AttrType {
     HP = 0,
@@ -19,7 +19,7 @@ export enum ResourceCorrespondingItem {
     Troop = "8004",
     Energy = "8005",
     Gold = "8006",
-    NFTExp = "8007"
+    NFTExp = "8007",
 }
 
 export enum NPCNameLangType {
@@ -35,7 +35,7 @@ export enum NPCNameLangType {
 export const enum ECursorType {
     Common = 0,
     Action = 1,
-    Error = 2
+    Error = 2,
 }
 
 export const enum ECursorStyle {
@@ -83,11 +83,21 @@ export enum MapMemberFactionType {
     neutral = 2,
 }
 
+export enum MapMemberTargetType {
+    pioneer = 0,
+    building = 1,
+}
+
+export interface MapMemberShowStruct {
+    target: MapMemberTargetType,
+    show: boolean,
+}
+
 export interface MapMemberShowHideCountStruct {
-    countTime: number,
-    isShow: boolean
+    countTime: number;
+    isShow: boolean;
 }
 export interface MapMemberGetTalkCountStruct {
-    countTime: number,
-    talkId: string
+    countTime: number;
+    talkId: string;
 }

@@ -7,7 +7,7 @@ export class SaveData {
     private _eraseShadowDataMgr: EraseShadowDataMgr;
     private _mapBuildingDataMgr: MapBuildingDataMgr;
 
-    public get pioneers() {
+    public get pioneer() {
         return this._pioneersDataMgr;
     }
 
@@ -26,7 +26,7 @@ export class SaveData {
     }
 
     public async load() {
-        // await this._pioneersDataMgr.load();
+        this._pioneersDataMgr.loadObj();
         await this._eraseShadowDataMgr.loadObj();
         await this._mapBuildingDataMgr.loadObj();
     }

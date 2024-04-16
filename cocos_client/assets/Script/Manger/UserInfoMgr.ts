@@ -2,8 +2,7 @@ import { Asset, __private, resources, sys } from "cc";
 import { GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
-import { ArtifactMgr, BuildingMgr, CountMgr, ItemMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
-import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
+import { ArtifactMgr, CountMgr, ItemMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { UserInfoEvent, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";
 import { InnerBuildingType, UserInnerBuildInfo } from "../Const/BuildingDefine";
@@ -17,6 +16,7 @@ import { NotificationName } from "../Const/Notification";
 import Config from "../Const/Config";
 import { ArtifactEffectType } from "../Const/Artifact";
 import { DataMgr } from "../Data/DataMgr";
+import { MapPioneerObject } from "../Const/PioneerDefine";
 
 export default class UserInfoMgr {
 
@@ -254,7 +254,7 @@ export default class UserInfoMgr {
 
                 // hpmax
                 if (nextLvConfig.hp_max > 0) {
-                    PioneerMgr.pioneerChangeAllPlayerOriginalHpMax(nextLvConfig.hp_max);
+                    PioneerMgr.pioneerChangeAllPlayerHpMax(nextLvConfig.hp_max);
                 }
 
                 // event_building
@@ -315,7 +315,7 @@ export default class UserInfoMgr {
     public set afterCivilizationClosedShowArtifactDatas(artifactDatas: ArtifactData[]) {
         this._afterCivilizationClosedShowArtifactDatas = artifactDatas;
     }
-    public set afterCivilizationClosedShowPioneerDatas(pioneerDatas: MapPioneerModel[]) {
+    public set afterCivilizationClosedShowPioneerDatas(pioneerDatas: MapPioneerObject[]) {
         this._afterCivilizationClosedShowPioneerDatas = pioneerDatas;
     }
 
@@ -412,7 +412,7 @@ export default class UserInfoMgr {
     private _afterTalkItemGetData: Map<string, ItemData[]> = new Map();
     private _afterCivilizationClosedShowItemDatas: ItemData[] = [];
     private _afterCivilizationClosedShowArtifactDatas: ArtifactData[] = [];
-    private _afterCivilizationClosedShowPioneerDatas: MapPioneerModel[] = [];
+    private _afterCivilizationClosedShowPioneerDatas: MapPioneerObject[] = [];
 
     private _isFinishRookie: boolean = false;
 

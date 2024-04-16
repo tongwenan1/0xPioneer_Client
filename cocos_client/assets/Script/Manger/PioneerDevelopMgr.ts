@@ -2,7 +2,6 @@ import NotificationMgr from "../Basic/NotificationMgr";
 import NFTPioneerConfig from "../Config/NFTPioneerConfig";
 import { NotificationName } from "../Const/Notification";
 import { NFTPioneerModel } from "../Const/PioneerDevelopDefine";
-import MapPioneerModel from "../Game/Outer/Model/MapPioneerModel";
 import CommonTools from "../Tool/CommonTools";
 
 export default class PioneerDevelopMgr {

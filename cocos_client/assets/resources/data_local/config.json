@@ -99,5 +99,73 @@
     "para": [
       5
     ]
+  },
+  "300001": {
+    "id": "300001",
+    "**NOTES**": "world map group: type - building random number",
+    "para": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        0,
+        2
+      ]
+    ]
+  },
+  "300002": {
+    "id": "300002",
+    "**NOTES**": "world map group: type - building type",
+    "para": [
+      0.7,
+      0.5,
+      0.5
+    ]
+  },
+  "300003": {
+    "id": "300003",
+    "**NOTES**": "cont k in level-distance",
+    "para": [
+      4,
+      10
+    ]
+  },
+  "300004": {
+    "id": "300004",
+    "**NOTES**": "world map group: type - enemy number",
+    "para": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        0,
+        2
+      ]
+    ]
+  },
+  "310001": {
+    "id": "310001",
+    "**NOTES**": "world map birth const n",
+    "para": [
+      10
+    ]
+  },
+  "310002": {
+    "id": "310002",
+    "**NOTES**": "world map birth res num",
+    "para": [
+      1,
+      3
+    ]
   }
 }

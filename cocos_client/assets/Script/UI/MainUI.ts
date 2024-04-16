@@ -1,30 +1,24 @@
-import { _decorator, Component, Node, Button, SpriteFrame, Sprite, Label, Prefab, instantiate, tiledLayerAssembler, Tween, v3, tween, math, randomRangeInt, Color, LabelOutline, ImageAsset } from 'cc';
-import { TilePos } from '../Game/TiledMap/TileTool';
-import { ClaimRewardUI } from './ClaimRewardUI';
-import { PioneerMgrEvent } from '../Const/Manager/PioneerMgrDefine';
-import { ArtifactMgr, BattleReportsMgr, BuildingMgr, ItemMgr, LanMgr, LocalDataLoader, PioneerDevelopMgr, PioneerMgr, UserInfoMgr } from '../Utils/Global';
-import { MapPioneerActionType } from '../Const/Model/MapPioneerModelDefine';
-import MapPioneerModel, { MapPioneerLogicModel } from '../Game/Outer/Model/MapPioneerModel';
-import { UIName } from '../Const/ConstUIDefine';
-import { TaskListUI } from './TaskListUI';
-import { NewSettlementUI } from './NewSettlementUI';
-import ViewController from '../BasicView/ViewController';
-import NotificationMgr from '../Basic/NotificationMgr';
-import { UserInfoEvent } from '../Const/UserInfoDefine';
-import { NotificationName } from '../Const/Notification';
-import Config from '../Const/Config';
-import { MapMemberFactionType, ResourceCorrespondingItem } from '../Const/ConstDefine';
-import UIPanelManger from '../Basic/UIPanelMgr';
-import GameMainHelper from '../Game/Helper/GameMainHelper';
-import { DataMgr } from '../Data/DataMgr';
-import { NFTBackpackUI } from './NFTBackpackUI';
-import ItemData from '../Model/ItemData';
+import { _decorator, Node, Button, Label } from "cc";
+import { ClaimRewardUI } from "./ClaimRewardUI";
+import { LanMgr, UserInfoMgr } from "../Utils/Global";
+import { UIName } from "../Const/ConstUIDefine";
+import { TaskListUI } from "./TaskListUI";
+import { NewSettlementUI } from "./NewSettlementUI";
+import ViewController from "../BasicView/ViewController";
+import NotificationMgr from "../Basic/NotificationMgr";
+import { UserInfoEvent } from "../Const/UserInfoDefine";
+import { NotificationName } from "../Const/Notification";
+import Config from "../Const/Config";
+import { MapMemberFactionType } from "../Const/ConstDefine";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import GameMainHelper from "../Game/Helper/GameMainHelper";
+import { DataMgr } from "../Data/DataMgr";
+import { NFTBackpackUI } from "./NFTBackpackUI";
 
 const { ccclass, property } = _decorator;
 
-@ccclass('MainUI')
-export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoEvent {
-
+@ccclass("MainUI")
+export class MainUI extends ViewController implements UserInfoEvent {
     @property(Button)
     backpackBtn: Button = null;
 
@@ -40,7 +34,6 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         this._gangsterComingTipView = this.node.getChildByPath("CommonContent/GangsterTipView");
         this._gangsterComingTipView.active = false;
 
-        PioneerMgr.addObserver(this);
         UserInfoMgr.addObserver(this);
 
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
@@ -48,8 +41,6 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         NotificationMgr.addListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
         NotificationMgr.addListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onInnerOuterChanged, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, this._onPioneerShowHideCountChanged, this);
-
-        // DataMgr.n.websocket.on("get_pioneers_res", this._get_pioneers_res);
     }
 
     protected async viewDidStart(): Promise<void> {
@@ -62,18 +53,26 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         this._onInnerOuterChanged();
         this.changeLang();
 
-        const bigGanster = PioneerMgr.getPioneerById("gangster_3");
+        const bigGanster = DataMgr.s.pioneer.getById("gangster_3");
         if (bigGanster != null && bigGanster.show) {
             this.checkCanShowGansterComingTip(bigGanster.id);
         }
 
-        this.backpackBtn.node.on(Button.EventType.CLICK, async () => {
-            await UIPanelManger.inst.pushPanel(UIName.Backpack);
-        }, this);
+        this.backpackBtn.node.on(
+            Button.EventType.CLICK,
+            async () => {
+                await UIPanelManger.inst.pushPanel(UIName.Backpack);
+            },
+            this
+        );
 
-        this.artifactBtn.node.on(Button.EventType.CLICK, async () => {
-            await UIPanelManger.inst.pushPanel(UIName.Artifact);
-        }, this);
+        this.artifactBtn.node.on(
+            Button.EventType.CLICK,
+            async () => {
+                await UIPanelManger.inst.pushPanel(UIName.Artifact);
+            },
+            this
+        );
 
         // test
         // for (let i = 1; i <= 10; i++) {
@@ -93,7 +92,6 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        PioneerMgr.removeObserver(this);
         UserInfoMgr.removeObserver(this);
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.changeLang, this);
@@ -101,8 +99,6 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         NotificationMgr.removeListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
         NotificationMgr.removeListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onInnerOuterChanged, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, this._onPioneerShowHideCountChanged, this);
-
-        //DataMgr.n.websocket.off("get_pioneers_res", this._get_pioneers_res);
     }
 
     changeLang(): void {
@@ -181,66 +177,9 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
     }
 
-    //------------------------------------------
-    // PioneerMgrEvent
-    pioneerActionTypeChanged(pioneerId: string, actionType: MapPioneerActionType, actionEndTimeStamp: number): void {
-
-    }
-    pioneerHpMaxChanged(pioneerId: string): void {
-
-    }
-    pioneerAttackChanged(pioneerId: string): void {
-
-    }
-    pioneerLoseHp(pioneerId: string, value: number): void {
-
-    }
-    pionerrRebirthCount(pioneerId: string, count: number): void {
-
-    }
-    pioneerRebirth(pioneerId: string): void {
-
-    }
-    pioneerDidShow(pioneerId: string): void {
-        this.checkCanShowGansterComingTip(pioneerId);
-    }
-    pioneerDidHide(pioneerId: string): void {
-
-    }
-    addNewOnePioneer(newPioneer: MapPioneerModel): void {
-
-    }
-    destroyOnePioneer(pioneerId: string): void {
-
-    }
-
-    exploredPioneer(pioneerId: string): void {
-
-    }
-    exploredBuilding(buildingId: string): void {
-
-    }
-    miningBuilding(actionPioneerId: string, buildingId: string): void {
-
-    }
-    eventBuilding(actionPioneerId: string, buildingId: string, eventId: string): void {
-
-    }
-    pioneerLogicMoveTimeCountChanged(pioneer: MapPioneerModel): void {
-
-    }
-    pioneerLogicMove(pioneer: MapPioneerModel, logic: MapPioneerLogicModel): void {
-
-    }
-    playerPioneerShowMovePath(pioneerId: string, path: TilePos[]): void {
-
-    }
-
     //-----------------------------------------------------------------
     //userInfoEvent
-    playerNameChanged(value: string): void {
-
-    }
+    playerNameChanged(value: string): void {}
     playerLvlupChanged(value: number): void {
         const gap: number = 4;
         if (value % gap == 0) {
@@ -256,21 +195,24 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
     playerExplorationValueChanged?(value: number): void {
         this._claimRewardUI.refreshUI();
     }
-    getProp(propId: string, num: number): void {
-
-    }
+    getProp(propId: string, num: number): void {}
 
     //----------------------------------------------------- notification
-    private _onPioneerShowHideCountChanged(pioneer: MapPioneerModel) {
-        if (pioneer.id == "gangster_3" &&
-            pioneer.showHideStruct != null &&
-            pioneer.showHideStruct.countTime > 0 &&
-            pioneer.showHideStruct.isShow) {
-
+    private _onPioneerShowChanged(data: { id: string; show: boolean }) { 
+        this.checkCanShowGansterComingTip(data.id);
+    }
+    private _onPioneerShowHideCountChanged(data: { id: string }) {
+        const pioneer = DataMgr.s.pioneer.getById(data.id);
+        if (pioneer == undefined) {
+            return;
+        }
+        if (pioneer.id == "gangster_3" && pioneer.showHideStruct != null && pioneer.showHideStruct.countTime > 0 && pioneer.showHideStruct.isShow) {
             this._gangsterComingTipView.active = true;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = false;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
-            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.replaceLanById("200003", [this.secondsToTime(pioneer.showHideStruct.countTime)]);
+            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.replaceLanById("200003", [
+                this.secondsToTime(pioneer.showHideStruct.countTime),
+            ]);
         }
     }
 
@@ -282,13 +224,4 @@ export class MainUI extends ViewController implements PioneerMgrEvent, UserInfoE
         const isOuter: boolean = GameMainHelper.instance.isGameShowOuter;
         this.node.getChildByPath("btnBuild").active = !isOuter;
     }
-
-
-    // res
-    private _get_pioneers_res() {
-        let pioneers = DataMgr.s.pioneers.getAll;
-        console.log("Pioneers info: ", pioneers);
-    }
 }
-
-

@@ -11,7 +11,7 @@ export default class BuildingMgr {
 
     public async initData() {
         await this._initData();
-        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, this._onBuildingChangeShowHide, this);
+        NotificationMgr.addListener(NotificationName.MAP_MEMBER_SHOW_CHANGED, this._onBuildingChangeShowHide, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_FACTION, this._onBuildingChangeFaction, this);
     }
 
