@@ -100,19 +100,12 @@ export class PioneersDataMgr {
     }
     public changeActionType(pioneerId: string, type: MapPioneerActionType, beginTimeStamp: number = 0, useTime: number = 0, eventId: string = null) {
         const findPioneer = this.getById(pioneerId);
-        console.log('exce step1');
         if (findPioneer != undefined) {
-            console.log('exce step2: ' + type);
-            if (findPioneer.actionType == type) {
-                return;
-            }
-            console.log('exce step3: ' + type);
             findPioneer.actionType = type;
             findPioneer.actionBeginTimeStamp = beginTimeStamp;
             findPioneer.actionEndTimeStamp = beginTimeStamp + useTime;
             findPioneer.actionEventId = eventId;
             this._saveObj();
-            console.log('exce step4: ' + type);
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: pioneerId });
         }
     }
@@ -272,7 +265,7 @@ export class PioneersDataMgr {
                 NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_BEGIN_MOVE, { id: pioneerId, showMovePath: showMovePath });
             } else {
                 this.changeActionType(pioneerId, MapPioneerActionType.idle);
-                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneer: findPioneer.id, isStay: true });
+                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneerId: findPioneer.id, isStay: true });
             }
         }
     }
@@ -284,13 +277,13 @@ export class PioneersDataMgr {
                 this._saveObj();
                 // enemy step trigger
                 if (findPioneer.type != MapPioneerType.player && findPioneer.faction == MapMemberFactionType.enemy) {
-                    NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneer: findPioneer.id, isStay: false });
+                    NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneerId: findPioneer.id, isStay: false });
                 }
             }
             if (findPioneer.movePaths.length == 0) {
                 // move over trigger
                 this.changeActionType(pioneerId, MapPioneerActionType.idle);
-                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneer: findPioneer.id, isStay: true });
+                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneerId: findPioneer.id, isStay: true });
             }
             if (findPioneer.type == MapPioneerType.player) {
                 NotificationMgr.triggerEvent(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, { id: pioneerId });
@@ -361,6 +354,7 @@ export class PioneersDataMgr {
 
                     movePaths: [],
                     actionType: MapPioneerActionType.idle,
+                    eventStatus: MapPioneerEventStatus.None,
                     actionBeginTimeStamp: 0,
                     actionEndTimeStamp: 0,
 

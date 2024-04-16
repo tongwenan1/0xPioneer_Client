@@ -62,7 +62,7 @@ export interface MapBuildingMainCityData extends MapBuildingBaseData {
     taskObj: any;
 }
 export interface MapBuildingResourceData extends MapBuildingBaseData {
-    resources: { id: string; num: number }[];
+    resources: { id: string; num: number };
     quota: number;
 }
 export type MapBuildingData = MapBuildingMainCityData | MapBuildingResourceData | MapBuildingBaseData;

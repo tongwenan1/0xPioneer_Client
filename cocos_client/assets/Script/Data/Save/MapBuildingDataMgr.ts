@@ -133,8 +133,7 @@ export class MapBuildingDataMgr {
             originalEventId: temple.event ? temple.event : null,
             exp: temple.exp ? temple.exp : 0,
             animType: temple.node ? temple.node : null,
-
-            resources: temple.resources ? temple.resources : [],
+            resources: temple.resources ? { id: temple.resources[0], num: temple.resources[1] } : null,
             quota: temple.quota ? temple.quota : 1,
         };
         return obj;
@@ -229,7 +228,7 @@ export class MapBuildingDataMgr {
             exp: temple.exp,
             animType: temple.animType,
 
-            resources: temple.resources ? temple.resources : [],
+            resources: temple.resources ? { id: temple.resources[0], num: temple.resources[1] } : null,
             quota: temple.quota,
         };
 

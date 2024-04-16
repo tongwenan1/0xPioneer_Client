@@ -131,7 +131,6 @@ export default class LvlupConfig {
                 }
             }
         }
-        console.log("exce map: ", costMap);
         const cost: ItemData[] = [];
         costMap.forEach((value: ItemData, key: string) => {
             cost.push(value);

@@ -77,7 +77,6 @@ export class NFTInfoUI extends ViewController {
         // content.getChildByPath("BaseProperty/Defense/Title").getComponent(Label).string = LanMgr.getLanById("201003");
         content.getChildByPath("BaseProperty/Defense/Value").getComponent(Label).string = data.defense.toString();
 
-        console.log("exce hp: ", data);
         // userlanMgr
         // content.getChildByPath("BaseProperty/Hp/Title").getComponent(Label).string = LanMgr.getLanById("201003");
         content.getChildByPath("BaseProperty/Hp/Value").getComponent(Label).string = data.hp.toString();

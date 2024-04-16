@@ -133,6 +133,7 @@ export interface MapPioneerData {
     movePaths: MapPosStruct[];
 
     actionType: MapPioneerActionType;
+    eventStatus: MapPioneerEventStatus;
     actionBeginTimeStamp: number;
     actionEndTimeStamp: number;
 
@@ -147,10 +148,6 @@ export interface MapPioneerData {
     moveDirection?: MapPioneerMoveDirection;
 
     actionEventId?: string;
-    eventStatus?: MapPioneerEventStatus;
-
-    purchaseMovingBuildingId?: string;
-    purchaseMovingPioneerId?: string;
 }
 
 export interface MapPlayerPioneerData extends MapPioneerData {

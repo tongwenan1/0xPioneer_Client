@@ -20,7 +20,7 @@ import {
     view,
 } from "cc";
 import { MapBuildingType } from "../../Const/BuildingDefine";
-import { ECursorType, MapMemberFactionType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
+import { ECursorType, MapMemberFactionType, MapMemberTargetType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
 import { UIHUDController } from "../../UI/UIHUDController";
 import { TilePos, TileHexDirection } from "../TiledMap/TileTool";
 import { OuterPioneerController } from "./OuterPioneerController";
@@ -556,7 +556,8 @@ export class OuterTiledMapActionController extends ViewController {
                             if (
                                 logic.type == MapPioneerLogicType.targetmove ||
                                 logic.type == MapPioneerLogicType.stepmove ||
-                                logic.type == MapPioneerLogicType.patrol) {
+                                logic.type == MapPioneerLogicType.patrol
+                            ) {
                                 isMoving = true;
                                 break;
                             }
@@ -675,8 +676,8 @@ export class OuterTiledMapActionController extends ViewController {
                         PioneerMgr.pioneerToIdle(currentActionPioneer.id);
                     } else {
                         // move to near pioneer or building
-                        currentActionPioneer.purchaseMovingPioneerId = purchaseMovingPioneerId;
-                        currentActionPioneer.purchaseMovingBuildingId = purchaseMovingBuildingId;
+                        PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, purchaseMovingPioneerId);
+                        PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, purchaseMovingBuildingId);
                     }
                     DataMgr.s.pioneer.beginMove(currentActionPioneer.id, movePaths);
                     this._mapActionCursorView.hide();

@@ -163,8 +163,6 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
         // move
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_BEGIN_MOVE, this._onPioneerBeginMove, this);
         NotificationMgr.addListener(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, this._onPlayerPioneerDidMoveOneStep, this);
-
-
     }
 
     protected viewDidStart() {
@@ -231,7 +229,6 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
 
             if (this._movingPioneerIds.indexOf(pioneer.id) != -1 && this._pioneerMap.has(pioneer.id)) {
                 let pioneermap = this._pioneerMap.get(pioneer.id);
-                console.log("exce move");
                 this._updateMoveStep(usedSpeed, dt, pioneer, pioneermap);
             }
         }
@@ -570,11 +567,9 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
     //---------- pioneer
     private _onPioneerActionChanged(data: { id: string }) {
         const pioneer = DataMgr.s.pioneer.getById(data.id);
-        console.log("exce beginmove1:", data);
         if (pioneer != undefined && pioneer.show) {
             if (pioneer.actionType == MapPioneerActionType.moving) {
                 this._movingPioneerIds.push(data.id);
-                console.log("exce beginmove:" + JSON.stringify(this._movingPioneerIds));
             } else {
                 const index = this._movingPioneerIds.indexOf(data.id);
                 if (index >= 0) {
@@ -645,7 +640,7 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
             if (building.exp > 0) UserInfoMgr.exp += building.exp;
         }
     }
-    private _onMiningBuilding(data: { actionId: string, id: string }): void {
+    private _onMiningBuilding(data: { actionId: string; id: string }): void {
         // const buildingObj: MapBuildingObject = BuildingMgr.getBuildingById(buildingId);
         const buildingObj: MapBuildingObject = DataMgr.s.mapBuilding.getBuildingById(data.id);
 
@@ -654,17 +649,15 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
 
         const building = buildingObj as MapBuildingResourceObject;
 
-        if (building.resources != null && building.resources.length > 0) {
+        if (building.resources != null) {
             let actionView = null;
             if (this._pioneerMap.has(data.actionId)) {
                 actionView = this._pioneerMap.get(data.actionId);
             }
-            for (const resource of building.resources) {
-                const resultNum: number = Math.floor(resource.num * (1 + LvlupConfig.getTotalExtraRateByLvl(UserInfoMgr.level)));
-                actionView.getComponent(MapPioneer).playGetResourceAnim(resource.id, resultNum, () => {
-                    ItemMgr.addItem([new ItemData(resource.id, resultNum)]);
-                });
-            }
+            const resultNum: number = Math.floor(building.resources.num * (1 + LvlupConfig.getTotalExtraRateByLvl(UserInfoMgr.level)));
+            actionView.getComponent(MapPioneer).playGetResourceAnim(building.resources.id, resultNum, () => {
+                ItemMgr.addItem([new ItemData(building.resources.id, resultNum)]);
+            });
 
             NotificationMgr.triggerEvent(NotificationName.MINING_FINISHED, {
                 buildingId: data.id,
@@ -677,18 +670,17 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
         if (building.progress > 0) UserInfoMgr.explorationValue += building.progress;
         if (building.exp > 0) UserInfoMgr.exp += building.exp;
     }
-    private async _onEventBuilding(data: { pioneerId: string, buildingId: string, eventId: string }): Promise<void> {
+    private async _onEventBuilding(data: { pioneerId: string; buildingId: string; eventId: string }): Promise<void> {
         const actionPioneerId = data.pioneerId;
         const buildingId = data.buildingId;
         const eventId = data.eventId;
-        
+
         GlobalData.latestActiveEventState = {
             pioneerId: actionPioneerId,
             buildingId: buildingId,
             eventId: eventId,
             prevEventId: null,
         };
-
         const event = EventConfig.getById(eventId);
         if (event != null) {
             const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
@@ -714,7 +706,7 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
             }
         }
     }
-    private _onPioneerBeginMove(data: { id: string, showMovePath: boolean }): void {
+    private _onPioneerBeginMove(data: { id: string; showMovePath: boolean }): void {
         const pioneer = DataMgr.s.pioneer.getById(data.id);
         if (this._actionShowPioneerId == data.id) {
             if (this._actionPioneerFootStepViews != null) {

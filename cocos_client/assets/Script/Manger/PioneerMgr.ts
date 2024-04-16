@@ -1,4 +1,4 @@
-import { Vec2 } from "cc";
+import { CurveRange, Vec2 } from "cc";
 import CommonTools from "../Tool/CommonTools";
 import { MapMemberFactionType, MapMemberTargetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { ArtifactMgr, CountMgr, ItemMgr, LanMgr, SettlementMgr, UserInfoMgr } from "../Utils/Global";
@@ -118,6 +118,7 @@ export default class PioneerMgr {
             return;
         }
         DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.eventing, 0, 0, currentEvent.id);
+
         const currentTimeStamp = new Date().getTime();
         let canShowDialog: boolean = false;
         if (pioneer.eventStatus == MapPioneerEventStatus.Waited) {
@@ -134,7 +135,11 @@ export default class PioneerMgr {
             }
         }
         if (canShowDialog) {
-            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENT_BUILDING, { pioneerId: pioneer.id, buildingId: buildingId, eventId: currentEvent.id });
+            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENT_BUILDING, {
+                pioneerId: pioneer.id,
+                buildingId: buildingId,
+                eventId: currentEvent.id,
+            });
         }
     }
 
@@ -301,7 +306,9 @@ export default class PioneerMgr {
         // }
     }
     public setMovingTarget(pioneerId: string, target: MapMemberTargetType, id: string) {
-        this._movingTargetDataMap.set(pioneerId, { target: target, id: id });
+        if (pioneerId != null && id != null) {
+            this._movingTargetDataMap.set(pioneerId, { target: target, id: id });
+        }
     }
 
     public _initData() {}
@@ -332,7 +339,7 @@ export default class PioneerMgr {
             if (movingTargetData != null && movingTargetData.target == MapMemberTargetType.pioneer) {
                 // if target pioneer is moving, than try get it from near position;
                 stayPioneers = pioneerDataMgr.getByNearPos(pioneer.stayPos, 2, true);
-                pioneer.purchaseMovingPioneerId = null;
+                this._movingTargetDataMap.delete(pioneer.id);
             } else {
                 stayPioneers = pioneerDataMgr.getByStayPos(pioneer.stayPos, true);
             }
@@ -811,7 +818,7 @@ export default class PioneerMgr {
         if (targetMapPos != null) {
             const moveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(pioneer.stayPos, targetMapPos);
             if (moveData.canMove) {
-                DataMgr.s.pioneer.beginMove(pioneer.id, moveData.path, );
+                DataMgr.s.pioneer.beginMove(pioneer.id, moveData.path);
             }
         }
     }
