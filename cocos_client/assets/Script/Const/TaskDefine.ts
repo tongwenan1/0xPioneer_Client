@@ -65,6 +65,7 @@ export interface TaskFinishCondition {
   finishTime: number;
 }
 export interface TaskKillCondition {
+  target: MapMemberTargetType;
   enemyIds: string[];
   killTime: number;
 }
@@ -155,8 +156,9 @@ export default class TaskModel {
           };
         } else if (conditionType == TaskConditionType.Kill) {
           kill = {
-            enemyIds: temple[1],
-            killTime: temple[2],
+            target: temple[1],
+            enemyIds: temple[2],
+            killTime: temple[3],
           };
         } else if (conditionType == TaskConditionType.ShowHide) {
           showHide = {

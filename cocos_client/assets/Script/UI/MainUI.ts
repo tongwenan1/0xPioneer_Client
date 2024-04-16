@@ -198,7 +198,7 @@ export class MainUI extends ViewController implements UserInfoEvent {
     getProp(propId: string, num: number): void {}
 
     //----------------------------------------------------- notification
-    private _onPioneerShowChanged(data: { id: string; show: boolean }) { 
+    private _onPioneerShowChanged(data: { id: string; show: boolean }) {
         this.checkCanShowGansterComingTip(data.id);
     }
     private _onPioneerShowHideCountChanged(data: { id: string }) {

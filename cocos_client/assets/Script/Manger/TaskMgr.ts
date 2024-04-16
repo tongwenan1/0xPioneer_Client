@@ -33,6 +33,7 @@ export default class TaskMgr {
         this._checkTask({
             type: TaskConditionType.Kill,
             kill: {
+                target: MapMemberTargetType.pioneer,
                 enemyIds: [pioneerId],
                 killTime: 1,
             }

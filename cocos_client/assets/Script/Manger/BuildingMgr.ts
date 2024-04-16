@@ -3,15 +3,16 @@ import { TilePos } from "../Game/TiledMap/TileTool";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
-import { TaskFactionAction, TaskShowHideAction, TaskShowHideStatus, TaskTargetType } from "../Const/TaskDefine";
+import { TaskFactionAction, TaskShowHideAction, TaskShowHideStatus } from "../Const/TaskDefine";
 import { DataMgr } from "../Data/DataMgr";
+import { MapMemberTargetType } from "../Const/ConstDefine";
 
 export default class BuildingMgr {
     public constructor() {}
 
     public async initData() {
         await this._initData();
-        NotificationMgr.addListener(NotificationName.MAP_MEMBER_SHOW_CHANGED, this._onBuildingChangeShowHide, this);
+        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, this._onBuildingChangeShowHide, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_FACTION, this._onBuildingChangeFaction, this);
     }
 
@@ -56,7 +57,7 @@ export default class BuildingMgr {
 
     //---------------------------------- notification
     private _onBuildingChangeShowHide(action: TaskShowHideAction) {
-        if (action.type == TaskTargetType.building) {
+        if (action.type == MapMemberTargetType.building) {
             if (action.delayTime <= 0) {
                 if (action.status == TaskShowHideStatus.show) {
                     DataMgr.s.mapBuilding.showBuilding(action.id);
@@ -78,7 +79,7 @@ export default class BuildingMgr {
         }
     }
     private _onBuildingChangeFaction(action: TaskFactionAction) {
-        if (action.type == TaskTargetType.building) {
+        if (action.type == MapMemberTargetType.building) {
             DataMgr.s.mapBuilding.changeBuildingFaction(action.id, action.faction);
         }
     }

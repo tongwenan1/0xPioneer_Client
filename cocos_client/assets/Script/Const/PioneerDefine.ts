@@ -153,7 +153,8 @@ export interface MapPioneerData {
 export interface MapPlayerPioneerData extends MapPioneerData {
     rebirthCountTime: number;
     killerId: string;
-    NFTLinkId: string,
+    NFTInitLinkId: string,
+    NFTId: string,
 }
 
 export interface MapNpcPioneerData extends MapPioneerData {

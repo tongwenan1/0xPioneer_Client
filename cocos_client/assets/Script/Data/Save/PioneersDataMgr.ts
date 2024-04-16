@@ -147,22 +147,21 @@ export class PioneersDataMgr {
         }
         const npcObj: MapNpcPioneerObject = pioneer as MapNpcPioneerObject;
         if (!!npcObj) {
-            return;
-        }
-        if (npcObj.talkId == talkId) {
-            return;
-        }
-        if (delayTime > 0) {
-            npcObj.talkCountStruct = {
-                talkId: talkId,
-                countTime: delayTime,
-            };
+            if (npcObj.talkId == talkId) {
+                return;
+            }
+            if (delayTime > 0) {
+                npcObj.talkCountStruct = {
+                    talkId: talkId,
+                    countTime: delayTime,
+                };
+                this._saveObj();
+                return;
+            }
+            npcObj.talkId = talkId;
             this._saveObj();
-            return;
+            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_TALK_CHANGED, { id: pioneerId, talkId: npcObj.talkId });
         }
-        npcObj.talkId = talkId;
-        this._saveObj();
-        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_TALK_CHANGED, { id: pioneerId, talkId: npcObj.talkId });
     }
     public changeFaction(pioneerId: string, faction: MapMemberFactionType) {
         const pioneer = this.getById(pioneerId);
@@ -199,6 +198,24 @@ export class PioneersDataMgr {
             }
         }
         return cost;
+    }
+    public loseHp(pioneerId: string, num: number): boolean {
+        const pioneer = this.getById(pioneerId);
+        let isDead: boolean = false;
+        if (pioneer != undefined) {
+            const cost = Math.min(pioneer.hp, num);
+            if (cost > 0) {
+                pioneer.hp -= cost;
+                this._saveObj();
+                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED, { id: pioneerId, loseValue: cost });
+            }
+            if (pioneer.hp <= 0) {
+                isDead = true;
+                this.changeActionType(pioneerId, MapPioneerActionType.idle);
+                this.changeShow(pioneerId, false);
+            }
+        }
+        return isDead;
     }
     public changeHpMax(pioneerId: string, num: number): void {
         if (num == 0) {
@@ -291,6 +308,15 @@ export class PioneersDataMgr {
         }
     }
 
+    public bindPlayerNFT(pioneerId: string, NFTId: string) {
+        console.log("exce idnft: " + NFTId);
+        const findPioneer = this.getById(pioneerId) as MapPlayerPioneerObject;
+        if (!!findPioneer) {
+            findPioneer.NFTId = NFTId;
+            this._saveObj();
+        }
+    }
+
     public _initData() {
         this._pioneers = [];
         const localPioneers = localStorage.getItem(this._localStorageKey);
@@ -365,9 +391,10 @@ export class PioneersDataMgr {
                 if (obj.type == MapPioneerType.player) {
                     resultObj = {
                         ...obj,
-                        NFTLinkId: item.nft_pioneer,
+                        NFTInitLinkId: item.nft_pioneer,
                         rebirthCountTime: -1,
                         killerId: null,
+                        NFTId: null,
                     };
                 } else if (obj.type == MapPioneerType.npc) {
                     resultObj = {
@@ -431,12 +458,7 @@ export class PioneersDataMgr {
         }
         // default player id is "0"
         this._currentActionPioneerId = "pioneer_0";
-        //xx wait
-        // const originalPioneer = this.getById(this._currentActionPioneerId);
-        // if (originalPioneer != undefined && originalPioneer.NFTId == null) {
-        //     NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_NEW_PIONEER, originalPioneer);
-        // }
-
+        
         // NetworkMgr.websocket.on("change_pioneer_res", this._onChangePioneer);
         // NetworkMgr.websocket.on("begin_pioneer_move_res", this._onBeginPioneerMove);
         this._initInterval();
@@ -446,13 +468,6 @@ export class PioneersDataMgr {
     private _localStorageKey: string = "local_pioneers";
     private _pioneers: MapPioneerObject[] = [];
     private _currentActionPioneerId: string = null;
-
-    private _addListeners() {
-        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, this._onPioneerChangeShow, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_NEW_TALK, this._onPioneerGetTalk, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_USE_NEW_TALK, this._onPioneerUseTalk, this);
-        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_FACTION, this._onPioneerChangeFaction, this);
-    }
 
     private _initInterval() {
         setInterval(() => {
@@ -534,7 +549,6 @@ export class PioneersDataMgr {
                                 if (npcPioneer.talkCountStruct.countTime > 0) {
                                     npcPioneer.talkCountStruct.countTime -= 1;
                                     NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_TALK_COUNT_CHANGED, { id: pioneer.id });
-                                    console.log("exce talkidcount: " + npcPioneer.talkCountStruct.countTime);
                                     this._saveObj();
                                     if (npcPioneer.talkCountStruct.countTime == 0) {
                                         this.changeTalk(npcPioneer.id, npcPioneer.talkCountStruct.talkId);
@@ -564,6 +578,13 @@ export class PioneersDataMgr {
         }, 1000);
     }
 
+    private _addListeners() {
+        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, this._onPioneerChangeShow, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_NEW_TALK, this._onPioneerGetTalk, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_USE_NEW_TALK, this._onPioneerUseTalk, this);
+        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_FACTION, this._onPioneerChangeFaction, this);
+    }
+
     private _saveObj() {
         localStorage.setItem(this._localStorageKey, JSON.stringify(this._pioneers));
     }
@@ -581,11 +602,10 @@ export class PioneersDataMgr {
         for (const pioneer of this._pioneers) {
             const npc = pioneer as MapNpcPioneerObject;
             if (!!npc) {
-                continue;
-            }
-            if (npc.talkId == talkId) {
-                this.changeTalk(npc.id, null);
-                break;
+                if (npc.talkId == talkId) {
+                    this.changeTalk(npc.id, null);
+                    break;
+                }
             }
         }
     }
