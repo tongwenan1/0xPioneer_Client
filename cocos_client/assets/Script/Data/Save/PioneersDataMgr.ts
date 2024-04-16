@@ -245,6 +245,7 @@ export class PioneersDataMgr {
             pioneer.hp = recoverHp;
             pioneer.stayPos = rebirthPos;
             pioneer.killerId = null;
+            this.changeShow(pioneerId, true);
             this.changeActionType(pioneerId, MapPioneerActionType.idle);
             this.changeEventStatus(pioneerId, MapPioneerEventStatus.None);
             this._saveObj();
