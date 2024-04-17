@@ -18,6 +18,7 @@ import MapBuildingConfig from "../../Config/MapBuildingConfig";
 import { MapMemberFactionType } from "../../Const/ConstDefine";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
+import CLog from "../../Utils/CLog";
 
 export class MapBuildingDataMgr {
     private _building_data: MapBuildingObject[];
@@ -288,6 +289,7 @@ export class MapBuildingDataMgr {
         return obj;
     }
 
+    // get obj
     public getObj_building() {
         return this._building_data;
     }
@@ -295,6 +297,7 @@ export class MapBuildingDataMgr {
         return this._decorate_data;
     }
 
+    // save obj
     public async saveObj() {
         await this.saveObj_building();
         await this.saveObj_decorate();
@@ -306,7 +309,7 @@ export class MapBuildingDataMgr {
         localStorage.setItem(this._decorate_key, JSON.stringify(this._decorate_data));
     }
 
-    public getBuildingById(buidingId: string) {
+    public getBuildingById(buidingId: string): MapBuildingObject | null {
         const findDatas = this._building_data.filter((buiding) => {
             return buiding.id === buidingId;
         });
@@ -317,50 +320,55 @@ export class MapBuildingDataMgr {
     }
     public insertDefendPioneer(buildingId: string, pioneerId: string) {
         const findBuilding = this.getBuildingById(buildingId);
-        if (findBuilding != null) {
-            findBuilding.defendPioneerIds.push(pioneerId);
-            this.saveObj_building();
-            NotificationMgr.triggerEvent(NotificationName.BUILDING_INSERT_DEFEND_PIONEER);
-        }
+        if (findBuilding == null) return;
+
+        findBuilding.defendPioneerIds.push(pioneerId);
+        this.saveObj_building();
+        NotificationMgr.triggerEvent(NotificationName.BUILDING_INSERT_DEFEND_PIONEER);
     }
     public removeDefendPioneer(buildingId: string, pioneerId: string) {
         const findBuilding = this.getBuildingById(buildingId);
-        if (findBuilding != null) {
-            const index = findBuilding.defendPioneerIds.indexOf(pioneerId);
-            if (index != -1) {
-                findBuilding.defendPioneerIds.splice(index, 1);
-            }
-            this.saveObj_building();
-            NotificationMgr.triggerEvent(NotificationName.BUILDING_REMOVE_DEFEND_PIONEER);
+        if (findBuilding == null) return;
+
+        const index = findBuilding.defendPioneerIds.indexOf(pioneerId);
+        if (index === -1) {
+            CLog.error(`MapBuildingDataMgr: removeDefendPioneer, buildingId[${buildingId}] don't have pioneerid[${pioneerId}]`);
+            return;
         }
+
+        findBuilding.defendPioneerIds.splice(index, 1);
+        this.saveObj_building();
+        NotificationMgr.triggerEvent(NotificationName.BUILDING_REMOVE_DEFEND_PIONEER);
     }
     public buildingGetTask(buildingId: string, task) {
         const findBuilding = this.getBuildingById(buildingId);
-        if (findBuilding != null && findBuilding.type == MapBuildingType.city) {
-            (findBuilding as MapBuildingMainCityObject).taskObj = task;
-            this.saveObj_building();
-        }
+        if (findBuilding == null) return;
+        if (findBuilding.type != MapBuildingType.city) return;
+
+        (findBuilding as MapBuildingMainCityObject).taskObj = task;
+        this.saveObj_building();
     }
     public buildingClearTask(buildingId: string) {
         const findBuilding = this.getBuildingById(buildingId);
-        if (findBuilding != null && findBuilding.type == MapBuildingType.city) {
-            (findBuilding as MapBuildingMainCityObject).taskObj = null;
-            this.saveObj_building();
-        }
+        if (findBuilding == null) return;
+        if (findBuilding.type != MapBuildingType.city) return;
+
+        (findBuilding as MapBuildingMainCityObject).taskObj = null;
+        this.saveObj_building();
     }
     public changeBuildingEventId(buidingId: string, eventId: string) {
         const findBuilding = this.getBuildingById(buidingId);
-        if (findBuilding != null) {
-            findBuilding.eventId = eventId;
-            this.saveObj_building();
-        }
+        if (findBuilding == null) return;
+
+        findBuilding.eventId = eventId;
+        this.saveObj_building();
     }
     public fillBuildingStayPos(buildingId: string, newPosions: Vec2[]) {
-        const building = this.getBuildingById(buildingId);
-        if (building != null) {
-            building.stayMapPositions = newPosions;
-            this.saveObj_building();
-        }
+        const findBuilding = this.getBuildingById(buildingId);
+        if (findBuilding == null) return;
+
+        findBuilding.stayMapPositions = newPosions;
+        this.saveObj_building();
     }
     public getResourceBuildings() {
         return this._building_data.filter((buiding) => {
@@ -374,23 +382,22 @@ export class MapBuildingDataMgr {
     }
     public changeBuildingFaction(buildingId: string, faction: MapMemberFactionType) {
         const findBuilding = this.getBuildingById(buildingId);
-        if (findBuilding != null) {
-            if (findBuilding.faction != faction) {
-                findBuilding.faction = faction;
+        if (findBuilding == null) return;
+        if (findBuilding.faction == faction) return;
 
-                this.saveObj_building();
+        findBuilding.faction = faction;
+        this.saveObj_building();
 
-                if (findBuilding.id == "building_1" && findBuilding.faction == MapMemberFactionType.enemy) {
-                    NotificationMgr.triggerEvent(NotificationName.CHOOSE_GANGSTER_ROUTE);
-                }
-
-                NotificationMgr.triggerEvent(NotificationName.BUILDING_FACTION_CHANGED);
-            }
+        if (findBuilding.id == "building_1" && findBuilding.faction == MapMemberFactionType.enemy) {
+            NotificationMgr.triggerEvent(NotificationName.CHOOSE_GANGSTER_ROUTE);
         }
+
+        NotificationMgr.triggerEvent(NotificationName.BUILDING_FACTION_CHANGED);
     }
     public showBuilding(buildingId: string) {
-        let temple = null;
+        let temple: MapBuildingObject | MapDecorateObject;
         const actionTargetBuilding = this.getBuildingById(buildingId);
+
         if (actionTargetBuilding != null) {
             temple = actionTargetBuilding;
         } else {
@@ -399,50 +406,42 @@ export class MapBuildingDataMgr {
             //     temple = decorateBuiling;
             // }
         }
-        if (temple == null) {
-            return;
-        }
-        if (temple.show) {
-            return;
-        }
+
+        if (temple == null) return;
+        if (temple.show) return;
+
         temple.show = true;
 
         this.saveObj_building();
-
         NotificationMgr.triggerEvent(NotificationName.BUILDING_DID_SHOW, temple.id);
     }
     public hideBuilding(buildingId: string, beacusePioneerId: string = null) {
-        let temple = null;
+        let temple: MapBuildingObject | MapDecorateObject;
         const actionTargetBuilding = this.getBuildingById(buildingId);
         if (actionTargetBuilding != null) {
             temple = actionTargetBuilding;
         } else {
-            // TODO
             // const decorateBuiling = this.getDecorateById(buildingId);
             // if (decorateBuiling != null) {
             //     temple = decorateBuiling;
             // }
         }
-        if (temple == null) {
-            return;
-        }
-        if (!temple.show) {
-            return;
-        }
+
+        if (temple == null) return;
+        if (temple.show) return;
+
         temple.show = false;
 
         this.saveObj_building();
-
         NotificationMgr.triggerEvent(NotificationName.BUILDING_DID_HIDE, temple.id);
     }
     public resourceBuildingCollected(buildingId: string) {
         const actionTargetBuilding = this.getBuildingById(buildingId);
-        if (actionTargetBuilding == null) {
-            return;
-        }
-        const resource = actionTargetBuilding as MapBuildingResourceObject;
-        resource.quota -= 1;
+        if (actionTargetBuilding == null) return;
 
+        const resource = actionTargetBuilding as MapBuildingResourceObject;
+
+        resource.quota -= 1;
         this.saveObj_building();
 
         if (resource.quota <= 0) {
