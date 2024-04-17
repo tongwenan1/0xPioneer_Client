@@ -1,12 +1,13 @@
 import { _decorator, Component, instantiate, Label, Layout, Node, UITransform, Widget } from 'cc';
 import { EvaluationMgr, LanMgr, SettlementMgr } from '../../Utils/Global';
+import { DataMgr } from '../../Data/DataMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('SettlementView')
 export class SettlementView extends Component {
 
     public refreshUI(beginLevel: number, endLevel: number) {
-        const model = SettlementMgr.getSettlement(beginLevel, endLevel);
+        const model = DataMgr.s.settlement.getObj(beginLevel, endLevel);
 
         this.node.getChildByPath("Level/Before").getComponent(Label).string = "C.Lv " + beginLevel;
         this.node.getChildByPath("Level/After").getComponent(Label).string = "C.Lv " + endLevel;

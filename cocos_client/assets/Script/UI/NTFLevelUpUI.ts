@@ -8,6 +8,7 @@ import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import CommonTools from "../Tool/CommonTools";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
+import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("NTFLevelUpUI")
@@ -19,7 +20,7 @@ export class NTFLevelUpUI extends ViewController {
         // this.node.getChildByPath("__ViewContent/Title").getComponent(Label).string = LanMgr.getLanById("201003");
         // this.node.getChildByPath("__ViewContent/btnUse/name").getComponent(Label).string = LanMgr.getLanById("201003");
 
-        const resourceLimitMaxNum = LvlupConfig.getMaxNFTLevelUpNum(this._data.level, ItemMgr.getOwnItemCount(ResourceCorrespondingItem.NFTExp));
+        const resourceLimitMaxNum = LvlupConfig.getMaxNFTLevelUpNum(this._data.level, DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.NFTExp));
         this._maxLevelUpNum = Math.min(resourceLimitMaxNum, this._data.levelLimit - this._data.level);
 
         this._refreshUI();
@@ -102,7 +103,7 @@ export class NTFLevelUpUI extends ViewController {
 
         // resource
         this._currentCost = LvlupConfig.getNFTLevelUpCost(this._data.level, this._data.level + this._levelUpNum);
-        contentView.getChildByPath("material/Item/Num/Limit").getComponent(Label).string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.NFTExp).toString();
+        contentView.getChildByPath("material/Item/Num/Limit").getComponent(Label).string = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.NFTExp).toString();
         contentView.getChildByPath("material/Item/Num/Use").getComponent(Label).string = this._currentCost.toString();
 
         // action button

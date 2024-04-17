@@ -10,6 +10,7 @@ import s from "../Manger/SettlementMgr";
 import tk from "../Manger/TaskMgr";
 import user from "../Manger/UserInfoMgr";
 import pd from "../Manger/PioneerDevelopMgr";
+import game from "../Manger/GameMgr";
 
 import audio from "../Basic/AudioMgr";
 import res from "../Basic/ResourcesMgr";
@@ -26,6 +27,7 @@ const TaskMgr = new tk();
 const UserInfoMgr = new user();
 const BattleReportsMgr = new br();
 const PioneerDevelopMgr = new pd();
+const GameMgr = new game();
 
 const AudioMgr = new audio();
 const ResourcesMgr = new res();
@@ -44,6 +46,7 @@ export {
     TaskMgr,
     UserInfoMgr,
     PioneerDevelopMgr,
+    GameMgr,
 
     // system
     AudioMgr,

@@ -10,6 +10,7 @@ import { NotificationName } from '../../../Const/Notification';
 import { MapMemberFactionType } from '../../../Const/ConstDefine';
 import { ConfigType, EnergyTipThresholdParam } from '../../../Const/Config';
 import { MapBuildingObject } from '../../../Const/MapBuilding';
+import { DataMgr } from '../../../Data/DataMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('OuterBuildingView')
@@ -199,7 +200,7 @@ export class OuterBuildingView extends ViewController {
                     for (const cost of levelConfig) {
                         const type = cost[0].toString();
                         const num = cost[1];
-                        if (ItemMgr.getOwnItemCount(type) < num) {
+                        if (DataMgr.s.item.getObj_item_count(type) < num) {
                             thisBuild = false;
                             break;
                         }

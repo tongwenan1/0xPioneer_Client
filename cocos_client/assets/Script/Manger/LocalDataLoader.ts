@@ -9,8 +9,6 @@ export default class LocalDataLoader {
         await UserInfoMgr.initData();
         await BuildingMgr.initData();
         await TaskMgr.initData();
-        await ItemMgr.initData();
-
         PioneerMgr.initData();
         PioneerDevelopMgr.initData();
     }

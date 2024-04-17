@@ -40,7 +40,7 @@ export default class PioneerMgr {
     }
 
     public pioneerHealHpToMax(pioneerId: string) {
-        const costTroops: number = DataMgr.s.pioneer.gainHp(pioneerId, ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop));
+        const costTroops: number = DataMgr.s.pioneer.gainHp(pioneerId, DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop));
         if (costTroops > 0) {
             ItemMgr.subItem(ResourceCorrespondingItem.Troop, costTroops);
         }
@@ -78,7 +78,7 @@ export default class PioneerMgr {
         if (DataMgr.s.pioneer.changeShow(pioneerId, true)) {
             const pioneer = DataMgr.s.pioneer.getById(pioneerId);
             if (pioneer.type == MapPioneerType.player) {
-                SettlementMgr.insertSettlement({
+                DataMgr.s.settlement.addObj({
                     level: UserInfoMgr.level,
                     newPioneerIds: [pioneerId],
                     killEnemies: 0,
@@ -720,7 +720,7 @@ export default class PioneerMgr {
                         ItemConfigDropTool.getItemByConfig(selfKillPioneer.drop);
                     }
                     // settle
-                    SettlementMgr.insertSettlement({
+                    DataMgr.s.settlement.addObj({
                         level: UserInfoMgr.level,
                         newPioneerIds: [],
                         killEnemies: 1,
@@ -875,7 +875,7 @@ export default class PioneerMgr {
                     rebirthMapPos = new Vec2(pioneer.stayPos.x - 1, pioneer.stayPos.y);
                 }
             }
-            let rebirthHp: number = Math.max(1, Math.min(ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop), pioneer.hpMax));
+            let rebirthHp: number = Math.max(1, Math.min(DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop), pioneer.hpMax));
             ItemMgr.subItem(ResourceCorrespondingItem.Troop, rebirthHp);
             DataMgr.s.pioneer.rebirth(data.id, rebirthHp, rebirthMapPos);
         }

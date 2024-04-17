@@ -8,6 +8,7 @@ import NotificationMgr from '../Basic/NotificationMgr';
 import ItemData, { ItemArrangeType } from '../Const/Item';
 import { NotificationName } from '../Const/Notification';
 import UIPanelManger from '../Basic/UIPanelMgr';
+import { DataMgr } from '../Data/DataMgr';
 const { ccclass, property } = _decorator;
 
 
@@ -47,7 +48,7 @@ export class BackpackUI extends ViewController {
         super.viewDidStart();
 
         this._allItemViews = [];
-        for (let i = 0; i < ItemMgr.maxItemLength; i++) {
+        for (let i = 0; i < DataMgr.s.item.getObj_item_maxLength(); i++) {
             let itemView = instantiate(this.backpackItemPrb);
             itemView.active = true;
 
@@ -97,7 +98,7 @@ export class BackpackUI extends ViewController {
         // this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string = LanMgr.getLanById("107549");
         // this._sortMenu.getChildByPath("Content/Type").getComponent(Label).string = LanMgr.getLanById("107549");
 
-        const items = ItemMgr.localBackpackItemDatas;
+        const items = DataMgr.s.item.getObj_item_backpack();
         this._itemDatas = items;
 
         for (let i = 0; i < this._allItemViews.length; i++) {
@@ -105,7 +106,7 @@ export class BackpackUI extends ViewController {
             itemView.getComponent(BackpackItem).refreshUI(i < items.length ? items[i] : null);
             itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
         }
-        this.node.getChildByPath("__ViewContent/Bg/QuantityNum").getComponent(Label).string = items.length + "/" + ItemMgr.maxItemLength;
+        this.node.getChildByPath("__ViewContent/Bg/QuantityNum").getComponent(Label).string = items.length + "/" + DataMgr.s.item.getObj_item_maxLength();
     }
 
     private _refreshMenu() {
@@ -134,7 +135,7 @@ export class BackpackUI extends ViewController {
         }
     }
     private onTapArrange() {
-        ItemMgr.arrange(this._currentArrangeType);
+        DataMgr.s.item.getObj_item_sort(this._currentArrangeType);
     }
 
     private onTapSortMenuAction() {

@@ -8,6 +8,7 @@ import { UserInfoEvent } from '../Const/UserInfoDefine';
 import LvlupConfig from '../Config/LvlupConfig';
 import { NotificationName } from '../Const/Notification';
 import UIPanelManger from '../Basic/UIPanelMgr';
+import { DataMgr } from '../Data/DataMgr';
 const { ccclass, property } = _decorator;
 
 
@@ -63,8 +64,8 @@ export default class TopUI extends Component implements UserInfoEvent {
         this.txtPlayerName.string = info.playerName;
         this.txtPlayerLV.string = "C.LV" + info.level;
         this.txtLvProgress.string = `${info.exp}/${1000}`;
-        this.txtMoney.string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Gold).toString();
-        this.txtEnergy.string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Energy).toString();
+        this.txtMoney.string = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Gold).toString();
+        this.txtEnergy.string = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy).toString();
 
         const lvlupConfig = LvlupConfig.getById(info.level.toString());
         const maxExp = lvlupConfig.exp;
@@ -72,10 +73,10 @@ export default class TopUI extends Component implements UserInfoEvent {
         this.node.getChildByPath("progressLv/txtLvProgress").getComponent(Label).string = info.exp + "/" + maxExp;
 
         const resourceView = this.node.getChildByName("Resource");
-        resourceView.getChildByPath("Food/Label").getComponent(Label).string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Food).toString();
-        resourceView.getChildByPath("Wood/Label").getComponent(Label).string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Wood).toString();
-        resourceView.getChildByPath("Stone/Label").getComponent(Label).string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Stone).toString();
-        resourceView.getChildByPath("Troops/Label").getComponent(Label).string = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop).toString();
+        resourceView.getChildByPath("Food/Label").getComponent(Label).string = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Food).toString();
+        resourceView.getChildByPath("Wood/Label").getComponent(Label).string = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Wood).toString();
+        resourceView.getChildByPath("Stone/Label").getComponent(Label).string = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Stone).toString();
+        resourceView.getChildByPath("Troops/Label").getComponent(Label).string = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop).toString();
     }
 
     private _playExpGettedAnim(getExpValue: number, playOver: () => void = null) {

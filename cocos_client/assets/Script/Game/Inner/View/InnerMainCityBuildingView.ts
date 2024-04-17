@@ -10,6 +10,7 @@ import InnerBuildingConfig from "../../../Config/InnerBuildingConfig";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { NotificationName } from "../../../Const/Notification";
 import UIPanelManger from "../../../Basic/UIPanelMgr";
+import { DataMgr } from "../../../Data/DataMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -31,7 +32,7 @@ export class InnerMainCityBuildingView extends InnerBuildingView {
                 for (const cost of levelConfig) {
                     const type = cost[0].toString();
                     const num = cost[1];
-                    if (ItemMgr.getOwnItemCount(type) < num) {
+                    if (DataMgr.s.item.getObj_item_count(type) < num) {
                         thisBuild = false;
                         break;
                     }

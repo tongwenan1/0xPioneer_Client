@@ -40,7 +40,7 @@ export class BuildingUpgradeUI extends ViewController {
                         for (const cost of levelConfig) {
                             const type = cost[0].toString();
                             const num = cost[1];
-                            if (ItemMgr.getOwnItemCount(type) < num) {
+                            if (DataMgr.s.item.getObj_item_count(type) < num) {
                                 thisBuild = false;
                                 break;
                             }
@@ -169,7 +169,7 @@ export class BuildingUpgradeUI extends ViewController {
                 for (const cost of costData) {
                     const type = cost[0].toString();
                     let num = Math.floor(cost[1] - cost[1] * this._artifactResourceEffectNum);
-                    const ownNum: number = ItemMgr.getOwnItemCount(type);
+                    const ownNum: number = DataMgr.s.item.getObj_item_count(type);
 
                     const item = instantiate(this._levelInfoCostItem);
                     item.active = true;
@@ -180,7 +180,7 @@ export class BuildingUpgradeUI extends ViewController {
                     item.getChildByPath("Icon/8004").active = type == ResourceCorrespondingItem.Troop;
 
                     item.getChildByPath("num/left").getComponent(Label).string = num + "";
-                    item.getChildByPath("num/right").getComponent(Label).string = ItemMgr.getOwnItemCount(type).toString();
+                    item.getChildByPath("num/right").getComponent(Label).string = DataMgr.s.item.getObj_item_count(type).toString();
                     item.getChildByPath("num/right").getComponent(Label).color = ownNum >= num ? new Color(142, 218, 97) : Color.RED;
 
                     this._levelInfoShowCostItems.push(item);
@@ -249,7 +249,7 @@ export class BuildingUpgradeUI extends ViewController {
                 // total num
                 needNum = Math.floor(needNum - (needNum * this._artifactResourceEffectNum));
 
-                if (ItemMgr.getOwnItemCount(type) < needNum) {
+                if (DataMgr.s.item.getObj_item_count(type) < needNum) {
                     canUpgrade = false;
                     break;
                 }

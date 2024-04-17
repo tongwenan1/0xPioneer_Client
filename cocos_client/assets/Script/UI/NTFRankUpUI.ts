@@ -12,6 +12,7 @@ import ItemData from "../Const/Item";
 import ConfigConfig from "../Config/ConfigConfig";
 import { ConfigType, NFTLevelLimitPerRankAddNumParam } from "../Const/Config";
 import ItemConfig from "../Config/ItemConfig";
+import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("NTFRankUpUI")
@@ -23,7 +24,7 @@ export class NTFRankUpUI extends ViewController {
         // this.node.getChildByPath("__ViewContent/Title").getComponent(Label).string = LanMgr.getLanById("201003");
         // this.node.getChildByPath("__ViewContent/btnUse/name").getComponent(Label).string = LanMgr.getLanById("201003");
 
-        const resourceLimitMaxNum = LvlupConfig.getMaxNFTRankUpNum(this._data.rarity, this._data.rank, ItemMgr.localItemDatas);
+        const resourceLimitMaxNum = LvlupConfig.getMaxNFTRankUpNum(this._data.rarity, this._data.rank, DataMgr.s.item.getObj());
         this._maxRankUpNum = Math.min(resourceLimitMaxNum, this._data.rankLimit - this._data.rank);
 
         this._refreshUI();
@@ -93,7 +94,7 @@ export class NTFRankUpUI extends ViewController {
             view.active = true;
             view.parent = this.node.getChildByPath("__ViewContent/material");
             view.getChildByPath("Icon/Image").getComponent(Sprite).spriteFrame = await ItemMgr.getItemIcon(itemConfig.icon);
-            view.getChildByPath("Num/Limit").getComponent(Label).string = ItemMgr.getOwnItemCount(templeItem.itemConfigId).toString();
+            view.getChildByPath("Num/Limit").getComponent(Label).string = DataMgr.s.item.getObj_item_count(templeItem.itemConfigId).toString();
             view.getChildByPath("Num/Use").getComponent(Label).string = templeItem.count.toString();
             this._allShowItems.push(view);
         }

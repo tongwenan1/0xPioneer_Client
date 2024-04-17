@@ -13,6 +13,7 @@ import ItemConfig from "../Config/ItemConfig";
 import { ItemInfoUI } from "./ItemInfoUI";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
+import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("NFTSkillLearnUI")
@@ -36,7 +37,7 @@ export class NFTSkillLearnUI extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        this._skillBooks = ItemMgr.localSkillBookDatas;
+        this._skillBooks = DataMgr.s.item.getObj_item_skillbook();
 
         this._bookContent = this.node.getChildByPath("__ViewContent/BgTaskListWord/ScrollView/View/Content");
         this._bookItem = this._bookContent.getChildByPath("Item");

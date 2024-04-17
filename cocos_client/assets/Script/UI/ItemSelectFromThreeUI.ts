@@ -152,7 +152,7 @@ export class ItemSelectFromThreeUI extends ViewController {
     }
 
     private async onTapGetAll() {
-        const energyNum: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Energy);
+        const energyNum: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
         const needNum: number = 200;
         if (energyNum >= needNum) {
             DataMgr.s.artifact.addObj_artifact(this._items);

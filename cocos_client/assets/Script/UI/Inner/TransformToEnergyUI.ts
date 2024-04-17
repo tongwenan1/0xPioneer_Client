@@ -33,7 +33,7 @@ export class TransformToEnergyUI extends ViewController {
 
         let maxGenerate: number = 99999999;
         for (const data of energyData.convert) {
-            maxGenerate = Math.min(maxGenerate, ItemMgr.getOwnItemCount(data.type) / data.num);
+            maxGenerate = Math.min(maxGenerate, DataMgr.s.item.getObj_item_count(data.type) / data.num);
         }
         if (initSelectGenerate) {
             this._selectGenerateNum = Math.min(maxGenerate, 1);
@@ -83,7 +83,7 @@ export class TransformToEnergyUI extends ViewController {
                 if (this._selectGenerateNum == 0) {
                     currentCost = energyData.convert[i].num;
                 }
-                const ownNum: number = ItemMgr.getOwnItemCount(energyData.convert[i].type);
+                const ownNum: number = DataMgr.s.item.getObj_item_count(energyData.convert[i].type);
 
                 const item = this._costShowItems[i];
                 item.getChildByPath("num/Value").getComponent(Label).string = currentCost + "";
@@ -96,7 +96,7 @@ export class TransformToEnergyUI extends ViewController {
                 if (this._selectGenerateNum == 0) {
                     currentCost = cost.num;
                 }
-                const ownNum: number = ItemMgr.getOwnItemCount(cost.type);
+                const ownNum: number = DataMgr.s.item.getObj_item_count(cost.type);
                 const item = instantiate(this._costItem);
                 item.active = true;
                 item.setParent(this._costItem.parent);
@@ -184,7 +184,7 @@ export class TransformToEnergyUI extends ViewController {
         }
         let maxGenerate: number = 99999999;
         for (const data of energyData.convert) {
-            maxGenerate = Math.min(maxGenerate, ItemMgr.getOwnItemCount(data.type) / data.num);
+            maxGenerate = Math.min(maxGenerate, DataMgr.s.item.getObj_item_count(data.type) / data.num);
         }
         // maxGenerate = Math.min(maxGenerate, energyData.storage - userEnergyInfo.totalEnergyNum);
 

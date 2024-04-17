@@ -662,7 +662,7 @@ export class OuterTiledMapActionController extends ViewController {
                     if (PioneerGameTest) {
                     } else {
                         if (costEnergy > 0) {
-                            const ownEnergy: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Energy);
+                            const ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
                             if (ownEnergy < costEnergy) {
                                 UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
                                 return;

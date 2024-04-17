@@ -253,7 +253,7 @@ export class EventUI extends ViewController {
         const num: EventSelectCondNum = condition[2];
 
         if (type == ItemConfigType.Item) {
-            const currentNum = ItemMgr.getOwnItemCount(id);
+            const currentNum = DataMgr.s.item.getObj_item_count(id);
             if (currentNum >= num) {
                 temple.satisfy = true;
             } else {
@@ -312,7 +312,7 @@ export class EventUI extends ViewController {
             if (type == ItemConfigType.Item) {
                 // item
                 if (cost) {
-                    for (const item of ItemMgr.localItemDatas) {
+                    for (const item of DataMgr.s.item.getObj()) {
                         if (item.itemConfigId == id) {
                             const itemConf = ItemConfig.getById(id);
                             ItemMgr.subItem(item.itemConfigId, num);
@@ -387,7 +387,7 @@ export class EventUI extends ViewController {
                     }
                 }
             }
-            SettlementMgr.insertSettlement({
+            DataMgr.s.settlement.addObj({
                 level: UserInfoMgr.level,
                 newPioneerIds: [],
                 killEnemies: 0,

@@ -35,7 +35,7 @@ export class RecruitUI extends ViewController {
         // this.node.getChildByPath("__ViewContent/footer/time/txt").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
-        const currentTroops: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop);
+        const currentTroops: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop);
         
 
         this._totalTroop.string = this._maxTroop.toString();
@@ -58,7 +58,7 @@ export class RecruitUI extends ViewController {
             for (let i = 0; i < this._costShowItems.length; i++) {
                 const view = this._costShowItems[i];
                 view.getChildByPath("Num/left").getComponent(Label).string = (this._costDatas[i].count * this._selectGenerateNum).toString();
-                view.getChildByPath("Num/right").getComponent(Label).string = ItemMgr.getOwnItemCount(this._costDatas[i].itemConfigId).toString();
+                view.getChildByPath("Num/right").getComponent(Label).string = DataMgr.s.item.getObj_item_count(this._costDatas[i].itemConfigId).toString();
             }
         } else {
             for (const cost of this._costDatas) {
@@ -70,7 +70,7 @@ export class RecruitUI extends ViewController {
                 view.getChildByPath("Icon/8003").active = cost.itemConfigId == ResourceCorrespondingItem.Stone;
                 view.getChildByPath("Icon/8004").active = cost.itemConfigId == ResourceCorrespondingItem.Troop;
                 view.getChildByPath("Num/right").getComponent(Label).string = (cost.count * this._selectGenerateNum).toString();
-                view.getChildByPath("Num/left").getComponent(Label).string = ItemMgr.getOwnItemCount(cost.itemConfigId).toString();
+                view.getChildByPath("Num/left").getComponent(Label).string = DataMgr.s.item.getObj_item_count(cost.itemConfigId).toString();
                 this._costShowItems.push(view);
             }
         }
@@ -125,7 +125,7 @@ export class RecruitUI extends ViewController {
         if (configPerGenerateNum != null) {
             this._perTroopTime = configPerGenerateNum;
         }
-        this._maxRecruitTroop = Math.max(0, this._maxTroop - ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop));
+        this._maxRecruitTroop = Math.max(0, this._maxTroop - DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop));
 
 
         const effectData = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
@@ -174,7 +174,7 @@ export class RecruitUI extends ViewController {
         for (const cost of this._costDatas) {
             tempUseNum = Math.min(
                 tempUseNum,
-                ItemMgr.getOwnItemCount(cost.itemConfigId) / cost.count,
+                DataMgr.s.item.getObj_item_count(cost.itemConfigId) / cost.count,
                 this._maxRecruitTroop
             );
         }
