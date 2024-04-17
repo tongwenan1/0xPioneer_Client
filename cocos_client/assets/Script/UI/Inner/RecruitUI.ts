@@ -1,6 +1,6 @@
 import { _decorator, Component, instantiate, Label, Layout, Node, ProgressBar, Slider } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
-import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import { GameExtraEffectType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { ArtifactMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
@@ -10,7 +10,6 @@ import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 import { InnerBuildingType } from '../../Const/BuildingDefine';
 import ItemData from '../../Const/Item';
 import UIPanelManger from '../../Basic/UIPanelMgr';
-import { ArtifactEffectType } from '../../Const/Artifact';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
@@ -127,8 +126,8 @@ export class RecruitUI extends ViewController {
 
 
         const effectData = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
-        if (effectData != null && effectData.has(ArtifactEffectType.TROOP_GENERATE_TIME)) {
-            this._artifactEffect = effectData.get(ArtifactEffectType.TROOP_GENERATE_TIME);
+        if (effectData != null && effectData.has(GameExtraEffectType.TROOP_GENERATE_TIME)) {
+            this._artifactEffect = effectData.get(GameExtraEffectType.TROOP_GENERATE_TIME);
         }
 
         this._totalTroopProgress = this.node.getChildByPath("__ViewContent/ProgressBar").getComponent(ProgressBar);

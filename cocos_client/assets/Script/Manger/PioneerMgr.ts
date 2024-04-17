@@ -1,10 +1,9 @@
 import { CurveRange, Vec2 } from "cc";
 import CommonTools from "../Tool/CommonTools";
-import { MapMemberFactionType, MapMemberTargetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { ArtifactMgr, CountMgr, ItemMgr, LanMgr, PioneerDevelopMgr, SettlementMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
 import { UIHUDController } from "../UI/UIHUDController";
 import NotificationMgr from "../Basic/NotificationMgr";
-import { ArtifactEffectType } from "../Const/Artifact";
 import { MapBuildingType } from "../Const/BuildingDefine";
 import { CountType } from "../Const/Count";
 import { EventConfigData } from "../Const/Event";
@@ -506,8 +505,8 @@ export default class PioneerMgr {
                     // artifact
                     const artifactEff = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
                     let artifactGather = 0;
-                    if (artifactEff.has(ArtifactEffectType.GATHER_TIME)) {
-                        artifactGather = artifactEff.get(ArtifactEffectType.GATHER_TIME);
+                    if (artifactEff.has(GameExtraEffectType.GATHER_TIME)) {
+                        artifactGather = artifactEff.get(GameExtraEffectType.GATHER_TIME);
                     }
 
                     let actionTime: number = 3000;

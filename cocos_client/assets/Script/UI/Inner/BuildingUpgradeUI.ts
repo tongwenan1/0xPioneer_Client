@@ -1,11 +1,10 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
-import { ResourceCorrespondingItem } from '../../Const/ConstDefine';
+import { GameExtraEffectType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
 import { ArtifactMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
-import { ArtifactEffectType } from '../../Const/Artifact';
 import { InnerBuildingType, UserInnerBuildInfo } from '../../Const/BuildingDefine';
 import InnerBuildingConfig from '../../Config/InnerBuildingConfig';
 import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
@@ -68,11 +67,11 @@ export class BuildingUpgradeUI extends ViewController {
 
         const effect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
         if (effect != null) {
-            if (effect.has(ArtifactEffectType.BUILDING_LVUP_TIME)) {
-                this._artifactTimeEffectNum = effect.get(ArtifactEffectType.BUILDING_LVUP_TIME);
+            if (effect.has(GameExtraEffectType.BUILDING_LVUP_TIME)) {
+                this._artifactTimeEffectNum = effect.get(GameExtraEffectType.BUILDING_LVUP_TIME);
             }
-            if (effect.has(ArtifactEffectType.BUILDING_LVLUP_RESOURCE)) {
-                this._artifactResourceEffectNum = effect.get(ArtifactEffectType.BUILDING_LVLUP_RESOURCE);
+            if (effect.has(GameExtraEffectType.BUILDING_LVLUP_RESOURCE)) {
+                this._artifactResourceEffectNum = effect.get(GameExtraEffectType.BUILDING_LVLUP_RESOURCE);
             }
         }
 

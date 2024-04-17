@@ -4,10 +4,11 @@ import ArtifactData from "../Model/ArtifactData";
 import ArtifactConfig from "../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import NotificationMgr from "../Basic/NotificationMgr";
-import { ArtifactArrangeType, ArtifactEffectType } from "../Const/Artifact";
 import CLog from "../Utils/CLog";
 import { NotificationName } from "../Const/Notification";
 import Config from "../Const/Config";
+import { ArtifactArrangeType } from "../Const/Artifact";
+import { GameExtraEffectType } from "../Const/ConstDefine";
 
 export default class ArtifactMgr {
 
@@ -69,8 +70,8 @@ export default class ArtifactMgr {
         return count;
     }
 
-    public getEffectiveEffect(artifactStoreLevel: number): Map<ArtifactEffectType, number> {
-        const effectMap: Map<ArtifactEffectType, number> = new Map();
+    public getEffectiveEffect(artifactStoreLevel: number): Map<GameExtraEffectType, number> {
+        const effectMap: Map<GameExtraEffectType, number> = new Map();
         for (const artifact of this._localArtifactDatas) {
             if (artifact.effectIndex < 0) {
                 continue;
@@ -81,13 +82,13 @@ export default class ArtifactMgr {
                     const effectId = artifactConfig.effect[j];
                     const effConfig = ArtifactEffectConfig.getById(effectId);
                     let effectType = effConfig.type;
-                    if (effectType == ArtifactEffectType.VISION_RANGE) {
+                    if (effectType == GameExtraEffectType.VISION_RANGE) {
                         if (effConfig.para[0] == 0) {
-                            effectType = ArtifactEffectType.CITY_ONLY_VISION_RANGE;
+                            effectType = GameExtraEffectType.CITY_ONLY_VISION_RANGE;
                         } else if (effConfig.para[0] == 1) {
-                            effectType = ArtifactEffectType.PIONEER_ONLY_VISION_RANGE;
+                            effectType = GameExtraEffectType.PIONEER_ONLY_VISION_RANGE;
                         } else if (effConfig.para[0] == 2) {
-                            effectType = ArtifactEffectType.CITY_AND_PIONEER_VISION_RANGE;
+                            effectType = GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE;
                         }
                     }
                     if (effConfig.unlock && effConfig.unlock > artifactStoreLevel) {
@@ -97,9 +98,9 @@ export default class ArtifactMgr {
                         effectMap.set(effectType, 0);
                     }
                     let lastNum: number = effectMap.get(effectType);
-                    if (effectType == ArtifactEffectType.VISION_RANGE ||
-                        effectType == ArtifactEffectType.PIONEER_ONLY_VISION_RANGE ||
-                        effectType == ArtifactEffectType.CITY_AND_PIONEER_VISION_RANGE) {
+                    if (effectType == GameExtraEffectType.VISION_RANGE ||
+                        effectType == GameExtraEffectType.PIONEER_ONLY_VISION_RANGE ||
+                        effectType == GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE) {
                         lastNum += effConfig.para[1];
                     } else {
                         lastNum += effConfig.para[0];

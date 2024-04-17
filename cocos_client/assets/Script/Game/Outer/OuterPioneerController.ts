@@ -5,8 +5,7 @@ import { OuterOtherPioneerView } from "./View/OuterOtherPioneerView";
 import { MapItemMonster } from "./View/MapItemMonster";
 import { MapPioneer } from "./View/MapPioneer";
 import { OuterMapCursorView } from "./View/OuterMapCursorView";
-import { MapMemberFactionType, MapMemberTargetType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
-import ItemConfigDropTool from "../../Tool/ItemConfigDropTool";
+import { GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
 import { ArtifactMgr, BuildingMgr, ItemMgr, PioneerMgr, SettlementMgr, TaskMgr, UserInfoMgr } from "../../Utils/Global";
 import { OuterBuildingController } from "./OuterBuildingController";
 import { UIName } from "../../Const/ConstUIDefine";
@@ -14,7 +13,6 @@ import { DialogueUI } from "../../UI/Outer/DialogueUI";
 import { SecretGuardGettedUI } from "../../UI/Outer/SecretGuardGettedUI";
 import { EventUI } from "../../UI/Outer/EventUI";
 import NotificationMgr from "../../Basic/NotificationMgr";
-import { ArtifactEffectType } from "../../Const/Artifact";
 import { UserInfoEvent } from "../../Const/UserInfoDefine";
 import TalkConfig from "../../Config/TalkConfig";
 import LvlupConfig from "../../Config/LvlupConfig";
@@ -214,8 +212,8 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
         // artifact effect
         let artifactSpeed = 0;
         const artifactEff = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
-        if (artifactEff.has(ArtifactEffectType.MOVE_SPEED)) {
-            artifactSpeed = artifactEff.get(ArtifactEffectType.MOVE_SPEED);
+        if (artifactEff.has(GameExtraEffectType.MOVE_SPEED)) {
+            artifactSpeed = artifactEff.get(GameExtraEffectType.MOVE_SPEED);
         }
 
         for (var i = 0; i < allPioneers.length; i++) {
@@ -553,8 +551,8 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
         if (mainCity != null && mainCity.faction != MapMemberFactionType.enemy && pioneer != null && pioneer.show) {
             let radialRange = UserInfoMgr.cityVision;
             const artifactEffect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
-            if (artifactEffect != null && artifactEffect.has(ArtifactEffectType.CITY_RADIAL_RANGE)) {
-                radialRange += artifactEffect.get(ArtifactEffectType.CITY_RADIAL_RANGE);
+            if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.CITY_RADIAL_RANGE)) {
+                radialRange += artifactEffect.get(GameExtraEffectType.CITY_RADIAL_RANGE);
             }
             const isInCityRange: boolean = BuildingMgr.checkMapPosIsInBuilingRange(pioneer.stayPos, mainCityId, radialRange);
             if (isInCityRange && pioneer.hp < pioneer.hpMax) {
