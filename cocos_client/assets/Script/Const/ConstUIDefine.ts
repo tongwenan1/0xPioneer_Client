@@ -28,6 +28,8 @@ export enum UIName {
     NFTRankUpUI = "prefab/ui/NFTRankUpUI",
     NFTSkillDetailUI = "prefab/ui/NFTSkillDetailUI",
     NFTSkillLearnUI = "prefab/ui/NFTSkillLearnUI",
+
+    DelegateUI = "prefab/ui/DelegateUI",
 }
 
 export enum GameName {

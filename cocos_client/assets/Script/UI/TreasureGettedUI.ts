@@ -12,6 +12,7 @@ import ItemConfig from '../Config/ItemConfig';
 import ItemData, { ItemConfigType } from '../Const/Item';
 import { BoxInfoConfigData } from '../Const/BoxInfo';
 import UIPanelManger from '../Basic/UIPanelMgr';
+import { DataMgr } from '../Data/DataMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('TreasureGettedUI')
@@ -110,7 +111,7 @@ export class TreasureGettedUI extends ViewController {
                                 ItemMgr.addItem([new ItemData(dropResultProp.propId, dropResultProp.num)]);
 
                             } else if (dropResultProp.type == ItemConfigType.Artifact) {
-                                ArtifactMgr.addArtifact([new ArtifactData(dropResultProp.propId, dropResultProp.num)])
+                                DataMgr.s.artifact.addObj_artifact([new ArtifactData(dropResultProp.propId, dropResultProp.num)])
                             }
                             UserInfoMgr.getExplorationReward(box.id);
                             UIPanelManger.inst.popPanel();

@@ -495,7 +495,7 @@ export default class PioneerMgr {
             } else if (stayBuilding.type == MapBuildingType.resource) {
                 if (pioneer.type == MapPioneerType.player && pioneer.faction != MapMemberFactionType.enemy) {
                     // artifact
-                    const artifactEff = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+                    const artifactEff = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
                     let artifactGather = 0;
                     if (artifactEff.has(GameExtraEffectType.GATHER_TIME)) {
                         artifactGather = artifactEff.get(GameExtraEffectType.GATHER_TIME);

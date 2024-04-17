@@ -13,6 +13,7 @@ import DropConfig from '../Config/DropConfig';
 import { DropConfigData } from '../Const/Drop';
 import { ItemConfigType } from '../Const/Item';
 import UIPanelManger from '../Basic/UIPanelMgr';
+import { DataMgr } from '../Data/DataMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemSelectFromThreeUI')
@@ -138,7 +139,7 @@ export class ItemSelectFromThreeUI extends ViewController {
     private async onTapGet(event: Event, customEventData: string) {
         const index: number = parseInt(customEventData);
         const item = this._items[index];
-        ArtifactMgr.addArtifact([item]);
+        DataMgr.s.artifact.addObj_artifact([item]);
         const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
         if (result.success) {
             result.node.getComponent(ArtifactInfoUI).showItem([item]);
@@ -154,7 +155,7 @@ export class ItemSelectFromThreeUI extends ViewController {
         const energyNum: number = ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Energy);
         const needNum: number = 200;
         if (energyNum >= needNum) {
-            ArtifactMgr.addArtifact(this._items);
+            DataMgr.s.artifact.addObj_artifact(this._items);
             ItemMgr.subItem(ResourceCorrespondingItem.Energy, needNum);
 
             const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);

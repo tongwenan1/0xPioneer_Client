@@ -9,6 +9,7 @@ import NotificationMgr from "../Basic/NotificationMgr";
 import { ArtifactArrangeType } from "../Const/Artifact";
 import { NotificationName } from "../Const/Notification";
 import UIPanelManger from "../Basic/UIPanelMgr";
+import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactUI")
@@ -46,7 +47,7 @@ export class ArtifactUI extends ViewController {
         // ArtifactMgr.addObserver(this);
 
         this._allItemViews = [];
-        for (let i = 0; i < ArtifactMgr.maxItemLength; i++) {
+        for (let i = 0; i < DataMgr.s.artifact.getObj_artifact_maxLength(); i++) {
             let itemView = instantiate(this.itemPrb);
             itemView.active = true;
 
@@ -96,7 +97,7 @@ export class ArtifactUI extends ViewController {
         // this._sortMenu.getChildByPath("Content/Recently").getComponent(Label).string = LanMgr.getLanById("107549");
         // this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string = LanMgr.getLanById("107549");
 
-        const items = ArtifactMgr.localArtifactDatas;
+        const items = DataMgr.s.artifact.getObj();
         this._itemDatas = items;
 
         for (let i = 0; i < this._allItemViews.length; i++) {
@@ -104,7 +105,7 @@ export class ArtifactUI extends ViewController {
             itemView.getComponent(ArtifactItem).refreshUI(i < items.length ? items[i] : null);
             itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
         }
-        this.node.getChildByPath("__ViewContent/Bg/QuantityNum").getComponent(Label).string = items.length + "/" + ArtifactMgr.maxItemLength;
+        this.node.getChildByPath("__ViewContent/Bg/QuantityNum").getComponent(Label).string = items.length + "/" + DataMgr.s.artifact.getObj_artifact_maxLength();
     }
 
     private _refreshMenu() {
@@ -132,7 +133,7 @@ export class ArtifactUI extends ViewController {
         }
     }
     private onTapArrange() {
-        ArtifactMgr.arrange(this._currentArrangeType);
+        DataMgr.s.artifact.getObj_artifact_sort(this._currentArrangeType);
     }
 
     private onTapSortMenuAction() {

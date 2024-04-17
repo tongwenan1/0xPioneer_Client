@@ -1,6 +1,7 @@
 import ConfigConfig from "../Config/ConfigConfig";
 import NFTPioneerNameConfig from "../Config/NFTPioneerNameConfig";
 import CommonTools from "../Tool/CommonTools";
+import { InnerBuildingType } from "./BuildingDefine";
 import { ConfigType, NFTLevelInitLimitNumParam, NFTLevelLimitPerRankAddNumParam, NFTRankLimitNumParam, NFTRaritySkillInitNumParam } from "./Config";
 import { GameExtraEffectType, GameSingleParamEffectType, GameDoubleParamEffectType } from "./ConstDefine";
 
@@ -64,6 +65,9 @@ export class NFTPioneerModel {
             isOriginal: false
         });
     }
+    public changeWorkBuilding(buildingId: InnerBuildingType) {
+        this._workingBuildingId = buildingId;
+    }
 
     public get uniqueId(): string {
         return this._uniqueId;
@@ -118,6 +122,9 @@ export class NFTPioneerModel {
     }
     public get skills(): NFTPioneerSkil[] {
         return this._skills;
+    }
+    public get workingBuildingId(): InnerBuildingType {
+        return this._workingBuildingId;
     }
     public convertConfigToModel(uniqueId: string, config: NFTPioneerConfigData) {
         this._uniqueId = uniqueId;
@@ -185,11 +192,13 @@ export class NFTPioneerModel {
         this._speedGrowValue = localData._speedGrowValue;
         this._iqGrowValue = localData._iqGrowValue;
         this._skills = localData._skills;
+        this._workingBuildingId = localData._workingBuildingId;
     }
     public constructor() {
         this._level = 1;
         this._rank = 1;
         this._skills = [];
+        this._workingBuildingId = null;
     }
     private _uniqueId: string;
     private _rarity: number;
@@ -210,4 +219,6 @@ export class NFTPioneerModel {
     private _speedGrowValue: number;
     private _iqGrowValue: number;
     private _skills: NFTPioneerSkil[];
+
+    private _workingBuildingId: InnerBuildingType;
 }

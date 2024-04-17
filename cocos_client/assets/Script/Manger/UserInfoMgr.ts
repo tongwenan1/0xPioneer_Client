@@ -279,7 +279,7 @@ export default class UserInfoMgr {
     public set explorationValue(value: number) {
         const original = this._explorationValue;
         let addNum = value - original;
-        const effect = ArtifactMgr.getEffectiveEffect(this.artifactStoreLevel);
+        const effect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(this.artifactStoreLevel);
         if (effect != null && effect.has(GameExtraEffectType.TREASURE_PROGRESS)) {
             addNum = Math.floor(addNum + addNum * effect.get(GameExtraEffectType.TREASURE_PROGRESS));
         }
@@ -377,7 +377,7 @@ export default class UserInfoMgr {
                     if (this._generateEnergyInfo.countTime <= 0) {
                         let generateNumPerMin: number = generateConfig.output;
                         let effectNum: number = 0;
-                        const artifactEffect = ArtifactMgr.getEffectiveEffect(this.artifactStoreLevel);
+                        const artifactEffect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(this.artifactStoreLevel);
                         if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.ENERGY_GENERATE)) {
                             effectNum = artifactEffect.get(GameExtraEffectType.ENERGY_GENERATE);
                         }

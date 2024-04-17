@@ -6,6 +6,7 @@ import { ECursorType, GameExtraEffectType } from "../../Const/ConstDefine";
 import { TileHexDirection, TileMapHelper, TilePos } from "../TiledMap/TileTool";
 import { ArtifactMgr, UserInfoMgr } from "../../Utils/Global";
 import { ConfigType, MapScaleParam } from "../../Const/Config";
+import { DataMgr } from "../../Data/DataMgr";
 
 export default class GameMainHelper {
     public static get instance() {
@@ -229,7 +230,7 @@ export default class GameMainHelper {
             return [];
         }
         let vision: number = 6;
-        const effectData = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+        const effectData = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
         if (effectData != null) {
             if (effectData.has(GameExtraEffectType.PIONEER_ONLY_VISION_RANGE)) {
                 vision += effectData.get(GameExtraEffectType.PIONEER_ONLY_VISION_RANGE);

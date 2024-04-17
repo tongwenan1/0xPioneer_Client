@@ -9,6 +9,7 @@ import { ArtifactItem } from "./ArtifactItem";
 import ManualNestedScrollView from "../BasicView/ManualNestedScrollView";
 import { InnerBuildingType } from "../Const/BuildingDefine";
 import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
+import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactStore")
@@ -83,7 +84,7 @@ export class ArtifactStore extends ViewController {
     }
 
     private _initArtifact() {
-        const itemDatas = ArtifactMgr.localArtifactDatas;
+        const itemDatas = DataMgr.s.artifact.getObj();
         this._itemDatas = itemDatas;
 
         this._allEffectItemViews = [];
@@ -194,7 +195,7 @@ export class ArtifactStore extends ViewController {
                         // remove 
                         this._moveEffectViewData = this._allEffectItemViews[this._moveArtifactIndex].itemData;
                         this._moveEffectViewData.effectIndex = -1;
-                        ArtifactMgr.saveLocalData();
+                        DataMgr.s.artifact.saveObj()
                         this._allEffectItemViews[this._moveArtifactIndex].itemData = null;
                         for (const child of this._allEffectItemViews[this._moveArtifactIndex].node.children) {
                             if (child.name == "Item") {
@@ -247,12 +248,12 @@ export class ArtifactStore extends ViewController {
                     if (isItemScrollAction) {
                         intersectItem.itemData = this._itemDatas[this._moveArtifactIndex];
                         this._itemDatas[this._moveArtifactIndex].effectIndex = index;
-                        ArtifactMgr.saveLocalData();
+                        DataMgr.s.artifact.saveObj()
                     } else {
 
                         if (this._moveEffectViewData != null) {
                             this._moveEffectViewData.effectIndex = index;
-                            ArtifactMgr.saveLocalData();
+                            DataMgr.s.artifact.saveObj()
                             this._allEffectItemViews[index].itemData = this._moveEffectViewData;
                         }
                     }

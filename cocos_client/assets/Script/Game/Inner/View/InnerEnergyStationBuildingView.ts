@@ -11,6 +11,7 @@ import ItemData from "../../../Const/Item";
 import { NotificationName } from "../../../Const/Notification";
 import { GameExtraEffectType, ResourceCorrespondingItem } from "../../../Const/ConstDefine";
 import UIPanelManger from "../../../Basic/UIPanelMgr";
+import { DataMgr } from "../../../Data/DataMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -85,7 +86,7 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
                     this._produceInfoView.getChildByPath("BottomContent/CurrentTime").getComponent(Label).string = generateInfoData.countTime.toString();
 
                     let showOutput: string = generateConfig.output.toString();
-                    const artifactEffect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+                    const artifactEffect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
                     if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.ENERGY_GENERATE)) {
                         const effectNum = Math.floor(generateConfig.output * artifactEffect.get(GameExtraEffectType.ENERGY_GENERATE));
                         if (effectNum > 0) {

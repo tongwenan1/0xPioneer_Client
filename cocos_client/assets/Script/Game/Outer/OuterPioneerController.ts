@@ -210,7 +210,7 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
         const allPioneers = DataMgr.s.pioneer.getAll(true);
         // artifact effect
         let artifactSpeed = 0;
-        const artifactEff = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+        const artifactEff = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
         if (artifactEff.has(GameExtraEffectType.MOVE_SPEED)) {
             artifactSpeed = artifactEff.get(GameExtraEffectType.MOVE_SPEED);
         }
@@ -549,7 +549,7 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
 
         if (mainCity != null && mainCity.faction != MapMemberFactionType.enemy && pioneer != null && pioneer.show) {
             let radialRange = UserInfoMgr.cityVision;
-            const artifactEffect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+            const artifactEffect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
             if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.CITY_RADIAL_RANGE)) {
                 radialRange += artifactEffect.get(GameExtraEffectType.CITY_RADIAL_RANGE);
             }

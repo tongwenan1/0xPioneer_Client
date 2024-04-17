@@ -10,6 +10,9 @@ import InnerBuildingConfig from '../../Config/InnerBuildingConfig';
 import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 import { NotificationName } from '../../Const/Notification';
 import UIPanelManger from '../../Basic/UIPanelMgr';
+import { DataMgr } from '../../Data/DataMgr';
+import { UIName } from '../../Const/ConstUIDefine';
+import { DelegateUI } from '../DelegateUI';
 const { ccclass } = _decorator;
 
 @ccclass('BuildingUpgradeUI')
@@ -65,7 +68,7 @@ export class BuildingUpgradeUI extends ViewController {
         super.viewDidLoad();
 
 
-        const effect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+        const effect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
         if (effect != null) {
             if (effect.has(GameExtraEffectType.BUILDING_LVUP_TIME)) {
                 this._artifactTimeEffectNum = effect.get(GameExtraEffectType.BUILDING_LVUP_TIME);
@@ -278,6 +281,13 @@ export class BuildingUpgradeUI extends ViewController {
     private async onTapClose() {
         await this.playExitAnimation();
         UIPanelManger.inst.popPanel();
+    }
+    private async onTapDelegate() {
+        const result = await UIPanelManger.inst.pushPanel(UIName.DelegateUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(DelegateUI).showUI(InnerBuildingType.MainCity);
     }
 
     //------------------- ItemMgrEvent

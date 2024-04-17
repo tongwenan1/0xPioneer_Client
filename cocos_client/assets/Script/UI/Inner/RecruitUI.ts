@@ -10,6 +10,9 @@ import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
 import { InnerBuildingType } from '../../Const/BuildingDefine';
 import ItemData from '../../Const/Item';
 import UIPanelManger from '../../Basic/UIPanelMgr';
+import { DataMgr } from '../../Data/DataMgr';
+import { UIName } from '../../Const/ConstUIDefine';
+import { DelegateUI } from '../DelegateUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('RecruitUI')
@@ -125,7 +128,7 @@ export class RecruitUI extends ViewController {
         this._maxRecruitTroop = Math.max(0, this._maxTroop - ItemMgr.getOwnItemCount(ResourceCorrespondingItem.Troop));
 
 
-        const effectData = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+        const effectData = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
         if (effectData != null && effectData.has(GameExtraEffectType.TROOP_GENERATE_TIME)) {
             this._artifactEffect = effectData.get(GameExtraEffectType.TROOP_GENERATE_TIME);
         }
@@ -234,6 +237,13 @@ export class RecruitUI extends ViewController {
 
         await this.playExitAnimation();
         UIPanelManger.inst.popPanel();
+    }
+    private async onTapDelegate() {
+        const result = await UIPanelManger.inst.pushPanel(UIName.DelegateUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(DelegateUI).showUI(InnerBuildingType.Barrack);
     }
 }
 

@@ -1,6 +1,6 @@
 import { _decorator, Node, Button, Label } from "cc";
 import { ClaimRewardUI } from "./ClaimRewardUI";
-import { ItemMgr, LanMgr, UserInfoMgr } from "../Utils/Global";
+import { ItemMgr, LanMgr, PioneerDevelopMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TaskListUI } from "./TaskListUI";
 import { NewSettlementUI } from "./NewSettlementUI";
@@ -77,7 +77,7 @@ export class MainUI extends ViewController implements UserInfoEvent {
 
         // test
         // for (let i = 1; i <= 10; i++) {
-        //     ArtifactMgr.addArtifact([new ArtifactData("700" + i, 1)]);
+        //     DataMgr.s.artifact.addObj_artifact([new ArtifactData("700" + i, 1)]);
         // }
         //DataMgr.n.websocketMsg.create_pioneer({
         //    type: "0"

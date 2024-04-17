@@ -9,6 +9,9 @@ import { InnerBuildingType } from '../../Const/BuildingDefine';
 import ItemData from '../../Const/Item';
 import { NotificationName } from '../../Const/Notification';
 import UIPanelManger from '../../Basic/UIPanelMgr';
+import { DataMgr } from '../../Data/DataMgr';
+import { UIName } from '../../Const/ConstUIDefine';
+import { DelegateUI } from '../DelegateUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('TransformToEnergyUI')
@@ -49,7 +52,7 @@ export class TransformToEnergyUI extends ViewController {
         // this.node.getChildByPath("__ViewContent/footer/Convert").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.getLanById("107549");
         let showOutput: string = energyData.output.toString();
-        const artifactEffect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+        const artifactEffect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
         if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.ENERGY_GENERATE)) {
             const effectNum = Math.floor(energyData.output * artifactEffect.get(GameExtraEffectType.ENERGY_GENERATE));
             if (effectNum > 0) {
@@ -215,6 +218,13 @@ export class TransformToEnergyUI extends ViewController {
         }
         ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Energy, this._selectGenerateNum)]);
         this.refreshUI(true);
+    }
+    private async onTapDelegate() {
+        const result = await UIPanelManger.inst.pushPanel(UIName.DelegateUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(DelegateUI).showUI(InnerBuildingType.EnergyStation);
     }
 }
 

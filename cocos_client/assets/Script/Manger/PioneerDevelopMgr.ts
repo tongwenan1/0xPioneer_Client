@@ -1,5 +1,6 @@
 import NotificationMgr from "../Basic/NotificationMgr";
 import NFTPioneerConfig from "../Config/NFTPioneerConfig";
+import { InnerBuildingType } from "../Const/BuildingDefine";
 import { NotificationName } from "../Const/Notification";
 import { NFTPioneerModel } from "../Const/PioneerDevelopDefine";
 import CommonTools from "../Tool/CommonTools";
@@ -59,6 +60,19 @@ export default class PioneerDevelopMgr {
         model.learnSkill(skillId);
         this._saveLocalData();
         NotificationMgr.triggerEvent(NotificationName.NFTDIDLEARNSKILL);
+    }
+    public NFTChangeWork(NFTId: string, workingBuildingId: InnerBuildingType) {
+        const lastBuildingBindModel = this._develpDatas.find((v) => v.workingBuildingId == workingBuildingId);
+        if (lastBuildingBindModel != undefined) {
+            lastBuildingBindModel.changeWorkBuilding(null);
+        }
+        const model = this._develpDatas.find((v) => v.uniqueId == NFTId);
+        if (model == undefined) {
+            return;
+        }
+        model.changeWorkBuilding(workingBuildingId);
+        this._saveLocalData();
+        NotificationMgr.triggerEvent(NotificationName.NFTDIDCHANGEWORKBUILDING);
     }
 
     private _localStorageKey: string = "local_pioneer_develop";

@@ -220,7 +220,7 @@ export class OuterTiledMapActionController extends ViewController {
                                         const centerPos = stayBuilding.stayMapPositions[3];
                                         const visionPositions = [];
                                         let radialRange = UserInfoMgr.cityVision;
-                                        const artifactEffect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
+                                        const artifactEffect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
                                         if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.CITY_RADIAL_RANGE)) {
                                             radialRange += artifactEffect.get(GameExtraEffectType.CITY_RADIAL_RANGE);
                                         }

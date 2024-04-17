@@ -3,6 +3,7 @@ import DropConfig from "../Config/DropConfig";
 import { GetPropData } from "../Const/ConstDefine";
 import { UIName } from "../Const/ConstUIDefine";
 import ItemData, { ItemConfigType } from "../Const/Item";
+import { DataMgr } from "../Data/DataMgr";
 import ArtifactData from "../Model/ArtifactData";
 import { ArtifactInfoUI } from "../UI/ArtifactInfoUI";
 import { ItemGettedUI } from "../UI/ItemGettedUI";
@@ -62,7 +63,7 @@ export default class ItemConfigDropTool {
             }
         }
         if (artifacts.length > 0) {
-            ArtifactMgr.addArtifact(artifacts);
+            DataMgr.s.artifact.addObj_artifact(artifacts);
             if (showDialog) {
                 setTimeout(async () => {
                     if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI) ||
