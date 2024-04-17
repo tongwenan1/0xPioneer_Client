@@ -8,6 +8,7 @@ export enum ItemType {
     Resource = 0,
     TaskItem = 1,
     AddProp = 2, // coin, energy, wood, food, stone, troop
+    SkillBook = 3,
 }
 
 export enum ItemConfigType {
@@ -27,6 +28,7 @@ export class ItemConfigData {
     // gainPropId: string;
     // gainPropCount: number;
     gain_item: null | [ItemConfigType, string, number];
+    skill_learn: string;
 }
 
 export default class ItemData {

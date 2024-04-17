@@ -31,7 +31,7 @@ export default class PioneerDevelopMgr {
         if (model != undefined) {
             model.levelUp(levelUpNum);
             this._saveLocalData();
-            NotificationMgr.triggerEvent(NotificationName.NFTDidLevelUp);
+            NotificationMgr.triggerEvent(NotificationName.NFTDIDLEVELUP);
         }
     }
     public NFTRankUp(NFTId: string, rankUpNum: number) {
@@ -39,8 +39,26 @@ export default class PioneerDevelopMgr {
         if (model != undefined) {
             model.rankUp(rankUpNum);
             this._saveLocalData();
-            NotificationMgr.triggerEvent(NotificationName.NFTDidRankUp);
+            NotificationMgr.triggerEvent(NotificationName.NFTDIDRANKUP);
         }
+    }
+    public NFTForgetSkill(NFTId: string, skillIndex: number) {
+        const model = this._develpDatas.find((v) => v.uniqueId == NFTId);
+        if (model == undefined) {
+            return;
+        }
+        model.forgetSkill(skillIndex);
+        this._saveLocalData();
+        NotificationMgr.triggerEvent(NotificationName.NFTDIDFORGETSKILL);
+    }
+    public NFTLearnSkill(NFTId: string, skillId: string) {
+        const model = this._develpDatas.find((v) => v.uniqueId == NFTId);
+        if (model == undefined) {
+            return;
+        }
+        model.learnSkill(skillId);
+        this._saveLocalData();
+        NotificationMgr.triggerEvent(NotificationName.NFTDIDLEARNSKILL);
     }
 
     private _localStorageKey: string = "local_pioneer_develop";

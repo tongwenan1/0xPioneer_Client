@@ -311,7 +311,6 @@ export class PioneersDataMgr {
     }
 
     public bindPlayerNFT(pioneerId: string, NFTId: string) {
-        console.log("exce idnft: " + NFTId);
         const findPioneer = this.getById(pioneerId) as MapPlayerPioneerObject;
         if (!!findPioneer) {
             findPioneer.NFTId = NFTId;

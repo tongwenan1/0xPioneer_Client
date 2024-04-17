@@ -34,12 +34,12 @@ export class NTFLevelUpUI extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        NotificationMgr.addListener(NotificationName.NFTDidLevelUp, this._onNFTDidLevelUp, this);
+        NotificationMgr.addListener(NotificationName.NFTDIDLEVELUP, this._onNFTDidLevelUp, this);
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(NotificationName.NFTDidLevelUp, this._onNFTDidLevelUp, this);
+        NotificationMgr.removeListener(NotificationName.NFTDIDLEVELUP, this._onNFTDidLevelUp, this);
     }
     protected viewPopAnimation(): boolean {
         return true;

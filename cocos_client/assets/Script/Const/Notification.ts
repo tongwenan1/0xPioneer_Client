@@ -108,7 +108,8 @@ export enum NotificationName {
 
 
 
-
-    NFTDidLevelUp,
-    NFTDidRankUp
+    NFTDIDLEVELUP,
+    NFTDIDRANKUP,
+    NFTDIDFORGETSKILL,
+    NFTDIDLEARNSKILL
 }

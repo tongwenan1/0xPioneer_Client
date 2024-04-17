@@ -32,7 +32,10 @@ export interface NFTPioneerSkillEffectConfigData {
 }
 
 
-
+export interface NFTPioneerSkil {
+    id: string,
+    isOriginal: boolean
+} 
 
 export class NFTPioneerModel {
     public levelUp(levelUpNum: number) {
@@ -48,6 +51,18 @@ export class NFTPioneerModel {
         const resultRankUpNum: number = Math.min(rankUpNum, this._rankLimit - this._rank);
         this._rank += resultRankUpNum;
         this._levelLimit += (resultRankUpNum * (ConfigConfig.getConfig(ConfigType.NFTLevelLimitPerRankAddNum) as NFTLevelLimitPerRankAddNumParam).value);
+    }
+    public forgetSkill(index: number) {
+        if (index < 0 || index >= this._skills.length) {
+            return;
+        }
+        this._skills.splice(index, 1);
+    }
+    public learnSkill(skillId: string) {
+        this._skills.push({
+            id: skillId,
+            isOriginal: false
+        });
     }
 
     public get uniqueId(): string {
@@ -101,7 +116,7 @@ export class NFTPioneerModel {
     public get iqGrowValue(): number {
         return this._iqGrowValue;
     }
-    public get skills(): string[] {
+    public get skills(): NFTPioneerSkil[] {
         return this._skills;
     }
     public convertConfigToModel(uniqueId: string, config: NFTPioneerConfigData) {
@@ -144,7 +159,10 @@ export class NFTPioneerModel {
             const skillLength: number = Math.min(config.skill.length, (ConfigConfig.getConfig(ConfigType.NFTRaritySkillInitNum) as NFTRaritySkillInitNumParam).initNumMap.get(this._rarity));
             
             for (let i = 0; i < skillLength; i++) {
-                this._skills.push(config.skill[i]);
+                this._skills.push({
+                    id: config.skill[i],
+                    isOriginal: true
+                });
             }
         }
     }
@@ -191,5 +209,5 @@ export class NFTPioneerModel {
     private _hpGrowValue: number;
     private _speedGrowValue: number;
     private _iqGrowValue: number;
-    private _skills: string[];
+    private _skills: NFTPioneerSkil[];
 }

@@ -18,9 +18,6 @@ import {
     labelAssembler,
 } from "cc";
 import ViewController from "../BasicView/ViewController";
-import { CountType } from "../Const/Count";
-import ItemConfig from "../Config/ItemConfig";
-import ItemData, { ItemType } from "../Const/Item";
 import { NFTPioneerModel } from "../Const/PioneerDevelopDefine";
 import { LanMgr, PioneerDevelopMgr } from "../Utils/Global";
 import UIPanelManger from "../Basic/UIPanelMgr";
@@ -32,6 +29,8 @@ import { NTFRankUpUI } from "./NTFRankUpUI";
 import ConfigConfig from "../Config/ConfigConfig";
 import { ConfigType, NFTRaritySkillLimitNumParam } from "../Const/Config";
 import NFTSkillConfig from "../Config/NFTSkillConfig";
+import { NFTSkillDetailUI } from "./NFTSkillDetailUI";
+import { NFTSkillLearnUI } from "./NFTSkillLearnUI";
 const { ccclass, property } = _decorator;
 
 @ccclass("NFTInfoUI")
@@ -63,14 +62,18 @@ export class NFTInfoUI extends ViewController {
         this._skillAddItem = this._skillContent.getChildByPath("AddItem");
         this._skillAddItem.removeFromParent();
 
-        NotificationMgr.addListener(NotificationName.NFTDidLevelUp, this._refreshUI, this);
-        NotificationMgr.addListener(NotificationName.NFTDidRankUp, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.NFTDIDLEVELUP, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.NFTDIDRANKUP, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.NFTDIDLEARNSKILL, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.NFTDIDFORGETSKILL, this._refreshUI, this);
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(NotificationName.NFTDidLevelUp, this._refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.NFTDidRankUp, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.NFTDIDLEVELUP, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.NFTDIDRANKUP, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.NFTDIDLEARNSKILL, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.NFTDIDFORGETSKILL, this._refreshUI, this);
     }
     protected viewPopAnimation(): boolean {
         return true;
@@ -124,8 +127,8 @@ export class NFTInfoUI extends ViewController {
             const item = instantiate(this._skillItem);
             item.active = true;
             item.parent = this._skillContent;
-            item.getChildByPath("item").getComponent(Label).string = LanMgr.getLanById(NFTSkillConfig.getById(data.skills[i]).name);
-            item.getComponent(Button).clickEvents[0].customEventData = data.skills[i];
+            item.getChildByPath("item").getComponent(Label).string = LanMgr.getLanById(NFTSkillConfig.getById(data.skills[i].id).name);
+            item.getComponent(Button).clickEvents[0].customEventData = i.toString();
             this._skillAllItems.push(item);
         }
         if (data.skills.length < currentSkillLimit) {
@@ -180,11 +183,21 @@ export class NFTInfoUI extends ViewController {
             }
         }
     }
-    private onTapSkill(event: Event, customEventData: string) {
-        const skillId = customEventData;
-        
+    private async onTapSkill(event: Event, customEventData: string) {
+        const data = this._NFTDatas[this._currentIndex];
+        const index = parseInt(customEventData);
+        const result = await UIPanelManger.inst.pushPanel(UIName.NFTSkillDetailUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(NFTSkillDetailUI).showItem(data, index);
     }
     private async onTapAddSkill() {
-
+        const data = this._NFTDatas[this._currentIndex];
+        const result = await UIPanelManger.inst.pushPanel(UIName.NFTSkillLearnUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(NFTSkillLearnUI).showItem(data);
     }
 }

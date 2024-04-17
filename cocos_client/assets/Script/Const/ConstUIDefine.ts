@@ -27,7 +27,7 @@ export enum UIName {
     NFTLevelUpUI = "prefab/ui/NFTLevelUpUI",
     NFTRankUpUI = "prefab/ui/NFTRankUpUI",
     NFTSkillDetailUI = "prefab/ui/NFTSkillDetailUI",
-    
+    NFTSkillLearnUI = "prefab/ui/NFTSkillLearnUI",
 }
 
 export enum GameName {
@@ -38,4 +38,5 @@ export enum HUDName {
     CommonTip = "prefab/hud/HUDView",
     Loading = "prefab/hud/LoadingUI",
     ResourceGetted = "prefab/hud/ResourceGettedView",
+    Alter = "prefab/hud/AlterView",
 }

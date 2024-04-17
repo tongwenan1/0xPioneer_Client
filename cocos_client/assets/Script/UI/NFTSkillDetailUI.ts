@@ -1,43 +1,43 @@
-import {
-    _decorator,
-    Component,
-    Label,
-    Node,
-    Sprite,
-    SpriteFrame,
-    Vec3,
-    Button,
-    EventHandler,
-    v2,
-    Vec2,
-    Prefab,
-    Slider,
-    instantiate,
-    RichText,
-    randomRangeInt,
-} from "cc";
-import { LanMgr } from "../Utils/Global";
+import { _decorator, Label, Node, RichText } from "cc";
+import { LanMgr, PioneerDevelopMgr } from "../Utils/Global";
 import ViewController from "../BasicView/ViewController";
-import ItemData, { ItemType } from "../Const/Item";
-import UIPanelManger from "../Basic/UIPanelMgr";
-import { NFTPioneerModel } from "../Const/PioneerDevelopDefine";
+import UIPanelManger, { UIPanelLayerType } from "../Basic/UIPanelMgr";
+import { NFTPioneerModel, NFTPioneerSkillConfigData } from "../Const/PioneerDevelopDefine";
+
 import NFTSkillConfig from "../Config/NFTSkillConfig";
+import NFTSkillEffectConfig from "../Config/NFTSkillEffectConfig";
+import { HUDName } from "../Const/ConstUIDefine";
+import { AlterView } from "./View/AlterView";
 const { ccclass, property } = _decorator;
 
 @ccclass("NFTSkillDetailUI")
 export class NFTSkillDetailUI extends ViewController {
     public async showItem(data: NFTPioneerModel, skillIndex: number) {
-        const skillConfig = NFTSkillConfig.getById(data.skills[skillIndex]);
-        if (skillConfig != null) {
-            this.node.getChildByPath("__ViewContent/Name").getComponent(Label).string = LanMgr.getLanById(skillConfig.name);
-            
+        if (data == null || skillIndex < 0 || skillIndex >= data.skills.length) {
+            return;
         }
+
+        const skillConfig = NFTSkillConfig.getById(data.skills[skillIndex].id);
+        if (skillConfig == null) {
+            return;
+        }
+        this._data = data;
+        this._skillIndex = skillIndex;
+        this._skillConfig = skillConfig;
+
+        this.node.getChildByPath("__ViewContent/Name").getComponent(Label).string = LanMgr.getLanById(skillConfig.name);
+
+        const desIds: string[] = [];
+        for (const effect of skillConfig.effect) {
+            desIds.push(effect.toString());
+        }
+        this.node.getChildByPath("__ViewContent/DescTxt").getComponent(RichText).string = NFTSkillEffectConfig.getDesByIds(desIds);
+        this.node.getChildByPath("__ViewContent/btnUse").active = !data.skills[skillIndex].isOriginal;
     }
 
-    private _items: ItemData[] = [];
-    private _isGet: boolean;
-    private _canGetItem: ItemData = null;
-    private _closeCallback: () => void;
+    private _data: NFTPioneerModel = null;
+    private _skillIndex: number = -1;
+    private _skillConfig: NFTPioneerSkillConfigData = null;
     protected viewPopAnimation(): boolean {
         return true;
     }
@@ -50,5 +50,15 @@ export class NFTSkillDetailUI extends ViewController {
         await this.playExitAnimation();
         UIPanelManger.inst.popPanel();
     }
-
+    private async onTapForget() {
+        const result = await UIPanelManger.inst.pushPanel(HUDName.Alter, UIPanelLayerType.HUD);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(AlterView).showTip(LanMgr.replaceLanById("106006", [this._data.name, LanMgr.getLanById(this._skillConfig.name)]), async () => {
+            PioneerDevelopMgr.NFTForgetSkill(this._data.uniqueId, this._skillIndex);
+            await this.playExitAnimation();
+            UIPanelManger.inst.popPanel();
+        });
+    }
 }

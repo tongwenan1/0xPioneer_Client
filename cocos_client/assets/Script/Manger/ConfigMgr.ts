@@ -16,6 +16,7 @@ import MapBuildingConfig from "../Config/MapBuildingConfig";
 import NFTPioneerConfig from "../Config/NFTPioneerConfig";
 import NFTPioneerNameConfig from "../Config/NFTPioneerNameConfig";
 import NFTSkillConfig from "../Config/NFTSkillConfig";
+import NFTSkillEffectConfig from "../Config/NFTSkillEffectConfig";
 import PioneerConfig from "../Config/PioneerConfig";
 import ProtobufConfig from "../Config/ProtobufConfig";
 import TalkConfig from "../Config/TalkConfig";
@@ -41,6 +42,7 @@ export default class ConfigMgr {
         if (!(await NFTPioneerConfig.init())) return false;
         if (!(await NFTPioneerNameConfig.init())) return false;
         if (!(await NFTSkillConfig.init())) return false;
+        if (!(await NFTSkillEffectConfig.init())) return false;
         if (!(await PioneerConfig.init())) return false;
         if (!(await TalkConfig.init())) return false;
         if (!(await TaskConfig.init())) return false;

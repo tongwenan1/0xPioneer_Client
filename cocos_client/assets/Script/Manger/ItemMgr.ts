@@ -33,6 +33,15 @@ export default class ItemMgr {
     public get localItemDatas(): ItemData[] {
         return this._localItemDatas;
     }
+    public get localSkillBookDatas(): ItemData[] {
+        return this._localItemDatas.filter((item) => {
+            const config = ItemConfig.getById(item.itemConfigId);
+            if (config == null) {
+                return false;
+            }
+            return config.itemType == ItemType.SkillBook;
+        });
+    }
     public get localBackpackItemDatas(): ItemData[] {
         return this._localItemDatas.filter((item) => {
             const config = ItemConfig.getById(item.itemConfigId);

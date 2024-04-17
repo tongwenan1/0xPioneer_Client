@@ -1,6 +1,6 @@
 import { _decorator, Node, Button, Label } from "cc";
 import { ClaimRewardUI } from "./ClaimRewardUI";
-import { LanMgr, UserInfoMgr } from "../Utils/Global";
+import { ItemMgr, LanMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TaskListUI } from "./TaskListUI";
 import { NewSettlementUI } from "./NewSettlementUI";
@@ -14,6 +14,7 @@ import UIPanelManger from "../Basic/UIPanelMgr";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import { DataMgr } from "../Data/DataMgr";
 import { NFTBackpackUI } from "./NFTBackpackUI";
+import ItemData from "../Const/Item";
 
 const { ccclass, property } = _decorator;
 
@@ -81,7 +82,7 @@ export class MainUI extends ViewController implements UserInfoEvent {
         //DataMgr.n.websocketMsg.create_pioneer({
         //    type: "0"
         //});
-        // ItemMgr.addItem([new ItemData("7", 1)]);
+        ItemMgr.addItem([new ItemData("5001", 4)]);
         // ItemMgr.addItem([new ItemData("8", 1)]);
         // ItemMgr.addItem([new ItemData("9", 1)]);
         // ItemMgr.addItem([new ItemData("10", 1)]);
