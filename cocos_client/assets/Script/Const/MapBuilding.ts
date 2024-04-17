@@ -1,7 +1,6 @@
 import { Vec2 } from "cc";
 import { BuildingStayPosType, MapBuildingType } from "./BuildingDefine";
 import { MapMemberFactionType } from "./ConstDefine";
-import { MapDecoratePosMode } from "./Model/MapDecorateModelDefine";
 
 export interface MapBuildingConfigData {
     block: any;
@@ -79,6 +78,10 @@ export interface MapBuildingResourceObject extends MapBuildingResourceData {
 export type MapBuildingObject = MapBuildingMainCityObject | MapBuildingResourceObject | MapBuildingBaseObject;
 
 // decorate
+export enum MapDecoratePosMode {
+    Tiled = "tiled",
+    World = "world",
+}
 export interface MapDecorateData {
     id: string;
     name: string;

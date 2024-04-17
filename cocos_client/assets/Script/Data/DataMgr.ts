@@ -47,8 +47,6 @@ export class DataMgr {
         let p: s2c_user.Iget_pioneers_res = e.data;
         // TODO: update all pioneers data
 
-        // pioneernft func
-        let testpioneer: share.Ipioneer_info = { type: "1" };
-        DataMgr.s.pioneers.add(testpioneer);
+        
     };
 }
