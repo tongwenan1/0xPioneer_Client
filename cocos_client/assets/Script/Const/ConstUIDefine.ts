@@ -26,6 +26,8 @@ export enum UIName {
     NFTInfoUI = "prefab/ui/NFTInfoUI",
     NFTLevelUpUI = "prefab/ui/NFTLevelUpUI",
     NFTRankUpUI = "prefab/ui/NFTRankUpUI",
+    NFTSkillDetailUI = "prefab/ui/NFTSkillDetailUI",
+    
 }
 
 export enum GameName {

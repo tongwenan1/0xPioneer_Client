@@ -2,6 +2,7 @@ import ConfigConfig from "../Config/ConfigConfig";
 import NFTPioneerNameConfig from "../Config/NFTPioneerNameConfig";
 import CommonTools from "../Tool/CommonTools";
 import { ConfigType, NFTLevelInitLimitNumParam, NFTLevelLimitPerRankAddNumParam, NFTRankLimitNumParam, NFTRaritySkillInitNumParam } from "./Config";
+import { GameExtraEffectType, GameSingleParamEffectType, GameDoubleParamEffectType } from "./ConstDefine";
 
 export interface NFTPioneerConfigData {
     id: string;
@@ -23,6 +24,15 @@ export interface NFTPioneerSkillConfigData {
     rank: number;
     effect: number[];
 }
+export interface NFTPioneerSkillEffectConfigData {
+    id: string;
+    type: GameExtraEffectType;
+    para: GameSingleParamEffectType | GameDoubleParamEffectType;
+    des: string;
+}
+
+
+
 
 export class NFTPioneerModel {
     public levelUp(levelUpNum: number) {

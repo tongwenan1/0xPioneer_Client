@@ -24,11 +24,18 @@ import ItemConfig from "../Config/ItemConfig";
 import ItemData, { ItemType } from "../Const/Item";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { NFTPioneerModel } from "../Const/PioneerDevelopDefine";
+import NFTSkillConfig from "../Config/NFTSkillConfig";
 const { ccclass, property } = _decorator;
 
 @ccclass("NFTSkillDetailUI")
 export class NFTSkillDetailUI extends ViewController {
-    public async showItem(data: NFTPioneerModel, skillIndex: number) {}
+    public async showItem(data: NFTPioneerModel, skillIndex: number) {
+        const skillConfig = NFTSkillConfig.getById(data.skills[skillIndex]);
+        if (skillConfig != null) {
+            this.node.getChildByPath("__ViewContent/Name").getComponent(Label).string = LanMgr.getLanById(skillConfig.name);
+            
+        }
+    }
 
     private _items: ItemData[] = [];
     private _isGet: boolean;
@@ -46,4 +53,5 @@ export class NFTSkillDetailUI extends ViewController {
         await this.playExitAnimation();
         UIPanelManger.inst.popPanel();
     }
+
 }

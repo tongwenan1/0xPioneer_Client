@@ -47,6 +47,8 @@ export enum GameExtraEffectType {
     TREASURE_PROGRESS = 8,
     VISION_RANGE = 9
 }
+export type GameSingleParamEffectType = [number];
+export type GameDoubleParamEffectType = [number, number];
 
 export const enum ECursorType {
     Common = 0,
