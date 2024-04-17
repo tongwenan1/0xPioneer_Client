@@ -20,8 +20,7 @@ import {
 import GameMainHelper from "../../Game/Helper/GameMainHelper";
 import { NotificationName } from "../../Const/Notification";
 import NotificationMgr from "../../Basic/NotificationMgr";
-import { Ichange_pioneer_type, WebsocketMsg, c2s_user, s2c_user } from "../../Net/msg/WebsocketMsg";
-import { NetworkMgr } from "../../Net/NetworkMgr";
+import { Ichange_pioneer_type, s2c_user } from "../../Net/msg/WebsocketMsg";
 import CommonTools from "../../Tool/CommonTools";
 import { TaskFactionAction, TaskNpcGetNewTalkAction, TaskShowHideAction, TaskShowHideStatus } from "../../Const/TaskDefine";
 
@@ -100,24 +99,24 @@ export class PioneersDataMgr {
     }
     public changeActionType(pioneerId: string, type: MapPioneerActionType, beginTimeStamp: number = 0, useTime: number = 0, eventId: string = null) {
         const findPioneer = this.getById(pioneerId);
-        if (findPioneer != undefined) {
-            findPioneer.actionType = type;
-            findPioneer.actionBeginTimeStamp = beginTimeStamp;
-            findPioneer.actionEndTimeStamp = beginTimeStamp + useTime;
-            findPioneer.actionEventId = eventId;
-            this._saveObj();
-            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: pioneerId });
-        }
+        if (findPioneer == undefined) return;
+
+        findPioneer.actionType = type;
+        findPioneer.actionBeginTimeStamp = beginTimeStamp;
+        findPioneer.actionEndTimeStamp = beginTimeStamp + useTime;
+        findPioneer.actionEventId = eventId;
+        this._saveObj();
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: pioneerId });
     }
     public changeEventStatus(pioneerId: string, status: MapPioneerEventStatus, beginTimeStamp: number = 0, useTime: number = 0) {
         const findPioneer = this.getById(pioneerId);
-        if (findPioneer != undefined) {
-            findPioneer.eventStatus = status;
-            findPioneer.actionBeginTimeStamp = beginTimeStamp;
-            findPioneer.actionEndTimeStamp = beginTimeStamp + useTime;
-            this._saveObj();
-            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENTSTATUS_CHANGED, { id: pioneerId });
-        }
+        if (findPioneer == undefined) return;
+
+        findPioneer.eventStatus = status;
+        findPioneer.actionBeginTimeStamp = beginTimeStamp;
+        findPioneer.actionEndTimeStamp = beginTimeStamp + useTime;
+        this._saveObj();
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENTSTATUS_CHANGED, { id: pioneerId });
     }
     public changeShow(pioneerId: string, show: boolean, delayTime: number = 0): boolean {
         const pioneer = this.getById(pioneerId);
@@ -459,7 +458,7 @@ export class PioneersDataMgr {
         }
         // default player id is "0"
         this._currentActionPioneerId = "pioneer_0";
-        
+
         // NetworkMgr.websocket.on("change_pioneer_res", this._onChangePioneer);
         // NetworkMgr.websocket.on("begin_pioneer_move_res", this._onBeginPioneerMove);
         this._initInterval();

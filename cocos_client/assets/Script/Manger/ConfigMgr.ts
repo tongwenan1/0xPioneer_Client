@@ -31,18 +31,18 @@ export default class ConfigMgr {
         if (!(await DropConfig.init())) return false;
         if (!(await EvaluationConfig.init())) return false;
         if (!(await EventConfig.init())) return false;
+        if (!(await InnerBuildingConfig.init())) return false;
+        if (!(await InnerBuildingLvlUpConfig.init())) return false;
         if (!(await ItemConfig.init())) return false;
         if (!(await LanConfig.init())) return false;
         if (!(await LvlupConfig.init())) return false;
         if (!(await MapBuildingConfig.init())) return false;
-        if (!(await InnerBuildingConfig.init())) return false;
-        if (!(await InnerBuildingLvlUpConfig.init())) return false;
-        if (!(await TalkConfig.init())) return false;
-        if (!(await TaskConfig.init())) return false;
-        if (!(await TaskStepConfigData.init())) return false;
         if (!(await NFTPioneerConfig.init())) return false;
         if (!(await NFTPioneerNameConfig.init())) return false;
         if (!(await PioneerConfig.init())) return false;
+        if (!(await TalkConfig.init())) return false;
+        if (!(await TaskConfig.init())) return false;
+        if (!(await TaskStepConfigData.init())) return false;
 
         // abi
         const chainId = ChainConfig.getCurrentChainId();
