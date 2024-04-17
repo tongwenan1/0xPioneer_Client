@@ -82,7 +82,7 @@ export class MainUI extends ViewController implements UserInfoEvent {
         //DataMgr.n.websocketMsg.create_pioneer({
         //    type: "0"
         //});
-        ItemMgr.addItem([new ItemData("5001", 4)]);
+        // ItemMgr.addItem([new ItemData("5001", 4)]);
         // ItemMgr.addItem([new ItemData("8", 1)]);
         // ItemMgr.addItem([new ItemData("9", 1)]);
         // ItemMgr.addItem([new ItemData("10", 1)]);

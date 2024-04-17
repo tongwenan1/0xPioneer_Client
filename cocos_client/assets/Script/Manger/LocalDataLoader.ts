@@ -6,8 +6,7 @@ export default class LocalDataLoader {
     public async loadLocalDatas() {
         this._importSaveOnStartIfExists();
 
-        if (!await ArtifactMgr.initData()) return;
-
+        await ArtifactMgr.initData();
         await UserInfoMgr.initData();
         await BuildingMgr.initData();
         await TaskMgr.initData();

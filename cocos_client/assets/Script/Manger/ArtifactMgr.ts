@@ -9,6 +9,7 @@ import { NotificationName } from "../Const/Notification";
 import Config from "../Const/Config";
 import { ArtifactArrangeType } from "../Const/Artifact";
 import { GameExtraEffectType } from "../Const/ConstDefine";
+import { DataMgr } from "../Data/DataMgr";
 
 export default class ArtifactMgr {
 
@@ -16,17 +17,15 @@ export default class ArtifactMgr {
         this._saveLocalData();
     }
 
-    private _maxArtifactLength: number = 100;
-    private _localStorageKey: string = "artifact_data";
     private _localArtifactDatas: ArtifactData[] = [];
 
     private _itemIconSpriteFrames = {};
 
     public get artifactIsFull(): boolean {
-        return this._localArtifactDatas.length >= this._maxArtifactLength;
+        return DataMgr.s.artifact.artifactIsFull();
     }
     public get maxItemLength(): number {
-        return this._maxArtifactLength;
+        return DataMgr.s.artifact.getObj_artifact_maxLength();
     }
     public get localArtifactDatas(): ArtifactData[] {
         return this._localArtifactDatas;
@@ -45,19 +44,9 @@ export default class ArtifactMgr {
         return this._itemIconSpriteFrames[iconName];
     }
 
-    public async initData(): Promise<boolean> {
+    public async initData(): Promise<void> {
         // load local artifact data
-        const jsonStr = sys.localStorage.getItem(this._localStorageKey);
-        if (jsonStr) {
-            try {
-                this._localArtifactDatas = JSON.parse(jsonStr);
-                return true;
-            } catch (e) {
-                CLog.error("ArtifactMgr initData error", e);
-                return false;
-            }
-        }
-        return true;
+        this._localArtifactDatas = DataMgr.s.artifact.getObj();
     }
 
     public getOwnArtifactCount(artifactConfigId: string): number {
@@ -160,44 +149,7 @@ export default class ArtifactMgr {
     // }
 
     public addArtifact(artifacts: ArtifactData[]): void {
-        if (artifacts.length <= 0) {
-            return;
-        }
-        let changed: boolean = false;
-        for (const artifact of artifacts) {
-            const artifactConfig = ArtifactConfig.getById(artifact.artifactConfigId);
-            if (artifactConfig == null) continue;
-            if (this.artifactIsFull) continue;
-
-            changed = true;
-
-            artifact.addTimeStamp = new Date().getTime();
-            this._localArtifactDatas.push(artifact);
-
-            if (artifactConfig.effect != null) {
-                for (const temple of artifactConfig.effect) {
-                    const effectData = ArtifactEffectConfig.getById(temple);
-                }
-            }
-            if (artifactConfig.prop != null) {
-                for (let j = 0; j < artifactConfig.prop.length; j++) {
-                    const propType = artifactConfig.prop[j];
-                    const propValue = artifactConfig.prop_value[j];
-                    // wait xx
-                    // if (propType == AttrType.HP) {
-                    //     PioneerMgr.pioneerChangeAllPlayerHpMax({
-                    //         type: propValue[0],
-                    //         value: propValue[1] * artifact.count,
-                    //     });
-                    // } else if (propType == AttrType.ATTACK) {
-                    //     PioneerMgr.pioneerChangeAllPlayerAttack({
-                    //         type: propValue[0],
-                    //         value: propValue[1] * artifact.count,
-                    //     });
-                    // }
-                }
-            }
-        }
+        const changed = DataMgr.s.artifact.addObj_artifact(artifacts);
         this.arrange(ArtifactArrangeType.Rarity);
         if (changed) {
             this._saveLocalData();
@@ -252,23 +204,14 @@ export default class ArtifactMgr {
         //     }
         // }
         // this._saveLocalData();
-        if (sortType == ArtifactArrangeType.Recently) {
-            this._localArtifactDatas.sort((a, b) => {
-                return b.addTimeStamp - a.addTimeStamp;
-            });
-        } else if (sortType == ArtifactArrangeType.Rarity) {
-            //bigger in front
-            this._localArtifactDatas.sort((a, b) => {
-                return ArtifactConfig.getById(b.artifactConfigId).rank - ArtifactConfig.getById(a.artifactConfigId).rank;
-            });
-        }
+        DataMgr.s.artifact.getObj_artifact_sort(sortType);
 
         NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
     }
 
     private _saveLocalData() {
         if (Config.canSaveLocalData) {
-            localStorage.setItem(this._localStorageKey, JSON.stringify(this._localArtifactDatas));
+            DataMgr.s.artifact.loadObj();
         }
     }
 }
