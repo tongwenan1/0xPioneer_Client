@@ -1,6 +1,6 @@
 import { _decorator, Asset, AssetManager, Component, Node } from "cc";
 import ViewController from "./BasicView/ViewController";
-import { AudioMgr, LocalDataLoader, ResourcesMgr } from "./Utils/Global";
+import { AudioMgr, LanMgr, LocalDataLoader, ResourcesMgr } from "./Utils/Global";
 import ConfigMgr from "./Manger/ConfigMgr";
 import NotificationMgr from "./Basic/NotificationMgr";
 import { NotificationName } from "./Const/Notification";
@@ -23,8 +23,15 @@ export class Main extends ViewController {
     protected async viewDidLoad(): Promise<void> {
         super.viewDidLoad();
 
+        // listener
         NotificationMgr.addListener(NotificationName.GAME_INITED, this._onGameInited, this);
         NotificationMgr.addListener(NotificationName.USER_LOGIN_SUCCEED, this._onUserLoginSucceed, this);
+
+        // audio
+        AudioMgr.prepareAudioSource();
+
+        // language
+        LanMgr.initData();
 
         // DataMgr init
         if (!(await DataMgr.init())) return;
@@ -42,8 +49,7 @@ export class Main extends ViewController {
             }
         }
 
-        // audio prepare
-        AudioMgr.prepareAudioSource();
+
 
         // debug mode
         if (GAME_ENV_IS_DEBUG) {

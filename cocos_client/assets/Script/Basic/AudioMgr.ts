@@ -1,7 +1,23 @@
 import { AudioClip, AudioSource, Node, Scene, director, resources } from "cc";
-import Config from "../Const/Config";
 
 export default class AudioMgr {
+    private _currentScene: Scene = null;
+    private _musicSource: AudioSource = null;
+    private _effectSource: AudioSource = null;
+    private _musicVolume: number = 1.0;
+    private _effectVolume: number = 1.0;
+
+    private _music_key = "localMusicVolume";
+    private _effect_key = "localEffectVolume";
+
+    public get musicVolume(): number {
+        return this._musicVolume;
+    }
+    public get effectVolume(): number {
+        return this._effectVolume;
+    }
+
+    constructor() {}
 
     public prepareAudioSource() {
         this._currentScene = director.getScene();
@@ -15,13 +31,13 @@ export default class AudioMgr {
         this._effectSource = effectNode.addComponent(AudioSource);
         this._currentScene.addChild(effectNode);
 
-        const localMusicVolume = localStorage.getItem("localMusicVolume");
+        const localMusicVolume = localStorage.getItem(this._music_key);
         if (localMusicVolume != null) {
             this._musicVolume = parseFloat(localMusicVolume);
         }
         this._musicSource.volume = this._musicVolume;
 
-        const localEffectVolume = localStorage.getItem("localEffectVolume");
+        const localEffectVolume = localStorage.getItem(this._effect_key);
         if (localEffectVolume != null) {
             this._effectVolume = parseFloat(localEffectVolume);
         }
@@ -42,12 +58,12 @@ export default class AudioMgr {
             this._musicSource.play();
         });
     }
+
     public changeMusicVolume(volume: number) {
         this._musicVolume = volume;
         this._musicSource.volume = volume;
-        if (Config.canSaveLocalData) {
-            localStorage.setItem("localMusicVolume", volume.toString());
-        }
+
+        localStorage.setItem(this._music_key, volume.toString());
     }
 
     public playEffect(path: string) {
@@ -61,30 +77,11 @@ export default class AudioMgr {
             this._effectSource.playOneShot(clip);
         });
     }
+
     public changeEffectVolume(volume: number) {
         this._effectVolume = volume;
         this._effectSource.volume = volume;
-        if (Config.canSaveLocalData) {
-            localStorage.setItem("localEffectVolume", volume.toString());
-        }
-    }
 
-    public get musicVolume(): number {
-        return this._musicVolume
-    }
-    public get effectVolume(): number {
-        return this._effectVolume;
-    }
-
-    private _currentScene: Scene = null;
-    private _musicSource: AudioSource = null;
-    private _effectSource: AudioSource = null;
-    private _musicVolume: number = 1.0;
-    private _effectVolume: number = 1.0;
-
-
-    constructor() {
+        localStorage.setItem(this._effect_key, volume.toString());
     }
 }
-
-

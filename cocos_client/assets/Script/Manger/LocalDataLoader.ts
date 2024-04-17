@@ -8,7 +8,6 @@ export default class LocalDataLoader {
 
         if (!await ArtifactMgr.initData()) return;
         if (!await CountMgr.initData()) return;
-        if (!await LanMgr.initData()) return;
 
         await UserInfoMgr.initData();
         await BuildingMgr.initData();
