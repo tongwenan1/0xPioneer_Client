@@ -1,5 +1,5 @@
 import { Asset, __private, resources, sys } from "cc";
-import { GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { GameExtraEffectType, GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
 import { ArtifactMgr, CountMgr, ItemMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
@@ -14,7 +14,6 @@ import { LvlupConfigData } from "../Const/Lvlup";
 import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import Config from "../Const/Config";
-import { ArtifactEffectType } from "../Const/Artifact";
 import { DataMgr } from "../Data/DataMgr";
 import { MapPioneerObject } from "../Const/PioneerDefine";
 
@@ -293,8 +292,8 @@ export default class UserInfoMgr {
         const original = this._explorationValue;
         let addNum = value - original;
         const effect = ArtifactMgr.getEffectiveEffect(this.artifactStoreLevel);
-        if (effect != null && effect.has(ArtifactEffectType.TREASURE_PROGRESS)) {
-            addNum = Math.floor(addNum + addNum * effect.get(ArtifactEffectType.TREASURE_PROGRESS));
+        if (effect != null && effect.has(GameExtraEffectType.TREASURE_PROGRESS)) {
+            addNum = Math.floor(addNum + addNum * effect.get(GameExtraEffectType.TREASURE_PROGRESS));
         }
         this._explorationValue = original + addNum;
 
@@ -391,8 +390,8 @@ export default class UserInfoMgr {
                         let generateNumPerMin: number = generateConfig.output;
                         let effectNum: number = 0;
                         const artifactEffect = ArtifactMgr.getEffectiveEffect(this.artifactStoreLevel);
-                        if (artifactEffect != null && artifactEffect.has(ArtifactEffectType.ENERGY_GENERATE)) {
-                            effectNum = artifactEffect.get(ArtifactEffectType.ENERGY_GENERATE);
+                        if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.ENERGY_GENERATE)) {
+                            effectNum = artifactEffect.get(GameExtraEffectType.ENERGY_GENERATE);
                         }
                         generateNumPerMin = Math.floor(generateNumPerMin + generateNumPerMin * effectNum);
                         this._generateEnergyInfo.totalEnergyNum = Math.min(generateConfig.storage, this._generateEnergyInfo.totalEnergyNum + generateNumPerMin);

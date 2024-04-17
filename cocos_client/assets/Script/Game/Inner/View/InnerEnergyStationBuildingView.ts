@@ -9,10 +9,8 @@ import { UIName } from "../../../Const/ConstUIDefine";
 import { TransformToEnergyUI } from "../../../UI/Inner/TransformToEnergyUI";
 import ItemData from "../../../Const/Item";
 import { NotificationName } from "../../../Const/Notification";
-import { ResourceCorrespondingItem } from "../../../Const/ConstDefine";
-import InnerBuildingConfig from "../../../Config/InnerBuildingConfig";
+import { GameExtraEffectType, ResourceCorrespondingItem } from "../../../Const/ConstDefine";
 import UIPanelManger from "../../../Basic/UIPanelMgr";
-import { ArtifactEffectType } from "../../../Const/Artifact";
 
 const { ccclass, property } = _decorator;
 
@@ -88,8 +86,8 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
 
                     let showOutput: string = generateConfig.output.toString();
                     const artifactEffect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
-                    if (artifactEffect != null && artifactEffect.has(ArtifactEffectType.ENERGY_GENERATE)) {
-                        const effectNum = Math.floor(generateConfig.output * artifactEffect.get(ArtifactEffectType.ENERGY_GENERATE));
+                    if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.ENERGY_GENERATE)) {
+                        const effectNum = Math.floor(generateConfig.output * artifactEffect.get(GameExtraEffectType.ENERGY_GENERATE));
                         if (effectNum > 0) {
                             showOutput += ("+" + effectNum);
                         }

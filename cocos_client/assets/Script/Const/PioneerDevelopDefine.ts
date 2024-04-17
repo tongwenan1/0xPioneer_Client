@@ -1,7 +1,7 @@
 import ConfigConfig from "../Config/ConfigConfig";
 import NFTPioneerNameConfig from "../Config/NFTPioneerNameConfig";
 import CommonTools from "../Tool/CommonTools";
-import { ConfigType, NFTLevelInitLimitNumParam, NFTLevelLimitPerRankAddNumParam, NFTRankLimitNumParam } from "./Config";
+import { ConfigType, NFTLevelInitLimitNumParam, NFTLevelLimitPerRankAddNumParam, NFTRankLimitNumParam, NFTRaritySkillInitNumParam } from "./Config";
 
 export interface NFTPioneerConfigData {
     id: string;
@@ -15,6 +15,13 @@ export interface NFTPioneerConfigData {
 export interface NFTPioneerNameConfigData {
     id: string;
     name: string;
+}
+
+export interface NFTPioneerSkillConfigData {
+    id: string;
+    name: string;
+    rank: number;
+    effect: number[];
 }
 
 export class NFTPioneerModel {
@@ -84,6 +91,9 @@ export class NFTPioneerModel {
     public get iqGrowValue(): number {
         return this._iqGrowValue;
     }
+    public get skills(): string[] {
+        return this._skills;
+    }
     public convertConfigToModel(uniqueId: string, config: NFTPioneerConfigData) {
         this._uniqueId = uniqueId;
         this._rarity = config.quality;
@@ -118,6 +128,15 @@ export class NFTPioneerModel {
 
         this._levelLimit = (ConfigConfig.getConfig(ConfigType.NFTLevelInitLimitNum) as NFTLevelInitLimitNumParam).limit;
         this._rankLimit = (ConfigConfig.getConfig(ConfigType.NFTRankLimitNum) as NFTRankLimitNumParam).limit;
+
+        this._skills = [];
+        if (config.skill != null) {
+            const skillLength: number = Math.min(config.skill.length, (ConfigConfig.getConfig(ConfigType.NFTRaritySkillInitNum) as NFTRaritySkillInitNumParam).initNumMap.get(this._rarity));
+            
+            for (let i = 0; i < skillLength; i++) {
+                this._skills.push(config.skill[i]);
+            }
+        }
     }
     public convertLocalDataToModel(localData: any) {
         this._uniqueId = localData._uniqueId;
@@ -137,10 +156,12 @@ export class NFTPioneerModel {
         this._hpGrowValue = localData._hpGrowValue;
         this._speedGrowValue = localData._speedGrowValue;
         this._iqGrowValue = localData._iqGrowValue;
+        this._skills = localData._skills;
     }
     public constructor() {
         this._level = 1;
         this._rank = 1;
+        this._skills = [];
     }
     private _uniqueId: string;
     private _rarity: number;
@@ -160,4 +181,5 @@ export class NFTPioneerModel {
     private _hpGrowValue: number;
     private _speedGrowValue: number;
     private _iqGrowValue: number;
+    private _skills: string[];
 }

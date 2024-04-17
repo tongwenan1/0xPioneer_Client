@@ -20,7 +20,7 @@ import {
     view,
 } from "cc";
 import { MapBuildingType } from "../../Const/BuildingDefine";
-import { ECursorType, MapMemberFactionType, MapMemberTargetType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
+import { ECursorType, GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
 import { UIHUDController } from "../../UI/UIHUDController";
 import { TilePos, TileHexDirection } from "../TiledMap/TileTool";
 import { OuterPioneerController } from "./OuterPioneerController";
@@ -33,7 +33,6 @@ import GameMainHelper from "../Helper/GameMainHelper";
 import ViewController from "../../BasicView/ViewController";
 import EventConfig from "../../Config/EventConfig";
 import Config from "../../Const/Config";
-import { ArtifactEffectType } from "../../Const/Artifact";
 import { DataMgr } from "../../Data/DataMgr";
 import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType, MapPioneerObject } from "../../Const/PioneerDefine";
 import { MapBuildingObject } from "../../Const/MapBuilding";
@@ -222,8 +221,8 @@ export class OuterTiledMapActionController extends ViewController {
                                         const visionPositions = [];
                                         let radialRange = UserInfoMgr.cityVision;
                                         const artifactEffect = ArtifactMgr.getEffectiveEffect(UserInfoMgr.artifactStoreLevel);
-                                        if (artifactEffect != null && artifactEffect.has(ArtifactEffectType.CITY_RADIAL_RANGE)) {
-                                            radialRange += artifactEffect.get(ArtifactEffectType.CITY_RADIAL_RANGE);
+                                        if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.CITY_RADIAL_RANGE)) {
+                                            radialRange += artifactEffect.get(GameExtraEffectType.CITY_RADIAL_RANGE);
                                         }
                                         const extAround = GameMainHelper.instance.tiledMapGetExtAround(centerPos, radialRange - 1);
                                         for (const temple of extAround) {
