@@ -16,14 +16,14 @@ export class CountDataMgr {
     private _data: CountData[];
     private _key = "localCount";
 
+    public constructor() {}
+
     public async loadObj() {
         if (this._data == null) {
             this._data = [];
             const data = localStorage.getItem(this._key);
             if (data) {
-                for (const d of JSON.parse(data)) {
-                    this._data.push(d);
-                }
+                this._data = JSON.parse(data) as CountData[];
             }
         }
         CLog.debug("CountDataMgr: loadObj, ", this._data);

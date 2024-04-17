@@ -26,6 +26,9 @@ import { TaskFactionAction, TaskNpcGetNewTalkAction, TaskShowHideAction, TaskSho
 import CLog from "../../Utils/CLog";
 
 export class PioneersDataMgr {
+
+    public constructor() {}
+
     //-------------------------------- public
     public async loadObj() {
         this._initData();

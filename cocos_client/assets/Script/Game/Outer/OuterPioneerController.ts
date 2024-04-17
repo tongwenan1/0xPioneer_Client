@@ -17,7 +17,6 @@ import { UserInfoEvent } from "../../Const/UserInfoDefine";
 import TalkConfig from "../../Config/TalkConfig";
 import LvlupConfig from "../../Config/LvlupConfig";
 import EventConfig from "../../Config/EventConfig";
-import GlobalData from "../../Data/GlobalData";
 import { OuterFightResultView } from "./View/OuterFightResultView";
 import ItemData from "../../Const/Item";
 import { NotificationName } from "../../Const/Notification";
@@ -710,7 +709,7 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
         const buildingId = data.buildingId;
         const eventId = data.eventId;
 
-        GlobalData.latestActiveEventState = {
+        DataMgr.s.battleReport.latestActiveEventState = {
             pioneerId: actionPioneerId,
             buildingId: buildingId,
             eventId: eventId,

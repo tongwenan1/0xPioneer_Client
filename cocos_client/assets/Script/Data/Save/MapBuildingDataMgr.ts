@@ -27,6 +27,8 @@ export class MapBuildingDataMgr {
     private _decorate_data: MapDecorateObject[];
     private _decorate_key: string = "local_decorate";
 
+    public constructor() {}
+
     private _loadObj_mapPositions(data: StayMapPosition[]) {
         const mapPositions: Vec2[] = [];
         for (const pos of data) {
@@ -59,7 +61,7 @@ export class MapBuildingDataMgr {
         }
 
         CLog.debug("MapBuildingDataMgr: loadObj/building_data, ", this._building_data);
-        CLog.debug("MapBuildingDataMgr: loadObj/decorate_data, ", this._building_data);
+        CLog.debug("MapBuildingDataMgr: loadObj/decorate_data, ", this._decorate_data);
     }
 
     // create buiding obj

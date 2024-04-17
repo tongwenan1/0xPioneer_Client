@@ -1,108 +1,105 @@
-import {_decorator, Button, Component, Label, Node, ProgressBar, RichText, Sprite, SpriteFrame} from 'cc';
+import { _decorator, Button, Component, Label, Node, ProgressBar, RichText, Sprite, SpriteFrame } from "cc";
 import CommonTools from "db://assets/Script/Tool/CommonTools";
-import BattleReportsMgrDefine, { BattleReportRecord, BattleReportType, LocationInfo } from '../Const/BattleReport';
-import { LanMgr, PioneerMgr } from '../Utils/Global';
-import { UIName } from '../Const/ConstUIDefine';
-import { LootsPopup } from './LootsPopup';
-import { UIHUDController } from './UIHUDController';
-import EventConfig from '../Config/EventConfig';
-import GameMainHelper from '../Game/Helper/GameMainHelper';
-import UIPanelManger from '../Basic/UIPanelMgr';
-import { DataMgr } from '../Data/DataMgr';
+import { BattleReportData, BattleReportExploringData, BattleReportType, LocationInfo } from "../Const/BattleReport";
+import { LanMgr, PioneerMgr } from "../Utils/Global";
+import { UIName } from "../Const/ConstUIDefine";
+import { LootsPopup } from "./LootsPopup";
+import { UIHUDController } from "./UIHUDController";
+import EventConfig from "../Config/EventConfig";
+import GameMainHelper from "../Game/Helper/GameMainHelper";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import { DataMgr } from "../Data/DataMgr";
+import { FIGHT_FINISHED_DATA, MINING_FINISHED_DATA } from "../Const/PioneerDefine";
 
-const {ccclass, property} = _decorator;
+const { ccclass, property } = _decorator;
 
-
-
-@ccclass('BattleReportListItemUI')
+@ccclass("BattleReportListItemUI")
 export class BattleReportListItemUI extends Component {
-    @property({type: Label, group: 'Common'})
+    @property({ type: Label, group: "Common" })
     public leftNameLabel: Label = null;
 
-    @property({type: Sprite, group: 'Common'})
+    @property({ type: Sprite, group: "Common" })
     public leftAvatarIconSprite: Sprite = null;
 
-    @property({type: ProgressBar, group: 'Fight'})
+    @property({ type: ProgressBar, group: "Fight" })
     public leftHpBar: ProgressBar = null;
 
-    @property({type: Label, group: 'Fight'})
+    @property({ type: Label, group: "Fight" })
     public leftHpText: Label = null;
 
-    @property({type: Sprite, group: 'Fight'})
+    @property({ type: Sprite, group: "Fight" })
     public leftAttackerOrDefenderSign: Sprite = null;
 
-    @property({type: Label, group: 'Fight'})
+    @property({ type: Label, group: "Fight" })
     public rightNameLabel: Label = null;
 
-    @property({type: Sprite, group: 'Fight'})
+    @property({ type: Sprite, group: "Fight" })
     public rightAvatarIconSprite: Sprite = null;
 
-    @property({type: ProgressBar, group: 'Fight'})
+    @property({ type: ProgressBar, group: "Fight" })
     public rightHpBar: ProgressBar = null;
 
-    @property({type: Label, group: 'Fight'})
+    @property({ type: Label, group: "Fight" })
     public rightHpText: Label = null;
 
-    @property({type: Sprite, group: 'Fight'})
+    @property({ type: Sprite, group: "Fight" })
     public rightAttackerOrDefenderSign: Sprite = null;
 
-    @property({type: SpriteFrame, group: 'Fight'})
+    @property({ type: SpriteFrame, group: "Fight" })
     public attackerSign: SpriteFrame = null;
 
-    @property({type: SpriteFrame, group: 'Fight'})
+    @property({ type: SpriteFrame, group: "Fight" })
     public defenderSign: SpriteFrame = null;
 
-    @property({type: Label, group: 'Common'})
+    @property({ type: Label, group: "Common" })
     public eventTimeLabel: Label = null;
 
-    @property({type: Label, group: 'Common'})
+    @property({ type: Label, group: "Common" })
     public eventResultLabel: Label = null;
 
-    @property({type: Sprite, group: 'Fight'})
+    @property({ type: Sprite, group: "Fight" })
     public fightResultSprite: Sprite = null;
 
-    @property({type: SpriteFrame, group: 'Fight'})
+    @property({ type: SpriteFrame, group: "Fight" })
     public fightResultVictory: SpriteFrame = null;
 
-    @property({type: SpriteFrame, group: 'Fight'})
+    @property({ type: SpriteFrame, group: "Fight" })
     public fightResultDefeat: SpriteFrame = null;
 
-    @property({type: RichText, group: 'Common'})
+    @property({ type: RichText, group: "Common" })
     public eventLocationLabel: RichText = null;
 
-    @property({type: RichText, group: 'Mining'})
+    @property({ type: RichText, group: "Mining" })
     public timeElapsedLabel: RichText = null;
 
-    @property({type: RichText, group: 'Mining'})
+    @property({ type: RichText, group: "Mining" })
     public miningResultLabel: RichText = null;
 
-
-    @property({type: Node, group: 'Common'})
+    @property({ type: Node, group: "Common" })
     public pendingMark: Node = null;
 
-    @property({type: Button, group: 'Common'})
+    @property({ type: Button, group: "Common" })
     public lootsButton: Button = null;
 
-    @property({type: Button, group: 'Explore'})
+    @property({ type: Button, group: "Explore" })
     public branchSelectionButton: Button = null;
 
     private _locationInfo: LocationInfo = null;
-    private _loots: { id: string, num: number }[] = null;
+    private _loots: { id: string; num: number }[] = null;
 
-    private _report: BattleReportRecord = null;
+    private _report: BattleReportData = null;
     public get report() {
         return this._report;
     }
 
     protected onLoad() {
-        if (this.lootsButton)
-            this.lootsButton.node.on(Button.EventType.CLICK, this.onClickLoots, this);
+        if (this.lootsButton) this.lootsButton.node.on(Button.EventType.CLICK, this.onClickLoots, this);
     }
 
-    public initWithReportData(report: BattleReportRecord): void {
+    public initWithReportData(report: BattleReportData): void {
         this._report = report;
         if (this.pendingMark) {
-            this.pendingMark.active = BattleReportsMgrDefine.isReportPending(report); 
+            this.pendingMark.active = DataMgr.s.battleReport.isReportPending(report);
         }
 
         switch (report.type) {
@@ -116,13 +113,13 @@ export class BattleReportListItemUI extends Component {
                 this._initWithExploreReport(report);
                 break;
             default:
-                console.error(`Unknown report type ${report.type}. ${JSON.stringify(report)}`)
+                console.error(`Unknown report type ${report.type}. ${JSON.stringify(report)}`);
                 break;
         }
     }
 
-    private _initWithFightReport(report: BattleReportRecord): void {
-        const data = report.data;
+    private _initWithFightReport(report: BattleReportData): void {
+        const data = report.data as FIGHT_FINISHED_DATA;
         const selfRoleInfo = data.attackerIsSelf ? data.attacker : data.defender;
         this.leftNameLabel.string = LanMgr.getLanById(selfRoleInfo.name);
         this.leftHpBar.progress = selfRoleInfo.hp / selfRoleInfo.hpMax;
@@ -139,16 +136,18 @@ export class BattleReportListItemUI extends Component {
         this.fightResultSprite.spriteFrame = selfWin ? this.fightResultVictory : this.fightResultDefeat;
         this.eventTimeLabel.string = CommonTools.formatDateTime(report.timestamp);
 
-        this._locationInfo = {type: "pos", pos: data.position};
+        this._locationInfo = { type: "pos", pos: data.position };
         this.eventLocationLabel.string = this._locationString(this._locationInfo);
 
         this._loots = data.rewards;
         this.lootsButton.node.active = data.rewards.length != 0;
     }
 
-    private _initWithMiningReport(report: BattleReportRecord): void {
+    private _initWithMiningReport(report: BattleReportData): void {
         // let buildingInfo = BuildingMgr.getBuildingById(report.data.buildingId);
         let buildingInfo = DataMgr.s.mapBuilding.getBuildingById(report.data.buildingId);
+
+        report.data = report.data as MINING_FINISHED_DATA;
 
         let pioneerInfo = DataMgr.s.pioneer.getById(report.data.pioneerId);
 
@@ -158,7 +157,7 @@ export class BattleReportListItemUI extends Component {
 
         this.leftNameLabel.string = roleName;
 
-        this._locationInfo = {type: "building", buildingId: buildingInfo.id};
+        this._locationInfo = { type: "building", buildingId: buildingInfo.id };
         this.eventLocationLabel.string = this._locationString(this._locationInfo);
 
         this.timeElapsedLabel.string = LanMgr.replaceLanById("701003", [CommonTools.formatSeconds(Math.floor(duration / 1000))]);
@@ -170,9 +169,11 @@ export class BattleReportListItemUI extends Component {
         this.lootsButton.node.active = rewards.length != 0;
     }
 
-    private _initWithExploreReport(report: BattleReportRecord): void {
+    private _initWithExploreReport(report: BattleReportData): void {
         // let buildingInfo = BuildingMgr.getBuildingById(report.data.buildingId);
         let buildingInfo = DataMgr.s.mapBuilding.getBuildingById(report.data.buildingId);
+
+        report.data = report.data as BattleReportExploringData;
 
         let pioneerInfo = DataMgr.s.pioneer.getById(report.data.pioneerId);
 
@@ -180,7 +181,7 @@ export class BattleReportListItemUI extends Component {
         const rewards = report.data.rewards;
 
         this.leftNameLabel.string = roleName;
-        this._locationInfo = {type: "building", buildingId: buildingInfo.id};
+        this._locationInfo = { type: "building", buildingId: buildingInfo.id };
         this.eventLocationLabel.string = this._locationString(this._locationInfo);
 
         this.eventTimeLabel.string = CommonTools.formatDateTime(report.timestamp);
@@ -204,7 +205,7 @@ export class BattleReportListItemUI extends Component {
             return;
         }
 
-        let pos: { x: number, y: number };
+        let pos: { x: number; y: number };
         switch (this._locationInfo.type) {
             case "pos":
                 pos = this._locationInfo.pos;
@@ -236,7 +237,7 @@ export class BattleReportListItemUI extends Component {
     }
 
     onClickBranchSelection() {
-        const reportData = this.report.data;
+        const reportData = this.report.data as BattleReportExploringData;
         // const building = BuildingMgr.getBuildingById(reportData.buildingId);
         const building = DataMgr.s.mapBuilding.getBuildingById(reportData.buildingId);
 

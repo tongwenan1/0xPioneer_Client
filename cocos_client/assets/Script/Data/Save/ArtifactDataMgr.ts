@@ -9,6 +9,8 @@ export class ArtifactDataMgr {
     private _key: string = "artifact_data";
     private _maxArtifactLength: number = 100;
 
+    public constructor() {}
+
     public async loadObj() {
         if (this._data == null) {
             this._data = [];

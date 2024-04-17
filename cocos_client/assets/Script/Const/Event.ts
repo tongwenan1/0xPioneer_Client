@@ -47,14 +47,7 @@ export interface EventConfigData {
     map_building_refresh: EventMapBuildingRefresh[] | null;
 }
 
-
-export class ActiveEventState {
-    /** current event id */
-    eventId: string = null;
-
-    prevEventId: string = null;
-
-    pioneerId: string = null;
-
-    buildingId: string = null;
+export interface EVENT_STEPEND_DATA {
+    eventId: string;
+    hasNextStep: boolean;
 }

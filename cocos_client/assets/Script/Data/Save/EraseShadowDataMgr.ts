@@ -5,6 +5,8 @@ export class EraseShadowDataMgr {
     private _data: Vec2[];
     private _key: string = "erase_shadow";
 
+    public constructor() {}
+
     public async loadObj() {
         if (this._data == null) {
             this._data = [];

@@ -27,6 +27,10 @@ export class RunData {
 
     height: number = 0;
     l1height: number = 0;
+
+    public constructor() {
+
+    }
 }
 
 export interface walletData {

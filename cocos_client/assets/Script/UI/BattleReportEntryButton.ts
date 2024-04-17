@@ -4,6 +4,7 @@ import {UIName} from '../Const/ConstUIDefine';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
 import UIPanelManger from '../Basic/UIPanelMgr';
+import { DataMgr } from '../Data/DataMgr';
 
 const {ccclass} = _decorator;
 
@@ -33,7 +34,7 @@ export class BattleReportEntryButton extends Component {
         const emergencyCountLabel = this.node.getChildByName('emergencyCountLabel').getComponent(Label);
 
         const label = this.node.getChildByName('unreadCountLabel').getComponent(Label);
-        const count = BattleReportsMgr.unreadCount;
+        const count = DataMgr.s.battleReport.unreadCount;
         if (count != 0) {
             label.string = Math.min(count, 99).toString();
             label.node.active = true;
@@ -45,7 +46,7 @@ export class BattleReportEntryButton extends Component {
             icon_WarReport_2.active = false;
         }
 
-        const emergencyReportCount = BattleReportsMgr.emergencyCount;
+        const emergencyReportCount = DataMgr.s.battleReport.emergencyCount;
         if (emergencyReportCount != 0) {
             icon_WarReport_3.active = true;
             emergencyCountLabel.string = Math.min(emergencyReportCount, 99).toString();

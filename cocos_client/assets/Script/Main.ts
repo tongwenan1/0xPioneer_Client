@@ -1,6 +1,6 @@
 import { _decorator, Asset, AssetManager, Component, Node } from "cc";
 import ViewController from "./BasicView/ViewController";
-import { AudioMgr, LanMgr, LocalDataLoader, ResourcesMgr } from "./Utils/Global";
+import { AudioMgr, BattleReportsMgr, LanMgr, LocalDataLoader, ResourcesMgr } from "./Utils/Global";
 import ConfigMgr from "./Manger/ConfigMgr";
 import NotificationMgr from "./Basic/NotificationMgr";
 import { NotificationName } from "./Const/Notification";
@@ -33,12 +33,12 @@ export class Main extends ViewController {
         // language
         LanMgr.initData();
 
-        // DataMgr init
-        if (!(await DataMgr.init())) return;
-
         // ConfigMgr init
         if (!(await ConfigMgr.init())) return;
         NotificationMgr.triggerEvent(NotificationName.CONFIG_LOADED);
+
+        // DataMgr init
+        if (!(await DataMgr.init())) return;
 
         // NetworkMgr init
         const chainConfig = ChainConfig.getCurrentChainConfig();
@@ -93,6 +93,8 @@ export class Main extends ViewController {
     private async _onUserLoginSucceed() {
 
         await DataMgr.load();
+
+        BattleReportsMgr.init();
 
         if (GAME_ENV_IS_DEBUG) {
             await this._showGameMain();

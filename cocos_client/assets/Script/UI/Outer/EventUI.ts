@@ -5,8 +5,7 @@ import { UIName } from "../../Const/ConstUIDefine";
 import { UIHUDController } from "../UIHUDController";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import EventConfig from "../../Config/EventConfig";
-import { EventConfigData, EventCost, EventReward, EventSelectCond, EventSelectCondId, EventSelectCondNum } from "../../Const/Event";
-import GlobalData from "../../Data/GlobalData";
+import { EVENT_STEPEND_DATA, EventConfigData, EventCost, EventReward, EventSelectCond, EventSelectCondId, EventSelectCondNum } from "../../Const/Event";
 import ItemData, { ItemConfigType, ItemType } from "../../Const/Item";
 import ItemConfig from "../../Config/ItemConfig";
 import { NotificationName } from "../../Const/Notification";
@@ -362,8 +361,8 @@ export class EventUI extends ViewController {
 
     private _nextEvent(eventId: string) {
         // console.log(`_nextEvent, current: ${this._event.id}, next: ${eventId}`);
-        GlobalData.latestActiveEventState.prevEventId = this._event.id;
-        GlobalData.latestActiveEventState.eventId = eventId;
+        DataMgr.s.battleReport.latestActiveEventState.prevEventId = this._event.id;
+        DataMgr.s.battleReport.latestActiveEventState.eventId = eventId;
 
         if (eventId == "-1" || eventId == "-2") {
             // clear temp attributes
@@ -426,7 +425,7 @@ export class EventUI extends ViewController {
         const eventId = customEventData;
         const hasNextStep = eventId != "-1";
         // console.log(`eventStepEnd, source: onTapNext, eventId: ${this._event.id}, next: ${eventId}`);
-        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, [this._event.id, hasNextStep]);
+        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, {eventId: this._event.id, hasNextStep: hasNextStep} as EVENT_STEPEND_DATA);
 
         this._nextEvent(eventId);
     }
@@ -450,7 +449,7 @@ export class EventUI extends ViewController {
                 if (this._event) {
                     const hasNextStep = eventId != null && eventId != -1 && eventId != -2;
                     // console.log(`eventStepEnd, source: onTapFight, eventId: ${this._event.id}, next: ${eventId}`);
-                    NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, [this._event.id, hasNextStep]);
+                    NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, {eventId: this._event.id, hasNextStep: hasNextStep} as EVENT_STEPEND_DATA);
                 }
                 if (eventId != null) {
                     this._nextEvent(eventId);
@@ -475,7 +474,7 @@ export class EventUI extends ViewController {
         let hasNextStep = event != null;
 
         // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}, next: ${eventId}`);
-        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, [this._event.id, hasNextStep]);
+        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, {eventId: this._event.id, hasNextStep: hasNextStep} as EVENT_STEPEND_DATA);
 
         this._nextEvent(eventId);
     }

@@ -18,10 +18,20 @@ export interface PioneerConfigData {
     exp: number;
     animType: string;
     drop: [ItemConfigType, string, number][];
-    pos: { x: number, y: number }[];
-    logics: { type: number, posx: number, posy: number, step: number, cd: number, direction: number, repeat: number, interval: [number, number], range: number, speed: number }[];
+    pos: { x: number; y: number }[];
+    logics: {
+        type: number;
+        posx: number;
+        posy: number;
+        step: number;
+        cd: number;
+        direction: number;
+        repeat: number;
+        interval: [number, number];
+        range: number;
+        speed: number;
+    }[];
 }
-
 
 export enum MapPioneerActionType {
     dead = "dead",
@@ -33,7 +43,7 @@ export enum MapPioneerActionType {
     fighting = "fighting",
     exploring = "exploring",
     eventing = "eventing",
-    addingtroops = "addingtroops"
+    addingtroops = "addingtroops",
 }
 
 export enum MapPioneerType {
@@ -60,7 +70,7 @@ export enum MapPioneerMoveDirection {
 export enum MapPioneerEventStatus {
     None,
     Waiting,
-    Waited
+    Waited,
 }
 
 export interface MapPioneerAttributesChangeModel {
@@ -73,8 +83,8 @@ export interface MapPioneerLogicStepMoveData {
     cd: number;
     direction: TileHexDirection;
 }
- 
-export interface MapPioneerLogicStepMoveObject extends MapPioneerLogicStepMoveData { }
+
+export interface MapPioneerLogicStepMoveObject extends MapPioneerLogicStepMoveData {}
 
 export interface MapPioneerLogicPatrolData {
     originalPos: MapPosStruct;
@@ -82,7 +92,7 @@ export interface MapPioneerLogicPatrolData {
     range: number;
 }
 
-export interface MapPioneerLogicPatrolObject extends MapPioneerLogicPatrolData { 
+export interface MapPioneerLogicPatrolObject extends MapPioneerLogicPatrolData {
     originalPos: Vec2;
 }
 
@@ -153,17 +163,14 @@ export interface MapPioneerData {
 export interface MapPlayerPioneerData extends MapPioneerData {
     rebirthCountTime: number;
     killerId: string;
-    NFTInitLinkId: string,
-    NFTId: string,
+    NFTInitLinkId: string;
+    NFTId: string;
 }
 
 export interface MapNpcPioneerData extends MapPioneerData {
     talkId: string;
     talkCountStruct: MapMemberGetTalkCountStruct;
 }
-
-
-
 
 export interface MapPioneerObject extends MapPioneerData {
     stayPos: Vec2;
@@ -181,4 +188,30 @@ export interface MapNpcPioneerObject extends MapNpcPioneerData {
     stayPos: Vec2;
     movePaths: TilePos[];
     logics: MapPioneerLogicObject[];
+}
+
+export interface FIGHT_FINISHED_DATA {
+    attacker: {
+        name: string;
+        avatarIcon: string;
+        hp: number;
+        hpMax: number;
+    };
+    defender: {
+        name: string;
+        avatarIcon: string;
+        hp: number;
+        hpMax: number;
+    };
+    attackerIsSelf: boolean;
+    buildingId: string;
+    position: Vec2;
+    fightResult: string;
+    rewards: [];
+}
+export interface MINING_FINISHED_DATA {
+    buildingId: string;
+    pioneerId: string;
+    duration: number;
+    rewards: [];
 }

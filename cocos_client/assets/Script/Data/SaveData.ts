@@ -3,6 +3,7 @@ import { ArtifactDataMgr } from "./Save/ArtifactDataMgr";
 import { EraseShadowDataMgr } from "./Save/EraseShadowDataMgr";
 import { MapBuildingDataMgr } from "./Save/MapBuildingDataMgr";
 import { PioneersDataMgr } from "./Save/PioneersDataMgr";
+import { BattleReportDataMgr } from "./Save/BattleReportDataMgr";
 
 export class SaveData {
     private _pioneersDataMgr: PioneersDataMgr;
@@ -11,6 +12,7 @@ export class SaveData {
     private _countDataMgr: CountDataMgr;
     private _artifactDataMgr: ArtifactDataMgr;
     // private _itemDataMgr: ItemDataMgr;
+    private _battleReportDataMgr: BattleReportDataMgr;
 
     public get pioneer() {
         return this._pioneersDataMgr;
@@ -36,6 +38,10 @@ export class SaveData {
     //     return this._itemDataMgr;
     // }
 
+    public get battleReport() {
+        return this._battleReportDataMgr;
+    }
+
     constructor() {
         this._pioneersDataMgr = new PioneersDataMgr();
         this._eraseShadowDataMgr = new EraseShadowDataMgr();
@@ -43,6 +49,7 @@ export class SaveData {
         this._countDataMgr = new CountDataMgr();
         this._artifactDataMgr = new ArtifactDataMgr();
         // this._itemDataMgr = new ItemDataMgr();
+        this._battleReportDataMgr = new BattleReportDataMgr();
     }
 
     public async load() {
@@ -52,6 +59,7 @@ export class SaveData {
         await this._countDataMgr.loadObj();
         await this._artifactDataMgr.loadObj();
         // await this._itemDataMgr.loadObj();
+        await this._battleReportDataMgr.loadObj();
     }
     public async save() {
         await this._eraseShadowDataMgr.saveObj();
@@ -60,5 +68,6 @@ export class SaveData {
         await this._countDataMgr.saveObj();
         await this._artifactDataMgr.saveObj();
         // await this._itemDataMgr.saveObj();
+        await this._battleReportDataMgr.saveObj();
     }
 }
