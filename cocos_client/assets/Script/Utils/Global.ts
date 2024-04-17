@@ -1,7 +1,6 @@
 import af from "../Manger/ArtifactMgr";
 import br from "../Manger/BattleReportsMgr";
 import bd from "../Manger/BuildingMgr";
-import ct from "../Manger/CountMgr";
 import ev from "../Manger/EvaluationMgr";
 import im from "../Manger/ItemMgr";
 import l from "../Manger/LanMgr";
@@ -17,7 +16,6 @@ import res from "../Basic/ResourcesMgr";
 
 const ArtifactMgr = new af();
 const BuildingMgr = new bd();
-const CountMgr = new ct();
 const EvaluationMgr = new ev();
 const ItemMgr = new im();
 const LanMgr = new l();
@@ -38,7 +36,6 @@ export {
     ArtifactMgr,
     BattleReportsMgr,
     BuildingMgr,
-    CountMgr,
     EvaluationMgr,
     ItemMgr,
     LanMgr,

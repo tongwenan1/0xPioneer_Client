@@ -1,27 +1,36 @@
-import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from 'cc';
-import { CountMgr, ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UserInfoMgr } from '../../Utils/Global';
-import ViewController from '../../BasicView/ViewController';
-import { UIName } from '../../Const/ConstUIDefine';
-import { UIHUDController } from '../UIHUDController';
-import NotificationMgr from '../../Basic/NotificationMgr';
-import { CountType } from '../../Const/Count';
-import EventConfig from '../../Config/EventConfig';
-import { EventConfigData, EventCost, EventReward, EventSelectCond, EventSelectCondId, EventSelectCondNum } from '../../Const/Event';
-import GlobalData from '../../Data/GlobalData';
-import ItemData, { ItemConfigType, ItemType } from '../../Const/Item';
-import ItemConfig from '../../Config/ItemConfig';
-import { NotificationName } from '../../Const/Notification';
-import { ItemGettedUI } from '../ItemGettedUI';
-import Config from '../../Const/Config';
-import UIPanelManger from '../../Basic/UIPanelMgr';
-import { DataMgr } from '../../Data/DataMgr';
-import { MapPioneerAttributesChangeModel } from '../../Const/PioneerDefine';
+import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from "cc";
+import { ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UserInfoMgr } from "../../Utils/Global";
+import ViewController from "../../BasicView/ViewController";
+import { UIName } from "../../Const/ConstUIDefine";
+import { UIHUDController } from "../UIHUDController";
+import NotificationMgr from "../../Basic/NotificationMgr";
+import EventConfig from "../../Config/EventConfig";
+import { EventConfigData, EventCost, EventReward, EventSelectCond, EventSelectCondId, EventSelectCondNum } from "../../Const/Event";
+import GlobalData from "../../Data/GlobalData";
+import ItemData, { ItemConfigType, ItemType } from "../../Const/Item";
+import ItemConfig from "../../Config/ItemConfig";
+import { NotificationName } from "../../Const/Notification";
+import { ItemGettedUI } from "../ItemGettedUI";
+import Config from "../../Const/Config";
+import UIPanelManger from "../../Basic/UIPanelMgr";
+import { DataMgr } from "../../Data/DataMgr";
+import { MapPioneerAttributesChangeModel } from "../../Const/PioneerDefine";
 const { ccclass, property } = _decorator;
 
-@ccclass('EventUI')
+@ccclass("EventUI")
 export class EventUI extends ViewController {
-
-    public eventUIShow(triggerPioneerId: string, eventBuildingId: string, event: EventConfigData, fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => void, dealWithNextEvent: (event: EventConfigData) => void) {
+    public eventUIShow(
+        triggerPioneerId: string,
+        eventBuildingId: string,
+        event: EventConfigData,
+        fightCallback: (
+            pioneerId: string,
+            enemyId: string,
+            temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>,
+            fightOver: (succeed: boolean) => void
+        ) => void,
+        dealWithNextEvent: (event: EventConfigData) => void
+    ) {
         this._triggerPioneerId = triggerPioneerId;
         this._eventBuildingId = eventBuildingId;
         this._fightCallback = fightCallback;
@@ -33,7 +42,12 @@ export class EventUI extends ViewController {
     private _triggerPioneerId: string = null;
     private _eventBuildingId: string = null;
     private _temporaryAttributes: Map<string, MapPioneerAttributesChangeModel> = new Map();
-    private _fightCallback: (pioneerId: string, enemyId: string, temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>, fightOver: (succeed: boolean) => void) => void = null;
+    private _fightCallback: (
+        pioneerId: string,
+        enemyId: string,
+        temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>,
+        fightOver: (succeed: boolean) => void
+    ) => void = null;
     private _dealWithNextEvent: (event: EventConfigData) => void = null;
 
     private _event: EventConfigData = null;
@@ -75,8 +89,7 @@ export class EventUI extends ViewController {
         }
         this._event = event;
 
-
-        // type = 1：text 
+        // type = 1：text
         // type = 2：select
         // type = 3：fight
         // type = 4：exchange
@@ -103,9 +116,7 @@ export class EventUI extends ViewController {
         this._contentView.active = true;
 
         if (event.type == 2) {
-            if (event.select != null &&
-                event.select_txt != null &&
-                event.select.length == event.select_txt.length) {
+            if (event.select != null && event.select_txt != null && event.select.length == event.select_txt.length) {
                 this._dialogSelectView.active = true;
                 for (const item of this._dialogSelectItems) {
                     item.destroy();
@@ -122,7 +133,12 @@ export class EventUI extends ViewController {
                     }
 
                     // useLanMgr
-                    item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? LanMgr.getLanById(event.select_txt[i]) : conditionResult.tipText) : LanMgr.getLanById(event.select_txt[i]);
+                    item.getChildByName("label").getComponent(Label).string =
+                        conditionResult != null
+                            ? conditionResult.satisfy
+                                ? LanMgr.getLanById(event.select_txt[i])
+                                : conditionResult.tipText
+                            : LanMgr.getLanById(event.select_txt[i]);
                     // item.getChildByName("label").getComponent(Label).string = conditionResult != null ? (conditionResult.satisfy ? event.select_txt[i] : conditionResult.tipText) : event.select_txt[i];
 
                     item.getComponent(Sprite).grayscale = conditionResult != null ? !conditionResult.satisfy : false;
@@ -167,38 +183,32 @@ export class EventUI extends ViewController {
                         }
                         if (isPlayer) {
                             if (changedType == 1) {
-
                                 // useLanMgr
                                 showTip += LanMgr.getLanById("207001") + "\n";
                                 // showTip += "Your HP has changed\n";
-                            }
-                            else {
+                            } else {
                                 // useLanMgr
                                 showTip += LanMgr.getLanById("207002") + "\n";
                                 // showTip += "Your Attack has changed\n";
                             }
-                        }
-                        else {
+                        } else {
                             const pioneerInfo = DataMgr.s.pioneer.getById(pioneerId);
                             if (pioneerInfo == null) {
                                 if (changedType == 1) {
                                     // useLanMgr
                                     showTip += LanMgr.getLanById("207003") + "\n";
                                     // showTip += "Enemy's HP has changed\n";
-                                }
-                                else {
+                                } else {
                                     // useLanMgr
                                     showTip += LanMgr.getLanById("207004") + "\n";
                                     // showTip += "Enemy's Attack has changed\n";
                                 }
-                            }
-                            else {
+                            } else {
                                 if (changedType == 1) {
                                     // useLanMgr
                                     showTip += LanMgr.replaceLanById("207005", [pioneerInfo.name]) + "\n";
                                     // showTip += pioneerInfo.name + " HP has changed\n";
-                                }
-                                else {
+                                } else {
                                     // useLanMgr
                                     showTip += LanMgr.replaceLanById("207006", [pioneerInfo.name]) + "\n";
                                     // showTip += pioneerInfo.name + " Attack has changed\n";
@@ -211,12 +221,8 @@ export class EventUI extends ViewController {
             }
         }
 
-        CountMgr.addNewCount({
-            type: CountType.showEvent,
-            timeStamp: new Date().getTime(),
-            data: {
-                eventId: event.id
-            }
+        DataMgr.s.count.addObj_showEvent({
+            eventId: event.id,
         });
 
         if (event.map_building_refresh != null) {
@@ -241,8 +247,8 @@ export class EventUI extends ViewController {
         }
     }
 
-    private _checkIsSatisfiedCondition(condition: EventSelectCond): { satisfy: boolean, tipText: string } {
-        const temple: { satisfy: boolean, tipText: string } = { satisfy: true, tipText: "" };
+    private _checkIsSatisfiedCondition(condition: EventSelectCond): { satisfy: boolean; tipText: string } {
+        const temple: { satisfy: boolean; tipText: string } = { satisfy: true, tipText: "" };
         const type: ItemConfigType = condition[0];
         const id: EventSelectCondId = condition[1];
         const num: EventSelectCondNum = condition[2];
@@ -327,7 +333,7 @@ export class EventUI extends ViewController {
                     // showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
                 }
             } else if (type == ItemConfigType.Artifact) {
-                // donn't need support wait function 
+                // donn't need support wait function
             }
         }
         if (itemDatas.length > 0) {
@@ -359,8 +365,7 @@ export class EventUI extends ViewController {
         GlobalData.latestActiveEventState.prevEventId = this._event.id;
         GlobalData.latestActiveEventState.eventId = eventId;
 
-        if (eventId == "-1" ||
-            eventId == "-2") {
+        if (eventId == "-1" || eventId == "-2") {
             // clear temp attributes
             this._temporaryAttributes = new Map();
 
@@ -373,7 +378,6 @@ export class EventUI extends ViewController {
                     // BuildingMgr.hideBuilding(this._eventBuildingId);
                     DataMgr.s.mapBuilding.changeBuildingEventId(this._eventBuildingId, null);
                     DataMgr.s.mapBuilding.hideBuilding(this._eventBuildingId);
-
                 } else if (eventId == "-2") {
                     // const building = BuildingMgr.getBuildingById(this._eventBuildingId);
                     const building = DataMgr.s.mapBuilding.getBuildingById(this._eventBuildingId);
@@ -394,7 +398,7 @@ export class EventUI extends ViewController {
                 consumeTroops: 0,
                 gainEnergy: 0,
                 consumeEnergy: 0,
-                exploredEvents: 1
+                exploredEvents: 1,
             });
 
             if (this._triggerPioneerId != null) {
@@ -432,13 +436,11 @@ export class EventUI extends ViewController {
         if (this._fightCallback != null) {
             this._fightCallback(this._triggerPioneerId, pioneerId, this._temporaryAttributes, (succeed: boolean) => {
                 let eventId = null;
-                if (this._event != null &&
-                    this._event.enemy_result != null && this._event.enemy_result.length == 2) {
+                if (this._event != null && this._event.enemy_result != null && this._event.enemy_result.length == 2) {
                     eventId = succeed ? this._event.enemy_result[0] : this._event.enemy_result[1];
                 }
 
                 if (succeed) {
-
                 } else {
                     const event = EventConfig.getById(eventId);
                     if (event != null) {
@@ -478,5 +480,3 @@ export class EventUI extends ViewController {
         this._nextEvent(eventId);
     }
 }
-
-

@@ -16,11 +16,8 @@ import {
     RichText,
     randomRangeInt,
 } from "cc";
-import { BackpackItem } from "./BackpackItem";
-import { CountMgr, ItemMgr, LanMgr } from "../Utils/Global";
+import { LanMgr } from "../Utils/Global";
 import ViewController from "../BasicView/ViewController";
-import { CountType } from "../Const/Count";
-import ItemConfig from "../Config/ItemConfig";
 import ItemData, { ItemType } from "../Const/Item";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { NFTPioneerModel } from "../Const/PioneerDevelopDefine";

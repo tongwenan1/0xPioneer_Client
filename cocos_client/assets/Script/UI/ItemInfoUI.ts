@@ -1,11 +1,11 @@
 import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, RichText, randomRangeInt } from 'cc';
 import { BackpackItem } from './BackpackItem';
-import { CountMgr, ItemMgr, LanMgr } from '../Utils/Global';
+import { ItemMgr, LanMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
-import { CountType } from '../Const/Count';
 import ItemConfig from '../Config/ItemConfig';
 import ItemData, { ItemType } from '../Const/Item';
 import UIPanelManger from '../Basic/UIPanelMgr';
+import { DataMgr } from '../Data/DataMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemInfoUI')
@@ -95,13 +95,9 @@ export class ItemInfoUI extends ViewController {
         } else {
             if (this._canGetItem != null) {
                 ItemMgr.subItem(this._canGetItem.itemConfigId, 1);
-                CountMgr.addNewCount({
-                    type: CountType.useItem,
-                    timeStamp: new Date().getTime(),
-                    data: {
-                        itemId: this._canGetItem.itemConfigId,
-                        num: 1
-                    }
+                DataMgr.s.count.addObj_useItem({
+                    itemId: this._canGetItem.itemConfigId,
+                    num: 1
                 });
             }
         }

@@ -1,17 +1,18 @@
-import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node } from 'cc';
-import { NPCNameLangType } from '../../Const/ConstDefine';
-import { CountMgr, LanMgr, TaskMgr, UserInfoMgr } from '../../Utils/Global';
-import ViewController from '../../BasicView/ViewController';
-import { UIName } from '../../Const/ConstUIDefine';
-import NotificationMgr from '../../Basic/NotificationMgr';
-import { CountType } from '../../Const/Count';
-import { NotificationName } from '../../Const/Notification';
-import { ItemGettedUI } from '../ItemGettedUI';
-import { TalkConfigData } from '../../Const/Talk';
-import UIPanelManger from '../../Basic/UIPanelMgr';
+import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node } from "cc";
+import { NPCNameLangType } from "../../Const/ConstDefine";
+import { LanMgr, TaskMgr, UserInfoMgr } from "../../Utils/Global";
+import ViewController from "../../BasicView/ViewController";
+import { UIName } from "../../Const/ConstUIDefine";
+import NotificationMgr from "../../Basic/NotificationMgr";
+import { CountType } from "../../Const/Count";
+import { NotificationName } from "../../Const/Notification";
+import { ItemGettedUI } from "../ItemGettedUI";
+import { TalkConfigData } from "../../Const/Talk";
+import UIPanelManger from "../../Basic/UIPanelMgr";
+import { DataMgr } from "../../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
-@ccclass('DialogueUI')
+@ccclass("DialogueUI")
 export class DialogueUI extends ViewController {
     public dialogShow(talk: TalkConfigData, talkOverCallback: () => void = null) {
         this._talk = talk;
@@ -31,7 +32,7 @@ export class DialogueUI extends ViewController {
         "hunter",
         "prophetess",
         "rebels",
-        "secretGuard"
+        "secretGuard",
     ];
     private _roleViewNameMap: Map<NPCNameLangType, string> = new Map();
     protected viewDidLoad(): void {
@@ -54,8 +55,7 @@ export class DialogueUI extends ViewController {
     }
 
     private _refreshUI() {
-        if (this._talk == null ||
-            this._dialogStep > this._talk.messsages.length - 1) {
+        if (this._talk == null || this._dialogStep > this._talk.messsages.length - 1) {
             return;
         }
 
@@ -77,9 +77,7 @@ export class DialogueUI extends ViewController {
             if (this._roleViewNameMap.has(currentMesssage.name)) {
                 dialogView.getChildByName("name_bg").active = true;
                 dialogView.getChildByPath("name_bg/Label").getComponent(Label).string = LanMgr.getLanById(currentMesssage.name);
-
             } else if (currentMesssage.name == NPCNameLangType.DefaultPlayer) {
-
                 dialogView.getChildByName("player_name").active = true;
                 dialogView.getChildByPath("player_name/Label").getComponent(Label).string = UserInfoMgr.playerName;
             }
@@ -87,8 +85,7 @@ export class DialogueUI extends ViewController {
             dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.getLanById(currentMesssage.text);
 
             for (const roleName of this._roleNames) {
-                if (this._roleViewNameMap)
-                    dialogView.getChildByName(roleName).active = roleName == this._roleViewNameMap.get(currentMesssage.name);
+                if (this._roleViewNameMap) dialogView.getChildByName(roleName).active = roleName == this._roleViewNameMap.get(currentMesssage.name);
             }
         } else if (currentMesssage.type == "1") {
             if (currentMesssage.text != undefined) {
@@ -101,8 +98,7 @@ export class DialogueUI extends ViewController {
                 for (const roleName of this._roleNames) {
                     dialogView.getChildByName(roleName).active = false;
                 }
-            }
-            else {
+            } else {
                 dialogView.active = false;
             }
             selectView.active = true;
@@ -129,8 +125,7 @@ export class DialogueUI extends ViewController {
         const talkId = this._talk.id;
         if (UserInfoMgr.afterTalkItemGetData.has(talkId)) {
             setTimeout(async () => {
-                if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI) ||
-                    UIPanelManger.inst.panelIsShow(UIName.SecretGuardGettedUI)) {
+                if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI) || UIPanelManger.inst.panelIsShow(UIName.SecretGuardGettedUI)) {
                     UserInfoMgr.afterCivilizationClosedShowItemDatas.push(...UserInfoMgr.afterTalkItemGetData.get(talkId));
                 } else {
                     const result = await UIPanelManger.inst.pushPanel(UIName.ItemGettedUI);
@@ -164,12 +159,8 @@ export class DialogueUI extends ViewController {
             return;
         }
         TaskMgr.talkSelected(this._talk.id, parseInt(customEventData));
-        CountMgr.addNewCount({
-            type: CountType.selectDialog,
-            timeStamp: new Date().getTime(),
-            data: {
-                selectText: customEventData
-            }
+        DataMgr.s.count.addObj_selectDialog({
+            selectText: customEventData,
         });
 
         this._dialogStep += 1;
@@ -181,5 +172,3 @@ export class DialogueUI extends ViewController {
         }
     }
 }
-
-

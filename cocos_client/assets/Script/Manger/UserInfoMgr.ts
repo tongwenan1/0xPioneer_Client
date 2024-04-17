@@ -2,7 +2,7 @@ import { Asset, __private, resources, sys } from "cc";
 import { GameExtraEffectType, GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
-import { ArtifactMgr, CountMgr, ItemMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
+import { ArtifactMgr, ItemMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { UserInfoEvent, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";
 import { InnerBuildingType, UserInnerBuildInfo } from "../Const/BuildingDefine";
@@ -71,13 +71,9 @@ export default class UserInfoMgr {
                 // build house
 
             }
-            CountMgr.addNewCount({
-                type: CountType.buildInnerBuilding,
-                timeStamp: new Date().getTime(),
-                data: {
-                    bId: buildingType,
-                    level: buildInfo.buildLevel,
-                }
+            DataMgr.s.count.addObj_buildInnerBuilding({
+                bId: buildingType,
+                level: buildInfo.buildLevel,
             });
         }
     }
@@ -94,12 +90,8 @@ export default class UserInfoMgr {
         this._localJsonData.playerData.gettedExplorationRewardIds = this._gettedExplorationRewardIds;
         this._localDataChanged(this._localJsonData);
 
-        CountMgr.addNewCount({
-            type: CountType.openBox,
-            timeStamp: new Date().getTime(),
-            data: {
-                id: boxId
-            }
+        DataMgr.s.count.addObj_openBox({
+            id: boxId
         });
     }
 
@@ -111,12 +103,8 @@ export default class UserInfoMgr {
         this._localJsonData.playerData.generateTroopInfo = this._generateTroopInfo;
         this._localDataChanged(this._localJsonData);
 
-        CountMgr.addNewCount({
-            type: CountType.generateTroops,
-            timeStamp: new Date().getTime(),
-            data: {
-                num: troopNum
-            }
+        DataMgr.s.count.addObj_generateTroops({
+            num: troopNum
         });
     }
 

@@ -1,4 +1,5 @@
 import { Vec2 } from "cc";
+import CLog from "../../Utils/CLog";
 
 export class EraseShadowDataMgr {
     private _data: Vec2[];
@@ -13,6 +14,8 @@ export class EraseShadowDataMgr {
                     this._data.push(new Vec2(vec.x, vec.y));
                 }
             }
+
+            CLog.debug("EraseShadowDataMgr: loadObj, ", this._data);
         }
     }
 

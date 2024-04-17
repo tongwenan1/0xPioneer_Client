@@ -1,13 +1,12 @@
 import Config from "../Const/Config";
 import CLog from "../Utils/CLog";
-import { ArtifactMgr, BattleReportsMgr, BuildingMgr, CountMgr, ItemMgr, LanMgr, PioneerDevelopMgr, PioneerMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
+import { ArtifactMgr, BattleReportsMgr, BuildingMgr, ItemMgr, LanMgr, PioneerDevelopMgr, PioneerMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
 
 export default class LocalDataLoader {
     public async loadLocalDatas() {
         this._importSaveOnStartIfExists();
 
         if (!await ArtifactMgr.initData()) return;
-        if (!await CountMgr.initData()) return;
 
         await UserInfoMgr.initData();
         await BuildingMgr.initData();

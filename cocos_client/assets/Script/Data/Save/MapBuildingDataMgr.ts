@@ -57,6 +57,9 @@ export class MapBuildingDataMgr {
                 this._createObj_decorate();
             }
         }
+
+        CLog.debug("MapBuildingDataMgr: loadObj/building_data, ", this._building_data);
+        CLog.debug("MapBuildingDataMgr: loadObj/decorate_data, ", this._building_data);
     }
 
     // create buiding obj

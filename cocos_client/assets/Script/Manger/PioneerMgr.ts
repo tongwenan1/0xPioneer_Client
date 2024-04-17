@@ -1,7 +1,7 @@
 import { CurveRange, Vec2 } from "cc";
 import CommonTools from "../Tool/CommonTools";
 import { GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
-import { ArtifactMgr, CountMgr, ItemMgr, LanMgr, PioneerDevelopMgr, SettlementMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
+import { ArtifactMgr, ItemMgr, LanMgr, PioneerDevelopMgr, SettlementMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
 import { UIHUDController } from "../UI/UIHUDController";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { MapBuildingType } from "../Const/BuildingDefine";
@@ -360,13 +360,9 @@ export default class PioneerMgr {
             }
             if (interactPioneer != null) {
                 if (pioneer.type == MapPioneerType.player || interactPioneer.type == MapPioneerType.player) {
-                    CountMgr.addNewCount({
-                        type: CountType.actionPioneer,
-                        timeStamp: new Date().getTime(),
-                        data: {
-                            actionPid: pioneer.id,
-                            interactPid: interactPioneer.id,
-                        },
+                    DataMgr.s.count.addObj_actionPioneer({
+                        actionPid: pioneer.id,
+                        interactPid: interactPioneer.id,
                     });
                 }
                 if (pioneer.faction == MapMemberFactionType.friend && interactPioneer.faction == MapMemberFactionType.friend) {
@@ -402,13 +398,9 @@ export default class PioneerMgr {
             // building
             // need changed. use manger to deal with pioneer and building
             if (pioneer.type == MapPioneerType.player) {
-                CountMgr.addNewCount({
-                    type: CountType.actionBuilding,
-                    timeStamp: new Date().getTime(),
-                    data: {
-                        actionPid: pioneer.id,
-                        interactBId: stayBuilding.id,
-                    },
+                DataMgr.s.count.addObj_actionBuilding({
+                    actionPid: pioneer.id,
+                    interactBId: stayBuilding.id,
                 });
             }
             if (stayBuilding.type == MapBuildingType.city) {
