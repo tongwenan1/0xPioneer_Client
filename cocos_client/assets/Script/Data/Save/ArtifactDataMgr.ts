@@ -56,8 +56,8 @@ export class ArtifactDataMgr {
         NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
     }
 
-    public getObj_artifact_effectiveEffect(artifactStoreLevel: number): Map<GameExtraEffectType, number> {
-        const effectMap: Map<GameExtraEffectType, number> = new Map();
+    public getObj_artifact_effectiveEffect(type: GameExtraEffectType, artifactStoreLevel: number): number {
+        let effectNum: number = 0;
         for (const artifact of this._data) {
             if (artifact.effectIndex < 0) {
                 continue;
@@ -77,25 +77,25 @@ export class ArtifactDataMgr {
                             effectType = GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE;
                         }
                     }
+                    if (effectType != type) {
+                        continue;
+                    }
                     if (effConfig.unlock && effConfig.unlock > artifactStoreLevel) {
                         continue;
                     }
-                    if (!effectMap.has(effectType)) {
-                        effectMap.set(effectType, 0);
-                    }
-                    let lastNum: number = effectMap.get(effectType);
-                    if (effectType == GameExtraEffectType.VISION_RANGE ||
+                    if (
+                        effectType == GameExtraEffectType.VISION_RANGE ||
                         effectType == GameExtraEffectType.PIONEER_ONLY_VISION_RANGE ||
-                        effectType == GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE) {
-                        lastNum += effConfig.para[1];
+                        effectType == GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE
+                    ) {
+                        effectNum += effConfig.para[1];
                     } else {
-                        lastNum += effConfig.para[0];
+                        effectNum += effConfig.para[0];
                     }
-                    effectMap.set(effectType, lastNum);
                 }
             }
         }
-        return effectMap;
+        return effectNum;
     }
 
     public addObj_artifact(artifacts: ArtifactData[]) {
@@ -130,7 +130,7 @@ export class ArtifactDataMgr {
             NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
         }
         this.getObj_artifact_sort(ArtifactArrangeType.Rarity);
-        return changed
+        return changed;
     }
 
     public artifactIsFull(): boolean {

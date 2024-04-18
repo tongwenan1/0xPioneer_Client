@@ -1,7 +1,7 @@
 import { CurveRange, Vec2 } from "cc";
 import CommonTools from "../Tool/CommonTools";
 import { GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
-import { ArtifactMgr, ItemMgr, LanMgr, PioneerDevelopMgr, SettlementMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
+import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, PioneerDevelopMgr, SettlementMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
 import { UIHUDController } from "../UI/UIHUDController";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { MapBuildingType } from "../Const/BuildingDefine";
@@ -495,15 +495,8 @@ export default class PioneerMgr {
             } else if (stayBuilding.type == MapBuildingType.resource) {
                 if (pioneer.type == MapPioneerType.player && pioneer.faction != MapMemberFactionType.enemy) {
                     // artifact
-                    const artifactEff = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
-                    let artifactGather = 0;
-                    if (artifactEff.has(GameExtraEffectType.GATHER_TIME)) {
-                        artifactGather = artifactEff.get(GameExtraEffectType.GATHER_TIME);
-                    }
-
                     let actionTime: number = 3000;
-                    // artifact eff
-                    actionTime = Math.floor(actionTime - actionTime * artifactGather);
+                    actionTime = GameMgr.getAfterExtraEffectPropertyByPioneer(pioneer.id, GameExtraEffectType.GATHER_TIME, actionTime);
                     if (actionTime <= 0) actionTime = 1;
                     pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.mining, currentTimeStamp, actionTime);
                     setTimeout(() => {

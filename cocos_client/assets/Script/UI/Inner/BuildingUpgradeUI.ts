@@ -1,7 +1,7 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
 import { GameExtraEffectType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ArtifactMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
@@ -62,21 +62,8 @@ export class BuildingUpgradeUI extends ViewController {
     private _levelInfoShowCostItems: Node[] = [];
 
     private _curBuildingType: InnerBuildingType = null;
-    private _artifactTimeEffectNum: number = 0;
-    private _artifactResourceEffectNum: number = 0;
     protected viewDidLoad(): void {
         super.viewDidLoad();
-
-
-        const effect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
-        if (effect != null) {
-            if (effect.has(GameExtraEffectType.BUILDING_LVUP_TIME)) {
-                this._artifactTimeEffectNum = effect.get(GameExtraEffectType.BUILDING_LVUP_TIME);
-            }
-            if (effect.has(GameExtraEffectType.BUILDING_LVLUP_RESOURCE)) {
-                this._artifactResourceEffectNum = effect.get(GameExtraEffectType.BUILDING_LVLUP_RESOURCE);
-            }
-        }
 
         this._buildingMap = new Map();
         this._buildingMap.set(InnerBuildingType.MainCity, this.node.getChildByPath("__ViewContent/BuildingInfoView/MainCity"));
@@ -155,7 +142,7 @@ export class BuildingUpgradeUI extends ViewController {
             if (time == null) {
                 time = 5;
             }
-            time = Math.floor(time - time * this._artifactTimeEffectNum);
+            time = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.BUILDING_LVUP_TIME, time);
             upgradeView.getChildByPath("Time/Label-001").getComponent(Label).string = CommonTools.formatSeconds(time);
 
 
@@ -168,7 +155,7 @@ export class BuildingUpgradeUI extends ViewController {
             if (costData != null) {
                 for (const cost of costData) {
                     const type = cost[0].toString();
-                    let num = Math.floor(cost[1] - cost[1] * this._artifactResourceEffectNum);
+                    let num = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.BUILDING_LVLUP_RESOURCE, cost[1]);
                     const ownNum: number = DataMgr.s.item.getObj_item_count(type);
 
                     const item = instantiate(this._levelInfoCostItem);
@@ -245,9 +232,7 @@ export class BuildingUpgradeUI extends ViewController {
                     continue;
                 }
                 const type = resource[0].toString();
-                let needNum = resource[1];
-                // total num
-                needNum = Math.floor(needNum - (needNum * this._artifactResourceEffectNum));
+                let needNum = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.BUILDING_LVLUP_RESOURCE, resource[1]);
 
                 if (DataMgr.s.item.getObj_item_count(type) < needNum) {
                     canUpgrade = false;
@@ -269,7 +254,7 @@ export class BuildingUpgradeUI extends ViewController {
             if (time == null) {
                 time = 5;
             }
-            time = Math.floor(time - (time * this._artifactTimeEffectNum));
+            time = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.BUILDING_LVUP_TIME, time);
             UserInfoMgr.beginUpgrade(buildingType, time);
 
             this._closeBuildingUpgradeUI();

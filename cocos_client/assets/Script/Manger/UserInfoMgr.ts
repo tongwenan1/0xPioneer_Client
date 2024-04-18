@@ -2,7 +2,7 @@ import { Asset, __private, resources, sys } from "cc";
 import { GameExtraEffectType, GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
-import { ArtifactMgr, ItemMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
+import { ArtifactMgr, GameMgr, ItemMgr, PioneerMgr, TaskMgr } from "../Utils/Global";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { UserInfoEvent, GenerateTroopInfo, GenerateEnergyInfo } from "../Const/UserInfoDefine";
 import { InnerBuildingType, UserInnerBuildInfo } from "../Const/BuildingDefine";
@@ -279,10 +279,7 @@ export default class UserInfoMgr {
     public set explorationValue(value: number) {
         const original = this._explorationValue;
         let addNum = value - original;
-        const effect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(this.artifactStoreLevel);
-        if (effect != null && effect.has(GameExtraEffectType.TREASURE_PROGRESS)) {
-            addNum = Math.floor(addNum + addNum * effect.get(GameExtraEffectType.TREASURE_PROGRESS));
-        }
+        addNum = GameMgr.getAfterExtraEffectPropertyByPioneer(null, GameExtraEffectType.TREASURE_PROGRESS, addNum);
         this._explorationValue = original + addNum;
 
         this._localJsonData.playerData.explorationValue = this._explorationValue;
@@ -376,12 +373,7 @@ export default class UserInfoMgr {
 
                     if (this._generateEnergyInfo.countTime <= 0) {
                         let generateNumPerMin: number = generateConfig.output;
-                        let effectNum: number = 0;
-                        const artifactEffect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(this.artifactStoreLevel);
-                        if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.ENERGY_GENERATE)) {
-                            effectNum = artifactEffect.get(GameExtraEffectType.ENERGY_GENERATE);
-                        }
-                        generateNumPerMin = Math.floor(generateNumPerMin + generateNumPerMin * effectNum);
+                        generateNumPerMin = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.EnergyStation, GameExtraEffectType.ENERGY_GENERATE, generateNumPerMin);
                         this._generateEnergyInfo.totalEnergyNum = Math.min(generateConfig.storage, this._generateEnergyInfo.totalEnergyNum + generateNumPerMin);
                         this._generateEnergyInfo.countTime = perGenerateTime;
 

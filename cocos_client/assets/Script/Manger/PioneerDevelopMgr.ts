@@ -1,6 +1,9 @@
 import NotificationMgr from "../Basic/NotificationMgr";
 import NFTPioneerConfig from "../Config/NFTPioneerConfig";
+import NFTSkillConfig from "../Config/NFTSkillConfig";
+import NFTSkillEffectConfig from "../Config/NFTSkillEffectConfig";
 import { InnerBuildingType } from "../Const/BuildingDefine";
+import { GameExtraEffectType } from "../Const/ConstDefine";
 import { NotificationName } from "../Const/Notification";
 import { NFTPioneerModel } from "../Const/PioneerDevelopDefine";
 import CommonTools from "../Tool/CommonTools";
@@ -12,6 +15,40 @@ export default class PioneerDevelopMgr {
 
     public getAllNFTs(): NFTPioneerModel[] {
         return this._develpDatas;
+    }
+    public getNFTById(NFTId: string): NFTPioneerModel {
+        return this._develpDatas.find((v) => v.uniqueId == NFTId);
+    }
+    public getNFTByWorkingBuildingId(buildingId: InnerBuildingType): NFTPioneerModel {
+        return this._develpDatas.find((v) => v.workingBuildingId == buildingId);
+    }
+    public getNFTEffectById(NFTId: string, type:GameExtraEffectType): number {
+        let effectNum: number = 0;
+        const NFT = this.getNFTById(NFTId);
+        if (NFT == undefined) {
+            return effectNum;
+        }
+        for (const skill of NFT.skills) {
+            const config = NFTSkillConfig.getById(skill.id);
+            if (config == null) {
+                continue;
+            }
+            for (const templeEffect of config.effect) {
+                const effectConfig = NFTSkillEffectConfig.getById(templeEffect.toString());
+                if (effectConfig == null) {
+                    continue;
+                }
+                let effectType = effectConfig.type;
+                if (effectType == GameExtraEffectType.VISION_RANGE) {
+                    effectType = GameExtraEffectType.PIONEER_ONLY_VISION_RANGE;
+                }
+                if (effectType != type) {
+                    continue;
+                }
+                effectNum += effectConfig.para[0];
+            }
+        }
+        return effectNum;
     }
     //-------------------------------- data action
     public generateNewNFT(NFTId: string = null): NFTPioneerModel {

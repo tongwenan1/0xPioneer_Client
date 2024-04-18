@@ -1,6 +1,6 @@
 import { _decorator, Color, Component, instantiate, Label, Layers, Layout, math, Node, ProgressBar, Slider } from 'cc';
 import { GameExtraEffectType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ArtifactMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
@@ -52,12 +52,11 @@ export class TransformToEnergyUI extends ViewController {
         // this.node.getChildByPath("__ViewContent/footer/Convert").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.getLanById("107549");
         let showOutput: string = energyData.output.toString();
-        const artifactEffect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
-        if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.ENERGY_GENERATE)) {
-            const effectNum = Math.floor(energyData.output * artifactEffect.get(GameExtraEffectType.ENERGY_GENERATE));
-            if (effectNum > 0) {
-                showOutput += ("+" + effectNum);
-            }
+        const effectOutput = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.EnergyStation, GameExtraEffectType.ENERGY_GENERATE, energyData.output);
+
+        const gapNum: number = effectOutput - energyData.output;
+        if (gapNum > 0) {
+            showOutput += ("+" + gapNum);
         }
         this._perMinOutputLabel.string = showOutput + "/" + "min";
 

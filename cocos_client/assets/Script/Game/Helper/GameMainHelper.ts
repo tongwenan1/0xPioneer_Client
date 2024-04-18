@@ -4,7 +4,7 @@ import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import { ECursorType, GameExtraEffectType } from "../../Const/ConstDefine";
 import { TileHexDirection, TileMapHelper, TilePos } from "../TiledMap/TileTool";
-import { ArtifactMgr, UserInfoMgr } from "../../Utils/Global";
+import { ArtifactMgr, GameMgr, UserInfoMgr } from "../../Utils/Global";
 import { ConfigType, MapScaleParam } from "../../Const/Config";
 import { DataMgr } from "../../Data/DataMgr";
 
@@ -230,15 +230,8 @@ export default class GameMainHelper {
             return [];
         }
         let vision: number = 6;
-        const effectData = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
-        if (effectData != null) {
-            if (effectData.has(GameExtraEffectType.PIONEER_ONLY_VISION_RANGE)) {
-                vision += effectData.get(GameExtraEffectType.PIONEER_ONLY_VISION_RANGE);
-            }
-            if (effectData.has(GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE)) {
-                vision += effectData.get(GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE);
-            }
-        }
+        vision = GameMgr.getAfterExtraEffectPropertyByPioneer(ownerId, GameExtraEffectType.PIONEER_ONLY_VISION_RANGE, vision);
+        vision = GameMgr.getAfterExtraEffectPropertyByPioneer(ownerId, GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE, vision);
         return this._tiledMapHelper.Shadow_Earse(this._tiledMapHelper.getPos(mapPos.x, mapPos.y), ownerId, vision, false);
     }
     public tiledMapGetShadowClearedTiledPositions(): TilePos[] {

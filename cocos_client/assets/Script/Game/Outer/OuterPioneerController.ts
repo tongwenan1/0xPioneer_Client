@@ -6,7 +6,7 @@ import { MapItemMonster } from "./View/MapItemMonster";
 import { MapPioneer } from "./View/MapPioneer";
 import { OuterMapCursorView } from "./View/OuterMapCursorView";
 import { GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
-import { ArtifactMgr, BuildingMgr, ItemMgr, PioneerMgr, SettlementMgr, TaskMgr, UserInfoMgr } from "../../Utils/Global";
+import { ArtifactMgr, BuildingMgr, GameMgr, ItemMgr, PioneerMgr, SettlementMgr, TaskMgr, UserInfoMgr } from "../../Utils/Global";
 import { OuterBuildingController } from "./OuterBuildingController";
 import { UIName } from "../../Const/ConstUIDefine";
 import { DialogueUI } from "../../UI/Outer/DialogueUI";
@@ -27,7 +27,7 @@ import { TaskShowHideStatus } from "../../Const/TaskDefine";
 import { EventConfigData } from "../../Const/Event";
 import UIPanelManger from "../../Basic/UIPanelMgr";
 import { MapBuildingObject, MapBuildingResourceObject } from "../../Const/MapBuilding";
-import { MapBuildingType } from "../../Const/BuildingDefine";
+import { InnerBuildingType, MapBuildingType } from "../../Const/BuildingDefine";
 import { DataMgr } from "../../Data/DataMgr";
 import {
     MapNpcPioneerObject,
@@ -200,23 +200,18 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
 
     protected viewUpdate(dt: number): void {
         super.viewUpdate(dt);
-
         // default speed
         let defaultSpeed = 180;
-
         if (PioneerGameTest) {
             defaultSpeed = 600;
         }
-        const allPioneers = DataMgr.s.pioneer.getAll(true);
-        // artifact effect
-        let artifactSpeed = 0;
-        const artifactEff = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
-        if (artifactEff.has(GameExtraEffectType.MOVE_SPEED)) {
-            artifactSpeed = artifactEff.get(GameExtraEffectType.MOVE_SPEED);
-        }
 
+        const allPioneers = DataMgr.s.pioneer.getAll(true);
         for (var i = 0; i < allPioneers.length; i++) {
             let pioneer = allPioneers[i];
+            if (this._movingPioneerIds.indexOf(pioneer.id) == -1 || !this._pioneerMap.has(pioneer.id)) {
+                continue;
+            }
             let usedSpeed = defaultSpeed;
             for (const logic of pioneer.logics) {
                 if (logic.moveSpeed > 0) {
@@ -225,13 +220,10 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
             }
             // artifact move speed
             if (pioneer.type == MapPioneerType.player) {
-                usedSpeed = Math.floor(usedSpeed + usedSpeed * artifactSpeed);
+                usedSpeed = GameMgr.getAfterExtraEffectPropertyByPioneer(pioneer.id, GameExtraEffectType.MOVE_SPEED, usedSpeed);
             }
-
-            if (this._movingPioneerIds.indexOf(pioneer.id) != -1 && this._pioneerMap.has(pioneer.id)) {
-                let pioneermap = this._pioneerMap.get(pioneer.id);
-                this._updateMoveStep(usedSpeed, dt, pioneer, pioneermap);
-            }
+            let pioneermap = this._pioneerMap.get(pioneer.id);
+            this._updateMoveStep(usedSpeed, dt, pioneer, pioneermap);
         }
     }
 
@@ -549,10 +541,8 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
 
         if (mainCity != null && mainCity.faction != MapMemberFactionType.enemy && pioneer != null && pioneer.show) {
             let radialRange = UserInfoMgr.cityVision;
-            const artifactEffect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
-            if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.CITY_RADIAL_RANGE)) {
-                radialRange += artifactEffect.get(GameExtraEffectType.CITY_RADIAL_RANGE);
-            }
+            radialRange = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.CITY_RADIAL_RANGE, radialRange);
+
             const isInCityRange: boolean = BuildingMgr.checkMapPosIsInBuilingRange(pioneer.stayPos, mainCityId, radialRange);
             if (isInCityRange && pioneer.hp < pioneer.hpMax) {
                 PioneerMgr.pioneerHealHpToMax(pioneerId);

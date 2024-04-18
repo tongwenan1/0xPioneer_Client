@@ -1,7 +1,7 @@
 import { Label, Node, _decorator, v3 } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
-import { ArtifactMgr, ItemMgr, LanMgr, UserInfoMgr } from "../../../Utils/Global";
+import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, UserInfoMgr } from "../../../Utils/Global";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
@@ -84,14 +84,14 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
                 } else {
                     this._produceInfoView.getChildByPath("BottomContent").active = true;
                     this._produceInfoView.getChildByPath("BottomContent/CurrentTime").getComponent(Label).string = generateInfoData.countTime.toString();
-
+                    // output
                     let showOutput: string = generateConfig.output.toString();
-                    const artifactEffect = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
-                    if (artifactEffect != null && artifactEffect.has(GameExtraEffectType.ENERGY_GENERATE)) {
-                        const effectNum = Math.floor(generateConfig.output * artifactEffect.get(GameExtraEffectType.ENERGY_GENERATE));
-                        if (effectNum > 0) {
-                            showOutput += ("+" + effectNum);
-                        }
+                    // output after effect
+                    const afterEffectOutput = GameMgr.getAfterExtraEffectPropertyByBuilding(this._building.buildType, GameExtraEffectType.ENERGY_GENERATE, generateConfig.output);
+                    // output gap
+                    const gapNum: number = afterEffectOutput - generateConfig.output;
+                    if (gapNum > 0) {
+                        showOutput += ("+" + gapNum);
                     }
                     this._produceInfoView.getChildByPath("BottomContent/PerNum").getComponent(Label).string = showOutput;
                 }

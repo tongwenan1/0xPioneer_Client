@@ -1,7 +1,7 @@
 import { _decorator, Component, instantiate, Label, Layout, Node, ProgressBar, Slider } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
 import { GameExtraEffectType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ArtifactMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
+import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
@@ -51,7 +51,8 @@ export class RecruitUI extends ViewController {
         this._generateMaxTroop.node.getParent().getComponent(Layout).updateLayout();
 
         this._generateTimeNum = Math.ceil(this._perTroopTime * this._selectGenerateNum);
-        this._generateTimeNum = Math.floor(this._generateTimeNum - this._generateTimeNum * this._artifactEffect);
+        this._generateTimeNum = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.Barrack, GameExtraEffectType.TROOP_GENERATE_TIME, this._generateTimeNum);
+
         this._generateTime.string = CommonTools.formatSeconds(this._generateTimeNum);
 
         if (this._costShowItems.length == this._costDatas.length) {
@@ -97,7 +98,6 @@ export class RecruitUI extends ViewController {
     private _costItem: Node = null;
     private _costShowItems: Node[] = [];
 
-    private _artifactEffect: number = 0;
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
@@ -126,12 +126,6 @@ export class RecruitUI extends ViewController {
             this._perTroopTime = configPerGenerateNum;
         }
         this._maxRecruitTroop = Math.max(0, this._maxTroop - DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop));
-
-
-        const effectData = DataMgr.s.artifact.getObj_artifact_effectiveEffect(UserInfoMgr.artifactStoreLevel);
-        if (effectData != null && effectData.has(GameExtraEffectType.TROOP_GENERATE_TIME)) {
-            this._artifactEffect = effectData.get(GameExtraEffectType.TROOP_GENERATE_TIME);
-        }
 
         this._totalTroopProgress = this.node.getChildByPath("__ViewContent/ProgressBar").getComponent(ProgressBar);
         this._currentTroop = this.node.getChildByPath("__ViewContent/current_res/num/cur").getComponent(Label);
