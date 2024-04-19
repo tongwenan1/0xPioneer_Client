@@ -1,7 +1,6 @@
 import { _decorator, Component, instantiate, Node, Prefab, v3, Vec2, Vec3 } from "cc";
 import { TileHexDirection, TilePos } from "../TiledMap/TileTool";
 import { OuterBuildingView } from "./View/OuterBuildingView";
-import { TaskMgr } from "../../Utils/Global";
 import GameMainHelper from "../Helper/GameMainHelper";
 import { OuterTiledMapActionController } from "./OuterTiledMapActionController";
 import { TaskShowHideStatus } from "../../Const/TaskDefine";
@@ -295,12 +294,12 @@ export class OuterBuildingController extends Component {
         this._refreshUI();
     }
     buildingDidHide(buildingId: string): void {
-        TaskMgr.showHideChanged(MapMemberTargetType.building, buildingId, TaskShowHideStatus.hide);
+        DataMgr.s.task.showHideChanged(MapMemberTargetType.building, buildingId, TaskShowHideStatus.hide);
         this._refreshUI();
         // this._refreshDecorationUI();
     }
     buildingDidShow(buildingId: string): void {
-        TaskMgr.showHideChanged(MapMemberTargetType.building, buildingId, TaskShowHideStatus.show);
+        DataMgr.s.task.showHideChanged(MapMemberTargetType.building, buildingId, TaskShowHideStatus.show);
         this._refreshUI();
         // this._refreshDecorationUI();
     }

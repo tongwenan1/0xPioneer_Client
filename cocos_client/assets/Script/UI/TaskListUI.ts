@@ -1,9 +1,9 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node, Vec2 } from 'cc';
-import { LanMgr, PioneerMgr, TaskMgr } from '../Utils/Global';
+import { LanMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
-import TaskModel, { TaskCondition, TaskConditionType, TaskStepModel } from '../Const/TaskDefine';
+import { TaskCondition, TaskConditionType, TaskObject, TaskStepObject } from '../Const/TaskDefine';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
 import CommonTools from '../Tool/CommonTools';
 import UIPanelManger from '../Basic/UIPanelMgr';
@@ -40,9 +40,9 @@ export class TaskListUI extends ViewController {
         }
         this._detailProgressList = [];
 
-        const finishedTasks: TaskModel[] = [];
-        const toDoTasks: TaskModel[] = [];
-        const allGettedTasks = TaskMgr.getAllGettedTasks();
+        const finishedTasks: TaskObject[] = [];
+        const toDoTasks: TaskObject[] = [];
+        const allGettedTasks = DataMgr.s.task.getAllGettedTasks();
         for (const task of allGettedTasks) {
             if (task.isFinished || task.isFailed) {
                 finishedTasks.push(task);
@@ -59,8 +59,8 @@ export class TaskListUI extends ViewController {
                 break;
             }
             actionTaskShowCount += 1;
-            const currentTask: TaskModel = toDoTasks[i];
-            const currentStep: TaskStepModel = TaskMgr.getTaskStep(currentTask.steps[currentTask.stepIndex]);
+            const currentTask: TaskObject = toDoTasks[i];
+            const currentStep: TaskStepObject = DataMgr.s.task.getTaskStep(currentTask.steps[currentTask.stepIndex]);
 
             const action = instantiate(this._actionItem);
             action.active = true;
@@ -77,13 +77,13 @@ export class TaskListUI extends ViewController {
 
         this._detailTaskView.active = this._isDetailShow;
         if (this._isDetailShow) {
-            let showTasks: TaskModel[] = null;
+            let showTasks: TaskObject[] = null;
             if (this._isDetailToDoShow) {
                 showTasks = toDoTasks;
             } else {
                 showTasks = finishedTasks;
             }
-            showTasks.sort((a: TaskModel, b: TaskModel) => a.taskId.localeCompare(b.taskId));
+            showTasks.sort((a: TaskObject, b: TaskObject) => a.taskId.localeCompare(b.taskId));
             for (let i = 0; i < showTasks.length; i++) {
                 const detail = instantiate(this._detailTaskItem);
                 detail.active = true;
@@ -98,7 +98,7 @@ export class TaskListUI extends ViewController {
 
             if (this._detailSelectedIndex < showTasks.length) {
                 this._detailTaskView.getChildByName("ProgressList").active = true;
-                const currentTask: TaskModel = showTasks[this._detailSelectedIndex];
+                const currentTask: TaskObject = showTasks[this._detailSelectedIndex];
                 if (currentTask.isFailed) {
                     const unDoneTitleItem = instantiate(this._detailProgressUndoneTitleItem);
                     unDoneTitleItem.active = true;
@@ -110,12 +110,12 @@ export class TaskListUI extends ViewController {
                     // 2- finished task
                     // 3- todo title
                     // 4- todo task
-                    const finishedDatas: { status: number, stepData: TaskStepModel }[] = [];
-                    const todoDatas: { status: number, stepData: TaskStepModel }[] = [];
+                    const finishedDatas: { status: number, stepData: TaskStepObject }[] = [];
+                    const todoDatas: { status: number, stepData: TaskStepObject }[] = [];
                     let hasFinishedTitle: boolean = false;
                     let hasToDoTitle: boolean = false;
                     for (let i = 0; i < currentTask.steps.length; i++) {
-                        const currentStep = TaskMgr.getTaskStep(currentTask.steps[currentTask.stepIndex]);
+                        const currentStep = DataMgr.s.task.getTaskStep(currentTask.steps[currentTask.stepIndex]);
                         if (i < currentTask.stepIndex) {
                             // step finished
                             if (!hasFinishedTitle) {
@@ -179,7 +179,7 @@ export class TaskListUI extends ViewController {
 
     private _isDetailShow: boolean = false;
     private _isDetailToDoShow: boolean = true;
-    private _toDoTaskList: TaskModel[] = [];
+    private _toDoTaskList: TaskObject[] = [];
     private _detailSelectedIndex: number = 0;
 
     private _actionTaskList: Node[] = [];
@@ -266,8 +266,8 @@ export class TaskListUI extends ViewController {
         if (index >= this._toDoTaskList.length) {
             return;
         }
-        const templeTask: TaskModel = this._toDoTaskList[index];
-        const currentStepTask: TaskStepModel = TaskMgr.getTaskStep(templeTask.steps[templeTask.stepIndex]);
+        const templeTask: TaskObject = this._toDoTaskList[index];
+        const currentStepTask: TaskStepObject = DataMgr.s.task.getTaskStep(templeTask.steps[templeTask.stepIndex]);
         if (currentStepTask == null) {
             return;
         }

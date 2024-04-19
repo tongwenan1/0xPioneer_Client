@@ -7,7 +7,7 @@ import { BattleReportDataMgr } from "./Save/BattleReportDataMgr";
 import { ItemDataMgr } from "./Save/ItemDataMgr";
 import { SettlementDataMgr } from "./Save/SettlementDataMgr";
 import UserInfoDataMgr from "./Save/UserInfoDataMgr";
-// import { UserDataMgr } from "./Save/UserDataMgr";
+import TaskDataMgr from "./Save/TaskDataMgr";
 
 export class SaveData {
     private _pioneersDataMgr: PioneersDataMgr;
@@ -19,6 +19,7 @@ export class SaveData {
     private _itemDataMgr: ItemDataMgr;
     private _settlementDataMgr: SettlementDataMgr;
     private _userInfoDataMgr: UserInfoDataMgr;
+    private _taskDataMgr: TaskDataMgr;
 
     public get pioneer() {
         return this._pioneersDataMgr;
@@ -56,6 +57,10 @@ export class SaveData {
         return this._userInfoDataMgr;
     }
 
+    public get task() {
+        return this._taskDataMgr;
+    }
+
     constructor() {
         this._pioneersDataMgr = new PioneersDataMgr();
         this._eraseShadowDataMgr = new EraseShadowDataMgr();
@@ -66,6 +71,7 @@ export class SaveData {
         this._itemDataMgr = new ItemDataMgr();
         this._settlementDataMgr = new SettlementDataMgr();
         this._userInfoDataMgr = new UserInfoDataMgr();
+        this._taskDataMgr = new TaskDataMgr();
     }
 
     public async load(walletAddr: string) {
@@ -78,6 +84,7 @@ export class SaveData {
         await this._itemDataMgr.loadObj(walletAddr);
         await this._settlementDataMgr.loadObj(walletAddr);
         await this._userInfoDataMgr.loadObj(walletAddr);
+        await this._taskDataMgr.loadObj(walletAddr);
     }
     public async save() {
         await this._eraseShadowDataMgr.saveObj();
@@ -89,5 +96,6 @@ export class SaveData {
         await this._itemDataMgr.saveObj();
         await this._settlementDataMgr.saveObj();
         await this._userInfoDataMgr.saveObj();
+        await this._taskDataMgr.saveObj();
     }
 }

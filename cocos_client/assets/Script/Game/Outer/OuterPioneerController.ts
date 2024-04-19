@@ -6,7 +6,7 @@ import { MapItemMonster } from "./View/MapItemMonster";
 import { MapPioneer } from "./View/MapPioneer";
 import { OuterMapCursorView } from "./View/OuterMapCursorView";
 import { GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
-import { BuildingMgr, GameMgr, ItemMgr, PioneerMgr, TaskMgr, UserInfoMgr } from "../../Utils/Global";
+import { BuildingMgr, GameMgr, ItemMgr, PioneerMgr, UserInfoMgr } from "../../Utils/Global";
 import { OuterBuildingController } from "./OuterBuildingController";
 import { UIName } from "../../Const/ConstUIDefine";
 import { DialogueUI } from "../../UI/Outer/DialogueUI";
@@ -226,7 +226,7 @@ export class OuterPioneerController extends ViewController {
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
-        
+
         NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_BEGIN_EYES, this._onRookieGuideBeginEyes, this);
         NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_THIRD_EYES, this._onRookieGuideThirdEyes, this);
 
@@ -563,7 +563,7 @@ export class OuterPioneerController extends ViewController {
                 if (result.success) {
                     result.node.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), () => {
                         DataMgr.s.userInfo.finishRookie();
-                        TaskMgr.gameStarted();
+                        DataMgr.s.task.gameStarted();
                         // init resource
                         ItemMgr.addItem(
                             [
@@ -612,7 +612,7 @@ export class OuterPioneerController extends ViewController {
     }
     private _onPioneerShowChanged(data: { id: string; show: boolean }): void {
         if (data.show) {
-            TaskMgr.showHideChanged(MapMemberTargetType.pioneer, data.id, TaskShowHideStatus.show);
+            DataMgr.s.task.showHideChanged(MapMemberTargetType.pioneer, data.id, TaskShowHideStatus.show);
             if (data.id == "pioneer_1" || data.id == "pioneer_2" || data.id == "pioneer_3") {
                 // get secret guard
                 const pioneer = DataMgr.s.pioneer.getById(data.id);
@@ -630,7 +630,7 @@ export class OuterPioneerController extends ViewController {
                 }
             }
         } else {
-            TaskMgr.showHideChanged(MapMemberTargetType.pioneer, data.id, TaskShowHideStatus.hide);
+            DataMgr.s.task.showHideChanged(MapMemberTargetType.pioneer, data.id, TaskShowHideStatus.hide);
         }
         this._refreshUI();
     }

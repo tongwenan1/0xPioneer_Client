@@ -6,7 +6,6 @@ import im from "../Manger/ItemMgr";
 import l from "../Manger/LanMgr";
 import locad from "../Manger/LocalDataLoader";
 import p from "../Manger/PioneerMgr";
-import tk from "../Manger/TaskMgr";
 import user from "../Manger/UserInfoMgr";
 import pd from "../Manger/PioneerDevelopMgr";
 import game from "../Manger/GameMgr";
@@ -21,7 +20,6 @@ const ItemMgr = new im();
 const LanMgr = new l();
 const LocalDataLoader = new locad();
 const PioneerMgr = new p();
-const TaskMgr = new tk();
 const UserInfoMgr = new user();
 const BattleReportsMgr = new br();
 const PioneerDevelopMgr = new pd();
@@ -40,7 +38,6 @@ export {
     ItemMgr,
     LanMgr,
     PioneerMgr,
-    TaskMgr,
     UserInfoMgr,
     PioneerDevelopMgr,
     GameMgr,

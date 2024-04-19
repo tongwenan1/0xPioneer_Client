@@ -1,7 +1,7 @@
 import { CCBoolean, Component, ImageAsset, _decorator } from "cc";
 import { UIName } from "../Const/ConstUIDefine";
 import ViewController from "../BasicView/ViewController";
-import { ECursorStyle, ECursorType } from "../Const/ConstDefine";
+import { ECursorStyle, ECursorType, GetPropData } from "../Const/ConstDefine";
 import { MouseCursor } from "./MouseCursor";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
@@ -9,11 +9,11 @@ import { DialogueUI } from "./Outer/DialogueUI";
 import TalkConfig from "../Config/TalkConfig";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
+import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 
 const { ccclass, property } = _decorator;
 
-
-@ccclass('UIMainRootController')
+@ccclass("UIMainRootController")
 export class UIMainRootController extends ViewController {
     public async checkShowRookieGuide() {
         if (this.canShowRookieGuide && !DataMgr.s.userInfo.data.didFinishRookie) {
@@ -38,6 +38,7 @@ export class UIMainRootController extends ViewController {
 
         NotificationMgr.addListener(NotificationName.CHANGE_CURSOR, this._onCursorChanged, this);
         NotificationMgr.addListener(NotificationName.DIALOG_SHOW, this._onDialogShow, this);
+        NotificationMgr.addListener(NotificationName.TASK_PROP_TO_GET, this._onTaskPropToGet, this);
     }
 
     protected viewDidDestroy(): void {
@@ -45,6 +46,7 @@ export class UIMainRootController extends ViewController {
 
         NotificationMgr.removeListener(NotificationName.CHANGE_CURSOR, this._onCursorChanged, this);
         NotificationMgr.removeListener(NotificationName.DIALOG_SHOW, this._onDialogShow, this);
+        NotificationMgr.removeListener(NotificationName.TASK_PROP_TO_GET, this._onTaskPropToGet, this);
     }
 
     //------------------------------------------ notification
@@ -63,5 +65,8 @@ export class UIMainRootController extends ViewController {
         if (result.success) {
             result.node.getComponent(DialogueUI).dialogShow(talkData, null);
         }
+    }
+    private _onTaskPropToGet(data: { prop: GetPropData }) {
+        ItemConfigDropTool.getItemByConfig([data.prop]);
     }
 }

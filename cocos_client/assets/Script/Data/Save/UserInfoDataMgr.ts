@@ -20,7 +20,6 @@ export default class UserInfoDataMgr {
         this._initData();
     }
     public saveObj() {
-        const temple: UserInfoObject = Object.assign(this._data);
         localStorage.setItem(this._key, JSON.stringify(this._data));
     }
     //--------------------------------

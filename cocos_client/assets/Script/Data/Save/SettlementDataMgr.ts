@@ -1,5 +1,5 @@
 import ItemConfig from "../../Config/ItemConfig";
-import { SettlementModel } from "../../Const/Manager/SettlementMgrDefine";
+import { SettlementModel } from "../../Const/SettlementDefine";
 
 export class SettlementDataMgr {
     private _data: SettlementModel[];

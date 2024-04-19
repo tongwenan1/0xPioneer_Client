@@ -1,7 +1,7 @@
 import { CurveRange, Vec2 } from "cc";
 import CommonTools from "../Tool/CommonTools";
 import { GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
-import { GameMgr, ItemMgr, LanMgr, PioneerDevelopMgr, TaskMgr } from "../Utils/Global";
+import { GameMgr, ItemMgr, LanMgr, PioneerDevelopMgr } from "../Utils/Global";
 import { UIHUDController } from "../UI/UIHUDController";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { MapBuildingType } from "../Const/BuildingDefine";
@@ -13,7 +13,6 @@ import GameMainHelper from "../Game/Helper/GameMainHelper";
 import {
     MapPioneerType,
     MapPioneerActionType,
-    MapPioneerAttributesChangeModel,
     MapPioneerEventStatus,
     MapPioneerLogicType,
     MapPioneerObject,
@@ -342,7 +341,7 @@ export default class PioneerMgr {
                 }
                 if (selfKillPioneer != null) {
                     // task
-                    TaskMgr.pioneerKilled(selfKillPioneer.id);
+                    DataMgr.s.task.pioneerKilled(selfKillPioneer.id);
                     // pioneer win reward
                     DataMgr.s.userInfo.gainExp(selfKillPioneer.winExp);
                     if (selfKillPioneer.winProgress > 0) {

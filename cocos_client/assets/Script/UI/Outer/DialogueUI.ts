@@ -1,10 +1,9 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node } from "cc";
 import { NPCNameLangType } from "../../Const/ConstDefine";
-import { LanMgr, TaskMgr, UserInfoMgr } from "../../Utils/Global";
+import { LanMgr, UserInfoMgr } from "../../Utils/Global";
 import ViewController from "../../BasicView/ViewController";
 import { UIName } from "../../Const/ConstUIDefine";
 import NotificationMgr from "../../Basic/NotificationMgr";
-import { CountType } from "../../Const/Count";
 import { NotificationName } from "../../Const/Notification";
 import { ItemGettedUI } from "../ItemGettedUI";
 import { TalkConfigData } from "../../Const/Talk";
@@ -158,7 +157,7 @@ export class DialogueUI extends ViewController {
         if (this._talk == null) {
             return;
         }
-        TaskMgr.talkSelected(this._talk.id, parseInt(customEventData));
+        DataMgr.s.task.talkSelected(this._talk.id, parseInt(customEventData));
         DataMgr.s.count.addObj_selectDialog({
             selectText: customEventData,
         });

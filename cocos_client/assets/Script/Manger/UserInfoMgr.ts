@@ -1,7 +1,7 @@
 import { GameExtraEffectType, GetPropData, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import ArtifactData from "../Model/ArtifactData";
-import { GameMgr, ItemMgr, TaskMgr } from "../Utils/Global";
+import { GameMgr, ItemMgr } from "../Utils/Global";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { InnerBuildingType } from "../Const/BuildingDefine";
 import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
@@ -62,11 +62,11 @@ export default class UserInfoMgr {
     }
     //-------------------------------------------------- notification
     private _onTaskStepFinished(taskId: string) {
-        const task = TaskMgr.getTask(taskId);
+        const task = DataMgr.s.task.getTask(taskId);
         if (task != null) {
             const finishedStepIndex: number = task.stepIndex - 1;
             if (finishedStepIndex >= 0 && finishedStepIndex < task.steps.length) {
-                const finishedStep = TaskMgr.getTaskStep(task.steps[finishedStepIndex]);
+                const finishedStep = DataMgr.s.task.getTaskStep(task.steps[finishedStepIndex]);
 
                 if (finishedStep.progress != null && finishedStep.progress > 0) {
                     const effectProgress = GameMgr.getAfterExtraEffectPropertyByPioneer(null, GameExtraEffectType.TREASURE_PROGRESS, finishedStep.progress);

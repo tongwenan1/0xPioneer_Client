@@ -140,10 +140,14 @@ export class MainUI extends ViewController {
         }
     }
     private async onTapTaskList() {
-        const result = await UIPanelManger.inst.pushPanel(UIName.TaskListUI);
-        if (result.success) {
-            result.node.getComponent(TaskListUI).refreshUI();
+        if (UIPanelManger.inst.panelIsShow(UIName.TaskListUI)) {
+            return;
         }
+        const result = await UIPanelManger.inst.pushPanel(UIName.TaskListUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(TaskListUI).refreshUI();
     }
     private async onTapNFT() {
         const result = await UIPanelManger.inst.pushPanel(UIName.NFTBackpackUI);
