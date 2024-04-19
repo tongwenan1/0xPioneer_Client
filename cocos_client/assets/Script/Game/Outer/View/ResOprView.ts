@@ -1,11 +1,10 @@
-import { _decorator, Button, Component, Label, log, Node, UITransform, v2, v3, Vec2, Vec3 } from 'cc';
-import ConfigConfig from '../../../Config/ConfigConfig';
-import { ConfigType, OneStepCostEnergyParam } from '../../../Const/Config';
+import { _decorator, Button, Component, Label, log, Node, UITransform, v2, v3, Vec2, Vec3 } from "cc";
+import ConfigConfig from "../../../Config/ConfigConfig";
+import { ConfigType, OneStepCostEnergyParam } from "../../../Const/Config";
 const { ccclass, property } = _decorator;
 
-@ccclass('ResOprView')
+@ccclass("ResOprView")
 export class ResOprView extends Component {
-
     @property(Button)
     btnAttack: Button = null;
 
@@ -24,13 +23,17 @@ export class ResOprView extends Component {
     @property(Button)
     btnMove: Button = null;
 
-
-
     /**
-     * 
+     *
      * @param actionType -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel
      */
-    public show(worldPos: Vec3, actionType: number, moveStep: number, confirmCallback: (actionType: number, useEnergy: number) => void, closeCallback: () => void) {
+    public show(
+        worldPos: Vec3,
+        actionType: number,
+        moveStep: number,
+        confirmCallback: (actionType: number, useEnergy: number) => void,
+        closeCallback: () => void
+    ) {
         this.node.active = true;
         this.node.worldPosition = worldPos;
         this._actionType = actionType;
@@ -39,7 +42,7 @@ export class ResOprView extends Component {
         this.btnGetRes.node.active = actionType == 2;
         this.btnAttack.node.active = actionType == 3;
         this.btnCamp.node.active = actionType == 4;
-        this.btnMove.node.active = (actionType == 6 || actionType == -1);
+        this.btnMove.node.active = actionType == 6 || actionType == -1;
         this.node.getChildByPath("btnRemove").active = true;
 
         // action cost
@@ -48,7 +51,6 @@ export class ResOprView extends Component {
         if (this._cost > 0) {
             this.node.getChildByPath("CostView").active = true;
             this.node.getChildByPath("CostView/CostLabel").getComponent(Label).string = "-" + this._cost;
-
         } else {
             this.node.getChildByPath("CostView").active = false;
         }
@@ -67,12 +69,9 @@ export class ResOprView extends Component {
     private _confirmCallback: (actionType: number, useEnergy: number) => void = null;
     private _closeCallback: () => void = null;
 
-    start() {
-    }
+    start() {}
 
-    update(deltaTime: number) {
-
-    }
+    update(deltaTime: number) {}
 
     onSearchClick() {
         if (this._confirmCallback) {
@@ -130,5 +129,3 @@ export class ResOprView extends Component {
         this.hide();
     }
 }
-
-

@@ -12,7 +12,6 @@ import {
     CCString,
     SpriteFrame,
     instantiate,
-    Sprite,
     EventMouse,
     Color,
     TiledMap,
@@ -20,7 +19,14 @@ import {
     view,
 } from "cc";
 import { InnerBuildingType, MapBuildingType } from "../../Const/BuildingDefine";
-import { ECursorType, GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
+import {
+    ECursorType,
+    GameExtraEffectType,
+    MapMemberFactionType,
+    MapMemberTargetType,
+    PioneerGameTest,
+    ResourceCorrespondingItem,
+} from "../../Const/ConstDefine";
 import { UIHUDController } from "../../UI/UIHUDController";
 import { TilePos, TileHexDirection } from "../TiledMap/TileTool";
 import { OuterPioneerController } from "./OuterPioneerController";
@@ -28,7 +34,7 @@ import { OuterFogAnimShapMask } from "./View/OuterFogAnimShapMask";
 import { OuterFogMask } from "./View/OuterFogMask";
 import { OuterMapCursorView } from "./View/OuterMapCursorView";
 import { ResOprView } from "./View/ResOprView";
-import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, PioneerMgr } from "../../Utils/Global";
+import { GameMgr, ItemMgr, LanMgr, PioneerMgr } from "../../Utils/Global";
 import GameMainHelper from "../Helper/GameMainHelper";
 import ViewController from "../../BasicView/ViewController";
 import EventConfig from "../../Config/EventConfig";
@@ -220,7 +226,11 @@ export class OuterTiledMapActionController extends ViewController {
                                         const centerPos = stayBuilding.stayMapPositions[3];
                                         const visionPositions = [];
                                         let radialRange = DataMgr.s.userInfo.data.cityRadialRange;
-                                        GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.CITY_RADIAL_RANGE, radialRange);
+                                        GameMgr.getAfterExtraEffectPropertyByBuilding(
+                                            InnerBuildingType.MainCity,
+                                            GameExtraEffectType.CITY_RADIAL_RANGE,
+                                            radialRange
+                                        );
                                         const extAround = GameMainHelper.instance.tiledMapGetExtAround(centerPos, radialRange - 1);
                                         for (const temple of extAround) {
                                             visionPositions.push(v2(temple.x, temple.y));
@@ -429,10 +439,16 @@ export class OuterTiledMapActionController extends ViewController {
     }
 
     private _clickOnMap(worldpos: Vec3) {
+        const currentActionPioneer = DataMgr.s.pioneer.getCurrentPlayer();
+        if (currentActionPioneer == null) {
+            return;
+        }
+        const outPioneerController = this.node.getComponent(OuterPioneerController);
         if (this._actionView.isShow) {
             this._actionView.hide();
             this._mapActionCursorView.hide();
-            this.node.getComponent(OuterPioneerController).hideMovingPioneerAction();
+            outPioneerController.hideMovingPioneerAction();
+            outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
             return;
         }
         if (this["_actionViewActioned"] == true) {
@@ -455,7 +471,6 @@ export class OuterTiledMapActionController extends ViewController {
             return;
         }
         // check is dead
-        const currentActionPioneer = DataMgr.s.pioneer.getCurrentPlayer();
         if (!currentActionPioneer.show && currentActionPioneer.rebirthCountTime > 0) {
             // useLanMgr
             UIHUDController.showCenterTip(LanMgr.getLanById("203003"));
@@ -649,7 +664,9 @@ export class OuterTiledMapActionController extends ViewController {
                     }
                 }
             }
-
+            // show move path
+            outPioneerController.showPioneerFootStep(currentActionPioneer.id, movePaths);
+            // show action panel
             this._actionView.show(
                 setWorldPosition,
                 actionType,
@@ -677,16 +694,17 @@ export class OuterTiledMapActionController extends ViewController {
                     }
                     DataMgr.s.pioneer.beginMove(currentActionPioneer.id, movePaths);
                     this._mapActionCursorView.hide();
-                    this.node.getComponent(OuterPioneerController).hideMovingPioneerAction();
+                    outPioneerController.hideMovingPioneerAction();
                 },
                 () => {
                     this["_actionViewActioned"] = true;
                     this._mapActionCursorView.hide();
-                    this.node.getComponent(OuterPioneerController).hideMovingPioneerAction();
+                    outPioneerController.hideMovingPioneerAction();
+                    outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
                 }
             );
             if (actionMovingPioneerId != null) {
-                this.node.getComponent(OuterPioneerController).showMovingPioneerAction(tiledPos, actionMovingPioneerId, this._mapActionCursorView);
+                outPioneerController.showMovingPioneerAction(tiledPos, actionMovingPioneerId, this._mapActionCursorView);
             }
         }
     }

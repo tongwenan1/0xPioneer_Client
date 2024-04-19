@@ -98,6 +98,19 @@ export class OuterPioneerController extends ViewController {
         this._actionUsedCursor = null;
     }
 
+    public showPioneerFootStep(pioneerId: string, movePaths: TilePos[]) {
+        const footViews = this._addFootSteps(movePaths);
+        this._footPathMap.set(pioneerId, footViews);
+    }
+    public clearPioneerFootStep(pioneerId: string) {
+        if (this._footPathMap.has(pioneerId)) {
+            for (const view of this._footPathMap.get(pioneerId)) {
+                view.destroy();
+            }
+            this._footPathMap.delete(pioneerId);
+        }
+    }
+
     @property(Prefab)
     private selfPioneer: Prefab;
 
@@ -744,10 +757,10 @@ export class OuterPioneerController extends ViewController {
                 this._actionPioneerFootStepViews = this._addFootSteps(pioneer.movePaths, true);
             }
         } else {
-            if (data.showMovePath && pioneer.movePaths.length > 0) {
-                const footViews = this._addFootSteps(pioneer.movePaths);
-                this._footPathMap.set(pioneer.id, footViews);
-            }
+            // if (data.showMovePath && pioneer.movePaths.length > 0) {
+            //     const footViews = this._addFootSteps(pioneer.movePaths);
+            //     this._footPathMap.set(pioneer.id, footViews);
+            // }
         }
     }
     private _onPlayerPioneerDidMoveOneStep(data: { id: string }): void {
@@ -772,7 +785,6 @@ export class OuterPioneerController extends ViewController {
     }): void {
         this._refreshFightView(data);
     }
-
     private _onFightDidAttack(data: {
         fightId: string;
         isSelfAttack: boolean;
@@ -783,7 +795,6 @@ export class OuterPioneerController extends ViewController {
     }): void {
         this._refreshFightView(data);
     }
-
     private _onEndFight(data: { fightId: string; isSelfWin: boolean; playerPioneerId: string }): void {
         //fightview destroy
         if (this._fightViewMap.has(data.fightId)) {
