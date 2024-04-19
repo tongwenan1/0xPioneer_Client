@@ -1,21 +1,32 @@
-import { Component, Label, ProgressBar, Node, Sprite, _decorator, Tween, v3, warn, EventHandler, Button, randomRangeInt, UIOpacity, instantiate, tween } from 'cc';
-import { ResourceCorrespondingItem } from '../Const/ConstDefine';
-import { ItemMgr, UserInfoMgr } from '../Utils/Global';
-import { UIName } from '../Const/ConstUIDefine';
-import { CivilizationLevelUpUI } from './CivilizationLevelUpUI';
-import NotificationMgr from '../Basic/NotificationMgr';
-import { UserInfoEvent } from '../Const/UserInfoDefine';
-import LvlupConfig from '../Config/LvlupConfig';
-import { NotificationName } from '../Const/Notification';
-import UIPanelManger from '../Basic/UIPanelMgr';
-import { DataMgr } from '../Data/DataMgr';
+import {
+    Component,
+    Label,
+    ProgressBar,
+    Node,
+    Sprite,
+    _decorator,
+    Tween,
+    v3,
+    warn,
+    EventHandler,
+    Button,
+    randomRangeInt,
+    UIOpacity,
+    instantiate,
+    tween,
+} from "cc";
+import { ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { UIName } from "../Const/ConstUIDefine";
+import { CivilizationLevelUpUI } from "./CivilizationLevelUpUI";
+import NotificationMgr from "../Basic/NotificationMgr";
+import LvlupConfig from "../Config/LvlupConfig";
+import { NotificationName } from "../Const/Notification";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
-
-@ccclass('TopUI')
-export default class TopUI extends Component implements UserInfoEvent {
-
-
+@ccclass("TopUI")
+export default class TopUI extends Component {
     @property(Label)
     txtPlayerName: Label = null;
 
@@ -39,14 +50,13 @@ export default class TopUI extends Component implements UserInfoEvent {
 
     private _expAnimLabel: Label = null;
     protected onLoad(): void {
-
         this._expAnimLabel = this.node.getChildByPath("progressLv/AnimLabel").getComponent(Label);
         this._expAnimLabel.node.active = false;
 
-        UserInfoMgr.addObserver(this);
-
-
         NotificationMgr.addListener(NotificationName.ITEM_CHANGE, this.refreshTopUI, this);
+        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_NAME, this.refreshTopUI, this);
+        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_EXP, this._onPlayerExpChanged, this);
+        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onPlayerLvlupChanged, this);
     }
 
     start() {
@@ -54,14 +64,15 @@ export default class TopUI extends Component implements UserInfoEvent {
     }
 
     protected onDestroy(): void {
-        UserInfoMgr.removeObserver(this);
-
         NotificationMgr.removeListener(NotificationName.ITEM_CHANGE, this.refreshTopUI, this);
+        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_NAME, this.refreshTopUI, this);
+        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_EXP, this._onPlayerExpChanged, this);
+        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onPlayerLvlupChanged, this);
     }
 
     refreshTopUI() {
-        const info = UserInfoMgr;
-        this.txtPlayerName.string = info.playerName;
+        const info = DataMgr.s.userInfo.data;
+        this.txtPlayerName.string = info.name;
         this.txtPlayerLV.string = "C.LV" + info.level;
         this.txtLvProgress.string = `${info.exp}/${1000}`;
         this.txtMoney.string = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Gold).toString();
@@ -87,11 +98,7 @@ export default class TopUI extends Component implements UserInfoEvent {
         animNode.setParent(this._expAnimLabel.node.parent);
         animNode.active = true;
         animNode.getComponent(Label).string = "+" + getExpValue;
-        animNode.position = v3(
-            animNode.position.x,
-            animNode.position.y - 30,
-            animNode.position.z
-        );
+        animNode.position = v3(animNode.position.x, animNode.position.y - 30, animNode.position.z);
         tween(animNode)
             .to(0.4, { position: v3(animNode.position.x, animNode.position.y + 30, animNode.position.z) })
             .call(() => {
@@ -107,26 +114,20 @@ export default class TopUI extends Component implements UserInfoEvent {
     private async onTapPlayerInfo() {
         await UIPanelManger.inst.pushPanel(UIName.PlayerInfoUI);
     }
-    //-----------------------------------------------
-    // userinfoevent
-    playerNameChanged(value: string): void {
-        this.refreshTopUI();
-    }
-    playerExpChanged(value: number): void {
-        this._playExpGettedAnim(value, () => {
+    //----------------------------------------------- notification
+    private _onPlayerExpChanged(data: { exp: number }): void {
+        this._playExpGettedAnim(data.exp, () => {
             this.refreshTopUI();
         });
     }
-    async playerLvlupChanged(value: number): Promise<void> {
-        const levelConfig = LvlupConfig.getById(value.toString());
+    private async _onPlayerLvlupChanged(): Promise<void> {
+        const currentLevel: number = DataMgr.s.userInfo.data.level;
+        const levelConfig = LvlupConfig.getById(currentLevel.toString());
         if (levelConfig != null) {
             const result = await UIPanelManger.inst.pushPanel(UIName.CivilizationLevelUpUI);
             if (result.success) {
                 result.node.getComponent(CivilizationLevelUpUI).refreshUI(levelConfig);
             }
         }
-    }
-    getProp(propId: string, num: number): void {
-
     }
 }

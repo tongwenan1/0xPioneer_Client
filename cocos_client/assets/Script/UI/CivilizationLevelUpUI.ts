@@ -6,7 +6,6 @@ import { LanMgr, UserInfoMgr } from '../Utils/Global';
 import { UIName } from '../Const/ConstUIDefine';
 import { SecretGuardGettedUI } from './Outer/SecretGuardGettedUI';
 import ViewController from '../BasicView/ViewController';
-import { ItemInfoUI } from './ItemInfoUI';
 import { ArtifactInfoUI } from './ArtifactInfoUI';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { LvlupConfigData } from '../Const/Lvlup';

@@ -1,5 +1,5 @@
 import { _decorator, Component, instantiate, Label, Layout, Node, UITransform, Widget } from 'cc';
-import { EvaluationMgr, LanMgr, SettlementMgr } from '../../Utils/Global';
+import { EvaluationMgr, LanMgr } from '../../Utils/Global';
 import { DataMgr } from '../../Data/DataMgr';
 const { ccclass, property } = _decorator;
 

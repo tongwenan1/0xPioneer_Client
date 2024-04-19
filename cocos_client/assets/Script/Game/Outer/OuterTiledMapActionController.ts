@@ -28,7 +28,7 @@ import { OuterFogAnimShapMask } from "./View/OuterFogAnimShapMask";
 import { OuterFogMask } from "./View/OuterFogMask";
 import { OuterMapCursorView } from "./View/OuterMapCursorView";
 import { ResOprView } from "./View/ResOprView";
-import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, PioneerMgr, UserInfoMgr } from "../../Utils/Global";
+import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, PioneerMgr } from "../../Utils/Global";
 import GameMainHelper from "../Helper/GameMainHelper";
 import ViewController from "../../BasicView/ViewController";
 import EventConfig from "../../Config/EventConfig";
@@ -219,7 +219,7 @@ export class OuterTiledMapActionController extends ViewController {
                                     if (stayBuilding.type == MapBuildingType.city && stayBuilding.faction != MapMemberFactionType.enemy) {
                                         const centerPos = stayBuilding.stayMapPositions[3];
                                         const visionPositions = [];
-                                        let radialRange = UserInfoMgr.cityVision;
+                                        let radialRange = DataMgr.s.userInfo.data.cityRadialRange;
                                         GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.CITY_RADIAL_RANGE, radialRange);
                                         const extAround = GameMainHelper.instance.tiledMapGetExtAround(centerPos, radialRange - 1);
                                         for (const temple of extAround) {

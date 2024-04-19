@@ -14,11 +14,13 @@ import CLog from "../../Utils/CLog";
 
 export class CountDataMgr {
     private _data: CountData[];
-    private _key = "localCount";
+    private _baseKey: string = "localCount";
+    private _key = "";
 
     public constructor() {}
 
-    public async loadObj() {
+    public async loadObj(walletAddr: string) {
+        this._key = walletAddr + "|" + this._baseKey;
         if (this._data == null) {
             this._data = [];
             const data = localStorage.getItem(this._key);

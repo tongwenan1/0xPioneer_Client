@@ -7,7 +7,7 @@ import { DataMgr } from "../Data/DataMgr";
 import ArtifactData from "../Model/ArtifactData";
 import { ArtifactInfoUI } from "../UI/ArtifactInfoUI";
 import { ItemGettedUI } from "../UI/ItemGettedUI";
-import { ArtifactMgr, ItemMgr, UserInfoMgr } from "../Utils/Global";
+import { ItemMgr, UserInfoMgr } from "../Utils/Global";
 import CommonTools from "./CommonTools";
 
 export default class ItemConfigDropTool {

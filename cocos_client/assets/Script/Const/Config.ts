@@ -14,7 +14,9 @@ export enum ConfigType {
     NFTRaritySkillLimitNum = "210002",
     NFTLevelInitLimitNum = "210003",
     NFTLevelLimitPerRankAddNum = "210004",
-    NFTRankLimitNum = "210005"
+    NFTRankLimitNum = "210005",
+
+    WorldMapOtherExtraRadialRange = "310001",
 }
 
 export interface ConfigData {
@@ -61,4 +63,8 @@ export interface NFTLevelLimitPerRankAddNumParam extends ConfigData {
 }
 export interface NFTRankLimitNumParam extends ConfigData {
     limit: number;
+}
+
+export interface WorldMapOtherExtraRadialRangeParam extends ConfigData {
+    extraRadialRange: number;
 }

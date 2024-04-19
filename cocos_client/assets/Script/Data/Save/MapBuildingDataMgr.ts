@@ -22,10 +22,12 @@ import CLog from "../../Utils/CLog";
 
 export class MapBuildingDataMgr {
     private _building_data: MapBuildingObject[];
-    private _building_key: string = "local_buildings";
+    private _base_building_key: string = "local_base_building";
+    private _building_key: string = "";
 
     private _decorate_data: MapDecorateObject[];
-    private _decorate_key: string = "local_decorate";
+    private _base_decorate_key: string = "local_base_decorate";
+    private _decorate_key: string = "";
 
     public constructor() {}
 
@@ -37,7 +39,9 @@ export class MapBuildingDataMgr {
         return mapPositions;
     }
 
-    public async loadObj() {
+    public async loadObj(walletAddr: string) {
+        this._building_key = walletAddr + "|" + this._base_building_key;
+        this._decorate_key = walletAddr + "|" + this._base_decorate_key;
         if (this._building_data == null) {
             this._building_data = [];
             const building_data = localStorage.getItem(this._building_key);

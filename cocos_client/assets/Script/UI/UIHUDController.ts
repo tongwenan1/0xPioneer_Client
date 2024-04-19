@@ -1,5 +1,5 @@
 import { _decorator, Component, Node } from 'cc';
-import { ItemMgr, LanMgr, UserInfoMgr } from '../Utils/Global';
+import { LanMgr } from '../Utils/Global';
 import { HUDName, UIName } from '../Const/ConstUIDefine';
 import { HUDView } from './View/HUDView';
 import ViewController from '../BasicView/ViewController';
@@ -9,6 +9,7 @@ import { ResourceGettedView } from './View/ResourceGettedView';
 import { InnerBuildingType, UserInnerBuildInfo } from '../Const/BuildingDefine';
 import { NotificationName } from '../Const/Notification';
 import UIPanelManger, { UIPanelLayerType } from '../Basic/UIPanelMgr';
+import { DataMgr } from '../Data/DataMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIHUDController')
@@ -72,8 +73,8 @@ export class UIHUDController extends ViewController {
     }
 
     private _innerBuildingUpgradeFinished(buildingType: InnerBuildingType) {
-        if (UserInfoMgr.innerBuilds.has(buildingType)) {
-            this._resoucesShowItems.push(UserInfoMgr.innerBuilds.get(buildingType));
+        if (buildingType in DataMgr.s.userInfo.data.innerBuildings) {
+            this._resoucesShowItems.push(DataMgr.s.userInfo.data.innerBuildings[buildingType]);
             this._showResouceGettedView();
         }
     }

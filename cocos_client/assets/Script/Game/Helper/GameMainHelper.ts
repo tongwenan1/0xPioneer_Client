@@ -4,9 +4,8 @@ import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import { ECursorType, GameExtraEffectType } from "../../Const/ConstDefine";
 import { TileHexDirection, TileMapHelper, TilePos } from "../TiledMap/TileTool";
-import { ArtifactMgr, GameMgr, UserInfoMgr } from "../../Utils/Global";
+import { GameMgr } from "../../Utils/Global";
 import { ConfigType, MapScaleParam } from "../../Const/Config";
-import { DataMgr } from "../../Data/DataMgr";
 
 export default class GameMainHelper {
     public static get instance() {
@@ -103,6 +102,9 @@ export default class GameMainHelper {
         this._tiledMapHelper._shadowhalf2tag = 74;
         //set a callback here. 35 is block
         this._tiledMapHelper.Path_InitBlock(35);
+    }
+    public get tiledMapGetAllPos() {
+        return this._tiledMapHelper.getAllPos();
     }
     public get isTiledMapHelperInited(): boolean {
         return this._tiledMapHelper != null;
@@ -281,7 +283,4 @@ export default class GameMainHelper {
 
 
     private _isEditInnerBuildingLattice: boolean = false;
-    public constructor() {
-
-    }
 }

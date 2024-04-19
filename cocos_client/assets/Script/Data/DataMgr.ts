@@ -17,7 +17,7 @@ export class DataMgr {
     }
 
     public static async load() {
-        await this.s.load();
+        await this.s.load(this.r.wallet.addr);
     }
 
     public static async save() {

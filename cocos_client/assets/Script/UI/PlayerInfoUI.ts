@@ -1,23 +1,40 @@
-import { _decorator, Button, Color, Component, EditBox, instantiate, Label, Layout, Node, Prefab, ProgressBar, ScrollView, Slider, Sprite, UITransform, v2, Vec3 } from 'cc';
-import { SettlementView } from './View/SettlementView';
-import ArtifactData from '../Model/ArtifactData';
-import { ArtifactItem } from './ArtifactItem';
-import { BackpackItem } from './BackpackItem';
-import { LanMgr, UserInfoMgr, AudioMgr } from '../Utils/Global';
-import ViewController from '../BasicView/ViewController';
-import { UIHUDController } from './UIHUDController';
-import NotificationMgr from '../Basic/NotificationMgr';
-import { UserInfoEvent } from '../Const/UserInfoDefine';
-import LvlupConfig from '../Config/LvlupConfig';
-import ItemData, { ItemConfigType } from '../Const/Item';
-import { NotificationName } from '../Const/Notification';
-import Config from '../Const/Config';
-import UIPanelManger from '../Basic/UIPanelMgr';
+import {
+    _decorator,
+    Button,
+    Color,
+    Component,
+    EditBox,
+    instantiate,
+    Label,
+    Layout,
+    Node,
+    Prefab,
+    ProgressBar,
+    ScrollView,
+    Slider,
+    Sprite,
+    UITransform,
+    v2,
+    Vec3,
+} from "cc";
+import { SettlementView } from "./View/SettlementView";
+import ArtifactData from "../Model/ArtifactData";
+import { ArtifactItem } from "./ArtifactItem";
+import { BackpackItem } from "./BackpackItem";
+import { LanMgr, UserInfoMgr, AudioMgr } from "../Utils/Global";
+import ViewController from "../BasicView/ViewController";
+import { UIHUDController } from "./UIHUDController";
+import NotificationMgr from "../Basic/NotificationMgr";
+import LvlupConfig from "../Config/LvlupConfig";
+import ItemData, { ItemConfigType } from "../Const/Item";
+import { NotificationName } from "../Const/Notification";
+import Config from "../Const/Config";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
-@ccclass('PlayerInfoUI')
-export class PlayerInfoUI extends ViewController implements UserInfoEvent {
-
+@ccclass("PlayerInfoUI")
+export class PlayerInfoUI extends ViewController {
     private _selectIndex: number = 0;
     private _selectSettleIndex: number = 0;
     private _selectSettleViewOffsetHeight: number[] = [];
@@ -32,7 +49,6 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
     private _artifactItem: Node = null;
     private _showRewardItems: Node[] = [];
     private _showArtifactItems: Node[] = [];
-
 
     private _settlementItem: Node = null;
     private _settlementUseItems: Node[] = [];
@@ -74,9 +90,9 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
         this._changeNameView.active = false;
 
         this._nextLevelView = this.node.getChildByName("NextLevelContent");
-        this._rewardItem = this._nextLevelView.getChildByPath("NextLevelInfo/RewardContent/Rewards/Content/BackpackItem")
+        this._rewardItem = this._nextLevelView.getChildByPath("NextLevelInfo/RewardContent/Rewards/Content/BackpackItem");
         this._rewardItem.active = false;
-        this._artifactItem = this._nextLevelView.getChildByPath("NextLevelInfo/RewardContent/Rewards/Content/ArtifactItem")
+        this._artifactItem = this._nextLevelView.getChildByPath("NextLevelInfo/RewardContent/Rewards/Content/ArtifactItem");
         this._artifactItem.active = false;
 
         this._nextLevelView.active = false;
@@ -88,8 +104,7 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
         this._langSelectView.active = false;
 
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._onChangeLang, this);
-
-        UserInfoMgr.addObserver(this);
+        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._refreshUI, this);
     }
 
     protected viewDidStart(): void {
@@ -103,19 +118,12 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
 
         this._refreshUI();
     }
-    
+
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._onChangeLang, this);
-
-        UserInfoMgr.removeObserver(this);
-    }
-
-
-    // ---------------- UserInfoEvent
-    public playerLvlupChanged() {
-        this._refreshUI();
+        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._refreshUI, this);
     }
 
     //-------------------------------- function
@@ -133,7 +141,7 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
             data[key] = localStorage.getItem(key);
         }
         await navigator.clipboard.writeText(JSON.stringify(data));
-        UIHUDController.showCenterTip("Save exported to clipboard.")
+        UIHUDController.showCenterTip("Save exported to clipboard.");
     }
 
     private onClickImportSave() {
@@ -183,7 +191,7 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
         const settingBtn = this.node.getChildByPath("Content/tabButtons/SettingsBtn");
 
         const lang = new Map();
-        // useLanMgr 
+        // useLanMgr
         // lang.set("eng", LanMgr.getLanById("107549"));
         // lang.set("cn", LanMgr.getLanById("107549"));
         lang.set("eng", "English");
@@ -195,10 +203,10 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
         // achievementBtn.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById("107549");
         // settingBtn.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
-        // infoView.getChildByPath("NextLevel/Label").getComponent(Label).string = LanMgr.getLanById("107549"); 
+        // infoView.getChildByPath("NextLevel/Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
-        //  summaryView.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById("107549"); 
-        //  summaryView.getChildByName("EmptyTip").getComponent(Label).string = LanMgr.getLanById("107549"); 
+        //  summaryView.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById("107549");
+        //  summaryView.getChildByName("EmptyTip").getComponent(Label).string = LanMgr.getLanById("107549");
 
         // settingView.getChildByName("Music").getComponent(Label).string = LanMgr.getLanById("107549");
         // settingView.getChildByName("SFX").getComponent(Label).string = LanMgr.getLanById("107549");
@@ -219,34 +227,34 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
 
         for (let i = 0; i < this._tabViews.length; i++) {
             this._tabViews[i].active = i == this._selectIndex;
-            this._tabButtons[i].getComponent(Sprite).grayscale = (i != this._selectIndex);
+            this._tabButtons[i].getComponent(Sprite).grayscale = i != this._selectIndex;
         }
 
         const currentShowView = this._tabViews[this._selectIndex];
         if (this._selectIndex == 0) {
             // info
-            let currentLevel = UserInfoMgr.level;
-            currentShowView.getChildByPath("UserID/UserID").getComponent(Label).string = "ID: " + UserInfoMgr.playerID;
-            // useLanMgr 
-            // currentShowView.getChildByPath("UserName/UserName").getComponent(Label).string = LanMgr.getLanById("107549") + ":" + UserInfoMgr.playerName;
-            currentShowView.getChildByPath("UserName/UserName").getComponent(Label).string = "Name: " + UserInfoMgr.playerName;
+            let currentLevel = DataMgr.s.userInfo.data.level;
+            currentShowView.getChildByPath("UserID/UserID").getComponent(Label).string = "ID: " + DataMgr.s.userInfo.data.id;
+            // useLanMgr
+            // currentShowView.getChildByPath("UserName/UserName").getComponent(Label).string = LanMgr.getLanById("107549") + ":" + DataMgr.s.userInfo.data.name;
+            currentShowView.getChildByPath("UserName/UserName").getComponent(Label).string = "Name: " + DataMgr.s.userInfo.data.name;
 
-            // useLanMgr 
+            // useLanMgr
             // currentShowView.getChildByPath("UserLCivilizationLv/UserLCivilizationLv").getComponent(Label).string = LanMgr.getLanById("107549");
             currentShowView.getChildByPath("UserCivilizationLv/Label").getComponent(Label).string = currentLevel.toString();
 
-            // useLanMgr 
+            // useLanMgr
             // currentShowView.getChildByPath("RewardContent/CityVersion/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
             currentShowView.getChildByPath("RewardContent/CityVersion/Value").getComponent(Label).string = "+" + LvlupConfig.getTotalVisionByLvl(currentLevel);
 
-            // useLanMgr 
+            // useLanMgr
             // currentShowView.getChildByPath("RewardContent/ResGetRateUp/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-            currentShowView.getChildByPath("RewardContent/ResGetRateUp/Value").getComponent(Label).string = "+" + LvlupConfig.getTotalExtraRateByLvl(currentLevel) * 100 + "%";
+            currentShowView.getChildByPath("RewardContent/ResGetRateUp/Value").getComponent(Label).string =
+                "+" + LvlupConfig.getTotalExtraRateByLvl(currentLevel) * 100 + "%";
 
-            // useLanMgr 
+            // useLanMgr
             // currentShowView.getChildByPath("RewardContent/GetHpMax/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
             currentShowView.getChildByPath("RewardContent/GetHpMax/Value").getComponent(Label).string = "+" + LvlupConfig.getTotalHpMaxByLvl(currentLevel);
-
         } else if (this._selectIndex == 1) {
             // summary
             const settleViewContent = currentShowView.getChildByPath("PeriodicSettlement/view/content");
@@ -261,14 +269,13 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
             }
             this._settleUseSelectItems = [];
 
-            let currentLevel: number = UserInfoMgr.level;
+            let currentLevel: number = DataMgr.s.userInfo.data.level;
             const gap: number = 4;
             const settleCount: number = Math.floor(currentLevel / gap) + 1;
             if (settleCount <= 0) {
                 currentShowView.getChildByName("PeriodicSettlement").active = false;
                 currentShowView.getChildByName("SettlementList").active = false;
                 currentShowView.getChildByName("EmptyTip").active = true;
-
             } else {
                 this._selectSettleViewOffsetHeight = [];
                 currentShowView.getChildByName("PeriodicSettlement").active = true;
@@ -299,13 +306,11 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
                     select.getComponent(Button).clickEvents[0].customEventData = i.toString();
                     select.getChildByName("Label").getComponent(Label).string = "C.Lv" + beginLevel + " - " + endLevel;
                     this._settleUseSelectItems.push(select);
-                };
+                }
                 settleViewContent.getComponent(Layout).updateLayout();
                 selectItemContent.getComponent(Layout).updateLayout();
                 this._refreshSettleButtons();
             }
-
-
         } else if (this._selectIndex == 2) {
             // setting
             const bgmSlider = currentShowView.getChildByName("MusicVolumeSlider").getComponent(Slider);
@@ -320,15 +325,14 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
 
             // useLanMgr
             // currentShowView.getChildByName("ResetButton").getComponent(Label).string = LanMgr.getLanById("107549");
-
         } else if (this._selectIndex == 3) {
-            // xx reversed   
+            // xx reversed
         }
     }
 
     private async _refreshNextLevelView() {
-        const nextLevel = UserInfoMgr.level + 1;
-        // useLanMgr 
+        const nextLevel = DataMgr.s.userInfo.data.level + 1;
+        // useLanMgr
         // this._nextLevelView.getChildByPath("NextLevelInfo/UserCivilizationLv/Title").getComponent(Label).string = LanMgr.getLanById("107549")
         this._nextLevelView.getChildByPath("NextLevelInfo/UserCivilizationLv/NextLevel").getComponent(Label).string = nextLevel.toString();
 
@@ -341,7 +345,7 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
             rewardView.active = true;
             const content = rewardView;
             content.getChildByName("CityVersion").active = levelConfig.city_vision != null && levelConfig.city_vision > 0;
-            // useLanMgr 
+            // useLanMgr
             // content.getChildByPath("CityVersion/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
             content.getChildByPath("CityVersion/Value").getComponent(Label).string = "+" + levelConfig.city_vision;
 
@@ -356,7 +360,7 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
 
             if (levelConfig.hp_max != null && levelConfig.hp_max > 0) {
                 content.getChildByName("GetHpMax").active = true;
-                // useLanMgr 
+                // useLanMgr
                 // content.getChildByPath("GetHpMax/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
                 content.getChildByPath("GetHpMax/Value").getComponent(Label).string = "+" + levelConfig.hp_max;
             } else {
@@ -439,7 +443,7 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
             UIHUDController.showCenterTip("Name cannot be empty");
             return;
         }
-        UserInfoMgr.playerName = changedName;
+        DataMgr.s.userInfo.data.name = changedName;
         this._refreshUI();
         this._changeNameView.active = false;
     }
@@ -505,10 +509,7 @@ export class PlayerInfoUI extends ViewController implements UserInfoEvent {
         this.node.getChildByPath("Content/tabContents/SettingsContent/LanguageMenu/LanguageBtn/Arrow").angle = 0;
     }
 
-
     private onTapClose() {
         UIPanelManger.inst.popPanel();
     }
 }
-
-

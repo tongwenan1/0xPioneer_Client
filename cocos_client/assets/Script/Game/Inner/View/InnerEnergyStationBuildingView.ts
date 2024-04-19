@@ -1,7 +1,7 @@
 import { Label, Node, _decorator, v3 } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
-import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, UserInfoMgr } from "../../../Utils/Global";
+import { GameMgr, ItemMgr, LanMgr } from "../../../Utils/Global";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
@@ -38,14 +38,12 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
         this._produceInfoView = this.node.getChildByName("InfoView");
 
         NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_TIME_COUNT_CHANGED, this._countingGenerate, this);
-        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_CHANGED, this._countingGenerate, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
         NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_TIME_COUNT_CHANGED, this._countingGenerate, this);
-        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_CHANGED, this._countingGenerate, this);
     }
 
 
@@ -67,7 +65,7 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
         if (this._building == null) {
             return;
         }
-        const generateInfoData = UserInfoMgr.generateEnergyInfo;
+        const generateInfoData = DataMgr.s.userInfo.data.generateEnergyInfo;
         if (this._building.buildLevel > 0 && generateInfoData != null) {
             const generateConfig = InnerBuildingLvlUpConfig.getEnergyLevelData(this._building.buildLevel);
             if (generateConfig != null) {
@@ -109,10 +107,10 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
             // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
             return;
         }
-        if (UserInfoMgr.generateEnergyInfo == null) {
+        if (DataMgr.s.userInfo.data.generateEnergyInfo == null) {
             return;
         }
-        const produceNum: number = UserInfoMgr.generateEnergyInfo.totalEnergyNum;
+        const produceNum: number = DataMgr.s.userInfo.data.generateEnergyInfo.totalEnergyNum;
         if (produceNum <= 0) {
             // useLanMgr
             // UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
@@ -120,6 +118,6 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
             return;
         }
         ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Energy, produceNum)]);
-        UserInfoMgr.generateEnergyGetted();
+        DataMgr.s.userInfo.generateEnergyGetted();
     }
 }

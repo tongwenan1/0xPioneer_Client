@@ -1,11 +1,10 @@
 import { CurveRange, Vec2 } from "cc";
 import CommonTools from "../Tool/CommonTools";
 import { GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
-import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, PioneerDevelopMgr, SettlementMgr, TaskMgr, UserInfoMgr } from "../Utils/Global";
+import { GameMgr, ItemMgr, LanMgr, PioneerDevelopMgr, TaskMgr } from "../Utils/Global";
 import { UIHUDController } from "../UI/UIHUDController";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { MapBuildingType } from "../Const/BuildingDefine";
-import { CountType } from "../Const/Count";
 import { EventConfigData } from "../Const/Event";
 import EventConfig from "../Config/EventConfig";
 import { NotificationName } from "../Const/Notification";
@@ -28,7 +27,6 @@ import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 
 export default class PioneerMgr {
     public initData() {
-        this._initData();
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_MOVE_MEETTED, this._onPioneerMoveMeeted, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_LOGIC_MOVE, this._onPioneerLogicMove, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_REBIRTH_BEGIN, this._onPioneerRebirthBegin, this);
@@ -38,7 +36,6 @@ export default class PioneerMgr {
             this._bindPlayerNFT(originalPioneer.id, originalPioneer.NFTInitLinkId);
         }
     }
-
     public pioneerHealHpToMax(pioneerId: string) {
         const costTroops: number = DataMgr.s.pioneer.gainHp(pioneerId, DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop));
         if (costTroops > 0) {
@@ -79,7 +76,7 @@ export default class PioneerMgr {
             const pioneer = DataMgr.s.pioneer.getById(pioneerId);
             if (pioneer.type == MapPioneerType.player) {
                 DataMgr.s.settlement.addObj({
-                    level: UserInfoMgr.level,
+                    level: DataMgr.s.userInfo.data.level,
                     newPioneerIds: [pioneerId],
                     killEnemies: 0,
                     gainResources: 0,
@@ -151,380 +148,13 @@ export default class PioneerMgr {
         }
     }
 
-    public eventFight(
-        attackerId: string,
-        enemyId: string,
-        temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>,
-        fightOverCallback: (succeed: boolean) => void
+    public fight(
+        attacker: MapPioneerObject,
+        pioneerDefender: MapPioneerObject,
+        buildingDefender: MapBuildingObject,
+        isEventFight: boolean = false,
+        fightOverCallback: (isSelfWin: boolean) => void = null
     ) {
-        // xx wait
-        // const attacker = this.getPioneerById(attackerId);
-        // const enemy = this.getPioneerById(enemyId);
-        // if (attacker != null && enemy != null) {
-        //     attacker.actionType = MapPioneerActionType.fighting;
-        //     for (const observer of this._observers) {
-        //         observer.pioneerActionTypeChanged(attacker.id, attacker.actionType, attacker.actionEndTimeStamp);
-        //     }
-        //     const fightId: string = new Date().getTime().toString();
-        //     let attackerAttack = attacker.attack;
-        //     let attackerDefend = attacker.defend;
-        //     let enemyId = enemy.id;
-        //     let isBuilding = false;
-        //     let enemyName = enemy.name;
-        //     let enemyHp = enemy.hp;
-        //     let enemyHpMax = enemy.hpMax;
-        //     let enemyAttack = enemy.attack;
-        //     let enemyDefend = enemy.defend;
-        //     // gain temporaryAttributes
-        //     temporaryAttributes.forEach((model: MapPioneerAttributesChangeModel, key: string) => {
-        //         const id = key.split("|")[0];
-        //         const type = parseInt(key.split("|")[1]);
-        //         if (id == enemyId) {
-        //             if (type == 1) {
-        //                 // hp
-        //                 if (model.type == AttrChangeType.ADD) {
-        //                     enemyHpMax += model.value;
-        //                 } else if (model.type == AttrChangeType.MUL) {
-        //                     enemyHpMax += enemy.originalHpMax * model.value;
-        //                 }
-        //                 enemyHpMax = Math.max(1, enemyHpMax);
-        //                 enemyHp = enemyHpMax;
-        //             } else if (type == 2) {
-        //                 // attack
-        //                 if (model.type == AttrChangeType.ADD) {
-        //                     enemyAttack += model.value;
-        //                 } else if (model.type == AttrChangeType.MUL) {
-        //                     enemyAttack += enemy.originalAttack * model.value;
-        //                 }
-        //             }
-        //         } else if (id == attackerId) {
-        //             if (type == 2) {
-        //                 if (model.type == AttrChangeType.ADD) {
-        //                     attackerAttack += model.value;
-        //                 } else if (model.type == AttrChangeType.MUL) {
-        //                     attackerAttack += attacker.originalAttack * model.value;
-        //                 }
-        //             }
-        //         }
-        //     });
-        //     for (const observer of this._observers) {
-        //         if (observer.beginFight != null) {
-        //             observer.beginFight(
-        //                 fightId,
-        //                 { id: attacker.id, name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
-        //                 { id: enemyId, isBuilding: isBuilding, name: enemyName, hp: enemyHp, hpMax: enemyHpMax },
-        //                 attacker.faction == MapMemberFactionType.friend,
-        //                 [attacker.stayPos]
-        //             );
-        //         }
-        //     }
-        //     let selfAttack: boolean = true;
-        //     const intervalId = setInterval(() => {
-        //         let fightOver: boolean = false;
-        //         let deadPioneer = null;
-        //         let killer = null;
-        //         if (selfAttack) {
-        //             const damage = Math.max(1, attackerAttack - enemyDefend);
-        //             if (damage > 0) {
-        //                 enemyHp = Math.max(0, enemyHp - damage);
-        //                 if (enemyHp <= 0) {
-        //                     fightOver = true;
-        //                     deadPioneer = enemy;
-        //                     killer = attacker;
-        //                 }
-        //             }
-        //         } else {
-        //             const damage = Math.max(1, enemyAttack - attackerDefend);
-        //             if (damage > 0) {
-        //                 attacker.loseHp(damage);
-        //                 for (const observe of this._observers) {
-        //                     observe.pioneerLoseHp(attacker.id, damage);
-        //                 }
-        //                 if (attacker.hp <= 0) {
-        //                     this.hidePioneer(attacker.id);
-        //                     fightOver = true;
-        //                     deadPioneer = attacker;
-        //                     killer = enemy;
-        //                 }
-        //             }
-        //         }
-        //         selfAttack = !selfAttack;
-        //         for (const observer of this._observers) {
-        //             if (observer.fightDidAttack != null) {
-        //                 observer.fightDidAttack(
-        //                     fightId,
-        //                     { id: attacker.id, name: attacker.name, hp: attacker.hp, hpMax: attacker.hpMax },
-        //                     { id: attacker.id, isBuilding: isBuilding, name: enemyName, hp: enemyHp, hpMax: enemyHpMax },
-        //                     attacker.faction == MapMemberFactionType.friend,
-        //                     [attacker.stayPos]
-        //                 );
-        //             }
-        //         }
-        //         if (fightOver) {
-        //             if (deadPioneer == enemy && deadPioneer.winexp > 0) {
-        //                 // win fight, add exp
-        //                 UserInfoMgr.exp += enemy.winexp;
-        //             }
-        //             for (const observer of this._observers) {
-        //                 if (observer.endFight != null) {
-        //                     observer.endFight(fightId, true, deadPioneer instanceof MapPioneerModel, deadPioneer.id, deadPioneer == enemy, attacker.id);
-        //                 }
-        //             }
-        //             NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
-        //                 attacker: {
-        //                     name: attacker.name,
-        //                     avatarIcon: "icon_player_avatar", // todo
-        //                     hp: attacker.hp,
-        //                     hpMax: attacker.hpMax,
-        //                 },
-        //                 defender: {
-        //                     name: enemy.name,
-        //                     avatarIcon: "icon_player_avatar",
-        //                     hp: enemyHp,
-        //                     hpMax: enemyHpMax,
-        //                 },
-        //                 attackerIsSelf: attacker.faction == MapMemberFactionType.friend,
-        //                 buildingId: null,
-        //                 position: attacker.stayPos,
-        //                 fightResult: attacker.hp != 0 ? "win" : "lose",
-        //                 rewards: [],
-        //             });
-        //             // status changed
-        //             attacker.actionType = MapPioneerActionType.idle;
-        //             for (const observer of this._observers) {
-        //                 observer.pioneerActionTypeChanged(attacker.id, attacker.actionType, attacker.actionEndTimeStamp);
-        //             }
-        //             clearInterval(intervalId);
-        //             this._savePioneerData();
-        //             if (deadPioneer instanceof MapPlayerPioneerModel) {
-        //                 // player dead
-        //                 deadPioneer.rebirthCountTime = 10;
-        //                 deadPioneer.killerId = killer.id;
-        //                 this._savePioneerData();
-        //                 // useLanMgr
-        //                 let tips = LanMgr.replaceLanById("106001", [LanMgr.getLanById(deadPioneer.name)]);
-        //                 // let tips = LanMgr.getLanById(deadPioneer.name) + " is dead, please wait for the resurrection";
-        //                 UIHUDController.showCenterTip(tips);
-        //             }
-        //             if (fightOverCallback != null) {
-        //                 fightOverCallback(enemyHp <= 0);
-        //             }
-        //         }
-        //     }, 250);
-        // }
-    }
-    public setMovingTarget(pioneerId: string, target: MapMemberTargetType, id: string) {
-        if (pioneerId != null && id != null) {
-            this._movingTargetDataMap.set(pioneerId, { target: target, id: id });
-        }
-    }
-
-    public _initData() {}
-    private _movingTargetDataMap: Map<string, { target: MapMemberTargetType; id: string }> = new Map();
-    public constructor() {}
-
-    private _moveMeeted(pioneerId: string, isStay: boolean = true) {
-        const pioneerDataMgr: PioneersDataMgr = DataMgr.s.pioneer;
-        const pioneer: MapPioneerObject = pioneerDataMgr.getById(pioneerId);
-        if (pioneer == undefined) {
-            return;
-        }
-        const movingTargetData = this._movingTargetDataMap.get(pioneer.id);
-        let stayBuilding: MapBuildingObject = null;
-        if (movingTargetData != null && movingTargetData.target == MapMemberTargetType.building) {
-            const templeBuildings = DataMgr.s.mapBuilding.getShowBuildingsNearMapPos(pioneer.stayPos, 2);
-            if (templeBuildings.length > 0) {
-                // use first find building
-                stayBuilding = templeBuildings[0];
-            }
-            this._movingTargetDataMap.delete(pioneer.id);
-        } else {
-            stayBuilding = DataMgr.s.mapBuilding.getShowBuildingByMapPos(pioneer.stayPos);
-        }
-        const currentTimeStamp = new Date().getTime();
-        if (stayBuilding == null) {
-            let stayPioneers;
-            if (movingTargetData != null && movingTargetData.target == MapMemberTargetType.pioneer) {
-                // if target pioneer is moving, than try get it from near position;
-                stayPioneers = pioneerDataMgr.getByNearPos(pioneer.stayPos, 2, true);
-                this._movingTargetDataMap.delete(pioneer.id);
-            } else {
-                stayPioneers = pioneerDataMgr.getByStayPos(pioneer.stayPos, true);
-            }
-            let interactPioneer: MapPioneerObject = null;
-            for (const stayPioneer of stayPioneers) {
-                if (stayPioneer.id != pioneer.id) {
-                    interactPioneer = stayPioneer;
-                    break;
-                }
-            }
-            if (interactPioneer != null) {
-                if (pioneer.type == MapPioneerType.player || interactPioneer.type == MapPioneerType.player) {
-                    DataMgr.s.count.addObj_actionPioneer({
-                        actionPid: pioneer.id,
-                        interactPid: interactPioneer.id,
-                    });
-                }
-                if (pioneer.faction == MapMemberFactionType.friend && interactPioneer.faction == MapMemberFactionType.friend) {
-                    if (interactPioneer.type == MapPioneerType.npc) {
-                        // get task
-                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_PIONEER, { id: interactPioneer.id });
-                    } else if (interactPioneer.type == MapPioneerType.gangster) {
-                        // get more hp
-                        const actionTime: number = 3000;
-                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.addingtroops, currentTimeStamp, actionTime);
-                        setTimeout(() => {
-                            pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_PIONEER, { id: interactPioneer.id });
-                        }, actionTime);
-                    } else {
-                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                    }
-                } else if (pioneer.faction == MapMemberFactionType.enemy && interactPioneer.faction == MapMemberFactionType.enemy) {
-                    if (isStay) {
-                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                    }
-                } else {
-                    // nonfriendly, fight
-                    this._fight(pioneer, interactPioneer, null);
-                }
-            } else {
-                if (isStay) {
-                    pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                }
-            }
-        } else {
-            // building
-            // need changed. use manger to deal with pioneer and building
-            if (pioneer.type == MapPioneerType.player) {
-                DataMgr.s.count.addObj_actionBuilding({
-                    actionPid: pioneer.id,
-                    interactBId: stayBuilding.id,
-                });
-            }
-            if (stayBuilding.type == MapBuildingType.city) {
-                if (
-                    (pioneer.type == MapPioneerType.player &&
-                        pioneer.faction == MapMemberFactionType.friend &&
-                        stayBuilding.faction == MapMemberFactionType.enemy) ||
-                    (pioneer.id == "gangster_3" && pioneer.faction == MapMemberFactionType.enemy && stayBuilding.faction != MapMemberFactionType.enemy)
-                ) {
-                    const cityBuilding = stayBuilding as MapBuildingMainCityObject;
-                    if (cityBuilding.taskObj != null) {
-                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                        // wait xx
-                        // if (
-                        //     cityBuilding.taskObj.entrypoint.talk != null &&
-                        //     cityBuilding.taskObj.entrypoint.triggerpioneerId != null &&
-                        //     cityBuilding.taskObj.entrypoint.triggerpioneerId == pioneer.id
-                        // ) {
-                        //     if (pioneer.logics.length > 0) {
-                        //         // clear logic
-                        //         pioneer.logics = [];
-                        //         this._savePioneerData();
-                        //     }
-                        //     // for (const observer of this._observers) {
-                        //     //     observer.showGetTaskDialog(cityBuilding.taskObj);
-                        //     // }
-                        //     DataMgr.s.mapBuilding.buildingClearTask(cityBuilding.id);
-                        // }
-                    } else {
-                        this._fight(pioneer, null, stayBuilding);
-                    }
-                } else {
-                    if (isStay) {
-                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                    }
-                }
-            } else if (stayBuilding.type == MapBuildingType.explore) {
-                if (pioneer.type == MapPioneerType.player && pioneer.faction == MapMemberFactionType.friend) {
-                    const actionTime: number = 3000;
-                    pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.exploring, currentTimeStamp, actionTime);
-                    setTimeout(() => {
-                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: stayBuilding.id });
-                    }, actionTime);
-                } else {
-                    if (pioneer.name == "gangster_3") {
-                        DataMgr.s.mapBuilding.hideBuilding(stayBuilding.id, pioneer.id);
-                    }
-                    if (isStay) {
-                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                    }
-                }
-            } else if (stayBuilding.type == MapBuildingType.stronghold) {
-                // 0-idle 1-fight 2-defend
-                let tempAction: number = 0;
-                if (pioneer.type == MapPioneerType.player && pioneer.faction == MapMemberFactionType.friend) {
-                    if (stayBuilding.faction != MapMemberFactionType.enemy) {
-                        tempAction = 2;
-                        DataMgr.s.mapBuilding.changeBuildingFaction(stayBuilding.id, MapMemberFactionType.friend);
-                        DataMgr.s.mapBuilding.insertDefendPioneer(stayBuilding.id, pioneer.id);
-                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: stayBuilding.id });
-                    } else {
-                        tempAction = 1;
-                    }
-                } else {
-                    if (pioneer.id == "gangster_3" && stayBuilding.id == "building_4") {
-                        if (stayBuilding.faction != MapMemberFactionType.friend || stayBuilding.defendPioneerIds.length <= 0) {
-                            tempAction = 0;
-                            DataMgr.s.mapBuilding.hideBuilding(stayBuilding.id, pioneer.id);
-                        } else {
-                            // wait xx
-                            // pioneer.loseHp(Math.floor(pioneer.hp / 2));
-                            // pioneer.changeAttack({
-                            //     type: AttrChangeType.MUL,
-                            //     value: -0.5,
-                            // });
-                            tempAction = 1;
-                        }
-                    } else {
-                        tempAction = 0;
-                    }
-                }
-                if (tempAction == 0) {
-                    if (isStay) {
-                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                    }
-                } else if (tempAction == 1) {
-                    this._fight(pioneer, null, stayBuilding);
-                } else if (tempAction == 2) {
-                    pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.defend);
-                }
-            } else if (stayBuilding.type == MapBuildingType.resource) {
-                if (pioneer.type == MapPioneerType.player && pioneer.faction != MapMemberFactionType.enemy) {
-                    // artifact
-                    let actionTime: number = 3000;
-                    actionTime = GameMgr.getAfterExtraEffectPropertyByPioneer(pioneer.id, GameExtraEffectType.GATHER_TIME, actionTime);
-                    if (actionTime <= 0) actionTime = 1;
-                    pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.mining, currentTimeStamp, actionTime);
-                    setTimeout(() => {
-                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                        DataMgr.s.mapBuilding.resourceBuildingCollected(stayBuilding.id);
-                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MINING_BUILDING, { actionId: pioneer.id, id: stayBuilding.id });
-                    }, actionTime);
-                } else {
-                    if (isStay) {
-                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                    }
-                }
-            } else if (stayBuilding.type == MapBuildingType.event) {
-                if (pioneer.type == MapPioneerType.player) {
-                    let currentEvent = EventConfig.getById(stayBuilding.eventId);
-                    if (currentEvent != null) {
-                        this.pioneerDealWithEvent(pioneer.id, stayBuilding.id, currentEvent);
-                    }
-                } else {
-                    if (isStay) {
-                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
-                    }
-                }
-            }
-        }
-    }
-
-    private _fight(attacker: MapPioneerObject, pioneerDefender: MapPioneerObject, buildingDefender: MapBuildingObject, isEventFight: boolean = false) {
         const pioneerDataMgr: PioneersDataMgr = DataMgr.s.pioneer;
         const isAttackBuilding: boolean = buildingDefender != null;
         const isSelfAttack: boolean = attacker.type == MapPioneerType.player;
@@ -680,7 +310,14 @@ export default class PioneerMgr {
                 if (isSelfWin) {
                     if (isSelfAttack) {
                         if (isAttackBuilding) {
-                            UserInfoMgr.explorationValue += buildingDefender.winprogress;
+                            if (buildingDefender.winprogress > 0) {
+                                const effectProgress = GameMgr.getAfterExtraEffectPropertyByPioneer(
+                                    null,
+                                    GameExtraEffectType.TREASURE_PROGRESS,
+                                    buildingDefender.winprogress
+                                );
+                                DataMgr.s.userInfo.gainTreasureProgress(effectProgress);
+                            }
                         } else {
                             selfKillPioneer = pioneerDefender;
                         }
@@ -707,14 +344,21 @@ export default class PioneerMgr {
                     // task
                     TaskMgr.pioneerKilled(selfKillPioneer.id);
                     // pioneer win reward
-                    UserInfoMgr.exp += selfKillPioneer.winExp;
-                    UserInfoMgr.explorationValue += selfKillPioneer.winProgress;
+                    DataMgr.s.userInfo.gainExp(selfKillPioneer.winExp);
+                    if (selfKillPioneer.winProgress > 0) {
+                        const effectProgress = GameMgr.getAfterExtraEffectPropertyByPioneer(
+                            null,
+                            GameExtraEffectType.TREASURE_PROGRESS,
+                            selfKillPioneer.winProgress
+                        );
+                        DataMgr.s.userInfo.gainTreasureProgress(effectProgress);
+                    }
                     if (selfKillPioneer.drop != null) {
                         ItemConfigDropTool.getItemByConfig(selfKillPioneer.drop);
                     }
                     // settle
                     DataMgr.s.settlement.addObj({
-                        level: UserInfoMgr.level,
+                        level: DataMgr.s.userInfo.data.level,
                         newPioneerIds: [],
                         killEnemies: 1,
                         gainResources: 0,
@@ -777,11 +421,223 @@ export default class PioneerMgr {
                     let tips = LanMgr.replaceLanById("106001", [LanMgr.getLanById(selfDeadName)]);
                     UIHUDController.showCenterTip(tips);
                 }
+                if (fightOverCallback != null) {
+                    fightOverCallback(isSelfWin);
+                }
             }
         }, 250);
     }
+    public setMovingTarget(pioneerId: string, target: MapMemberTargetType, id: string) {
+        if (pioneerId != null && id != null) {
+            this._movingTargetDataMap.set(pioneerId, { target: target, id: id });
+        }
+    }
 
-    private _bindPlayerNFT(id: string, linkId: string ) {
+    private _movingTargetDataMap: Map<string, { target: MapMemberTargetType; id: string }> = new Map();
+    public constructor() {}
+
+    private _moveMeeted(pioneerId: string, isStay: boolean = true) {
+        const pioneerDataMgr: PioneersDataMgr = DataMgr.s.pioneer;
+        const pioneer: MapPioneerObject = pioneerDataMgr.getById(pioneerId);
+        if (pioneer == undefined) {
+            return;
+        }
+        const movingTargetData = this._movingTargetDataMap.get(pioneer.id);
+        let stayBuilding: MapBuildingObject = null;
+        if (movingTargetData != null && movingTargetData.target == MapMemberTargetType.building) {
+            const templeBuildings = DataMgr.s.mapBuilding.getShowBuildingsNearMapPos(pioneer.stayPos, 2);
+            if (templeBuildings.length > 0) {
+                // use first find building
+                stayBuilding = templeBuildings[0];
+            }
+            this._movingTargetDataMap.delete(pioneer.id);
+        } else {
+            stayBuilding = DataMgr.s.mapBuilding.getShowBuildingByMapPos(pioneer.stayPos);
+        }
+        const currentTimeStamp = new Date().getTime();
+        if (stayBuilding == null) {
+            let stayPioneers;
+            if (movingTargetData != null && movingTargetData.target == MapMemberTargetType.pioneer) {
+                // if target pioneer is moving, than try get it from near position;
+                stayPioneers = pioneerDataMgr.getByNearPos(pioneer.stayPos, 2, true);
+                this._movingTargetDataMap.delete(pioneer.id);
+            } else {
+                stayPioneers = pioneerDataMgr.getByStayPos(pioneer.stayPos, true);
+            }
+            let interactPioneer: MapPioneerObject = null;
+            for (const stayPioneer of stayPioneers) {
+                if (stayPioneer.id != pioneer.id) {
+                    interactPioneer = stayPioneer;
+                    break;
+                }
+            }
+            if (interactPioneer != null) {
+                if (pioneer.type == MapPioneerType.player || interactPioneer.type == MapPioneerType.player) {
+                    DataMgr.s.count.addObj_actionPioneer({
+                        actionPid: pioneer.id,
+                        interactPid: interactPioneer.id,
+                    });
+                }
+                if (pioneer.faction == MapMemberFactionType.friend && interactPioneer.faction == MapMemberFactionType.friend) {
+                    if (interactPioneer.type == MapPioneerType.npc) {
+                        // get task
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_PIONEER, { id: interactPioneer.id });
+                    } else if (interactPioneer.type == MapPioneerType.gangster) {
+                        // get more hp
+                        const actionTime: number = 3000;
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.addingtroops, currentTimeStamp, actionTime);
+                        setTimeout(() => {
+                            pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_PIONEER, { id: interactPioneer.id });
+                        }, actionTime);
+                    } else {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                    }
+                } else if (pioneer.faction == MapMemberFactionType.enemy && interactPioneer.faction == MapMemberFactionType.enemy) {
+                    if (isStay) {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                    }
+                } else {
+                    // nonfriendly, fight
+                    this.fight(pioneer, interactPioneer, null);
+                }
+            } else {
+                if (isStay) {
+                    pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                }
+            }
+        } else {
+            // building
+            // need changed. use manger to deal with pioneer and building
+            if (pioneer.type == MapPioneerType.player) {
+                DataMgr.s.count.addObj_actionBuilding({
+                    actionPid: pioneer.id,
+                    interactBId: stayBuilding.id,
+                });
+            }
+            if (stayBuilding.type == MapBuildingType.city) {
+                if (
+                    (pioneer.type == MapPioneerType.player &&
+                        pioneer.faction == MapMemberFactionType.friend &&
+                        stayBuilding.faction == MapMemberFactionType.enemy) ||
+                    (pioneer.id == "gangster_3" && pioneer.faction == MapMemberFactionType.enemy && stayBuilding.faction != MapMemberFactionType.enemy)
+                ) {
+                    const cityBuilding = stayBuilding as MapBuildingMainCityObject;
+                    if (cityBuilding.taskObj != null) {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                        // wait xx
+                        // if (
+                        //     cityBuilding.taskObj.entrypoint.talk != null &&
+                        //     cityBuilding.taskObj.entrypoint.triggerpioneerId != null &&
+                        //     cityBuilding.taskObj.entrypoint.triggerpioneerId == pioneer.id
+                        // ) {
+                        //     if (pioneer.logics.length > 0) {
+                        //         // clear logic
+                        //         pioneer.logics = [];
+                        //         this._savePioneerData();
+                        //     }
+                        //     // for (const observer of this._observers) {
+                        //     //     observer.showGetTaskDialog(cityBuilding.taskObj);
+                        //     // }
+                        //     DataMgr.s.mapBuilding.buildingClearTask(cityBuilding.id);
+                        // }
+                    } else {
+                        this.fight(pioneer, null, stayBuilding);
+                    }
+                } else {
+                    if (isStay) {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                    }
+                }
+            } else if (stayBuilding.type == MapBuildingType.explore) {
+                if (pioneer.type == MapPioneerType.player && pioneer.faction == MapMemberFactionType.friend) {
+                    const actionTime: number = 3000;
+                    pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.exploring, currentTimeStamp, actionTime);
+                    setTimeout(() => {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: stayBuilding.id });
+                    }, actionTime);
+                } else {
+                    if (pioneer.name == "gangster_3") {
+                        DataMgr.s.mapBuilding.hideBuilding(stayBuilding.id, pioneer.id);
+                    }
+                    if (isStay) {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                    }
+                }
+            } else if (stayBuilding.type == MapBuildingType.stronghold) {
+                // 0-idle 1-fight 2-defend
+                let tempAction: number = 0;
+                if (pioneer.type == MapPioneerType.player && pioneer.faction == MapMemberFactionType.friend) {
+                    if (stayBuilding.faction != MapMemberFactionType.enemy) {
+                        tempAction = 2;
+                        DataMgr.s.mapBuilding.changeBuildingFaction(stayBuilding.id, MapMemberFactionType.friend);
+                        DataMgr.s.mapBuilding.insertDefendPioneer(stayBuilding.id, pioneer.id);
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: stayBuilding.id });
+                    } else {
+                        tempAction = 1;
+                    }
+                } else {
+                    if (pioneer.id == "gangster_3" && stayBuilding.id == "building_4") {
+                        if (stayBuilding.faction != MapMemberFactionType.friend || stayBuilding.defendPioneerIds.length <= 0) {
+                            tempAction = 0;
+                            DataMgr.s.mapBuilding.hideBuilding(stayBuilding.id, pioneer.id);
+                        } else {
+                            // wait xx
+                            // pioneer.loseHp(Math.floor(pioneer.hp / 2));
+                            // pioneer.changeAttack({
+                            //     type: AttrChangeType.MUL,
+                            //     value: -0.5,
+                            // });
+                            tempAction = 1;
+                        }
+                    } else {
+                        tempAction = 0;
+                    }
+                }
+                if (tempAction == 0) {
+                    if (isStay) {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                    }
+                } else if (tempAction == 1) {
+                    this.fight(pioneer, null, stayBuilding);
+                } else if (tempAction == 2) {
+                    pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.defend);
+                }
+            } else if (stayBuilding.type == MapBuildingType.resource) {
+                if (pioneer.type == MapPioneerType.player && pioneer.faction != MapMemberFactionType.enemy) {
+                    // artifact
+                    let actionTime: number = 3000;
+                    actionTime = GameMgr.getAfterExtraEffectPropertyByPioneer(pioneer.id, GameExtraEffectType.GATHER_TIME, actionTime);
+                    if (actionTime <= 0) actionTime = 1;
+                    pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.mining, currentTimeStamp, actionTime);
+                    setTimeout(() => {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                        DataMgr.s.mapBuilding.resourceBuildingCollected(stayBuilding.id);
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MINING_BUILDING, { actionId: pioneer.id, id: stayBuilding.id });
+                    }, actionTime);
+                } else {
+                    if (isStay) {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                    }
+                }
+            } else if (stayBuilding.type == MapBuildingType.event) {
+                if (pioneer.type == MapPioneerType.player) {
+                    let currentEvent = EventConfig.getById(stayBuilding.eventId);
+                    if (currentEvent != null) {
+                        this.pioneerDealWithEvent(pioneer.id, stayBuilding.id, currentEvent);
+                    }
+                } else {
+                    if (isStay) {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                    }
+                }
+            }
+        }
+    }
+
+    private _bindPlayerNFT(id: string, linkId: string) {
         const NFT = PioneerDevelopMgr.generateNewNFT(linkId);
         DataMgr.s.pioneer.bindPlayerNFT(id, NFT.uniqueId);
     }

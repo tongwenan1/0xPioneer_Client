@@ -3,9 +3,11 @@ import { SettlementModel } from "../../Const/Manager/SettlementMgrDefine";
 
 export class SettlementDataMgr {
     private _data: SettlementModel[];
-    private _key: string = "localSettlement";
+    private _baseKey: string = "localSettlement";
+    private _key: string = "";
 
-    public async loadObj() {
+    public async loadObj(walletAddr: string) {
+        this._key = walletAddr + "|" + this._baseKey;
         if (this._data == null) {
             this._data = [];
             const data = localStorage.getItem(this._key);

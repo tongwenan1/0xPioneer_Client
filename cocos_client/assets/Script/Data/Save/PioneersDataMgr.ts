@@ -26,13 +26,19 @@ import { TaskFactionAction, TaskNpcGetNewTalkAction, TaskShowHideAction, TaskSho
 import CLog from "../../Utils/CLog";
 
 export class PioneersDataMgr {
-
+    private _baseLocalStorageKey: string = "local_pioneers";
+    private _localStorageKey: string = "";
+    private _pioneers: MapPioneerObject[] = [];
+    private _currentActionPioneerId: string = null;
     public constructor() {}
-
     //-------------------------------- public
-    public async loadObj() {
+    public async loadObj(walletAddr: string) {
+        this._localStorageKey = walletAddr + "|" + this._baseLocalStorageKey;
         this._initData();
         CLog.debug("PioneersDataMgr: loadObj, ", this._pioneers);
+    }
+    public async saveObj() {
+        localStorage.setItem(this._localStorageKey, JSON.stringify(this._pioneers));
     }
     //-------------- get
     public getAll(forceShow: boolean = false): MapPioneerObject[] {
@@ -232,6 +238,16 @@ export class PioneersDataMgr {
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HPMAX_CHANGED, { id: pioneerId });
         }
     }
+    public changeAllPlayerHpMax(num: number): void {
+        if (num == 0) {
+            return;
+        }
+        for (const player of this.getAllPlayers()) {
+            player.hpMax += num;
+            this.saveObj();
+            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HPMAX_CHANGED, { id: player.id });
+        }
+    }
     public changeAttack(pioneerId: string, num: number): void {
         if (num == 0) {
             return;
@@ -321,7 +337,7 @@ export class PioneersDataMgr {
         }
     }
 
-    public _initData() {
+    private _initData() {
         this._pioneers = [];
         const localPioneers = localStorage.getItem(this._localStorageKey);
         if (localPioneers == null) {
@@ -469,10 +485,6 @@ export class PioneersDataMgr {
         this._addListeners();
     }
 
-    private _localStorageKey: string = "local_pioneers";
-    private _pioneers: MapPioneerObject[] = [];
-    private _currentActionPioneerId: string = null;
-
     private _initInterval() {
         setInterval(() => {
             for (const pioneer of this._pioneers) {
@@ -587,10 +599,6 @@ export class PioneersDataMgr {
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_NEW_TALK, this._onPioneerGetTalk, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_USE_NEW_TALK, this._onPioneerUseTalk, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_FACTION, this._onPioneerChangeFaction, this);
-    }
-
-    public async saveObj() {
-        localStorage.setItem(this._localStorageKey, JSON.stringify(this._pioneers));
     }
 
     //--------------------------- notification

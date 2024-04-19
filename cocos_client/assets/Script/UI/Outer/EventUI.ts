@@ -1,5 +1,5 @@
 import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, Sprite } from "cc";
-import { ItemMgr, LanMgr, PioneerMgr, SettlementMgr, UserInfoMgr } from "../../Utils/Global";
+import { ItemMgr, LanMgr, PioneerMgr } from "../../Utils/Global";
 import ViewController from "../../BasicView/ViewController";
 import { UIName } from "../../Const/ConstUIDefine";
 import { UIHUDController } from "../UIHUDController";
@@ -388,7 +388,7 @@ export class EventUI extends ViewController {
                 }
             }
             DataMgr.s.settlement.addObj({
-                level: UserInfoMgr.level,
+                level: DataMgr.s.userInfo.data.level,
                 newPioneerIds: [],
                 killEnemies: 0,
                 gainResources: 0,

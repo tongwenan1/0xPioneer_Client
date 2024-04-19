@@ -1,6 +1,24 @@
-import { _decorator, Label, Node, Button, EventHandler, Prefab, instantiate, Layout, Event, NodeEventType, EventTouch, ScrollView, UITransform, v3, Vec3, rect, Rect } from "cc";
+import {
+    _decorator,
+    Label,
+    Node,
+    Button,
+    EventHandler,
+    Prefab,
+    instantiate,
+    Layout,
+    Event,
+    NodeEventType,
+    EventTouch,
+    ScrollView,
+    UITransform,
+    v3,
+    Vec3,
+    rect,
+    Rect,
+} from "cc";
 import ArtifactData from "../Model/ArtifactData";
-import { ArtifactMgr, LanMgr, UserInfoMgr } from "../Utils/Global";
+import { LanMgr } from "../Utils/Global";
 import ViewController from "../BasicView/ViewController";
 import { UIName } from "../Const/ConstUIDefine";
 import { ArtifactInfoUI } from "./ArtifactInfoUI";
@@ -14,23 +32,28 @@ const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactStore")
 export class ArtifactStore extends ViewController {
-
     private _itemDatas: ArtifactData[] = null;
     private _effectLimit: number = 9;
 
     private _effectItemContent: Node = null;
     private _effectScrollView: ManualNestedScrollView = null;
     private _effectEmptyItem: Node = null;
-    private _allEffectItemViews: { itemData: ArtifactData, node: Node }[] = null;
+    private _allEffectItemViews: { itemData: ArtifactData; node: Node }[] = null;
 
     private _itemContent: Node = null;
     private _itemView: Node = null;
     private _itemScrollView: ManualNestedScrollView = null;
     private _allItemViews: Node[] = null;
+
+    private _isDragging: boolean = false;
+    private _moveArtifactIndex: number = -1;
+    private _moveArtifactView: Node = null;
+    private _moveEffectViewData: ArtifactData = null;
+
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        const buildingData = UserInfoMgr.innerBuilds.get(InnerBuildingType.ArtifactStore);
+        const buildingData = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.ArtifactStore];
         if (buildingData != null) {
             this.node.getChildByPath("__ViewContent/Bg/LeftContent/LevelTitle").getComponent(Label).string = "Lv " + buildingData.buildLevel;
 
@@ -63,25 +86,22 @@ export class ArtifactStore extends ViewController {
         this._itemScrollView.node.on(NodeEventType.TOUCH_END, this._onTouchEnd, this);
         this._itemScrollView.node.on(NodeEventType.TOUCH_CANCEL, this._onTouchEnd, this);
     }
-
     protected viewDidStart(): void {
         super.viewDidStart();
-
 
         this._initArtifact();
         this._refreshArtifactEffect();
     }
-
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
     }
-
     protected viewPopAnimation(): boolean {
         return true;
     }
     protected contentView(): Node {
         return this.node.getChildByName("__ViewContent");
     }
+
 
     private _initArtifact() {
         const itemDatas = DataMgr.s.artifact.getObj();
@@ -110,7 +130,7 @@ export class ArtifactStore extends ViewController {
 
             this._allEffectItemViews.push({
                 itemData: templeData,
-                node: itemView
+                node: itemView,
             });
         }
         this._effectItemContent.getComponent(Layout).updateLayout();
@@ -140,11 +160,6 @@ export class ArtifactStore extends ViewController {
         UIPanelManger.inst.popPanel();
     }
 
-
-    private _isDragging: boolean = false;
-    private _moveArtifactIndex: number = -1;
-    private _moveArtifactView: Node = null;
-    private _moveEffectViewData: ArtifactData = null;
     private _onTouchStart(event: EventTouch) {
         if (event.currentTarget == this._itemScrollView.node) {
             for (let i = 0; i < this._allItemViews.length; i++) {
@@ -155,7 +170,6 @@ export class ArtifactStore extends ViewController {
                 }
             }
             this._itemScrollView.forceNested = this._moveArtifactIndex >= 0;
-
         } else if (event.currentTarget == this._effectScrollView.node) {
             for (let i = 0; i < this._allEffectItemViews.length; i++) {
                 if (this._allEffectItemViews[i].itemData == null) {
@@ -187,15 +201,19 @@ export class ArtifactStore extends ViewController {
                     if (isItemScrollAction) {
                         this._moveArtifactView = instantiate(this._allItemViews[this._moveArtifactIndex]);
                         this._moveArtifactView.parent = this.node;
-                        this._moveArtifactView.position = this.node.getComponent(UITransform).convertToNodeSpaceAR(this._allItemViews[this._moveArtifactIndex].worldPosition.clone());
+                        this._moveArtifactView.position = this.node
+                            .getComponent(UITransform)
+                            .convertToNodeSpaceAR(this._allItemViews[this._moveArtifactIndex].worldPosition.clone());
                     } else {
                         this._moveArtifactView = instantiate(this._allEffectItemViews[this._moveArtifactIndex].node);
                         this._moveArtifactView.parent = this.node;
-                        this._moveArtifactView.position = this.node.getComponent(UITransform).convertToNodeSpaceAR(this._allEffectItemViews[this._moveArtifactIndex].node.worldPosition.clone());
-                        // remove 
+                        this._moveArtifactView.position = this.node
+                            .getComponent(UITransform)
+                            .convertToNodeSpaceAR(this._allEffectItemViews[this._moveArtifactIndex].node.worldPosition.clone());
+                        // remove
                         this._moveEffectViewData = this._allEffectItemViews[this._moveArtifactIndex].itemData;
                         this._moveEffectViewData.effectIndex = -1;
-                        DataMgr.s.artifact.saveObj()
+                        DataMgr.s.artifact.saveObj();
                         this._allEffectItemViews[this._moveArtifactIndex].itemData = null;
                         for (const child of this._allEffectItemViews[this._moveArtifactIndex].node.children) {
                             if (child.name == "Item") {
@@ -223,7 +241,7 @@ export class ArtifactStore extends ViewController {
             if (this._isDragging) {
                 // is effect
                 const moveWorldBox = this._moveArtifactView.getComponent(UITransform).getBoundingBoxToWorld();
-                let intersectItem: { itemData: ArtifactData, node: Node } = null;
+                let intersectItem: { itemData: ArtifactData; node: Node } = null;
                 for (const effectItem of this._allEffectItemViews) {
                     if (effectItem.itemData == null) {
                         const effectWorldBox = effectItem.node.getComponent(UITransform).getBoundingBoxToWorld();
@@ -234,7 +252,9 @@ export class ArtifactStore extends ViewController {
                                 intersectItem = effectItem;
                             } else {
                                 const intersectionArea = intersection.width * intersection.height;
-                                const curIntersectionArea = intersectItem.node.getComponent(UITransform).getBoundingBoxToWorld().width * intersectItem.node.getComponent(UITransform).getBoundingBoxToWorld().height;
+                                const curIntersectionArea =
+                                    intersectItem.node.getComponent(UITransform).getBoundingBoxToWorld().width *
+                                    intersectItem.node.getComponent(UITransform).getBoundingBoxToWorld().height;
                                 if (intersectionArea > curIntersectionArea) {
                                     intersectItem = effectItem;
                                 }
@@ -248,12 +268,11 @@ export class ArtifactStore extends ViewController {
                     if (isItemScrollAction) {
                         intersectItem.itemData = this._itemDatas[this._moveArtifactIndex];
                         this._itemDatas[this._moveArtifactIndex].effectIndex = index;
-                        DataMgr.s.artifact.saveObj()
+                        DataMgr.s.artifact.saveObj();
                     } else {
-
                         if (this._moveEffectViewData != null) {
                             this._moveEffectViewData.effectIndex = index;
-                            DataMgr.s.artifact.saveObj()
+                            DataMgr.s.artifact.saveObj();
                             this._allEffectItemViews[index].itemData = this._moveEffectViewData;
                         }
                     }
@@ -261,7 +280,6 @@ export class ArtifactStore extends ViewController {
                     this._moveArtifactView.position = Vec3.ZERO;
                     this._refreshArtifactEffect();
                 }
-
             } else {
                 let itemData: ArtifactData = null;
                 if (isItemScrollAction) {

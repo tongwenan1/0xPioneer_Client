@@ -1,7 +1,6 @@
 import { Label, Node, UITransform, _decorator, v3 } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
-import { UIHUDController } from "../../../UI/UIHUDController";
-import { ItemMgr, LanMgr, UserInfoMgr } from "../../../Utils/Global";
+import { LanMgr } from "../../../Utils/Global";
 import { UIName } from "../../../Const/ConstUIDefine";
 import { InnerBuildingType, UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import { BuildingUpgradeUI } from "../../../UI/Inner/BuildingUpgradeUI";
@@ -24,8 +23,11 @@ export class InnerMainCityBuildingView extends InnerBuildingView {
             this._buildingUpView.position = v3(0, this._buildingSize.height, 0);
         }
         let canBuild: boolean = false;
-        UserInfoMgr.innerBuilds.forEach((value: UserInnerBuildInfo, key: InnerBuildingType) => {
-            const innerConfig = InnerBuildingConfig.getByBuildingType(key);
+        const innerBuildings = DataMgr.s.userInfo.data.innerBuildings;
+        for (const key in innerBuildings) {
+            const useKey = key as InnerBuildingType;
+            const value = innerBuildings[useKey];
+            const innerConfig = InnerBuildingConfig.getByBuildingType(useKey);
             const levelConfig = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel + 1, innerConfig.lvlup_cost);
             if (levelConfig != null) {
                 let thisBuild: boolean = true;
@@ -41,7 +43,7 @@ export class InnerMainCityBuildingView extends InnerBuildingView {
                     canBuild = true;
                 }
             }
-        });
+        }
         this._buildingUpView.active = canBuild;
     }
 

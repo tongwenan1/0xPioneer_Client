@@ -2,12 +2,13 @@ import { InnerBuildingType } from "../Const/BuildingDefine";
 import { GameExtraEffectType } from "../Const/ConstDefine";
 import { MapPlayerPioneerObject } from "../Const/PioneerDefine";
 import { DataMgr } from "../Data/DataMgr";
-import { PioneerDevelopMgr, UserInfoMgr } from "../Utils/Global";
+import { PioneerDevelopMgr } from "../Utils/Global";
 
 export default class GameMgr {
+    //--------------------------- effect
     public getAfterExtraEffectPropertyByPioneer(pioneerId: string, type: GameExtraEffectType, originalValue: number): number {
         // artifact effect
-        let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(type, UserInfoMgr.artifactStoreLevel);
+        let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(type, DataMgr.s.userInfo.artifactStoreLevel);
 
         // nft
         let nftChangeRate: number = 0;
@@ -20,7 +21,7 @@ export default class GameMgr {
     }
     public getAfterExtraEffectPropertyByBuilding(buildingType: InnerBuildingType, type: GameExtraEffectType, originalValue: number): number {
         // artifact effect
-        let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(type, UserInfoMgr.artifactStoreLevel);
+        let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(type, DataMgr.s.userInfo.artifactStoreLevel);
 
         //nft
         let nftChangeRate: number = 0;
@@ -50,5 +51,9 @@ export default class GameMgr {
             originalValue = originalValue + effectNum;
         }
         return originalValue;
+    }
+
+    public constructor() {
+        
     }
 }

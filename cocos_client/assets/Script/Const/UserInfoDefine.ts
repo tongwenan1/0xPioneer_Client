@@ -1,3 +1,4 @@
+import { InnerBuildingType, UserInnerBuildInfo } from "./BuildingDefine";
 
 export interface ResourceModel {
     id: string;
@@ -14,9 +15,19 @@ export interface GenerateEnergyInfo {
     totalEnergyNum: number
 }
 
-export interface UserInfoEvent {
-    playerNameChanged?(value: string): void;
-    playerExpChanged?(value: number): void;
-    playerLvlupChanged?(value: number): void;
-    playerExplorationValueChanged?(value: number): void;
+export interface UserInfoObject {
+    id: string;
+    name: string;
+    level: number;
+    exp: number;
+    treasureProgress: number;
+    treasureDidGetRewards: string[];
+    
+    cityRadialRange: number;
+
+    didFinishRookie: boolean;
+
+    generateTroopInfo: GenerateTroopInfo;
+    generateEnergyInfo: GenerateEnergyInfo;
+    innerBuildings: { [key: string]: UserInnerBuildInfo };
 }

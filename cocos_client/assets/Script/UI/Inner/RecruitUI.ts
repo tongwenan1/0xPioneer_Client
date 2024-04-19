@@ -19,7 +19,7 @@ const { ccclass, property } = _decorator;
 export class RecruitUI extends ViewController {
 
     public refreshUI(initSelectGenerate: boolean = false) {
-        const barrackBuildingData = UserInfoMgr.innerBuilds.get(InnerBuildingType.Barrack);
+        const barrackBuildingData = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.Barrack];
         if (barrackBuildingData == null) {
             return;
         }
@@ -101,7 +101,7 @@ export class RecruitUI extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        const barrackBuildingData = UserInfoMgr.innerBuilds.get(InnerBuildingType.Barrack);
+        const barrackBuildingData = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.Barrack];
         if (barrackBuildingData == null) {
             return;
         }

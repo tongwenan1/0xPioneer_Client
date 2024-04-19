@@ -1,7 +1,7 @@
 import { _decorator, Button, Color, instantiate, Label, Layout, Node, Sprite } from 'cc';
 import CommonTools from '../../Tool/CommonTools';
 import { GameExtraEffectType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
+import { GameMgr, ItemMgr, LanMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
@@ -24,12 +24,14 @@ export class BuildingUpgradeUI extends ViewController {
         // useLanMgr 
         // buildingInfoView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.getLanById("107549");
 
-        const innerData: Map<string, UserInnerBuildInfo> = UserInfoMgr.innerBuilds;
-        innerData.forEach((value: UserInnerBuildInfo, key: InnerBuildingType) => {
-            if (this._buildingMap.has(key)) {
-                const innerConfig = InnerBuildingConfig.getByBuildingType(key);
+        const innerData = DataMgr.s.userInfo.data.innerBuildings;
+        for (const key in innerData) {
+            const useKey = key as InnerBuildingType;
+            const value = innerData[key];
+            if (this._buildingMap.has(useKey)) {
+                const innerConfig = InnerBuildingConfig.getByBuildingType(useKey);
                 if (innerConfig != null) {
-                    const view = this._buildingMap.get(key);
+                    const view = this._buildingMap.get(useKey);
                     view.getChildByPath("Title/Label").getComponent(Label).string = LanMgr.getLanById(innerConfig.name);
                     view.getChildByPath("Level").getComponent(Label).string = "Lv." + value.buildLevel;
                     view.getComponent(Button).clickEvents[0].customEventData = value.buildType;
@@ -51,7 +53,7 @@ export class BuildingUpgradeUI extends ViewController {
                     }
                 }
             }
-        });
+        }
     }
 
 
@@ -102,7 +104,7 @@ export class BuildingUpgradeUI extends ViewController {
         if (buildingType == null) {
             return;
         }
-        const userInnerData = UserInfoMgr.innerBuilds.get(buildingType);
+        const userInnerData = DataMgr.s.userInfo.data.innerBuildings[buildingType];
         const innerConfig = InnerBuildingConfig.getByBuildingType(buildingType);
 
         if (userInnerData == null || innerConfig == null) {
@@ -207,12 +209,12 @@ export class BuildingUpgradeUI extends ViewController {
     private async onTapBuildingUpgrade(event: Event, customEventData: string) {
         const buildingType: InnerBuildingType = customEventData as InnerBuildingType;
 
-        const userInnerData = UserInfoMgr.innerBuilds.get(buildingType);
+        const userInnerData = DataMgr.s.userInfo.data.innerBuildings[buildingType];
         const innerConfig = InnerBuildingConfig.getByBuildingType(buildingType);
         if (userInnerData == null || innerConfig == null) {
             return;
         }
-        if (UserInfoMgr.level < innerConfig.unlock) {
+        if (DataMgr.s.userInfo.data.level < innerConfig.unlock) {
             // useLanMgr
             // UIHUDController.showCenterTip(LanMgr.getLanById("201004"));
             UIHUDController.showCenterTip("Insufficient civilization level");
@@ -255,7 +257,7 @@ export class BuildingUpgradeUI extends ViewController {
                 time = 5;
             }
             time = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.BUILDING_LVUP_TIME, time);
-            UserInfoMgr.beginUpgrade(buildingType, time);
+            DataMgr.s.userInfo.beginUpgrade(buildingType, time);
 
             this._closeBuildingUpgradeUI();
             await this.playExitAnimation();

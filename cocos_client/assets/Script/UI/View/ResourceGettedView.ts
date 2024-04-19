@@ -55,7 +55,7 @@ export class ResourceGettedView extends ViewController {
                 itemView.getChildByPath("IconTip/Name").getComponent(Label).string = LanMgr.getLanById(config.itemName);
                 itemView.getChildByPath("IconTip/Num").getComponent(Label).string = "+" + item.count;
 
-            } else if (item instanceof UserInnerBuildInfo) {
+            } else if (!!(item as UserInnerBuildInfo)) {
                 itemView.getChildByPath("IconTip").active = false;
                 itemView.getChildByPath("TextTip").active = true;
                 const config = InnerBuildingConfig.getByBuildingType(item.buildType);

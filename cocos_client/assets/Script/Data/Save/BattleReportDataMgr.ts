@@ -7,13 +7,16 @@ import CLog from "../../Utils/CLog";
 
 export class BattleReportDataMgr {
     private _data: BattleReportData[];
-    private _key = "local_battle_reports";
+
+    private _baseKey: string = "local_battle_reports";
+    private _key = "";
 
     public latestActiveEventState: ActiveEventState;
 
     public constructor() {}
 
-    public async loadObj() {
+    public async loadObj(walletAddr: string) {
+        this._key = walletAddr + "|" + this._baseKey;
         if (this._data == null) {
             this._data = [];
             const data = localStorage.getItem(this._key);

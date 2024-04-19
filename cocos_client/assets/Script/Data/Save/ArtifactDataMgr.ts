@@ -9,12 +9,14 @@ import { GameExtraEffectType } from "../../Const/ConstDefine";
 
 export class ArtifactDataMgr {
     private _data: ArtifactData[];
-    private _key: string = "artifact_data";
+    private _baseKey: string = "artifact_data";
+    private _key: string = "";
     private _maxArtifactLength: number = 100;
 
     public constructor() {}
 
-    public async loadObj() {
+    public async loadObj(walletAddr: string) {
+        this._key = walletAddr + "|" + this._baseKey;
         if (this._data == null) {
             this._data = [];
             const data = localStorage.getItem(this._key);
@@ -140,4 +142,51 @@ export class ArtifactDataMgr {
     public async saveObj() {
         localStorage.setItem(this._key, JSON.stringify(this._data));
     }
+
+    // public getPropEffValue(buildingLv: number) {
+    //     const r = {
+    //         prop: {}, // propType => { add: 0, mul: 0}
+    //         eff: {}, // effectType => 0
+    //     };
+    //     for (let i = 0; i < this._localArtifactDatas.length; i++) {
+    //         const artifact = this._localArtifactDatas[i];
+    //         if (artifact.effectIndex < 0) {
+    //             continue;
+    //         }
+    //         const artifactConfig = ArtifactConfig.getById(artifact.artifactConfigId);
+    //         // prop
+    //         if (artifactConfig.prop.length > 0) {
+    //             for (let j = 0; j < artifactConfig.prop.length; j++) {
+    //                 const propType = artifactConfig.prop[j];
+    //                 const propValue = artifactConfig.prop_value[j];
+
+    //                 if (!r.prop[propType]) r.prop[propType] = { add: 0, mul: 0 };
+
+    //                 if (propValue[0] == AttrChangeType.ADD) {
+    //                     r.prop[propType].add += propValue[0] * artifact.count;
+    //                 } else if (propValue[0] == AttrChangeType.MUL) {
+    //                     r.prop[propType].mul += propValue[0] * artifact.count;
+    //                 }
+    //             }
+    //         }
+
+    //         // effect
+    //         if (artifactConfig.effect.length > 0) {
+    //             for (let j = 0; j < artifactConfig.effect.length; j++) {
+    //                 const effectId = artifactConfig.effect[j];
+    //                 const effConfig = ArtifactEffectConfig.getById(effectId);
+    //                 const effectType = effConfig.type;
+
+    //                 if (effConfig.unlock && effConfig.unlock > cLv) {
+    //                     continue;
+    //                 }
+
+    //                 if (!r.eff[effectType]) r.eff[effectType] = 0;
+    //                 r.eff[effectType] += effConfig.para[0] * artifact.count;
+    //             }
+    //         }
+    //     }
+
+    //     return r;
+    // }
 }

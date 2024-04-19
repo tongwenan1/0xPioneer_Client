@@ -44,8 +44,6 @@ export class ArtifactUI extends ViewController {
     protected viewDidStart(): void {
         super.viewDidStart();
 
-        // ArtifactMgr.addObserver(this);
-
         this._allItemViews = [];
         for (let i = 0; i < DataMgr.s.artifact.getObj_artifact_maxLength(); i++) {
             let itemView = instantiate(this.itemPrb);
@@ -70,8 +68,6 @@ export class ArtifactUI extends ViewController {
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
-
-        // ArtifactMgr.removeObserver(this);
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._refreshArtifactUI, this);
         NotificationMgr.removeListener(NotificationName.ARTIFACT_CHANGE, this._refreshArtifactUI, this);
@@ -105,7 +101,8 @@ export class ArtifactUI extends ViewController {
             itemView.getComponent(ArtifactItem).refreshUI(i < items.length ? items[i] : null);
             itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
         }
-        this.node.getChildByPath("__ViewContent/Bg/QuantityNum").getComponent(Label).string = items.length + "/" + DataMgr.s.artifact.getObj_artifact_maxLength();
+        this.node.getChildByPath("__ViewContent/Bg/QuantityNum").getComponent(Label).string =
+            items.length + "/" + DataMgr.s.artifact.getObj_artifact_maxLength();
     }
 
     private _refreshMenu() {

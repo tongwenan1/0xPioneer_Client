@@ -1,6 +1,6 @@
 import { _decorator, Color, Component, instantiate, Label, Layers, Layout, math, Node, ProgressBar, Slider } from 'cc';
 import { GameExtraEffectType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
+import { GameMgr, ItemMgr, LanMgr } from '../../Utils/Global';
 import ViewController from '../../BasicView/ViewController';
 import { UIHUDController } from '../UIHUDController';
 import NotificationMgr from '../../Basic/NotificationMgr';
@@ -18,11 +18,11 @@ const { ccclass, property } = _decorator;
 export class TransformToEnergyUI extends ViewController {
 
     public refreshUI(initSelectGenerate: boolean = false) {
-        const userEnergyInfo = UserInfoMgr.generateEnergyInfo;
+        const userEnergyInfo = DataMgr.s.userInfo.data.generateEnergyInfo;
         if (userEnergyInfo == null) {
             return;
         }
-        const energyBuilding = UserInfoMgr.innerBuilds.get(InnerBuildingType.EnergyStation);
+        const energyBuilding = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.EnergyStation];
         if (energyBuilding == null) {
             return;
         }
@@ -136,13 +136,13 @@ export class TransformToEnergyUI extends ViewController {
     protected viewDidAppear(): void {
         super.viewDidAppear();
 
-        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_CHANGED, this._energyNumChanged, this);
+        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE, this._energyNumChanged, this);
     }
 
     protected viewDidDisAppear(): void {
         super.viewDidDisAppear();
 
-        NotificationMgr.removeListener(NotificationName.GENERATE_ENERGY_NUM_CHANGED, this._energyNumChanged, this);
+        NotificationMgr.removeListener(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE, this._energyNumChanged, this);
 
     }
 
@@ -169,11 +169,11 @@ export class TransformToEnergyUI extends ViewController {
         UIPanelManger.inst.popPanel();
     }
     private onGenerateSlided(event: Event, customEventData: string) {
-        const userEnergyInfo = UserInfoMgr.generateEnergyInfo;
+        const userEnergyInfo = DataMgr.s.userInfo.data.generateEnergyInfo;
         if (userEnergyInfo == null) {
             return;
         }
-        const energyBuilding = UserInfoMgr.innerBuilds.get(InnerBuildingType.EnergyStation);
+        const energyBuilding = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.EnergyStation];
         if (energyBuilding == null) {
             return;
         }
@@ -197,7 +197,7 @@ export class TransformToEnergyUI extends ViewController {
         }
     }
     private onTapConvert() {
-        const energyBuilding = UserInfoMgr.innerBuilds.get(InnerBuildingType.EnergyStation);
+        const energyBuilding = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.EnergyStation];
         if (energyBuilding == null) {
             return;
         }

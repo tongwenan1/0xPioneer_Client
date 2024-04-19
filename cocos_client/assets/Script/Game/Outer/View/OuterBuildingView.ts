@@ -1,5 +1,5 @@
 import { _decorator, Component, instantiate, Label, Layout, Node } from 'cc';
-import { ItemMgr, LanMgr, UserInfoMgr } from '../../../Utils/Global';
+import { LanMgr } from '../../../Utils/Global';
 import { MapBuildingType, InnerBuildingType, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
 import ViewController from '../../../BasicView/ViewController';
 import NotificationMgr from '../../../Basic/NotificationMgr';
@@ -149,7 +149,7 @@ export class OuterBuildingView extends ViewController {
     protected viewDidStart(): void {
         super.viewDidStart();
 
-        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_CHANGED, this._onEnergyNumChanged, this);
+        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE, this._onEnergyNumChanged, this);
         NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
         NotificationMgr.addListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
     }
@@ -166,7 +166,7 @@ export class OuterBuildingView extends ViewController {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(NotificationName.GENERATE_ENERGY_NUM_CHANGED, this._onEnergyNumChanged, this);
+        NotificationMgr.removeListener(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE, this._onEnergyNumChanged, this);
         NotificationMgr.removeListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
         NotificationMgr.removeListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
     }
@@ -175,10 +175,10 @@ export class OuterBuildingView extends ViewController {
     private _refreshEnergyTipShow() {
         this._toGetEnergyTip.active = false;
         if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != MapMemberFactionType.enemy) {
-            const energyInfo = UserInfoMgr.generateEnergyInfo;
+            const energyInfo = DataMgr.s.userInfo.data.generateEnergyInfo;
             if (energyInfo != null) {
                 const threshold = (ConfigConfig.getConfig(ConfigType.MainCityEnergyTipThreshold) as EnergyTipThresholdParam).threshold;
-                const energyStationData = UserInfoMgr.innerBuilds.get(InnerBuildingType.EnergyStation);
+                const energyStationData = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.EnergyStation];
                 const psycData = InnerBuildingLvlUpConfig.getEnergyLevelData(energyStationData.buildLevel);
                 if (psycData != null) {
                     if ((energyInfo.totalEnergyNum / psycData.storage) >= threshold) {
@@ -192,8 +192,10 @@ export class OuterBuildingView extends ViewController {
         this._toBuildBuildingTip.active = false;
         if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != MapMemberFactionType.enemy) {
             let canBuild: boolean = false;
-            UserInfoMgr.innerBuilds.forEach((value: UserInnerBuildInfo, key: InnerBuildingType) => {
-                const innerConfig = InnerBuildingConfig.getByBuildingType(key);
+            const innerBuildings = DataMgr.s.userInfo.data.innerBuildings;
+            for (const key in innerBuildings) {
+                const value = innerBuildings[key];
+                const innerConfig = InnerBuildingConfig.getByBuildingType(key as InnerBuildingType);
                 const levelConfig = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel + 1, innerConfig.lvlup_cost);
                 if (levelConfig != null) {
                     let thisBuild: boolean = true;
@@ -209,7 +211,7 @@ export class OuterBuildingView extends ViewController {
                         canBuild = true;
                     }
                 }
-            });
+            }
             if (canBuild) {
                 this._toBuildBuildingTip.active = true;
             }

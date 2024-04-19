@@ -6,6 +6,7 @@ import { PioneersDataMgr } from "./Save/PioneersDataMgr";
 import { BattleReportDataMgr } from "./Save/BattleReportDataMgr";
 import { ItemDataMgr } from "./Save/ItemDataMgr";
 import { SettlementDataMgr } from "./Save/SettlementDataMgr";
+import UserInfoDataMgr from "./Save/UserInfoDataMgr";
 // import { UserDataMgr } from "./Save/UserDataMgr";
 
 export class SaveData {
@@ -16,8 +17,8 @@ export class SaveData {
     private _artifactDataMgr: ArtifactDataMgr;
     private _battleReportDataMgr: BattleReportDataMgr;
     private _itemDataMgr: ItemDataMgr;
-    private _settlementDataMgr: SettlementDataMgr
-    // private _userDataMgr: UserDataMgr
+    private _settlementDataMgr: SettlementDataMgr;
+    private _userInfoDataMgr: UserInfoDataMgr;
 
     public get pioneer() {
         return this._pioneersDataMgr;
@@ -51,9 +52,9 @@ export class SaveData {
         return this._settlementDataMgr;
     }
 
-    // public get user() {
-    //     return this._userDataMgr;
-    // }
+    public get userInfo() {
+        return this._userInfoDataMgr;
+    }
 
     constructor() {
         this._pioneersDataMgr = new PioneersDataMgr();
@@ -64,19 +65,19 @@ export class SaveData {
         this._battleReportDataMgr = new BattleReportDataMgr();
         this._itemDataMgr = new ItemDataMgr();
         this._settlementDataMgr = new SettlementDataMgr();
-        // this._userDataMgr = new UserDataMgr();
+        this._userInfoDataMgr = new UserInfoDataMgr();
     }
 
-    public async load() {
-        await this._pioneersDataMgr.loadObj();
-        await this._eraseShadowDataMgr.loadObj();
-        await this._mapBuildingDataMgr.loadObj();
-        await this._countDataMgr.loadObj();
-        await this._artifactDataMgr.loadObj();
-        await this._battleReportDataMgr.loadObj();
-        await this._itemDataMgr.loadObj();
-        await this._settlementDataMgr.loadObj();
-        // await this._userDataMgr.loadObj();
+    public async load(walletAddr: string) {
+        await this._pioneersDataMgr.loadObj(walletAddr);
+        await this._eraseShadowDataMgr.loadObj(walletAddr);
+        await this._mapBuildingDataMgr.loadObj(walletAddr);
+        await this._countDataMgr.loadObj(walletAddr);
+        await this._artifactDataMgr.loadObj(walletAddr);
+        await this._battleReportDataMgr.loadObj(walletAddr);
+        await this._itemDataMgr.loadObj(walletAddr);
+        await this._settlementDataMgr.loadObj(walletAddr);
+        await this._userInfoDataMgr.loadObj(walletAddr);
     }
     public async save() {
         await this._eraseShadowDataMgr.saveObj();
@@ -87,6 +88,6 @@ export class SaveData {
         await this._battleReportDataMgr.saveObj();
         await this._itemDataMgr.saveObj();
         await this._settlementDataMgr.saveObj();
-        // await this._userDataMgr.saveObj();
+        await this._userInfoDataMgr.saveObj();
     }
 }

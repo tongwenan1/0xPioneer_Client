@@ -7,7 +7,7 @@ import {
     Color,
 } from "cc";
 import { ArtifactItem } from "./ArtifactItem";
-import { ArtifactMgr, LanMgr, UserInfoMgr } from "../Utils/Global";
+import { LanMgr } from "../Utils/Global";
 import ArtifactData from "../Model/ArtifactData";
 import ViewController from "../BasicView/ViewController";
 import ArtifactConfig from "../Config/ArtifactConfig";
@@ -15,6 +15,7 @@ import ArtifactEffectConfig from "../Config/ArtifactEffectConfig";
 import { GetPropRankColor } from "../Const/ConstDefine";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { InnerBuildingType } from "../Const/BuildingDefine";
+import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactInfoUI")
@@ -66,7 +67,7 @@ export class ArtifactInfoUI extends ViewController {
                 content.getChildByName("Title").getComponent(Label).color = useColor;
     
                 // effect
-                const buildingLevel = UserInfoMgr.innerBuilds.get(InnerBuildingType.ArtifactStore).buildLevel;
+                const buildingLevel = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.ArtifactStore].buildLevel;
                 if (config.effect.length > 0) {
                     const numStrings: string[] = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
                     let effectIndex: number = 0;

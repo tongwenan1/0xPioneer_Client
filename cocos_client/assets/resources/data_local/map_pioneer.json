@@ -161,7 +161,7 @@
     "show": 1,
     "level": 1,
     "nft_pioneer": "30001",
-    "hp": 1,
+    "hp": 120,
     "attack": 25,
     "def": 0,
     "winprogress": null,

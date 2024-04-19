@@ -33,7 +33,7 @@ export enum InnerBuildingType {
     ArtifactStore = "30005",
 }
 
-export class UserInnerBuildInfo {
+export interface UserInnerBuildInfo {
     buildBeginLatticeIndex: number;
     buildType: InnerBuildingType;
     buildLevel: number;

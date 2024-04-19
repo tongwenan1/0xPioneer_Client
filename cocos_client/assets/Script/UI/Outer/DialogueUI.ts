@@ -79,7 +79,7 @@ export class DialogueUI extends ViewController {
                 dialogView.getChildByPath("name_bg/Label").getComponent(Label).string = LanMgr.getLanById(currentMesssage.name);
             } else if (currentMesssage.name == NPCNameLangType.DefaultPlayer) {
                 dialogView.getChildByName("player_name").active = true;
-                dialogView.getChildByPath("player_name/Label").getComponent(Label).string = UserInfoMgr.playerName;
+                dialogView.getChildByPath("player_name/Label").getComponent(Label).string = DataMgr.s.userInfo.data.name;
             }
 
             dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.getLanById(currentMesssage.text);

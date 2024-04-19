@@ -1,11 +1,12 @@
 import { _decorator, Component, Node, instantiate, director, BoxCharacterController, Label, Layout, UITransform, ProgressBar, Button, tween, v3, } from "cc";
-import { LanMgr, UserInfoMgr } from "../Utils/Global";
+import { LanMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TreasureGettedUI } from "./TreasureGettedUI";
 import { UIHUDController } from "./UIHUDController";
 import BoxInfoConfig from "../Config/BoxInfoConfig";
 import { BoxInfoConfigData } from "../Const/BoxInfo";
 import UIPanelManger from "../Basic/UIPanelMgr";
+import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("ClaimRewardUI")
@@ -13,14 +14,14 @@ export class ClaimRewardUI extends Component {
     @property(Node) RewardBoxArr: Node;
 
     public refreshUI() {
-        let value = UserInfoMgr.explorationValue;
+        let value = DataMgr.s.userInfo.data.treasureProgress;
         let showBox = false;
         for (let i = 0; i < this._boxViews.length; i++) {
             if (i < this._boxDatas.length) {
                 const data = this._boxDatas[i];
                 // 0-no 1-can 2-getted
                 let getStatus: number = 0;
-                if (UserInfoMgr.gettedExplorationRewardIds.indexOf(data.id) != -1) {
+                if (DataMgr.s.userInfo.data.treasureDidGetRewards.indexOf(data.id) != -1) {
                     getStatus = 2;
                 } else if (value >= data.threshold) {
                     getStatus = 1;
@@ -106,9 +107,9 @@ export class ClaimRewardUI extends Component {
         const data = this._boxDatas[index];
         // 0-no 1-can 2-getted
         let getStatus: number = 0;
-        if (UserInfoMgr.gettedExplorationRewardIds.indexOf(data.id) != -1) {
+        if (DataMgr.s.userInfo.data.treasureDidGetRewards.indexOf(data.id) != -1) {
             getStatus = 2;
-        } else if (UserInfoMgr.explorationValue >= data.threshold) {
+        } else if (DataMgr.s.userInfo.data.treasureProgress >= data.threshold) {
             getStatus = 1;
         }
         if (getStatus == 2) {

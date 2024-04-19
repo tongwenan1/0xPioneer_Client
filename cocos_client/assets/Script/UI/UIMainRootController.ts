@@ -1,5 +1,4 @@
 import { CCBoolean, Component, ImageAsset, _decorator } from "cc";
-import { ItemMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import ViewController from "../BasicView/ViewController";
 import { ECursorStyle, ECursorType } from "../Const/ConstDefine";
@@ -9,6 +8,7 @@ import { NotificationName } from "../Const/Notification";
 import { DialogueUI } from "./Outer/DialogueUI";
 import TalkConfig from "../Config/TalkConfig";
 import UIPanelManger from "../Basic/UIPanelMgr";
+import { DataMgr } from "../Data/DataMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -16,7 +16,7 @@ const { ccclass, property } = _decorator;
 @ccclass('UIMainRootController')
 export class UIMainRootController extends ViewController {
     public async checkShowRookieGuide() {
-        if (this.canShowRookieGuide && !UserInfoMgr.isFinishRookie) {
+        if (this.canShowRookieGuide && !DataMgr.s.userInfo.data.didFinishRookie) {
             await UIPanelManger.inst.pushPanel(UIName.RookieGuide);
         }
     }

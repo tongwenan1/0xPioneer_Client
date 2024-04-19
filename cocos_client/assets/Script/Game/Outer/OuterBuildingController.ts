@@ -1,8 +1,7 @@
 import { _decorator, Component, instantiate, Node, Prefab, v3, Vec2, Vec3 } from "cc";
 import { TileHexDirection, TilePos } from "../TiledMap/TileTool";
 import { OuterBuildingView } from "./View/OuterBuildingView";
-import { TaskMgr, UserInfoMgr } from "../../Utils/Global";
-import { UserInfoEvent } from "../../Const/UserInfoDefine";
+import { TaskMgr } from "../../Utils/Global";
 import GameMainHelper from "../Helper/GameMainHelper";
 import { OuterTiledMapActionController } from "./OuterTiledMapActionController";
 import { TaskShowHideStatus } from "../../Const/TaskDefine";
@@ -15,7 +14,7 @@ import { BuildingStayPosType } from "../../Const/BuildingDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("OuterBuildingController")
-export class OuterBuildingController extends Component implements UserInfoEvent {
+export class OuterBuildingController extends Component {
     public getBuildingView(buildingId: string): OuterBuildingView {
         if (this._buildingMap.has(buildingId)) {
             const view = this._buildingMap.get(buildingId).node.getComponent(OuterBuildingView);
@@ -30,8 +29,6 @@ export class OuterBuildingController extends Component implements UserInfoEvent 
     private _buildingMap: Map<string, { node: Node; stayPositons: Vec2[] }> = new Map();
 
     protected onLoad() {
-        UserInfoMgr.addObserver(this);
-
         NotificationMgr.addListener(NotificationName.BUILDING_DID_HIDE, this.buildingDidHide, this);
         NotificationMgr.addListener(NotificationName.BUILDING_DID_SHOW, this.buildingDidShow, this);
         NotificationMgr.addListener(NotificationName.BUILDING_FACTION_CHANGED, this.buildingFacitonChanged, this);
@@ -96,7 +93,6 @@ export class OuterBuildingController extends Component implements UserInfoEvent 
     update(deltaTime: number) {}
 
     protected onDestroy(): void {
-        UserInfoMgr.removeObserver(this);
 
         NotificationMgr.removeListener(NotificationName.BUILDING_DID_HIDE, this.buildingDidHide, this);
         NotificationMgr.removeListener(NotificationName.BUILDING_DID_SHOW, this.buildingDidShow, this);
@@ -290,11 +286,6 @@ export class OuterBuildingController extends Component implements UserInfoEvent 
     //         this.node.getComponent(OuterTiledMapActionController).sortMapItemSiblingIndex();
     //     }
     // }
-
-    //-----------------------------------------------------------
-    //UserInfoEvent
-    playerNameChanged(value: string): void {}
-    getProp(propId: string, num: number): void {}
     //-----------------------------------------------------------
     //BuildingMgrEvent
     buildingFacitonChanged(): void {
@@ -318,5 +309,5 @@ export class OuterBuildingController extends Component implements UserInfoEvent 
     }
     buildingRemoveDefendPioneer(): void {
         this._refreshUI();
-    }   
+    }
 }

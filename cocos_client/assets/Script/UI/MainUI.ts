@@ -1,12 +1,11 @@
 import { _decorator, Node, Button, Label } from "cc";
 import { ClaimRewardUI } from "./ClaimRewardUI";
-import { ItemMgr, LanMgr, PioneerDevelopMgr, UserInfoMgr } from "../Utils/Global";
+import { LanMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TaskListUI } from "./TaskListUI";
 import { NewSettlementUI } from "./NewSettlementUI";
 import ViewController from "../BasicView/ViewController";
 import NotificationMgr from "../Basic/NotificationMgr";
-import { UserInfoEvent } from "../Const/UserInfoDefine";
 import { NotificationName } from "../Const/Notification";
 import Config from "../Const/Config";
 import { MapMemberFactionType } from "../Const/ConstDefine";
@@ -19,7 +18,7 @@ import ItemData from "../Const/Item";
 const { ccclass, property } = _decorator;
 
 @ccclass("MainUI")
-export class MainUI extends ViewController implements UserInfoEvent {
+export class MainUI extends ViewController {
     @property(Button)
     backpackBtn: Button = null;
 
@@ -35,13 +34,14 @@ export class MainUI extends ViewController implements UserInfoEvent {
         this._gangsterComingTipView = this.node.getChildByPath("CommonContent/GangsterTipView");
         this._gangsterComingTipView.active = false;
 
-        UserInfoMgr.addObserver(this);
-
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
         NotificationMgr.addListener(NotificationName.CHOOSE_GANGSTER_ROUTE, this._refreshInnerOuterChange, this);
         NotificationMgr.addListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
         NotificationMgr.addListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onInnerOuterChanged, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, this._onPioneerShowHideCountChanged, this);
+
+        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onPlayerLvlupChanged, this);
+        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._onPlayerExplorationValueChanged, this);
     }
 
     protected async viewDidStart(): Promise<void> {
@@ -93,13 +93,14 @@ export class MainUI extends ViewController implements UserInfoEvent {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        UserInfoMgr.removeObserver(this);
-
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.changeLang, this);
         NotificationMgr.removeListener(NotificationName.CHOOSE_GANGSTER_ROUTE, this._refreshInnerOuterChange, this);
         NotificationMgr.removeListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
         NotificationMgr.removeListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onInnerOuterChanged, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, this._onPioneerShowHideCountChanged, this);
+
+        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onPlayerLvlupChanged, this);
+        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._onPlayerExplorationValueChanged, this);
     }
 
     changeLang(): void {
@@ -177,27 +178,6 @@ export class MainUI extends ViewController implements UserInfoEvent {
 
         return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
     }
-
-    //-----------------------------------------------------------------
-    //userInfoEvent
-    playerNameChanged(value: string): void {}
-    playerLvlupChanged(value: number): void {
-        const gap: number = 4;
-        if (value % gap == 0) {
-            const currentSettle: number = value / gap - 1;
-            const beginLevel: number = currentSettle * gap + 1;
-            const endLevel: number = (currentSettle + 1) * gap;
-            if (Config.canSaveLocalData) {
-                localStorage.setItem("local_newSettle", beginLevel + "|" + endLevel);
-            }
-            this._refreshSettlememntTip();
-        }
-    }
-    playerExplorationValueChanged?(value: number): void {
-        this._claimRewardUI.refreshUI();
-    }
-    getProp(propId: string, num: number): void {}
-
     //----------------------------------------------------- notification
     private _onPioneerShowChanged(data: { id: string; show: boolean }) {
         this.checkCanShowGansterComingTip(data.id);
@@ -224,5 +204,22 @@ export class MainUI extends ViewController implements UserInfoEvent {
     private _onInnerOuterChanged() {
         const isOuter: boolean = GameMainHelper.instance.isGameShowOuter;
         this.node.getChildByPath("btnBuild").active = !isOuter;
+    }
+
+    private _onPlayerLvlupChanged(): void {
+        const currentLevel: number = DataMgr.s.userInfo.data.level;
+        const gap: number = 4;
+        if (currentLevel % gap == 0) {
+            const currentSettle: number = currentLevel / gap - 1;
+            const beginLevel: number = currentSettle * gap + 1;
+            const endLevel: number = (currentSettle + 1) * gap;
+            if (Config.canSaveLocalData) {
+                localStorage.setItem("local_newSettle", beginLevel + "|" + endLevel);
+            }
+            this._refreshSettlememntTip();
+        }
+    }
+    private _onPlayerExplorationValueChanged(): void {
+        this._claimRewardUI.refreshUI();
     }
 }

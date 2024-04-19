@@ -6,14 +6,13 @@ import { MapItemMonster } from "./View/MapItemMonster";
 import { MapPioneer } from "./View/MapPioneer";
 import { OuterMapCursorView } from "./View/OuterMapCursorView";
 import { GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
-import { ArtifactMgr, BuildingMgr, GameMgr, ItemMgr, PioneerMgr, SettlementMgr, TaskMgr, UserInfoMgr } from "../../Utils/Global";
+import { BuildingMgr, GameMgr, ItemMgr, PioneerMgr, TaskMgr, UserInfoMgr } from "../../Utils/Global";
 import { OuterBuildingController } from "./OuterBuildingController";
 import { UIName } from "../../Const/ConstUIDefine";
 import { DialogueUI } from "../../UI/Outer/DialogueUI";
 import { SecretGuardGettedUI } from "../../UI/Outer/SecretGuardGettedUI";
 import { EventUI } from "../../UI/Outer/EventUI";
 import NotificationMgr from "../../Basic/NotificationMgr";
-import { UserInfoEvent } from "../../Const/UserInfoDefine";
 import TalkConfig from "../../Config/TalkConfig";
 import LvlupConfig from "../../Config/LvlupConfig";
 import EventConfig from "../../Config/EventConfig";
@@ -43,7 +42,7 @@ import {
 const { ccclass, property } = _decorator;
 
 @ccclass("OuterPioneerController")
-export class OuterPioneerController extends ViewController implements UserInfoEvent {
+export class OuterPioneerController extends ViewController {
     public showMovingPioneerAction(tilePos: TilePos, movingPioneerId: string, usedCursor: OuterMapCursorView) {
         this._actionShowPioneerId = movingPioneerId;
         this._actionUsedCursor = usedCursor;
@@ -131,8 +130,6 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        UserInfoMgr.addObserver(this);
-
         this._pioneerMap = new Map();
 
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_BEGIN_EYES, this._onRookieGuideBeginEyes, this);
@@ -182,7 +179,7 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
                     GameMainHelper.instance.changeGameCameraZoom(parseFloat(localOuterMapScale));
                 }
             }
-            if (!UserInfoMgr.isFinishRookie) {
+            if (!DataMgr.s.userInfo.data.didFinishRookie) {
                 if (actionPioneer != null) {
                     this.scheduleOnce(() => {
                         GameMainHelper.instance.tiledMapShadowErase(actionPioneer.stayPos);
@@ -229,9 +226,7 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
-
-        UserInfoMgr.removeObserver(this);
-
+        
         NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_BEGIN_EYES, this._onRookieGuideBeginEyes, this);
         NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_THIRD_EYES, this._onRookieGuideThirdEyes, this);
 
@@ -540,7 +535,7 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
         const mainCity = DataMgr.s.mapBuilding.getBuildingById(mainCityId);
 
         if (mainCity != null && mainCity.faction != MapMemberFactionType.enemy && pioneer != null && pioneer.show) {
-            let radialRange = UserInfoMgr.cityVision;
+            let radialRange = DataMgr.s.userInfo.data.cityRadialRange;
             radialRange = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.CITY_RADIAL_RANGE, radialRange);
 
             const isInCityRange: boolean = BuildingMgr.checkMapPosIsInBuilingRange(pioneer.stayPos, mainCityId, radialRange);
@@ -567,7 +562,7 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
                 const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
                 if (result.success) {
                     result.node.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), () => {
-                        UserInfoMgr.isFinishRookie = true;
+                        DataMgr.s.userInfo.finishRookie();
                         TaskMgr.gameStarted();
                         // init resource
                         ItemMgr.addItem(
@@ -660,8 +655,11 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
         // const building = BuildingMgr.getBuildingById(buildingId);
         const building = DataMgr.s.mapBuilding.getBuildingById(data.id);
         if (building != null) {
-            if (building.progress > 0) UserInfoMgr.explorationValue += building.progress;
-            if (building.exp > 0) UserInfoMgr.exp += building.exp;
+            if (building.progress > 0) {
+                const effectProgress = GameMgr.getAfterExtraEffectPropertyByPioneer(null, GameExtraEffectType.TREASURE_PROGRESS, building.progress);
+                DataMgr.s.userInfo.gainTreasureProgress(effectProgress);
+            }
+            if (building.exp > 0) DataMgr.s.userInfo.gainExp(building.exp);
         }
     }
     private _onMiningBuilding(data: { actionId: string; id: string }): void {
@@ -678,7 +676,7 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
             if (this._pioneerMap.has(data.actionId)) {
                 actionView = this._pioneerMap.get(data.actionId);
             }
-            const resultNum: number = Math.floor(building.resources.num * (1 + LvlupConfig.getTotalExtraRateByLvl(UserInfoMgr.level)));
+            const resultNum: number = Math.floor(building.resources.num * (1 + LvlupConfig.getTotalExtraRateByLvl(DataMgr.s.userInfo.data.level)));
             actionView.getComponent(MapPioneer).playGetResourceAnim(building.resources.id, resultNum, () => {
                 ItemMgr.addItem([new ItemData(building.resources.id, resultNum)]);
             });
@@ -691,8 +689,11 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
             });
         }
 
-        if (building.progress > 0) UserInfoMgr.explorationValue += building.progress;
-        if (building.exp > 0) UserInfoMgr.exp += building.exp;
+        if (building.progress > 0) {
+            const effectProgress = GameMgr.getAfterExtraEffectPropertyByPioneer(null, GameExtraEffectType.TREASURE_PROGRESS, building.progress);
+            DataMgr.s.userInfo.gainTreasureProgress(effectProgress);
+        }
+        if (building.exp > 0) DataMgr.s.userInfo.gainExp(building.exp);
     }
     private async _onEventBuilding(data: { pioneerId: string; buildingId: string; eventId: string }): Promise<void> {
         const actionPioneerId = data.pioneerId;
@@ -720,7 +721,7 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
                         fightOver: (succeed: boolean) => void
                     ) => {
                         PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
-                        PioneerMgr.eventFight(attackerPioneerId, enemyPioneerId, temporaryAttributes, fightOver);
+                        PioneerMgr.fight(DataMgr.s.pioneer.getById(attackerPioneerId), DataMgr.s.pioneer.getById(enemyPioneerId), null, true, fightOver);
                     },
                     (nextEvent: EventConfigData) => {
                         PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
@@ -801,9 +802,4 @@ export class OuterPioneerController extends ViewController implements UserInfoEv
             this._checkInMainCityRangeAndHealHpToMax(data.playerPioneerId);
         }
     }
-
-    //---------------------------------------------
-    //UserInfoEvent
-    playerNameChanged(value: string): void {}
-    getProp(propId: string, num: number): void {}
 }

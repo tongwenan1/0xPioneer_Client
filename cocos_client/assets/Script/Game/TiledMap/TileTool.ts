@@ -107,6 +107,9 @@ export class TileMapHelper {
     pixelheight: number;
     type: TileMapType;
 
+    getAllPos(): TilePos[] {
+        return this._pos;
+    }
     getPos(x: number, y: number): TilePos {
         if (x < 0 || y < 0 || x >= this.width || y >= this.height)
             return null;

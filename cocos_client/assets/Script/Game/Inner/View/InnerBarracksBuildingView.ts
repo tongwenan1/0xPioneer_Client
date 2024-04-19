@@ -1,7 +1,7 @@
 import { Label, Node, _decorator } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
-import { ItemMgr, LanMgr, UserInfoMgr } from "../../../Utils/Global";
+import { LanMgr } from "../../../Utils/Global";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { UIName } from "../../../Const/ConstUIDefine";
 import { RecruitUI } from "../../../UI/Inner/RecruitUI";
@@ -9,6 +9,7 @@ import CommonTools from "../../../Tool/CommonTools";
 import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import { NotificationName } from "../../../Const/Notification";
 import UIPanelManger from "../../../Basic/UIPanelMgr";
+import { DataMgr } from "../../../Data/DataMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -27,15 +28,13 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
         super.innerBuildingLoad();
         this._generateTime = this.node.getChildByPath("RecruitTime").getComponent(Label);
 
-        NotificationMgr.addListener(NotificationName.GENERATE_TROOP_TIME_COUNT_ChANGED, this._countingGenerate, this);
-        NotificationMgr.addListener(NotificationName.GENERATE_TROOP_NUM_CHANGED, this._countingGenerate, this);
+        NotificationMgr.addListener(NotificationName.GENERATE_TROOP_TIME_COUNT_CHANGED, this._countingGenerate, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(NotificationName.GENERATE_TROOP_TIME_COUNT_ChANGED, this._countingGenerate, this);
-        NotificationMgr.removeListener(NotificationName.GENERATE_TROOP_NUM_CHANGED, this._countingGenerate, this);
+        NotificationMgr.removeListener(NotificationName.GENERATE_TROOP_TIME_COUNT_CHANGED, this._countingGenerate, this);
     }
 
 
@@ -46,7 +45,7 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
             return;
         }
         if (this._building.buildLevel > 0) {
-            if (UserInfoMgr.generateTroopInfo != null) {
+            if (DataMgr.s.userInfo.data.generateTroopInfo != null) {
                 UIHUDController.showCenterTip(LanMgr.getLanById("201002"));
                 // UIHUDController.showCenterTip("Recruiting…Please wait…");
                 return;
@@ -61,10 +60,10 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
     //------------------------------- action
     private _countingGenerate() {
         if (this._building.buildLevel > 0 &&
-            UserInfoMgr.generateTroopInfo != null &&
-            UserInfoMgr.generateTroopInfo.countTime > 0) {
+            DataMgr.s.userInfo.data.generateTroopInfo != null &&
+            DataMgr.s.userInfo.data.generateTroopInfo.countTime > 0) {
             this._generateTime.node.active = true;
-            this._generateTime.string = CommonTools.formatSeconds(UserInfoMgr.generateTroopInfo.countTime);
+            this._generateTime.string = CommonTools.formatSeconds(DataMgr.s.userInfo.data.generateTroopInfo.countTime);
 
         } else {
             this._generateTime.node.active = false;
