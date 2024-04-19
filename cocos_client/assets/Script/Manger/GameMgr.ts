@@ -2,7 +2,6 @@ import { InnerBuildingType } from "../Const/BuildingDefine";
 import { GameExtraEffectType } from "../Const/ConstDefine";
 import { MapPlayerPioneerObject } from "../Const/PioneerDefine";
 import { DataMgr } from "../Data/DataMgr";
-import { PioneerDevelopMgr } from "../Utils/Global";
 
 export default class GameMgr {
     //--------------------------- effect
@@ -14,7 +13,7 @@ export default class GameMgr {
         let nftChangeRate: number = 0;
         const pioneer = DataMgr.s.pioneer.getById(pioneerId) as MapPlayerPioneerObject;
         if (!!pioneer && pioneer.NFTId != null) {
-            nftChangeRate = PioneerDevelopMgr.getNFTEffectById(pioneer.NFTId, type);
+            nftChangeRate = DataMgr.s.nftPioneer.getNFTEffectById(pioneer.NFTId, type);
         }
 
         return this._getEffectResultNum(type, originalValue, artifactChangeRate + nftChangeRate);
@@ -25,9 +24,9 @@ export default class GameMgr {
 
         //nft
         let nftChangeRate: number = 0;
-        const nft = PioneerDevelopMgr.getNFTByWorkingBuildingId(buildingType);
+        const nft = DataMgr.s.nftPioneer.getNFTByWorkingBuildingId(buildingType);
         if (nft != undefined) {
-            nftChangeRate = PioneerDevelopMgr.getNFTEffectById(nft.uniqueId, type);
+            nftChangeRate = DataMgr.s.nftPioneer.getNFTEffectById(nft.uniqueId, type);
         }
 
         return this._getEffectResultNum(type, originalValue, artifactChangeRate + nftChangeRate);

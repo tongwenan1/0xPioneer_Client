@@ -1,8 +1,8 @@
 import { _decorator, Button, Component, Label, Layout, Node, Sprite } from "cc";
 import ViewController from "../BasicView/ViewController";
 import UIPanelManger from "../Basic/UIPanelMgr";
-import { NFTPioneerModel } from "../Const/PioneerDevelopDefine";
-import { ItemMgr, LanMgr, PioneerDevelopMgr } from "../Utils/Global";
+import { NFTPioneerObject } from "../Const/NFTPioneerDefine";
+import { ItemMgr, LanMgr } from "../Utils/Global";
 import LvlupConfig from "../Config/LvlupConfig";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import CommonTools from "../Tool/CommonTools";
@@ -13,7 +13,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass("NTFLevelUpUI")
 export class NTFLevelUpUI extends ViewController {
-    public showUI(NFTData: NFTPioneerModel) {
+    public showUI(NFTData: NFTPioneerObject) {
         this._data = NFTData;
 
         // userlanMgr
@@ -27,7 +27,7 @@ export class NTFLevelUpUI extends ViewController {
     }
 
     //------------------------ life cycle
-    private _data: NFTPioneerModel = null;
+    private _data: NFTPioneerObject = null;
     private _levelUpNum: number = 1;
     private _maxLevelUpNum: number = 0;
 
@@ -140,7 +140,7 @@ export class NTFLevelUpUI extends ViewController {
     private onTapConfirmLevelUp() {
         if (this._data != null && this._currentCost > 0) {
             ItemMgr.subItem(ResourceCorrespondingItem.NFTExp, this._currentCost);
-            PioneerDevelopMgr.NFTLevelUp(this._data.uniqueId, this._levelUpNum);
+            DataMgr.s.nftPioneer.NFTLevelUp(this._data.uniqueId, this._levelUpNum);
         }
     }
 

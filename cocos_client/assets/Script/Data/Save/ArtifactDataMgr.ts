@@ -1,4 +1,3 @@
-import { Vec2 } from "cc";
 import ArtifactData from "../../Model/ArtifactData";
 import { ArtifactArrangeType } from "../../Const/Artifact";
 import ArtifactConfig from "../../Config/ArtifactConfig";

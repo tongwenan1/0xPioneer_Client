@@ -1,18 +1,19 @@
 import { _decorator, Label, Node, RichText } from "cc";
-import { LanMgr, PioneerDevelopMgr } from "../Utils/Global";
+import { LanMgr } from "../Utils/Global";
 import ViewController from "../BasicView/ViewController";
 import UIPanelManger, { UIPanelLayerType } from "../Basic/UIPanelMgr";
-import { NFTPioneerModel, NFTPioneerSkillConfigData } from "../Const/PioneerDevelopDefine";
+import { NFTPioneerObject, NFTPioneerSkillConfigData } from "../Const/NFTPioneerDefine";
 
 import NFTSkillConfig from "../Config/NFTSkillConfig";
 import NFTSkillEffectConfig from "../Config/NFTSkillEffectConfig";
 import { HUDName } from "../Const/ConstUIDefine";
 import { AlterView } from "./View/AlterView";
+import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("NFTSkillDetailUI")
 export class NFTSkillDetailUI extends ViewController {
-    public async showItem(data: NFTPioneerModel, skillIndex: number) {
+    public async showItem(data: NFTPioneerObject, skillIndex: number) {
         if (data == null || skillIndex < 0 || skillIndex >= data.skills.length) {
             return;
         }
@@ -35,7 +36,7 @@ export class NFTSkillDetailUI extends ViewController {
         this.node.getChildByPath("__ViewContent/btnUse").active = !data.skills[skillIndex].isOriginal;
     }
 
-    private _data: NFTPioneerModel = null;
+    private _data: NFTPioneerObject = null;
     private _skillIndex: number = -1;
     private _skillConfig: NFTPioneerSkillConfigData = null;
     protected viewPopAnimation(): boolean {
@@ -56,7 +57,7 @@ export class NFTSkillDetailUI extends ViewController {
             return;
         }
         result.node.getComponent(AlterView).showTip(LanMgr.replaceLanById("106006", [this._data.name, LanMgr.getLanById(this._skillConfig.name)]), async () => {
-            PioneerDevelopMgr.NFTForgetSkill(this._data.uniqueId, this._skillIndex);
+            DataMgr.s.nftPioneer.NFTForgetSkill(this._data.uniqueId, this._skillIndex);
             await this.playExitAnimation();
             UIPanelManger.inst.popPanel();
         });

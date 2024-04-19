@@ -1,20 +1,10 @@
 import { _decorator, Button, instantiate, Label, Layout, Node, RichText, Sprite } from "cc";
-import { ItemMgr, LanMgr, PioneerDevelopMgr } from "../Utils/Global";
 import ViewController from "../BasicView/ViewController";
-import UIPanelManger, { UIPanelLayerType } from "../Basic/UIPanelMgr";
-import { NFTPioneerModel, NFTPioneerSkillConfigData } from "../Const/PioneerDevelopDefine";
-import NFTSkillConfig from "../Config/NFTSkillConfig";
-import NFTSkillEffectConfig from "../Config/NFTSkillEffectConfig";
-import { HUDName, UIName } from "../Const/ConstUIDefine";
-import { AlterView } from "./View/AlterView";
-import ItemData from "../Const/Item";
-import { BackpackItem } from "./BackpackItem";
-import ItemConfig from "../Config/ItemConfig";
-import { ItemInfoUI } from "./ItemInfoUI";
-import NotificationMgr from "../Basic/NotificationMgr";
-import { NotificationName } from "../Const/Notification";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import { NFTPioneerObject } from "../Const/NFTPioneerDefine";
 import { NTFBackpackItem } from "./View/NTFBackpackItem";
 import { InnerBuildingType } from "../Const/BuildingDefine";
+import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("DelegateUI")
@@ -28,7 +18,7 @@ export class DelegateUI extends ViewController {
     }
 
     private _buildingId: InnerBuildingType = null;
-    private _datas: NFTPioneerModel[] = [];
+    private _datas: NFTPioneerObject[] = [];
     private _selectIndex: number = -1;
 
     private _NFTContent: Node = null;
@@ -66,8 +56,8 @@ export class DelegateUI extends ViewController {
         }
         this._allNFTItems = [];
 
-        this._datas = PioneerDevelopMgr.getAllNFTs();
-        this._datas.sort((a: NFTPioneerModel, b: NFTPioneerModel) => {
+        this._datas = DataMgr.s.nftPioneer.getAll();
+        this._datas.sort((a: NFTPioneerObject, b: NFTPioneerObject) => {
             if (a.workingBuildingId != null && b.workingBuildingId == null) return 1;
             if (a.workingBuildingId == null && b.workingBuildingId != null) return -1;
             if (a.attack > b.attack) return -1;
@@ -137,7 +127,7 @@ export class DelegateUI extends ViewController {
         if (this._selectIndex < 0) {
             return;
         }
-        PioneerDevelopMgr.NFTChangeWork(this._datas[this._selectIndex].uniqueId, this._buildingId);
+        DataMgr.s.nftPioneer.NFTChangeWork(this._datas[this._selectIndex].uniqueId, this._buildingId);
         this._refreshUI();
     }
 }

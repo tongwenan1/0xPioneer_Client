@@ -87,7 +87,7 @@ export class MainUI extends ViewController {
         // ItemMgr.addItem([new ItemData("9", 1)]);
         // ItemMgr.addItem([new ItemData("10", 1)]);
         // ItemMgr.addItem([new ItemData("11", 1)]);
-        // PioneerDevelopMgr.generateNewNFT();
+        // DataMgr.s.nftPioneer.generateNewNFT();
     }
 
     protected viewDidDestroy(): void {

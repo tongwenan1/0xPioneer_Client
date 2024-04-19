@@ -1,5 +1,5 @@
 import { resources } from "cc";
-import { NFTPioneerSkillEffectConfigData } from "../Const/PioneerDevelopDefine";
+import { NFTPioneerSkillEffectConfigData } from "../Const/NFTPioneerDefine";
 import { LanMgr } from "../Utils/Global";
 
 export default class NFTSkillEffectConfig {

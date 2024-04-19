@@ -1,11 +1,9 @@
 import { _decorator, Button, Component, instantiate, Label, Layout, Node, Sprite } from "cc";
 import ViewController from "../BasicView/ViewController";
 import UIPanelManger from "../Basic/UIPanelMgr";
-import { NFTPioneerModel } from "../Const/PioneerDevelopDefine";
-import { ItemMgr, LanMgr, PioneerDevelopMgr } from "../Utils/Global";
+import { NFTPioneerObject } from "../Const/NFTPioneerDefine";
+import { ItemMgr, LanMgr } from "../Utils/Global";
 import LvlupConfig from "../Config/LvlupConfig";
-import { ResourceCorrespondingItem } from "../Const/ConstDefine";
-import CommonTools from "../Tool/CommonTools";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import ItemData from "../Const/Item";
@@ -17,7 +15,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass("NTFRankUpUI")
 export class NTFRankUpUI extends ViewController {
-    public showUI(NFTData: NFTPioneerModel) {
+    public showUI(NFTData: NFTPioneerObject) {
         this._data = NFTData;
 
         // userlanMgr
@@ -31,7 +29,7 @@ export class NTFRankUpUI extends ViewController {
     }
 
     //------------------------ life cycle
-    private _data: NFTPioneerModel = null;
+    private _data: NFTPioneerObject = null;
     private _rankUpNum: number = 1;
     private _maxRankUpNum: number = 0;
     private _currentCost: ItemData[] = [];
@@ -115,7 +113,7 @@ export class NTFRankUpUI extends ViewController {
             for (const cost of this._currentCost) {
                 ItemMgr.subItem(cost.itemConfigId, cost.count);
             }
-            PioneerDevelopMgr.NFTRankUp(this._data.uniqueId, this._rankUpNum);
+            DataMgr.s.nftPioneer.NFTRankUp(this._data.uniqueId, this._rankUpNum);
         }
     }
 

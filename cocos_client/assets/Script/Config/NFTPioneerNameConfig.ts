@@ -1,5 +1,5 @@
 import { resources } from "cc";
-import { NFTPioneerNameConfigData } from "../Const/PioneerDevelopDefine";
+import { NFTPioneerNameConfigData } from "../Const/NFTPioneerDefine";
 
 export default class NFTPioneerNameConfig {
     private static _confs: { [index: string]: NFTPioneerNameConfigData } = {};

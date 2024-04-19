@@ -1,5 +1,5 @@
 import { resources } from "cc";
-import { NFTPioneerConfigData } from "../Const/PioneerDevelopDefine";
+import { NFTPioneerConfigData } from "../Const/NFTPioneerDefine";
 import CommonTools from "../Tool/CommonTools";
 
 export default class NFTPioneerConfig {

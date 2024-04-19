@@ -1,5 +1,5 @@
 import { resources } from "cc";
-import { NFTPioneerSkillConfigData } from "../Const/PioneerDevelopDefine";
+import { NFTPioneerSkillConfigData } from "../Const/NFTPioneerDefine";
 
 export default class NFTSkillConfig {
     private static _confs: { [index: string]: NFTPioneerSkillConfigData } = {};

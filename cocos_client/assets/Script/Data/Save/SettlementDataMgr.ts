@@ -1,4 +1,3 @@
-import ItemConfig from "../../Config/ItemConfig";
 import { SettlementModel } from "../../Const/SettlementDefine";
 
 export class SettlementDataMgr {

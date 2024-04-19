@@ -2,10 +2,10 @@ import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, 
 import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import UIPanelManger from '../Basic/UIPanelMgr';
-import { PioneerDevelopMgr } from '../Utils/Global';
-import { NFTPioneerModel } from '../Const/PioneerDevelopDefine';
+import { NFTPioneerObject } from '../Const/NFTPioneerDefine';
 import { NTFBackpackItem } from './View/NTFBackpackItem';
 import { NFTInfoUI } from './NFTInfoUI';
+import { DataMgr } from '../Data/DataMgr';
 const { ccclass, property } = _decorator;
 
 
@@ -17,7 +17,7 @@ export class NFTBackpackUI extends ViewController {
     private backpackItemPrb: Prefab = null;
 
     private _selectSortMenuShow: boolean = false;
-    private _NFTDatas: NFTPioneerModel[] = [];
+    private _NFTDatas: NFTPioneerObject[] = [];
 
     private _itemContent: Node = null;
     private _allItemViews: Node[] = null;
@@ -27,7 +27,7 @@ export class NFTBackpackUI extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        this._NFTDatas = PioneerDevelopMgr.getAllNFTs();
+        this._NFTDatas = DataMgr.s.nftPioneer.getAll();
 
         this._sortMenu = this.node.getChildByPath("__ViewContent/SortMenu");
         this._sortMenu.active = false;

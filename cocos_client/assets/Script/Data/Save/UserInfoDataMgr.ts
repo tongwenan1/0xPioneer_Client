@@ -2,7 +2,7 @@ import NotificationMgr from "../../Basic/NotificationMgr";
 import InnerBuildingConfig from "../../Config/InnerBuildingConfig";
 import InnerBuildingLvlUpConfig from "../../Config/InnerBuildingLvlUpConfig";
 import LvlupConfig from "../../Config/LvlupConfig";
-import { InnerBuildingType, UserInnerBuildInfo } from "../../Const/BuildingDefine";
+import { InnerBuildingType } from "../../Const/BuildingDefine";
 import { GetPropData } from "../../Const/ConstDefine";
 import { LvlupConfigData } from "../../Const/Lvlup";
 import { NotificationName } from "../../Const/Notification";

@@ -1,24 +1,20 @@
 import { _decorator, Button, instantiate, Label, Layout, Node, RichText } from "cc";
-import { ItemMgr, LanMgr, PioneerDevelopMgr } from "../Utils/Global";
+import { ItemMgr, LanMgr } from "../Utils/Global";
 import ViewController from "../BasicView/ViewController";
 import UIPanelManger, { UIPanelLayerType } from "../Basic/UIPanelMgr";
-import { NFTPioneerModel, NFTPioneerSkillConfigData } from "../Const/PioneerDevelopDefine";
-import NFTSkillConfig from "../Config/NFTSkillConfig";
-import NFTSkillEffectConfig from "../Config/NFTSkillEffectConfig";
+import { NFTPioneerObject, NFTPioneerSkillConfigData } from "../Const/NFTPioneerDefine";
 import { HUDName, UIName } from "../Const/ConstUIDefine";
 import { AlterView } from "./View/AlterView";
 import ItemData from "../Const/Item";
 import { BackpackItem } from "./BackpackItem";
 import ItemConfig from "../Config/ItemConfig";
 import { ItemInfoUI } from "./ItemInfoUI";
-import NotificationMgr from "../Basic/NotificationMgr";
-import { NotificationName } from "../Const/Notification";
 import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("NFTSkillLearnUI")
 export class NFTSkillLearnUI extends ViewController {
-    public async showItem(data: NFTPioneerModel) {
+    public async showItem(data: NFTPioneerObject) {
         if (data == null) {
             return;
         }
@@ -26,7 +22,7 @@ export class NFTSkillLearnUI extends ViewController {
         this._refreshUI();
     }
 
-    private _data: NFTPioneerModel = null;
+    private _data: NFTPioneerObject = null;
     private _skillIndex: number = -1;
     private _skillConfig: NFTPioneerSkillConfigData = null;
     private _skillBooks: ItemData[] = [];
@@ -107,7 +103,7 @@ export class NFTSkillLearnUI extends ViewController {
             return;
         }
         result.node.getComponent(AlterView).showTip(LanMgr.replaceLanById("106005", [this._data.name, LanMgr.getLanById(config.itemName)]), async () => {
-            PioneerDevelopMgr.NFTLearnSkill(this._data.uniqueId, config.skill_learn);
+            DataMgr.s.nftPioneer.NFTLearnSkill(this._data.uniqueId, config.skill_learn);
             ItemMgr.subItem(itemConfigId, 1);
             this._refreshUI();
         });

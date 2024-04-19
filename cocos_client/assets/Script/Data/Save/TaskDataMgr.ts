@@ -26,7 +26,6 @@ import {
     TaskTalkAction,
     TaskTalkCondition,
 } from "../../Const/TaskDefine";
-import ItemConfigDropTool from "../../Tool/ItemConfigDropTool";
 
 export default class TaskDataMgr {
     private _baseKey: string = "local_task";
@@ -34,7 +33,6 @@ export default class TaskDataMgr {
 
     private _data: TaskObject[] = [];
     private _taskStepMap: Map<string, TaskStepObject> = new Map();
-    DataMgr: any;
     public constructor() {}
     //--------------------------------
     public loadObj(walletAddr: string) {

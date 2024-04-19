@@ -1,7 +1,7 @@
-import { Vec2, log } from "cc";
+import { Vec2 } from "cc";
 import PioneerConfig from "../../Config/PioneerConfig";
 import { TileHexDirection, TilePos } from "../../Game/TiledMap/TileTool";
-import { GetPropData, MapMemberFactionType, MapMemberTargetType, ResourceCorrespondingItem } from "../../Const/ConstDefine";
+import { GetPropData, MapMemberFactionType, MapMemberTargetType } from "../../Const/ConstDefine";
 import {
     MapNpcPioneerObject,
     MapPioneerActionType,

@@ -1,25 +1,13 @@
 import {
     _decorator,
-    Component,
     Label,
     Node,
-    Sprite,
-    SpriteFrame,
-    Vec3,
-    Button,
-    EventHandler,
-    v2,
-    Vec2,
-    Prefab,
-    Slider,
+    Button,   
     instantiate,
-    RichText,
-    randomRangeInt,
-    labelAssembler,
 } from "cc";
 import ViewController from "../BasicView/ViewController";
-import { NFTPioneerModel } from "../Const/PioneerDevelopDefine";
-import { LanMgr, PioneerDevelopMgr } from "../Utils/Global";
+import { NFTPioneerObject } from "../Const/NFTPioneerDefine";
+import { LanMgr } from "../Utils/Global";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { UIName } from "../Const/ConstUIDefine";
 import { NTFLevelUpUI } from "./NTFLevelUpUI";
@@ -31,6 +19,7 @@ import { ConfigType, NFTRaritySkillLimitNumParam } from "../Const/Config";
 import NFTSkillConfig from "../Config/NFTSkillConfig";
 import { NFTSkillDetailUI } from "./NFTSkillDetailUI";
 import { NFTSkillLearnUI } from "./NFTSkillLearnUI";
+import { DataMgr } from "../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("NFTInfoUI")
@@ -41,7 +30,7 @@ export class NFTInfoUI extends ViewController {
     }
 
     private _currentIndex: number = 0;
-    private _NFTDatas: NFTPioneerModel[] = [];
+    private _NFTDatas: NFTPioneerObject[] = [];
 
     private _skillContent: Node = null;
     private _skillItem: Node = null;
@@ -52,7 +41,7 @@ export class NFTInfoUI extends ViewController {
         super.viewDidLoad();
 
         this._currentIndex = 0;
-        this._NFTDatas = PioneerDevelopMgr.getAllNFTs();
+        this._NFTDatas = DataMgr.s.nftPioneer.getAll();
 
         this._skillContent = this.node.getChildByPath("__ViewContent/Skill/Content");
         this._skillItem = this._skillContent.getChildByPath("SkillItem");

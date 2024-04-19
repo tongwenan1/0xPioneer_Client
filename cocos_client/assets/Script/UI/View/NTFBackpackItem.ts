@@ -1,10 +1,10 @@
-import { _decorator, Component, Sprite, SpriteFrame, Node, Label } from 'cc';
-import { NFTPioneerModel } from '../../Const/PioneerDevelopDefine';
+import { _decorator, Component, Label } from "cc";
+import { NFTPioneerObject } from "../../Const/NFTPioneerDefine";
 const { ccclass, property } = _decorator;
 
-@ccclass('NTFBackpackItem')
+@ccclass("NTFBackpackItem")
 export class NTFBackpackItem extends Component {
-    public async refreshUI(model: NFTPioneerModel = null) {
+    public async refreshUI(model: NFTPioneerObject = null) {
         const propView = this.node.getChildByName("Prop");
         if (model == null) {
             propView.active = false;

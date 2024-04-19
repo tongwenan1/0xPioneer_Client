@@ -1,7 +1,7 @@
 import { CurveRange, Vec2 } from "cc";
 import CommonTools from "../Tool/CommonTools";
 import { GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
-import { GameMgr, ItemMgr, LanMgr, PioneerDevelopMgr } from "../Utils/Global";
+import { GameMgr, ItemMgr, LanMgr } from "../Utils/Global";
 import { UIHUDController } from "../UI/UIHUDController";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { MapBuildingType } from "../Const/BuildingDefine";
@@ -637,7 +637,7 @@ export default class PioneerMgr {
     }
 
     private _bindPlayerNFT(id: string, linkId: string) {
-        const NFT = PioneerDevelopMgr.generateNewNFT(linkId);
+        const NFT = DataMgr.s.nftPioneer.generateNewNFT(linkId);
         DataMgr.s.pioneer.bindPlayerNFT(id, NFT.uniqueId);
     }
 

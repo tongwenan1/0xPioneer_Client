@@ -2,7 +2,6 @@ import ItemConfig from "../../Config/ItemConfig";
 import ItemData, { ItemArrangeType, ItemType } from "../../Const/Item";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
-import { DataMgr } from "../DataMgr";
 import { GetPropData, ResourceCorrespondingItem } from "../../Const/ConstDefine";
 
 export class ItemDataMgr {
@@ -109,7 +108,7 @@ export class ItemDataMgr {
             }
             if (itemConfig.itemType == ItemType.Resource) {
                 NotificationMgr.triggerEvent(NotificationName.RESOURCE_GETTED, item);
-            } else if (DataMgr.s.item.itemIsFull()) {
+            } else if (this.itemIsFull()) {
                 continue;
             }
             changed = true;
@@ -119,7 +118,7 @@ export class ItemDataMgr {
             this.getObj_item_sort(ItemArrangeType.Recently);
         }
         if (changed) {
-            DataMgr.s.item.saveObj();
+            this.saveObj();
             NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
         }
     }

@@ -7,7 +7,6 @@ import l from "../Manger/LanMgr";
 import locad from "../Manger/LocalDataLoader";
 import p from "../Manger/PioneerMgr";
 import user from "../Manger/UserInfoMgr";
-import pd from "../Manger/PioneerDevelopMgr";
 import game from "../Manger/GameMgr";
 
 import audio from "../Basic/AudioMgr";
@@ -22,7 +21,6 @@ const LocalDataLoader = new locad();
 const PioneerMgr = new p();
 const UserInfoMgr = new user();
 const BattleReportsMgr = new br();
-const PioneerDevelopMgr = new pd();
 const GameMgr = new game();
 
 const AudioMgr = new audio();
@@ -39,7 +37,6 @@ export {
     LanMgr,
     PioneerMgr,
     UserInfoMgr,
-    PioneerDevelopMgr,
     GameMgr,
 
     // system

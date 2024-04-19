@@ -1,6 +1,5 @@
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { ActiveEventState, BattleReportData, BattleReportExploringData, BattleReportType } from "../../Const/BattleReport";
-import { EVENT_STEPEND_DATA } from "../../Const/Event";
 import { NotificationName } from "../../Const/Notification";
 import { FIGHT_FINISHED_DATA, MINING_FINISHED_DATA } from "../../Const/PioneerDefine";
 import CLog from "../../Utils/CLog";
