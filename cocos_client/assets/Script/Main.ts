@@ -49,8 +49,6 @@ export class Main extends ViewController {
             }
         }
 
-
-
         // debug mode
         if (GAME_ENV_IS_DEBUG) {
             await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.HUD);
@@ -60,8 +58,7 @@ export class Main extends ViewController {
             if (chainConfig.api.init) {
                 this._addListener();
                 NetworkMgr.websocketConnect();
-            }
-            else {
+            } else {
                 NotificationMgr.triggerEvent(NotificationName.GAME_INITED);
             }
         }
@@ -91,7 +88,6 @@ export class Main extends ViewController {
     }
 
     private async _onUserLoginSucceed() {
-
         await DataMgr.load();
 
         BattleReportsMgr.init();
@@ -180,6 +176,8 @@ export class Main extends ViewController {
 
         // pioneernft func
         NetworkMgr.websocket.on("get_pioneers_res", DataMgr.get_pioneers_res);
+
+        NetworkMgr.websocket.on("player_move_res", this._on_upload_pioneer_move);
     }
 
     private async reconnect() {
@@ -260,4 +258,8 @@ export class Main extends ViewController {
                 break;
         }
     };
+
+    private _on_upload_pioneer_move(e: any) {
+        console.log("exce e:", e);
+    }
 }

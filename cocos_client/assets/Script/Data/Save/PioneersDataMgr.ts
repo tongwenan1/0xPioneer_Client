@@ -24,6 +24,7 @@ import { Ichange_pioneer_type, s2c_user } from "../../Net/msg/WebsocketMsg";
 import CommonTools from "../../Tool/CommonTools";
 import { TaskFactionAction, TaskNpcGetNewTalkAction, TaskShowHideAction, TaskShowHideStatus } from "../../Const/TaskDefine";
 import CLog from "../../Utils/CLog";
+import { NFTPioneerObject } from "../../Const/NFTPioneerDefine";
 
 export class PioneersDataMgr {
     private _baseLocalStorageKey: string = "local_pioneers";
@@ -259,6 +260,29 @@ export class PioneersDataMgr {
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ATTACK_CHANGED, { id: pioneerId });
         }
     }
+    
+    public changeDefend(pioneerId: string, num: number): void {
+        if (num == 0) {
+            return;
+        }
+        const pioneer = this.getById(pioneerId);
+        if (pioneer != undefined) {
+            pioneer.defend += num;
+            this.saveObj();
+            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_DEFEND_CHANGED, { id: pioneerId });
+        }
+    }
+    public changeSpeed(pioneerId: string, num: number): void {
+        if (num == 0) {
+            return;
+        }
+        const pioneer = this.getById(pioneerId);
+        if (pioneer != undefined) {
+            pioneer.speed += num;
+            this.saveObj();
+            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SPEED_CHANGED, { id: pioneerId });
+        }
+    }
     public rebirth(pioneerId: string, recoverHp: number, rebirthPos: Vec2): void {
         const pioneer = this.getById(pioneerId) as MapPlayerPioneerObject;
         if (!!pioneer) {
@@ -270,17 +294,6 @@ export class PioneersDataMgr {
             this.changeEventStatus(pioneerId, MapPioneerEventStatus.None);
             this.saveObj();
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_REBIRTH_FINISHED, { id: pioneerId });
-        }
-    }
-    public changeDefend(pioneerId: string, num: number): void {
-        if (num == 0) {
-            return;
-        }
-        const pioneer = this.getById(pioneerId);
-        if (pioneer != undefined) {
-            pioneer.defend += num;
-            this.saveObj();
-            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_DEFEND_CHANGED, { id: pioneerId });
         }
     }
 
@@ -329,13 +342,20 @@ export class PioneersDataMgr {
         }
     }
 
-    public bindPlayerNFT(pioneerId: string, NFTId: string) {
+    public bindPlayerNFT(pioneerId: string, NFT: NFTPioneerObject) {
         const findPioneer = this.getById(pioneerId) as MapPlayerPioneerObject;
-        if (!!findPioneer) {
-            findPioneer.NFTId = NFTId;
-            this.saveObj();
+        if (findPioneer == undefined) {
+            return;
         }
+        findPioneer.NFTId = NFT.uniqueId;
+        this.saveObj();
+
+        this.changeHpMax(pioneerId, NFT.hp);
+        this.changeAttack(pioneerId, NFT.attack);
+        this.changeDefend(pioneerId, NFT.defense);
+        this.changeSpeed(pioneerId, NFT.speed);
     }
+    public unbindPlayerNFT(pioneerId: string, NFT: NFTPioneerObject) {}
 
     private _initData() {
         this._pioneers = [];
@@ -393,10 +413,10 @@ export class PioneersDataMgr {
                     hpMax: item.hp,
                     attack: item.attack,
                     defend: item.def,
+                    speed: 180,
                     stayPos: stayPos,
 
                     logics: logics,
-                    moveSpeed: 0,
 
                     movePaths: [],
                     actionType: MapPioneerActionType.idle,
@@ -599,6 +619,7 @@ export class PioneersDataMgr {
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_NEW_TALK, this._onPioneerGetTalk, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_USE_NEW_TALK, this._onPioneerUseTalk, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_FACTION, this._onPioneerChangeFaction, this);
+        NotificationMgr.addListener(NotificationName.NFTDIDLEVELUP, this._onNFTPioneerDidLevelUp, this);
     }
 
     //--------------------------- notification
@@ -625,6 +646,24 @@ export class PioneersDataMgr {
         if (action.type == MapMemberTargetType.pioneer) {
             this.changeFaction(action.id, action.faction);
         }
+    }
+
+    private _onNFTPioneerDidLevelUp(NFT: NFTPioneerObject) {
+        let currentPlayer: MapPlayerPioneerObject = null;
+        const allPlayers = this.getAllPlayers();
+        for (const player of allPlayers) {
+            if (player.NFTId == NFT.uniqueId) {
+                currentPlayer = player;
+                break;
+            }
+        }
+        if (currentPlayer == null) {
+            return;
+        }
+        this.changeHpMax(currentPlayer.id, NFT.hpGrowValue);
+        this.changeAttack(currentPlayer.id, NFT.attackGrowValue);
+        this.changeDefend(currentPlayer.id, NFT.defenseGrowValue);
+        this.changeSpeed(currentPlayer.id, NFT.speedGrowValue);
     }
     //---------------------------fake socket
     private _onChangePioneer(e: any) {

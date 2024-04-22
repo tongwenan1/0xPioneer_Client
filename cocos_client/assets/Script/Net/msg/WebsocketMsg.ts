@@ -99,6 +99,10 @@ export class WebsocketMsg {
     public begin_pioneer_move(d: c2s_user.Ibegin_pioneer_move) {
         this._websocket.emit("begin_pioneer_move_res", d);
     }
+
+    public upload_pioneer_move(d: c2s_user.Iupload_pioneer_move) {
+        this.send_packet("player_move", d);
+    }
 }
 
 export const WebsocketEvent = {
@@ -163,6 +167,12 @@ export namespace c2s_user {
     export interface Ibegin_pioneer_move {
         pioneerId: string;
         targetPos: Vec2;
+    }
+
+    export interface Iupload_pioneer_move {
+        pioneerId: string;
+        movePath: string;
+        targetPos: string;
     }
 }
 

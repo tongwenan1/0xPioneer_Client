@@ -89,7 +89,7 @@ export default class NFTPioneerDataMgr {
         object.speed = CommonTools.getOneDecimalNum(object.speed + object.speedGrowValue * resultLevelUpNum);
         object.iq = CommonTools.getOneDecimalNum(object.iq + object.iqGrowValue * resultLevelUpNum);
         this.saveObj();
-        NotificationMgr.triggerEvent(NotificationName.NFTDIDLEVELUP);
+        NotificationMgr.triggerEvent(NotificationName.NFTDIDLEVELUP, { nft: object });
     }
     public NFTRankUp(NFTId: string, rankUpNum: number) {
         const object = this.getNFTById(NFTId);

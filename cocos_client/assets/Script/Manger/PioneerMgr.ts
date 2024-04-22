@@ -638,7 +638,7 @@ export default class PioneerMgr {
 
     private _bindPlayerNFT(id: string, linkId: string) {
         const NFT = DataMgr.s.nftPioneer.generateNewNFT(linkId);
-        DataMgr.s.pioneer.bindPlayerNFT(id, NFT.uniqueId);
+        DataMgr.s.pioneer.bindPlayerNFT(id, NFT);
     }
 
     //------------------------------- notification

@@ -42,6 +42,7 @@ import Config from "../../Const/Config";
 import { DataMgr } from "../../Data/DataMgr";
 import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType, MapPioneerObject } from "../../Const/PioneerDefine";
 import { MapBuildingObject } from "../../Const/MapBuilding";
+import { NetworkMgr } from "../../Net/NetworkMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -636,7 +637,7 @@ export class OuterTiledMapActionController extends ViewController {
                     }
                 }
             }
-            let movePaths = [];
+            let movePaths: TilePos[] = [];
             if (taregtPos != null) {
                 const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, taregtPos, targetStayPositions);
                 if (toPosMoveData.canMove) {
@@ -695,6 +696,16 @@ export class OuterTiledMapActionController extends ViewController {
                     DataMgr.s.pioneer.beginMove(currentActionPioneer.id, movePaths);
                     this._mapActionCursorView.hide();
                     outPioneerController.hideMovingPioneerAction();
+
+                    const uploadPath: { x: number; y: number }[] = [];
+                    for (const path of movePaths) {
+                        uploadPath.push({ x: path.x, y: path.y });
+                    }
+                    NetworkMgr.websocketMsg.upload_pioneer_move({
+                        pioneerId: currentActionPioneer.id,
+                        movePath: JSON.stringify(uploadPath),
+                        targetPos: JSON.stringify(uploadPath[uploadPath.length - 1]),
+                    });
                 },
                 () => {
                     this["_actionViewActioned"] = true;

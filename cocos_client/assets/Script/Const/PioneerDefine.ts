@@ -139,6 +139,7 @@ export interface MapPioneerData {
     hp: number;
     attack: number;
     defend: number;
+    speed: number;
 
     movePaths: MapPosStruct[];
 
@@ -148,7 +149,6 @@ export interface MapPioneerData {
     actionEndTimeStamp: number;
 
     logics: MapPioneerLogicData[];
-    moveSpeed: number;
 
     winProgress: number;
     winExp: number;

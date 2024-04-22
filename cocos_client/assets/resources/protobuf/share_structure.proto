@@ -30,3 +30,11 @@ message player_info {
     required uint32 level = 2; // user level
     required uint32 exp = 3; // user exp
 }
+
+message tran_data {
+    required string signerlogid = 1; // signserver logid
+    required string txhash = 2; // transaction hash
+    required string txtype = 3; // transaction type
+    required uint32 createdtm = 4; // transaction log time
+    required uint32 state = 5; // transaction state, succ = 1
+}

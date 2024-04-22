@@ -27,6 +27,50 @@ message enter_game_res {
     optional share.player_data data = 2; // full player data of self
 }
 
+// ----------------------------------------------------------------------------
+
+// get transactions info res
+message get_pending_res {
+    required int32 res = 1;
+    repeated share.tran_data pending = 2; // pending transactions
+}
+
+message pending_change {
+    required string changetype = 1; // new mod remove
+    required share.tran_data trandata = 2; // pending change tran data
+}
+
+message upload_pending_res {
+    required int32 res = 1;
+}
+
+message get_pending_history_res {
+    required int32 res = 1;
+    optional uint32 page = 2;
+    optional uint32 size = 3;
+    optional uint32 total = 4;
+    repeated share.tran_data history = 5;
+}
+
+message get_block_height_res {
+    required int32 res = 1;
+    optional uint32 height = 2;
+    optional uint32 l1height = 3;
+}
+
+message mint_package_res {
+    required int32 res = 1;
+    required uint32 logid = 2;
+}
+
+// ----------------------------------------------------------------------------
+
+message player_move_res {
+    required uint32 res = 1;
+}
+
+// ----------------------------------------------------------------------------
+
 message save_archives_res {
     required int32 res = 1;
 }

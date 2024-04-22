@@ -21,6 +21,40 @@ message enter_game {
 
 }
 
+// ----------------------------------------------------------------------------
+
+// get transactions info
+message get_pending {
+    
+}
+
+// upload pending txhash
+message upload_pending {
+    required string txhash = 1; // pending transaction hash
+    required string txtype = 2; // pending transaction type
+}
+
+// get pending history
+message get_pending_history {
+    required uint32 page = 1; // page
+    required uint32 size = 2; // size
+}
+
+// get block height
+message get_block_height {
+    
+}
+
+// ----------------------------------------------------------------------------
+
+message player_move {
+    required string pioneerId = 1;
+    required string movePath = 2; 
+    required string targetPos = 3; 
+}
+
+// ----------------------------------------------------------------------------
+
 message save_archives {
     required string archives = 1;
 }

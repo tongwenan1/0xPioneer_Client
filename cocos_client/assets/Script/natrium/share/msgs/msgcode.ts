@@ -23,4 +23,13 @@ export enum ServerErrorCode {
     ResSessionNotLogin = -1009,
     ResServiceSessionNotExist = -1010,
     ResServicePlayerNotExist = -1011,
+    ResPlayerDataNotExist = -1012,
+    ResPlayerFirstInitError = -1013,
+    ResPlayerToMapPointNotExist = -1014,
+    ResTargetPlayerNotExist = -1015,
+    ResPlayerUnspendTxNotFindYet = -1016,
+    ResPlayerUnspendTxAlreadyUsed = -1017,
+    ResPlayerFeeConfError = -1018,
+    ResPlayerNameAlreadyExist = -1019,
+    ResPlayerPackageTypeUsed = -1020,
 }
