@@ -12,8 +12,16 @@
     "prefab": "prefab_main",
     "desc": "desc_main",
     "size": 3,
-    "staff_effect": null,
-    "staff_des": ""
+    "staff_effect": [
+      [
+        "lvlup_time",
+        1,
+        [
+          -0.2
+        ]
+      ]
+    ],
+    "staff_des": "122001"
   },
   "30002": {
     "id": "30002",
@@ -28,8 +36,16 @@
     "prefab": "prefab_barr",
     "desc": "desc_barr",
     "size": 2,
-    "staff_effect": null,
-    "staff_des": ""
+    "staff_effect": [
+      [
+        "lvlup_time",
+        1,
+        [
+          -0.2
+        ]
+      ]
+    ],
+    "staff_des": "122001"
   },
   "30003": {
     "id": "30003",
@@ -44,8 +60,16 @@
     "prefab": "prefab_house",
     "desc": "desc_house",
     "size": 2,
-    "staff_effect": null,
-    "staff_des": ""
+    "staff_effect": [
+      [
+        "lvlup_time",
+        1,
+        [
+          -0.2
+        ]
+      ]
+    ],
+    "staff_des": "122001"
   },
   "30004": {
     "id": "30004",
@@ -60,8 +84,16 @@
     "prefab": "prefab_energy",
     "desc": "desc_energy",
     "size": 2,
-    "staff_effect": null,
-    "staff_des": ""
+    "staff_effect": [
+      [
+        "lvlup_time",
+        1,
+        [
+          -0.2
+        ]
+      ]
+    ],
+    "staff_des": "122001"
   },
   "30005": {
     "id": "30005",
@@ -76,7 +108,15 @@
     "prefab": "",
     "desc": "",
     "size": 2,
-    "staff_effect": null,
-    "staff_des": ""
+    "staff_effect": [
+      [
+        "lvlup_time",
+        1,
+        [
+          -0.2
+        ]
+      ]
+    ],
+    "staff_des": "122001"
   }
 }
