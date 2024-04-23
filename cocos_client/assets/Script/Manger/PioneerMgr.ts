@@ -1,6 +1,6 @@
 import { CurveRange, Vec2 } from "cc";
 import CommonTools from "../Tool/CommonTools";
-import { GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { AttrChangeType, GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { GameMgr, ItemMgr, LanMgr } from "../Utils/Global";
 import { UIHUDController } from "../UI/UIHUDController";
 import NotificationMgr from "../Basic/NotificationMgr";
@@ -18,11 +18,13 @@ import {
     MapPioneerObject,
     MapPioneerLogicObject,
     MapPlayerPioneerObject,
+    MapPioneerAttributesChangeModel,
+    MapPioneerEventAttributesChangeType,
 } from "../Const/PioneerDefine";
 import { DataMgr } from "../Data/DataMgr";
-import { PioneersDataMgr } from "../Data/Save/PioneersDataMgr";
 import { MapBuildingMainCityObject, MapBuildingObject } from "../Const/MapBuilding";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
+import { PioneersDataMgr } from "../Data/Save/PioneersDataMgr";
 
 export default class PioneerMgr {
     public initData() {
@@ -152,18 +154,23 @@ export default class PioneerMgr {
         pioneerDefender: MapPioneerObject,
         buildingDefender: MapBuildingObject,
         isEventFight: boolean = false,
+        eventCenterPositions: Vec2[] = null,
+        temporaryAttributes: Map<string, MapPioneerAttributesChangeModel> = null,
         fightOverCallback: (isSelfWin: boolean) => void = null
     ) {
         const pioneerDataMgr: PioneersDataMgr = DataMgr.s.pioneer;
         const isAttackBuilding: boolean = buildingDefender != null;
         const isSelfAttack: boolean = attacker.type == MapPioneerType.player;
         let canFight: boolean = true;
-        if (attacker.actionType != MapPioneerActionType.moving && attacker.actionType != MapPioneerActionType.idle) {
-            canFight = false;
+        if (isEventFight) {
         } else {
-            if (!isAttackBuilding) {
-                if (pioneerDefender.actionType != MapPioneerActionType.moving && pioneerDefender.actionType != MapPioneerActionType.idle) {
-                    canFight = false;
+            if (attacker.actionType != MapPioneerActionType.moving && attacker.actionType != MapPioneerActionType.idle) {
+                canFight = false;
+            } else {
+                if (!isAttackBuilding) {
+                    if (pioneerDefender.actionType != MapPioneerActionType.moving && pioneerDefender.actionType != MapPioneerActionType.idle) {
+                        canFight = false;
+                    }
                 }
             }
         }
@@ -224,6 +231,33 @@ export default class PioneerMgr {
                 }
             }
         }
+        // event deal
+        if (isEventFight) {
+            if (eventCenterPositions != null) {
+                defenderCenterPositions = eventCenterPositions;
+            }
+            if (temporaryAttributes != null) {
+                temporaryAttributes.forEach((value: MapPioneerAttributesChangeModel, key: string) => {
+                    if (key == defenderId) {
+                        if (value.method == AttrChangeType.ADD) {
+                            if (value.type == MapPioneerEventAttributesChangeType.HP) {
+                                defenderHpMax += value.value;
+                            } else if (value.type == MapPioneerEventAttributesChangeType.ATTACK) {
+                                defenderAttack += value.value;
+                            }
+                        } else if (value.method == AttrChangeType.MUL) {
+                            if (value.type == MapPioneerEventAttributesChangeType.HP) {
+                                defenderHpMax += defenderHpMax * value.value;
+                            } else if (value.type == MapPioneerEventAttributesChangeType.ATTACK) {
+                                defenderAttack += defenderAttack * value.value;
+                            }
+                        }
+                        defenderHp = defenderHpMax;
+                    }
+                });
+            }
+        }
+
         const useData = {
             fightId: fightId,
             isSelfAttack: isSelfAttack,
@@ -250,33 +284,56 @@ export default class PioneerMgr {
             let fightOver: boolean = false;
             let isAttackWin: boolean = false;
             if (attackRound) {
-                const damage: number = Math.max(1, attacker.attack - defenderDefned);
+                let useAttack: number = attacker.attack;
+                if (isEventFight) {
+                    if (temporaryAttributes != null) {
+                        temporaryAttributes.forEach((value: MapPioneerAttributesChangeModel, key: string) => {
+                            if (key == attacker.id) {
+                                if (value.type == MapPioneerEventAttributesChangeType.HP) {
+                                    if (value.method == AttrChangeType.ADD) {
+                                        useAttack += value.value;
+                                    } else if (value.method == AttrChangeType.MUL) {
+                                        useAttack += useAttack * value.value;
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+                const damage: number = Math.max(1, useAttack - defenderDefned);
                 if (damage > 0) {
-                    useData.defenderInfo.hp = Math.max(0, defenderHp - damage);
-                    if (!isAttackBuilding) {
-                        const isDead: boolean = pioneerDataMgr.loseHp(pioneerDefender.id, damage);
-                        if (isDead) {
+                    useData.defenderInfo.hp = Math.max(0, useData.defenderInfo.hp - damage);
+                    if (isEventFight) {
+                        if (useData.defenderInfo.hp <= 0) {
                             fightOver = true;
                             isAttackWin = true;
                         }
                     } else {
-                        if (buildingDefender.type == MapBuildingType.city) {
-                            if (useData.defenderInfo.hp <= 0) {
+                        if (!isAttackBuilding) {
+                            const isDead: boolean = pioneerDataMgr.loseHp(pioneerDefender.id, damage);
+                            if (isDead) {
                                 fightOver = true;
                                 isAttackWin = true;
                             }
-                        } else if (buildingDefender.type == MapBuildingType.stronghold) {
-                            for (const pioneerId of buildingDefender.defendPioneerIds) {
-                                const findPioneer = pioneerDataMgr.getById(pioneerId);
-                                if (findPioneer != undefined && findPioneer.hp > 0) {
-                                    pioneerDataMgr.loseHp(findPioneer.id, damage);
-                                    break;
+                        } else {
+                            if (buildingDefender.type == MapBuildingType.city) {
+                                if (useData.defenderInfo.hp <= 0) {
+                                    fightOver = true;
+                                    isAttackWin = true;
                                 }
-                            }
-                            if (useData.defenderInfo.hp <= 0) {
-                                DataMgr.s.mapBuilding.hideBuilding(buildingDefender.id, attacker.id);
-                                fightOver = true;
-                                isAttackWin = true;
+                            } else if (buildingDefender.type == MapBuildingType.stronghold) {
+                                for (const pioneerId of buildingDefender.defendPioneerIds) {
+                                    const findPioneer = pioneerDataMgr.getById(pioneerId);
+                                    if (findPioneer != undefined && findPioneer.hp > 0) {
+                                        pioneerDataMgr.loseHp(findPioneer.id, damage);
+                                        break;
+                                    }
+                                }
+                                if (useData.defenderInfo.hp <= 0) {
+                                    DataMgr.s.mapBuilding.hideBuilding(buildingDefender.id, attacker.id);
+                                    fightOver = true;
+                                    isAttackWin = true;
+                                }
                             }
                         }
                     }

@@ -13,7 +13,8 @@ import { ItemGettedUI } from "../ItemGettedUI";
 import Config from "../../Const/Config";
 import UIPanelManger from "../../Basic/UIPanelMgr";
 import { DataMgr } from "../../Data/DataMgr";
-import { MapPioneerAttributesChangeModel } from "../../Const/PioneerDefine";
+import { MapPioneerAttributesChangeModel, MapPioneerEventAttributesChangeType } from "../../Const/PioneerDefine";
+import { AttrChangeType } from "../../Const/ConstDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("EventUI")
@@ -169,16 +170,21 @@ export class EventUI extends ViewController {
                         const isPlayer: boolean = tempChange[0] == "-1";
                         const pioneerId: string = isPlayer ? this._triggerPioneerId : tempChange[0];
                         // 1-hp 2-attack
-                        const changedType: number = tempChange[1];
+                        const changedType: MapPioneerEventAttributesChangeType = tempChange[1];
                         // 1-add 2-multi
-                        const changeMethod: number = tempChange[2];
+                        const changeMethod: AttrChangeType = tempChange[2];
                         const changedValue: number = tempChange[3];
 
                         if (isPlayer && changedType == 1) {
-                            // wait xx
-                            // PioneerMgr.pioneerChangeHpMax(pioneerId, { type: changeMethod, value: changedValue });
+                            let useValue: number = 0;
+                            if (changeMethod == AttrChangeType.ADD) {
+                                useValue = changedValue;
+                            } else if (changeMethod == AttrChangeType.MUL) {
+                                useValue = DataMgr.s.pioneer.getById(pioneerId)?.hpMax * changedValue;
+                            }
+                            DataMgr.s.pioneer.changeHpMax(pioneerId, useValue);
                         } else {
-                            this._temporaryAttributes.set(pioneerId + "|" + changedType, { type: changeMethod, value: changedValue });
+                            this._temporaryAttributes.set(pioneerId, { method: changeMethod, type: changedType, value: changedValue });
                         }
                         if (isPlayer) {
                             if (changedType == 1) {
@@ -360,7 +366,6 @@ export class EventUI extends ViewController {
     }
 
     private _nextEvent(eventId: string) {
-        // console.log(`_nextEvent, current: ${this._event.id}, next: ${eventId}`);
         DataMgr.s.battleReport.latestActiveEventState.prevEventId = this._event.id;
         DataMgr.s.battleReport.latestActiveEventState.eventId = eventId;
 
@@ -425,8 +430,8 @@ export class EventUI extends ViewController {
         const eventId = customEventData;
         const hasNextStep = eventId != "-1";
         // console.log(`eventStepEnd, source: onTapNext, eventId: ${this._event.id}, next: ${eventId}`);
-        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, {eventId: this._event.id, hasNextStep: hasNextStep} as EVENT_STEPEND_DATA);
-
+        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, { eventId: this._event.id, hasNextStep: hasNextStep } as EVENT_STEPEND_DATA);
+        // send socket
         this._nextEvent(eventId);
     }
     private onTapFight(event: Event, customEventData: string) {
@@ -449,7 +454,7 @@ export class EventUI extends ViewController {
                 if (this._event) {
                     const hasNextStep = eventId != null && eventId != -1 && eventId != -2;
                     // console.log(`eventStepEnd, source: onTapFight, eventId: ${this._event.id}, next: ${eventId}`);
-                    NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, {eventId: this._event.id, hasNextStep: hasNextStep} as EVENT_STEPEND_DATA);
+                    NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, { eventId: this._event.id, hasNextStep: hasNextStep } as EVENT_STEPEND_DATA);
                 }
                 if (eventId != null) {
                     this._nextEvent(eventId);
@@ -474,7 +479,7 @@ export class EventUI extends ViewController {
         let hasNextStep = event != null;
 
         // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}, next: ${eventId}`);
-        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, {eventId: this._event.id, hasNextStep: hasNextStep} as EVENT_STEPEND_DATA);
+        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, { eventId: this._event.id, hasNextStep: hasNextStep } as EVENT_STEPEND_DATA);
 
         this._nextEvent(eventId);
     }

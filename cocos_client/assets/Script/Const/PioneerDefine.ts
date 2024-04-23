@@ -73,8 +73,14 @@ export enum MapPioneerEventStatus {
     Waited,
 }
 
+export enum MapPioneerEventAttributesChangeType {
+    HP = 1,
+    ATTACK = 2 
+}
+
 export interface MapPioneerAttributesChangeModel {
-    type: AttrChangeType;
+    type: MapPioneerEventAttributesChangeType,
+    method: AttrChangeType;
     value: number;
 }
 

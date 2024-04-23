@@ -41,6 +41,9 @@ export interface UserInnerBuildInfo {
     upgradeTotalTime: number;
 }
 
+export type InnerBuildingStaffLevelUpType = string;
+export type InnerBuildingStaffLevel = number;
+export type InnerBuildingStaffRate = number;
 export interface ConfigInnerBuildingData {
     id: InnerBuildingType;
     name: string,
@@ -54,7 +57,9 @@ export interface ConfigInnerBuildingData {
     lvlup_time: string,
     prefab: string,
     desc: string,
-    size: number
+    size: number,
+    staff_effect: [InnerBuildingStaffLevelUpType, InnerBuildingStaffLevel, [InnerBuildingStaffRate]],
+    staff_des: string
 }
 
 export interface ConfigInnerBuildingLevelUpData {

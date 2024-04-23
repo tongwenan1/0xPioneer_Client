@@ -1,3 +1,4 @@
+import InnerBuildingConfig from "../Config/InnerBuildingConfig";
 import { InnerBuildingType } from "../Const/BuildingDefine";
 import { GameExtraEffectType } from "../Const/ConstDefine";
 import { MapPlayerPioneerObject } from "../Const/PioneerDefine";
@@ -22,14 +23,23 @@ export default class GameMgr {
         // artifact effect
         let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(type, DataMgr.s.userInfo.artifactStoreLevel);
 
+        let resultValue = this._getEffectResultNum(type, originalValue, artifactChangeRate);
         //nft
-        let nftChangeRate: number = 0;
-        const nft = DataMgr.s.nftPioneer.getNFTByWorkingBuildingId(buildingType);
-        if (nft != undefined) {
-            nftChangeRate = DataMgr.s.nftPioneer.getNFTEffectById(nft.uniqueId, type);
+        if (type == GameExtraEffectType.BUILDING_LVUP_TIME) {
+            const nft = DataMgr.s.nftPioneer.getNFTByWorkingBuildingId(buildingType);
+            const buildingConfig = InnerBuildingConfig.getByBuildingType(buildingType);
+            if (nft != undefined && buildingConfig.staff_effect != null) {
+                let nftEffect = 0;
+                for (const temple of buildingConfig.staff_effect) {
+                    if (temple[0] == "lvlup_time" && temple[1] == (DataMgr.s.userInfo.getInnerBuildingLevel(buildingType) + 1)) {
+                        nftEffect += temple[2][0];
+                    }
+                }
+                resultValue = Math.floor(resultValue * (1 + nft.iq * nftEffect));
+            }
         }
-
-        return this._getEffectResultNum(type, originalValue, artifactChangeRate + nftChangeRate);
+        resultValue = Math.max(1, resultValue);
+        return resultValue;
     }
 
     private _getEffectResultNum(type: GameExtraEffectType, originalValue: number, effectNum: number): number {
@@ -52,7 +62,5 @@ export default class GameMgr {
         return originalValue;
     }
 
-    public constructor() {
-        
-    }
+    public constructor() {}
 }

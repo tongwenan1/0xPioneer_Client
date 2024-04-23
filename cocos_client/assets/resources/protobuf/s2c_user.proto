@@ -69,6 +69,11 @@ message player_move_res {
     required uint32 res = 1;
 }
 
+message get_battle_report_res {
+    required uint32 res = 1;
+    repeated share.battle_report_data data = 2;
+}
+
 // ----------------------------------------------------------------------------
 
 message save_archives_res {

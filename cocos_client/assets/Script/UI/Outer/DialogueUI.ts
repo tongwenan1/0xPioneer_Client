@@ -9,6 +9,7 @@ import { ItemGettedUI } from "../ItemGettedUI";
 import { TalkConfigData } from "../../Const/Talk";
 import UIPanelManger from "../../Basic/UIPanelMgr";
 import { DataMgr } from "../../Data/DataMgr";
+import { NetworkMgr } from "../../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("DialogueUI")
@@ -45,6 +46,8 @@ export class DialogueUI extends ViewController {
         this._roleViewNameMap.set(NPCNameLangType.Hunter, "hunter");
         this._roleViewNameMap.set(NPCNameLangType.Prophetess, "prophetess");
         this._roleViewNameMap.set(NPCNameLangType.SecretGuard, "secretGuard");
+
+        //listener socket
     }
 
     protected viewDidDestroy(): void {
@@ -144,6 +147,7 @@ export class DialogueUI extends ViewController {
 
     //------------------------------------------------ action
     private onTapNext() {
+        //send socket
         this._dialogStep += 1;
         if (this._dialogStep > this._talk.messsages.length - 1) {
             UIPanelManger.inst.popPanel();
@@ -161,7 +165,7 @@ export class DialogueUI extends ViewController {
         DataMgr.s.count.addObj_selectDialog({
             selectText: customEventData,
         });
-
+        //send socket
         this._dialogStep += 1;
         if (this._dialogStep > this._talk.messsages.length - 1) {
             UIPanelManger.inst.popPanel();

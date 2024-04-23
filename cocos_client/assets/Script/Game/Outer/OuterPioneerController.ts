@@ -732,7 +732,7 @@ export class OuterPioneerController extends ViewController {
                         fightOver: (succeed: boolean) => void
                     ) => {
                         PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
-                        PioneerMgr.fight(DataMgr.s.pioneer.getById(attackerPioneerId), DataMgr.s.pioneer.getById(enemyPioneerId), null, true, fightOver);
+                        PioneerMgr.fight(DataMgr.s.pioneer.getById(attackerPioneerId), DataMgr.s.pioneer.getById(enemyPioneerId), null, true, DataMgr.s.mapBuilding.getBuildingById(buildingId).stayMapPositions, temporaryAttributes, fightOver);
                     },
                     (nextEvent: EventConfigData) => {
                         PioneerMgr.pioneerEventStatusToNone(actionPioneerId);

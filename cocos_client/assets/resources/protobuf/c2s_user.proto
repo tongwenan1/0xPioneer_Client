@@ -53,6 +53,10 @@ message player_move {
     required string targetPos = 3; 
 }
 
+message get_battle_report {
+
+}
+
 // ----------------------------------------------------------------------------
 
 message save_archives {

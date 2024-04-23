@@ -1,5 +1,4 @@
 import { Vec2 } from "cc";
-import { TilePos } from "../Game/TiledMap/TileTool";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";

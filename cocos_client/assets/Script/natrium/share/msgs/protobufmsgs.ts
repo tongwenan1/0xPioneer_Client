@@ -14,6 +14,7 @@ export enum protobuf_c2s {
     get_block_height = 124,
 
     player_move = 200,
+    get_battle_report = 299,
 }
 
 export enum protobuf_s2c {
@@ -30,4 +31,5 @@ export enum protobuf_s2c {
     get_block_height_res = 10142,
 
     player_move_res = 20000,
+    get_battle_report_res = 20299,
 }

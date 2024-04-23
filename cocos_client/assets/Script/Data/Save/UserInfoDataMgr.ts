@@ -33,6 +33,13 @@ export default class UserInfoDataMgr {
         }
         return level;
     }
+    public getInnerBuildingLevel(buildingType: InnerBuildingType) {
+        let level: number = 0;
+        if (this._data.innerBuildings != null && buildingType in this._data.innerBuildings) {
+            level = this._data.innerBuildings[buildingType].buildLevel;
+        }
+        return level;
+    }
     //--------------------------------
     public beginUpgrade(buildingType: InnerBuildingType, upgradeTime: number) {
         const buildInfo = this._data.innerBuildings[buildingType];

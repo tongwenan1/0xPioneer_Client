@@ -38,3 +38,9 @@ message tran_data {
     required uint32 createdtm = 4; // transaction log time
     required uint32 state = 5; // transaction state, succ = 1
 }
+
+message battle_report_data {
+    required string action = 1;
+    required string params = 2;
+    required uint32 createdtm = 3;
+}

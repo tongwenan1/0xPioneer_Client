@@ -15,6 +15,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.upload_pending_res, "upload_pending_res", "s2c_user.upload_pending_res");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_move_res, "player_move_res", "s2c_user.player_move_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.get_battle_report_res, "get_battle_report_res", "s2c_user.get_battle_report_res");
 
     // register client msg
     pcodec.register_protobuf_msg(protobuf_c2s.login, "login", "c2s_user.login");
@@ -28,4 +29,5 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.get_block_height, "get_block_height", "c2s_user.get_block_height");
 
     pcodec.register_protobuf_msg(protobuf_c2s.player_move, "player_move", "c2s_user.player_move");
+    pcodec.register_protobuf_msg(protobuf_c2s.get_battle_report, "get_battle_report", "c2s_user.get_battle_report");
 }

@@ -260,6 +260,6 @@ export class Main extends ViewController {
     };
 
     private _on_upload_pioneer_move(e: any) {
-        console.log("exce e:", e);
+        
     }
 }
