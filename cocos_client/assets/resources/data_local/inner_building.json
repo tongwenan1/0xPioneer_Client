@@ -98,7 +98,7 @@
   "30005": {
     "id": "30005",
     "name": "120005",
-    "anim": "",
+    "anim": "ArtifactStore",
     "unlock": 1,
     "maxlevel": 10,
     "lvlup_progress": "progress",

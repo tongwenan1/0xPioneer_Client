@@ -576,7 +576,7 @@ export class OuterPioneerController extends ViewController {
                         DataMgr.s.userInfo.finishRookie();
                         DataMgr.s.task.gameStarted();
                         // init resource
-                        ItemMgr.addItem(
+                        DataMgr.s.item.addObj_item(
                             [
                                 new ItemData(ResourceCorrespondingItem.Energy, 2000),
                                 new ItemData(ResourceCorrespondingItem.Food, 2000),
@@ -649,7 +649,7 @@ export class OuterPioneerController extends ViewController {
         const pioneer = DataMgr.s.pioneer.getById(data.id);
         if (pioneer != null) {
             if (pioneer.type == MapPioneerType.gangster) {
-                ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Troop, pioneer.hpMax)]);
+                DataMgr.s.item.addObj_item([new ItemData(ResourceCorrespondingItem.Troop, pioneer.hpMax)]);
             } else if (pioneer.type == MapPioneerType.npc) {
                 const npcModel = pioneer as MapNpcPioneerObject;
                 if (!!npcModel && npcModel.talkId != null) {
@@ -689,7 +689,7 @@ export class OuterPioneerController extends ViewController {
             }
             const resultNum: number = Math.floor(building.resources.num * (1 + LvlupConfig.getTotalExtraRateByLvl(DataMgr.s.userInfo.data.level)));
             actionView.getComponent(MapPioneer).playGetResourceAnim(building.resources.id, resultNum, () => {
-                ItemMgr.addItem([new ItemData(building.resources.id, resultNum)]);
+                DataMgr.s.item.addObj_item([new ItemData(building.resources.id, resultNum)]);
             });
 
             NotificationMgr.triggerEvent(NotificationName.MINING_FINISHED, {

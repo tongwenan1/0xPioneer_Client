@@ -1,18 +1,16 @@
-import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from 'cc';
-import ViewController from '../BasicView/ViewController';
-import { UIName } from '../Const/ConstUIDefine';
-import UIPanelManger from '../Basic/UIPanelMgr';
-import { NFTPioneerObject } from '../Const/NFTPioneerDefine';
-import { NTFBackpackItem } from './View/NTFBackpackItem';
-import { NFTInfoUI } from './NFTInfoUI';
-import { DataMgr } from '../Data/DataMgr';
+import { _decorator, Component, Label, Node, Sprite, SpriteFrame, Vec3, Button, EventHandler, v2, Vec2, Prefab, Slider, instantiate, Layout } from "cc";
+import ViewController from "../BasicView/ViewController";
+import { UIName } from "../Const/ConstUIDefine";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import { NFTPioneerObject } from "../Const/NFTPioneerDefine";
+import { NTFBackpackItem } from "./View/NTFBackpackItem";
+import { NFTInfoUI } from "./NFTInfoUI";
+import { DataMgr } from "../Data/DataMgr";
+import { LanMgr } from "../Utils/Global";
 const { ccclass, property } = _decorator;
 
-
-@ccclass('NFTBackpackUI')
+@ccclass("NFTBackpackUI")
 export class NFTBackpackUI extends ViewController {
-
-
     @property(Prefab)
     private backpackItemPrb: Prefab = null;
 
@@ -56,6 +54,13 @@ export class NFTBackpackUI extends ViewController {
     }
 
     private _initBackpack() {
+        // useLanMgr
+        // this.node.getChildByPath("__ViewContent/Bg/title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/Bg/ArrangeButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._sortMenu.getChildByPath("Content/Recently").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string = LanMgr.getLanById("107549");
+
         this._allItemViews = [];
         for (let i = 0; i < this._NFTDatas.length; i++) {
             let itemView = instantiate(this.backpackItemPrb);
@@ -86,6 +91,8 @@ export class NFTBackpackUI extends ViewController {
                 itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
             }
         }
+
+        
     }
 
     private _refreshMenu() {
@@ -93,7 +100,6 @@ export class NFTBackpackUI extends ViewController {
         this._menuArrow.angle = this._selectSortMenuShow ? 180 : 0;
         // this._sortMenu.getChildByPath("Content/Recently/ImgScreenSelect").active = this._currentArrangeType == ItemArrangeType.Recently;
         // this._sortMenu.getChildByPath("Content/Rarity/ImgScreenSelect").active = this._currentArrangeType == ItemArrangeType.Rarity;
-        // this._sortMenu.getChildByPath("Content/Type/ImgScreenSelect").active = this._currentArrangeType == ItemArrangeType.Type;
     }
     //------------------------------------------------------------ action
     private async onTapClose() {
@@ -109,9 +115,7 @@ export class NFTBackpackUI extends ViewController {
             }
         }
     }
-    private onTapArrange() {
-
-    }
+    private onTapArrange() {}
 
     private onTapSortMenuAction() {
         this._selectSortMenuShow = !this._selectSortMenuShow;

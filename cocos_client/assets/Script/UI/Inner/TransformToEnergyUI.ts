@@ -12,6 +12,7 @@ import UIPanelManger from '../../Basic/UIPanelMgr';
 import { DataMgr } from '../../Data/DataMgr';
 import { UIName } from '../../Const/ConstUIDefine';
 import { DelegateUI } from '../DelegateUI';
+import { NetworkMgr } from '../../Net/NetworkMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('TransformToEnergyUI')
@@ -137,6 +138,7 @@ export class TransformToEnergyUI extends ViewController {
         super.viewDidAppear();
 
         NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE, this._energyNumChanged, this);
+        NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._onResourceDidGet, this);
     }
 
     protected viewDidDisAppear(): void {
@@ -161,7 +163,11 @@ export class TransformToEnergyUI extends ViewController {
     private _energyNumChanged() {
         this.refreshUI();
     }
-
+    private _onResourceDidGet(data: { item: ItemData; needSettlement: boolean }) {
+        if (data.item.itemConfigId == ResourceCorrespondingItem.Energy) {
+            this.refreshUI(true);
+        }
+    }
 
     //---------------------------------- action
     private async onTapClose() {
@@ -211,12 +217,17 @@ export class TransformToEnergyUI extends ViewController {
             UIHUDController.showCenterTip("Unable to produce");
             return;
         }
+        const costItems = [];
         for (const cost of energyData.convert) {
             const currentCost = cost.num * this._selectGenerateNum;
-            ItemMgr.subItem(cost.type, currentCost);
+            costItems.push(new ItemData(cost.type, currentCost));
         }
-        ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Energy, this._selectGenerateNum)]);
-        this.refreshUI(true);
+
+        DataMgr.setTempSendData("player_generate_energy_res", {
+            num: this._selectGenerateNum,
+            subItems: costItems
+        });
+        NetworkMgr.websocketMsg.player_generate_energy({ num: this._selectGenerateNum });
     }
     private async onTapDelegate() {
         const result = await UIPanelManger.inst.pushPanel(UIName.DelegateUI);

@@ -1,23 +1,23 @@
-import { _decorator, Component, instantiate, Label, Layout, Node, ProgressBar, Slider } from 'cc';
-import CommonTools from '../../Tool/CommonTools';
-import { GameExtraEffectType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, UserInfoMgr } from '../../Utils/Global';
-import ViewController from '../../BasicView/ViewController';
-import { UIHUDController } from '../UIHUDController';
-import NotificationMgr from '../../Basic/NotificationMgr';
-import { NotificationName } from '../../Const/Notification';
-import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
-import { InnerBuildingType } from '../../Const/BuildingDefine';
-import ItemData from '../../Const/Item';
-import UIPanelManger from '../../Basic/UIPanelMgr';
-import { DataMgr } from '../../Data/DataMgr';
-import { UIName } from '../../Const/ConstUIDefine';
-import { DelegateUI } from '../DelegateUI';
+import { _decorator, Component, instantiate, Label, Layout, Node, ProgressBar, Slider } from "cc";
+import CommonTools from "../../Tool/CommonTools";
+import { GameExtraEffectType, ResourceCorrespondingItem } from "../../Const/ConstDefine";
+import { ArtifactMgr, GameMgr, ItemMgr, LanMgr, UserInfoMgr } from "../../Utils/Global";
+import ViewController from "../../BasicView/ViewController";
+import { UIHUDController } from "../UIHUDController";
+import NotificationMgr from "../../Basic/NotificationMgr";
+import { NotificationName } from "../../Const/Notification";
+import InnerBuildingLvlUpConfig from "../../Config/InnerBuildingLvlUpConfig";
+import { InnerBuildingType } from "../../Const/BuildingDefine";
+import ItemData from "../../Const/Item";
+import UIPanelManger from "../../Basic/UIPanelMgr";
+import { DataMgr } from "../../Data/DataMgr";
+import { UIName } from "../../Const/ConstUIDefine";
+import { DelegateUI } from "../DelegateUI";
+import { NetworkMgr } from "../../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
-@ccclass('RecruitUI')
+@ccclass("RecruitUI")
 export class RecruitUI extends ViewController {
-
     public refreshUI(initSelectGenerate: boolean = false) {
         const barrackBuildingData = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.Barrack];
         if (barrackBuildingData == null) {
@@ -36,7 +36,6 @@ export class RecruitUI extends ViewController {
         // this.node.getChildByPath("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
         const currentTroops: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop);
-        
 
         this._totalTroop.string = this._maxTroop.toString();
         this._currentTroop.string = currentTroops.toString();
@@ -51,7 +50,11 @@ export class RecruitUI extends ViewController {
         this._generateMaxTroop.node.getParent().getComponent(Layout).updateLayout();
 
         this._generateTimeNum = Math.ceil(this._perTroopTime * this._selectGenerateNum);
-        this._generateTimeNum = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.Barrack, GameExtraEffectType.TROOP_GENERATE_TIME, this._generateTimeNum);
+        this._generateTimeNum = GameMgr.getAfterExtraEffectPropertyByBuilding(
+            InnerBuildingType.Barrack,
+            GameExtraEffectType.TROOP_GENERATE_TIME,
+            this._generateTimeNum
+        );
 
         this._generateTime.string = CommonTools.formatSeconds(this._generateTimeNum);
 
@@ -136,7 +139,6 @@ export class RecruitUI extends ViewController {
         this._generateMaxTroop = this.node.getChildByPath("__ViewContent/recruiting/control/num/max").getComponent(Label);
         this._generateSelectTroop = this.node.getChildByPath("__ViewContent/recruiting/control/num/cur").getComponent(Label);
 
-
         this._generateTime = this.node.getChildByPath("__ViewContent/footer/time/txt-001").getComponent(Label);
         this._costItem = this.node.getChildByPath("__ViewContent/footer/material/Item");
         this._costItem.active = false;
@@ -157,7 +159,6 @@ export class RecruitUI extends ViewController {
         return this.node.getChildByPath("__ViewContent");
     }
 
-
     changeLang(): void {
         if (this.node.active === false) return;
         this.refreshUI();
@@ -166,11 +167,7 @@ export class RecruitUI extends ViewController {
     private _currentGenerateMaxNum(): number {
         let tempUseNum: number = 999999999;
         for (const cost of this._costDatas) {
-            tempUseNum = Math.min(
-                tempUseNum,
-                DataMgr.s.item.getObj_item_count(cost.itemConfigId) / cost.count,
-                this._maxRecruitTroop
-            );
+            tempUseNum = Math.min(tempUseNum, DataMgr.s.item.getObj_item_count(cost.itemConfigId) / cost.count, this._maxRecruitTroop);
         }
         return Math.floor(tempUseNum);
     }
@@ -225,10 +222,16 @@ export class RecruitUI extends ViewController {
             return;
         }
         for (const cost of this._costDatas) {
-            ItemMgr.subItem(cost.itemConfigId, cost.count * this._selectGenerateNum);
+            cost.count = cost.count * this._selectGenerateNum;
         }
-        UserInfoMgr.beginGenerateTroop(this._generateTimeNum, this._selectGenerateNum);
-
+        DataMgr.setTempSendData("player_generate_troop_res", {
+            num: this._selectGenerateNum,
+            time: this._generateTimeNum,
+            subItems: this._costDatas
+        });
+        NetworkMgr.websocketMsg.player_generate_troop({
+            num: this._selectGenerateNum,
+        });
         await this.playExitAnimation();
         UIPanelManger.inst.popPanel();
     }
@@ -240,5 +243,3 @@ export class RecruitUI extends ViewController {
         result.node.getComponent(DelegateUI).showUI(InnerBuildingType.Barrack);
     }
 }
-
-

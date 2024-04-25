@@ -1,10 +1,15 @@
 import { Vec2 } from "cc";
 import ProtobufConfig from "../../Config/ProtobufConfig";
-import { MapPioneerActionType, MapPioneerObject } from "../../Const/PioneerDefine";
+import { MapPioneerActionType, MapPioneerAttributesChangeModel, MapPioneerObject } from "../../Const/PioneerDefine";
 import { natrium_ws } from "../../natrium/client/natrium_ws";
 import { registermsg } from "../../natrium/share/msgs/registermsg";
 import CLog from "../../Utils/CLog";
 import { TilePos } from "../../Game/TiledMap/TileTool";
+import ItemData from "../../Const/Item";
+import { InnerBuildingType } from "../../Const/BuildingDefine";
+import ArtifactData from "../../Model/ArtifactData";
+import { EventConfigData } from "../../Const/Event";
+import { MapBuildingObject } from "../../Const/MapBuilding";
 
 export class WebsocketMsg {
     private _websocket_host: string;
@@ -79,29 +84,71 @@ export class WebsocketMsg {
         this.send_packet("enter_game", d);
     }
 
-    public create_pioneer(d: c2s_user.Icreate_pioneer): void {
-        //this.send_packet("create_pioneer", d);
+    // public create_pioneer(d: c2s_user.Icreate_pioneer): void {
+    //     //this.send_packet("create_pioneer", d);
 
-        // pioneernft func
-        this._websocket.emit("mark_data_dirty", { type: "pioneer" });
-    }
+    //     // pioneernft func
+    //     this._websocket.emit("mark_data_dirty", { type: "pioneer" });
+    // }
 
-    public get_pioneers(d: c2s_user.Iget_pioneers): void {
-        // this.send_packet("get_pioneers", d);
+    // public get_pioneers(d: c2s_user.Iget_pioneers): void {
+    //     // this.send_packet("get_pioneers", d);
 
-        // pioneernft func
-        this._websocket.emit("get_pioneers_res", {});
-    }
+    //     // pioneernft func
+    //     this._websocket.emit("get_pioneers_res", {});
+    // }
 
-    public change_pioneer(d: c2s_user.Ichange_pioneer) {
-        this._websocket.emit("change_pioneer_res", d);
-    }
-    public begin_pioneer_move(d: c2s_user.Ibegin_pioneer_move) {
-        this._websocket.emit("begin_pioneer_move_res", d);
-    }
+    // public change_pioneer(d: c2s_user.Ichange_pioneer) {
+    //     this._websocket.emit("change_pioneer_res", d);
+    // }
+    // public begin_pioneer_move(d: c2s_user.Ibegin_pioneer_move) {
+    //     this._websocket.emit("begin_pioneer_move_res", d);
+    // }
 
-    public upload_pioneer_move(d: c2s_user.Iupload_pioneer_move) {
+    public player_move(d: c2s_user.Iplayer_move) {
         this.send_packet("player_move", d);
+    }
+    public player_talk_select(d: c2s_user.Iplayer_talk_select) {
+        this.send_packet("player_talk_select", d);
+    }
+    public player_gather(d: c2s_user.Iplayer_gather) {
+        this.send_packet("player_gather", d);
+    }
+    public player_explore(d: c2s_user.Iplayer_explore) {
+        this.send_packet("player_explore", d);
+    }
+    public player_fight(d: c2s_user.Iplayer_fight) {
+        this.send_packet("player_fight", d);
+    }
+    public player_event_select(d: c2s_user.Iplayer_event_select) {
+        this.send_packet("player_event_select", d);
+    }
+    public player_item_use(d: c2s_user.Iplayer_item_use) {
+        this.send_packet("player_item_use", d);
+    }
+    public player_treasure_open(d: c2s_user.Iplayer_treasure_open) {
+        this.send_packet("player_treasure_open", d);
+    }
+    public player_artifact_equip(d: c2s_user.Iplayer_artifact_equip) {
+        this.send_packet("player_artifact_equip", d);
+    }
+    public player_artifact_remove(d: c2s_user.Iplayer_artifact_remove) {
+        this.send_packet("player_artifact_remove", d);
+    }
+    public player_building_levelup(d: c2s_user.Iplayer_building_levelup) {
+        this.send_packet("player_building_levelup", d);
+    }
+    public player_get_auto_energy(d: c2s_user.Iplayer_get_auto_energy) {
+        this.send_packet("player_get_auto_energy", d);
+    }
+    public player_generate_energy(d: c2s_user.Iplayer_generate_energy) {
+        this.send_packet("player_generate_energy", d);
+    }
+    public player_generate_troop(d: c2s_user.Iplayer_generate_troop) {
+        this.send_packet("player_generate_troop", d);
+    }
+    public player_building_delegate_nft(d: c2s_user.Iplayer_building_delegate_nft) {
+        this.send_packet("player_building_delegate_nft", d);
     }
 }
 
@@ -115,7 +162,7 @@ export const WebsocketEvent = {
 export enum Ichange_pioneer_type {
     showHide,
     GetNewTalk,
-    actionType
+    actionType,
 }
 export interface Ichange_pioneer_showHide {
     show: boolean;
@@ -155,24 +202,73 @@ export namespace c2s_user {
 
     export interface Iget_pioneers {}
 
-    
-    
-    export interface Ichange_pioneer { 
-        type: Ichange_pioneer_type, 
-        pioneerId: string, 
-        showHide?: Ichange_pioneer_showHide,
-        actionType?: Ichange_pioneer_actionType,
-        newTalk?: Ichange_pioneer_newTalk,
+    export interface Ichange_pioneer {
+        type: Ichange_pioneer_type;
+        pioneerId: string;
+        showHide?: Ichange_pioneer_showHide;
+        actionType?: Ichange_pioneer_actionType;
+        newTalk?: Ichange_pioneer_newTalk;
     }
     export interface Ibegin_pioneer_move {
         pioneerId: string;
         targetPos: Vec2;
     }
 
-    export interface Iupload_pioneer_move {
+    export interface Iplayer_move {
         pioneerId: string;
         movePath: string;
         targetPos: string;
+    }
+    export interface Iplayer_talk_select {
+        talkId: string;
+        selectIndex: number;
+    }
+    export interface Iplayer_gather {
+        pioneerId: string;
+        resourceBuildingId: string;
+    }
+    export interface Iplayer_explore {
+        pioneerId: string;
+        isExporeBuilding: boolean;
+        exploreId: string;
+    }
+    export interface Iplayer_fight {
+        isTakeTheInitiative: boolean;
+        isBuildingDefender: boolean;
+        attackerId: string;
+        defenderId: string;
+    }
+    export interface Iplayer_event_select {
+        pioneerId: string;
+        buildingId: string;
+        eventId: string;
+    }
+    export interface Iplayer_item_use {
+        itemId: string;
+        num: number;
+    }
+    export interface Iplayer_treasure_open {
+        boxId: string;
+    }
+    export interface Iplayer_artifact_equip {
+        artifactId: string;
+    }
+    export interface Iplayer_artifact_remove {
+        artifactId: string;
+    }
+    export interface Iplayer_building_levelup {
+        innerBuildingId: string;
+    }
+    export interface Iplayer_get_auto_energy {}
+    export interface Iplayer_generate_energy {
+        num: number;
+    }
+    export interface Iplayer_generate_troop {
+        num: number;
+    }
+    export interface Iplayer_building_delegate_nft {
+        innerBuildingId: string;
+        nftId: string;
     }
 }
 
@@ -222,15 +318,85 @@ export namespace s2c_user {
         res: number;
         type: Ichange_pioneer_type;
         pioneerId: string;
-        showHide?: Ichange_pioneer_showHide,
-        actionType?: Ichange_pioneer_actionType,
-        newTalk: Ichange_pioneer_newTalk,
+        showHide?: Ichange_pioneer_showHide;
+        actionType?: Ichange_pioneer_actionType;
+        newTalk: Ichange_pioneer_newTalk;
     }
 
     export interface Ibegin_pioneer_move_res {
         res: number;
         pioneerId: string;
         targetPos: Vec2;
+    }
+
+    export interface Iplayer_talk_select_res {
+        talkId: string;
+        selectIndex: number;
+    }
+    export interface Iplayer_gather_res {
+        pioneerId: string;
+        buildingId: string;
+    }
+    export interface Iplayer_explore_res {
+        pioneerId: string;
+        isExporeBuilding: boolean;
+        exploreId: string;
+        actionType: MapPioneerActionType;
+    }
+    export interface Iplayer_fight_res {
+        isAttackBuilding: boolean,
+        isSelfAttack: boolean;
+        attacker: MapPioneerObject;
+        pioneerDefender: MapPioneerObject;
+        buildingDefender: MapBuildingObject;
+        isEventFight?: boolean;
+        eventCenterPositions?: Vec2[];
+        temporaryAttributes?: Map<string, MapPioneerAttributesChangeModel>;
+        fightOverCallback?: (isSelfWin: boolean) => void;
+    }
+    export interface player_event_select_res {
+        pioneerId: string;
+        buildingId: string;
+        eventData: EventConfigData;
+    }
+    export interface Iplayer_item_use_res {
+        itemId: string;
+        num: number;
+    }
+    export interface Iplayer_treasure_open_res {
+        boxId: string;
+        items: ItemData[];
+        artifacts: ArtifactData[];
+        subItems?: ItemData[];
+    }
+    export interface Iplayer_artifact_equip_res {
+        artifactId: string;
+        effectIndex: number;
+    }
+    export interface Iplayer_artifact_remove_res {
+        artifactId: string;
+        effectIndex: number;
+    }
+    export interface Iplayer_building_levelup_res {
+        innerBuildingType: InnerBuildingType;
+        time: number;
+        subItems: ItemData[];
+    }
+    export interface Iplayer_get_auto_energy_res {
+        num: number;
+    }
+    export interface Iplayer_generate_energy_res {
+        num: number;
+        subItems: ItemData[];
+    }
+    export interface Iplayer_generate_troop_res {
+        num: number;
+        time: number;
+        subItems: ItemData[];
+    }
+    export interface Iplayer_building_delegate_nft_res {
+        innerBuildingId: string;
+        nftId: string;
     }
 }
 

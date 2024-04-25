@@ -14,6 +14,7 @@ import GameMainHelper from "../Game/Helper/GameMainHelper";
 import { DataMgr } from "../Data/DataMgr";
 import { NFTBackpackUI } from "./NFTBackpackUI";
 import ItemData from "../Const/Item";
+import ArtifactData from "../Model/ArtifactData";
 
 const { ccclass, property } = _decorator;
 
@@ -82,11 +83,11 @@ export class MainUI extends ViewController {
         //DataMgr.n.websocketMsg.create_pioneer({
         //    type: "0"
         //});
-        // ItemMgr.addItem([new ItemData("5001", 4)]);
-        // ItemMgr.addItem([new ItemData("8", 1)]);
-        // ItemMgr.addItem([new ItemData("9", 1)]);
-        // ItemMgr.addItem([new ItemData("10", 1)]);
-        // ItemMgr.addItem([new ItemData("11", 1)]);
+        // DataMgr.s.item.addObj_item([new ItemData("5001", 4)]);
+        // DataMgr.s.item.addObj_item([new ItemData("8", 1)]);
+        // DataMgr.s.item.addObj_item([new ItemData("9", 1)]);
+        // DataMgr.s.item.addObj_item([new ItemData("10", 1)]);
+        // DataMgr.s.item.addObj_item([new ItemData("11", 1)]);
         // DataMgr.s.nftPioneer.generateNewNFT();
     }
 

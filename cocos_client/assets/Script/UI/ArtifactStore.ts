@@ -28,6 +28,8 @@ import ManualNestedScrollView from "../BasicView/ManualNestedScrollView";
 import { InnerBuildingType } from "../Const/BuildingDefine";
 import InnerBuildingLvlUpConfig from "../Config/InnerBuildingLvlUpConfig";
 import { DataMgr } from "../Data/DataMgr";
+import { WebsocketMsg } from "../Net/msg/WebsocketMsg";
+import { NetworkMgr } from "../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactStore")
@@ -101,7 +103,6 @@ export class ArtifactStore extends ViewController {
     protected contentView(): Node {
         return this.node.getChildByName("__ViewContent");
     }
-
 
     private _initArtifact() {
         const itemDatas = DataMgr.s.artifact.getObj();
@@ -213,7 +214,6 @@ export class ArtifactStore extends ViewController {
                         // remove
                         this._moveEffectViewData = this._allEffectItemViews[this._moveArtifactIndex].itemData;
                         this._moveEffectViewData.effectIndex = -1;
-                        DataMgr.s.artifact.saveObj();
                         this._allEffectItemViews[this._moveArtifactIndex].itemData = null;
                         for (const child of this._allEffectItemViews[this._moveArtifactIndex].node.children) {
                             if (child.name == "Item") {
@@ -268,17 +268,35 @@ export class ArtifactStore extends ViewController {
                     if (isItemScrollAction) {
                         intersectItem.itemData = this._itemDatas[this._moveArtifactIndex];
                         this._itemDatas[this._moveArtifactIndex].effectIndex = index;
-                        DataMgr.s.artifact.saveObj();
+
+                        DataMgr.setTempSendData("player_artifact_equip_res", {
+                            artifactId: this._itemDatas[this._moveArtifactIndex].uniqueId,
+                            effectIndex: index,
+                        });
+                        NetworkMgr.websocketMsg.player_artifact_equip({ artifactId: this._itemDatas[this._moveArtifactIndex].uniqueId });
                     } else {
                         if (this._moveEffectViewData != null) {
                             this._moveEffectViewData.effectIndex = index;
-                            DataMgr.s.artifact.saveObj();
                             this._allEffectItemViews[index].itemData = this._moveEffectViewData;
+
+                            DataMgr.setTempSendData("player_artifact_equip_res", {
+                                artifactId: this._moveEffectViewData.uniqueId,
+                                effectIndex: index,
+                            });
+                            NetworkMgr.websocketMsg.player_artifact_equip({ artifactId: this._moveEffectViewData.uniqueId });
                         }
                     }
                     this._moveArtifactView.parent = intersectItem.node;
                     this._moveArtifactView.position = Vec3.ZERO;
                     this._refreshArtifactEffect();
+                } else {
+                    if (!isItemScrollAction && this._moveEffectViewData != null) {
+                        DataMgr.setTempSendData("player_artifact_remove_res", {
+                            artifactId: this._moveEffectViewData.uniqueId,
+                            effectIndex: -1,
+                        });
+                        NetworkMgr.websocketMsg.player_artifact_remove({ artifactId: this._moveEffectViewData.uniqueId });
+                    }
                 }
             } else {
                 let itemData: ArtifactData = null;

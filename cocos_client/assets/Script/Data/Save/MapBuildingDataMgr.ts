@@ -238,7 +238,7 @@ export class MapBuildingDataMgr {
             exp: temple.exp,
             animType: temple.animType,
 
-            resources: temple.resources ? { id: temple.resources[0], num: temple.resources[1] } : null,
+            resources: temple.resources,
             quota: temple.quota,
         };
 
@@ -437,7 +437,7 @@ export class MapBuildingDataMgr {
         }
 
         if (temple == null) return;
-        if (temple.show) return;
+        if (!temple.show) return;
 
         temple.show = false;
 

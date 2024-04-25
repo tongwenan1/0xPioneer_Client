@@ -35,7 +35,6 @@ export class EventUI extends ViewController {
         this._eventBuildingId = eventBuildingId;
         this._fightCallback = fightCallback;
         this._dealWithNextEvent = dealWithNextEvent;
-
         this._refreshUI(event);
     }
 
@@ -321,7 +320,7 @@ export class EventUI extends ViewController {
                     for (const item of DataMgr.s.item.getObj()) {
                         if (item.itemConfigId == id) {
                             const itemConf = ItemConfig.getById(id);
-                            ItemMgr.subItem(item.itemConfigId, num);
+                            DataMgr.s.item.subObj_item(item.itemConfigId, num);
 
                             // useLanMgr
                             showTip += LanMgr.replaceLanById("207008", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
@@ -342,7 +341,7 @@ export class EventUI extends ViewController {
             }
         }
         if (itemDatas.length > 0) {
-            ItemMgr.addItem(itemDatas);
+            DataMgr.s.item.addObj_item(itemDatas);
 
             let hasItem: boolean = false;
             for (const item of itemDatas) {

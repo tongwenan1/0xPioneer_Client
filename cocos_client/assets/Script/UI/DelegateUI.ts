@@ -5,6 +5,8 @@ import { NFTPioneerObject } from "../Const/NFTPioneerDefine";
 import { NTFBackpackItem } from "./View/NTFBackpackItem";
 import { InnerBuildingType } from "../Const/BuildingDefine";
 import { DataMgr } from "../Data/DataMgr";
+import InnerBuildingConfig from "../Config/InnerBuildingConfig";
+import { LanMgr } from "../Utils/Global";
 const { ccclass, property } = _decorator;
 
 @ccclass("DelegateUI")
@@ -29,12 +31,12 @@ export class DelegateUI extends ViewController {
 
         // useLanMgr
         // this.node.getChildByPath("__ViewContent/Info/NoOccupied/Label").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByPath("__ViewContent/Info/ConfirmButton/item").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/ConfirmButton/item").getComponent(Label).string = LanMgr.getLanById("107549");
 
         this._NFTContent = this.node.getChildByPath("__ViewContent/Pioneers/ScrollView/View/Content");
         this._NFTItem = this._NFTContent.getChildByPath("Item");
         // useLanMgr
-        // this._NFTItem.getChildByPath("Working").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._NFTItem.getChildByPath("Working/Working").getComponent(Label).string = LanMgr.getLanById("107549");
         this._NFTItem.removeFromParent();
     }
     protected viewDidStart(): void {
@@ -68,7 +70,7 @@ export class DelegateUI extends ViewController {
             const data = this._datas[i];
             const itemView = instantiate(this._NFTItem);
             itemView.active = true;
-            await itemView.getComponent(NTFBackpackItem).refreshUI(data);
+            // await itemView.getComponent(NTFBackpackItem).refreshUI(data);
             itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
             itemView.getChildByPath("Working").active = data.workingBuildingId != null;
             itemView.parent = this._NFTContent;
@@ -85,7 +87,7 @@ export class DelegateUI extends ViewController {
     private _refreshInfoUI() {
         const noOccupiedView = this.node.getChildByPath("__ViewContent/Info/NoOccupied");
         const selectOccupiedView = this.node.getChildByPath("__ViewContent/Info/SelectOccupied");
-        const confirmButton = this.node.getChildByPath("__ViewContent/Info/ConfirmButton");
+        const confirmButton = this.node.getChildByPath("__ViewContent/ConfirmButton");
         if (this._selectIndex >= 0) {
             noOccupiedView.active = false;
             selectOccupiedView.active = true;
@@ -93,11 +95,16 @@ export class DelegateUI extends ViewController {
             confirmButton.getComponent(Button).interactable = true;
 
             const data = this._datas[this._selectIndex];
-            selectOccupiedView.getChildByPath("NFTBackpackItem").getComponent(NTFBackpackItem).refreshUI(data);
-            selectOccupiedView.getChildByPath("Level").getComponent(Label).string = "Lv." + data.level;
-            selectOccupiedView.getChildByPath("Rank").getComponent(Label).string = "Rank." + data.level;
-            selectOccupiedView.getChildByPath("Name").getComponent(Label).string = data.name;
-            selectOccupiedView.getChildByPath("Attack").getComponent(Label).string = "ATK " + data.attack;
+            // selectOccupiedView.getChildByPath("NFTBackpackItem").getComponent(NTFBackpackItem).refreshUI(data);
+            selectOccupiedView.getChildByPath("Level/Level").getComponent(Label).string = "Lv." + data.level;
+            selectOccupiedView.getChildByPath("Rank/Rank").getComponent(Label).string = "Rank." + data.level;
+            selectOccupiedView.getChildByPath("Name/Name").getComponent(Label).string = data.name;
+            selectOccupiedView.getChildByPath("Ability/Ability").getComponent(Label).string = "Ability:" + data.iq;
+
+            const buildingConfig = InnerBuildingConfig.getByBuildingType(this._buildingId);
+            if (buildingConfig != null && buildingConfig.staff_des != null) {
+                selectOccupiedView.getChildByPath("Desc/Effect").getComponent(Label).string = LanMgr.getLanById(buildingConfig.staff_des);
+            }
         } else {
             noOccupiedView.active = true;
             selectOccupiedView.active = false;

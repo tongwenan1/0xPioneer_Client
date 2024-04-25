@@ -96,7 +96,7 @@ export class ItemDataMgr {
         });
     }
 
-    public addObj_item(items: ItemData[]): void {
+    public addObj_item(items: ItemData[], needSettlement: boolean = true): void {
         if (items.length <= 0) {
             return;
         }
@@ -107,7 +107,7 @@ export class ItemDataMgr {
                 continue;
             }
             if (itemConfig.itemType == ItemType.Resource) {
-                NotificationMgr.triggerEvent(NotificationName.RESOURCE_GETTED, item);
+                NotificationMgr.triggerEvent(NotificationName.RESOURCE_GETTED, { item: item, needSettlement: needSettlement });
             } else if (this.itemIsFull()) {
                 continue;
             }
@@ -141,17 +141,6 @@ export class ItemDataMgr {
 
         this._data[idx].count -= count;
 
-        if (
-            itemConfigId == ResourceCorrespondingItem.Food ||
-            itemConfigId == ResourceCorrespondingItem.Wood ||
-            itemConfigId == ResourceCorrespondingItem.Stone ||
-            itemConfigId == ResourceCorrespondingItem.Gold ||
-            itemConfigId == ResourceCorrespondingItem.Troop ||
-            itemConfigId == ResourceCorrespondingItem.Energy
-        ) {
-            NotificationMgr.triggerEvent(NotificationName.RESOURCE_CONSUMED);
-        }
-
         const itemConfig = ItemConfig.getById(itemConfigId);
         if (itemConfig != null) {
             if (itemConfig.gain_item != null) {
@@ -161,6 +150,17 @@ export class ItemDataMgr {
                     num: itemConfig.gain_item[2],
                 };
             }
+        }
+
+        if (
+            itemConfigId == ResourceCorrespondingItem.Food ||
+            itemConfigId == ResourceCorrespondingItem.Wood ||
+            itemConfigId == ResourceCorrespondingItem.Stone ||
+            itemConfigId == ResourceCorrespondingItem.Gold ||
+            itemConfigId == ResourceCorrespondingItem.Troop ||
+            itemConfigId == ResourceCorrespondingItem.Energy
+        ) {
+            NotificationMgr.triggerEvent(NotificationName.RESOURCE_CONSUMED, { itemConfigId: itemConfigId, count: count, getItem: result.getItem });
         }
 
         if (this._data[idx].count <= 0) {

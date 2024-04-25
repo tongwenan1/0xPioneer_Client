@@ -67,8 +67,8 @@ export class UIHUDController extends ViewController {
         }
     }
     //---------------------------------- notifiaction
-    private async _resourceGetted(item: ItemData) {
-        this._resoucesShowItems.push(item);
+    private async _resourceGetted(data: {item: ItemData, needSettlement: boolean}) {
+        this._resoucesShowItems.push(data.item);
         this._showResouceGettedView();
     }
 

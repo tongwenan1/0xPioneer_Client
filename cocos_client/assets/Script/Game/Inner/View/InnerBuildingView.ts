@@ -1,20 +1,19 @@
-import { _decorator, Button, CCInteger, Component, instantiate, Node, Prefab, size, Size, UITransform, v3, Vec3 } from 'cc';
-import ViewController from '../../../BasicView/ViewController';
-import { InnerBuildUI } from '../../../UI/Inner/InnerBuildUI';
-import NotificationMgr from '../../../Basic/NotificationMgr';
-import { InnerBuildingType, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
-import { LanMgr, ResourcesMgr } from '../../../Utils/Global';
-import InnerBuildingLvlUpConfig from '../../../Config/InnerBuildingLvlUpConfig';
-import InnerBuildingConfig from '../../../Config/InnerBuildingConfig';
-import { NotificationName } from '../../../Const/Notification';
-import UIPanelManger from '../../../Basic/UIPanelMgr';
-import { UIName } from '../../../Const/ConstUIDefine';
-import { UIHUDController } from '../../../UI/UIHUDController';
+import { _decorator, Button, CCInteger, Component, instantiate, Node, Prefab, size, Size, UITransform, v3, Vec3 } from "cc";
+import ViewController from "../../../BasicView/ViewController";
+import { InnerBuildUI } from "../../../UI/Inner/InnerBuildUI";
+import NotificationMgr from "../../../Basic/NotificationMgr";
+import { InnerBuildingType, UserInnerBuildInfo } from "../../../Const/BuildingDefine";
+import { LanMgr, ResourcesMgr } from "../../../Utils/Global";
+import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
+import InnerBuildingConfig from "../../../Config/InnerBuildingConfig";
+import { NotificationName } from "../../../Const/Notification";
+import UIPanelManger from "../../../Basic/UIPanelMgr";
+import { UIName } from "../../../Const/ConstUIDefine";
+import { UIHUDController } from "../../../UI/UIHUDController";
 const { ccclass, property } = _decorator;
 
-@ccclass('InnerBuildingView')
+@ccclass("InnerBuildingView")
 export class InnerBuildingView extends ViewController {
-
     public async refreshUI(building: UserInnerBuildInfo, canAction: boolean = true) {
         if (building == null) {
             return;
@@ -27,8 +26,7 @@ export class InnerBuildingView extends ViewController {
             let showedBuildingView: Node = null;
             let prefabName: string = null;
             const innerConfig = InnerBuildingConfig.getByBuildingType(this._building.buildType);
-            if (this._building.buildLevel > 0 &&
-                innerConfig != null && innerConfig.prefab != null && innerConfig.prefab.length > 0) {
+            if (this._building.buildLevel > 0 && innerConfig != null && innerConfig.prefab != null && innerConfig.prefab.length > 0) {
                 prefabName = InnerBuildingLvlUpConfig.getBuildingLevelData(this._building.buildLevel, innerConfig.prefab);
             }
             if (prefabName != null) {
@@ -45,7 +43,6 @@ export class InnerBuildingView extends ViewController {
                     this._showBuilding = buildView;
                     showedBuildingView = buildView;
                 }
-
             } else {
                 this._defaultBuildingView.active = true;
                 showedBuildingView = this._defaultBuildingView;
@@ -65,10 +62,22 @@ export class InnerBuildingView extends ViewController {
                         maxY = maxY == null ? children.position.y : Math.max(maxY, children.position.y);
                     } else {
                         const size = children.getComponent(UITransform).contentSize;
-                        minX = minX == null ? (children.position.x - size.width / 2 * childrenScale.x) : Math.min(minX, children.position.x - size.width / 2 * childrenScale.x);
-                        maxX = maxX == null ? (children.position.x + size.width / 2 * childrenScale.x) : Math.max(maxX, children.position.x + size.width / 2 * childrenScale.x);
-                        minY = minY == null ? (children.position.y - size.height / 2 * childrenScale.y) : Math.min(minY, children.position.y - size.width / 2 * childrenScale.y);
-                        maxY = maxY == null ? (children.position.y + size.height / 2 * childrenScale.y) : Math.max(maxY, children.position.y + size.height / 2 * childrenScale.y);
+                        minX =
+                            minX == null
+                                ? children.position.x - (size.width / 2) * childrenScale.x
+                                : Math.min(minX, children.position.x - (size.width / 2) * childrenScale.x);
+                        maxX =
+                            maxX == null
+                                ? children.position.x + (size.width / 2) * childrenScale.x
+                                : Math.max(maxX, children.position.x + (size.width / 2) * childrenScale.x);
+                        minY =
+                            minY == null
+                                ? children.position.y - (size.height / 2) * childrenScale.y
+                                : Math.min(minY, children.position.y - (size.width / 2) * childrenScale.y);
+                        maxY =
+                            maxY == null
+                                ? children.position.y + (size.height / 2) * childrenScale.y
+                                : Math.max(maxY, children.position.y + (size.height / 2) * childrenScale.y);
                     }
                 }
                 const showedBuildingViewScale: Vec3 = showedBuildingView.scale;
@@ -82,7 +91,7 @@ export class InnerBuildingView extends ViewController {
             this.node.getChildByPath("clickNode").getComponent(UITransform).setContentSize(buildingSize);
         }
 
-        // info 
+        // info
         this._infoView.refreshUI(this._building);
         this._infoView.setProgressTime(this._building.upgradeCountTime, this._building.upgradeTotalTime);
 
@@ -100,10 +109,8 @@ export class InnerBuildingView extends ViewController {
     @property(Prefab)
     private buildingAnimPrb: Prefab = null;
 
-    protected innerBuildingLoad() {
-    }
-    protected innerBuildingTaped() {
-    }
+    protected innerBuildingLoad() {}
+    protected innerBuildingTaped() {}
 
     private _buildingAnim: Node = null;
     private _defaultBuildingView: Node = null;
@@ -125,7 +132,7 @@ export class InnerBuildingView extends ViewController {
         // default building
         this._defaultBuildingView = this.node.getChildByPath("BuildingContent/Default");
 
-        // info 
+        // info
         this._infoView = this.node.getChildByName("innerBuildUI").getComponent(InnerBuildUI);
 
         this.innerBuildingLoad();
@@ -149,7 +156,6 @@ export class InnerBuildingView extends ViewController {
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
-
     }
     //---------------------------- function
     private _beginUpgrade() {
@@ -172,12 +178,9 @@ export class InnerBuildingView extends ViewController {
             // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
             return;
         }
-        if (this._building.buildLevel > 0 &&
-            this._building.buildType == InnerBuildingType.ArtifactStore) {
+        if (this._building.buildLevel > 0 && this._building.buildType == InnerBuildingType.ArtifactStore) {
             UIPanelManger.inst.pushPanel(UIName.ArtifactStore);
         }
         this.innerBuildingTaped();
     }
 }
-
-

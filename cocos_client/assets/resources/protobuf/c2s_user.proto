@@ -53,6 +53,73 @@ message player_move {
     required string targetPos = 3; 
 }
 
+message player_talk_select {
+    required string talkId = 1;
+    required uint32 selectIndex = 2;
+}
+
+message player_gather {
+    required string pioneerId = 1;
+    required string resourceBuildingId = 2;
+}
+
+message player_explore {
+    required string pioneerId = 1;
+    required bool isExporeBuilding = 2;
+    required string exploreId = 3;
+}
+
+message player_fight {
+    required bool isTakeTheInitiative = 1;
+    required bool isBuildingDefender = 2; 
+    required string attackerId = 3; 
+    required string defenderId = 4; 
+}
+
+message player_event_select {
+    required string pioneerId = 1;
+    required string buildingId = 2;
+    required string eventId = 3;
+}
+
+message player_item_use {
+    required string itemId = 1;
+    required uint32 num = 2;
+}
+
+message player_treasure_open {
+    required string boxId = 1;
+}
+
+message player_artifact_equip {
+    required string artifactId = 1;
+}
+
+message player_artifact_remove {
+    required string artifactId = 1;
+}
+
+message player_building_levelup {
+    required string innerBuildingId = 1;
+}
+
+message player_get_auto_energy {
+    
+}
+
+message player_generate_energy {
+    required string num = 1; 
+}
+
+message player_generate_troop {
+    required string num = 1;
+}
+
+message player_building_delegate_nft {
+    required string innerBuildingId = 1;
+    required string nftId = 2; 
+}
+
 message get_battle_report {
 
 }

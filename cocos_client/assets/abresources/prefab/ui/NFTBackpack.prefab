@@ -2188,7 +2188,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 108.85546875,
+      "width": 252.0546875,
       "height": 70.56
     },
     "_anchorPoint": {
@@ -2224,7 +2224,7 @@
       "b": 113,
       "a": 255
     },
-    "_string": "NTF",
+    "_string": "PIONEER",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 56,
@@ -2445,7 +2445,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 1200,
-      "height": 72.5
+      "height": 40
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2478,12 +2478,12 @@
       "height": 40
     },
     "_startAxis": 0,
-    "_paddingLeft": 45,
-    "_paddingRight": 45,
-    "_paddingTop": 36.25,
-    "_paddingBottom": 36.25,
-    "_spacingX": 33.33,
-    "_spacingY": 33.33,
+    "_paddingLeft": 60,
+    "_paddingRight": 60,
+    "_paddingTop": 20,
+    "_paddingBottom": 20,
+    "_spacingX": 45.6,
+    "_spacingY": 20,
     "_verticalDirection": 1,
     "_horizontalDirection": 0,
     "_constraint": 0,

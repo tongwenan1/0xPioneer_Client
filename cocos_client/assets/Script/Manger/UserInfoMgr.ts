@@ -106,7 +106,7 @@ export default class UserInfoMgr {
         if (data.generateNum <= 0) {
             return;
         }
-        ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Troop, data.generateNum)]);
+        DataMgr.s.item.addObj_item([new ItemData(ResourceCorrespondingItem.Troop, data.generateNum)]);
     }
     private _generateEnergyNumToChange() {
         const energyBuildingData = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.EnergyStation];

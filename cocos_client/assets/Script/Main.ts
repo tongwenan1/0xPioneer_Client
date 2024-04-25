@@ -167,7 +167,7 @@ export class Main extends ViewController {
         // --- websocket common
         NetworkMgr.websocket.on("login_res", this.login_res);
         NetworkMgr.websocket.on("create_player_res", this.create_player_res);
-        NetworkMgr.websocket.on("mark_data_dirty", this.mark_data_dirty);
+        // NetworkMgr.websocket.on("mark_data_dirty", this.mark_data_dirty);
 
         // DataMgr listener
         // websocket
@@ -176,8 +176,22 @@ export class Main extends ViewController {
 
         // pioneernft func
         NetworkMgr.websocket.on("get_pioneers_res", DataMgr.get_pioneers_res);
-
-        NetworkMgr.websocket.on("player_move_res", this._on_upload_pioneer_move);
+        
+        NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
+        NetworkMgr.websocket.on("player_talk_select_res", DataMgr.player_talk_select_res);
+        NetworkMgr.websocket.on("player_gather_res", DataMgr.player_gather_res);
+        NetworkMgr.websocket.on("player_explore_res", DataMgr.player_explore_res);
+        NetworkMgr.websocket.on("player_fight_res", DataMgr.player_fight_res);
+        NetworkMgr.websocket.on("player_event_select_res", DataMgr.player_event_select_res);
+        NetworkMgr.websocket.on("player_item_use_res", DataMgr.player_item_use_res);
+        NetworkMgr.websocket.on("player_treasure_open_res", DataMgr.player_treasure_open_res);
+        NetworkMgr.websocket.on("player_artifact_equip_res", DataMgr.player_artifact_equip_res);
+        NetworkMgr.websocket.on("player_artifact_remove_res", DataMgr.player_artifact_remove_res);
+        NetworkMgr.websocket.on("player_building_levelup_res", DataMgr.player_building_levelup_res);
+        NetworkMgr.websocket.on("player_get_auto_energy_res", DataMgr.player_get_auto_energy_res);
+        NetworkMgr.websocket.on("player_generate_energy_res", DataMgr.player_generate_energy_res);
+        NetworkMgr.websocket.on("player_generate_troop_res", DataMgr.player_generate_troop_res);
+        NetworkMgr.websocket.on("player_building_delegate_nft_res", DataMgr.player_building_delegate_nft_res);
     }
 
     private async reconnect() {
@@ -249,17 +263,13 @@ export class Main extends ViewController {
             NetworkMgr.websocketMsg.enter_game({});
         }
     };
-    private mark_data_dirty = (e: any) => {
-        let p: s2c_user.Imark_data_dirty = e.data;
-        switch (p.type) {
-            case "pioneer":
-                // TODO: refetch pioneer data
-                NetworkMgr.websocketMsg.get_pioneers({});
-                break;
-        }
-    };
-
-    private _on_upload_pioneer_move(e: any) {
-        
-    }
+    // private mark_data_dirty = (e: any) => {
+    //     let p: s2c_user.Imark_data_dirty = e.data;
+    //     switch (p.type) {
+    //         case "pioneer":
+    //             // TODO: refetch pioneer data
+    //             NetworkMgr.websocketMsg.get_pioneers({});
+    //             break;
+    //     }
+    // };
 }

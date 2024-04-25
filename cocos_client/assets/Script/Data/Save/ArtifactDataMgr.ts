@@ -5,6 +5,7 @@ import ArtifactEffectConfig from "../../Config/ArtifactEffectConfig";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import { GameExtraEffectType } from "../../Const/ConstDefine";
+import CommonTools from "../../Tool/CommonTools";
 
 export class ArtifactDataMgr {
     private _data: ArtifactData[];
@@ -24,15 +25,22 @@ export class ArtifactDataMgr {
             }
         }
     }
-
+    public async saveObj() {
+        localStorage.setItem(this._key, JSON.stringify(this._data));
+    }
+    //------------------------------------------------------------
     public getObj() {
         return this._data;
     }
-
+    public getObj_by_uniqueId(uniqueId: string) {
+        return this._data.find((artifact) => artifact.uniqueId == uniqueId);
+    }
     public getObj_artifact_maxLength() {
         return this._maxArtifactLength;
     }
-
+    public artifactIsFull(): boolean {
+        return this._data.length >= this._maxArtifactLength;
+    }
     public getObj_artifact_count(artifactConfigId: string): number {
         let count: number = 0;
         for (const artifact of this._data) {
@@ -42,7 +50,6 @@ export class ArtifactDataMgr {
         }
         return count;
     }
-
     public getObj_artifact_sort(sortType: ArtifactArrangeType) {
         if (sortType == ArtifactArrangeType.Recently) {
             this._data.sort((a, b) => {
@@ -56,7 +63,6 @@ export class ArtifactDataMgr {
         }
         NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
     }
-
     public getObj_artifact_effectiveEffect(type: GameExtraEffectType, artifactStoreLevel: number): number {
         let effectNum: number = 0;
         for (const artifact of this._data) {
@@ -98,7 +104,7 @@ export class ArtifactDataMgr {
         }
         return effectNum;
     }
-
+    //-------------------------------------------------------
     public addObj_artifact(artifacts: ArtifactData[]) {
         if (artifacts.length <= 0) {
             return;
@@ -107,13 +113,13 @@ export class ArtifactDataMgr {
         for (const artifact of artifacts) {
             const artifactConfig = ArtifactConfig.getById(artifact.artifactConfigId);
             if (artifactConfig == null) continue;
-            if (this.artifactIsFull) continue;
-
+            if (this.artifactIsFull()) continue;
             changed = true;
 
-            artifact.addTimeStamp = new Date().getTime();
+            const currentTimeStamp: number = new Date().getTime();
+            artifact.uniqueId = CommonTools.generateUUID() + currentTimeStamp;
+            artifact.addTimeStamp = currentTimeStamp;
             this._data.push(artifact);
-
             if (artifactConfig.effect != null) {
                 for (const temple of artifactConfig.effect) {
                     const effectData = ArtifactEffectConfig.getById(temple);
@@ -133,13 +139,13 @@ export class ArtifactDataMgr {
         this.getObj_artifact_sort(ArtifactArrangeType.Rarity);
         return changed;
     }
-
-    public artifactIsFull(): boolean {
-        return this._data.length >= this._maxArtifactLength;
-    }
-
-    public async saveObj() {
-        localStorage.setItem(this._key, JSON.stringify(this._data));
+    public changeObj_artifact_effectIndex(uniqueId: string, effectIndex: number) {
+        const artifact = this.getObj_by_uniqueId(uniqueId);
+        if (artifact == undefined) {
+            return;
+        }
+        artifact.effectIndex = effectIndex;
+        this.saveObj();
     }
 
     // public getPropEffValue(buildingLv: number) {

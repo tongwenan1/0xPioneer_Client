@@ -104,7 +104,7 @@ export class NFTSkillLearnUI extends ViewController {
         }
         result.node.getComponent(AlterView).showTip(LanMgr.replaceLanById("106005", [this._data.name, LanMgr.getLanById(config.itemName)]), async () => {
             DataMgr.s.nftPioneer.NFTLearnSkill(this._data.uniqueId, config.skill_learn);
-            ItemMgr.subItem(itemConfigId, 1);
+            DataMgr.s.item.subObj_item(itemConfigId, 1);
             this._refreshUI();
         });
     }

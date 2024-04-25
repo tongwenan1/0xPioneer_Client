@@ -12,6 +12,7 @@ import { NotificationName } from "../../../Const/Notification";
 import { GameExtraEffectType, ResourceCorrespondingItem } from "../../../Const/ConstDefine";
 import UIPanelManger from "../../../Basic/UIPanelMgr";
 import { DataMgr } from "../../../Data/DataMgr";
+import { NetworkMgr } from "../../../Net/NetworkMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -117,7 +118,7 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
             UIHUDController.showCenterTip("No PSYC to collect");
             return;
         }
-        ItemMgr.addItem([new ItemData(ResourceCorrespondingItem.Energy, produceNum)]);
-        DataMgr.s.userInfo.generateEnergyGetted();
+        DataMgr.setTempSendData("player_get_auto_energy_res", { num: produceNum });
+        NetworkMgr.websocketMsg.player_get_auto_energy({});
     }
 }

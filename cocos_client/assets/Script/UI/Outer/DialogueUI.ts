@@ -10,6 +10,7 @@ import { TalkConfigData } from "../../Const/Talk";
 import UIPanelManger from "../../Basic/UIPanelMgr";
 import { DataMgr } from "../../Data/DataMgr";
 import { NetworkMgr } from "../../Net/NetworkMgr";
+import { s2c_user } from "../../Net/msg/WebsocketMsg";
 const { ccclass, property } = _decorator;
 
 @ccclass("DialogueUI")
@@ -24,16 +25,7 @@ export class DialogueUI extends ViewController {
     private _talk: TalkConfigData = null;
     private _talkOverCallback: () => void;
     private _dialogStep: number = 0;
-    private _roleNames: string[] = [
-        "artisan",
-        "doomsdayGangBigTeam",
-        "doomsdayGangSpy",
-        "doomsdayGangTeam",
-        "hunter",
-        "prophetess",
-        "rebels",
-        "secretGuard",
-    ];
+    private _roleNames: string[] = ["artisan", "doomsdayGangBigTeam", "doomsdayGangSpy", "doomsdayGangTeam", "hunter", "prophetess", "rebels", "secretGuard"];
     private _roleViewNameMap: Map<NPCNameLangType, string> = new Map();
     protected viewDidLoad(): void {
         super.viewDidLoad();
@@ -48,6 +40,7 @@ export class DialogueUI extends ViewController {
         this._roleViewNameMap.set(NPCNameLangType.SecretGuard, "secretGuard");
 
         //listener socket
+        NetworkMgr.websocket.on("player_talk_select_res", this._on_player_talk_select_res.bind(this));
     }
 
     protected viewDidDestroy(): void {
@@ -147,31 +140,75 @@ export class DialogueUI extends ViewController {
 
     //------------------------------------------------ action
     private onTapNext() {
-        //send socket
-        this._dialogStep += 1;
-        if (this._dialogStep > this._talk.messsages.length - 1) {
-            UIPanelManger.inst.popPanel();
-            this._talkOver();
-        } else {
-            this._refreshUI();
+        if (this._talk == null) {
+            return;
+        } 
+        if (this._dialogStep > this._talk.messsages.length - 2) {
+            return;
         }
+        DataMgr.setTempSendData("player_talk_select_res", {
+            talkId: this._talk.id,
+            selectIndex: -1,
+        });
+        NetworkMgr.websocketMsg.player_talk_select({
+            talkId: this._talk.id,
+            selectIndex: -1,
+        });
     }
 
     private onTapAction(event: Event, customEventData: string) {
         if (this._talk == null) {
             return;
         }
-        DataMgr.s.task.talkSelected(this._talk.id, parseInt(customEventData));
-        DataMgr.s.count.addObj_selectDialog({
-            selectText: customEventData,
+        const selectIndex = parseInt(customEventData);
+        DataMgr.setTempSendData("player_talk_select_res", {
+            talkId: this._talk.id,
+            selectIndex: selectIndex,
         });
-        //send socket
-        this._dialogStep += 1;
-        if (this._dialogStep > this._talk.messsages.length - 1) {
-            UIPanelManger.inst.popPanel();
-            this._talkOver();
+        NetworkMgr.websocketMsg.player_talk_select({
+            talkId: this._talk.id,
+            selectIndex: selectIndex,
+        });
+    }
+
+    //------------------------------------------------ socket notification
+    private _on_player_talk_select_res(e: any) {
+        if (this._talk == null) {
+            return;
+        }
+        const data: s2c_user.Iplayer_talk_select_res = DataMgr.socketSendData.has("player_talk_select_res")
+            ? (DataMgr.socketSendData.get("player_talk_select_res") as s2c_user.Iplayer_talk_select_res)
+            : null;
+        if (data == null) {
+            return;
+        }
+
+        const { talkId, selectIndex } = data;
+        if (this._talk.id != talkId) {
+            return;
+        }
+
+        if (selectIndex == -1) {
+            this._dialogStep += 1;
+            if (this._dialogStep > this._talk.messsages.length - 1) {
+                UIPanelManger.inst.popPanel();
+                this._talkOver();
+            } else {
+                this._refreshUI();
+            }
         } else {
-            this._refreshUI();
+            DataMgr.s.task.talkSelected(this._talk.id, selectIndex);
+            DataMgr.s.count.addObj_selectDialog({
+                selectText: selectIndex.toString(),
+            });
+            //send socket
+            this._dialogStep += 1;
+            if (this._dialogStep > this._talk.messsages.length - 1) {
+                UIPanelManger.inst.popPanel();
+                this._talkOver();
+            } else {
+                this._refreshUI();
+            }
         }
     }
 }

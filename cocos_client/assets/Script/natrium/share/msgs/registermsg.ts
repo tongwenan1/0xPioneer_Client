@@ -15,6 +15,20 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.upload_pending_res, "upload_pending_res", "s2c_user.upload_pending_res");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_move_res, "player_move_res", "s2c_user.player_move_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_talk_select_res, "player_talk_select_res", "s2c_user.player_talk_select_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_gather_res, "player_gather_res", "s2c_user.player_gather_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_explore_res, "player_explore_res", "s2c_user.player_explore_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_fight_res, "player_fight_res", "s2c_user.player_fight_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_event_select_res, "player_event_select_res", "s2c_user.player_event_select_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_item_use_res, "player_item_use_res", "s2c_user.player_item_use_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_treasure_open_res, "player_treasure_open_res", "s2c_user.player_treasure_open_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_artifact_equip_res, "player_artifact_equip_res", "s2c_user.player_artifact_equip_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_artifact_remove_res, "player_artifact_remove_res", "s2c_user.player_artifact_remove_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_building_levelup_res, "player_building_levelup_res", "s2c_user.player_building_levelup_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_get_auto_energy_res, "player_get_auto_energy_res", "s2c_user.player_get_auto_energy_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_generate_energy_res, "player_generate_energy_res", "s2c_user.player_generate_energy_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_generate_troop_res, "player_generate_troop_res", "s2c_user.player_generate_troop_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_building_delegate_nft_res, "player_building_delegate_nft_res", "s2c_user.player_building_delegate_nft_res");
     pcodec.register_protobuf_msg(protobuf_s2c.get_battle_report_res, "get_battle_report_res", "s2c_user.get_battle_report_res");
 
     // register client msg
@@ -29,5 +43,19 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.get_block_height, "get_block_height", "c2s_user.get_block_height");
 
     pcodec.register_protobuf_msg(protobuf_c2s.player_move, "player_move", "c2s_user.player_move");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_talk_select, "player_talk_select", "c2s_user.player_talk_select");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_gather, "player_gather", "c2s_user.player_gather");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_explore, "player_explore", "c2s_user.player_explore");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_fight, "player_fight", "c2s_user.player_fight");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_event_select, "player_event_select", "c2s_user.player_event_select");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_item_use, "player_item_use", "c2s_user.player_item_use");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_treasure_open, "player_treasure_open", "c2s_user.player_treasure_open");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_artifact_equip, "player_artifact_equip", "c2s_user.player_artifact_equip");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_artifact_remove, "player_artifact_remove", "c2s_user.player_artifact_remove");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_building_levelup, "player_building_levelup", "c2s_user.player_building_levelup");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_get_auto_energy, "player_get_auto_energy", "c2s_user.player_get_auto_energy");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_generate_energy, "player_generate_energy", "c2s_user.player_generate_energy");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_generate_troop, "player_generate_troop", "c2s_user.player_generate_troop");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_building_delegate_nft, "player_building_delegate_nft", "c2s_user.player_building_delegate_nft");
     pcodec.register_protobuf_msg(protobuf_c2s.get_battle_report, "get_battle_report", "c2s_user.get_battle_report");
 }

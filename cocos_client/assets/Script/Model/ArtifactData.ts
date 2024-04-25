@@ -1,4 +1,5 @@
 export default class ArtifactData {
+    public uniqueId: string;
     public artifactConfigId: string; // artifact config id
     public count: number; // count
     public addTimeStamp: number;

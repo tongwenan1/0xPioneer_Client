@@ -13,6 +13,8 @@ import ItemData, { ItemConfigType } from '../Const/Item';
 import { BoxInfoConfigData } from '../Const/BoxInfo';
 import UIPanelManger from '../Basic/UIPanelMgr';
 import { DataMgr } from '../Data/DataMgr';
+import { s2c_user } from '../Net/msg/WebsocketMsg';
+import { NetworkMgr } from '../Net/NetworkMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('TreasureGettedUI')
@@ -50,8 +52,7 @@ export class TreasureGettedUI extends ViewController {
                 this.scheduleOnce(async () => {
                     const result = await UIPanelManger.inst.pushPanel(UIName.ItemSelectFromThreeUI);
                     if (result.success) {
-                        result.node.getComponent(ItemSelectFromThreeUI).showItem(drop.id, () => {
-                            UserInfoMgr.getExplorationReward(box.id);
+                        result.node.getComponent(ItemSelectFromThreeUI).showItem(box.id, drop.id, () => {
                             if (gettedCallback) {
                                 gettedCallback();
                             }
@@ -107,13 +108,20 @@ export class TreasureGettedUI extends ViewController {
                         .to(0.2, { scale: v3(0.7, 0.7, 0.7) })
                         .delay(0.5)
                         .call(() => {
+                            const tempData: s2c_user.Iplayer_treasure_open_res = {
+                                boxId: box.id,
+                                items: [],
+                                artifacts: [],
+                            };
                             if (dropResultProp.type == ItemConfigType.Item) {
-                                ItemMgr.addItem([new ItemData(dropResultProp.propId, dropResultProp.num)]);
+                                tempData.items.push(new ItemData(dropResultProp.propId, dropResultProp.num));
 
                             } else if (dropResultProp.type == ItemConfigType.Artifact) {
-                                DataMgr.s.artifact.addObj_artifact([new ArtifactData(dropResultProp.propId, dropResultProp.num)])
+                                tempData.artifacts.push(new ArtifactData(dropResultProp.propId, dropResultProp.num));
                             }
-                            UserInfoMgr.getExplorationReward(box.id);
+                            DataMgr.setTempSendData("player_treasure_open_res", tempData);
+                            NetworkMgr.websocketMsg.player_treasure_open({ boxId: box.id });
+
                             UIPanelManger.inst.popPanel();
                             if (gettedCallback) {
                                 gettedCallback();

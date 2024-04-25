@@ -72,6 +72,7 @@ export class NFTInfoUI extends ViewController {
     }
 
     private _refreshUI() {
+        return;
         this._currentIndex = Math.max(0, Math.min(this._NFTDatas.length - 1, this._currentIndex));
         const data = this._NFTDatas[this._currentIndex];
         const currentSkillLimit: number = (ConfigConfig.getConfig(ConfigType.NFTRaritySkillLimitNum) as NFTRaritySkillLimitNumParam).limitNumMap.get(

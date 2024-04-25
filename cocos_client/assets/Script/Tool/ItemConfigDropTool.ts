@@ -47,7 +47,7 @@ export default class ItemConfigDropTool {
             }
         }
         if (items.length > 0) {
-            ItemMgr.addItem(items);
+            DataMgr.s.item.addObj_item(items);
             if (showDialog) {
                 setTimeout(async () => {
                     if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI) ||

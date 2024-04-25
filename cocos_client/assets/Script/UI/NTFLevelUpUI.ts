@@ -139,7 +139,7 @@ export class NTFLevelUpUI extends ViewController {
     }
     private onTapConfirmLevelUp() {
         if (this._data != null && this._currentCost > 0) {
-            ItemMgr.subItem(ResourceCorrespondingItem.NFTExp, this._currentCost);
+            DataMgr.s.item.subObj_item(ResourceCorrespondingItem.NFTExp, this._currentCost);
             DataMgr.s.nftPioneer.NFTLevelUp(this._data.uniqueId, this._levelUpNum);
         }
     }

@@ -69,6 +69,62 @@ message player_move_res {
     required uint32 res = 1;
 }
 
+message player_talk_select_res {
+    required uint32 res = 1;
+}
+
+message player_gather_res {
+    required uint32 res = 1;
+}
+
+message player_explore_res {
+    required uint32 res = 1;
+}
+
+message player_fight_res {
+    required uint32 res = 1;
+}
+
+message player_event_select_res {
+    required uint32 res = 1;
+}
+
+message player_item_use_res {
+    required uint32 res = 1;
+}
+
+message player_treasure_open_res {
+    required uint32 res = 1;
+}
+
+message player_artifact_equip_res {
+    required uint32 res = 1;
+}
+
+message player_artifact_remove_res {
+    required uint32 res = 1;
+}
+
+message player_building_levelup_res {
+    required uint32 res = 1;
+}
+
+message player_get_auto_energy_res {
+    required uint32 res = 1;
+}
+
+message player_generate_energy_res {
+    required uint32 res = 1;
+}
+
+message player_generate_troop_res {
+    required uint32 res = 1;
+}
+
+message player_building_delegate_nft_res {
+    required uint32 res = 1;
+}
+
 message get_battle_report_res {
     required uint32 res = 1;
     repeated share.battle_report_data data = 2;

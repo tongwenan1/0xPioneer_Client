@@ -13,6 +13,7 @@ import UIPanelManger from '../../Basic/UIPanelMgr';
 import { DataMgr } from '../../Data/DataMgr';
 import { UIName } from '../../Const/ConstUIDefine';
 import { DelegateUI } from '../DelegateUI';
+import { NetworkMgr } from '../../Net/NetworkMgr';
 const { ccclass } = _decorator;
 
 @ccclass('BuildingUpgradeUI')
@@ -227,6 +228,9 @@ export class BuildingUpgradeUI extends ViewController {
         }
         const costData = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_cost);
         let time = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_time);
+        if (time == null) {
+            time = 5;
+        }
         if (costData != null && time != null) {
             let canUpgrade: boolean = true;
             for (const resource of costData) {
@@ -247,17 +251,15 @@ export class BuildingUpgradeUI extends ViewController {
                 // UIHUDController.showCenterTip("Insufficient resources for building upgrades");
                 return;
             }
-            // cost resource
-            for (const cost of costData) {
-                if (cost.length == 2) {
-                    ItemMgr.subItem(cost[0].toString(), cost[1]);
-                }
-            }
-            if (time == null) {
-                time = 5;
-            }
+            // prepare time
             time = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.BUILDING_LVUP_TIME, time);
-            DataMgr.s.userInfo.beginUpgrade(buildingType, time);
+            // set tempSendData
+            DataMgr.setTempSendData("player_building_levelup_res", {
+                innerBuildingType: buildingType,
+                time: time,
+                subItems: costData
+            });
+            NetworkMgr.websocketMsg.player_building_levelup({ innerBuildingId: buildingType });
 
             this._closeBuildingUpgradeUI();
             await this.playExitAnimation();

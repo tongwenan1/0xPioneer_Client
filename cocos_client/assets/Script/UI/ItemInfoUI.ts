@@ -6,6 +6,7 @@ import ItemConfig from '../Config/ItemConfig';
 import ItemData, { ItemType } from '../Const/Item';
 import UIPanelManger from '../Basic/UIPanelMgr';
 import { DataMgr } from '../Data/DataMgr';
+import { NetworkMgr } from '../Net/NetworkMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemInfoUI')
@@ -94,7 +95,12 @@ export class ItemInfoUI extends ViewController {
             
         } else {
             if (this._canGetItem != null) {
-                ItemMgr.subItem(this._canGetItem.itemConfigId, 1);
+                DataMgr.setTempSendData("player_item_use_res", {
+                    itemId: this._canGetItem.itemConfigId,
+                    num: 1
+                });
+                NetworkMgr.websocketMsg.player_item_use({ itemId: this._canGetItem.itemConfigId, num: 1 });
+
                 DataMgr.s.count.addObj_useItem({
                     itemId: this._canGetItem.itemConfigId,
                     num: 1

@@ -111,7 +111,7 @@ export class NTFRankUpUI extends ViewController {
     private onTapConfirmRankUp() {
         if (this._data != null && this._currentCost.length > 0) {
             for (const cost of this._currentCost) {
-                ItemMgr.subItem(cost.itemConfigId, cost.count);
+                DataMgr.s.item.subObj_item(cost.itemConfigId, cost.count);
             }
             DataMgr.s.nftPioneer.NFTRankUp(this._data.uniqueId, this._rankUpNum);
         }
