@@ -129,6 +129,9 @@ export class WebsocketMsg {
     public player_treasure_open(d: c2s_user.Iplayer_treasure_open) {
         this.send_packet("player_treasure_open", d);
     }
+    public player_point_treasure_open(d: c2s_user.Iplayer_point_treasure_open) {
+        this.send_packet("player_point_treasure_open", d);
+    }
     public player_artifact_equip(d: c2s_user.Iplayer_artifact_equip) {
         this.send_packet("player_artifact_equip", d);
     }
@@ -250,6 +253,9 @@ export namespace c2s_user {
     export interface Iplayer_treasure_open {
         boxId: string;
     }
+    export interface Iplayer_point_treasure_open {
+        boxId: string;
+    }
     export interface Iplayer_artifact_equip {
         artifactId: string;
     }
@@ -364,6 +370,12 @@ export namespace s2c_user {
         num: number;
     }
     export interface Iplayer_treasure_open_res {
+        boxId: string;
+        items: ItemData[];
+        artifacts: ArtifactData[];
+        subItems?: ItemData[];
+    }
+    export interface Iplayer_point_treasure_open_res {
         boxId: string;
         items: ItemData[];
         artifacts: ArtifactData[];

@@ -12,7 +12,7 @@ import ArtifactEffectConfig from '../Config/ArtifactEffectConfig';
 import DropConfig from '../Config/DropConfig';
 import { DropConfigData } from '../Const/Drop';
 import ItemData, { ItemConfigType } from '../Const/Item';
-import UIPanelManger from '../Basic/UIPanelMgr';
+import UIPanelManger, { UIPanelLayerType } from '../Basic/UIPanelMgr';
 import { DataMgr } from '../Data/DataMgr';
 import { s2c_user } from '../Net/msg/WebsocketMsg';
 import { NetworkMgr } from '../Net/NetworkMgr';
@@ -21,7 +21,7 @@ const { ccclass, property } = _decorator;
 @ccclass('ItemSelectFromThreeUI')
 export class ItemSelectFromThreeUI extends ViewController {
 
-    public async showItem(boxId: string, dropId: string, selectedCallback: () => void) {
+    public async showItem(boxId: string, dropId: string, selectedCallback: (gettedData: { boxId: string, items: ItemData[], artifacts: ArtifactData[], subItems?: ItemData[] }) => void) {
         this._boxId = boxId;
         this._selectedCallback = selectedCallback;
         const drop = DropConfig.getById(dropId);
@@ -114,7 +114,7 @@ export class ItemSelectFromThreeUI extends ViewController {
 
     private _boxId: string = null;
     private _items: ArtifactData[];
-    private _selectedCallback: () => void;
+    private _selectedCallback: (gettedData: { boxId: string, items: ItemData[], artifacts: ArtifactData[], subItems?: ItemData[] }) => void;
 
     private _itemView: Node = null;
     private _showItemViews: Node[] = null;
@@ -134,56 +134,49 @@ export class ItemSelectFromThreeUI extends ViewController {
         return this.node.getChildByPath("__ViewContent");
     }
 
-    private _sendRequest(artifacts: ArtifactData[], subNum: number) {
-        if (this._boxId == null) {
-            return;
-        }
-        const tempData: s2c_user.Iplayer_treasure_open_res = {
-            boxId: this._boxId,
-            items: [],
-            artifacts: artifacts,
-            subItems: subNum > 0 ? [new ItemData(ResourceCorrespondingItem.Energy, subNum)] : null
-        };
-        DataMgr.setTempSendData("player_treasure_open_res", tempData);
-        NetworkMgr.websocketMsg.player_treasure_open({ boxId: this._boxId });
-    }
     //---------------------------------------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node, UIPanelLayerType.UI);
     }
 
     private async onTapGet(event: Event, customEventData: string) {
         const index: number = parseInt(customEventData);
         const item = this._items[index];
-        this._sendRequest([item], -1);
-        
+
         const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
         if (result.success) {
             result.node.getComponent(ArtifactInfoUI).showItem([item]);
         }
         if (this._selectedCallback != null) {
-            this._selectedCallback();
+            this._selectedCallback({
+                boxId: this._boxId,
+                items: [],
+                artifacts: [item]
+            });
         }
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node, UIPanelLayerType.UI);
     }
 
     private async onTapGetAll() {
         const energyNum: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
         const needNum: number = 200;
         if (energyNum >= needNum) {
-            this._sendRequest(this._items, needNum);
-
             const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
             if (result.success) {
                 result.node.getComponent(ArtifactInfoUI).showItem(this._items);
             }
             if (this._selectedCallback != null) {
-                this._selectedCallback();
+                this._selectedCallback({
+                    boxId: this._boxId,
+                    items: [],
+                    artifacts: this._items,
+                    subItems: [new ItemData(ResourceCorrespondingItem.Energy, needNum)]
+                });
             }
             await this.playExitAnimation();
-            UIPanelManger.inst.popPanel();
+            UIPanelManger.inst.popPanel(this.node, UIPanelLayerType.UI);
         } else {
             // useLanMgr
             // UIHUDController.showCenterTip(LanMgr.getLanById("201004"));

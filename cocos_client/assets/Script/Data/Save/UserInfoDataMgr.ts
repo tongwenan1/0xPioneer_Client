@@ -65,6 +65,10 @@ export default class UserInfoDataMgr {
         this._data.treasureDidGetRewards.push(boxId);
         this.saveObj();
     }
+    public getPointExplorationReward(boxId: string) {
+        this._data.pointTreasureDidGetRewards.push(boxId);
+        this.saveObj();
+    }
 
     public beginGenerateTroop(leftTime: number, troopNum: number) {
         this._data.generateTroopInfo = {
@@ -200,6 +204,7 @@ export default class UserInfoDataMgr {
                 exp: 0,
                 treasureProgress: 0,
                 treasureDidGetRewards: [],
+                pointTreasureDidGetRewards: [],
                 cityRadialRange: 7,
                 didFinishRookie: false,
                 generateTroopInfo: null,
@@ -277,7 +282,7 @@ export default class UserInfoDataMgr {
                 energyStationBuilded = this._data.innerBuildings[InnerBuildingType.EnergyStation].buildLevel > 0;
             }
             if (energyStationBuilded) {
-                const energyBuildingData = this._data.innerBuildings[InnerBuildingType.EnergyStation]
+                const energyBuildingData = this._data.innerBuildings[InnerBuildingType.EnergyStation];
                 const generateConfig = InnerBuildingLvlUpConfig.getEnergyLevelData(energyBuildingData.buildLevel);
                 const perGenerateTime: number = 5;
                 if (this._data.generateEnergyInfo == null) {

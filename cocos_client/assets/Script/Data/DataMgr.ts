@@ -495,6 +495,24 @@ export class DataMgr {
             DataMgr.s.userInfo.getExplorationReward(data.boxId);
         }
     };
+    public static player_point_treasure_open_res = (e: any) => {
+        const key: string = "player_point_treasure_open_res";
+        if (DataMgr.socketSendData.has(key)) {
+            const data: s2c_user.Iplayer_point_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_point_treasure_open_res;
+            if (data.items != null && data.items.length > 0) {
+                DataMgr.s.item.addObj_item(data.items);
+            }
+            if (data.artifacts != null && data.artifacts.length > 0) {
+                DataMgr.s.artifact.addObj_artifact(data.artifacts);
+            }
+            if (data.subItems != null) {
+                for (const temple of data.subItems) {
+                    DataMgr.s.item.subObj_item(temple.itemConfigId, temple.count);
+                }
+            }
+            DataMgr.s.userInfo.getPointExplorationReward(data.boxId);
+        }
+    };
     public static player_artifact_equip_res = (e: any) => {
         const key: string = "player_artifact_equip_res";
         if (DataMgr.socketSendData.has(key)) {

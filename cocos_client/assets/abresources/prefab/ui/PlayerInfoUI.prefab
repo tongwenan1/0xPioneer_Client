@@ -12774,6 +12774,8 @@
       "__id__": 0
     },
     "fileId": "25Cx1NaRdEKIFDvFcnPUSF",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -23559,8 +23561,8 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 1.2,
-      "y": 1.2,
+      "x": 1,
+      "y": 1,
       "z": 1
     },
     "_mobility": 0,

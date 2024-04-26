@@ -22,6 +22,7 @@ export interface UserInfoObject {
     exp: number;
     treasureProgress: number;
     treasureDidGetRewards: string[];
+    pointTreasureDidGetRewards: string[];
     
     cityRadialRange: number;
 

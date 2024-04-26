@@ -29,6 +29,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_generate_energy_res, "player_generate_energy_res", "s2c_user.player_generate_energy_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_generate_troop_res, "player_generate_troop_res", "s2c_user.player_generate_troop_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_building_delegate_nft_res, "player_building_delegate_nft_res", "s2c_user.player_building_delegate_nft_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_point_treasure_open_res, "player_point_treasure_open_res", "s2c_user.player_point_treasure_open_res");
     pcodec.register_protobuf_msg(protobuf_s2c.get_battle_report_res, "get_battle_report_res", "s2c_user.get_battle_report_res");
 
     // register client msg
@@ -57,5 +58,6 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.player_generate_energy, "player_generate_energy", "c2s_user.player_generate_energy");
     pcodec.register_protobuf_msg(protobuf_c2s.player_generate_troop, "player_generate_troop", "c2s_user.player_generate_troop");
     pcodec.register_protobuf_msg(protobuf_c2s.player_building_delegate_nft, "player_building_delegate_nft", "c2s_user.player_building_delegate_nft");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_point_treasure_open, "player_point_treasure_open", "c2s_user.player_point_treasure_open");
     pcodec.register_protobuf_msg(protobuf_c2s.get_battle_report, "get_battle_report", "c2s_user.get_battle_report");
 }

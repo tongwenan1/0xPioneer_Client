@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, instantiate, director, BoxCharacterController, Label, Layout, UITransform, ProgressBar, Button, tween, v3, } from "cc";
+import { _decorator, Component, Node, instantiate, director, BoxCharacterController, Label, Layout, UITransform, ProgressBar, Button, tween, v3 } from "cc";
 import { LanMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TreasureGettedUI } from "./TreasureGettedUI";
@@ -7,6 +7,9 @@ import BoxInfoConfig from "../Config/BoxInfoConfig";
 import { BoxInfoConfigData } from "../Const/BoxInfo";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
+import ArtifactData from "../Model/ArtifactData";
+import { NetworkMgr } from "../Net/NetworkMgr";
+import ItemData from "../Const/Item";
 const { ccclass, property } = _decorator;
 
 @ccclass("ClaimRewardUI")
@@ -46,7 +49,8 @@ export class ClaimRewardUI extends Component {
                                                 tween().by(0.05, { position: v3(0, -10, 0) }),
                                                 tween().delay(1)
                                             )
-                                        ).start();
+                                        )
+                                        .start();
                                 }
                             } else {
                                 if (treasureView["actiontween"] != null) {
@@ -71,6 +75,7 @@ export class ClaimRewardUI extends Component {
     private _boxViews: Node[] = [];
 
     protected onLoad(): void {
+        NetworkMgr.websocket.on("player_treasure_open_res", this._on_player_treasure_open_res.bind(this));
     }
     start() {
         this._boxDatas = BoxInfoConfig.getAllBox();
@@ -98,8 +103,11 @@ export class ClaimRewardUI extends Component {
         this.refreshUI();
     }
 
-    update(deltaTime: number) { }
+    protected onDestroy(): void {
+        NetworkMgr.websocket.off("player_treasure_open_res", this._on_player_treasure_open_res.bind(this));
+    }
 
+    update(deltaTime: number) {}
 
     //------------------------------------------ action
     private async onTapBoxItem(event: Event, customEventData: string) {
@@ -113,19 +121,28 @@ export class ClaimRewardUI extends Component {
             getStatus = 1;
         }
         if (getStatus == 2) {
-
         } else if (getStatus == 1) {
             const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);
             if (result.success) {
-                result.node.getComponent(TreasureGettedUI).dialogShow(data, () => {
-                    this.refreshUI();
+                result.node.getComponent(TreasureGettedUI).dialogShow(data, (gettedData: { boxId: string; items: ItemData[]; artifacts: ArtifactData[]; subItems: ItemData[] }) => {
+                    DataMgr.setTempSendData("player_treasure_open_res", {
+                        boxId: gettedData.boxId,
+                        items: gettedData.items,
+                        artifacts: gettedData.artifacts,
+                        subItems: gettedData.subItems
+                    });
+                    NetworkMgr.websocketMsg.player_treasure_open({ boxId: gettedData.boxId });
                 });
             }
         } else if (getStatus == 0) {
-
             // useLanMgr
             UIHUDController.showCenterTip(LanMgr.getLanById("200002"));
             // UIHUDController.showCenterTip("Please explore more to get it");
         }
+    }
+
+    //-------------------------------------- websocket notification
+    private _on_player_treasure_open_res(e: any) {
+        this.refreshUI();
     }
 }

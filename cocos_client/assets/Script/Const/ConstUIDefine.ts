@@ -30,6 +30,8 @@ export enum UIName {
     NFTSkillLearnUI = "prefab/ui/NFTSkillLearnUI",
 
     DelegateUI = "prefab/ui/DelegateUI",
+
+    PointTreasureUI = "prefab/ui/PointTreasureUI",
 }
 
 export enum GameName {

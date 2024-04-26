@@ -97,6 +97,10 @@ message player_treasure_open_res {
     required uint32 res = 1;
 }
 
+message player_point_treasure_open_res {
+    required uint32 res = 1;
+}
+
 message player_artifact_equip_res {
     required uint32 res = 1;
 }

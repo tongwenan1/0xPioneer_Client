@@ -1,10 +1,10 @@
 import { s2c_user } from "../Net/msg/WebsocketMsg";
 import { ItemConfigType } from "./Item";
 
-export const GAME_ENV_IS_DEBUG = true;
+export const GAME_ENV_IS_DEBUG = false;
 export const PioneerGameTest = false;
 
-export type DataMgrResData = s2c_user.Iplayer_building_delegate_nft_res | s2c_user.Iplayer_generate_troop_res | s2c_user.Iplayer_generate_energy_res | s2c_user.Iplayer_get_auto_energy_res | s2c_user.Iplayer_building_levelup_res | s2c_user.Iplayer_artifact_equip_res | s2c_user.Iplayer_artifact_remove_res | s2c_user.Iplayer_treasure_open_res | s2c_user.Iplayer_item_use_res | s2c_user.player_event_select_res | s2c_user.Iplayer_fight_res | s2c_user.Iplayer_explore_res | s2c_user.Iplayer_gather_res | s2c_user.Iplayer_talk_select_res;
+export type DataMgrResData = s2c_user.Iplayer_building_delegate_nft_res | s2c_user.Iplayer_generate_troop_res | s2c_user.Iplayer_generate_energy_res | s2c_user.Iplayer_get_auto_energy_res | s2c_user.Iplayer_building_levelup_res | s2c_user.Iplayer_artifact_equip_res | s2c_user.Iplayer_artifact_remove_res | s2c_user.Iplayer_treasure_open_res | s2c_user.Iplayer_point_treasure_open_res | s2c_user.Iplayer_item_use_res | s2c_user.player_event_select_res | s2c_user.Iplayer_fight_res | s2c_user.Iplayer_explore_res | s2c_user.Iplayer_gather_res | s2c_user.Iplayer_talk_select_res;
 
 export enum AttrType {
     HP = 0,

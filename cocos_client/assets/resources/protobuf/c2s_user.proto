@@ -91,6 +91,10 @@ message player_treasure_open {
     required string boxId = 1;
 }
 
+message player_point_treasure_open {
+    required string boxId = 1;
+}
+
 message player_artifact_equip {
     required string artifactId = 1;
 }
@@ -104,7 +108,7 @@ message player_building_levelup {
 }
 
 message player_get_auto_energy {
-    
+
 }
 
 message player_generate_energy {

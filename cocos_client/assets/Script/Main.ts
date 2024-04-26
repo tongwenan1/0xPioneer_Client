@@ -176,7 +176,7 @@ export class Main extends ViewController {
 
         // pioneernft func
         NetworkMgr.websocket.on("get_pioneers_res", DataMgr.get_pioneers_res);
-        
+
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
         NetworkMgr.websocket.on("player_talk_select_res", DataMgr.player_talk_select_res);
         NetworkMgr.websocket.on("player_gather_res", DataMgr.player_gather_res);
@@ -185,6 +185,7 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_event_select_res", DataMgr.player_event_select_res);
         NetworkMgr.websocket.on("player_item_use_res", DataMgr.player_item_use_res);
         NetworkMgr.websocket.on("player_treasure_open_res", DataMgr.player_treasure_open_res);
+        NetworkMgr.websocket.on("player_point_treasure_open_res", DataMgr.player_point_treasure_open_res);
         NetworkMgr.websocket.on("player_artifact_equip_res", DataMgr.player_artifact_equip_res);
         NetworkMgr.websocket.on("player_artifact_remove_res", DataMgr.player_artifact_remove_res);
         NetworkMgr.websocket.on("player_building_levelup_res", DataMgr.player_building_levelup_res);
