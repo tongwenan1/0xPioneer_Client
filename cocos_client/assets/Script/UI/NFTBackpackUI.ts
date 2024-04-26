@@ -7,6 +7,7 @@ import { NTFBackpackItem } from "./View/NTFBackpackItem";
 import { NFTInfoUI } from "./NFTInfoUI";
 import { DataMgr } from "../Data/DataMgr";
 import { LanMgr } from "../Utils/Global";
+import { BackpackArrangeType } from "../Const/ConstDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("NFTBackpackUI")
@@ -16,6 +17,7 @@ export class NFTBackpackUI extends ViewController {
 
     private _selectSortMenuShow: boolean = false;
     private _NFTDatas: NFTPioneerObject[] = [];
+    private _currentArrangeType: BackpackArrangeType = BackpackArrangeType.Recently;
 
     private _itemContent: Node = null;
     private _allItemViews: Node[] = null;
@@ -91,15 +93,13 @@ export class NFTBackpackUI extends ViewController {
                 itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
             }
         }
-
-        
     }
 
     private _refreshMenu() {
         this._sortMenu.active = this._selectSortMenuShow;
         this._menuArrow.angle = this._selectSortMenuShow ? 180 : 0;
-        // this._sortMenu.getChildByPath("Content/Recently/ImgScreenSelect").active = this._currentArrangeType == ItemArrangeType.Recently;
-        // this._sortMenu.getChildByPath("Content/Rarity/ImgScreenSelect").active = this._currentArrangeType == ItemArrangeType.Rarity;
+        this._sortMenu.getChildByPath("Content/Recently/ImgScreenSelect").active = this._currentArrangeType == BackpackArrangeType.Recently;
+        this._sortMenu.getChildByPath("Content/Rarity/ImgScreenSelect").active = this._currentArrangeType == BackpackArrangeType.Rarity;
     }
     //------------------------------------------------------------ action
     private async onTapClose() {
@@ -115,18 +115,31 @@ export class NFTBackpackUI extends ViewController {
             }
         }
     }
-    private onTapArrange() {}
+    private onTapArrange() {
+        DataMgr.s.nftPioneer.NFTSort(this._currentArrangeType);
+        this._refreshBackpackUI();
+    }
 
     private onTapSortMenuAction() {
         this._selectSortMenuShow = !this._selectSortMenuShow;
         this._refreshMenu();
     }
     private onTapSelectSortCondition(event: Event, customEventData: string) {
-        // if (customEventData == this._currentArrangeType) {
-        //     return;
-        // }
-        // this._currentArrangeType = customEventData;
-        // this._selectSortMenuShow = false;
-        // this._refreshMenu();
+        if (customEventData == this._currentArrangeType) {
+            return;
+        }
+        this._currentArrangeType = customEventData as BackpackArrangeType;
+
+        switch (this._currentArrangeType) {
+            case BackpackArrangeType.Rarity:
+                this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string;
+                break;
+            case BackpackArrangeType.Recently:
+                this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Recently").getComponent(Label).string;
+                break;
+        }
+
+        this._selectSortMenuShow = false;
+        this._refreshMenu();
     }
 }

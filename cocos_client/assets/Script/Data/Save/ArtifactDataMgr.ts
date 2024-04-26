@@ -1,10 +1,9 @@
 import ArtifactData from "../../Model/ArtifactData";
-import { ArtifactArrangeType } from "../../Const/Artifact";
 import ArtifactConfig from "../../Config/ArtifactConfig";
 import ArtifactEffectConfig from "../../Config/ArtifactEffectConfig";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
-import { GameExtraEffectType } from "../../Const/ConstDefine";
+import { BackpackArrangeType, GameExtraEffectType } from "../../Const/ConstDefine";
 import CommonTools from "../../Tool/CommonTools";
 
 export class ArtifactDataMgr {
@@ -50,12 +49,12 @@ export class ArtifactDataMgr {
         }
         return count;
     }
-    public getObj_artifact_sort(sortType: ArtifactArrangeType) {
-        if (sortType == ArtifactArrangeType.Recently) {
+    public getObj_artifact_sort(sortType: BackpackArrangeType) {
+        if (sortType == BackpackArrangeType.Recently) {
             this._data.sort((a, b) => {
                 return b.addTimeStamp - a.addTimeStamp;
             });
-        } else if (sortType == ArtifactArrangeType.Rarity) {
+        } else if (sortType == BackpackArrangeType.Rarity) {
             //bigger in front
             this._data.sort((a, b) => {
                 return ArtifactConfig.getById(b.artifactConfigId).rank - ArtifactConfig.getById(a.artifactConfigId).rank;
@@ -136,7 +135,7 @@ export class ArtifactDataMgr {
             this.saveObj();
             NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
         }
-        this.getObj_artifact_sort(ArtifactArrangeType.Rarity);
+        this.getObj_artifact_sort(BackpackArrangeType.Rarity);
         return changed;
     }
     public changeObj_artifact_effectIndex(uniqueId: string, effectIndex: number) {

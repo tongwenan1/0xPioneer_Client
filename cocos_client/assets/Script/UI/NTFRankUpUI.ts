@@ -66,7 +66,6 @@ export class NTFRankUpUI extends ViewController {
         const levelView = contentView.getChildByPath("UpgradeLevel");
         levelView.getChildByPath("Current").getComponent(Label).string = "Rank " + this._data.rank;
         levelView.getChildByPath("Next").getComponent(Label).string = "Rank " + (this._data.rank + this._rankUpNum);
-        levelView.getComponent(Layout).updateLayout();
 
         // max level limit
         const growMaxLevelLimit: number =
@@ -74,7 +73,7 @@ export class NTFRankUpUI extends ViewController {
         const maxLevelLimitView = contentView.getChildByPath("Property/MaxLevel");
         // userlanMgr
         // maxLevelLimitView.getChildByPath("Current").getComponent(Label).string = LanMgr.getLanById("201003"); + " +" + growMaxLevelLimit;
-        maxLevelLimitView.getChildByPath("Current").getComponent(Label).string = "Max Level +" + growMaxLevelLimit;
+        maxLevelLimitView.getChildByPath("Current").getComponent(Label).string = "Max Level +    " + growMaxLevelLimit;
         maxLevelLimitView.getChildByPath("Next").getComponent(Label).string = (this._data.levelLimit + growMaxLevelLimit).toString();
 
         // cost item

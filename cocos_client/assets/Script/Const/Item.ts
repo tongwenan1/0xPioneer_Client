@@ -1,9 +1,3 @@
-export enum ItemArrangeType {
-    Recently = "Recently",
-    Rarity = "Rarity",
-    Type = "Type",
-}
-
 export enum ItemType {
     Resource = 0,
     TaskItem = 1,

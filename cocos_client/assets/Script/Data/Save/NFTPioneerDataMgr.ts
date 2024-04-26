@@ -6,7 +6,7 @@ import NFTSkillConfig from "../../Config/NFTSkillConfig";
 import NFTSkillEffectConfig from "../../Config/NFTSkillEffectConfig";
 import { InnerBuildingType } from "../../Const/BuildingDefine";
 import { ConfigType, NFTLevelInitLimitNumParam, NFTLevelLimitPerRankAddNumParam, NFTRankLimitNumParam, NFTRaritySkillInitNumParam } from "../../Const/Config";
-import { GameExtraEffectType } from "../../Const/ConstDefine";
+import { BackpackArrangeType, GameExtraEffectType } from "../../Const/ConstDefine";
 import { NFTPioneerConfigData, NFTPioneerObject } from "../../Const/NFTPioneerDefine";
 import { NotificationName } from "../../Const/Notification";
 import CommonTools from "../../Tool/CommonTools";
@@ -142,6 +142,20 @@ export default class NFTPioneerDataMgr {
         this.saveObj();
         NotificationMgr.triggerEvent(NotificationName.NFTDIDCHANGEWORKBUILDING);
     }
+
+    public NFTSort(sortType: BackpackArrangeType) {
+        // sort
+        if (sortType == BackpackArrangeType.Recently) {
+            this._data.sort((a, b) => {
+                return b.addTimeStamp - a.addTimeStamp;
+            });
+        } else if (sortType == BackpackArrangeType.Rarity) {
+            //bigger in front
+            this._data.sort((a, b) => {
+                return b.rank - a.rank;
+            });
+        }
+    }
     //--------------------------------
     private _initData() {
         const localDataString = localStorage.getItem(this._key);
@@ -216,6 +230,7 @@ export default class NFTPioneerDataMgr {
             rankLimit: (ConfigConfig.getConfig(ConfigType.NFTRankLimitNum) as NFTRankLimitNumParam).limit,
             skills: skills,
             workingBuildingId: null,
+            addTimeStamp: new Date().getTime(),
         };
     }
 }

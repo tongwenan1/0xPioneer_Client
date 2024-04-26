@@ -5,10 +5,11 @@ import ViewController from '../BasicView/ViewController';
 import { UIName } from '../Const/ConstUIDefine';
 import { ItemInfoUI } from './ItemInfoUI';
 import NotificationMgr from '../Basic/NotificationMgr';
-import ItemData, { ItemArrangeType } from '../Const/Item';
+import ItemData from '../Const/Item';
 import { NotificationName } from '../Const/Notification';
 import UIPanelManger from '../Basic/UIPanelMgr';
 import { DataMgr } from '../Data/DataMgr';
+import { BackpackArrangeType } from '../Const/ConstDefine';
 const { ccclass, property } = _decorator;
 
 
@@ -20,7 +21,7 @@ export class BackpackUI extends ViewController {
     private backpackItemPrb: Prefab = null;
 
     private _selectSortMenuShow: boolean = false;
-    private _currentArrangeType: ItemArrangeType = null;
+    private _currentArrangeType: BackpackArrangeType = null;
     private _itemDatas: ItemData[] = null;
 
     private _itemContent: Node = null;
@@ -36,7 +37,7 @@ export class BackpackUI extends ViewController {
 
         this._menuArrow = this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Arrow");
 
-        this._currentArrangeType = ItemArrangeType.Recently;
+        this._currentArrangeType = BackpackArrangeType.Recently;
 
         this._itemContent = this.node.getChildByPath("__ViewContent/Bg/ScrollView/View/Content");
 
@@ -112,9 +113,9 @@ export class BackpackUI extends ViewController {
     private _refreshMenu() {
         this._sortMenu.active = this._selectSortMenuShow;
         this._menuArrow.angle = this._selectSortMenuShow ? 180 : 0;
-        this._sortMenu.getChildByPath("Content/Recently/ImgScreenSelect").active = this._currentArrangeType == ItemArrangeType.Recently;
-        this._sortMenu.getChildByPath("Content/Rarity/ImgScreenSelect").active = this._currentArrangeType == ItemArrangeType.Rarity;
-        this._sortMenu.getChildByPath("Content/Type/ImgScreenSelect").active = this._currentArrangeType == ItemArrangeType.Type;
+        this._sortMenu.getChildByPath("Content/Recently/ImgScreenSelect").active = this._currentArrangeType == BackpackArrangeType.Recently;
+        this._sortMenu.getChildByPath("Content/Rarity/ImgScreenSelect").active = this._currentArrangeType == BackpackArrangeType.Rarity;
+        this._sortMenu.getChildByPath("Content/Type/ImgScreenSelect").active = this._currentArrangeType == BackpackArrangeType.Type;
 
     }
     //------------------------------------------------------------ action
@@ -147,16 +148,16 @@ export class BackpackUI extends ViewController {
         if (customEventData == this._currentArrangeType) {
             return;
         }
-        this._currentArrangeType = customEventData as ItemArrangeType;
+        this._currentArrangeType = customEventData as BackpackArrangeType;
 
         switch (this._currentArrangeType) {
-            case ItemArrangeType.Rarity:
+            case BackpackArrangeType.Rarity:
                 this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Rarity").getComponent(Label).string;
                 break;
-            case ItemArrangeType.Recently:
+            case BackpackArrangeType.Recently:
                 this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Recently").getComponent(Label).string;
                 break;
-            case ItemArrangeType.Type:
+            case BackpackArrangeType.Type:
                 this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu.getChildByPath("Content/Type").getComponent(Label).string;
                 break;
         }

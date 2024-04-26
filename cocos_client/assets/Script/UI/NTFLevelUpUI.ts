@@ -59,7 +59,6 @@ export class NTFLevelUpUI extends ViewController {
         const levelView = contentView.getChildByPath("UpgradeLevel");
         levelView.getChildByPath("Current").getComponent(Label).string = "Lv " + this._data.level;
         levelView.getChildByPath("Next").getComponent(Label).string = "Lv " + (this._data.level + this._levelUpNum);
-        levelView.getComponent(Layout).updateLayout();
 
         // attack
         const growAttack = CommonTools.getOneDecimalNum(this._data.attackGrowValue * this._levelUpNum);
@@ -95,10 +94,10 @@ export class NTFLevelUpUI extends ViewController {
 
         // iq
         const growIq = CommonTools.getOneDecimalNum(this._data.iqGrowValue * this._levelUpNum);
-        const iqView = contentView.getChildByPath("Property/Iq");
+        const iqView = contentView.getChildByPath("Property/Int");
         // userlanMgr
         // iqView.getChildByPath("Current").getComponent(Label).string = LanMgr.getLanById("201003"); + " +" + growIq;
-        iqView.getChildByPath("Current").getComponent(Label).string = "IQ +" + growIq;
+        iqView.getChildByPath("Current").getComponent(Label).string = "Int +" + growIq;
         iqView.getChildByPath("Next").getComponent(Label).string = CommonTools.getOneDecimalNum(this._data.iq + growIq).toString();
 
         // resource

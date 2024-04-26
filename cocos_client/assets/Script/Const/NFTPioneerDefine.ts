@@ -55,4 +55,6 @@ export interface NFTPioneerObject {
     skills: NFTPioneerSkil[];
 
     workingBuildingId: InnerBuildingType;
+
+    addTimeStamp: number;
 }

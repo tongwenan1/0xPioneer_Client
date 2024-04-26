@@ -1,10 +1,5 @@
 import { AttrChangeType, AttrType, GameDoubleParamEffectType, GameExtraEffectType, GameSingleParamEffectType } from "./ConstDefine";
 
-export enum ArtifactArrangeType {
-    Recently = "Recently",
-    Rarity = "Rarity",
-}
-
 export class ArtifactConfigData {
     configId: string;
     name: string;

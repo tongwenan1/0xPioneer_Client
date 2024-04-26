@@ -40,7 +40,6 @@ export class NFTSkillLearnUI extends ViewController {
         // useLanMgr
         // this._bookItem.getChildByPath("LearnBtn/Label").getComponent(Label).string = LanMgr.getLanById("107549")
         this._bookItem.removeFromParent();
-
     }
     protected viewDidStart(): void {
         super.viewDidStart();
@@ -61,23 +60,28 @@ export class NFTSkillLearnUI extends ViewController {
         }
         this._allBookItems = [];
 
-        for (let i = 0; i < this._skillBooks.length; i++) {
-            const book = this._skillBooks[i];
-            const config = ItemConfig.getById(book.itemConfigId);
-            if (config == null) {
-                continue;
+        if (this._skillBooks.length == 0) {
+            this.node.getChildByPath("__ViewContent/Empty").active = true;
+        } else {
+            this.node.getChildByPath("__ViewContent/Empty").active = false;
+            for (let i = 0; i < this._skillBooks.length; i++) {
+                const book = this._skillBooks[i];
+                const config = ItemConfig.getById(book.itemConfigId);
+                if (config == null) {
+                    continue;
+                }
+                const itemView = instantiate(this._bookItem);
+                itemView.active = true;
+                itemView.parent = this._bookContent;
+                itemView.getChildByPath("BackpackItem").getComponent(Button).clickEvents[0].customEventData = i.toString();
+                itemView.getChildByPath("BackpackItem").getComponent(BackpackItem).refreshUI(book);
+                itemView.getChildByPath("Name").getComponent(Label).string = LanMgr.getLanById(config.itemName);
+                itemView.getChildByPath("Num").getComponent(Label).string = "x" + book.count;
+                itemView.getChildByPath("LearnBtn").getComponent(Button).clickEvents[0].customEventData = book.itemConfigId;
+                this._allBookItems.push(itemView);
             }
-            const itemView = instantiate(this._bookItem);
-            itemView.active = true;
-            itemView.parent = this._bookContent;
-            itemView.getChildByPath("BackpackItem").getComponent(Button).clickEvents[0].customEventData = i.toString();
-            itemView.getChildByPath("BackpackItem").getComponent(BackpackItem).refreshUI(book);
-            itemView.getChildByPath("Name").getComponent(Label).string = LanMgr.getLanById(config.itemName);
-            itemView.getChildByPath("Num").getComponent(Label).string = "x" + book.count;
-            itemView.getChildByPath("LearnBtn").getComponent(Button).clickEvents[0].customEventData = book.itemConfigId;
-            this._allBookItems.push(itemView);
+            this._bookContent.getComponent(Layout).updateLayout();
         }
-        this._bookContent.getComponent(Layout).updateLayout();
     }
     //---------------------------------------------------- action
     private async onTapClose() {

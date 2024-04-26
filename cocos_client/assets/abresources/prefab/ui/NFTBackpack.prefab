@@ -584,7 +584,7 @@
         "__id__": 21
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 27
@@ -903,7 +903,7 @@
       "__id__": 1
     },
     "component": "",
-    "_componentId": "1963fn1L7dMwrmxcN4sgH5K",
+    "_componentId": "8b6c792BsNFLp9aH8jeJbrX",
     "handler": "onTapArrange",
     "customEventData": ""
   },
@@ -933,7 +933,7 @@
         "__id__": 36
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 57
@@ -1442,7 +1442,7 @@
       "__id__": 1
     },
     "component": "",
-    "_componentId": "1963fn1L7dMwrmxcN4sgH5K",
+    "_componentId": "8b6c792BsNFLp9aH8jeJbrX",
     "handler": "onTapSortMenuAction",
     "customEventData": ""
   },
@@ -2958,7 +2958,7 @@
         "__id__": 135
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 189
@@ -3741,7 +3741,7 @@
       "__id__": 1
     },
     "component": "",
-    "_componentId": "1963fn1L7dMwrmxcN4sgH5K",
+    "_componentId": "8b6c792BsNFLp9aH8jeJbrX",
     "handler": "onTapSelectSortCondition",
     "customEventData": "Recently"
   },
@@ -4268,7 +4268,7 @@
       "__id__": 1
     },
     "component": "",
-    "_componentId": "1963fn1L7dMwrmxcN4sgH5K",
+    "_componentId": "8b6c792BsNFLp9aH8jeJbrX",
     "handler": "onTapSelectSortCondition",
     "customEventData": "Rarity"
   },

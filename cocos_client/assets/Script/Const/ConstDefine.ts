@@ -15,6 +15,12 @@ export enum AttrChangeType {
     MUL = 2,
 }
 
+export enum BackpackArrangeType {
+    Recently = "Recently",
+    Rarity = "Rarity",
+    Type = "Type"
+}
+
 export enum ResourceCorrespondingItem {
     Food = "8001",
     Wood = "8002",

@@ -1,10 +1,4 @@
-import {
-    _decorator,
-    Label,
-    Node,
-    Button,   
-    instantiate,
-} from "cc";
+import { _decorator, Label, Node, Button, instantiate } from "cc";
 import ViewController from "../BasicView/ViewController";
 import { NFTPioneerObject } from "../Const/NFTPioneerDefine";
 import { LanMgr } from "../Utils/Global";
@@ -15,7 +9,7 @@ import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import { NTFRankUpUI } from "./NTFRankUpUI";
 import ConfigConfig from "../Config/ConfigConfig";
-import { ConfigType, NFTRaritySkillLimitNumParam } from "../Const/Config";
+import { ConfigType, NFTRankLimitNumParam, NFTRaritySkillLimitNumParam } from "../Const/Config";
 import NFTSkillConfig from "../Config/NFTSkillConfig";
 import { NFTSkillDetailUI } from "./NFTSkillDetailUI";
 import { NFTSkillLearnUI } from "./NFTSkillLearnUI";
@@ -72,7 +66,6 @@ export class NFTInfoUI extends ViewController {
     }
 
     private _refreshUI() {
-        return;
         this._currentIndex = Math.max(0, Math.min(this._NFTDatas.length - 1, this._currentIndex));
         const data = this._NFTDatas[this._currentIndex];
         const currentSkillLimit: number = (ConfigConfig.getConfig(ConfigType.NFTRaritySkillLimitNum) as NFTRaritySkillLimitNumParam).limitNumMap.get(
@@ -81,7 +74,7 @@ export class NFTInfoUI extends ViewController {
 
         const content = this.node.getChildByPath("__ViewContent");
         // name
-        content.getChildByPath("Name").getComponent(Label).string = data.name;
+        content.getChildByPath("Name/Name").getComponent(Label).string = data.name;
         // base property
         // userlanMgr
         // content.getChildByPath("BaseProperty/Attack/Title").getComponent(Label).string = LanMgr.getLanById("201003");
@@ -100,13 +93,18 @@ export class NFTInfoUI extends ViewController {
         content.getChildByPath("BaseProperty/Speed/Value").getComponent(Label).string = data.speed.toString();
 
         // userlanMgr
-        // content.getChildByPath("BaseProperty/Iq/Title").getComponent(Label).string = LanMgr.getLanById("201003");
-        content.getChildByPath("BaseProperty/Iq/Value").getComponent(Label).string = data.iq.toString();
+        // content.getChildByPath("BaseProperty/Int/Title").getComponent(Label).string = LanMgr.getLanById("201003");
+        content.getChildByPath("BaseProperty/Int/Value").getComponent(Label).string = data.iq.toString();
 
         // level
         content.getChildByPath("Level/Label").getComponent(Label).string = "Lv." + data.level;
+        content.getChildByPath("Level/Btn").active = data.level < data.levelLimit;
+        content.getChildByPath("Level/Max").active = data.level >= data.levelLimit;
         // rank
-        content.getChildByPath("Class/Label").getComponent(Label).string = "Rank. " + data.rank;
+        content.getChildByPath("Rank/Label").getComponent(Label).string = "Rank. " + data.rank;
+        content.getChildByPath("Rank/Btn").active = data.rank < data.rankLimit;
+        content.getChildByPath("Rank/Max").active = data.rank >= data.rankLimit;
+
 
         // skill
         for (const item of this._skillAllItems) {
@@ -114,10 +112,17 @@ export class NFTInfoUI extends ViewController {
         }
         this._skillAllItems = [];
         for (let i = 0; i < data.skills.length; i++) {
+            const skillConfig = NFTSkillConfig.getById(data.skills[i].id);
+            if (skillConfig == null) {
+                continue;
+            }
             const item = instantiate(this._skillItem);
             item.active = true;
             item.parent = this._skillContent;
-            item.getChildByPath("item").getComponent(Label).string = LanMgr.getLanById(NFTSkillConfig.getById(data.skills[i].id).name);
+            item.getChildByPath("item").getComponent(Label).string = LanMgr.getLanById(skillConfig.name);
+            for (let j = 1; j <= 5; j++) {
+                item.getChildByPath("Level" + j).active = skillConfig.rank == j;
+            }
             item.getComponent(Button).clickEvents[0].customEventData = i.toString();
             this._skillAllItems.push(item);
         }
@@ -180,7 +185,7 @@ export class NFTInfoUI extends ViewController {
         if (!result.success) {
             return;
         }
-        result.node.getComponent(NFTSkillDetailUI).showItem(data, index);
+        result.node.getComponent(NFTSkillDetailUI).showItem(this._skillAllItems[index].worldPosition, data, index);
     }
     private async onTapAddSkill() {
         const data = this._NFTDatas[this._currentIndex];

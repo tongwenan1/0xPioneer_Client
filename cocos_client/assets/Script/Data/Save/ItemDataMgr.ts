@@ -1,8 +1,8 @@
 import ItemConfig from "../../Config/ItemConfig";
-import ItemData, { ItemArrangeType, ItemType } from "../../Const/Item";
+import ItemData, { ItemType } from "../../Const/Item";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
-import { GetPropData, ResourceCorrespondingItem } from "../../Const/ConstDefine";
+import { BackpackArrangeType, GetPropData, ResourceCorrespondingItem } from "../../Const/ConstDefine";
 
 export class ItemDataMgr {
     private _data: ItemData[];
@@ -39,7 +39,7 @@ export class ItemDataMgr {
         return count;
     }
 
-    public getObj_item_sort(sortType: ItemArrangeType) {
+    public getObj_item_sort(sortType: BackpackArrangeType) {
         const singleItems: Map<string, ItemData> = new Map();
         for (let i = 0; i < this._data.length; i++) {
             const item = this._data[i];
@@ -57,16 +57,16 @@ export class ItemDataMgr {
         this.saveObj();
 
         // sort
-        if (sortType == ItemArrangeType.Recently) {
+        if (sortType == BackpackArrangeType.Recently) {
             this._data.sort((a, b) => {
                 return b.addTimeStamp - a.addTimeStamp;
             });
-        } else if (sortType == ItemArrangeType.Rarity) {
+        } else if (sortType == BackpackArrangeType.Rarity) {
             //bigger in front
             this._data.sort((a, b) => {
                 return ItemConfig.getById(b.itemConfigId).grade - ItemConfig.getById(a.itemConfigId).grade;
             });
-        } else if (sortType == ItemArrangeType.Type) {
+        } else if (sortType == BackpackArrangeType.Type) {
             //smaller in front
             this._data.sort((a, b) => {
                 return ItemConfig.getById(a.itemConfigId).itemType - ItemConfig.getById(b.itemConfigId).itemType;
@@ -115,7 +115,7 @@ export class ItemDataMgr {
             // add timestamp
             item.addTimeStamp = new Date().getTime();
             this._data.push(item);
-            this.getObj_item_sort(ItemArrangeType.Recently);
+            this.getObj_item_sort(BackpackArrangeType.Recently);
         }
         if (changed) {
             this.saveObj();

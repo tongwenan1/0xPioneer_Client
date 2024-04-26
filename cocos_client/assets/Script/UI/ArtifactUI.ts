@@ -6,10 +6,10 @@ import ViewController from "../BasicView/ViewController";
 import { UIName } from "../Const/ConstUIDefine";
 import { ArtifactInfoUI } from "./ArtifactInfoUI";
 import NotificationMgr from "../Basic/NotificationMgr";
-import { ArtifactArrangeType } from "../Const/Artifact";
 import { NotificationName } from "../Const/Notification";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
+import { BackpackArrangeType } from "../Const/ConstDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("ArtifactUI")
@@ -18,7 +18,7 @@ export class ArtifactUI extends ViewController {
     private itemPrb: Prefab = null;
 
     private _selectSortMenuShow: boolean = false;
-    private _currentArrangeType: ArtifactArrangeType = null;
+    private _currentArrangeType: BackpackArrangeType = null;
     private _itemDatas: ArtifactData[] = null;
 
     private _itemContent: Node = null;
@@ -33,7 +33,7 @@ export class ArtifactUI extends ViewController {
 
         this._menuArrow = this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Arrow");
 
-        this._currentArrangeType = ArtifactArrangeType.Recently;
+        this._currentArrangeType = BackpackArrangeType.Recently;
 
         this._itemContent = this.node.getChildByPath("__ViewContent/Bg/ScrollView/View/Content");
 
@@ -108,8 +108,8 @@ export class ArtifactUI extends ViewController {
     private _refreshMenu() {
         this._sortMenu.active = this._selectSortMenuShow;
         this._menuArrow.angle = this._selectSortMenuShow ? 180 : 0;
-        this._sortMenu.getChildByPath("Content/Recently/ImgScreenSelect").active = this._currentArrangeType == ArtifactArrangeType.Recently;
-        this._sortMenu.getChildByPath("Content/Rarity/ImgScreenSelect").active = this._currentArrangeType == ArtifactArrangeType.Rarity;
+        this._sortMenu.getChildByPath("Content/Recently/ImgScreenSelect").active = this._currentArrangeType == BackpackArrangeType.Recently;
+        this._sortMenu.getChildByPath("Content/Rarity/ImgScreenSelect").active = this._currentArrangeType == BackpackArrangeType.Rarity;
     }
 
     //------------------------------------------------------------ action
@@ -142,15 +142,15 @@ export class ArtifactUI extends ViewController {
         if (customEventData == this._currentArrangeType) {
             return;
         }
-        this._currentArrangeType = customEventData as ArtifactArrangeType;
+        this._currentArrangeType = customEventData as BackpackArrangeType;
 
         switch (this._currentArrangeType) {
-            case ArtifactArrangeType.Rarity:
+            case BackpackArrangeType.Rarity:
                 this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu
                     .getChildByPath("Content/Rarity")
                     .getComponent(Label).string;
                 break;
-            case ArtifactArrangeType.Recently:
+            case BackpackArrangeType.Recently:
                 this.node.getChildByPath("__ViewContent/Bg/SortView/Menu/Sort").getComponent(Label).string = this._sortMenu
                     .getChildByPath("Content/Recently")
                     .getComponent(Label).string;
