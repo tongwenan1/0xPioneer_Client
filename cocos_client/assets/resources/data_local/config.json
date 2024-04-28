@@ -211,5 +211,26 @@
         6000
       ]
     ]
+  },
+  "420001": {
+    "id": "420001",
+    "**NOTES**": "wormhole random dist",
+    "para": [
+      20
+    ]
+  },
+  "420002": {
+    "id": "420002",
+    "**NOTES**": "wormhole random limit",
+    "para": [
+      5
+    ]
+  },
+  "420003": {
+    "id": "420003",
+    "**NOTES**": "wormhole point constant",
+    "para": [
+      0.08
+    ]
   }
 }
