@@ -203,6 +203,7 @@ export default class UserInfoDataMgr {
                 level: 1,
                 exp: 0,
                 treasureProgress: 0,
+                heatValue: 0,
                 treasureDidGetRewards: [],
                 pointTreasureDidGetRewards: [],
                 cityRadialRange: 7,

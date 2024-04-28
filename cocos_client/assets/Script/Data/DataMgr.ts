@@ -17,9 +17,6 @@ import CLog from "../Utils/CLog";
 import { RunData } from "./RunData";
 import { SaveData } from "./SaveData";
 import { MapBuildingMainCityObject } from "../Const/MapBuilding";
-
-import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
-import { UIHUDController } from "../UI/UIHUDController";
 import { GameMgr, LanMgr } from "../Utils/Global";
 
 export class DataMgr {
@@ -65,7 +62,15 @@ export class DataMgr {
         // TODO: update all pioneers data
     };
 
-    public static player_move_res = (e: any) => {};
+    public static player_move_res = (e: any) => {
+        if (DataMgr.socketSendData.has("player_move_res")) {
+            const data: s2c_user.Iplayer_move_res = DataMgr.socketSendData.get("player_move_res") as s2c_user.Iplayer_move_res;
+            if (data.costEnergyNum > 0) {
+                DataMgr.s.item.subObj_item(ResourceCorrespondingItem.Energy, data.costEnergyNum);
+            }
+            DataMgr.s.pioneer.beginMove(data.pioneerId, data.movePath);
+        }
+    };
 
     public static player_talk_select_res = (e: any) => {};
     public static player_gather_res = (e: any) => {
@@ -359,7 +364,7 @@ export class DataMgr {
                             DataMgr.s.userInfo.gainTreasureProgress(effectProgress);
                         }
                         if (selfKillPioneer.drop != null) {
-                            ItemConfigDropTool.getItemByConfig(selfKillPioneer.drop);
+                            NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_PROP_GET, { props: selfKillPioneer.drop });
                         }
                         // settle
                         DataMgr.s.settlement.addObj({
@@ -423,8 +428,7 @@ export class DataMgr {
 
                     if (killerId != null && selfDeadName != null) {
                         pioneerDataMgr.changeBeKilled(playerPioneerId, killerId);
-                        let tips = LanMgr.replaceLanById("106001", [LanMgr.getLanById(selfDeadName)]);
-                        UIHUDController.showCenterTip(tips);
+                        NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_CENTER_TIP, { tip: LanMgr.replaceLanById("106001", [LanMgr.getLanById(selfDeadName)]) });
                     }
                     if (fightOverCallback != null) {
                         fightOverCallback(isSelfWin);

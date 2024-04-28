@@ -682,7 +682,6 @@ export class OuterTiledMapActionController extends ViewController {
                                 UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
                                 return;
                             }
-                            DataMgr.s.item.subObj_item(ResourceCorrespondingItem.Energy, costEnergy);
                         }
                     }
                     if (useActionType == 6) {
@@ -693,7 +692,6 @@ export class OuterTiledMapActionController extends ViewController {
                         PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, purchaseMovingPioneerId);
                         PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, purchaseMovingBuildingId);
                     }
-                    DataMgr.s.pioneer.beginMove(currentActionPioneer.id, movePaths);
                     this._mapActionCursorView.hide();
                     outPioneerController.hideMovingPioneerAction();
 
@@ -701,6 +699,11 @@ export class OuterTiledMapActionController extends ViewController {
                     for (const path of movePaths) {
                         uploadPath.push({ x: path.x, y: path.y });
                     }
+                    DataMgr.setTempSendData("player_move_res", {
+                        pioneerId: currentActionPioneer.id,
+                        movePath: movePaths,
+                        costEnergyNum: costEnergy
+                    });
                     NetworkMgr.websocketMsg.player_move({
                         pioneerId: currentActionPioneer.id,
                         movePath: JSON.stringify(uploadPath),

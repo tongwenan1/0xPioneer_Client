@@ -10,6 +10,7 @@ import TalkConfig from "../Config/TalkConfig";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
+import { UIHUDController } from "./UIHUDController";
 
 const { ccclass, property } = _decorator;
 
@@ -38,7 +39,8 @@ export class UIMainRootController extends ViewController {
 
         NotificationMgr.addListener(NotificationName.CHANGE_CURSOR, this._onCursorChanged, this);
         NotificationMgr.addListener(NotificationName.DIALOG_SHOW, this._onDialogShow, this);
-        NotificationMgr.addListener(NotificationName.TASK_PROP_TO_GET, this._onTaskPropToGet, this);
+        NotificationMgr.addListener(NotificationName.GAME_SHOW_PROP_GET, this._onShowPropGet, this);
+        NotificationMgr.addListener(NotificationName.GAME_SHOW_CENTER_TIP, this._onShowCenterTip, this);
     }
 
     protected viewDidDestroy(): void {
@@ -46,7 +48,8 @@ export class UIMainRootController extends ViewController {
 
         NotificationMgr.removeListener(NotificationName.CHANGE_CURSOR, this._onCursorChanged, this);
         NotificationMgr.removeListener(NotificationName.DIALOG_SHOW, this._onDialogShow, this);
-        NotificationMgr.removeListener(NotificationName.TASK_PROP_TO_GET, this._onTaskPropToGet, this);
+        NotificationMgr.removeListener(NotificationName.GAME_SHOW_PROP_GET, this._onShowPropGet, this);
+        NotificationMgr.removeListener(NotificationName.GAME_SHOW_CENTER_TIP, this._onShowCenterTip, this);
     }
 
     //------------------------------------------ notification
@@ -66,7 +69,10 @@ export class UIMainRootController extends ViewController {
             result.node.getComponent(DialogueUI).dialogShow(talkData, null);
         }
     }
-    private _onTaskPropToGet(data: { prop: GetPropData }) {
-        ItemConfigDropTool.getItemByConfig([data.prop]);
+    private _onShowPropGet(data: { props: GetPropData[] }) {
+        ItemConfigDropTool.getItemByConfig(data.props);
+    }
+    private _onShowCenterTip(data: { tip: string }) {
+        UIHUDController.showCenterTip(data.tip);
     }
 }

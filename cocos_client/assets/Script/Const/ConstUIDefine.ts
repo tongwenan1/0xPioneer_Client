@@ -32,6 +32,7 @@ export enum UIName {
     DelegateUI = "prefab/ui/DelegateUI",
 
     PointTreasureUI = "prefab/ui/PointTreasureUI",
+    WorldTreasureUI = "prefab/ui/WorldTreasureUI",
 }
 
 export enum GameName {

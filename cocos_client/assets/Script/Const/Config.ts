@@ -17,6 +17,8 @@ export enum ConfigType {
     NFTRankLimitNum = "210005",
 
     WorldMapOtherExtraRadialRange = "310001",
+
+    WorldBoxThreshold = "410001",
 }
 
 export interface ConfigData {
@@ -64,6 +66,10 @@ export interface NFTLevelLimitPerRankAddNumParam extends ConfigData {
 export interface NFTRankLimitNumParam extends ConfigData {
     limit: number;
 }
+export interface WorldBoxThresholdParam extends ConfigData {
+    thresholds: number[];
+}
+
 
 export interface WorldMapOtherExtraRadialRangeParam extends ConfigData {
     extraRadialRange: number;

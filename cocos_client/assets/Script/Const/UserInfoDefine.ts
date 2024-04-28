@@ -21,6 +21,7 @@ export interface UserInfoObject {
     level: number;
     exp: number;
     treasureProgress: number;
+    heatValue: number;
     treasureDidGetRewards: string[];
     pointTreasureDidGetRewards: string[];
     

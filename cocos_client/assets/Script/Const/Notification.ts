@@ -70,7 +70,6 @@ export enum NotificationName {
     TASK_FAILED,
     TASK_STEP_FINISHED,
     TASK_FINISHED,
-    TASK_PROP_TO_GET,
     //---------------------- map member
     MAP_MEMBER_CHANGE_SHOW_HIDE,
     MAP_MEMBER_CHANGE_FACTION,
@@ -111,10 +110,9 @@ export enum NotificationName {
     MAP_PIONEER_EVENT_BUILDING,
     //---------------------- dialog
     DIALOG_SHOW,
-
     CHOOSE_GANGSTER_ROUTE,
-
-
+    GAME_SHOW_PROP_GET,
+    GAME_SHOW_CENTER_TIP,
 
     NFTDIDLEVELUP,
     NFTDIDRANKUP,

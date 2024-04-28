@@ -101,10 +101,7 @@ export class WebsocketMsg {
     // public change_pioneer(d: c2s_user.Ichange_pioneer) {
     //     this._websocket.emit("change_pioneer_res", d);
     // }
-    // public begin_pioneer_move(d: c2s_user.Ibegin_pioneer_move) {
-    //     this._websocket.emit("begin_pioneer_move_res", d);
-    // }
-
+    
     public player_move(d: c2s_user.Iplayer_move) {
         this.send_packet("player_move", d);
     }
@@ -212,11 +209,7 @@ export namespace c2s_user {
         actionType?: Ichange_pioneer_actionType;
         newTalk?: Ichange_pioneer_newTalk;
     }
-    export interface Ibegin_pioneer_move {
-        pioneerId: string;
-        targetPos: Vec2;
-    }
-
+    
     export interface Iplayer_move {
         pioneerId: string;
         movePath: string;
@@ -329,12 +322,12 @@ export namespace s2c_user {
         newTalk: Ichange_pioneer_newTalk;
     }
 
-    export interface Ibegin_pioneer_move_res {
-        res: number;
+   
+    export interface Iplayer_move_res {
         pioneerId: string;
-        targetPos: Vec2;
+        movePath: TilePos[];
+        costEnergyNum: number;
     }
-
     export interface Iplayer_talk_select_res {
         talkId: string;
         selectIndex: number;

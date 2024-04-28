@@ -22,6 +22,7 @@ import ProtobufConfig from "../Config/ProtobufConfig";
 import TalkConfig from "../Config/TalkConfig";
 import TaskConfig from "../Config/TaskConfig";
 import TaskStepConfigData from "../Config/TaskStepConfig";
+import WorldBoxConfig from "../Config/WorldBoxConfig";
 
 export default class ConfigMgr {
     public static async init(): Promise<boolean> {
@@ -47,6 +48,7 @@ export default class ConfigMgr {
         if (!(await TalkConfig.init())) return false;
         if (!(await TaskConfig.init())) return false;
         if (!(await TaskStepConfigData.init())) return false;
+        if (!(await WorldBoxConfig.init())) return false;
 
         // abi
         const chainId = ChainConfig.getCurrentChainId();

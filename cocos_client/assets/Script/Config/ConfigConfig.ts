@@ -106,6 +106,11 @@ export default class ConfigConfig {
                     limit: param[0],
                 };
 
+            } else if (key == ConfigType.WorldBoxThreshold) {
+                temple = {
+                    type: key,
+                    thresholds: param,
+                };
             }
             this._config.set(key as ConfigType, temple);
         }

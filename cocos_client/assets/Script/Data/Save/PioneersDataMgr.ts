@@ -500,7 +500,6 @@ export class PioneersDataMgr {
         this._currentActionPioneerId = "pioneer_0";
 
         // NetworkMgr.websocket.on("change_pioneer_res", this._onChangePioneer);
-        // NetworkMgr.websocket.on("begin_pioneer_move_res", this._onBeginPioneerMove);
         this._initInterval();
         this._addListeners();
     }
@@ -675,16 +674,6 @@ export class PioneersDataMgr {
             } else if (data.type == Ichange_pioneer_type.actionType) {
                 findPioneer.actionType = data.actionType.type;
             }
-            this.saveObj();
-        }
-    }
-
-    private _onBeginPioneerMove(e: any) {
-        const data: s2c_user.Ibegin_pioneer_move_res = e;
-        const findPioneer = this._pioneers.find((p) => p.id == data.pioneerId);
-        if (findPioneer != undefined) {
-            findPioneer.actionType = MapPioneerActionType.moving;
-            findPioneer.movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(findPioneer.stayPos, data.targetPos).path;
             this.saveObj();
         }
     }
