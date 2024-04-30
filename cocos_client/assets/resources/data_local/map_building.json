@@ -436,5 +436,28 @@
     "winprogress": null,
     "faction": 0,
     "defendPioneerIds": []
+  },
+  {
+    "id": "building_21",
+    "name": "110014",
+    "type": 6,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      20,
+      35
+    ],
+    "node": "Aquatic_Relics_Group",
+    "level": 1,
+    "progress": null,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": null,
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": []
   }
 ]
