@@ -1,10 +1,114 @@
+import NotificationMgr from "../Basic/NotificationMgr";
 import InnerBuildingConfig from "../Config/InnerBuildingConfig";
 import { InnerBuildingType } from "../Const/BuildingDefine";
 import { GameExtraEffectType } from "../Const/ConstDefine";
+import { NotificationName } from "../Const/Notification";
 import { MapPlayerPioneerObject } from "../Const/PioneerDefine";
 import { DataMgr } from "../Data/DataMgr";
 
 export default class GameMgr {
+    public fakeWormholeFight(playPioneerIds: string[]): boolean {
+        const enemies: {
+            hpmax: number;
+            hp: number;
+            attack: number;
+            defend: number;
+        }[] = [
+            {
+                hpmax: 50,
+                hp: 50,
+                attack: 20,
+                defend: 5,
+            },
+            {
+                hpmax: 50,
+                hp: 50,
+                attack: 20,
+                defend: 5,
+            },
+            {
+                hpmax: 50,
+                hp: 50,
+                attack: 20,
+                defend: 5,
+            },
+        ];
+        let attackerHp: number = 0;
+        let attackerHpmax: number = 0;
+        let attackerCenterPos = null;
+        const players: {
+            hpmax: number;
+            hp: number;
+            attack: number;
+            defend: number;
+        }[] = [];
+        for (const id of playPioneerIds) {
+            const info = DataMgr.s.pioneer.getById(id);
+            if (info == undefined) {
+                continue;
+            }
+            attackerHp = info.hp;
+            attackerHpmax = info.hpMax;
+            attackerCenterPos = info.stayPos;
+            players.push({
+                hpmax: info.hpMax,
+                hp: info.hp,
+                attack: info.attack,
+                defend: info.defend,
+            });
+        }
+        let isWin: boolean = false;
+        while (true) {
+            if (players.length > 0 && enemies.length > 0) {
+                const player = players[0];
+                const enemy = enemies[0];
+                const damage = Math.max(1, player.attack - enemy.defend);
+                enemy.hp -= damage;
+                if (enemy.hp <= 0) {
+                    enemies.splice(0, 1);
+                }
+            }
+            if (enemies.length > 0 && players.length > 0) {
+                const enemy = enemies[0];
+                const player = players[0];
+                const damage = Math.max(1, enemy.attack - player.defend);
+                player.hp -= damage;
+                if (player.hp <= 0) {
+                    players.splice(0, 1);
+                }
+            }
+            if (enemies.length === 0 || players.length === 0) {
+                break;
+            }
+        }
+        if (enemies.length === 0) {
+            isWin = true;
+        } else if (players.length === 0) {
+            isWin = false;
+        }
+
+        NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
+            attacker: {
+                name: "worm_attacker",
+                avatarIcon: "icon_player_avatar", // todo
+                hp: attackerHp,
+                hpMax: attackerHpmax,
+            },
+            defender: {
+                name: "fake_wormhole_enemy",
+                avatarIcon: "icon_player_avatar",
+                hp: 50,
+                hpMax: 50,
+            },
+            attackerIsSelf: true,
+            buildingId: null,
+            position: attackerCenterPos,
+            fightResult: isWin ? "win" : "lose",
+            rewards: [],
+        });
+
+        return isWin;
+    }
     //--------------------------- effect
     public getAfterExtraEffectPropertyByPioneer(pioneerId: string, type: GameExtraEffectType, originalValue: number): number {
         // artifact effect
@@ -31,7 +135,7 @@ export default class GameMgr {
             if (nft != undefined && buildingConfig.staff_effect != null) {
                 let nftEffect = 0;
                 for (const temple of buildingConfig.staff_effect) {
-                    if (temple[0] == "lvlup_time" && temple[1] == (DataMgr.s.userInfo.getInnerBuildingLevel(buildingType) + 1)) {
+                    if (temple[0] == "lvlup_time" && temple[1] == DataMgr.s.userInfo.getInnerBuildingLevel(buildingType) + 1) {
                         nftEffect += temple[2][0];
                     }
                 }

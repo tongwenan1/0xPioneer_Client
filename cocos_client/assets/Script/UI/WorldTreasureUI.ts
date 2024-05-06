@@ -97,6 +97,7 @@ export class WorldTreasureUI extends ViewController {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
+        console.log('exce notifi off');
         NetworkMgr.websocket.off("player_heat_value_change_res", this._on_player_heat_value_change_res.bind(this));
     }
     protected viewPopAnimation(): boolean {
@@ -156,7 +157,6 @@ export class WorldTreasureUI extends ViewController {
 
     private _refreshUI(anim: boolean = false) {
         let currentHeatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
-        currentHeatValue = 400;
         this._currentPointLabel.string = "Current Points: " + currentHeatValue;
         const boxThresholds = (ConfigConfig.getConfig(ConfigType.WorldBoxThreshold) as WorldBoxThresholdParam).thresholds;
         for (let i = 0; i < this._allProgressBoxItems.length; i++) {
@@ -268,6 +268,7 @@ export class WorldTreasureUI extends ViewController {
 
     //----------------------------------------- notification
     private _on_player_heat_value_change_res() {
+        console.log('exce notifitrigger');
         this._refreshUI();
         this._refreshCountDownTime();
     }

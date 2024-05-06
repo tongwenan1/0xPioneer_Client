@@ -50,17 +50,12 @@ export class Main extends ViewController {
         }
 
         // debug mode
-        if (GAME_ENV_IS_DEBUG) {
-            await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.HUD);
-            NotificationMgr.triggerEvent(NotificationName.GAME_INITED);
+        await UIPanelManger.inst.pushPanel(UIName.LoginUI);
+        if (chainConfig.api.init) {
+            this._addListener();
+            NetworkMgr.websocketConnect();
         } else {
-            await UIPanelManger.inst.pushPanel(UIName.LoginUI);
-            if (chainConfig.api.init) {
-                this._addListener();
-                NetworkMgr.websocketConnect();
-            } else {
-                NotificationMgr.triggerEvent(NotificationName.GAME_INITED);
-            }
+            NotificationMgr.triggerEvent(NotificationName.GAME_INITED);
         }
     }
 
@@ -81,10 +76,6 @@ export class Main extends ViewController {
         DataMgr.r.inited = true;
 
         (window as any).hideLoading();
-
-        if (GAME_ENV_IS_DEBUG) {
-            NotificationMgr.triggerEvent(NotificationName.USER_LOGIN_SUCCEED);
-        }
     }
 
     private async _onUserLoginSucceed() {
@@ -93,8 +84,14 @@ export class Main extends ViewController {
         BattleReportsMgr.init();
 
         if (GAME_ENV_IS_DEBUG) {
+            UIPanelManger.inst.popPanel();
+            let loadingView: LoadingUI = null;
+            const result = await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.HUD);
+            if (result.success) {
+                loadingView = result.node.getComponent(LoadingUI);
+            }
             await this._showGameMain();
-            UIPanelManger.inst.popPanel(null, UIPanelLayerType.HUD);
+            UIPanelManger.inst.popPanel(loadingView.node, UIPanelLayerType.HUD);
             return;
         }
 

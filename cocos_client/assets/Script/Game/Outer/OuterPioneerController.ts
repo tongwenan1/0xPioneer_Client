@@ -824,6 +824,9 @@ export class OuterPioneerController extends ViewController {
         if (building == null) {
             return;
         }
+        // fake wormhole fight
+        GameMgr.fakeWormholeFight(building.defendPioneerIds);
+
         const tempIds = building.defendPioneerIds.slice();
         for (const pioneerId of tempIds) {
             PioneerMgr.pioneerToIdle(pioneerId);
