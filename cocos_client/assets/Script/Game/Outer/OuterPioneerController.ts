@@ -580,7 +580,7 @@ export class OuterPioneerController extends ViewController {
                     result.node.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), () => {
                         DataMgr.s.userInfo.finishRookie();
                         DataMgr.s.task.gameStarted();
-                        // init resource
+                        // upload resource changed rookie-finish
                         DataMgr.s.item.addObj_item(
                             [
                                 new ItemData(ResourceCorrespondingItem.Energy, 2000),
@@ -654,6 +654,7 @@ export class OuterPioneerController extends ViewController {
         const pioneer = DataMgr.s.pioneer.getById(data.id);
         if (pioneer != null) {
             if (pioneer.type == MapPioneerType.gangster) {
+                // upload resource changed explore
                 DataMgr.s.item.addObj_item([new ItemData(ResourceCorrespondingItem.Troop, pioneer.hpMax)]);
             } else if (pioneer.type == MapPioneerType.npc) {
                 const npcModel = pioneer as MapNpcPioneerObject;
@@ -694,6 +695,7 @@ export class OuterPioneerController extends ViewController {
             }
             const resultNum: number = Math.floor(building.resources.num * (1 + LvlupConfig.getTotalExtraRateByLvl(DataMgr.s.userInfo.data.level)));
             actionView.getComponent(MapPioneer).playGetResourceAnim(building.resources.id, resultNum, () => {
+                // upload resource changed gather
                 DataMgr.s.item.addObj_item([new ItemData(building.resources.id, resultNum)]);
             });
 

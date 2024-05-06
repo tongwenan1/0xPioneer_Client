@@ -369,6 +369,7 @@ export class DataMgr {
                             DataMgr.s.userInfo.gainTreasureProgress(effectProgress);
                         }
                         if (selfKillPioneer.drop != null) {
+                            // upload resource changed fight
                             NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_PROP_GET, { props: selfKillPioneer.drop });
                         }
                         // settle
@@ -492,6 +493,7 @@ export class DataMgr {
         const key: string = "player_treasure_open_res";
         if (DataMgr.socketSendData.has(key)) {
             const data: s2c_user.Iplayer_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_treasure_open_res;
+            // upload resource changed treasure-open
             if (data.items != null && data.items.length > 0) {
                 DataMgr.s.item.addObj_item(data.items);
             }
@@ -510,6 +512,7 @@ export class DataMgr {
         const key: string = "player_point_treasure_open_res";
         if (DataMgr.socketSendData.has(key)) {
             const data: s2c_user.Iplayer_point_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_point_treasure_open_res;
+            // upload resource changed point_treasure-open
             if (data.items != null && data.items.length > 0) {
                 DataMgr.s.item.addObj_item(data.items);
             }
@@ -552,6 +555,7 @@ export class DataMgr {
         const key: string = "player_get_auto_energy_res";
         if (DataMgr.socketSendData.has(key)) {
             const data: s2c_user.Iplayer_get_auto_energy_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_get_auto_energy_res;
+            // upload resource changed inner_building-get_auto_energy
             DataMgr.s.item.addObj_item([new ItemData(ResourceCorrespondingItem.Energy, data.num)]);
             DataMgr.s.userInfo.generateEnergyGetted();
         }
@@ -563,6 +567,7 @@ export class DataMgr {
             for (const temple of data.subItems) {
                 DataMgr.s.item.subObj_item(temple.itemConfigId, temple.count);
             }
+            // upload resource changed inner_building-generate_energy
             DataMgr.s.item.addObj_item([new ItemData(ResourceCorrespondingItem.Energy, data.num)]);
         }
     };
@@ -625,7 +630,7 @@ export class DataMgr {
     };
     public static player_world_treasure_lottery_res = (e: any) => {
         const data: s2c_user.Iplayer_world_treasure_lottery_res = e.data;
-        console.log("exce data: ", data);
+        // upload resource changed player_world_treasure_lottery
         DataMgr.s.item.addObj_item([new ItemData(data.itemId, data.num)]);
     };
 

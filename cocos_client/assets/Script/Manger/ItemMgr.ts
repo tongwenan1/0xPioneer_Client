@@ -136,6 +136,7 @@ export default class ItemMgr {
         }
 
         if (data.getItem != null) {
+            // upload resource changed item-use
             ItemConfigDropTool.getItemByConfig([data.getItem]);
         }
     }

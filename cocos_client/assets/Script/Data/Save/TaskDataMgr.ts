@@ -458,6 +458,7 @@ export default class TaskDataMgr {
         } else if (action.type == TaskActionType.Talk) {
             NotificationMgr.triggerEvent(NotificationName.DIALOG_SHOW, action.talk);
         } else if (action.type == TaskActionType.GetProp) {
+            // upload resource changed task end
             NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_PROP_GET, { props: [action.getProp] });
         } else if (action.type == TaskActionType.NpcGetNewTalk) {
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_NEW_TALK, action.npcGetNewTalk);
