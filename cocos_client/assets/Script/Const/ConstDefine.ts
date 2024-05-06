@@ -20,7 +20,11 @@ export type DataMgrResData =
     | s2c_user.Iplayer_fight_res
     | s2c_user.Iplayer_explore_res
     | s2c_user.Iplayer_gather_res
-    | s2c_user.Iplayer_talk_select_res;
+    | s2c_user.Iplayer_talk_select_res
+    | s2c_user.Iplayer_nft_lvlup_res
+    | s2c_user.Iplayer_nft_rankup_res
+    | s2c_user.Iplayer_nft_skill_learn_res
+    | s2c_user.Iplayer_nft_skill_forget_res;
 
 export enum AttrType {
     HP = 0,

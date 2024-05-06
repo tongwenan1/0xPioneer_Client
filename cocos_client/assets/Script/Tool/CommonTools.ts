@@ -35,6 +35,22 @@ export default class CommonTools {
         );
         return nextDay.getTime();
     }
+    public static getDayAMTimestamp(hour: number): number {
+        // current date
+        const now = new Date();
+
+        // next day hour date
+        const nextDay = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            hour, //
+            0, //
+            0, //
+            0 //
+        );
+        return nextDay.getTime();
+    }
 
     public static getDayOfWeek(): number {
         const today = new Date().getDay();

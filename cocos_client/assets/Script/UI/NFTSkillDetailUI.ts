@@ -10,6 +10,7 @@ import { HUDName } from "../Const/ConstUIDefine";
 import { AlterView } from "./View/AlterView";
 import { DataMgr } from "../Data/DataMgr";
 import { GetPropRankColor } from "../Const/ConstDefine";
+import { NetworkMgr } from "../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("NFTSkillDetailUI")
@@ -77,7 +78,14 @@ export class NFTSkillDetailUI extends ViewController {
             return;
         }
         result.node.getComponent(AlterView).showTip(LanMgr.replaceLanById("106006", [this._data.name, LanMgr.getLanById(this._skillConfig.name)]), async () => {
-            DataMgr.s.nftPioneer.NFTForgetSkill(this._data.uniqueId, this._skillIndex);
+            DataMgr.setTempSendData("player_nft_skill_forget_res", {
+                nftId: this._data.uniqueId,
+                skillIndex: this._skillIndex
+            });
+            NetworkMgr.websocketMsg.player_nft_skill_forget({
+                nftId: this._data.uniqueId,
+                skillIndex: this._skillIndex
+            });
             await this.playExitAnimation();
             UIPanelManger.inst.popPanel();
         });

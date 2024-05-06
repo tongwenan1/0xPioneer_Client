@@ -111,6 +111,12 @@ export default class ConfigConfig {
                     type: key,
                     thresholds: param,
                 };
+            
+            } else if (key == ConfigType.WorldBoxInitialPoint) {
+                temple = {
+                    type: key,
+                    initialPoint: param[0],
+                };
             }
             this._config.set(key as ConfigType, temple);
         }

@@ -124,6 +124,32 @@ message player_building_delegate_nft {
     required string nftId = 2; 
 }
 
+message player_nft_lvlup {
+    required string nftId = 1;
+}
+
+message player_nft_rankup {
+    required string nftId = 1;
+}
+
+message player_nft_skill_learn {
+    required string nftId = 1;
+    required string skillId = 2;
+}
+
+message player_nft_skill_forget {
+    required string nftId = 1;
+    required string skillIndex = 2;
+}
+
+message player_world_treasure_lottery {
+    
+}
+
+message player_add_heat_value {
+    required uint32 num = 1;
+}
+
 message get_battle_report {
 
 }

@@ -47,6 +47,7 @@ export class DataMgr {
         let p: s2c_user.Ienter_game_res = e.data;
         if (p.res === 1) {
             if (p.data) {
+                DataMgr.s.userInfo.loadObj(this.r.wallet.addr, p.archives);
                 DataMgr.r.userInfo = p.data.info.sinfo;
                 NotificationMgr.triggerEvent(NotificationName.USER_LOGIN_SUCCEED);
             }
@@ -107,6 +108,10 @@ export class DataMgr {
                         DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.idle);
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: exploreId });
                     }, actionTime);
+                } else if (actionType == MapPioneerActionType.wormhole) {
+                    DataMgr.s.pioneer.changeActionType(pioneerId, actionType);
+                    DataMgr.s.mapBuilding.insertDefendPioneer(exploreId, pioneerId);
+                    NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: exploreId });
                 }
             } else {
                 if (actionType == MapPioneerActionType.addingtroops) {
@@ -428,7 +433,9 @@ export class DataMgr {
 
                     if (killerId != null && selfDeadName != null) {
                         pioneerDataMgr.changeBeKilled(playerPioneerId, killerId);
-                        NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_CENTER_TIP, { tip: LanMgr.replaceLanById("106001", [LanMgr.getLanById(selfDeadName)]) });
+                        NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_CENTER_TIP, {
+                            tip: LanMgr.replaceLanById("106001", [LanMgr.getLanById(selfDeadName)]),
+                        });
                     }
                     if (fightOverCallback != null) {
                         fightOverCallback(isSelfWin);
@@ -575,6 +582,51 @@ export class DataMgr {
             const data: s2c_user.Iplayer_building_delegate_nft_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_building_delegate_nft_res;
             DataMgr.s.nftPioneer.NFTChangeWork(data.nftId, data.innerBuildingId as InnerBuildingType);
         }
+    };
+    public static player_nft_lvlup_res = (e: any) => {
+        const key: string = "player_nft_lvlup_res";
+        if (DataMgr.socketSendData.has(key)) {
+            const data: s2c_user.Iplayer_nft_lvlup_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_lvlup_res;
+            DataMgr.s.item.subObj_item(ResourceCorrespondingItem.NFTExp, data.nftExpCostNum);
+            DataMgr.s.nftPioneer.NFTLevelUp(data.nftId, data.levelUpNum);
+        }
+    };
+    public static player_nft_rankup_res = (e: any) => {
+        const key: string = "player_nft_rankup_res";
+        if (DataMgr.socketSendData.has(key)) {
+            const data: s2c_user.Iplayer_nft_rankup_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_rankup_res;
+            for (const cost of data.subItems) {
+                DataMgr.s.item.subObj_item(cost.itemConfigId, cost.count);
+            }
+            DataMgr.s.nftPioneer.NFTRankUp(data.nftId, data.rankUpNum);
+        }
+    };
+    public static player_nft_skill_learn_res = (e: any) => {
+        const key: string = "player_nft_skill_learn_res";
+        if (DataMgr.socketSendData.has(key)) {
+            const data: s2c_user.Iplayer_nft_skill_learn_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_skill_learn_res;
+            for (const cost of data.subItems) {
+                DataMgr.s.item.subObj_item(cost.itemConfigId, cost.count);
+            }
+            DataMgr.s.nftPioneer.NFTLearnSkill(data.nftId, data.skillId);
+        }
+    };
+    public static player_nft_skill_forget_res = (e: any) => {
+        const key: string = "player_nft_skill_forget_res";
+        if (DataMgr.socketSendData.has(key)) {
+            const data: s2c_user.Iplayer_nft_skill_forget_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_skill_forget_res;
+            DataMgr.s.nftPioneer.NFTForgetSkill(data.nftId, data.skillIndex);
+        }
+    };
+
+    public static player_heat_value_change_res = (e: any) => {
+        const data: s2c_user.Iplayer_heat_value_change_res = e.data;
+        DataMgr.s.userInfo.data.heatValue.currentHeatValue = data.currentHeatValue;
+    };
+    public static player_world_treasure_lottery_res = (e: any) => {
+        const data: s2c_user.Iplayer_world_treasure_lottery_res = e.data;
+        console.log("exce data: ", data);
+        DataMgr.s.item.addObj_item([new ItemData(data.itemId, data.num)]);
     };
 
     ///////////////// websocketTempData

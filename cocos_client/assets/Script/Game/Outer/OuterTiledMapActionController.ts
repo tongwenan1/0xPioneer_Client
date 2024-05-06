@@ -464,13 +464,6 @@ export class OuterTiledMapActionController extends ViewController {
         if (GameMainHelper.instance.tiledMapIsAllBlackShadow(tiledPos.x, tiledPos.y)) {
             return;
         }
-        // check is busy
-        if (DataMgr.s.pioneer.getCurrentActionIsBusy()) {
-            // useLanMgr
-            // UIHUDController.showCenterTip(LanMgr.getLanById("203002"));
-            // UIHUDController.showCenterTip("pioneer is busy");
-            return;
-        }
         // check is dead
         if (!currentActionPioneer.show && currentActionPioneer.rebirthCountTime > 0) {
             // useLanMgr
@@ -490,9 +483,11 @@ export class OuterTiledMapActionController extends ViewController {
         // check is building first
         // const stayBuilding = BuildingMgr.getShowBuildingByMapPos(v2(tiledPos.x, tiledPos.y));
         const stayBuilding = DataMgr.s.mapBuilding.getShowBuildingByMapPos(v2(tiledPos.x, tiledPos.y));
-
         if (stayBuilding != null) {
-            if (currentActionPioneer.actionType == MapPioneerActionType.defend && stayBuilding.type == MapBuildingType.stronghold) {
+            if (
+                (currentActionPioneer.actionType == MapPioneerActionType.defend && stayBuilding.type == MapBuildingType.stronghold) ||
+                (currentActionPioneer.actionType == MapPioneerActionType.wormhole && stayBuilding.type == MapBuildingType.wormhole)
+            ) {
                 actionType = 6;
                 stayPositons = stayBuilding.stayMapPositions;
             } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing) {
@@ -517,7 +512,7 @@ export class OuterTiledMapActionController extends ViewController {
                     actionType = 1;
                 } else if (stayBuilding.type == MapBuildingType.resource) {
                     actionType = 2;
-                } else if (stayBuilding.type == MapBuildingType.stronghold) {
+                } else if (stayBuilding.type == MapBuildingType.stronghold || stayBuilding.type == MapBuildingType.wormhole) {
                     actionType = 4;
                 } else if (stayBuilding.type == MapBuildingType.event) {
                     actionType = 5;
@@ -583,6 +578,16 @@ export class OuterTiledMapActionController extends ViewController {
                     }
                     stayPositons = [currentPioneer.stayPos];
                 }
+            }
+        }
+        if (actionType == 5 || actionType == 6) {
+        } else {
+            // check is busy
+            if (DataMgr.s.pioneer.getCurrentActionIsBusy()) {
+                // useLanMgr
+                // UIHUDController.showCenterTip(LanMgr.getLanById("203002"));
+                // UIHUDController.showCenterTip("pioneer is busy");
+                return;
             }
         }
         if (actionType == -1) {
@@ -702,7 +707,7 @@ export class OuterTiledMapActionController extends ViewController {
                     DataMgr.setTempSendData("player_move_res", {
                         pioneerId: currentActionPioneer.id,
                         movePath: movePaths,
-                        costEnergyNum: costEnergy
+                        costEnergyNum: costEnergy,
                     });
                     NetworkMgr.websocketMsg.player_move({
                         pioneerId: currentActionPioneer.id,

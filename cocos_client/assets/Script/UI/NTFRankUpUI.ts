@@ -11,6 +11,7 @@ import ConfigConfig from "../Config/ConfigConfig";
 import { ConfigType, NFTLevelLimitPerRankAddNumParam } from "../Const/Config";
 import ItemConfig from "../Config/ItemConfig";
 import { DataMgr } from "../Data/DataMgr";
+import { NetworkMgr } from "../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("NTFRankUpUI")
@@ -109,10 +110,12 @@ export class NTFRankUpUI extends ViewController {
 
     private onTapConfirmRankUp() {
         if (this._data != null && this._currentCost.length > 0) {
-            for (const cost of this._currentCost) {
-                DataMgr.s.item.subObj_item(cost.itemConfigId, cost.count);
-            }
-            DataMgr.s.nftPioneer.NFTRankUp(this._data.uniqueId, this._rankUpNum);
+            DataMgr.setTempSendData("player_nft_rankup_res", {
+                nftId: this._data.uniqueId,
+                rankUpNum: this._rankUpNum,
+                subItems: this._currentCost
+            });
+            NetworkMgr.websocketMsg.player_nft_rankup({ nftId: this._data.uniqueId, rankUpNum: this._rankUpNum });
         }
     }
 

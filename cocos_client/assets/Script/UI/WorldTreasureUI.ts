@@ -1,35 +1,20 @@
 import {
     _decorator,
-    Component,
     Node,
     instantiate,
-    director,
-    BoxCharacterController,
     Label,
     Layout,
     UITransform,
-    ProgressBar,
     Button,
-    tween,
-    v3,
     ScrollView,
     v2,
-    Widget,
     Color,
     Sprite,
 } from "cc";
-import { LanMgr } from "../Utils/Global";
-import { UIName } from "../Const/ConstUIDefine";
-import { TreasureGettedUI } from "./TreasureGettedUI";
-import { UIHUDController } from "./UIHUDController";
-import BoxInfoConfig from "../Config/BoxInfoConfig";
-import { BoxInfoConfigData } from "../Const/BoxInfo";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import ViewController from "../BasicView/ViewController";
-import { NetworkMgr } from "../Net/NetworkMgr";
 import ItemData from "../Const/Item";
-import ArtifactData from "../Model/ArtifactData";
 import { WorldBoxConfigData } from "../Const/WorldBoxDefine";
 import WorldBoxConfig from "../Config/WorldBoxConfig";
 import CommonTools from "../Tool/CommonTools";
@@ -37,6 +22,7 @@ import ConfigConfig from "../Config/ConfigConfig";
 import { ConfigType, WorldBoxThresholdParam } from "../Const/Config";
 import { GetPropRankColor } from "../Const/ConstDefine";
 import { BackpackItem } from "./BackpackItem";
+import { NetworkMgr } from "../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("WorldTreasureUI")
@@ -44,6 +30,7 @@ export class WorldTreasureUI extends ViewController {
     //----------------------------------------- data
     private _boxDatas: WorldBoxConfigData[] = [];
     private _currentBoxIndex: number = 0;
+    private _canClaimBoxIndex: number = -1;
     private _boxNames: string[] = [];
     private _rankColors: Color[] = [];
     //----------------------------------------- view
@@ -98,6 +85,8 @@ export class WorldTreasureUI extends ViewController {
         // this.node.getChildByPath("__ViewContent/Title").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/LeftContent/Title").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/RightContent/ClaimButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+
+        NetworkMgr.websocket.on("player_heat_value_change_res", this._on_player_heat_value_change_res.bind(this));
     }
     protected viewDidStart(): void {
         super.viewDidStart();
@@ -107,6 +96,8 @@ export class WorldTreasureUI extends ViewController {
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
+
+        NetworkMgr.websocket.off("player_heat_value_change_res", this._on_player_heat_value_change_res.bind(this));
     }
     protected viewPopAnimation(): boolean {
         return true;
@@ -116,18 +107,16 @@ export class WorldTreasureUI extends ViewController {
     }
 
     private _initBox() {
-        const currentHeatValue: number = DataMgr.s.userInfo.data.heatValue;
+        const currentHeatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
         this._currentPointLabel.string = "Current Points: " + currentHeatValue;
-
         const boxThresholds = (ConfigConfig.getConfig(ConfigType.WorldBoxThreshold) as WorldBoxThresholdParam).thresholds;
         for (let i = 0; i < 5; i++) {
             const boxView = instantiate(this._progressBoxItem);
             this._progressBoxContent.addChild(boxView);
-            this._allProgressBoxItems.push(boxView);
 
             // title
             const title = boxView.getChildByPath("Title").getComponent(Label);
-            title.string = boxView.getChildByPath("Title").getComponent(Label).string = this._boxNames[i];
+            title.string = this._boxNames[i];
             title.color = this._rankColors[i];
             // icon
             boxView.getChildByPath("Icon").getComponent(Sprite).color = this._rankColors[i];
@@ -136,31 +125,54 @@ export class WorldTreasureUI extends ViewController {
             if (i == boxThresholds.length - 1) {
                 tipString = "points >=" + boxThresholds[i];
                 if (currentHeatValue >= boxThresholds[i]) {
-                    this._currentBoxIndex = i;
+                    this._canClaimBoxIndex = i;
                 }
             } else {
                 if (i + 1 < boxThresholds.length) {
                     tipString = boxThresholds[i] + "<= points <" + boxThresholds[i + 1];
                     if (currentHeatValue >= boxThresholds[i] && currentHeatValue < boxThresholds[i + 1]) {
-                        this._currentBoxIndex = i;
+                        this._canClaimBoxIndex = i;
                     }
                 }
             }
             boxView.getChildByPath("Tip").getComponent(Label).string = tipString;
             // button
             boxView.getComponent(Button).clickEvents[0].customEventData = i.toString();
+
+            this._allProgressBoxItems.push(boxView);
         }
         this._progressBoxContent.getComponent(Layout).updateLayout();
 
+        if (this._canClaimBoxIndex >= 0) {
+            this._currentBoxIndex = this._canClaimBoxIndex;
+        }
+
         // next day eight hour timestamp
-        const countEndTimeStamp: number = CommonTools.getNextDayAMTimestamp(8);
-        this._refreshCountDownTime(countEndTimeStamp);
+        this._refreshCountDownTime();
         this.schedule(() => {
-            this._refreshCountDownTime(countEndTimeStamp);
+            this._refreshCountDownTime();
         }, 1);
     }
 
     private _refreshUI(anim: boolean = false) {
+        let currentHeatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
+        currentHeatValue = 400;
+        this._currentPointLabel.string = "Current Points: " + currentHeatValue;
+        const boxThresholds = (ConfigConfig.getConfig(ConfigType.WorldBoxThreshold) as WorldBoxThresholdParam).thresholds;
+        for (let i = 0; i < this._allProgressBoxItems.length; i++) {
+            if (i == boxThresholds.length - 1) {
+                if (currentHeatValue >= boxThresholds[i]) {
+                    this._canClaimBoxIndex = i;
+                }
+            } else {
+                if (i + 1 < boxThresholds.length) {
+                    if (currentHeatValue >= boxThresholds[i] && currentHeatValue < boxThresholds[i + 1]) {
+                        this._canClaimBoxIndex = i;
+                    }
+                }
+            }
+        }
+
         for (const item of this._allProgressBoxItems) {
             item.getChildByPath("Select").active = this._currentBoxIndex == this._allProgressBoxItems.indexOf(item);
         }
@@ -181,8 +193,13 @@ export class WorldTreasureUI extends ViewController {
         // reward
         this._currentBoxTitleLabel.string = this._boxNames[this._currentBoxIndex];
         this._currentBoxTitleLabel.color = this._rankColors[this._currentBoxIndex];
+
         this._currentBoxRewardContent.destroyAllChildren();
-        this._boxDatas = WorldBoxConfig.getByDayAndRank(CommonTools.getDayOfWeek(), this._currentBoxIndex + 1);
+        let rewardDataDay: number = CommonTools.getDayOfWeek() - 1;
+        if (rewardDataDay == 0) {
+            rewardDataDay = 7;
+        }
+        this._boxDatas = WorldBoxConfig.getByDayAndRank(rewardDataDay, this._currentBoxIndex + 1);
         const rewardItemMap: Map<number, Node> = new Map();
         for (const data of this._boxDatas) {
             let itemView = null;
@@ -203,13 +220,34 @@ export class WorldTreasureUI extends ViewController {
         }
     }
 
-    private _refreshCountDownTime(endTime: number) {
+    private _refreshCountDownTime() {
         const currentTimeStamp = new Date().getTime();
-        const gapTime: number = Math.max(0, endTime - currentTimeStamp);
-        this._claimCountDownLabel.string = "Claim Countdown: " + CommonTools.formatSeconds(gapTime / 1000, "HHh MMm");
-        // xx wait
-        this._claimButton.interactable = gapTime <= 0;
-        this._claimButton.node.getComponent(Sprite).grayscale = gapTime > 0;
+        const eightTimeStamp = CommonTools.getDayAMTimestamp(8);
+        const getTimeStamp = DataMgr.s.userInfo.data.heatValue.getTimestamp * 1000;
+
+        let endTime: number = null;
+        let canClaim: boolean = false;
+        if (currentTimeStamp < eightTimeStamp) {
+            endTime = eightTimeStamp;
+        } else {
+            const todayDidGet: boolean = getTimeStamp >= eightTimeStamp;
+            canClaim = !todayDidGet;
+            if (todayDidGet) {
+                endTime = CommonTools.getNextDayAMTimestamp(8);
+            }
+        }
+        if (endTime == null) {
+            this._claimCountDownLabel.node.active = false;
+        } else {
+            this._claimCountDownLabel.node.active = true;
+            const gapTime: number = Math.max(0, endTime - currentTimeStamp);
+            this._claimCountDownLabel.string = "Claim Countdown: " + CommonTools.formatSeconds(gapTime / 1000, "HHh MMm");
+        }
+        canClaim = true;
+        console.log("exce can: " + canClaim);
+        const claimButtonCanTap: boolean = this._currentBoxIndex == this._canClaimBoxIndex && canClaim;
+        this._claimButton.interactable = claimButtonCanTap;
+        this._claimButton.node.getComponent(Sprite).grayscale = !claimButtonCanTap;
     }
     //------------------------------------------ action
     private async onTapBoxItem(event: Event, customEventData: string) {
@@ -217,11 +255,20 @@ export class WorldTreasureUI extends ViewController {
         if (index != this._currentBoxIndex) {
             this._currentBoxIndex = index;
             this._refreshUI(true);
+            this._refreshCountDownTime();
         }
     }
-    private onTapClaim() {}
+    private onTapClaim() {
+        NetworkMgr.websocketMsg.player_world_treasure_lottery({});
+    }
     private async onTapClose() {
         await this.playExitAnimation();
         UIPanelManger.inst.popPanel();
+    }
+
+    //----------------------------------------- notification
+    private _on_player_heat_value_change_res() {
+        this._refreshUI();
+        this._refreshCountDownTime();
     }
 }

@@ -64,7 +64,10 @@ export interface MapBuildingResourceData extends MapBuildingBaseData {
     resources: { id: string; num: number };
     quota: number;
 }
-export type MapBuildingData = MapBuildingMainCityData | MapBuildingResourceData | MapBuildingBaseData;
+export interface MapBuildingWormholeData extends MapBuildingBaseData {
+    wormholdCountdowmTime: number;
+}
+export type MapBuildingData = MapBuildingMainCityData | MapBuildingResourceData | MapBuildingWormholeData | MapBuildingBaseData;
 
 export interface MapBuildingBaseObject extends MapBuildingBaseData {
     stayMapPositions: Vec2[];
@@ -75,7 +78,11 @@ export interface MapBuildingMainCityObject extends MapBuildingMainCityData {
 export interface MapBuildingResourceObject extends MapBuildingResourceData {
     stayMapPositions: Vec2[];
 }
-export type MapBuildingObject = MapBuildingMainCityObject | MapBuildingResourceObject | MapBuildingBaseObject;
+export interface MapBuildingWormholeObject extends MapBuildingWormholeData {
+    stayMapPositions: Vec2[];
+}
+
+export type MapBuildingObject = MapBuildingMainCityObject | MapBuildingResourceObject | MapBuildingWormholeObject | MapBuildingBaseObject;
 
 // decorate
 export enum MapDecoratePosMode {

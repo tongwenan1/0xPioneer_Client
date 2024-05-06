@@ -7,6 +7,8 @@ import { GetPropData } from "../../Const/ConstDefine";
 import { LvlupConfigData } from "../../Const/Lvlup";
 import { NotificationName } from "../../Const/Notification";
 import { UserInfoObject } from "../../Const/UserInfoDefine";
+import { NetworkMgr } from "../../Net/NetworkMgr";
+import { WebsocketMsg } from "../../Net/msg/WebsocketMsg";
 
 export default class UserInfoDataMgr {
     private _baseKey: string = "user_Info";
@@ -15,12 +17,18 @@ export default class UserInfoDataMgr {
     private _data: UserInfoObject = null;
     public constructor() {}
     //--------------------------------
-    public loadObj(walletAddr: string) {
+    public loadObj(walletAddr: string, archives: string) {
         this._key = walletAddr + "|" + this._baseKey;
-        this._initData();
+        this._initData(archives);
     }
     public saveObj() {
         localStorage.setItem(this._key, JSON.stringify(this._data));
+
+        // upload
+        const json = JSON.stringify({ userInfo: this._data });
+        NetworkMgr.websocketMsg.save_archives({
+            archives: json,
+        });
     }
     //--------------------------------
     public get data() {
@@ -193,40 +201,55 @@ export default class UserInfoDataMgr {
         NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE);
     }
 
-    //------------------------------------------------------------------------
-    private async _initData() {
-        const localDataString: string = localStorage.getItem(this._key);
-        if (localDataString == null) {
-            this._data = {
-                id: "1001",
-                name: "Player",
-                level: 1,
-                exp: 0,
-                treasureProgress: 0,
-                heatValue: 0,
-                treasureDidGetRewards: [],
-                pointTreasureDidGetRewards: [],
-                cityRadialRange: 7,
-                didFinishRookie: false,
-                generateTroopInfo: null,
-                generateEnergyInfo: null,
-                innerBuildings: {},
-            };
-            const buildingInfo = InnerBuildingConfig.getConfs();
-            for (const key in buildingInfo) {
-                this._data.innerBuildings[key] = {
-                    buildBeginLatticeIndex: null,
-                    buildType: buildingInfo[key].id,
-                    buildLevel: 0,
-                    upgradeCountTime: 0,
-                    upgradeTotalTime: 0,
-                };
-            }
-            this.saveObj();
-        } else {
-            this._data = JSON.parse(localDataString);
+    public setWormholeDefenderId(pioneerId: string, index: number) {
+        if (index < 0 || index >= this._data.wormholeDefenderIds.length) {
+            return;
         }
-
+        this._data.wormholeDefenderIds[index] = pioneerId;
+        this.saveObj();
+    }
+    //------------------------------------------------------------------------
+    private async _initData(archives: string = null) {
+        if (archives != null && archives.length > 0) {
+            this._data = JSON.parse(archives).userInfo;
+            console.log("exce d: ", this._data);
+        } else {
+            const localDataString: string = localStorage.getItem(this._key);
+            if (localDataString == null) {
+                this._data = {
+                    id: "1001",
+                    name: "Player",
+                    level: 1,
+                    exp: 0,
+                    treasureProgress: 0,
+                    heatValue: {
+                        getTimestamp: 0,
+                        currentHeatValue: 0
+                    },
+                    treasureDidGetRewards: [],
+                    pointTreasureDidGetRewards: [],
+                    cityRadialRange: 7,
+                    didFinishRookie: false,
+                    generateTroopInfo: null,
+                    generateEnergyInfo: null,
+                    innerBuildings: {},
+                    wormholeDefenderIds: ["", "", ""],
+                };
+                const buildingInfo = InnerBuildingConfig.getConfs();
+                for (const key in buildingInfo) {
+                    this._data.innerBuildings[key] = {
+                        buildBeginLatticeIndex: null,
+                        buildType: buildingInfo[key].id,
+                        buildLevel: 0,
+                        upgradeCountTime: 0,
+                        upgradeTotalTime: 0,
+                    };
+                }
+                this.saveObj();
+            } else {
+                this._data = JSON.parse(localDataString);
+            }
+        }
         this._initInterval();
     }
     private _initInterval() {

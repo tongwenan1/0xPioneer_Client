@@ -25,6 +25,7 @@ message create_player_res {
 message enter_game_res {
     required int32 res = 1; // error code see {ServerErrorCode}
     optional share.player_data data = 2; // full player data of self
+    required string archives = 3;
 }
 
 // ----------------------------------------------------------------------------
@@ -126,6 +127,41 @@ message player_generate_troop_res {
 }
 
 message player_building_delegate_nft_res {
+    required uint32 res = 1;
+}
+
+message player_nft_lvlup_res {
+    required uint32 res = 1;
+}
+
+message player_nft_rankup_res {
+    required uint32 res = 1;
+}
+
+message player_nft_skill_learn_res {
+    required uint32 res = 1;
+}
+
+message player_nft_skill_forget_res {
+    required uint32 res = 1;
+}
+
+message player_world_treasure_lottery_res {
+    required uint32 res = 1;
+    required string itemId = 2;
+    required uint32 num = 3;
+}
+
+message player_heat_value_change_res {
+    required uint32 res = 1;
+    required uint32 currentHeatValue = 2;
+}
+
+message player_world_treasure_pool_change_res {
+    required uint32 res = 1;
+}
+
+message player_add_heat_value_res {
     required uint32 res = 1;
 }
 

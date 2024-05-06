@@ -1,6 +1,6 @@
 import { _decorator, Node, Button, Label } from "cc";
 import { ClaimRewardUI } from "./ClaimRewardUI";
-import { LanMgr, UserInfoMgr } from "../Utils/Global";
+import { LanMgr, PioneerMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TaskListUI } from "./TaskListUI";
 import { NewSettlementUI } from "./NewSettlementUI";
@@ -15,6 +15,9 @@ import { DataMgr } from "../Data/DataMgr";
 import { NFTBackpackUI } from "./NFTBackpackUI";
 import ItemData from "../Const/Item";
 import ArtifactData from "../Model/ArtifactData";
+import CommonTools from "../Tool/CommonTools";
+import { DefenderSetUI } from "./DefenderSetUI";
+import { NetworkMgr } from "../Net/NetworkMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -116,7 +119,15 @@ export class MainUI extends ViewController {
         }
         this.node.getChildByPath("CommonContent/InnerOutChangeBtnBg").active = !isEnemy;
     }
+    private checkCanShowGansterComingTip(pioneerId: string) {
+        if (pioneerId == "gangster_3") {
+            this._gangsterComingTipView.active = true;
+            this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = true;
+            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = false;
+        }
+    }
 
+    //------------------------------------------------- action
     private async onTapNewSettlementTip() {
         const currentData = localStorage.getItem("local_newSettle");
         if (currentData != null) {
@@ -150,29 +161,30 @@ export class MainUI extends ViewController {
         GameMainHelper.instance.changeInnerBuildingLatticeEdit();
     }
 
-    private checkCanShowGansterComingTip(pioneerId: string) {
-        if (pioneerId == "gangster_3") {
-            this._gangsterComingTipView.active = true;
-            this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = true;
-            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = false;
+    private onTapRandomNFT() {
+        DataMgr.s.nftPioneer.generateNewNFT();
+    }
+    private onTapRandomPioneer() {
+        const pioneerIds: string[] = ["pioneer_1", "pioneer_2", "pioneer_3"];
+        for (let i = 0; i < pioneerIds.length; i++) {
+            if (DataMgr.s.pioneer.getById(pioneerIds[i], true) == undefined) {
+                continue;
+            }
+            pioneerIds.splice(i, 1);
+            i--;
+        }
+        if (pioneerIds.length > 0) {
+            const randomId = CommonTools.getRandomItem(pioneerIds);
+            PioneerMgr.showPioneer(randomId);
         }
     }
-
-    private padZero(num: number): string {
-        return num < 10 ? `0${num}` : `${num}`;
+    private async onTapSetDefender() {
+        UIPanelManger.inst.pushPanel(UIName.DefenderSetUI);
+    }
+    private onTapAddHeat() {
+        NetworkMgr.websocketMsg.player_add_heat_value({ num: 50 });
     }
 
-    private secondsToTime(seconds: number): string {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const remainingSeconds = seconds % 60;
-
-        const formattedHours = this.padZero(hours);
-        const formattedMinutes = this.padZero(minutes);
-        const formattedSeconds = this.padZero(remainingSeconds);
-
-        return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-    }
     //----------------------------------------------------- notification
     private _onPioneerShowChanged(data: { id: string; show: boolean }) {
         this.checkCanShowGansterComingTip(data.id);
@@ -187,7 +199,7 @@ export class MainUI extends ViewController {
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = false;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.replaceLanById("200003", [
-                this.secondsToTime(pioneer.showHideStruct.countTime),
+                CommonTools.formatSeconds(pioneer.showHideStruct.countTime),
             ]);
         }
     }

@@ -101,7 +101,7 @@ export class WebsocketMsg {
     // public change_pioneer(d: c2s_user.Ichange_pioneer) {
     //     this._websocket.emit("change_pioneer_res", d);
     // }
-    
+
     public player_move(d: c2s_user.Iplayer_move) {
         this.send_packet("player_move", d);
     }
@@ -149,6 +149,29 @@ export class WebsocketMsg {
     }
     public player_building_delegate_nft(d: c2s_user.Iplayer_building_delegate_nft) {
         this.send_packet("player_building_delegate_nft", d);
+    }
+    public player_nft_lvlup(d: c2s_user.Iplayer_nft_lvlup) {
+        this.send_packet("player_nft_lvlup", d);
+    }
+    public player_nft_rankup(d: c2s_user.Iplayer_nft_rankup) {
+        this.send_packet("player_nft_rankup", d);
+    }
+    public player_nft_skill_learn(d: c2s_user.Iplayer_nft_skill_learn) {
+        this.send_packet("player_nft_skill_learn", d);
+    }
+    public player_nft_skill_forget(d: c2s_user.Iplayer_nft_skill_forget) {
+        this.send_packet("player_nft_skill_forget", d);
+    }
+
+    public player_add_heat_value(d: c2s_user.Iplayer_add_heat_value) {
+        this.send_packet("player_add_heat_value", d);
+    }
+    public player_world_treasure_lottery(d: c2s_user.Iplayer_world_treasure_lottery) {
+        this.send_packet("player_world_treasure_lottery", d);
+    }
+
+    public save_archives(d: c2s_user.Isave_archives) {
+        this.send_packet("save_archives", d);
     }
 }
 
@@ -209,7 +232,7 @@ export namespace c2s_user {
         actionType?: Ichange_pioneer_actionType;
         newTalk?: Ichange_pioneer_newTalk;
     }
-    
+
     export interface Iplayer_move {
         pioneerId: string;
         movePath: string;
@@ -269,6 +292,31 @@ export namespace c2s_user {
         innerBuildingId: string;
         nftId: string;
     }
+    export interface Iplayer_nft_lvlup {
+        nftId: string;
+        levelUpNum: number;
+    }
+    export interface Iplayer_nft_rankup {
+        nftId: string;
+        rankUpNum: number;
+    }
+    export interface Iplayer_nft_skill_learn {
+        nftId: string;
+        skillId: string;
+    }
+    export interface Iplayer_nft_skill_forget {
+        nftId: string;
+        skillIndex: number;
+    }
+
+    export interface Iplayer_add_heat_value {
+        num: number;
+    }
+    export interface Iplayer_world_treasure_lottery {}
+
+    export interface Isave_archives {
+        archives: string;
+    }
 }
 
 export namespace s2c_user {
@@ -286,6 +334,8 @@ export namespace s2c_user {
 
         /** login_res data */
         data?: share.Iuser_data | null;
+
+        archives: string;
     }
 
     export interface Icreate_player_res {
@@ -302,6 +352,8 @@ export namespace s2c_user {
 
         /** enter_game_res data */
         data?: share.Iplayer_data | null;
+
+        archives: string;
     }
 
     export interface Imark_data_dirty {
@@ -322,7 +374,6 @@ export namespace s2c_user {
         newTalk: Ichange_pioneer_newTalk;
     }
 
-   
     export interface Iplayer_move_res {
         pioneerId: string;
         movePath: TilePos[];
@@ -343,7 +394,7 @@ export namespace s2c_user {
         actionType: MapPioneerActionType;
     }
     export interface Iplayer_fight_res {
-        isAttackBuilding: boolean,
+        isAttackBuilding: boolean;
         isSelfAttack: boolean;
         attacker: MapPioneerObject;
         pioneerDefender: MapPioneerObject;
@@ -402,6 +453,35 @@ export namespace s2c_user {
     export interface Iplayer_building_delegate_nft_res {
         innerBuildingId: string;
         nftId: string;
+    }
+    export interface Iplayer_nft_lvlup_res {
+        nftId: string;
+        levelUpNum: number;
+        nftExpCostNum: number;
+    }
+    export interface Iplayer_nft_rankup_res {
+        nftId: string;
+        rankUpNum: number;
+        subItems: ItemData[];
+    }
+    export interface Iplayer_nft_skill_learn_res {
+        nftId: string;
+        skillId: string;
+        subItems: ItemData[];
+    }
+    export interface Iplayer_nft_skill_forget_res {
+        nftId: string;
+        skillIndex: number;
+    }
+
+    export interface Iplayer_heat_value_change_res {
+        res: number;
+        currentHeatValue: number;
+    }
+    export interface Iplayer_world_treasure_lottery_res {
+        res: number;
+        itemId: string;
+        num: number;
     }
 }
 

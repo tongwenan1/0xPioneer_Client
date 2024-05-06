@@ -193,6 +193,13 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_generate_energy_res", DataMgr.player_generate_energy_res);
         NetworkMgr.websocket.on("player_generate_troop_res", DataMgr.player_generate_troop_res);
         NetworkMgr.websocket.on("player_building_delegate_nft_res", DataMgr.player_building_delegate_nft_res);
+        NetworkMgr.websocket.on("player_nft_lvlup_res", DataMgr.player_nft_lvlup_res);
+        NetworkMgr.websocket.on("player_nft_rankup_res", DataMgr.player_nft_rankup_res);
+        NetworkMgr.websocket.on("player_nft_skill_learn", DataMgr.player_nft_skill_learn_res);
+        NetworkMgr.websocket.on("player_nft_skill_forget", DataMgr.player_nft_skill_forget_res);
+
+        NetworkMgr.websocket.on("player_heat_value_change_res", DataMgr.player_heat_value_change_res);
+        NetworkMgr.websocket.on("player_world_treasure_lottery_res", DataMgr.player_world_treasure_lottery_res);
     }
 
     private async reconnect() {

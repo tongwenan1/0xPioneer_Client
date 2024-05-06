@@ -10,6 +10,8 @@ import {
     MapBuildingObject,
     MapBuildingResourceData,
     MapBuildingResourceObject,
+    MapBuildingWormholeData,
+    MapBuildingWormholeObject,
     MapDecorateData,
     MapDecorateObject,
     StayMapPosition,
@@ -64,8 +66,28 @@ export class MapBuildingDataMgr {
             }
         }
 
+        this._initInterval();
         CLog.debug("MapBuildingDataMgr: loadObj/building_data, ", this._building_data);
         CLog.debug("MapBuildingDataMgr: loadObj/decorate_data, ", this._decorate_data);
+    }
+
+    private _initInterval() {
+        setInterval(() => {
+            for (const obj of this._building_data) {
+                if (obj.type == MapBuildingType.wormhole) {
+                    const wormhole = obj as MapBuildingWormholeObject;
+                    if (wormhole.wormholdCountdowmTime > 0) {
+                        wormhole.wormholdCountdowmTime -= 1;
+                        this.saveObj_building();
+                        NotificationMgr.triggerEvent(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_CHANGE, { id: wormhole.id });
+
+                        if (wormhole.wormholdCountdowmTime == 0) {
+                            NotificationMgr.triggerEvent(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_FINISH, { id: wormhole.id });
+                        }
+                    }
+                }
+            }
+        }, 1000);
     }
 
     // create buiding obj
@@ -81,6 +103,9 @@ export class MapBuildingDataMgr {
                     break;
                 case MapBuildingType.resource:
                     this._building_data.push(this._createObj_building_resource(temple));
+                    break;
+                case MapBuildingType.wormhole:
+                    this._building_data.push(this._createObj_building_wormhole(temple));
                     break;
                 default:
                     this._building_data.push(this._createObj_building_base(temple));
@@ -148,6 +173,34 @@ export class MapBuildingDataMgr {
         };
         return obj;
     }
+    private _createObj_building_wormhole(temple: MapBuildingConfigData) {
+        const mapPositions: Vec2[] = [];
+        if (temple.positions.length == 2) {
+            mapPositions.push(new Vec2(temple.positions[0], temple.positions[1]));
+        }
+
+        const obj: MapBuildingWormholeObject = {
+            show: !!temple.show,
+            id: temple.id,
+            type: temple.type,
+            name: temple.name,
+            faction: MapMemberFactionType.neutral, // temple.faction, // TODO: ???
+            defendPioneerIds: temple.defendPioneerIds,
+            level: temple.level,
+            stayMapPositions: mapPositions,
+            stayPosType: temple.pos_type,
+
+            showHideStruct: null,
+            progress: temple.progress ? temple.progress : 0,
+            winprogress: temple.winprogress ? temple.winprogress : 0,
+            eventId: temple.event ? temple.event : null,
+            originalEventId: temple.event ? temple.event : null,
+            exp: temple.exp ? temple.exp : 0,
+            animType: temple.node ? temple.node : null,
+            wormholdCountdowmTime: 0,
+        };
+        return obj;
+    }
     private _createObj_building_base(temple: MapBuildingConfigData) {
         const mapPositions: Vec2[] = [];
         if (temple.positions.length == 2) {
@@ -185,6 +238,9 @@ export class MapBuildingDataMgr {
                     break;
                 case MapBuildingType.resource:
                     this._building_data.push(this._loadObj_building_resource(temple as MapBuildingResourceData));
+                    break;
+                case MapBuildingType.wormhole:
+                    this._building_data.push(this._loadObj_building_wormhole(temple as MapBuildingWormholeData));
                     break;
                 default:
                     this._building_data.push(this._loadObj_building_base(temple as MapBuildingBaseData));
@@ -240,6 +296,31 @@ export class MapBuildingDataMgr {
 
             resources: temple.resources,
             quota: temple.quota,
+        };
+
+        return obj;
+    }
+    private _loadObj_building_wormhole(temple: MapBuildingWormholeData): MapBuildingWormholeObject {
+        const obj: MapBuildingWormholeObject = {
+            show: temple.show,
+            id: temple.id,
+            type: temple.type,
+            name: temple.name,
+            faction: temple.faction,
+            defendPioneerIds: temple.defendPioneerIds,
+            level: temple.level,
+            stayMapPositions: this._loadObj_mapPositions(temple.stayMapPositions),
+            stayPosType: temple.stayPosType,
+
+            showHideStruct: temple.showHideStruct,
+            progress: temple.progress,
+            winprogress: temple.winprogress,
+            eventId: temple.eventId,
+            originalEventId: temple.originalEventId,
+            exp: temple.exp,
+            animType: temple.animType,
+
+            wormholdCountdowmTime: temple.wormholdCountdowmTime,
         };
 
         return obj;
@@ -330,8 +411,12 @@ export class MapBuildingDataMgr {
     public insertDefendPioneer(buildingId: string, pioneerId: string) {
         const findBuilding = this.getBuildingById(buildingId);
         if (findBuilding == null) return;
-
         findBuilding.defendPioneerIds.push(pioneerId);
+
+        if (findBuilding.type == MapBuildingType.wormhole && findBuilding.defendPioneerIds.length == 3) {
+            // go wormhole fight countdown
+            (findBuilding as MapBuildingWormholeObject).wormholdCountdowmTime = 30;
+        }
         this.saveObj_building();
         NotificationMgr.triggerEvent(NotificationName.BUILDING_INSERT_DEFEND_PIONEER);
     }
@@ -344,7 +429,6 @@ export class MapBuildingDataMgr {
             CLog.error(`MapBuildingDataMgr: removeDefendPioneer, buildingId[${buildingId}] don't have pioneerid[${pioneerId}]`);
             return;
         }
-
         findBuilding.defendPioneerIds.splice(index, 1);
         this.saveObj_building();
         NotificationMgr.triggerEvent(NotificationName.BUILDING_REMOVE_DEFEND_PIONEER);
@@ -387,6 +471,11 @@ export class MapBuildingDataMgr {
     public getStrongholdBuildings() {
         return this._building_data.filter((buiding) => {
             return buiding.type === MapBuildingType.stronghold;
+        });
+    }
+    public getWormholeBuildings() {
+        return this._building_data.filter((buiding) => {
+            return buiding.type === MapBuildingType.wormhole;
         });
     }
     public changeBuildingFaction(buildingId: string, faction: MapMemberFactionType) {

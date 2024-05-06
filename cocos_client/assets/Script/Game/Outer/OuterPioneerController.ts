@@ -25,7 +25,7 @@ import ViewController from "../../BasicView/ViewController";
 import { TaskShowHideStatus } from "../../Const/TaskDefine";
 import { EventConfigData } from "../../Const/Event";
 import UIPanelManger from "../../Basic/UIPanelMgr";
-import { MapBuildingObject, MapBuildingResourceObject } from "../../Const/MapBuilding";
+import { MapBuildingObject, MapBuildingResourceObject, MapBuildingWormholeObject } from "../../Const/MapBuilding";
 import { InnerBuildingType, MapBuildingType } from "../../Const/BuildingDefine";
 import { DataMgr } from "../../Data/DataMgr";
 import {
@@ -174,6 +174,9 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_BEGIN, this._onBeginFight, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_DID_ATTACK, this._onFightDidAttack, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_END, this._onEndFight, this);
+
+        NotificationMgr.addListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_FINISH, this._onWormholeCountDownTimeDidFinish, this);
+
     }
 
     protected viewDidStart() {
@@ -267,6 +270,8 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_BEGIN, this._onBeginFight, this);
         NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_DID_ATTACK, this._onFightDidAttack, this);
         NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_END, this._onEndFight, this);
+
+        NotificationMgr.removeListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_FINISH, this._onWormholeCountDownTimeDidFinish, this);
     }
 
     private _refreshUI() {
@@ -809,6 +814,17 @@ export class OuterPioneerController extends ViewController {
 
         if (data.playerPioneerId != null) {
             this._checkInMainCityRangeAndHealHpToMax(data.playerPioneerId);
+        }
+    }
+
+    private _onWormholeCountDownTimeDidFinish(data: { id: string }) {
+        const building = DataMgr.s.mapBuilding.getBuildingById(data.id);
+        if (building == null) {
+            return;
+        }
+        const tempIds = building.defendPioneerIds.slice();
+        for (const pioneerId of tempIds) {
+            PioneerMgr.pioneerToIdle(pioneerId);
         }
     }
 }

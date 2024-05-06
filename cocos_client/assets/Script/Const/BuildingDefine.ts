@@ -7,7 +7,8 @@ export enum MapBuildingType {
     stronghold = 2,
     city = 0,
     event = 4,
-    decorate = 5
+    decorate = 5,
+    wormhole = 6,
 }
 
 export enum BuildingStayPosType {

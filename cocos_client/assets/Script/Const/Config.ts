@@ -19,6 +19,7 @@ export enum ConfigType {
     WorldMapOtherExtraRadialRange = "310001",
 
     WorldBoxThreshold = "410001",
+    WorldBoxInitialPoint = "410002",
 }
 
 export interface ConfigData {
@@ -69,7 +70,9 @@ export interface NFTRankLimitNumParam extends ConfigData {
 export interface WorldBoxThresholdParam extends ConfigData {
     thresholds: number[];
 }
-
+export interface WorldBoxInitialPointParam extends ConfigData {
+    initialPoint: number;
+}
 
 export interface WorldMapOtherExtraRadialRangeParam extends ConfigData {
     extraRadialRange: number;

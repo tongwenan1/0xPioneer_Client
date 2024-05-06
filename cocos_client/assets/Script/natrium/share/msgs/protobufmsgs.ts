@@ -29,6 +29,12 @@ export enum protobuf_c2s {
     player_generate_troop = 213,
     player_building_delegate_nft = 214,
     player_point_treasure_open = 215,
+    player_nft_lvlup = 216,
+    player_nft_rankup = 217,
+    player_nft_skill_learn = 218,
+    player_nft_skill_forget = 219,
+    player_world_treasure_lottery = 220,
+    player_add_heat_value = 221,
     get_battle_report = 299,
 }
 
@@ -61,5 +67,13 @@ export enum protobuf_s2c {
     player_generate_troop_res = 20213,
     player_building_delegate_nft_res = 20214,
     player_point_treasure_open_res = 20215,
+    player_nft_lvlup_res = 20216,
+    player_nft_rankup_res = 20217,
+    player_nft_skill_learn_res = 20218,
+    player_nft_skill_forget_res = 20219,
+    player_world_treasure_lottery_res = 20220,
+    player_heat_value_change_res = 20221,
+    player_world_treasure_pool_change_res = 20222,
+    player_add_heat_value_res = 20223,
     get_battle_report_res = 20299,
 }

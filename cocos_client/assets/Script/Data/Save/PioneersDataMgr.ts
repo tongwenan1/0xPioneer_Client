@@ -93,12 +93,7 @@ export class PioneersDataMgr {
         let busy: boolean = false;
         const findPioneer = this._pioneers.find((pioneer) => pioneer.id === this._currentActionPioneerId);
         if (findPioneer != undefined) {
-            busy =
-                findPioneer.actionType != MapPioneerActionType.dead &&
-                findPioneer.actionType != MapPioneerActionType.wakeup &&
-                findPioneer.actionType != MapPioneerActionType.idle &&
-                findPioneer.actionType != MapPioneerActionType.defend &&
-                findPioneer.actionType != MapPioneerActionType.eventing;
+            busy = findPioneer.actionType != MapPioneerActionType.idle;
         }
         return busy;
     }
@@ -523,7 +518,8 @@ export class PioneersDataMgr {
                 }
                 if (pioneer.show) {
                     if (pioneer.actionType == MapPioneerActionType.idle) {
-                        if (pioneer.logics.length > 0) {
+                        // xx wait player cannot do logic
+                        if (pioneer.type != MapPioneerType.player && pioneer.logics.length > 0) {
                             const logic = pioneer.logics[0];
                             let logicMove: boolean = false;
                             if (logic.type == MapPioneerLogicType.stepmove) {

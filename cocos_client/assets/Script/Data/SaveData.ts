@@ -91,7 +91,7 @@ export class SaveData {
         await this._battleReportDataMgr.loadObj(walletAddr);
         await this._itemDataMgr.loadObj(walletAddr);
         await this._settlementDataMgr.loadObj(walletAddr);
-        await this._userInfoDataMgr.loadObj(walletAddr);
+        // await this._userInfoDataMgr.loadObj(walletAddr, null);
         await this._taskDataMgr.loadObj(walletAddr);
     }
     public async save() {
