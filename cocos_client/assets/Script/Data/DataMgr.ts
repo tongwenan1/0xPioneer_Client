@@ -634,6 +634,29 @@ export class DataMgr {
         DataMgr.s.item.addObj_item([new ItemData(data.itemId, data.num)]);
     };
 
+    public static player_rookie_finish_res = (e: any) => {
+        DataMgr.s.userInfo.finishRookie();
+        DataMgr.s.task.gameStarted();
+        DataMgr.s.item.addObj_item(
+            [
+                new ItemData(ResourceCorrespondingItem.Energy, 2000),
+                new ItemData(ResourceCorrespondingItem.Food, 2000),
+                new ItemData(ResourceCorrespondingItem.Stone, 2000),
+                new ItemData(ResourceCorrespondingItem.Wood, 2000),
+                new ItemData(ResourceCorrespondingItem.Troop, 2000),
+            ],
+            false
+        );
+    };
+
+    public static player_wormhole_set_defender_res = (e: any) => {
+        const key: string = "player_wormhole_set_defender_res";
+        if (DataMgr.socketSendData.has(key)) {
+            const data: s2c_user.Iplayer_wormhole_set_defender_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_wormhole_set_defender_res;
+            DataMgr.s.userInfo.setWormholeDefenderId(data.pioneerId, data.index);
+        }
+    };
+
     ///////////////// websocketTempData
     public static setTempSendData(key: string, data: DataMgrResData) {
         DataMgr.socketSendData.set(key, data);

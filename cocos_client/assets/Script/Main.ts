@@ -197,6 +197,10 @@ export class Main extends ViewController {
 
         NetworkMgr.websocket.on("player_heat_value_change_res", DataMgr.player_heat_value_change_res);
         NetworkMgr.websocket.on("player_world_treasure_lottery_res", DataMgr.player_world_treasure_lottery_res);
+
+        NetworkMgr.websocket.on("player_rookie_finish_res", DataMgr.player_rookie_finish_res);
+
+        NetworkMgr.websocket.on("player_wormhole_set_defender_res", DataMgr.player_wormhole_set_defender_res);
     }
 
     private async reconnect() {

@@ -5,6 +5,7 @@ import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import ViewController from "../BasicView/ViewController";
 import { DefenderSelectUI } from "./DefenderSelectUI";
+import { NetworkMgr } from "../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("DefenderSetUI")
@@ -75,6 +76,17 @@ export class DefenderSetUI extends ViewController {
         this._allDefenderItemMap.set(index, item);
     }
 
+    private _sendRequestSetDefender(pioneerId: string, index: number) {
+        DataMgr.setTempSendData("player_wormhole_set_defender_res", {
+            pioneerId: pioneerId,
+            index: index
+        });
+        NetworkMgr.websocketMsg.player_wormhole_set_defender({
+            poineerId: pioneerId,
+            index: index
+        });
+    }
+
     private async _onTapTBD(index: number) {
         const result = await UIPanelManger.inst.pushPanel(UIName.DefenderSelectUI);
         if (!result.success) {
@@ -82,7 +94,7 @@ export class DefenderSetUI extends ViewController {
         }
         result.node.getComponent(DefenderSelectUI).configuration((selectPioneerId: string) => {
             this._addDefender(selectPioneerId, index);
-            DataMgr.s.userInfo.setWormholeDefenderId(selectPioneerId, index);
+            this._sendRequestSetDefender(selectPioneerId, index);
         });
     }
     //------------------------------------------ action
@@ -93,7 +105,8 @@ export class DefenderSetUI extends ViewController {
         }
         this._allDefenderItemMap.get(index).destroy();
         this._allDefenderItemMap.delete(index);
-        DataMgr.s.userInfo.setWormholeDefenderId("", index);
+
+        this._sendRequestSetDefender("", index);
     }
     private async onTapClose() {
         await this.playExitAnimation();
@@ -186,8 +199,8 @@ export class DefenderSetUI extends ViewController {
             this._allDefenderItemMap.set(interactableItemIndex, movingItem);
             this._allDefenderItemMap.set(this._movingItemIndex, interactableItem);
 
-            DataMgr.s.userInfo.setWormholeDefenderId(movingItem["defenderId"], interactableItemIndex);
-            DataMgr.s.userInfo.setWormholeDefenderId(interactableItem["defenderId"], this._movingItemIndex);
+            this._sendRequestSetDefender(movingItem["defenderId"], interactableItemIndex);
+            this._sendRequestSetDefender(interactableItem["defenderId"], this._movingItemIndex);
 
             this._movingItemIndex = -1;
             this._isDragging = false;
@@ -224,8 +237,8 @@ export class DefenderSetUI extends ViewController {
             this._allDefenderItemMap.set(interactableItemIndex, movingItem);
             this._allDefenderItemMap.delete(this._movingItemIndex);
 
-            DataMgr.s.userInfo.setWormholeDefenderId(movingItem["defenderId"], interactableItemIndex);
-            DataMgr.s.userInfo.setWormholeDefenderId("", this._movingItemIndex);
+            this._sendRequestSetDefender(movingItem["defenderId"], interactableItemIndex);
+            this._sendRequestSetDefender("", this._movingItemIndex);
 
             this._movingItemIndex = -1;
             this._isDragging = false;

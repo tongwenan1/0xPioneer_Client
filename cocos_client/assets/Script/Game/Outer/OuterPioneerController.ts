@@ -38,6 +38,7 @@ import {
     MapPioneerObject,
     MapPioneerType,
 } from "../../Const/PioneerDefine";
+import { NetworkMgr } from "../../Net/NetworkMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -578,19 +579,7 @@ export class OuterPioneerController extends ViewController {
                 const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
                 if (result.success) {
                     result.node.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), () => {
-                        DataMgr.s.userInfo.finishRookie();
-                        DataMgr.s.task.gameStarted();
-                        // upload resource changed rookie-finish
-                        DataMgr.s.item.addObj_item(
-                            [
-                                new ItemData(ResourceCorrespondingItem.Energy, 2000),
-                                new ItemData(ResourceCorrespondingItem.Food, 2000),
-                                new ItemData(ResourceCorrespondingItem.Stone, 2000),
-                                new ItemData(ResourceCorrespondingItem.Wood, 2000),
-                                new ItemData(ResourceCorrespondingItem.Troop, 2000),
-                            ],
-                            false
-                        );
+                        NetworkMgr.websocketMsg.player_rookie_finish({});
                     });
                 }
             }, 10);

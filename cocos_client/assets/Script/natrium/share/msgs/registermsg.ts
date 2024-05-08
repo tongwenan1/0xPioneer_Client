@@ -38,6 +38,10 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_heat_value_change_res, "player_heat_value_change_res", "s2c_user.player_heat_value_change_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_world_treasure_pool_change_res, "player_world_treasure_pool_change_res", "s2c_user.player_world_treasure_pool_change_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_add_heat_value_res, "player_add_heat_value_res", "s2c_user.player_add_heat_value_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_rookie_finish_res, "player_rookie_finish_res", "s2c_user.player_rookie_finish_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_wormhole_set_defender_res, "player_wormhole_set_defender_res", "s2c_user.player_wormhole_set_defender_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_wormhole_set_attacker_res, "player_wormhole_set_attacker_res", "s2c_user.player_wormhole_set_attacker_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_wormhole_fight_res, "player_wormhole_fight_res", "s2c_user.player_wormhole_fight_res");
     pcodec.register_protobuf_msg(protobuf_s2c.get_battle_report_res, "get_battle_report_res", "s2c_user.get_battle_report_res");
 
     // register client msg
@@ -73,5 +77,9 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.player_nft_skill_forget, "player_nft_skill_forget", "c2s_user.player_nft_skill_forget");
     pcodec.register_protobuf_msg(protobuf_c2s.player_world_treasure_lottery, "player_world_treasure_lottery", "c2s_user.player_world_treasure_lottery");
     pcodec.register_protobuf_msg(protobuf_c2s.player_add_heat_value, "player_add_heat_value", "c2s_user.player_add_heat_value");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_rookie_finish, "player_rookie_finish", "c2s_user.player_rookie_finish");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_wormhole_set_defender, "player_wormhole_set_defender", "c2s_user.player_wormhole_set_defender");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_wormhole_set_attacker, "player_wormhole_set_attacker", "c2s_user.player_wormhole_set_attacker");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_wormhole_fight, "player_wormhole_fight", "c2s_user.player_wormhole_fight");
     pcodec.register_protobuf_msg(protobuf_c2s.get_battle_report, "get_battle_report", "c2s_user.get_battle_report");
 }

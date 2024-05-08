@@ -1,8 +1,8 @@
 import { s2c_user } from "../Net/msg/WebsocketMsg";
 import { ItemConfigType } from "./Item";
 
-export const GAME_ENV_IS_DEBUG = false;
-export const PioneerGameTest = false;
+export const GAME_ENV_IS_DEBUG = true;
+export const PioneerGameTest = true;
 
 export type DataMgrResData =
     | s2c_user.Iplayer_move_res
@@ -24,7 +24,8 @@ export type DataMgrResData =
     | s2c_user.Iplayer_nft_lvlup_res
     | s2c_user.Iplayer_nft_rankup_res
     | s2c_user.Iplayer_nft_skill_learn_res
-    | s2c_user.Iplayer_nft_skill_forget_res;
+    | s2c_user.Iplayer_nft_skill_forget_res
+    | s2c_user.Iplayer_wormhole_set_defender_res;
 
 export enum AttrType {
     HP = 0,

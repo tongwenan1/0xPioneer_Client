@@ -165,6 +165,22 @@ message player_add_heat_value_res {
     required uint32 res = 1;
 }
 
+message player_rookie_finish_res {
+    required uint32 res = 1;
+}
+
+message player_wormhole_set_defender_res {
+    required uint32 res = 1;
+}
+
+message player_wormhole_set_attacker_res {
+    required uint32 res = 1;
+}
+
+message player_wormhole_fight_res {
+    required uint32 res = 1;
+}
+
 message get_battle_report_res {
     required uint32 res = 1;
     repeated share.battle_report_data data = 2;

@@ -35,6 +35,10 @@ export enum protobuf_c2s {
     player_nft_skill_forget = 219,
     player_world_treasure_lottery = 220,
     player_add_heat_value = 221,
+    player_rookie_finish = 222,
+    player_wormhole_set_defender = 223,
+    player_wormhole_set_attacker = 224,
+    player_wormhole_fight = 225,
     get_battle_report = 299,
 }
 
@@ -75,5 +79,9 @@ export enum protobuf_s2c {
     player_heat_value_change_res = 20221,
     player_world_treasure_pool_change_res = 20222,
     player_add_heat_value_res = 20223,
+    player_rookie_finish_res = 20224,
+    player_wormhole_set_defender_res = 20225,
+    player_wormhole_set_attacker_res = 20226,
+    player_wormhole_fight_res = 20227,
     get_battle_report_res = 20299,
 }

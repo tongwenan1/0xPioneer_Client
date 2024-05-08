@@ -170,6 +170,17 @@ export class WebsocketMsg {
         this.send_packet("player_world_treasure_lottery", d);
     }
 
+    public player_rookie_finish(d: c2s_user.Iplayer_rookie_finish) {
+        this.send_packet("player_rookie_finish", d);
+    }
+
+    public player_wormhole_set_defender(d: c2s_user.Iplayer_wormhole_set_defender) {
+        this.send_packet("player_wormhole_set_defender", d);
+    }
+    public player_wormhole_set_attacker(d: c2s_user.Iplayer_wormhole_set_attacker) {
+        this.send_packet("player_wormhole_set_attacker", d);
+    }
+
     public save_archives(d: c2s_user.Isave_archives) {
         this.send_packet("save_archives", d);
     }
@@ -313,6 +324,18 @@ export namespace c2s_user {
         num: number;
     }
     export interface Iplayer_world_treasure_lottery {}
+
+    export interface Iplayer_rookie_finish {}
+
+    export interface Iplayer_wormhole_set_defender {
+        poineerId: string;
+        index: number;
+    }
+    export interface Iplayer_wormhole_set_attacker {
+        poineerId: string;
+        index: number;
+    }
+    export interface Iplayer_wormhole_fight {}
 
     export interface Isave_archives {
         archives: string;
@@ -482,6 +505,11 @@ export namespace s2c_user {
         res: number;
         itemId: string;
         num: number;
+    }
+
+    export interface Iplayer_wormhole_set_defender_res {
+        pioneerId: string;
+        index: number;
     }
 }
 
