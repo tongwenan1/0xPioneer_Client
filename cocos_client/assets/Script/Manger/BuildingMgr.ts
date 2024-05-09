@@ -12,6 +12,7 @@ export default class BuildingMgr {
     public async initData() {
         NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, this._onBuildingChangeShowHide, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_FACTION, this._onBuildingChangeFaction, this);
+        NotificationMgr.addListener(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_FINISH, this._onBuildingTavernCountdownTimeDidFinish, this);
 
         setInterval(() => {
             const buildings = DataMgr.s.mapBuilding.getObj_building();
@@ -76,5 +77,9 @@ export default class BuildingMgr {
     private _onBuildingChangeFaction(action: TaskFactionAction) {
         if (action.type != MapMemberTargetType.building) return;
         DataMgr.s.mapBuilding.changeBuildingFaction(action.id, action.faction);
+    }
+    private _onBuildingTavernCountdownTimeDidFinish(data: { id: string }) {
+        const nft = DataMgr.s.nftPioneer.generateNewNFT();
+        DataMgr.s.mapBuilding.changeBuildingNewNft(data.id, nft);
     }
 }

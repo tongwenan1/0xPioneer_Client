@@ -27,6 +27,7 @@ export interface UserInfoObject {
     exp: number;
     treasureProgress: number;
     heatValue: HeatValueObject;
+    tavernGetPioneerTimestamp: number;
     treasureDidGetRewards: string[];
     pointTreasureDidGetRewards: string[];
 

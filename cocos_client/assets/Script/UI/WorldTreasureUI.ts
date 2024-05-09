@@ -243,8 +243,6 @@ export class WorldTreasureUI extends ViewController {
             const gapTime: number = Math.max(0, endTime - currentTimeStamp);
             this._claimCountDownLabel.string = "Claim Countdown: " + CommonTools.formatSeconds(gapTime / 1000, "HHh MMm");
         }
-        canClaim = true;
-        console.log("exce can: " + canClaim);
         const claimButtonCanTap: boolean = this._currentBoxIndex == this._canClaimBoxIndex && canClaim;
         this._claimButton.interactable = claimButtonCanTap;
         this._claimButton.node.getComponent(Sprite).grayscale = !claimButtonCanTap;

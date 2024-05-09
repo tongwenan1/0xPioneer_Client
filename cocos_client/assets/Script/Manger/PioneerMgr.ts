@@ -22,10 +22,13 @@ import {
     MapPioneerEventAttributesChangeType,
 } from "../Const/PioneerDefine";
 import { DataMgr } from "../Data/DataMgr";
-import { MapBuildingMainCityObject, MapBuildingObject } from "../Const/MapBuilding";
+import { MapBuildingMainCityObject, MapBuildingObject, MapBuildingTavernObject } from "../Const/MapBuilding";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import { PioneersDataMgr } from "../Data/Save/PioneersDataMgr";
 import { NetworkMgr } from "../Net/NetworkMgr";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import { UIName } from "../Const/ConstUIDefine";
+import { TavernUI } from "../UI/Outer/TavernUI";
 
 export default class PioneerMgr {
     public initData() {
@@ -205,7 +208,7 @@ export default class PioneerMgr {
     private _movingTargetDataMap: Map<string, { target: MapMemberTargetType; id: string }> = new Map();
     public constructor() {}
 
-    private _moveMeeted(pioneerId: string, isStay: boolean = true) {
+    private async _moveMeeted(pioneerId: string, isStay: boolean = true) {
         const pioneerDataMgr: PioneersDataMgr = DataMgr.s.pioneer;
         const pioneer: MapPioneerObject = pioneerDataMgr.getById(pioneerId);
         if (pioneer == undefined) {
@@ -436,6 +439,20 @@ export default class PioneerMgr {
                     let currentEvent = EventConfig.getById(stayBuilding.eventId);
                     if (currentEvent != null) {
                         this.pioneerDealWithEvent(pioneer.id, stayBuilding.id, currentEvent);
+                    }
+                } else {
+                    if (isStay) {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                    }
+                }
+            } else if (stayBuilding.type == MapBuildingType.tavern) {
+                if (pioneer.type == MapPioneerType.player) {
+                    const tavern = stayBuilding as MapBuildingTavernObject;
+                    if (tavern.tavernCountdownTime <= 0) {
+                        const result = await UIPanelManger.inst.pushPanel(UIName.TavernUI);
+                        if (result.success) {
+                            result.node.getComponent(TavernUI).configuration(stayBuilding.id);
+                        }
                     }
                 } else {
                     if (isStay) {

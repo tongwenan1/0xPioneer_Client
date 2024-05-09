@@ -41,8 +41,11 @@ import EventConfig from "../../Config/EventConfig";
 import Config from "../../Const/Config";
 import { DataMgr } from "../../Data/DataMgr";
 import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType, MapPioneerObject } from "../../Const/PioneerDefine";
-import { MapBuildingObject } from "../../Const/MapBuilding";
+import { MapBuildingObject, MapBuildingTavernObject } from "../../Const/MapBuilding";
 import { NetworkMgr } from "../../Net/NetworkMgr";
+import UIPanelManger from "../../Basic/UIPanelMgr";
+import { UIName } from "../../Const/ConstUIDefine";
+import { NFTViewInfoUI } from "../../UI/NFTViewInfoUI";
 
 const { ccclass, property } = _decorator;
 
@@ -439,7 +442,7 @@ export class OuterTiledMapActionController extends ViewController {
         }
     }
 
-    private _clickOnMap(worldpos: Vec3) {
+    private async _clickOnMap(worldpos: Vec3) {
         const currentActionPioneer = DataMgr.s.pioneer.getCurrentPlayer();
         if (currentActionPioneer == null) {
             return;
@@ -472,7 +475,7 @@ export class OuterTiledMapActionController extends ViewController {
             return;
         }
 
-        // -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel
+        // -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel 7-tavern
         // -2 no action
         let actionType: number = -1;
         let actionMovingPioneerId: string = null;
@@ -516,6 +519,16 @@ export class OuterTiledMapActionController extends ViewController {
                     actionType = 4;
                 } else if (stayBuilding.type == MapBuildingType.event) {
                     actionType = 5;
+                } else if (stayBuilding.type == MapBuildingType.tavern) {
+                    const tempTavern = stayBuilding as MapBuildingTavernObject;
+                    if (tempTavern.nft != null) {
+                        const result = await UIPanelManger.inst.pushPanel(UIName.NFTViewInfoUI);
+                        if (result.success) {
+                            result.node.getComponent(NFTViewInfoUI).showItem(tempTavern.nft);
+                        }
+                        return;
+                    }
+                    actionType = 0;
                 }
                 if (actionType != -2 && actionType != 3) {
                     purchaseMovingBuildingId = stayBuilding.id;
@@ -642,6 +655,7 @@ export class OuterTiledMapActionController extends ViewController {
                     }
                 }
             }
+
             let movePaths: TilePos[] = [];
             if (taregtPos != null) {
                 const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, taregtPos, targetStayPositions);

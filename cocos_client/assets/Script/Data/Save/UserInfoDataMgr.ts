@@ -224,8 +224,9 @@ export default class UserInfoDataMgr {
                     treasureProgress: 0,
                     heatValue: {
                         getTimestamp: 0,
-                        currentHeatValue: 0
+                        currentHeatValue: 0,
                     },
+                    tavernGetPioneerTimestamp: 0,
                     treasureDidGetRewards: [],
                     pointTreasureDidGetRewards: [],
                     cityRadialRange: 7,

@@ -255,7 +255,7 @@ export class PioneersDataMgr {
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ATTACK_CHANGED, { id: pioneerId });
         }
     }
-    
+
     public changeDefend(pioneerId: string, num: number): void {
         if (num == 0) {
             return;
@@ -337,6 +337,42 @@ export class PioneersDataMgr {
         }
     }
 
+    public createNFTPlayer(nft: NFTPioneerObject, originalStayPos: Vec2) {
+        // const obj: MapPlayerPioneerObject  = {
+        //     id: nft.uniqueId,
+        //     show: true,
+        //     faction: MapMemberFactionType.friend,
+        //     type: MapPioneerType.player,
+        //     animType: "self",
+        //     name: nft.name,
+        //     stayPos: originalStayPos,
+
+        //     hpMax: nft.hp,
+        //     hp: nft.hp,
+        //     attack: nft.attack,
+        //     defend: nft.defense,
+        //     speed: nft.speed,
+
+        //     movePaths: [],
+
+        //     actionType: MapPioneerActionType.idle,
+        //     eventStatus: MapPioneerEventStatus.None,
+        //     actionBeginTimeStamp: 0,
+        //     actionEndTimeStamp: 0,
+
+        //     logics: null,
+
+        //     winProgress: null,
+        //     winExp: null,
+        //     drop: null,
+
+        //     rebirthCountTime: -1,
+        //     killerId: null,
+        //     NFT: nft
+        // };
+        // this._pioneers.push(obj);
+        // this.saveObj();
+    }
     public bindPlayerNFT(pioneerId: string, NFT: NFTPioneerObject) {
         const findPioneer = this.getById(pioneerId) as MapPlayerPioneerObject;
         if (findPioneer == undefined) {

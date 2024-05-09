@@ -1,6 +1,7 @@
 import { Vec2 } from "cc";
 import { BuildingStayPosType, MapBuildingType } from "./BuildingDefine";
 import { MapMemberFactionType } from "./ConstDefine";
+import { NFTPioneerObject } from "./NFTPioneerDefine";
 
 export interface MapBuildingConfigData {
     block: any;
@@ -65,9 +66,14 @@ export interface MapBuildingResourceData extends MapBuildingBaseData {
     quota: number;
 }
 export interface MapBuildingWormholeData extends MapBuildingBaseData {
-    wormholdCountdowmTime: number;
+    wormholdCountdownTime: number;
 }
-export type MapBuildingData = MapBuildingMainCityData | MapBuildingResourceData | MapBuildingWormholeData | MapBuildingBaseData;
+export interface MapBuildingTavernData extends MapBuildingBaseData {
+    tavernCountdownTime: number;
+    nft: NFTPioneerObject;
+}
+
+export type MapBuildingData = MapBuildingMainCityData | MapBuildingResourceData | MapBuildingWormholeData | MapBuildingTavernData | MapBuildingBaseData;
 
 export interface MapBuildingBaseObject extends MapBuildingBaseData {
     stayMapPositions: Vec2[];
@@ -81,8 +87,16 @@ export interface MapBuildingResourceObject extends MapBuildingResourceData {
 export interface MapBuildingWormholeObject extends MapBuildingWormholeData {
     stayMapPositions: Vec2[];
 }
+export interface MapBuildingTavernObject extends MapBuildingTavernData {
+    stayMapPositions: Vec2[];
+}
 
-export type MapBuildingObject = MapBuildingMainCityObject | MapBuildingResourceObject | MapBuildingWormholeObject | MapBuildingBaseObject;
+export type MapBuildingObject =
+    | MapBuildingMainCityObject
+    | MapBuildingResourceObject
+    | MapBuildingWormholeObject
+    | MapBuildingTavernObject
+    | MapBuildingBaseObject;
 
 // decorate
 export enum MapDecoratePosMode {
