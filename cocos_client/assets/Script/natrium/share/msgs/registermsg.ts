@@ -28,19 +28,43 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_get_auto_energy_res, "player_get_auto_energy_res", "s2c_user.player_get_auto_energy_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_generate_energy_res, "player_generate_energy_res", "s2c_user.player_generate_energy_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_generate_troop_res, "player_generate_troop_res", "s2c_user.player_generate_troop_res");
-    pcodec.register_protobuf_msg(protobuf_s2c.player_building_delegate_nft_res, "player_building_delegate_nft_res", "s2c_user.player_building_delegate_nft_res");
-    pcodec.register_protobuf_msg(protobuf_s2c.player_point_treasure_open_res, "player_point_treasure_open_res", "s2c_user.player_point_treasure_open_res");
+    pcodec.register_protobuf_msg(
+        protobuf_s2c.player_building_delegate_nft_res,
+        "player_building_delegate_nft_res",
+        "s2c_user.player_building_delegate_nft_res"
+    );
+    pcodec.register_protobuf_msg(
+        protobuf_s2c.player_point_treasure_open_res,
+        "player_point_treasure_open_res",
+        "s2c_user.player_point_treasure_open_res"
+    );
     pcodec.register_protobuf_msg(protobuf_s2c.player_nft_lvlup_res, "player_nft_lvlup_res", "s2c_user.player_nft_lvlup_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_nft_rankup_res, "player_nft_rankup_res", "s2c_user.player_nft_rankup_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_nft_skill_learn_res, "player_nft_skill_learn_res", "s2c_user.player_nft_skill_learn_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_nft_skill_forget_res, "player_nft_skill_forget_res", "s2c_user.player_nft_skill_forget_res");
-    pcodec.register_protobuf_msg(protobuf_s2c.player_world_treasure_lottery_res, "player_world_treasure_lottery_res", "s2c_user.player_world_treasure_lottery_res");
+    pcodec.register_protobuf_msg(
+        protobuf_s2c.player_world_treasure_lottery_res,
+        "player_world_treasure_lottery_res",
+        "s2c_user.player_world_treasure_lottery_res"
+    );
     pcodec.register_protobuf_msg(protobuf_s2c.player_heat_value_change_res, "player_heat_value_change_res", "s2c_user.player_heat_value_change_res");
-    pcodec.register_protobuf_msg(protobuf_s2c.player_world_treasure_pool_change_res, "player_world_treasure_pool_change_res", "s2c_user.player_world_treasure_pool_change_res");
+    pcodec.register_protobuf_msg(
+        protobuf_s2c.player_world_treasure_pool_change_res,
+        "player_world_treasure_pool_change_res",
+        "s2c_user.player_world_treasure_pool_change_res"
+    );
     pcodec.register_protobuf_msg(protobuf_s2c.player_add_heat_value_res, "player_add_heat_value_res", "s2c_user.player_add_heat_value_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_rookie_finish_res, "player_rookie_finish_res", "s2c_user.player_rookie_finish_res");
-    pcodec.register_protobuf_msg(protobuf_s2c.player_wormhole_set_defender_res, "player_wormhole_set_defender_res", "s2c_user.player_wormhole_set_defender_res");
-    pcodec.register_protobuf_msg(protobuf_s2c.player_wormhole_set_attacker_res, "player_wormhole_set_attacker_res", "s2c_user.player_wormhole_set_attacker_res");
+    pcodec.register_protobuf_msg(
+        protobuf_s2c.player_wormhole_set_defender_res,
+        "player_wormhole_set_defender_res",
+        "s2c_user.player_wormhole_set_defender_res"
+    );
+    pcodec.register_protobuf_msg(
+        protobuf_s2c.player_wormhole_set_attacker_res,
+        "player_wormhole_set_attacker_res",
+        "s2c_user.player_wormhole_set_attacker_res"
+    );
     pcodec.register_protobuf_msg(protobuf_s2c.player_wormhole_fight_res, "player_wormhole_fight_res", "s2c_user.player_wormhole_fight_res");
     pcodec.register_protobuf_msg(protobuf_s2c.get_battle_report_res, "get_battle_report_res", "s2c_user.get_battle_report_res");
 
@@ -75,11 +99,15 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.player_nft_rankup, "player_nft_rankup", "c2s_user.player_nft_rankup");
     pcodec.register_protobuf_msg(protobuf_c2s.player_nft_skill_learn, "player_nft_skill_learn", "c2s_user.player_nft_skill_learn");
     pcodec.register_protobuf_msg(protobuf_c2s.player_nft_skill_forget, "player_nft_skill_forget", "c2s_user.player_nft_skill_forget");
-    pcodec.register_protobuf_msg(protobuf_c2s.player_world_treasure_lottery, "player_world_treasure_lottery", "c2s_user.player_world_treasure_lottery");
+    pcodec.register_protobuf_msg(
+        protobuf_c2s.player_world_treasure_lottery,
+        "player_world_treasure_lottery",
+        "c2s_user.player_world_treasure_lottery"
+    );
     pcodec.register_protobuf_msg(protobuf_c2s.player_add_heat_value, "player_add_heat_value", "c2s_user.player_add_heat_value");
     pcodec.register_protobuf_msg(protobuf_c2s.player_rookie_finish, "player_rookie_finish", "c2s_user.player_rookie_finish");
     pcodec.register_protobuf_msg(protobuf_c2s.player_wormhole_set_defender, "player_wormhole_set_defender", "c2s_user.player_wormhole_set_defender");
     pcodec.register_protobuf_msg(protobuf_c2s.player_wormhole_set_attacker, "player_wormhole_set_attacker", "c2s_user.player_wormhole_set_attacker");
     pcodec.register_protobuf_msg(protobuf_c2s.player_wormhole_fight, "player_wormhole_fight", "c2s_user.player_wormhole_fight");
     pcodec.register_protobuf_msg(protobuf_c2s.get_battle_report, "get_battle_report", "c2s_user.get_battle_report");
-}
+};

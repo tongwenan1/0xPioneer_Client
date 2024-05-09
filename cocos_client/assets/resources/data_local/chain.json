@@ -1,5 +1,5 @@
 {
-    "currentChainId": "534351",
+    "currentChainId": "123456",
     "configs": {
         "42161": {
             "chainId": "42161",
@@ -32,6 +32,23 @@
             "api": {
                 "ws_host": "wss://apitest.0xpioneerdev.com/wss",
                 "http_host": "https://apitest.0xpioneerdev.com/api",
+                "init": true
+            }
+        },
+        "123456": {
+            "chainId": "534351",
+            "chainName": "Scroll Sepolia",
+            "nativeCurrency": {
+                "name": "ETH",
+                "symbol": "ETH",
+                "decimals": 18
+            },
+            "rpcUrls": ["https://sepolia-rpc.scroll.io"],
+            "blockExplorerUrls": ["https://sepolia.scrollscan.com"],
+            "abi": "deployresult_scrollTestnet",
+            "api": {
+                "ws_host": "ws://10.1.6.36:4091",
+                "http_host": "http://10.1.6.36:8080",
                 "init": true
             }
         }
