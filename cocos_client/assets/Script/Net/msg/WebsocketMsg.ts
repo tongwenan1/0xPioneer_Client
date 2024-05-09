@@ -375,8 +375,6 @@ export namespace s2c_user {
 
         /** enter_game_res data */
         data?: share.Iplayer_data | null;
-
-        archives: string;
     }
 
     export interface Imark_data_dirty {
@@ -528,6 +526,14 @@ export namespace share {
         lastlogintm: number;
     }
 
+    export interface pos2d {
+        x: number;
+        y: number;
+    }
+    export interface heat_value_data {
+        getTimestamp: number;
+        currentHeatValue: number;
+    }
     export interface Iplayer_sinfo {
         /** player_sinfo playerid */
         playerid: number;
@@ -537,16 +543,41 @@ export namespace share {
 
         /** player_sinfo gender */
         gender: number;
+
+        mapid: number;
+        speed: number;
+        level: number;
+        exp: number;
+        lastAPRecTms: number;
+        pos: pos2d;
+        treasureProgress: number;
+        heatValue: heat_value_data;
+        treasureDidGetRewards: string[];
+        pointTreasureDidGetRewards: string[];
+        cityRadialRange: number;
+        didFinishRookie: boolean;
+        generateTroopInfo: string;
+        generateEnergyInfo: string;
+    }
+    export interface Ibuilding_data {
+        id: string;
+        anim: string;
+        level: number;
+        prefab?: string;
+        desc?: string;
+        upgradeCountTime: number;
+        upgradeTotalTime: number;
     }
 
     export interface Iplayer_data {
         /** player_data info */
-        info: share.Iplayer_info;
+        info: Iplayer_info;
     }
 
     export interface Iplayer_info {
         /** player_info sinfo */
-        sinfo: share.Iplayer_sinfo;
+        sinfo: Iplayer_sinfo;
+        buildings: Ibuilding_data[];
     }
 
     export interface Ipioneer_info {

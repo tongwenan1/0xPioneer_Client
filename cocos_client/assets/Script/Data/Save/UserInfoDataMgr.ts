@@ -8,7 +8,8 @@ import { LvlupConfigData } from "../../Const/Lvlup";
 import { NotificationName } from "../../Const/Notification";
 import { UserInfoObject } from "../../Const/UserInfoDefine";
 import { NetworkMgr } from "../../Net/NetworkMgr";
-import { WebsocketMsg } from "../../Net/msg/WebsocketMsg";
+import { WebsocketMsg, share } from "../../Net/msg/WebsocketMsg";
+import NetGlobalData from "./Data/NetGlobalData";
 
 export default class UserInfoDataMgr {
     private _baseKey: string = "user_Info";
@@ -17,9 +18,8 @@ export default class UserInfoDataMgr {
     private _data: UserInfoObject = null;
     public constructor() {}
     //--------------------------------
-    public loadObj(walletAddr: string, archives: string) {
-        this._key = walletAddr + "|" + this._baseKey;
-        this._initData(archives);
+    public loadObj() {
+        this._initData();
     }
     public saveObj() {
         localStorage.setItem(this._key, JSON.stringify(this._data));
@@ -209,48 +209,43 @@ export default class UserInfoDataMgr {
         this.saveObj();
     }
     //------------------------------------------------------------------------
-    private async _initData(archives: string = null) {
-        if (archives != null && archives.length > 0) {
-            this._data = JSON.parse(archives).userInfo;
-            console.log("exce d: ", this._data);
-        } else {
-            const localDataString: string = localStorage.getItem(this._key);
-            if (localDataString == null) {
-                this._data = {
-                    id: "1001",
-                    name: "Player",
-                    level: 1,
-                    exp: 0,
-                    treasureProgress: 0,
-                    heatValue: {
-                        getTimestamp: 0,
-                        currentHeatValue: 0,
-                    },
-                    tavernGetPioneerTimestamp: 0,
-                    treasureDidGetRewards: [],
-                    pointTreasureDidGetRewards: [],
-                    cityRadialRange: 7,
-                    didFinishRookie: false,
-                    generateTroopInfo: null,
-                    generateEnergyInfo: null,
-                    innerBuildings: {},
-                    wormholeDefenderIds: ["", "", ""],
-                };
-                const buildingInfo = InnerBuildingConfig.getConfs();
-                for (const key in buildingInfo) {
-                    this._data.innerBuildings[key] = {
-                        buildBeginLatticeIndex: null,
-                        buildType: buildingInfo[key].id,
-                        buildLevel: 0,
-                        upgradeCountTime: 0,
-                        upgradeTotalTime: 0,
-                    };
-                }
-                this.saveObj();
-            } else {
-                this._data = JSON.parse(localDataString);
+    private async _initData() {
+        if (NetGlobalData.userInfo == null || NetGlobalData.innerBuildings == null) {
+            return;
+        }
+        const globalData: share.Iplayer_sinfo = NetGlobalData.userInfo;
+        const innerBuildings: share.Ibuilding_data[] = NetGlobalData.innerBuildings;
+        this._data = {
+            id: globalData.playerid.toString(),
+            name: globalData.pname,
+            level: globalData.level,
+            exp: globalData.exp,
+            treasureProgress: globalData.treasureProgress,
+            treasureDidGetRewards: globalData.treasureDidGetRewards,
+            pointTreasureDidGetRewards: globalData.pointTreasureDidGetRewards,
+            heatValue: {
+                getTimestamp: globalData.heatValue.getTimestamp,
+                currentHeatValue: globalData.heatValue.currentHeatValue,
+            },
+            cityRadialRange: globalData.cityRadialRange,
+            didFinishRookie: globalData.didFinishRookie,
+            innerBuildings: {},
+            // lost
+            tavernGetPioneerTimestamp: 0,
+            generateTroopInfo: null,
+            generateEnergyInfo: null,
+            wormholeDefenderIds: ["", "", ""],
+        };
+        for (const building of innerBuildings) {
+            this._data.innerBuildings[building.id] = {
+                buildBeginLatticeIndex: null,
+                buildLevel: building.level,
+                buildType: building.id as InnerBuildingType,
+                upgradeCountTime: building.upgradeCountTime,
+                upgradeTotalTime: building.upgradeTotalTime
             }
         }
+        console.log("exce _data: ", this._data);
         this._initInterval();
     }
     private _initInterval() {

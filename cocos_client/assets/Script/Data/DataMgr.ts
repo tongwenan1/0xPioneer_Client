@@ -18,6 +18,7 @@ import { RunData } from "./RunData";
 import { SaveData } from "./SaveData";
 import { MapBuildingMainCityObject } from "../Const/MapBuilding";
 import { GameMgr, LanMgr } from "../Utils/Global";
+import NetGlobalData from "./Save/Data/NetGlobalData";
 
 export class DataMgr {
     public static r: RunData;
@@ -31,10 +32,6 @@ export class DataMgr {
         return true;
     }
 
-    public static async load() {
-        await this.s.load(this.r.wallet.addr);
-    }
-
     public static async save() {
         await this.s.save();
     }
@@ -43,12 +40,16 @@ export class DataMgr {
         CLog.debug("DataMgr/onmsg: e => " + JSON.stringify(e));
     };
 
-    public static enter_game_res = (e: any) => {
+    public static enter_game_res = async (e: any) => {
         let p: s2c_user.Ienter_game_res = e.data;
         if (p.res === 1) {
             if (p.data) {
-                DataMgr.s.userInfo.loadObj(this.r.wallet.addr, p.archives);
-                DataMgr.r.userInfo = p.data.info.sinfo;
+                // set new global data
+                NetGlobalData.userInfo = p.data.info.sinfo;
+                NetGlobalData.innerBuildings = p.data.info.buildings;
+                // load save data
+                await DataMgr.s.load(this.r.wallet.addr);
+
                 NotificationMgr.triggerEvent(NotificationName.USER_LOGIN_SUCCEED);
             }
             // reconnect

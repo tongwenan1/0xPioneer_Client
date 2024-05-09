@@ -79,8 +79,6 @@ export class Main extends ViewController {
     }
 
     private async _onUserLoginSucceed() {
-        await DataMgr.load();
-
         BattleReportsMgr.init();
 
         if (GAME_ENV_IS_DEBUG) {
