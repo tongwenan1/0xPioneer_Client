@@ -227,13 +227,19 @@ export default class UserInfoDataMgr {
                 getTimestamp: globalData.heatValue.getTimestamp,
                 currentHeatValue: globalData.heatValue.currentHeatValue,
             },
+            generateTroopInfo: globalData.generateTroopInfo == null ? null : {
+                countTime: globalData.generateTroopInfo.countTime,
+                troopNum: globalData.generateTroopInfo.troopNum
+            },
+            generateEnergyInfo: globalData.generateEnergyInfo == null ? null : {
+                countTime: globalData.generateEnergyInfo.countTime,
+                totalEnergyNum: globalData.generateEnergyInfo.totalEnergyNum
+            },
             cityRadialRange: globalData.cityRadialRange,
             didFinishRookie: globalData.didFinishRookie,
             innerBuildings: {},
             // lost
             tavernGetPioneerTimestamp: 0,
-            generateTroopInfo: null,
-            generateEnergyInfo: null,
             wormholeDefenderIds: ["", "", ""],
         };
         for (const building of innerBuildings) {

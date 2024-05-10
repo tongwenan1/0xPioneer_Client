@@ -27,8 +27,8 @@ message player_sinfo {
     repeated string pointTreasureDidGetRewards = 12;
     required uint32 cityRadialRange = 13;
     required bool didFinishRookie = 14;
-    optional string generateTroopInfo = 15;
-    optional string generateEnergyInfo = 16;
+    optional troop_info_data generateTroopInfo = 15;
+    optional energy_info_data generateEnergyInfo = 16;
 }
 
 // self player data
@@ -46,8 +46,6 @@ message building_data {
     required string id = 1;
     required string anim = 2;
     required uint32 level = 3;
-    optional string prefab = 4;
-    optional string desc = 5;
     required uint32 upgradeCountTime = 6;
     required uint32 upgradeTotalTime = 7;
 }
@@ -60,6 +58,16 @@ message pos2d {
 message heat_value_data {
     required uint32 getTimestamp = 1;
     required uint32 currentHeatValue = 2;
+}
+
+message energy_info_data {
+    required uint32 countTime = 1;
+    required uint32 totalEnergyNum = 2;
+}
+
+message troop_info_data {
+    required uint32 countTime = 1;
+    required uint32 troopNum = 2;
 }
 
 message tran_data {

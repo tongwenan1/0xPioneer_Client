@@ -526,6 +526,14 @@ export namespace share {
         lastlogintm: number;
     }
 
+    export interface energy_info_data {
+        countTime: number;
+        totalEnergyNum: number;
+    }
+    export interface troop_info_data {
+        countTime: number;
+        troopNum: number;
+    }
     export interface pos2d {
         x: number;
         y: number;
@@ -556,8 +564,8 @@ export namespace share {
         pointTreasureDidGetRewards: string[];
         cityRadialRange: number;
         didFinishRookie: boolean;
-        generateTroopInfo: string;
-        generateEnergyInfo: string;
+        generateTroopInfo?: troop_info_data;
+        generateEnergyInfo?: energy_info_data;
     }
     export interface Ibuilding_data {
         id: string;
