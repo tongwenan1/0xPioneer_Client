@@ -48,6 +48,7 @@ export class DataMgr {
                 NetGlobalData.userInfo = p.data.info.sinfo;
                 NetGlobalData.innerBuildings = p.data.info.buildings;
                 NetGlobalData.storehouse = p.data.info.storehouse;
+                NetGlobalData.usermap = p.data.info.usermap;
                 // load save data
                 await DataMgr.s.load(this.r.wallet.addr);
 
@@ -69,31 +70,36 @@ export class DataMgr {
         }
     };
     public static player_item_use_res = (e: any) => {
-        
+        const p: s2c_user.Iplayer_item_use_res = e.data;
+        if (p.res === 1) {
+        }
     };
 
     // inner building
     public static player_building_levelup_res = (e: any) => {
         const p: s2c_user.Iplayer_building_levelup_res = e.data;
-        if (p.data == null) {
+        if (p.res !== 1) {
             return;
         }
         DataMgr.s.userInfo.beginInnerBuildingUpgrade(p.data.id as InnerBuildingType, p.data.upgradeCountTime, p.data.upgradeTotalTime);
     };
 
+    // map
+    public static player_move_res = (e: any) => {
+        const p: s2c_user.Iplayer_move_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        if (!DataMgr.socketSendData.has("player_move_res")) {
+            return;
+        }
+        const localData: s2c_user.Iplayer_move_res_local_data = DataMgr.socketSendData.get("player_move_res") as s2c_user.Iplayer_move_res_local_data;
+        DataMgr.s.pioneer.beginMove(localData.pioneerId, localData.movePath);
+    };
+
     public static get_pioneers_res = (e: any) => {
         let p: s2c_user.Iget_pioneers_res = e.data;
         // TODO: update all pioneers data
-    };
-
-    public static player_move_res = (e: any) => {
-        if (DataMgr.socketSendData.has("player_move_res")) {
-            const data: s2c_user.Iplayer_move_res = DataMgr.socketSendData.get("player_move_res") as s2c_user.Iplayer_move_res;
-            if (data.costEnergyNum > 0) {
-                DataMgr.s.item.subObj_item(ResourceCorrespondingItem.Energy, data.costEnergyNum);
-            }
-            DataMgr.s.pioneer.beginMove(data.pioneerId, data.movePath);
-        }
     };
 
     public static player_talk_select_res = (e: any) => {};

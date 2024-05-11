@@ -84,8 +84,7 @@ export class SaveData {
     public async load(walletAddr: string) {
         this._userInfoDataMgr.loadObj();
         this._itemDataMgr.loadObj();
-
-        await this._pioneersDataMgr.loadObj(walletAddr);
+        this._pioneersDataMgr.loadObj();
         await this._nftPioneerDataMgr.loadObj(walletAddr);
         await this._eraseShadowDataMgr.loadObj(walletAddr);
         await this._mapBuildingDataMgr.loadObj(walletAddr);
@@ -98,7 +97,6 @@ export class SaveData {
     public async save() {
         await this._eraseShadowDataMgr.saveObj();
         await this._mapBuildingDataMgr.saveObj();
-        await this._pioneersDataMgr.saveObj();
         await this._nftPioneerDataMgr.saveObj();
         await this._countDataMgr.saveObj();
         await this._artifactDataMgr.saveObj();

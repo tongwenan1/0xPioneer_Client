@@ -5,7 +5,7 @@ export const GAME_ENV_IS_DEBUG = true;
 export const PioneerGameTest = true;
 
 export type DataMgrResData =
-    | s2c_user.Iplayer_move_res
+    | s2c_user.Iplayer_move_res_local_data
     | s2c_user.Iplayer_building_delegate_nft_res
     | s2c_user.Iplayer_generate_troop_res
     | s2c_user.Iplayer_generate_energy_res

@@ -41,19 +41,69 @@ message player_info {
     required player_sinfo sinfo = 1; // player simple info
     repeated building_data buildings = 2;
     optional storehouse_data storehouse = 3;
+    optional artifact_data artifact = 4;
+    optional usermap_data usermap = 5;
 }
 
 message storehouse_data {
     map<string,item_data> items = 1; // goods/commodities in storehouse, itemid=>count map
 }
 
+message artifact_data {
+    map<string,artifact_info_data> items = 1; // goods/commodities in storehouse, itemid=>count map
+}
+
+message usermap_data {
+    map<string,pioneer_data> pioneer = 1; // goods/commodities in storehouse, itemid=>count map
+}
+
+message artifact_info_data {
+    optional string uniqueId = 1;
+    optional string artifactConfigId = 2; // artifact config id
+    optional uint32 count = 3; // count
+    optional uint32 addTimeStamp = 4;
+    optional uint32 effectIndex = 5;
+}
+
+message pioneer_data {
+    required string id = 1;
+    required bool show = 2;
+    required uint32 faction = 3;
+    required string type = 4;
+    required pos2d stayPos = 5;
+    required uint32 hpMax = 6;
+    required uint32 hp = 7;
+    required uint32 attack = 8;
+    required uint32 defend = 9;
+    required uint32 speed = 10;
+    required string actionType = 11;
+    required uint32 eventStatus = 12;
+    required uint32 actionBeginTimeStamp = 13;
+    required uint32 actionEndTimeStamp = 14;
+    optional uint32 winProgress = 15;
+    required uint32 winExp = 16;
+    optional user_map_member_status showHideStruct = 17;
+    optional string actionEventId = 18;
+    optional string NFTInitLinkId = 19;
+    optional int32 rebirthCountTime = 20;
+    optional string killerId = 21;
+    optional string NFTId = 22;
+    optional string talkId = 23;
+    optional user_map_member_status talkCountStruct = 24;
+}
+
+message user_map_member_status {
+    optional uint32 countTime = 1;
+    optional bool isShow = 2;
+}
+
 message building_data {
-    required string id = 1;
-    required string anim = 2;
-    required uint32 level = 3;
-    required uint32 upgradeCountTime = 4;
-    required uint32 upgradeTotalTime = 5;
-    required bool upgradeIng = 6;
+    required string id = 1;
+    required string anim = 2;
+    required uint32 level = 3;
+    required uint32 upgradeCountTime = 4;
+    required uint32 upgradeTotalTime = 5;
+    required bool upgradeIng = 6;
 }
 
 message pos2d {

@@ -399,6 +399,9 @@ export namespace s2c_user {
     }
 
     export interface Iplayer_move_res {
+        res: number;
+    }
+    export interface Iplayer_move_res_local_data {
         pioneerId: string;
         movePath: TilePos[];
         costEnergyNum: number;
@@ -576,9 +579,6 @@ export namespace share {
         upgradeTotalTime: number;
         upgradeIng: boolean;
     }
-    export interface Istorehouse_data {
-        items: { [key: string]: Iitem_data };
-    }
 
     export interface Iplayer_data {
         /** player_data info */
@@ -589,16 +589,55 @@ export namespace share {
         /** player_info sinfo */
         sinfo: Iplayer_sinfo;
         buildings: Ibuilding_data[];
-        storehouse: Istorehouse_data;
+        storehouse?: Istorehouse_data;
+        usermap?: Iusermap_data;
     }
 
-    export interface Ipioneer_info {
-        type: string;
+    export interface Istorehouse_data {
+        items: { [key: string]: Iitem_data };
     }
-
     export interface Iitem_data {
         itemConfigId: string;
         count: number;
         addTimeStamp: number;
+    }
+
+    export interface Iusermap_data {
+        pioneer: { [key: string]: Ipioneer_data };
+    }
+    export interface Ipioneer_data {
+        id: string;
+        show: boolean;
+        faction: number;
+        type: string;
+        stayPos: pos2d;
+        hpMax: number;
+        hp: number;
+        attack: number;
+        defend: number;
+        speed: number;
+        actionType: string;
+        eventStatus: number;
+        actionBeginTimeStamp: number;
+        actionEndTimeStamp: number;
+        winProgress?: number;
+        winExp: number;
+        showHideStruct: Iuser_map_member_status;
+        actionEventId?: string;
+        NFTInitLinkId?: string;
+        rebirthCountTime?: number;
+        killerId?: string;
+        NFTId?: string;
+        talkId?: string;
+        talkCountStruct: Iuser_map_member_status;
+    }
+    export interface Iuser_map_member_status {
+        countTime: number;
+        isShow: boolean;
+    }
+
+
+    export interface Ipioneer_info {
+        type: string;
     }
 }

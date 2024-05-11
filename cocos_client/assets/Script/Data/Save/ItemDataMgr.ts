@@ -7,10 +7,9 @@ import NetGlobalData from "./Data/NetGlobalData";
 
 export class ItemDataMgr {
     private _data: ItemData[];
-    private _key: string = "";
     private _maxItemLength: number = 100;
 
-    public async loadObj() {
+    public loadObj() {
         this._initData();
     }
 
