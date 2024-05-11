@@ -68,6 +68,8 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_wormhole_fight_res, "player_wormhole_fight_res", "s2c_user.player_wormhole_fight_res");
     pcodec.register_protobuf_msg(protobuf_s2c.get_battle_report_res, "get_battle_report_res", "s2c_user.get_battle_report_res");
 
+    pcodec.register_protobuf_msg(protobuf_s2c.storhouse_change, "storhouse_change", "s2c_user.storhouse_change");
+
     // register client msg
     pcodec.register_protobuf_msg(protobuf_c2s.login, "login", "c2s_user.login");
     pcodec.register_protobuf_msg(protobuf_c2s.create_player, "create_player", "c2s_user.create_player");

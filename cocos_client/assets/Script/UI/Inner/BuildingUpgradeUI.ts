@@ -1,28 +1,27 @@
-import { _decorator, Button, Color, instantiate, Label, Layout, Node, Sprite } from 'cc';
-import CommonTools from '../../Tool/CommonTools';
-import { GameExtraEffectType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { GameMgr, ItemMgr, LanMgr } from '../../Utils/Global';
-import ViewController from '../../BasicView/ViewController';
-import { UIHUDController } from '../UIHUDController';
-import NotificationMgr from '../../Basic/NotificationMgr';
-import { InnerBuildingType, UserInnerBuildInfo } from '../../Const/BuildingDefine';
-import InnerBuildingConfig from '../../Config/InnerBuildingConfig';
-import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
-import { NotificationName } from '../../Const/Notification';
-import UIPanelManger from '../../Basic/UIPanelMgr';
-import { DataMgr } from '../../Data/DataMgr';
-import { UIName } from '../../Const/ConstUIDefine';
-import { DelegateUI } from '../DelegateUI';
-import { NetworkMgr } from '../../Net/NetworkMgr';
+import { _decorator, Button, Color, instantiate, Label, Layout, Node, Sprite } from "cc";
+import CommonTools from "../../Tool/CommonTools";
+import { GameExtraEffectType, ResourceCorrespondingItem } from "../../Const/ConstDefine";
+import { GameMgr, ItemMgr, LanMgr } from "../../Utils/Global";
+import ViewController from "../../BasicView/ViewController";
+import { UIHUDController } from "../UIHUDController";
+import NotificationMgr from "../../Basic/NotificationMgr";
+import { InnerBuildingType, UserInnerBuildInfo } from "../../Const/BuildingDefine";
+import InnerBuildingConfig from "../../Config/InnerBuildingConfig";
+import InnerBuildingLvlUpConfig from "../../Config/InnerBuildingLvlUpConfig";
+import { NotificationName } from "../../Const/Notification";
+import UIPanelManger from "../../Basic/UIPanelMgr";
+import { DataMgr } from "../../Data/DataMgr";
+import { UIName } from "../../Const/ConstUIDefine";
+import { DelegateUI } from "../DelegateUI";
+import { NetworkMgr } from "../../Net/NetworkMgr";
 const { ccclass } = _decorator;
 
-@ccclass('BuildingUpgradeUI')
+@ccclass("BuildingUpgradeUI")
 export class BuildingUpgradeUI extends ViewController {
-
     public refreshUI() {
         const buildingInfoView = this.node.getChildByPath("__ViewContent/BuildingInfoView");
 
-        // useLanMgr 
+        // useLanMgr
         // buildingInfoView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.getLanById("107549");
 
         const innerData = DataMgr.s.userInfo.data.innerBuildings;
@@ -56,7 +55,6 @@ export class BuildingUpgradeUI extends ViewController {
             }
         }
     }
-
 
     private _buildingMap: Map<InnerBuildingType, Node> = null;
 
@@ -118,11 +116,9 @@ export class BuildingUpgradeUI extends ViewController {
         this._levelInfoView.getChildByPath("Bg/MainCity").active = buildingType == InnerBuildingType.MainCity;
         this._levelInfoView.getChildByPath("Bg/EnergyStation").active = buildingType == InnerBuildingType.EnergyStation;
 
-
         const upgradeView = this._levelInfoView.getChildByPath("UpgradeContent");
         const maxTipView = this._levelInfoView.getChildByPath("LevelMaxContent");
-        if (userInnerData.buildLevel >= innerConfig.maxLevel ||
-            costData == null) {
+        if (userInnerData.buildLevel >= innerConfig.maxLevel || costData == null) {
             // level max
             upgradeView.active = false;
             maxTipView.active = true;
@@ -148,9 +144,8 @@ export class BuildingUpgradeUI extends ViewController {
             time = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.BUILDING_LVUP_TIME, time);
             upgradeView.getChildByPath("Time/Label-001").getComponent(Label).string = CommonTools.formatSeconds(time);
 
-
             // cost
-            // upgradeView.getChildByName("CostTitle").getComponent(Label).string = LanMgr.getLanById("107549"); 
+            // upgradeView.getChildByName("CostTitle").getComponent(Label).string = LanMgr.getLanById("107549");
             for (const item of this._levelInfoShowCostItems) {
                 item.destroy();
             }
@@ -190,12 +185,10 @@ export class BuildingUpgradeUI extends ViewController {
                 actionButtonTip.string = "Level Up";
             }
         }
-
     }
     private _closeBuildingUpgradeUI() {
         this._levelInfoView.active = false;
     }
-
 
     //----------------------------- action
     private onTapBuildingUpgradeShow(event: Event, customEventData: string) {
@@ -221,7 +214,7 @@ export class BuildingUpgradeUI extends ViewController {
             UIHUDController.showCenterTip("Insufficient civilization level");
             return;
         }
-        if (userInnerData.upgradeTotalTime > 0) {
+        if (userInnerData.upgrading) {
             UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
             // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
             return;
@@ -238,7 +231,11 @@ export class BuildingUpgradeUI extends ViewController {
                     continue;
                 }
                 const type = resource[0].toString();
-                let needNum = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.BUILDING_LVLUP_RESOURCE, resource[1]);
+                let needNum = GameMgr.getAfterExtraEffectPropertyByBuilding(
+                    InnerBuildingType.MainCity,
+                    GameExtraEffectType.BUILDING_LVLUP_RESOURCE,
+                    resource[1]
+                );
 
                 if (DataMgr.s.item.getObj_item_count(type) < needNum) {
                     canUpgrade = false;
@@ -253,12 +250,6 @@ export class BuildingUpgradeUI extends ViewController {
             }
             // prepare time
             time = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.BUILDING_LVUP_TIME, time);
-            // set tempSendData
-            DataMgr.setTempSendData("player_building_levelup_res", {
-                innerBuildingType: buildingType,
-                time: time,
-                subItems: costData
-            });
             NetworkMgr.websocketMsg.player_building_levelup({ innerBuildingId: buildingType });
 
             this._closeBuildingUpgradeUI();
@@ -284,5 +275,3 @@ export class BuildingUpgradeUI extends ViewController {
         this._refreshUpgradeUI(this._curBuildingType);
     }
 }
-
-

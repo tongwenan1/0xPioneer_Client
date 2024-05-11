@@ -47,6 +47,7 @@ export class DataMgr {
                 // set new global data
                 NetGlobalData.userInfo = p.data.info.sinfo;
                 NetGlobalData.innerBuildings = p.data.info.buildings;
+                NetGlobalData.storehouse = p.data.info.storehouse;
                 // load save data
                 await DataMgr.s.load(this.r.wallet.addr);
 
@@ -57,6 +58,27 @@ export class DataMgr {
                 DataMgr.r.reconnects = 0;
             }
         }
+    };
+    // item
+    public static storhouse_change = (e: any) => {
+        const p: s2c_user.Istorhouse_change = e.data;
+        for (const item of p.iteminfo) {
+            const change = new ItemData(item.itemConfigId, item.count);
+            change.addTimeStamp = item.addTimeStamp;
+            DataMgr.s.item.countChanged(change);
+        }
+    };
+    public static player_item_use_res = (e: any) => {
+        
+    };
+
+    // inner building
+    public static player_building_levelup_res = (e: any) => {
+        const p: s2c_user.Iplayer_building_levelup_res = e.data;
+        if (p.data == null) {
+            return;
+        }
+        DataMgr.s.userInfo.beginInnerBuildingUpgrade(p.data.id as InnerBuildingType, p.data.upgradeCountTime, p.data.upgradeTotalTime);
     };
 
     public static get_pioneers_res = (e: any) => {
@@ -483,13 +505,7 @@ export class DataMgr {
             }
         }
     };
-    public static player_item_use_res = (e: any) => {
-        const key: string = "player_item_use_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_item_use_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_item_use_res;
-            DataMgr.s.item.subObj_item(data.itemId, data.num);
-        }
-    };
+
     public static player_treasure_open_res = (e: any) => {
         const key: string = "player_treasure_open_res";
         if (DataMgr.socketSendData.has(key)) {
@@ -542,16 +558,7 @@ export class DataMgr {
             DataMgr.s.artifact.changeObj_artifact_effectIndex(data.artifactId, data.effectIndex);
         }
     };
-    public static player_building_levelup_res = (e: any) => {
-        const key: string = "player_building_levelup_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_building_levelup_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_building_levelup_res;
-            for (const temple of data.subItems) {
-                DataMgr.s.item.subObj_item(temple.itemConfigId, temple.count);
-            }
-            DataMgr.s.userInfo.beginUpgrade(data.innerBuildingType, data.time);
-        }
-    };
+
     public static player_get_auto_energy_res = (e: any) => {
         const key: string = "player_get_auto_energy_res";
         if (DataMgr.socketSendData.has(key)) {
@@ -637,17 +644,17 @@ export class DataMgr {
 
     public static player_rookie_finish_res = (e: any) => {
         DataMgr.s.userInfo.finishRookie();
-        DataMgr.s.task.gameStarted();
-        DataMgr.s.item.addObj_item(
-            [
-                new ItemData(ResourceCorrespondingItem.Energy, 2000),
-                new ItemData(ResourceCorrespondingItem.Food, 2000),
-                new ItemData(ResourceCorrespondingItem.Stone, 2000),
-                new ItemData(ResourceCorrespondingItem.Wood, 2000),
-                new ItemData(ResourceCorrespondingItem.Troop, 2000),
-            ],
-            false
-        );
+        // DataMgr.s.task.gameStarted();
+        // DataMgr.s.item.addObj_item(
+        //     [
+        //         new ItemData(ResourceCorrespondingItem.Energy, 2000),
+        //         new ItemData(ResourceCorrespondingItem.Food, 2000),
+        //         new ItemData(ResourceCorrespondingItem.Stone, 2000),
+        //         new ItemData(ResourceCorrespondingItem.Wood, 2000),
+        //         new ItemData(ResourceCorrespondingItem.Troop, 2000),
+        //     ],
+        //     false
+        // );
     };
 
     public static player_wormhole_set_defender_res = (e: any) => {

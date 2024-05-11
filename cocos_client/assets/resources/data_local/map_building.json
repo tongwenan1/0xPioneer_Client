@@ -464,7 +464,7 @@
     "id": "building_22",
     "name": "110015",
     "type": 7,
-    "show": 1,
+    "show": 0,
     "pos_type": 1,
     "positions": [
       10,

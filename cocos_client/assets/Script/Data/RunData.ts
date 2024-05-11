@@ -15,13 +15,6 @@ export class RunData {
         uid: "",
         token: "",
     };
-
-    userInfo: share.Iplayer_sinfo = {
-        playerid: 0,
-        pname: "",
-        gender: 0,
-    };
-
     // pending: share.Itran_data[];
     // pendingHistory: pendingHistoryData;
 

@@ -39,8 +39,9 @@ export interface UserInnerBuildInfo {
     buildBeginLatticeIndex: number;
     buildType: InnerBuildingType;
     buildLevel: number;
-    upgradeCountTime: number;
-    upgradeTotalTime: number;
+    upgradeBeginTimestamp: number;
+    upgradeEndTimestamp: number;
+    upgrading: boolean;
 }
 
 export type InnerBuildingStaffLevelUpType = string;

@@ -163,7 +163,7 @@ export class TransformToEnergyUI extends ViewController {
     private _energyNumChanged() {
         this.refreshUI();
     }
-    private _onResourceDidGet(data: { item: ItemData; needSettlement: boolean }) {
+    private _onResourceDidGet(data: { item: ItemData }) {
         if (data.item.itemConfigId == ResourceCorrespondingItem.Energy) {
             this.refreshUI(true);
         }

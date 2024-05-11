@@ -31,13 +31,14 @@ export class InnerBuildUI extends Component {
         }
     }
 
-    public setProgressTime(currentTime: number, totalTime: number) {
-        if (currentTime <= totalTime) {
-            this.progresssBar.node.active = true;
-            this.progresssBar.progress = currentTime / totalTime;
-        } else {
+    public setProgressTime(beginTimeStamp: number, endTimeStamp: number) {
+        const currentTimestamp: number = new Date().getTime();
+        if (currentTimestamp >= endTimeStamp) {
             this.progresssBar.node.active = false;
+            return;
         }
+        this.progresssBar.node.active = true;
+        this.progresssBar.progress = (currentTimestamp - beginTimeStamp) / (endTimeStamp - beginTimeStamp);
     }
 
     @property(Label)

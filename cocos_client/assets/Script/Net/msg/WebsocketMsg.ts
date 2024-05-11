@@ -376,6 +376,9 @@ export namespace s2c_user {
         /** enter_game_res data */
         data?: share.Iplayer_data | null;
     }
+    export interface Istorhouse_change {
+        iteminfo: share.Iitem_data[];
+    }
 
     export interface Imark_data_dirty {
         type: string;
@@ -431,8 +434,7 @@ export namespace s2c_user {
         eventData: EventConfigData;
     }
     export interface Iplayer_item_use_res {
-        itemId: string;
-        num: number;
+        res: number;
     }
     export interface Iplayer_treasure_open_res {
         boxId: string;
@@ -455,9 +457,8 @@ export namespace s2c_user {
         effectIndex: number;
     }
     export interface Iplayer_building_levelup_res {
-        innerBuildingType: InnerBuildingType;
-        time: number;
-        subItems: ItemData[];
+        res: number;
+        data?: share.Ibuilding_data;
     }
     export interface Iplayer_get_auto_energy_res {
         num: number;
@@ -571,10 +572,12 @@ export namespace share {
         id: string;
         anim: string;
         level: number;
-        prefab?: string;
-        desc?: string;
         upgradeCountTime: number;
         upgradeTotalTime: number;
+        upgradeIng: boolean;
+    }
+    export interface Istorehouse_data {
+        items: { [key: string]: Iitem_data };
     }
 
     export interface Iplayer_data {
@@ -586,9 +589,16 @@ export namespace share {
         /** player_info sinfo */
         sinfo: Iplayer_sinfo;
         buildings: Ibuilding_data[];
+        storehouse: Istorehouse_data;
     }
 
     export interface Ipioneer_info {
         type: string;
+    }
+
+    export interface Iitem_data {
+        itemConfigId: string;
+        count: number;
+        addTimeStamp: number;
     }
 }

@@ -84,4 +84,6 @@ export enum protobuf_s2c {
     player_wormhole_set_attacker_res = 20226,
     player_wormhole_fight_res = 20227,
     get_battle_report_res = 20299,
+
+    storhouse_change = 20300,
 }

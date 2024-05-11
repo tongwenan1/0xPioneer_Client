@@ -65,6 +65,12 @@ message mint_package_res {
 
 // ----------------------------------------------------------------------------
 
+message storhouse_change {
+    repeated share.item_data iteminfo = 1;
+}
+
+// ----------------------------------------------------------------------------
+
 message player_move_res {
     required uint32 res = 1;
 }
@@ -111,6 +117,7 @@ message player_artifact_remove_res {
 
 message player_building_levelup_res {
     required uint32 res = 1;
+    optional share.building_data data = 2;
 }
 
 message player_get_auto_energy_res {

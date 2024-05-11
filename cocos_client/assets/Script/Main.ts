@@ -168,9 +168,18 @@ export class Main extends ViewController {
         // websocket
         NetworkMgr.websocket.on("onmsg", DataMgr.onmsg);
         NetworkMgr.websocket.on("enter_game_res", DataMgr.enter_game_res);
+        // item changed
+        NetworkMgr.websocket.on("storhouse_change", DataMgr.storhouse_change);
+        NetworkMgr.websocket.on("player_item_use_res", DataMgr.player_item_use_res);
+        // inner builing
+        NetworkMgr.websocket.on("player_building_levelup_res", DataMgr.player_building_levelup_res);
+
 
         // pioneernft func
         NetworkMgr.websocket.on("get_pioneers_res", DataMgr.get_pioneers_res);
+
+
+
 
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
         NetworkMgr.websocket.on("player_talk_select_res", DataMgr.player_talk_select_res);
@@ -178,12 +187,10 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_explore_res", DataMgr.player_explore_res);
         NetworkMgr.websocket.on("player_fight_res", DataMgr.player_fight_res);
         NetworkMgr.websocket.on("player_event_select_res", DataMgr.player_event_select_res);
-        NetworkMgr.websocket.on("player_item_use_res", DataMgr.player_item_use_res);
         NetworkMgr.websocket.on("player_treasure_open_res", DataMgr.player_treasure_open_res);
         NetworkMgr.websocket.on("player_point_treasure_open_res", DataMgr.player_point_treasure_open_res);
         NetworkMgr.websocket.on("player_artifact_equip_res", DataMgr.player_artifact_equip_res);
         NetworkMgr.websocket.on("player_artifact_remove_res", DataMgr.player_artifact_remove_res);
-        NetworkMgr.websocket.on("player_building_levelup_res", DataMgr.player_building_levelup_res);
         NetworkMgr.websocket.on("player_get_auto_energy_res", DataMgr.player_get_auto_energy_res);
         NetworkMgr.websocket.on("player_generate_energy_res", DataMgr.player_generate_energy_res);
         NetworkMgr.websocket.on("player_generate_troop_res", DataMgr.player_generate_troop_res);

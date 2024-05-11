@@ -46,7 +46,8 @@ export class ResOprView extends Component {
         this.node.getChildByPath("btnRemove").active = true;
 
         // action cost
-        const oneStepCostEnergy = (ConfigConfig.getConfig(ConfigType.OneStepCostEnergy) as OneStepCostEnergyParam).cost;
+        // const oneStepCostEnergy = (ConfigConfig.getConfig(ConfigType.OneStepCostEnergy) as OneStepCostEnergyParam).cost;
+        const oneStepCostEnergy = 0;
         this._cost = oneStepCostEnergy * moveStep;
         if (this._cost > 0) {
             this.node.getChildByPath("CostView").active = true;
