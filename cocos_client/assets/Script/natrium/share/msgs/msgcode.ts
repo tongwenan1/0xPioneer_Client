@@ -33,4 +33,5 @@ export enum ServerErrorCode {
     ResPlayerNameAlreadyExist = -1019,
     ResPlayerPackageTypeUsed = -1020,
     ResPlayerNotinMap = -1021,
+    ResPlayerMintFeeNotEnough = -1022,
 }

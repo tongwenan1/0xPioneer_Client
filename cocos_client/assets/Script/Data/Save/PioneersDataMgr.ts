@@ -104,7 +104,7 @@ export class PioneersDataMgr {
         findPioneer.actionBeginTimeStamp = beginTimeStamp;
         findPioneer.actionEndTimeStamp = beginTimeStamp + useTime;
         findPioneer.actionEventId = eventId;
-       
+
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: pioneerId });
     }
     public changeEventStatus(pioneerId: string, status: MapPioneerEventStatus, beginTimeStamp: number = 0, useTime: number = 0) {
@@ -114,7 +114,7 @@ export class PioneersDataMgr {
         findPioneer.eventStatus = status;
         findPioneer.actionBeginTimeStamp = beginTimeStamp;
         findPioneer.actionEndTimeStamp = beginTimeStamp + useTime;
-       
+
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENTSTATUS_CHANGED, { id: pioneerId });
     }
     public changeShow(pioneerId: string, show: boolean, delayTime: number = 0): boolean {
@@ -130,11 +130,11 @@ export class PioneersDataMgr {
                 isShow: show,
                 countTime: delayTime,
             };
-           
+
             return false;
         }
         pioneer.show = show;
-       
+
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: pioneerId, show: pioneer.show });
         return true;
     }
@@ -153,11 +153,11 @@ export class PioneersDataMgr {
                     talkId: talkId,
                     countTime: delayTime,
                 };
-               
+
                 return;
             }
             npcObj.talkId = talkId;
-           
+
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_TALK_CHANGED, { id: pioneerId, talkId: npcObj.talkId });
         }
     }
@@ -170,7 +170,7 @@ export class PioneersDataMgr {
             return;
         }
         pioneer.faction = faction;
-       
+
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, { id: pioneerId, faction: pioneer.faction });
     }
 
@@ -180,7 +180,6 @@ export class PioneersDataMgr {
             const player = pioneer as MapPlayerPioneerObject;
             player.rebirthCountTime = 10;
             player.killerId = killerId;
-           
         }
     }
 
@@ -191,7 +190,7 @@ export class PioneersDataMgr {
             cost = Math.min(pioneer.hpMax - pioneer.hp, maxNum);
             if (cost > 0) {
                 pioneer.hp += cost;
-               
+
                 NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED, { id: pioneerId, gainValue: cost });
             }
         }
@@ -204,7 +203,7 @@ export class PioneersDataMgr {
             const cost = Math.min(pioneer.hp, num);
             if (cost > 0) {
                 pioneer.hp -= cost;
-               
+
                 NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED, { id: pioneerId, loseValue: cost });
             }
             if (pioneer.hp <= 0) {
@@ -222,7 +221,7 @@ export class PioneersDataMgr {
         const pioneer = this.getById(pioneerId);
         if (pioneer != undefined) {
             pioneer.hpMax += num;
-           
+
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HPMAX_CHANGED, { id: pioneerId });
         }
     }
@@ -232,7 +231,7 @@ export class PioneersDataMgr {
         }
         for (const player of this.getAllPlayers()) {
             player.hpMax += num;
-           
+
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HPMAX_CHANGED, { id: player.id });
         }
     }
@@ -243,7 +242,7 @@ export class PioneersDataMgr {
         const pioneer = this.getById(pioneerId);
         if (pioneer != undefined) {
             pioneer.attack += num;
-           
+
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ATTACK_CHANGED, { id: pioneerId });
         }
     }
@@ -255,7 +254,7 @@ export class PioneersDataMgr {
         const pioneer = this.getById(pioneerId);
         if (pioneer != undefined) {
             pioneer.defend += num;
-           
+
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_DEFEND_CHANGED, { id: pioneerId });
         }
     }
@@ -266,7 +265,7 @@ export class PioneersDataMgr {
         const pioneer = this.getById(pioneerId);
         if (pioneer != undefined) {
             pioneer.speed += num;
-           
+
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SPEED_CHANGED, { id: pioneerId });
         }
     }
@@ -279,7 +278,7 @@ export class PioneersDataMgr {
             this.changeShow(pioneerId, true);
             this.changeActionType(pioneerId, MapPioneerActionType.idle);
             this.changeEventStatus(pioneerId, MapPioneerEventStatus.None);
-           
+
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_REBIRTH_FINISHED, { id: pioneerId });
         }
     }
@@ -289,7 +288,6 @@ export class PioneersDataMgr {
         if (findPioneer != undefined) {
             if (movePaths.length > 0) {
                 findPioneer.movePaths = movePaths;
-               
 
                 this.changeActionType(pioneerId, MapPioneerActionType.moving);
                 let showMovePath: boolean = false;
@@ -312,7 +310,7 @@ export class PioneersDataMgr {
         if (findPioneer != undefined) {
             if (findPioneer.movePaths.length > 0) {
                 findPioneer.movePaths.shift();
-               
+
                 // enemy step trigger
                 if (findPioneer.type != MapPioneerType.player && findPioneer.faction == MapMemberFactionType.enemy) {
                     NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneerId: findPioneer.id, isStay: false });
@@ -365,7 +363,6 @@ export class PioneersDataMgr {
             return;
         }
         findPioneer.NFTId = NFT.uniqueId;
-       
 
         this.changeHpMax(pioneerId, NFT.hp);
         this.changeAttack(pioneerId, NFT.attack);
@@ -447,14 +444,13 @@ export class PioneersDataMgr {
                 if (pioneer.showHideStruct != null) {
                     if (pioneer.showHideStruct.countTime > 0) {
                         pioneer.showHideStruct.countTime -= 1;
-                       
+
                         // wait server
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, { id: pioneer.id });
 
                         if (pioneer.showHideStruct.countTime == 0) {
                             this.changeShow(pioneer.id, pioneer.showHideStruct.isShow);
                             pioneer.showHideStruct = null;
-                           
                         }
                     }
                 }
@@ -506,7 +502,6 @@ export class PioneersDataMgr {
                                 this.changeShow(pioneer.id, false);
                                 pioneer.logics.splice(0, 1);
                             }
-                           
 
                             if (logicMove) {
                                 NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_LOGIC_MOVE, { id: pioneer.id, logic: logic });
@@ -522,11 +517,10 @@ export class PioneersDataMgr {
                                 if (npcPioneer.talkCountStruct.countTime > 0) {
                                     npcPioneer.talkCountStruct.countTime -= 1;
                                     NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_TALK_COUNT_CHANGED, { id: pioneer.id });
-                                   
+
                                     if (npcPioneer.talkCountStruct.countTime == 0) {
                                         this.changeTalk(npcPioneer.id, npcPioneer.talkCountStruct.talkId);
                                         npcPioneer.talkCountStruct = null;
-                                       
                                     }
                                 }
                             }
@@ -538,7 +532,7 @@ export class PioneersDataMgr {
                         if (!!playerPioneer) {
                             if (playerPioneer.rebirthCountTime > 0) {
                                 playerPioneer.rebirthCountTime -= 1;
-                               
+
                                 NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_REBIRTH_COUNT_CHANGED, { id: playerPioneer.id });
                                 if (playerPioneer.rebirthCountTime == 0) {
                                     NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_REBIRTH_BEGIN, { id: playerPioneer.id });
@@ -612,7 +606,6 @@ export class PioneersDataMgr {
             } else if (data.type == Ichange_pioneer_type.actionType) {
                 findPioneer.actionType = data.actionType.type;
             }
-           
         }
     }
 }

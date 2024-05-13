@@ -49,6 +49,7 @@ export class DataMgr {
                 NetGlobalData.innerBuildings = p.data.info.buildings;
                 NetGlobalData.storehouse = p.data.info.storehouse;
                 NetGlobalData.usermap = p.data.info.usermap;
+                NetGlobalData.nfts = p.data.info.nfts;
                 // load save data
                 await DataMgr.s.load(this.r.wallet.addr);
 
@@ -95,6 +96,16 @@ export class DataMgr {
         }
         const localData: s2c_user.Iplayer_move_res_local_data = DataMgr.socketSendData.get("player_move_res") as s2c_user.Iplayer_move_res_local_data;
         DataMgr.s.pioneer.beginMove(localData.pioneerId, localData.movePath);
+    };
+
+    // nft
+    public static player_bind_nft_res = (e: any) => {
+        const p: s2c_user.Iplayer_bind_nft_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        const newNFTObj = DataMgr.s.nftPioneer.NFTGetNew(p.nft_data);
+        DataMgr.s.pioneer.bindPlayerNFT(p.data.id, newNFTObj);
     };
 
     public static get_pioneers_res = (e: any) => {

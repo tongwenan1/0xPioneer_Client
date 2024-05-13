@@ -36,10 +36,10 @@ export default class PioneerMgr {
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_LOGIC_MOVE, this._onPioneerLogicMove, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_REBIRTH_BEGIN, this._onPioneerRebirthBegin, this);
 
-        // const originalPioneer = DataMgr.s.pioneer.getCurrentPlayer();
-        // if (!!originalPioneer && originalPioneer.NFTId == null) {
-        //     this._bindPlayerNFT(originalPioneer.id, originalPioneer.NFTInitLinkId);
-        // }
+        const originalPioneer = DataMgr.s.pioneer.getCurrentPlayer();
+        if (!!originalPioneer && originalPioneer.NFTId == null) {
+            this._bindPlayerNFT(originalPioneer.id);
+        }
     }
     public pioneerHealHpToMax(pioneerId: string) {
         const costTroops: number = DataMgr.s.pioneer.gainHp(pioneerId, DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop));
@@ -94,7 +94,7 @@ export default class PioneerMgr {
                 });
                 const player = pioneer as MapPlayerPioneerObject;
                 if (!!player && player.NFTId == null) {
-                    this._bindPlayerNFT(player.id, player.NFTInitLinkId);
+                    this._bindPlayerNFT(player.id);
                 }
             }
         }
@@ -463,9 +463,8 @@ export default class PioneerMgr {
         }
     }
 
-    private _bindPlayerNFT(id: string, linkId: string) {
-        const NFT = DataMgr.s.nftPioneer.generateNewNFT(linkId);
-        DataMgr.s.pioneer.bindPlayerNFT(id, NFT);
+    private _bindPlayerNFT(id: string) {
+        NetworkMgr.websocketMsg.player_bind_nft({ pioneerId: id });
     }
 
     //------------------------------- notification

@@ -191,6 +191,8 @@ message player_wormhole_fight_res {
 
 message player_bind_nft_res {
     required uint32 res = 1;
+    required share.pioneer_data pioneer_data = 2;
+    required share.artifact_info_data nft_data = 3;
 }
 
 message get_battle_report_res {

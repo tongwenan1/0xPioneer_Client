@@ -150,6 +150,9 @@ export class WebsocketMsg {
     public player_building_delegate_nft(d: c2s_user.Iplayer_building_delegate_nft) {
         this.send_packet("player_building_delegate_nft", d);
     }
+    public player_bind_nft(d: c2s_user.Iplayer_bind_nft) {
+        this.send_packet("player_bind_nft", d);
+    }
     public player_nft_lvlup(d: c2s_user.Iplayer_nft_lvlup) {
         this.send_packet("player_nft_lvlup", d);
     }
@@ -337,6 +340,10 @@ export namespace c2s_user {
     }
     export interface Iplayer_wormhole_fight {}
 
+    export interface Iplayer_bind_nft {
+        pioneerId: string;
+    }
+
     export interface Isave_archives {
         archives: string;
     }
@@ -513,6 +520,12 @@ export namespace s2c_user {
         pioneerId: string;
         index: number;
     }
+
+    export interface Iplayer_bind_nft_res {
+        res: number;
+        data: share.Ipioneer_data;
+        nft_data: share.Infts_info_data;   
+    }
 }
 
 export namespace share {
@@ -591,6 +604,7 @@ export namespace share {
         buildings: Ibuilding_data[];
         storehouse?: Istorehouse_data;
         usermap?: Iusermap_data;
+        nfts?: Infts_data;
     }
 
     export interface Istorehouse_data {
@@ -636,6 +650,39 @@ export namespace share {
         isShow: boolean;
     }
 
+    export interface Infts_data {
+        nfts: { [key: string]: Infts_info_data };
+    }
+    export interface Infts_info_data {
+        uniqueId: string;
+        rarity: number;
+        name: string;
+
+        level: number;
+        levelLimit: number;
+        rank: number;
+        rankLimit: number;
+
+        attack: number;
+        defense: number;
+        hp: number;
+        speed: number;
+        iq: number;
+
+        attackGrowValue: number;
+        defenseGrowValue: number;
+        hpGrowValue: number;
+        speedGrowValue: number;
+        iqGrowValue: number;
+
+        skills: Inft_pioneer_skil[];
+        workingBuildingId: string;
+        addTimeStamp: number;
+    }
+    export interface Inft_pioneer_skil {
+        id: string;
+        isOriginal: boolean;
+    }
 
     export interface Ipioneer_info {
         type: string;

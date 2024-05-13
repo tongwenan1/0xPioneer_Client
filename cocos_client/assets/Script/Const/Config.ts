@@ -20,6 +20,10 @@ export enum ConfigType {
 
     WorldBoxThreshold = "410001",
     WorldBoxInitialPoint = "410002",
+
+    WorldTreasureChancePerBoxExploreProgress = "410004",
+    WorldTreasureChanceLimitHeatValueCoefficient = "410006",
+    WorldTreasureBoxRarity = "410007",
 }
 
 export interface ConfigData {
@@ -76,4 +80,16 @@ export interface WorldBoxInitialPointParam extends ConfigData {
 
 export interface WorldMapOtherExtraRadialRangeParam extends ConfigData {
     extraRadialRange: number;
+}
+
+export interface WorldTreasureChancePerBoxExploreProgressParam extends ConfigData {
+    progress: number;
+}
+
+export interface WorldTreasureChanceLimitHeatValueCoefficientParam extends ConfigData {
+    coefficient: number;
+}
+
+export interface WorldTreasureBoxRarity extends ConfigData {
+    rarityNeedCLvDatas: number[];
 }

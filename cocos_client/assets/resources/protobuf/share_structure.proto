@@ -156,7 +156,7 @@ message nfts_info_data {
     optional uint32 hpGrowValue = 15;
     optional uint32 speedGrowValue = 16;
     optional uint32 iqGrowValue = 17;
-    optional nft_pioneer_skil skills = 18;
+    repeated nft_pioneer_skil skills = 18;
 
     optional string workingBuildingId = 19;
 
