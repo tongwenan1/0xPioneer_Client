@@ -25,7 +25,7 @@ export class NTFRankUpUI extends ViewController {
 
         const resourceLimitMaxNum = LvlupConfig.getMaxNFTRankUpNum(this._data.rarity, this._data.rank, DataMgr.s.item.getObj());
         this._maxRankUpNum = Math.min(resourceLimitMaxNum, this._data.rankLimit - this._data.rank);
-
+        console.log("exce mar: " + this._maxRankUpNum);
         this._refreshUI();
     }
 
@@ -110,20 +110,15 @@ export class NTFRankUpUI extends ViewController {
 
     private onTapConfirmRankUp() {
         if (this._data != null && this._currentCost.length > 0) {
-            DataMgr.setTempSendData("player_nft_rankup_res", {
-                nftId: this._data.uniqueId,
-                rankUpNum: this._rankUpNum,
-                subItems: this._currentCost
-            });
             NetworkMgr.websocketMsg.player_nft_rankup({ nftId: this._data.uniqueId, rankUpNum: this._rankUpNum });
         }
     }
 
     //------------------------ notification
-    private _onNFTDidRankUp() {
+    private _onNFTDidRankUp(data: { nft: NFTPioneerObject }) {
         this._rankUpNum = 1;
         this._maxRankUpNum = 0;
         this._currentCost = [];
-        this.showUI(this._data);
+        this.showUI(data.nft);
     }
 }

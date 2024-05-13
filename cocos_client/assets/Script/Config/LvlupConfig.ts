@@ -116,6 +116,8 @@ export default class LvlupConfig {
         if (fromLevel >= toLevel) {
             return [];
         }
+        console.log("exce r: " + NFTRarity + ", f: " + fromLevel + ", to: " + toLevel);
+        console.log("exce con:", this._confs);
         let costMap: Map<string, ItemData> = new Map();
         const valueKey: string = "p_rank_" + NFTRarity;
         for (let i = fromLevel + 1; i <= toLevel; i++) {
@@ -126,11 +128,12 @@ export default class LvlupConfig {
                     if (costMap.has(tempItem[0])) {
                         costMap.get(tempItem[0]).count += tempItem[1];
                     } else {
-                        costMap.set(tempItem[0], new ItemData(tempItem[0], tempItem[1]))
+                        costMap.set(tempItem[0], new ItemData(tempItem[0], tempItem[1]));
                     }
                 }
             }
         }
+        console.log("exce cost:", costMap);
         const cost: ItemData[] = [];
         costMap.forEach((value: ItemData, key: string) => {
             cost.push(value);
@@ -144,7 +147,7 @@ export default class LvlupConfig {
             const lvlStr = i.toString();
             if (this._confs[lvlStr] != null && this._confs[lvlStr][valueKey] != null) {
                 const rankNeedItems = this._confs[lvlStr][valueKey];
-                let canUp: boolean = true
+                let canUp: boolean = true;
                 for (const tempItem of rankNeedItems) {
                     let ownNum: number = 0;
                     for (const ownItem of allItems) {

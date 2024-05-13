@@ -59,34 +59,37 @@ export default class NFTPioneerDataMgr {
         return effectNum;
     }
     //-------------------------------- data action
+
+    //-------------------------------- data action {
+    public refreshNFT(netData: share.Infts_info_data): NFTPioneerObject {
+        for (let i = 0; i < this._data.length; i++) {
+            if (this._data[i].uniqueId == netData.uniqueId) {
+                const newNFT = this._convertNetDataToObject(netData);
+                this._data[i] = newNFT;
+                return newNFT;
+            }
+        }
+        return null;
+    }
+
     public NFTGetNew(netData: share.Infts_info_data): NFTPioneerObject {
         const obj = this._convertNetDataToObject(netData);
         this._data.push(obj);
         return obj;
     }
-    public NFTLevelUp(NFTId: string, levelUpNum: number) {
-        const object = this.getNFTById(NFTId);
-        if (object == undefined) {
+    public NFTLevelUp(netData: share.Infts_info_data) {
+        const obj = this.refreshNFT(netData);
+        if (obj == null) {
             return;
         }
-        const resultLevelUpNum: number = Math.min(levelUpNum, object.levelLimit - object.level);
-        object.level += resultLevelUpNum;
-        object.attack = CommonTools.getOneDecimalNum(object.attack + object.attackGrowValue * resultLevelUpNum);
-        object.defense = CommonTools.getOneDecimalNum(object.defense + object.defenseGrowValue * resultLevelUpNum);
-        object.hp = CommonTools.getOneDecimalNum(object.hp + object.hpGrowValue * resultLevelUpNum);
-        object.speed = CommonTools.getOneDecimalNum(object.speed + object.speedGrowValue * resultLevelUpNum);
-        object.iq = CommonTools.getOneDecimalNum(object.iq + object.iqGrowValue * resultLevelUpNum);
-        NotificationMgr.triggerEvent(NotificationName.NFTDIDLEVELUP, { nft: object });
+        NotificationMgr.triggerEvent(NotificationName.NFTDIDLEVELUP, { nft: obj });
     }
-    public NFTRankUp(NFTId: string, rankUpNum: number) {
-        const object = this.getNFTById(NFTId);
-        if (object == undefined) {
+    public NFTRankUp(netData: share.Infts_info_data) {
+        const obj = this.refreshNFT(netData);
+        if (obj == null) {
             return;
         }
-        const resultRankUpNum: number = Math.min(rankUpNum, object.rankLimit - object.rank);
-        object.rank += resultRankUpNum;
-        object.levelLimit += resultRankUpNum * (ConfigConfig.getConfig(ConfigType.NFTLevelLimitPerRankAddNum) as NFTLevelLimitPerRankAddNumParam).value;
-        NotificationMgr.triggerEvent(NotificationName.NFTDIDRANKUP);
+        NotificationMgr.triggerEvent(NotificationName.NFTDIDRANKUP, { nft: obj });
     }
 
     public NFTLearnSkill(NFTId: string, skillId: string) {
@@ -144,7 +147,8 @@ export default class NFTPioneerDataMgr {
             return;
         }
         this._data = [];
-        const netNfts = NetGlobalData.nfts;
+        const netNfts = NetGlobalData.nfts.nfts;
+        console.log("exce alln: ", netNfts);
         for (const key in netNfts) {
             this._data.push(this._convertNetDataToObject(netNfts[key]));
         }
@@ -162,7 +166,7 @@ export default class NFTPioneerDataMgr {
 
         return {
             uniqueId: netData.uniqueId,
-            rarity: netData.rank,
+            rarity: netData.rarity,
             name: netData.name,
             attack: netData.attack,
             defense: netData.defense,

@@ -177,6 +177,8 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
         // nft 
         NetworkMgr.websocket.on("player_bind_nft_res", DataMgr.player_bind_nft_res);
+        NetworkMgr.websocket.on("player_nft_lvlup_res", DataMgr.player_nft_lvlup_res);
+        NetworkMgr.websocket.on("player_nft_rankup_res", DataMgr.player_nft_rankup_res);
 
         // pioneernft func
         NetworkMgr.websocket.on("get_pioneers_res", DataMgr.get_pioneers_res);
@@ -194,8 +196,6 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_generate_energy_res", DataMgr.player_generate_energy_res);
         NetworkMgr.websocket.on("player_generate_troop_res", DataMgr.player_generate_troop_res);
         NetworkMgr.websocket.on("player_building_delegate_nft_res", DataMgr.player_building_delegate_nft_res);
-        NetworkMgr.websocket.on("player_nft_lvlup_res", DataMgr.player_nft_lvlup_res);
-        NetworkMgr.websocket.on("player_nft_rankup_res", DataMgr.player_nft_rankup_res);
         NetworkMgr.websocket.on("player_nft_skill_learn", DataMgr.player_nft_skill_learn_res);
         NetworkMgr.websocket.on("player_nft_skill_forget", DataMgr.player_nft_skill_forget_res);
 

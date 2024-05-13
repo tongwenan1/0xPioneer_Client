@@ -46,6 +46,7 @@ import { NetworkMgr } from "../../Net/NetworkMgr";
 import UIPanelManger from "../../Basic/UIPanelMgr";
 import { UIName } from "../../Const/ConstUIDefine";
 import { NFTViewInfoUI } from "../../UI/NFTViewInfoUI";
+import ChainConfig from "../../Config/ChainConfig";
 
 const { ccclass, property } = _decorator;
 
@@ -691,7 +692,7 @@ export class OuterTiledMapActionController extends ViewController {
                 setWorldPosition,
                 actionType,
                 movePaths.length,
-                (useActionType: number, costEnergy: number) => {
+                async (useActionType: number, costEnergy: number) => {
                     this["_actionViewActioned"] = true;
                     if (PioneerGameTest) {
                     } else {
@@ -714,20 +715,24 @@ export class OuterTiledMapActionController extends ViewController {
                     this._mapActionCursorView.hide();
                     outPioneerController.hideMovingPioneerAction();
 
-                    const uploadPath: { x: number; y: number }[] = [];
-                    for (const path of movePaths) {
-                        uploadPath.push({ x: path.x, y: path.y });
+                    const r = await NetworkMgr.ethereumMsg.transferETH(0.0001, ChainConfig.getCurrentChainConfig().api.fee_psyc);
+                    if (r.status == 1) {
+                        const uploadPath: { x: number; y: number }[] = [];
+                        for (const path of movePaths) {
+                            uploadPath.push({ x: path.x, y: path.y });
+                        }
+                        DataMgr.setTempSendData("player_move_res", {
+                            pioneerId: currentActionPioneer.id,
+                            movePath: movePaths,
+                            costEnergyNum: costEnergy,
+                        });
+                        NetworkMgr.websocketMsg.player_move({
+                            pioneerId: currentActionPioneer.id,
+                            movePath: JSON.stringify(uploadPath),
+                            targetPos: JSON.stringify(uploadPath[uploadPath.length - 1]),
+                            feeTxhash: r.hash,
+                        });
                     }
-                    DataMgr.setTempSendData("player_move_res", {
-                        pioneerId: currentActionPioneer.id,
-                        movePath: movePaths,
-                        costEnergyNum: costEnergy,
-                    });
-                    NetworkMgr.websocketMsg.player_move({
-                        pioneerId: currentActionPioneer.id,
-                        movePath: JSON.stringify(uploadPath),
-                        targetPos: JSON.stringify(uploadPath[uploadPath.length - 1]),
-                    });
                 },
                 () => {
                     this["_actionViewActioned"] = true;

@@ -50,6 +50,7 @@ message player_move {
     required string pioneerId = 1;
     required string movePath = 2; 
     required string targetPos = 3; 
+    required string feeTxhash = 4;
 }
 
 message player_talk_select {
