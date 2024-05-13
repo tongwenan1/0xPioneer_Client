@@ -43,6 +43,13 @@
     "**NOTES**": "Planar Shift condition",
     "para": null
   },
+  "30001": {
+    "id": "30001",
+    "**NOTES**": "exp basic num after fight win",
+    "para": [
+      30
+    ]
+  },
   "110000": {
     "id": "110000",
     "**NOTES**": "battle report max keep days",
@@ -170,7 +177,7 @@
   },
   "410001": {
     "id": "410001",
-    "**NOTES**": "world box point threshold",
+    "**NOTES**": "world box hot threshold",
     "para": [
       200,
       400,
@@ -181,9 +188,9 @@
   },
   "410002": {
     "id": "410002",
-    "**NOTES**": "initial wolrd box point",
+    "**NOTES**": "wolrd box hot interval para",
     "para": [
-      180
+      200
     ]
   },
   "410003": {
@@ -212,6 +219,38 @@
       ]
     ]
   },
+  "410004": {
+    "id": "410004",
+    "**NOTES**": "exp for 1 box open",
+    "para": [
+      50
+    ]
+  },
+  "410005": {
+    "id": "410005",
+    "**NOTES**": "hot para for psyc consumption",
+    "para": [
+      2
+    ]
+  },
+  "410006": {
+    "id": "410006",
+    "**NOTES**": "hot para for boxes open times",
+    "para": [
+      0.02
+    ]
+  },
+  "410007": {
+    "id": "410007",
+    "**NOTES**": "box quality -- c lv",
+    "para": [
+      1,
+      5,
+      16,
+      28,
+      50
+    ]
+  },
   "420001": {
     "id": "420001",
     "**NOTES**": "wormhole random dist",
@@ -231,6 +270,13 @@
     "**NOTES**": "wormhole point constant",
     "para": [
       0.08
+    ]
+  },
+  "430001": {
+    "id": "430001",
+    "**NOTES**": "accumulated para of psyc consumption",
+    "para": [
+      0.05
     ]
   }
 }

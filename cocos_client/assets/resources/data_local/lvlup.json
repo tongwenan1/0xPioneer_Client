@@ -25,40 +25,35 @@
         20
       ]
     ],
-    "p_rank_1": [
+    "p_rank_1": null,
+    "p_rank_2": [
       [
         "7",
         1
       ]
     ],
-    "p_rank_2": [
+    "p_rank_3": [
       [
         "8",
         1
       ]
     ],
-    "p_rank_3": [
+    "p_rank_4": [
       [
         "9",
         1
       ]
     ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
     "p_rank_5": [
       [
-        "11",
+        "10",
         1
       ]
     ]
   },
   "2": {
     "id": "2",
-    "p_exp": 5,
+    "p_exp": 10,
     "exp": 75,
     "extra_res": 0.01,
     "hp_max": 0,
@@ -82,40 +77,35 @@
         20
       ]
     ],
-    "p_rank_1": [
+    "p_rank_1": null,
+    "p_rank_2": [
       [
         "7",
         1
       ]
     ],
-    "p_rank_2": [
+    "p_rank_3": [
       [
         "8",
         1
       ]
     ],
-    "p_rank_3": [
+    "p_rank_4": [
       [
         "9",
         1
       ]
     ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
     "p_rank_5": [
       [
-        "11",
+        "10",
         1
       ]
     ]
   },
   "3": {
     "id": "3",
-    "p_exp": 5,
+    "p_exp": 15,
     "exp": 100,
     "extra_res": 0.01,
     "hp_max": 0,
@@ -139,40 +129,35 @@
         20
       ]
     ],
-    "p_rank_1": [
+    "p_rank_1": null,
+    "p_rank_2": [
       [
         "7",
         1
       ]
     ],
-    "p_rank_2": [
+    "p_rank_3": [
       [
         "8",
         1
       ]
     ],
-    "p_rank_3": [
+    "p_rank_4": [
       [
         "9",
         1
       ]
     ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
     "p_rank_5": [
       [
-        "11",
+        "10",
         1
       ]
     ]
   },
   "4": {
     "id": "4",
-    "p_exp": 5,
+    "p_exp": 20,
     "exp": 125,
     "extra_res": 0.01,
     "hp_max": 0,
@@ -196,40 +181,35 @@
         20
       ]
     ],
-    "p_rank_1": [
+    "p_rank_1": null,
+    "p_rank_2": [
       [
         "7",
         1
       ]
     ],
-    "p_rank_2": [
+    "p_rank_3": [
       [
         "8",
         1
       ]
     ],
-    "p_rank_3": [
+    "p_rank_4": [
       [
         "9",
         1
       ]
     ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
     "p_rank_5": [
       [
-        "11",
+        "10",
         1
       ]
     ]
   },
   "5": {
     "id": "5",
-    "p_exp": 5,
+    "p_exp": 25,
     "exp": 150,
     "extra_res": 0,
     "hp_max": 20,
@@ -253,40 +233,35 @@
         20
       ]
     ],
-    "p_rank_1": [
+    "p_rank_1": null,
+    "p_rank_2": [
       [
         "7",
         1
       ]
     ],
-    "p_rank_2": [
+    "p_rank_3": [
       [
         "8",
         1
       ]
     ],
-    "p_rank_3": [
+    "p_rank_4": [
       [
         "9",
         1
       ]
     ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
     "p_rank_5": [
       [
-        "11",
+        "10",
         1
       ]
     ]
   },
   "6": {
     "id": "6",
-    "p_exp": 5,
+    "p_exp": 30,
     "exp": 175,
     "extra_res": 0,
     "hp_max": 20,
@@ -310,40 +285,15 @@
         20
       ]
     ],
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "7": {
     "id": "7",
-    "p_exp": 5,
+    "p_exp": 35,
     "exp": 200,
     "extra_res": 0,
     "hp_max": 20,
@@ -367,40 +317,15 @@
         50
       ]
     ],
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "8": {
     "id": "8",
-    "p_exp": 5,
+    "p_exp": 40,
     "exp": 225,
     "extra_res": 0.01,
     "hp_max": 20,
@@ -424,40 +349,15 @@
         50
       ]
     ],
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "9": {
     "id": "9",
-    "p_exp": 5,
+    "p_exp": 45,
     "exp": 250,
     "extra_res": 0.01,
     "hp_max": 20,
@@ -481,40 +381,15 @@
         50
       ]
     ],
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "10": {
     "id": "10",
-    "p_exp": 5,
+    "p_exp": 50,
     "exp": 275,
     "extra_res": 0.01,
     "hp_max": 20,
@@ -538,40 +413,15 @@
         50
       ]
     ],
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "11": {
     "id": "11",
-    "p_exp": 5,
+    "p_exp": 55,
     "exp": 300,
     "extra_res": 0.0125,
     "hp_max": 0,
@@ -595,40 +445,15 @@
         50
       ]
     ],
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "12": {
     "id": "12",
-    "p_exp": 5,
+    "p_exp": 60,
     "exp": 325,
     "extra_res": 0.0125,
     "hp_max": 0,
@@ -652,40 +477,15 @@
         50
       ]
     ],
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "13": {
     "id": "13",
-    "p_exp": 5,
+    "p_exp": 65,
     "exp": 350,
     "extra_res": 0.0125,
     "hp_max": 0,
@@ -693,40 +493,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "14": {
     "id": "14",
-    "p_exp": 5,
+    "p_exp": 70,
     "exp": 375,
     "extra_res": 0,
     "hp_max": 25,
@@ -734,40 +509,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "15": {
     "id": "15",
-    "p_exp": 5,
+    "p_exp": 75,
     "exp": 400,
     "extra_res": 0,
     "hp_max": 25,
@@ -775,40 +525,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "16": {
     "id": "16",
-    "p_exp": 5,
+    "p_exp": 80,
     "exp": 425,
     "extra_res": 0,
     "hp_max": 25,
@@ -816,40 +541,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "17": {
     "id": "17",
-    "p_exp": 5,
+    "p_exp": 85,
     "exp": 450,
     "extra_res": 0,
     "hp_max": 0,
@@ -857,40 +557,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "18": {
     "id": "18",
-    "p_exp": 5,
+    "p_exp": 90,
     "exp": 475,
     "extra_res": 0,
     "hp_max": 0,
@@ -898,40 +573,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "19": {
     "id": "19",
-    "p_exp": 5,
+    "p_exp": 95,
     "exp": 500,
     "extra_res": 0,
     "hp_max": 0,
@@ -939,40 +589,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "20": {
     "id": "20",
-    "p_exp": 5,
+    "p_exp": 100,
     "exp": 525,
     "extra_res": 0,
     "hp_max": 0,
@@ -980,40 +605,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "21": {
     "id": "21",
-    "p_exp": 5,
+    "p_exp": 105,
     "exp": 550,
     "extra_res": 0,
     "hp_max": 0,
@@ -1021,40 +621,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "22": {
     "id": "22",
-    "p_exp": 5,
+    "p_exp": 110,
     "exp": 575,
     "extra_res": 0,
     "hp_max": 0,
@@ -1062,40 +637,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "23": {
     "id": "23",
-    "p_exp": 5,
+    "p_exp": 115,
     "exp": 600,
     "extra_res": 0,
     "hp_max": 0,
@@ -1103,40 +653,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "24": {
     "id": "24",
-    "p_exp": 5,
+    "p_exp": 120,
     "exp": 625,
     "extra_res": 0,
     "hp_max": 0,
@@ -1144,40 +669,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "25": {
     "id": "25",
-    "p_exp": 5,
+    "p_exp": 125,
     "exp": 650,
     "extra_res": 0,
     "hp_max": 0,
@@ -1185,40 +685,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "26": {
     "id": "26",
-    "p_exp": 5,
+    "p_exp": 130,
     "exp": 675,
     "extra_res": 0,
     "hp_max": 0,
@@ -1226,40 +701,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "27": {
     "id": "27",
-    "p_exp": 5,
+    "p_exp": 135,
     "exp": 700,
     "extra_res": 0,
     "hp_max": 0,
@@ -1267,40 +717,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "28": {
     "id": "28",
-    "p_exp": 5,
+    "p_exp": 140,
     "exp": 725,
     "extra_res": 0,
     "hp_max": 0,
@@ -1308,40 +733,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "29": {
     "id": "29",
-    "p_exp": 5,
+    "p_exp": 145,
     "exp": 750,
     "extra_res": 0,
     "hp_max": 0,
@@ -1349,40 +749,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "30": {
     "id": "30",
-    "p_exp": 5,
+    "p_exp": 150,
     "exp": 775,
     "extra_res": 0,
     "hp_max": 0,
@@ -1390,40 +765,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "31": {
     "id": "31",
-    "p_exp": 5,
+    "p_exp": 155,
     "exp": 800,
     "extra_res": 0,
     "hp_max": 0,
@@ -1431,40 +781,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "32": {
     "id": "32",
-    "p_exp": 5,
+    "p_exp": 160,
     "exp": 825,
     "extra_res": 0,
     "hp_max": 0,
@@ -1472,40 +797,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "33": {
     "id": "33",
-    "p_exp": 5,
+    "p_exp": 165,
     "exp": 850,
     "extra_res": 0,
     "hp_max": 0,
@@ -1513,40 +813,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "34": {
     "id": "34",
-    "p_exp": 5,
+    "p_exp": 170,
     "exp": 875,
     "extra_res": 0,
     "hp_max": 0,
@@ -1554,40 +829,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "35": {
     "id": "35",
-    "p_exp": 5,
+    "p_exp": 175,
     "exp": 900,
     "extra_res": 0,
     "hp_max": 0,
@@ -1595,40 +845,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "36": {
     "id": "36",
-    "p_exp": 5,
+    "p_exp": 180,
     "exp": 925,
     "extra_res": 0,
     "hp_max": 0,
@@ -1636,40 +861,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "37": {
     "id": "37",
-    "p_exp": 5,
+    "p_exp": 185,
     "exp": 950,
     "extra_res": 0,
     "hp_max": 0,
@@ -1677,40 +877,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "38": {
     "id": "38",
-    "p_exp": 5,
+    "p_exp": 190,
     "exp": 975,
     "extra_res": 0,
     "hp_max": 0,
@@ -1718,40 +893,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "39": {
     "id": "39",
-    "p_exp": 5,
+    "p_exp": 195,
     "exp": 1000,
     "extra_res": 0,
     "hp_max": 0,
@@ -1759,40 +909,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "40": {
     "id": "40",
-    "p_exp": 5,
+    "p_exp": 200,
     "exp": 1025,
     "extra_res": 0,
     "hp_max": 0,
@@ -1800,40 +925,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "41": {
     "id": "41",
-    "p_exp": 5,
+    "p_exp": 205,
     "exp": 1050,
     "extra_res": 0,
     "hp_max": 0,
@@ -1841,40 +941,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "42": {
     "id": "42",
-    "p_exp": 5,
+    "p_exp": 210,
     "exp": 1075,
     "extra_res": 0,
     "hp_max": 0,
@@ -1882,40 +957,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "43": {
     "id": "43",
-    "p_exp": 5,
+    "p_exp": 215,
     "exp": 1100,
     "extra_res": 0,
     "hp_max": 0,
@@ -1923,40 +973,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "44": {
     "id": "44",
-    "p_exp": 5,
+    "p_exp": 220,
     "exp": 1125,
     "extra_res": 0,
     "hp_max": 0,
@@ -1964,40 +989,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "45": {
     "id": "45",
-    "p_exp": 5,
+    "p_exp": 225,
     "exp": 1150,
     "extra_res": 0,
     "hp_max": 0,
@@ -2005,40 +1005,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "46": {
     "id": "46",
-    "p_exp": 5,
+    "p_exp": 230,
     "exp": 1175,
     "extra_res": 0,
     "hp_max": 0,
@@ -2046,40 +1021,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "47": {
     "id": "47",
-    "p_exp": 5,
+    "p_exp": 235,
     "exp": 1200,
     "extra_res": 0,
     "hp_max": 0,
@@ -2087,40 +1037,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "48": {
     "id": "48",
-    "p_exp": 5,
+    "p_exp": 240,
     "exp": 1225,
     "extra_res": 0,
     "hp_max": 0,
@@ -2128,40 +1053,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "49": {
     "id": "49",
-    "p_exp": 5,
+    "p_exp": 245,
     "exp": 1250,
     "extra_res": 0,
     "hp_max": 0,
@@ -2169,40 +1069,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "50": {
     "id": "50",
-    "p_exp": 5,
+    "p_exp": 250,
     "exp": 1275,
     "extra_res": 0,
     "hp_max": 0,
@@ -2210,40 +1085,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "51": {
     "id": "51",
-    "p_exp": 5,
+    "p_exp": 255,
     "exp": 1300,
     "extra_res": 0,
     "hp_max": 0,
@@ -2251,40 +1101,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "52": {
     "id": "52",
-    "p_exp": 5,
+    "p_exp": 260,
     "exp": 1325,
     "extra_res": 0,
     "hp_max": 0,
@@ -2292,40 +1117,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "53": {
     "id": "53",
-    "p_exp": 5,
+    "p_exp": 265,
     "exp": 1350,
     "extra_res": 0,
     "hp_max": 0,
@@ -2333,40 +1133,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "54": {
     "id": "54",
-    "p_exp": 5,
+    "p_exp": 270,
     "exp": 1375,
     "extra_res": 0,
     "hp_max": 0,
@@ -2374,40 +1149,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "55": {
     "id": "55",
-    "p_exp": 5,
+    "p_exp": 275,
     "exp": 1400,
     "extra_res": 0,
     "hp_max": 0,
@@ -2415,40 +1165,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "56": {
     "id": "56",
-    "p_exp": 5,
+    "p_exp": 280,
     "exp": 1425,
     "extra_res": 0,
     "hp_max": 0,
@@ -2456,40 +1181,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "57": {
     "id": "57",
-    "p_exp": 5,
+    "p_exp": 285,
     "exp": 1450,
     "extra_res": 0,
     "hp_max": 0,
@@ -2497,40 +1197,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "58": {
     "id": "58",
-    "p_exp": 5,
+    "p_exp": 290,
     "exp": 1475,
     "extra_res": 0,
     "hp_max": 0,
@@ -2538,40 +1213,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "59": {
     "id": "59",
-    "p_exp": 5,
+    "p_exp": 295,
     "exp": 1500,
     "extra_res": 0,
     "hp_max": 0,
@@ -2579,40 +1229,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "60": {
     "id": "60",
-    "p_exp": 5,
+    "p_exp": 300,
     "exp": 1525,
     "extra_res": 0,
     "hp_max": 0,
@@ -2620,40 +1245,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "61": {
     "id": "61",
-    "p_exp": 5,
+    "p_exp": 305,
     "exp": 1550,
     "extra_res": 0,
     "hp_max": 0,
@@ -2661,40 +1261,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "62": {
     "id": "62",
-    "p_exp": 5,
+    "p_exp": 310,
     "exp": 1575,
     "extra_res": 0,
     "hp_max": 0,
@@ -2702,40 +1277,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "63": {
     "id": "63",
-    "p_exp": 5,
+    "p_exp": 315,
     "exp": 1600,
     "extra_res": 0,
     "hp_max": 0,
@@ -2743,40 +1293,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "64": {
     "id": "64",
-    "p_exp": 5,
+    "p_exp": 320,
     "exp": 1625,
     "extra_res": 0,
     "hp_max": 0,
@@ -2784,40 +1309,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "65": {
     "id": "65",
-    "p_exp": 5,
+    "p_exp": 325,
     "exp": 1650,
     "extra_res": 0,
     "hp_max": 0,
@@ -2825,40 +1325,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "66": {
     "id": "66",
-    "p_exp": 5,
+    "p_exp": 330,
     "exp": 1675,
     "extra_res": 0,
     "hp_max": 0,
@@ -2866,40 +1341,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "67": {
     "id": "67",
-    "p_exp": 5,
+    "p_exp": 335,
     "exp": 1700,
     "extra_res": 0,
     "hp_max": 0,
@@ -2907,40 +1357,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "68": {
     "id": "68",
-    "p_exp": 5,
+    "p_exp": 340,
     "exp": 1725,
     "extra_res": 0,
     "hp_max": 0,
@@ -2948,40 +1373,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "69": {
     "id": "69",
-    "p_exp": 5,
+    "p_exp": 345,
     "exp": 1750,
     "extra_res": 0,
     "hp_max": 0,
@@ -2989,40 +1389,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "70": {
     "id": "70",
-    "p_exp": 5,
+    "p_exp": 350,
     "exp": 1775,
     "extra_res": 0,
     "hp_max": 0,
@@ -3030,40 +1405,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "71": {
     "id": "71",
-    "p_exp": 5,
+    "p_exp": 355,
     "exp": 1800,
     "extra_res": 0,
     "hp_max": 0,
@@ -3071,40 +1421,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "72": {
     "id": "72",
-    "p_exp": 5,
+    "p_exp": 360,
     "exp": 1825,
     "extra_res": 0,
     "hp_max": 0,
@@ -3112,40 +1437,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "73": {
     "id": "73",
-    "p_exp": 5,
+    "p_exp": 365,
     "exp": 1850,
     "extra_res": 0,
     "hp_max": 0,
@@ -3153,40 +1453,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "74": {
     "id": "74",
-    "p_exp": 5,
+    "p_exp": 370,
     "exp": 1875,
     "extra_res": 0,
     "hp_max": 0,
@@ -3194,40 +1469,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "75": {
     "id": "75",
-    "p_exp": 5,
+    "p_exp": 375,
     "exp": 1900,
     "extra_res": 0,
     "hp_max": 0,
@@ -3235,40 +1485,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "76": {
     "id": "76",
-    "p_exp": 5,
+    "p_exp": 380,
     "exp": 1925,
     "extra_res": 0,
     "hp_max": 0,
@@ -3276,40 +1501,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "77": {
     "id": "77",
-    "p_exp": 5,
+    "p_exp": 385,
     "exp": 1950,
     "extra_res": 0,
     "hp_max": 0,
@@ -3317,40 +1517,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "78": {
     "id": "78",
-    "p_exp": 5,
+    "p_exp": 390,
     "exp": 1975,
     "extra_res": 0,
     "hp_max": 0,
@@ -3358,40 +1533,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "79": {
     "id": "79",
-    "p_exp": 5,
+    "p_exp": 395,
     "exp": 2000,
     "extra_res": 0,
     "hp_max": 0,
@@ -3399,40 +1549,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "80": {
     "id": "80",
-    "p_exp": 5,
+    "p_exp": 400,
     "exp": 2025,
     "extra_res": 0,
     "hp_max": 0,
@@ -3440,40 +1565,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "81": {
     "id": "81",
-    "p_exp": 5,
+    "p_exp": 405,
     "exp": 2050,
     "extra_res": 0,
     "hp_max": 0,
@@ -3481,40 +1581,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "82": {
     "id": "82",
-    "p_exp": 5,
+    "p_exp": 410,
     "exp": 2075,
     "extra_res": 0,
     "hp_max": 0,
@@ -3522,40 +1597,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "83": {
     "id": "83",
-    "p_exp": 5,
+    "p_exp": 415,
     "exp": 2100,
     "extra_res": 0,
     "hp_max": 0,
@@ -3563,40 +1613,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "84": {
     "id": "84",
-    "p_exp": 5,
+    "p_exp": 420,
     "exp": 2125,
     "extra_res": 0,
     "hp_max": 0,
@@ -3604,40 +1629,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "85": {
     "id": "85",
-    "p_exp": 5,
+    "p_exp": 425,
     "exp": 2150,
     "extra_res": 0,
     "hp_max": 0,
@@ -3645,40 +1645,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "86": {
     "id": "86",
-    "p_exp": 5,
+    "p_exp": 430,
     "exp": 2175,
     "extra_res": 0,
     "hp_max": 0,
@@ -3686,40 +1661,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "87": {
     "id": "87",
-    "p_exp": 5,
+    "p_exp": 435,
     "exp": 2200,
     "extra_res": 0,
     "hp_max": 0,
@@ -3727,40 +1677,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "88": {
     "id": "88",
-    "p_exp": 5,
+    "p_exp": 440,
     "exp": 2225,
     "extra_res": 0,
     "hp_max": 0,
@@ -3768,40 +1693,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "89": {
     "id": "89",
-    "p_exp": 5,
+    "p_exp": 445,
     "exp": 2250,
     "extra_res": 0,
     "hp_max": 0,
@@ -3809,40 +1709,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "90": {
     "id": "90",
-    "p_exp": 5,
+    "p_exp": 450,
     "exp": 2275,
     "extra_res": 0,
     "hp_max": 0,
@@ -3850,40 +1725,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "91": {
     "id": "91",
-    "p_exp": 5,
+    "p_exp": 455,
     "exp": 2300,
     "extra_res": 0,
     "hp_max": 0,
@@ -3891,40 +1741,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "92": {
     "id": "92",
-    "p_exp": 5,
+    "p_exp": 460,
     "exp": 2325,
     "extra_res": 0,
     "hp_max": 0,
@@ -3932,40 +1757,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "93": {
     "id": "93",
-    "p_exp": 5,
+    "p_exp": 465,
     "exp": 2350,
     "extra_res": 0,
     "hp_max": 0,
@@ -3973,40 +1773,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "94": {
     "id": "94",
-    "p_exp": 5,
+    "p_exp": 470,
     "exp": 2375,
     "extra_res": 0,
     "hp_max": 0,
@@ -4014,40 +1789,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "95": {
     "id": "95",
-    "p_exp": 5,
+    "p_exp": 475,
     "exp": 2400,
     "extra_res": 0,
     "hp_max": 0,
@@ -4055,40 +1805,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "96": {
     "id": "96",
-    "p_exp": 5,
+    "p_exp": 480,
     "exp": 2425,
     "extra_res": 0,
     "hp_max": 0,
@@ -4096,40 +1821,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "97": {
     "id": "97",
-    "p_exp": 5,
+    "p_exp": 485,
     "exp": 2450,
     "extra_res": 0,
     "hp_max": 0,
@@ -4137,40 +1837,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "98": {
     "id": "98",
-    "p_exp": 5,
+    "p_exp": 490,
     "exp": 2475,
     "extra_res": 0,
     "hp_max": 0,
@@ -4178,40 +1853,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "99": {
     "id": "99",
-    "p_exp": 5,
+    "p_exp": 495,
     "exp": 2500,
     "extra_res": 0,
     "hp_max": 0,
@@ -4219,40 +1869,15 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   },
   "100": {
     "id": "100",
-    "p_exp": 5,
+    "p_exp": 500,
     "exp": 2525,
     "extra_res": 0,
     "hp_max": 0,
@@ -4260,35 +1885,10 @@
     "city_feature": 0,
     "event_building": null,
     "reward": null,
-    "p_rank_1": [
-      [
-        "7",
-        1
-      ]
-    ],
-    "p_rank_2": [
-      [
-        "8",
-        1
-      ]
-    ],
-    "p_rank_3": [
-      [
-        "9",
-        1
-      ]
-    ],
-    "p_rank_4": [
-      [
-        "10",
-        1
-      ]
-    ],
-    "p_rank_5": [
-      [
-        "11",
-        1
-      ]
-    ]
+    "p_rank_1": null,
+    "p_rank_2": null,
+    "p_rank_3": null,
+    "p_rank_4": null,
+    "p_rank_5": null
   }
 }

@@ -453,7 +453,7 @@
     "resources": null,
     "quota": null,
     "exp": null,
-    "event": null,
+    "event": "",
     "hp": null,
     "attack": null,
     "winprogress": null,
