@@ -1,3 +1,4 @@
+import { Color } from "cc";
 import { s2c_user } from "../Net/msg/WebsocketMsg";
 import { ItemConfigType } from "./Item";
 
@@ -147,3 +148,11 @@ export interface MapMemberGetTalkCountStruct {
     countTime: number;
     talkId: string;
 }
+
+export const GameRankColor = [
+    new Color().fromHEX(GetPropRankColor.RANK1),
+    new Color().fromHEX(GetPropRankColor.RANK2),
+    new Color().fromHEX(GetPropRankColor.RANK3),
+    new Color().fromHEX(GetPropRankColor.RANK4),
+    new Color().fromHEX(GetPropRankColor.RANK5),
+];

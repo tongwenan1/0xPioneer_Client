@@ -156,17 +156,21 @@ message player_rookie_finish {
 }
 
 message player_wormhole_set_defender {
-    required string poineerId = 1;
+    required string pioneerId = 1;
     required uint32 index = 2;
 }
 
 message player_wormhole_set_attacker {
-    required string poineerId = 1;
+    required string pioneerId = 1;
     required uint32 index = 2;
 }
 
 message player_wormhole_fight {
     
+}
+
+message player_bind_nft {
+    required string pioneerId = 1;
 }
 
 message get_battle_report {

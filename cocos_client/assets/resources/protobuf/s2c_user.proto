@@ -189,6 +189,10 @@ message player_wormhole_fight_res {
     required string defenderData = 3;
 }
 
+message player_bind_nft_res {
+    required uint32 res = 1;
+}
+
 message get_battle_report_res {
     required uint32 res = 1;
     repeated share.battle_report_data data = 2;

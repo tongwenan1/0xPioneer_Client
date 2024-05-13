@@ -153,15 +153,12 @@ export default class UserInfoDataMgr {
             return;
         }
 
-        this._data.treasureProgress += progress;
+        this._data.exploreProgress += progress;
 
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS);
     }
 
     public gainGenerateEnergy(energy: number): void {
-        if (this._data.generateEnergyInfo == null) {
-            return;
-        }
         const energyBuildingData = this._data.innerBuildings[InnerBuildingType.EnergyStation];
         if (energyBuildingData == null) {
             return;
@@ -170,14 +167,9 @@ export default class UserInfoDataMgr {
         if (generateConfig == null) {
             return;
         }
-        this._data.generateEnergyInfo.totalEnergyNum = Math.min(this._data.generateEnergyInfo.totalEnergyNum + energy, generateConfig.storage);
         NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE);
     }
     public generateEnergyGetted() {
-        if (this._data.generateEnergyInfo == null) {
-            return;
-        }
-        this._data.generateEnergyInfo.totalEnergyNum = 0;
         NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE);
     }
 
@@ -199,7 +191,8 @@ export default class UserInfoDataMgr {
             name: globalData.pname,
             level: globalData.level,
             exp: globalData.exp,
-            treasureProgress: globalData.treasureProgress,
+            exploreProgress: globalData.treasureProgress,
+            worldTreasureTodayDidGetTimes: 0,
             treasureDidGetRewards: globalData.treasureDidGetRewards,
             pointTreasureDidGetRewards: globalData.pointTreasureDidGetRewards,
             heatValue: {
@@ -213,13 +206,7 @@ export default class UserInfoDataMgr {
                           countTime: globalData.generateTroopInfo.countTime,
                           troopNum: globalData.generateTroopInfo.troopNum,
                       },
-            generateEnergyInfo:
-                globalData.generateEnergyInfo == null
-                    ? null
-                    : {
-                          countTime: globalData.generateEnergyInfo.countTime,
-                          totalEnergyNum: globalData.generateEnergyInfo.totalEnergyNum,
-                      },
+            energyDidGetTimes: 1,
             cityRadialRange: globalData.cityRadialRange,
             didFinishRookie: globalData.didFinishRookie,
             innerBuildings: {},
@@ -234,7 +221,7 @@ export default class UserInfoDataMgr {
                 buildType: building.id as InnerBuildingType,
                 upgradeBeginTimestamp: building.upgradeCountTime * 1000,
                 upgradeEndTimestamp: building.upgradeTotalTime * 1000,
-                upgrading: building.upgradeIng
+                upgrading: building.upgradeIng,
             };
         }
         console.log("exce _data: ", this._data);
@@ -294,36 +281,6 @@ export default class UserInfoDataMgr {
                     }
                 }
             }
-            // generate energy
-            // function hide
-            // let energyStationBuilded: boolean = false;
-            // if (this._data.innerBuildings != null && InnerBuildingType.EnergyStation in this._data.innerBuildings) {
-            //     energyStationBuilded = this._data.innerBuildings[InnerBuildingType.EnergyStation].buildLevel > 0;
-            // }
-            // if (energyStationBuilded) {
-            //     const energyBuildingData = this._data.innerBuildings[InnerBuildingType.EnergyStation];
-            //     const generateConfig = InnerBuildingLvlUpConfig.getEnergyLevelData(energyBuildingData.buildLevel);
-            //     const perGenerateTime: number = 5;
-            //     if (this._data.generateEnergyInfo == null) {
-            //         this._data.generateEnergyInfo = {
-            //             countTime: perGenerateTime,
-            //             totalEnergyNum: 0,
-            //         };
-            //     }
-            //     if (this._data.generateEnergyInfo.totalEnergyNum >= generateConfig.storage) {
-            //         this._data.generateEnergyInfo.countTime = perGenerateTime;
-            //     } else {
-            //         if (this._data.generateEnergyInfo.countTime > 0) {
-            //             this._data.generateEnergyInfo.countTime -= 1;
-            //             NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_TIME_COUNT_CHANGED);
-
-            //             if (this._data.generateEnergyInfo.countTime <= 0) {
-            //                 this._data.generateEnergyInfo.countTime = perGenerateTime;
-            //                 NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_NUM_TO_CHANGE);
-            //             }
-            //         }
-            //     }
-            // }
         }, 1000);
     }
 }

@@ -1,4 +1,4 @@
-import { Label, Node, _decorator, v3 } from "cc";
+import { Label, Layout, Node, _decorator, v3 } from "cc";
 import { InnerBuildingView } from "./InnerBuildingView";
 import { UIHUDController } from "../../../UI/UIHUDController";
 import { GameMgr, ItemMgr, LanMgr } from "../../../Utils/Global";
@@ -16,37 +16,47 @@ import { NetworkMgr } from "../../../Net/NetworkMgr";
 
 const { ccclass, property } = _decorator;
 
-@ccclass('InnerEnergyStationBuildingView')
+@ccclass("InnerEnergyStationBuildingView")
 export class InnerEnergyStationBuildingView extends InnerBuildingView {
+    private _limitGetTimes: number = 3;
+
+    private _produceInfoView: Node = null;
+    private _getInfoView: Node = null;
 
     public async refreshUI(building: UserInnerBuildInfo, canAction: boolean = true) {
         await super.refreshUI(building, canAction);
 
-        this._countingGenerate();
-
+        this._getInfoView.active = false;
         if (this._building.buildLevel > 0) {
+            this._getInfoView.active = true;
+
             const infoViewY = InnerBuildingLvlUpConfig.getBuildingLevelData(this._building.buildLevel, "info_y_energy");
             if (infoViewY != null) {
                 this._produceInfoView.position = v3(0, infoViewY, 0);
+                this._getInfoView.position = v3(0, infoViewY, 0);
             }
+
+            this._getInfoView.getChildByPath("TopContent/CurrentNum").getComponent(Label).string = "123";
+            this._getInfoView.getChildByPath("TopContent").getComponent(Layout).updateLayout();
+
+            this._getInfoView.getChildByPath("BottomContent/CurrentTime").getComponent(Label).string = "1";
+            this._getInfoView.getChildByPath("BottomContent/PerNum").getComponent(Label).string = this._limitGetTimes.toString();
+            this._getInfoView.getChildByPath("BottomContent").getComponent(Layout).updateLayout();
         }
     }
-
-    private _produceInfoView: Node = null;
-
+    //-------------------------------------------------lifecycle
     protected innerBuildingLoad(): void {
         super.innerBuildingLoad();
-        this._produceInfoView = this.node.getChildByName("InfoView");
 
-        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_TIME_COUNT_CHANGED, this._countingGenerate, this);
+        this._produceInfoView = this.node.getChildByName("InfoView");
+        this._produceInfoView.active = false;
+
+        this._getInfoView = this.node.getChildByName("GetInfoView");
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
-
-        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_TIME_COUNT_CHANGED, this._countingGenerate, this);
     }
-
 
     protected async innerBuildingTaped(): Promise<void> {
         super.innerBuildingTaped();
@@ -63,65 +73,71 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
     }
 
     //------------------------------- function
-    private _countingGenerate() {
-        if (this._building == null) {
-            return;
-        }
-        const generateInfoData = DataMgr.s.userInfo.data.generateEnergyInfo;
-        if (this._building.buildLevel > 0 && generateInfoData != null) {
-            const generateConfig = InnerBuildingLvlUpConfig.getEnergyLevelData(this._building.buildLevel);
-            if (generateConfig != null) {
-                this._produceInfoView.active = true;
-                // userlanMgr
-                // this._produceInfoView.getChildByPath("TopContent/Title").getComponent(Label).string = LanMgr.getLanById("201003");
-                // this._produceInfoView.getChildByPath("BottomContent/Title").getComponent(Label).string = LanMgr.getLanById("201003");
-                // this._produceInfoView.getChildByPath("BottomContent/Gap").getComponent(Label).string = LanMgr.getLanById("201003");
-                this._produceInfoView.getChildByPath("TopContent/CurrentNum").getComponent(Label).string = generateInfoData.totalEnergyNum.toString();
-                this._produceInfoView.getChildByPath("TopContent/MaxNum").getComponent(Label).string = generateConfig.storage.toString();
+    // private _countingGenerate() {
+    //     if (this._building == null) {
+    //         return;
+    //     }
+    //     const generateInfoData = DataMgr.s.userInfo.data.generateEnergyInfo;
+    //     if (this._building.buildLevel > 0 && generateInfoData != null) {
+    //         const generateConfig = InnerBuildingLvlUpConfig.getEnergyLevelData(this._building.buildLevel);
+    //         if (generateConfig != null) {
+    //             this._produceInfoView.active = true;
+    //             // userlanMgr
+    //             // this._produceInfoView.getChildByPath("TopContent/Title").getComponent(Label).string = LanMgr.getLanById("201003");
+    //             // this._produceInfoView.getChildByPath("BottomContent/Title").getComponent(Label).string = LanMgr.getLanById("201003");
+    //             // this._produceInfoView.getChildByPath("BottomContent/Gap").getComponent(Label).string = LanMgr.getLanById("201003");
+    //             this._produceInfoView.getChildByPath("TopContent/CurrentNum").getComponent(Label).string = generateInfoData.totalEnergyNum.toString();
+    //             this._produceInfoView.getChildByPath("TopContent/MaxNum").getComponent(Label).string = generateConfig.storage.toString();
 
-                if (generateInfoData.totalEnergyNum >= generateConfig.storage) {
-                    this._produceInfoView.getChildByPath("BottomContent").active = false;
-                } else {
-                    this._produceInfoView.getChildByPath("BottomContent").active = true;
-                    this._produceInfoView.getChildByPath("BottomContent/CurrentTime").getComponent(Label).string = generateInfoData.countTime.toString();
-                    // output
-                    let showOutput: string = generateConfig.output.toString();
-                    // output after effect
-                    const afterEffectOutput = GameMgr.getAfterExtraEffectPropertyByBuilding(this._building.buildType, GameExtraEffectType.ENERGY_GENERATE, generateConfig.output);
-                    // output gap
-                    const gapNum: number = afterEffectOutput - generateConfig.output;
-                    if (gapNum > 0) {
-                        showOutput += ("+" + gapNum);
-                    }
-                    this._produceInfoView.getChildByPath("BottomContent/PerNum").getComponent(Label).string = showOutput;
-                }
-            }
+    //             if (generateInfoData.totalEnergyNum >= generateConfig.storage) {
+    //                 this._produceInfoView.getChildByPath("BottomContent").active = false;
+    //             } else {
+    //                 this._produceInfoView.getChildByPath("BottomContent").active = true;
+    //                 this._produceInfoView.getChildByPath("BottomContent/CurrentTime").getComponent(Label).string = generateInfoData.countTime.toString();
+    //                 // output
+    //                 let showOutput: string = generateConfig.output.toString();
+    //                 // output after effect
+    //                 const afterEffectOutput = GameMgr.getAfterExtraEffectPropertyByBuilding(this._building.buildType, GameExtraEffectType.ENERGY_GENERATE, generateConfig.output);
+    //                 // output gap
+    //                 const gapNum: number = afterEffectOutput - generateConfig.output;
+    //                 if (gapNum > 0) {
+    //                     showOutput += ("+" + gapNum);
+    //                 }
+    //                 this._produceInfoView.getChildByPath("BottomContent/PerNum").getComponent(Label).string = showOutput;
+    //             }
+    //         }
 
-        } else {
-            this._produceInfoView.active = false;
-        }
-        this._produceInfoView.active = true;
-    }
+    //     } else {
+    //         this._produceInfoView.active = false;
+    //     }
+    // }
 
     //------------------------------- action
-    private onTapGetPSYC() {
-        // function hide
-        // if (this._building.upgradeTotalTime > 0) {
-        //     UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
-        //     // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
-        //     return;
-        // }
-        // if (DataMgr.s.userInfo.data.generateEnergyInfo == null) {
-        //     return;
-        // }
-        // const produceNum: number = DataMgr.s.userInfo.data.generateEnergyInfo.totalEnergyNum;
-        // if (produceNum <= 0) {
-        //     // useLanMgr
-        //     // UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
-        //     UIHUDController.showCenterTip("No PSYC to collect");
-        //     return;
-        // }
-        // DataMgr.setTempSendData("player_get_auto_energy_res", { num: produceNum });
-        // NetworkMgr.websocketMsg.player_get_auto_energy({});
+    private onTapGetEnergy() {
+        if (DataMgr.s.userInfo.data.energyDidGetTimes >= this._limitGetTimes) {
+            // useLanMgr
+            // UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
+            UIHUDController.showCenterTip("No PSYC to collect");
+            return;
+        }
     }
+    // private onTapGetPSYC() {
+    // if (this._building.upgradeTotalTime > 0) {
+    //     UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
+    //     // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
+    //     return;
+    // }
+    // if (DataMgr.s.userInfo.data.generateEnergyInfo == null) {
+    //     return;
+    // }
+    // const produceNum: number = DataMgr.s.userInfo.data.generateEnergyInfo.totalEnergyNum;
+    // if (produceNum <= 0) {
+    //     // useLanMgr
+    //     // UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
+    //     UIHUDController.showCenterTip("No PSYC to collect");
+    //     return;
+    // }
+    // DataMgr.setTempSendData("player_get_auto_energy_res", { num: produceNum });
+    // NetworkMgr.websocketMsg.player_get_auto_energy({});
+    // }
 }

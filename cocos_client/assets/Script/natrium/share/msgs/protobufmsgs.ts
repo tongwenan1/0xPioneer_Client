@@ -39,6 +39,7 @@ export enum protobuf_c2s {
     player_wormhole_set_defender = 223,
     player_wormhole_set_attacker = 224,
     player_wormhole_fight = 225,
+    player_bind_nft = 226,
     get_battle_report = 299,
 }
 
@@ -83,6 +84,7 @@ export enum protobuf_s2c {
     player_wormhole_set_defender_res = 20225,
     player_wormhole_set_attacker_res = 20226,
     player_wormhole_fight_res = 20227,
+    player_bind_nft_res = 20228,
     get_battle_report_res = 20299,
 
     storhouse_change = 20300,

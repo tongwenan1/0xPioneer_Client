@@ -235,16 +235,9 @@ export class OuterBuildingView extends ViewController {
     private _refreshEnergyTipShow() {
         this._toGetEnergyTip.active = false;
         if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != MapMemberFactionType.enemy) {
-            const energyInfo = DataMgr.s.userInfo.data.generateEnergyInfo;
-            if (energyInfo != null) {
-                const threshold = (ConfigConfig.getConfig(ConfigType.MainCityEnergyTipThreshold) as EnergyTipThresholdParam).threshold;
-                const energyStationData = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.EnergyStation];
-                const psycData = InnerBuildingLvlUpConfig.getEnergyLevelData(energyStationData.buildLevel);
-                if (psycData != null) {
-                    if (energyInfo.totalEnergyNum / psycData.storage >= threshold) {
-                        this._toGetEnergyTip.active = true;
-                    }
-                }
+            const limitGetTimes: number = 3;
+            if (DataMgr.s.userInfo.data.energyDidGetTimes < limitGetTimes) {
+                this._toGetEnergyTip.active = true;
             }
         }
     }

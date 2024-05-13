@@ -127,7 +127,7 @@ export class PointTreasureUI extends ViewController {
         }
     }
     private _refreshUI() {
-        let value = DataMgr.s.userInfo.data.treasureProgress;
+        let value = DataMgr.s.userInfo.data.exploreProgress;
 
         this._currentPointLabel.string = "Current Points: " + value;
 
@@ -184,7 +184,7 @@ export class PointTreasureUI extends ViewController {
         let getStatus: number = 0;
         if (DataMgr.s.userInfo.data.pointTreasureDidGetRewards.indexOf(data.id) != -1) {
             getStatus = 2;
-        } else if (DataMgr.s.userInfo.data.treasureProgress >= data.threshold) {
+        } else if (DataMgr.s.userInfo.data.exploreProgress >= data.threshold) {
             getStatus = 1;
         }
         if (getStatus == 2) {

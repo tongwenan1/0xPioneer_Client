@@ -31,6 +31,7 @@ export default class NFTPioneerConfig {
         return null;
     }
     public static getRandomNFTId(): string {
+        console.log("exce keys", Object.keys(this._confs));
         return CommonTools.getRandomItem(Object.keys(this._confs));
     }
 }

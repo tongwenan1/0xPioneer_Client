@@ -36,10 +36,10 @@ export default class PioneerMgr {
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_LOGIC_MOVE, this._onPioneerLogicMove, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_REBIRTH_BEGIN, this._onPioneerRebirthBegin, this);
 
-        const originalPioneer = DataMgr.s.pioneer.getCurrentPlayer();
-        if (!!originalPioneer && originalPioneer.NFTId == null) {
-            this._bindPlayerNFT(originalPioneer.id, originalPioneer.NFTInitLinkId);
-        }
+        // const originalPioneer = DataMgr.s.pioneer.getCurrentPlayer();
+        // if (!!originalPioneer && originalPioneer.NFTId == null) {
+        //     this._bindPlayerNFT(originalPioneer.id, originalPioneer.NFTInitLinkId);
+        // }
     }
     public pioneerHealHpToMax(pioneerId: string) {
         const costTroops: number = DataMgr.s.pioneer.gainHp(pioneerId, DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop));

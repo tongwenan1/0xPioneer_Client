@@ -10,11 +10,6 @@ export interface GenerateTroopInfo {
     troopNum: number;
 }
 
-export interface GenerateEnergyInfo {
-    countTime: number;
-    totalEnergyNum: number;
-}
-
 export interface HeatValueObject {
     getTimestamp: number;
     currentHeatValue: number;
@@ -25,8 +20,10 @@ export interface UserInfoObject {
     name: string;
     level: number;
     exp: number;
-    treasureProgress: number;
+    exploreProgress: number;
     heatValue: HeatValueObject;
+    worldTreasureTodayDidGetTimes: number;
+
     tavernGetPioneerTimestamp: number;
     treasureDidGetRewards: string[];
     pointTreasureDidGetRewards: string[];
@@ -36,7 +33,7 @@ export interface UserInfoObject {
     didFinishRookie: boolean;
 
     generateTroopInfo: GenerateTroopInfo;
-    generateEnergyInfo: GenerateEnergyInfo;
+    energyDidGetTimes: number;
     innerBuildings: { [key: string]: UserInnerBuildInfo };
 
     wormholeDefenderIds: [string, string, string];

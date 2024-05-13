@@ -24,7 +24,7 @@ export class PointActionView extends Component {
     private _treasureCanGetIcon: Node = null;
 
     protected onLoad(): void {
-        this._userInfoTreasureValue = DataMgr.s.userInfo.data.treasureProgress;
+        this._userInfoTreasureValue = DataMgr.s.userInfo.data.exploreProgress;
         this._boxDatas = BoxInfoConfig.getAllBox();
 
         this._boxView = this.node.getChildByPath("BoxView");

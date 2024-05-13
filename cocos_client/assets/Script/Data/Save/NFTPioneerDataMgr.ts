@@ -69,6 +69,7 @@ export default class NFTPioneerDataMgr {
         if (useId == null) {
             useId = NFTPioneerConfig.getRandomNFTId();
         }
+        console.log("exce uid: " + useId);
         const object = this._convertConfigToObject(new Date().getTime() + CommonTools.generateUUID(), NFTPioneerConfig.getById(useId));
         this._data.push(object);
         this.saveObj();
@@ -167,6 +168,7 @@ export default class NFTPioneerDataMgr {
     private _convertConfigToObject(uniqueId: string, config: NFTPioneerConfigData): NFTPioneerObject {
         // name
         let name: string = "";
+        console.log("exce config:", config);
         for (const fragment of config.name) {
             name += NFTPioneerNameConfig.getById(CommonTools.getRandomItem(fragment)).name;
         }

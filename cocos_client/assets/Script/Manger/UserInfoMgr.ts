@@ -22,7 +22,6 @@ export default class UserInfoMgr {
         NotificationMgr.addListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._onInnerBuildingDidFinishUpgrade, this);
 
         NotificationMgr.addListener(NotificationName.GENERATE_TROOP_NUM_TO_CHANGE, this._generateTroopNumToChange, this);
-        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_TO_CHANGE, this._generateEnergyNumToChange, this);
     }
     //--------------------------------------------------
     public get afterTalkItemGetData() {

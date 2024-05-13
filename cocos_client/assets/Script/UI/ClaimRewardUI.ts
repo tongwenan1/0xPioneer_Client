@@ -17,7 +17,7 @@ export class ClaimRewardUI extends Component {
     @property(Node) RewardBoxArr: Node;
 
     public refreshUI() {
-        let value = DataMgr.s.userInfo.data.treasureProgress;
+        let value = DataMgr.s.userInfo.data.exploreProgress;
         let showBox = false;
         for (let i = 0; i < this._boxViews.length; i++) {
             if (i < this._boxDatas.length) {
@@ -117,7 +117,7 @@ export class ClaimRewardUI extends Component {
         let getStatus: number = 0;
         if (DataMgr.s.userInfo.data.treasureDidGetRewards.indexOf(data.id) != -1) {
             getStatus = 2;
-        } else if (DataMgr.s.userInfo.data.treasureProgress >= data.threshold) {
+        } else if (DataMgr.s.userInfo.data.exploreProgress >= data.threshold) {
             getStatus = 1;
         }
         if (getStatus == 2) {

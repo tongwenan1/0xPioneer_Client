@@ -43,18 +43,23 @@ message player_info {
     optional storehouse_data storehouse = 3;
     optional artifact_data artifact = 4;
     optional usermap_data usermap = 5;
+    optional nfts_data nfts = 6;
 }
 
 message storehouse_data {
-    map<string,item_data> items = 1; // goods/commodities in storehouse, itemid=>count map
+    map<string,item_data> items = 1;
 }
 
 message artifact_data {
-    map<string,artifact_info_data> items = 1; // goods/commodities in storehouse, itemid=>count map
+    map<string,artifact_info_data> items = 1;
 }
 
 message usermap_data {
-    map<string,pioneer_data> pioneer = 1; // goods/commodities in storehouse, itemid=>count map
+    map<string,pioneer_data> pioneer = 1;
+}
+
+message nfts_data {
+    map<string,nfts_info_data> nfts = 1;
 }
 
 message artifact_info_data {
@@ -130,6 +135,37 @@ message item_data {
     required string itemConfigId = 1; // item id, see in item config
     required int32 count = 2; // count
     required uint32 addTimeStamp = 3;
+}
+
+message nfts_info_data {
+    required string uniqueId = 1;
+    required uint32 rarity = 2;
+    required string name = 3;
+    optional uint32 attack = 4;
+    optional uint32 defense = 5;
+    optional uint32 hp = 6;
+    optional uint32 speed = 7;
+    optional uint32 iq = 8;
+    optional uint32 level = 9;
+    optional uint32 levelLimit = 10;
+    optional uint32 rank = 11;
+    optional uint32 rankLimit = 12;
+
+    optional uint32 attackGrowValue = 13;
+    optional uint32 defenseGrowValue = 14;
+    optional uint32 hpGrowValue = 15;
+    optional uint32 speedGrowValue = 16;
+    optional uint32 iqGrowValue = 17;
+    optional nft_pioneer_skil skills = 18;
+
+    optional string workingBuildingId = 19;
+
+    optional uint32 addTimeStamp = 20;
+}
+
+message nft_pioneer_skil {
+    optional string id = 1;
+    optional bool isOriginal = 2;
 }
 
 message tran_data {

@@ -1,16 +1,4 @@
-import {
-    _decorator,
-    Node,
-    instantiate,
-    Label,
-    Layout,
-    UITransform,
-    Button,
-    ScrollView,
-    v2,
-    Color,
-    Sprite,
-} from "cc";
+import { _decorator, Node, instantiate, Label, Layout, UITransform, Button, ScrollView, v2, Color, Sprite, ProgressBar } from "cc";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import ViewController from "../BasicView/ViewController";
@@ -20,7 +8,7 @@ import WorldBoxConfig from "../Config/WorldBoxConfig";
 import CommonTools from "../Tool/CommonTools";
 import ConfigConfig from "../Config/ConfigConfig";
 import { ConfigType, WorldBoxThresholdParam } from "../Const/Config";
-import { GetPropRankColor } from "../Const/ConstDefine";
+import { GameRankColor, GetPropRankColor } from "../Const/ConstDefine";
 import { BackpackItem } from "./BackpackItem";
 import { NetworkMgr } from "../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
@@ -29,27 +17,24 @@ const { ccclass, property } = _decorator;
 export class WorldTreasureUI extends ViewController {
     //----------------------------------------- data
     private _boxDatas: WorldBoxConfigData[] = [];
-    private _currentBoxIndex: number = 0;
+    private _boxRank: number = 0;
     private _canClaimBoxIndex: number = -1;
     private _boxNames: string[] = [];
-    private _rankColors: Color[] = [];
+    private _todayEightTimestamp: number = 0;
+    private _nextDayEightTimestamp: number = 0;
     //----------------------------------------- view
-    private _currentPointLabel: Label = null;
-
-    private _progressBoxItem: Node = null;
-    private _progressBoxContent: Node = null;
-    private _allProgressBoxItems: Node[] = [];
-
     private _currentBoxTitleLabel: Label = null;
     private _currentBoxRewardItemItem: Node = null;
     private _currentBoxRewardItem: Node = null;
     private _currentBoxRewardContent: Node = null;
+
     private _claimButton: Button = null;
     private _claimCountDownLabel: Label = null;
 
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
+        this._boxRank = 3;
         // useLanMgr
         this._boxNames = [
             "Rank 1 Boxes", //LanMgr.getLanById("107549"),
@@ -58,19 +43,8 @@ export class WorldTreasureUI extends ViewController {
             "Rank 4 Boxes", //LanMgr.getLanById("107549"),
             "Rank 5 Boxes", //LanMgr.getLanById("107549"),
         ];
-        this._rankColors = [
-            new Color().fromHEX(GetPropRankColor.RANK1),
-            new Color().fromHEX(GetPropRankColor.RANK2),
-            new Color().fromHEX(GetPropRankColor.RANK3),
-            new Color().fromHEX(GetPropRankColor.RANK4),
-            new Color().fromHEX(GetPropRankColor.RANK5),
-        ];
-
-        this._currentPointLabel = this.node.getChildByPath("__ViewContent/LeftContent/Point").getComponent(Label);
-
-        this._progressBoxContent = this.node.getChildByPath("__ViewContent/LeftContent/ScrollView/View/Content");
-        this._progressBoxItem = this._progressBoxContent.getChildByPath("Item");
-        this._progressBoxItem.removeFromParent();
+        this._todayEightTimestamp = CommonTools.getDayAMTimestamp(8);
+        this._nextDayEightTimestamp = CommonTools.getNextDayAMTimestamp(8);
 
         this._currentBoxTitleLabel = this.node.getChildByPath("__ViewContent/RightContent/Title").getComponent(Label);
         this._currentBoxRewardContent = this.node.getChildByPath("__ViewContent/RightContent/ScrollView/View/Content");
@@ -78,27 +52,25 @@ export class WorldTreasureUI extends ViewController {
         this._currentBoxRewardItem.removeFromParent();
         this._currentBoxRewardItemItem = this._currentBoxRewardItem.getChildByPath("RewardContent/BackpackItem");
         this._currentBoxRewardItemItem.removeFromParent();
-        this._claimButton = this.node.getChildByPath("__ViewContent/RightContent/ClaimButton").getComponent(Button);
+
+        this._claimButton = this.node.getChildByPath("__ViewContent/LeftContent/TimeProgressView/ClaimButton").getComponent(Button);
         this._claimCountDownLabel = this.node.getChildByPath("__ViewContent/CountDown").getComponent(Label);
 
         // useLanMgr
         // this.node.getChildByPath("__ViewContent/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByPath("__ViewContent/LeftContent/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/LeftContent/CurrentBoxView/Title").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/RightContent/ClaimButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
-
-        NetworkMgr.websocket.on("player_heat_value_change_res", this._on_player_heat_value_change_res.bind(this));
     }
     protected viewDidStart(): void {
         super.viewDidStart();
 
-        this._initBox();
         this._refreshUI();
+        // next day eight hour timestamp
+        this._refreshCountDownTime();
+        this.schedule(this._refreshCountDownTime, 1);
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
-
-        console.log('exce notifi off');
-        NetworkMgr.websocket.off("player_heat_value_change_res", this._on_player_heat_value_change_res.bind(this));
     }
     protected viewPopAnimation(): boolean {
         return true;
@@ -107,99 +79,50 @@ export class WorldTreasureUI extends ViewController {
         return this.node.getChildByPath("__ViewContent");
     }
 
-    private _initBox() {
-        const currentHeatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
-        this._currentPointLabel.string = "Current Points: " + currentHeatValue;
-        const boxThresholds = (ConfigConfig.getConfig(ConfigType.WorldBoxThreshold) as WorldBoxThresholdParam).thresholds;
-        for (let i = 0; i < 5; i++) {
-            const boxView = instantiate(this._progressBoxItem);
-            this._progressBoxContent.addChild(boxView);
+    private _refreshUI() {
+        const currentIndex: number = Math.max(0, Math.min(this._boxRank - 1, 4));
 
-            // title
-            const title = boxView.getChildByPath("Title").getComponent(Label);
-            title.string = this._boxNames[i];
-            title.color = this._rankColors[i];
-            // icon
-            boxView.getChildByPath("Icon").getComponent(Sprite).color = this._rankColors[i];
-            // tip
-            let tipString: string = "";
-            if (i == boxThresholds.length - 1) {
-                tipString = "points >=" + boxThresholds[i];
-                if (currentHeatValue >= boxThresholds[i]) {
-                    this._canClaimBoxIndex = i;
-                }
-            } else {
-                if (i + 1 < boxThresholds.length) {
-                    tipString = boxThresholds[i] + "<= points <" + boxThresholds[i + 1];
-                    if (currentHeatValue >= boxThresholds[i] && currentHeatValue < boxThresholds[i + 1]) {
-                        this._canClaimBoxIndex = i;
-                    }
-                }
-            }
-            boxView.getChildByPath("Tip").getComponent(Label).string = tipString;
-            // button
-            boxView.getComponent(Button).clickEvents[0].customEventData = i.toString();
+        const leftView = this.node.getChildByPath("__ViewContent/LeftContent");
+        //------------------- current box
+        const boxView = leftView.getChildByPath("CurrentBoxView/Item");
+        // title
+        const title = boxView.getChildByPath("Title").getComponent(Label);
+        title.string = this._boxNames[currentIndex];
+        title.color = GameRankColor[currentIndex];
+        // icon
+        boxView.getChildByPath("Icon").getComponent(Sprite).color = GameRankColor[currentIndex];
 
-            this._allProgressBoxItems.push(boxView);
-        }
-        this._progressBoxContent.getComponent(Layout).updateLayout();
+        //------------------- max chance
+        const perTimeNeedProgress: number = 50;
+        const progress: number = DataMgr.s.userInfo.data.exploreProgress;
+        const heatValue: number = 200;
+        const limitTimes: number = Math.floor(heatValue / 80);
+        const canGeTimes: number = Math.min(limitTimes, Math.floor(progress / perTimeNeedProgress));
+        const didGetTimes: number = DataMgr.s.userInfo.data.worldTreasureTodayDidGetTimes;
 
-        if (this._canClaimBoxIndex >= 0) {
-            this._currentBoxIndex = this._canClaimBoxIndex;
-        }
+        leftView.getChildByPath("TimeView/MaxTimes").getComponent(Label).string = "Max Claim Chance: " + limitTimes;
+        leftView.getChildByPath("TimeView/PSYCProgress").getComponent(Label).string = "999/1000";
 
-        // next day eight hour timestamp
-        this._refreshCountDownTime();
-        this.schedule(() => {
-            this._refreshCountDownTime();
-        }, 1);
-    }
+        const currentProgress: number = progress - perTimeNeedProgress * canGeTimes;
+        const totalProgress: number = perTimeNeedProgress;
 
-    private _refreshUI(anim: boolean = false) {
-        let currentHeatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
-        this._currentPointLabel.string = "Current Points: " + currentHeatValue;
-        const boxThresholds = (ConfigConfig.getConfig(ConfigType.WorldBoxThreshold) as WorldBoxThresholdParam).thresholds;
-        for (let i = 0; i < this._allProgressBoxItems.length; i++) {
-            if (i == boxThresholds.length - 1) {
-                if (currentHeatValue >= boxThresholds[i]) {
-                    this._canClaimBoxIndex = i;
-                }
-            } else {
-                if (i + 1 < boxThresholds.length) {
-                    if (currentHeatValue >= boxThresholds[i] && currentHeatValue < boxThresholds[i + 1]) {
-                        this._canClaimBoxIndex = i;
-                    }
-                }
-            }
-        }
+        leftView.getChildByPath("TimeProgressView/Times").getComponent(Label).string = "Claim Chance Obtained: " + Math.max(0, canGeTimes - didGetTimes);
+        leftView.getChildByPath("TimeProgressView/ProgressBar").getComponent(ProgressBar).progress = Math.min(1, currentProgress / totalProgress);
+        leftView.getChildByPath("TimeProgressView/ProgressBar/Label").getComponent(Label).string = currentProgress + "/" + totalProgress;
 
-        for (const item of this._allProgressBoxItems) {
-            item.getChildByPath("Select").active = this._currentBoxIndex == this._allProgressBoxItems.indexOf(item);
-        }
-        this.scheduleOnce(() => {
-            this.node
-                .getChildByPath("__ViewContent/LeftContent/ScrollView")
-                .getComponent(ScrollView)
-                .scrollToOffset(
-                    v2(
-                        0,
-                        (this._progressBoxItem.getComponent(UITransform).height + this._progressBoxContent.getComponent(Layout).spacingY) *
-                            (this._allProgressBoxItems.length - 1 - this._currentBoxIndex)
-                    ),
-                    anim ? 1.0 : 0
-                );
-        });
+        this._claimButton.getComponent(Button).interactable = canGeTimes < didGetTimes;
+        this._claimButton.getComponent(Sprite).grayscale = !(canGeTimes < didGetTimes);
 
-        // reward
-        this._currentBoxTitleLabel.string = this._boxNames[this._currentBoxIndex];
-        this._currentBoxTitleLabel.color = this._rankColors[this._currentBoxIndex];
+        //------------------- reward
+        this._currentBoxTitleLabel.string = this._boxNames[currentIndex];
+        this._currentBoxTitleLabel.color = GameRankColor[currentIndex];
 
         this._currentBoxRewardContent.destroyAllChildren();
         let rewardDataDay: number = CommonTools.getDayOfWeek() - 1;
         if (rewardDataDay == 0) {
             rewardDataDay = 7;
         }
-        this._boxDatas = WorldBoxConfig.getByDayAndRank(rewardDataDay, this._currentBoxIndex + 1);
+        this._boxDatas = WorldBoxConfig.getByDayAndRank(rewardDataDay, this._boxRank);
         const rewardItemMap: Map<number, Node> = new Map();
         for (const data of this._boxDatas) {
             let itemView = null;
@@ -222,19 +145,11 @@ export class WorldTreasureUI extends ViewController {
 
     private _refreshCountDownTime() {
         const currentTimeStamp = new Date().getTime();
-        const eightTimeStamp = CommonTools.getDayAMTimestamp(8);
-        const getTimeStamp = DataMgr.s.userInfo.data.heatValue.getTimestamp * 1000;
-
         let endTime: number = null;
-        let canClaim: boolean = false;
-        if (currentTimeStamp < eightTimeStamp) {
-            endTime = eightTimeStamp;
+        if (currentTimeStamp < this._todayEightTimestamp) {
+            endTime = this._todayEightTimestamp;
         } else {
-            const todayDidGet: boolean = getTimeStamp >= eightTimeStamp;
-            canClaim = !todayDidGet;
-            if (todayDidGet) {
-                endTime = CommonTools.getNextDayAMTimestamp(8);
-            }
+            endTime = this._nextDayEightTimestamp;
         }
         if (endTime == null) {
             this._claimCountDownLabel.node.active = false;
@@ -243,19 +158,8 @@ export class WorldTreasureUI extends ViewController {
             const gapTime: number = Math.max(0, endTime - currentTimeStamp);
             this._claimCountDownLabel.string = "Claim Countdown: " + CommonTools.formatSeconds(gapTime / 1000, "HHh MMm");
         }
-        const claimButtonCanTap: boolean = this._currentBoxIndex == this._canClaimBoxIndex && canClaim;
-        this._claimButton.interactable = claimButtonCanTap;
-        this._claimButton.node.getComponent(Sprite).grayscale = !claimButtonCanTap;
     }
     //------------------------------------------ action
-    private async onTapBoxItem(event: Event, customEventData: string) {
-        const index = parseInt(customEventData);
-        if (index != this._currentBoxIndex) {
-            this._currentBoxIndex = index;
-            this._refreshUI(true);
-            this._refreshCountDownTime();
-        }
-    }
     private onTapClaim() {
         NetworkMgr.websocketMsg.player_world_treasure_lottery({});
     }
@@ -265,9 +169,4 @@ export class WorldTreasureUI extends ViewController {
     }
 
     //----------------------------------------- notification
-    private _on_player_heat_value_change_res() {
-        console.log('exce notifitrigger');
-        this._refreshUI();
-        this._refreshCountDownTime();
-    }
 }

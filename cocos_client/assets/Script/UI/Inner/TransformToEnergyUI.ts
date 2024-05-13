@@ -1,28 +1,27 @@
-import { _decorator, Color, Component, instantiate, Label, Layers, Layout, math, Node, ProgressBar, Slider } from 'cc';
-import { GameExtraEffectType, ResourceCorrespondingItem } from '../../Const/ConstDefine';
-import { GameMgr, ItemMgr, LanMgr } from '../../Utils/Global';
-import ViewController from '../../BasicView/ViewController';
-import { UIHUDController } from '../UIHUDController';
-import NotificationMgr from '../../Basic/NotificationMgr';
-import InnerBuildingLvlUpConfig from '../../Config/InnerBuildingLvlUpConfig';
-import { InnerBuildingType } from '../../Const/BuildingDefine';
-import ItemData from '../../Const/Item';
-import { NotificationName } from '../../Const/Notification';
-import UIPanelManger from '../../Basic/UIPanelMgr';
-import { DataMgr } from '../../Data/DataMgr';
-import { UIName } from '../../Const/ConstUIDefine';
-import { DelegateUI } from '../DelegateUI';
-import { NetworkMgr } from '../../Net/NetworkMgr';
+import { _decorator, Color, Component, instantiate, Label, Layers, Layout, math, Node, ProgressBar, Slider } from "cc";
+import { GameExtraEffectType, ResourceCorrespondingItem } from "../../Const/ConstDefine";
+import { GameMgr, ItemMgr, LanMgr } from "../../Utils/Global";
+import ViewController from "../../BasicView/ViewController";
+import { UIHUDController } from "../UIHUDController";
+import NotificationMgr from "../../Basic/NotificationMgr";
+import InnerBuildingLvlUpConfig from "../../Config/InnerBuildingLvlUpConfig";
+import { InnerBuildingType } from "../../Const/BuildingDefine";
+import ItemData from "../../Const/Item";
+import { NotificationName } from "../../Const/Notification";
+import UIPanelManger from "../../Basic/UIPanelMgr";
+import { DataMgr } from "../../Data/DataMgr";
+import { UIName } from "../../Const/ConstUIDefine";
+import { DelegateUI } from "../DelegateUI";
+import { NetworkMgr } from "../../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
-@ccclass('TransformToEnergyUI')
+@ccclass("TransformToEnergyUI")
 export class TransformToEnergyUI extends ViewController {
-
     public refreshUI(initSelectGenerate: boolean = false) {
-        const userEnergyInfo = DataMgr.s.userInfo.data.generateEnergyInfo;
-        if (userEnergyInfo == null) {
-            return;
-        }
+        // const userEnergyInfo = DataMgr.s.userInfo.data.generateEnergyInfo;
+        // if (userEnergyInfo == null) {
+        //     return;
+        // }
         const energyBuilding = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.EnergyStation];
         if (energyBuilding == null) {
             return;
@@ -53,11 +52,15 @@ export class TransformToEnergyUI extends ViewController {
         // this.node.getChildByPath("__ViewContent/footer/Convert").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/footer/Button/Label").getComponent(Label).string = LanMgr.getLanById("107549");
         let showOutput: string = energyData.output.toString();
-        const effectOutput = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.EnergyStation, GameExtraEffectType.ENERGY_GENERATE, energyData.output);
+        const effectOutput = GameMgr.getAfterExtraEffectPropertyByBuilding(
+            InnerBuildingType.EnergyStation,
+            GameExtraEffectType.ENERGY_GENERATE,
+            energyData.output
+        );
 
         const gapNum: number = effectOutput - energyData.output;
         if (gapNum > 0) {
-            showOutput += ("+" + gapNum);
+            showOutput += "+" + gapNum;
         }
         this._perMinOutputLabel.string = showOutput + "/" + "min";
 
@@ -73,7 +76,7 @@ export class TransformToEnergyUI extends ViewController {
 
         const rightContent = this.node.getChildByPath("__ViewContent/RightContent/Param");
         rightContent.getChildByPath("Max").getComponent(Label).string = energyData.storage.toString();
-        rightContent.getChildByPath("Num").getComponent(Label).string = userEnergyInfo.totalEnergyNum.toString();
+        // rightContent.getChildByPath("Num").getComponent(Label).string = userEnergyInfo.totalEnergyNum.toString();
         rightContent.getComponent(Layout).updateLayout();
 
         // cost
@@ -113,7 +116,6 @@ export class TransformToEnergyUI extends ViewController {
 
     private _selectGenerateNum: number = 0;
 
-
     private _perMinOutputLabel: Label = null;
 
     private _generateProgress: ProgressBar = null;
@@ -145,7 +147,6 @@ export class TransformToEnergyUI extends ViewController {
         super.viewDidDisAppear();
 
         NotificationMgr.removeListener(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE, this._energyNumChanged, this);
-
     }
 
     protected viewDidDestroy(): void {
@@ -175,10 +176,10 @@ export class TransformToEnergyUI extends ViewController {
         UIPanelManger.inst.popPanel();
     }
     private onGenerateSlided(event: Event, customEventData: string) {
-        const userEnergyInfo = DataMgr.s.userInfo.data.generateEnergyInfo;
-        if (userEnergyInfo == null) {
-            return;
-        }
+        // const userEnergyInfo = DataMgr.s.userInfo.data.generateEnergyInfo;
+        // if (userEnergyInfo == null) {
+        // return;
+        // }
         const energyBuilding = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.EnergyStation];
         if (energyBuilding == null) {
             return;
@@ -225,7 +226,7 @@ export class TransformToEnergyUI extends ViewController {
 
         DataMgr.setTempSendData("player_generate_energy_res", {
             num: this._selectGenerateNum,
-            subItems: costItems
+            subItems: costItems,
         });
         NetworkMgr.websocketMsg.player_generate_energy({ num: this._selectGenerateNum });
     }
@@ -237,5 +238,3 @@ export class TransformToEnergyUI extends ViewController {
         result.node.getComponent(DelegateUI).showUI(InnerBuildingType.EnergyStation);
     }
 }
-
-

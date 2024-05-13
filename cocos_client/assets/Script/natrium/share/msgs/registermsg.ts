@@ -66,6 +66,7 @@ export const registermsg = (pcodec: packetcodec) => {
         "s2c_user.player_wormhole_set_attacker_res"
     );
     pcodec.register_protobuf_msg(protobuf_s2c.player_wormhole_fight_res, "player_wormhole_fight_res", "s2c_user.player_wormhole_fight_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_bind_nft_res, "player_bind_nft_res", "s2c_user.player_bind_nft_res");
     pcodec.register_protobuf_msg(protobuf_s2c.get_battle_report_res, "get_battle_report_res", "s2c_user.get_battle_report_res");
 
     pcodec.register_protobuf_msg(protobuf_s2c.storhouse_change, "storhouse_change", "s2c_user.storhouse_change");
@@ -111,5 +112,6 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.player_wormhole_set_defender, "player_wormhole_set_defender", "c2s_user.player_wormhole_set_defender");
     pcodec.register_protobuf_msg(protobuf_c2s.player_wormhole_set_attacker, "player_wormhole_set_attacker", "c2s_user.player_wormhole_set_attacker");
     pcodec.register_protobuf_msg(protobuf_c2s.player_wormhole_fight, "player_wormhole_fight", "c2s_user.player_wormhole_fight");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_bind_nft, "player_bind_nft", "c2s_user.player_bind_nft");
     pcodec.register_protobuf_msg(protobuf_c2s.get_battle_report, "get_battle_report", "c2s_user.get_battle_report");
 };
