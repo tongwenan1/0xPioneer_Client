@@ -24,7 +24,7 @@ message create_player_res {
 // enter game
 message enter_game_res {
     required int32 res = 1; // error code see {ServerErrorCode}
-    optional share.player_data data = 2; // full player data of self
+    optional share.player_data data = 2;
 }
 
 // ----------------------------------------------------------------------------
@@ -61,6 +61,12 @@ message get_block_height_res {
 message mint_package_res {
     required int32 res = 1;
     required uint32 logid = 2;
+}
+
+// ----------------------------------------------------------------------------
+
+message storhouse_change {
+    repeated share.item_data iteminfo = 1;
 }
 
 // ----------------------------------------------------------------------------
@@ -111,6 +117,7 @@ message player_artifact_remove_res {
 
 message player_building_levelup_res {
     required uint32 res = 1;
+    optional share.building_data data = 2;
 }
 
 message player_get_auto_energy_res {
@@ -127,6 +134,59 @@ message player_generate_troop_res {
 
 message player_building_delegate_nft_res {
     required uint32 res = 1;
+}
+
+message player_nft_lvlup_res {
+    required uint32 res = 1;
+}
+
+message player_nft_rankup_res {
+    required uint32 res = 1;
+}
+
+message player_nft_skill_learn_res {
+    required uint32 res = 1;
+}
+
+message player_nft_skill_forget_res {
+    required uint32 res = 1;
+}
+
+message player_world_treasure_lottery_res {
+    required uint32 res = 1;
+    required string itemId = 2;
+    required uint32 num = 3;
+}
+
+message player_heat_value_change_res {
+    required uint32 res = 1;
+    required uint32 currentHeatValue = 2;
+}
+
+message player_world_treasure_pool_change_res {
+    required uint32 res = 1;
+}
+
+message player_add_heat_value_res {
+    required uint32 res = 1;
+}
+
+message player_rookie_finish_res {
+    required uint32 res = 1;
+}
+
+message player_wormhole_set_defender_res {
+    required uint32 res = 1;
+}
+
+message player_wormhole_set_attacker_res {
+    required uint32 res = 1;
+}
+
+message player_wormhole_fight_res {
+    required uint32 res = 1;
+    required string defenderWallet = 2;
+    required string defenderData = 3;
 }
 
 message get_battle_report_res {

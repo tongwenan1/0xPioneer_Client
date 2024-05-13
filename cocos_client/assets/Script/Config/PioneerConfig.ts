@@ -10,6 +10,12 @@ export default class PioneerConfig {
         }
         return items;
     }
+    public static getById(id: string): PioneerConfigData {
+        if (this._confs[id] == null) {
+            return null;
+        }
+        return this._confs[id];
+    }
 
     public static async init(): Promise<boolean> {
         const obj: any = await new Promise((resolve) => {

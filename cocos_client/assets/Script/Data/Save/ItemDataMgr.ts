@@ -3,22 +3,14 @@ import ItemData, { ItemType } from "../../Const/Item";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import { BackpackArrangeType, GetPropData, ResourceCorrespondingItem } from "../../Const/ConstDefine";
+import NetGlobalData from "./Data/NetGlobalData";
 
 export class ItemDataMgr {
     private _data: ItemData[];
-    private _baseKey: string = "item_data";
-    private _key: string = "";
     private _maxItemLength: number = 100;
 
-    public async loadObj(walletAddr: string) {
-        this._key = walletAddr + "|" + this._baseKey;
-        if (this._data == null) {
-            this._data = [];
-            const data = localStorage.getItem(this._key);
-            if (data) {
-                this._data = JSON.parse(data);
-            }
-        }
+    public loadObj() {
+        this._initData();
     }
 
     public getObj() {
@@ -53,8 +45,6 @@ export class ItemDataMgr {
                 singleItems.set(item.itemConfigId, item);
             }
         }
-
-        this.saveObj();
 
         // sort
         if (sortType == BackpackArrangeType.Recently) {
@@ -96,6 +86,42 @@ export class ItemDataMgr {
         });
     }
 
+    public countChanged(change: ItemData): void {
+        if (change.count == 0) {
+            return;
+        }
+        const config = ItemConfig.getById(change.itemConfigId);
+        if (config == null) {
+            return;
+        }
+        let exsitIndex: number = -1;
+        for (let i = 0; i < this._data.length; i++) {
+            if (this._data[i].itemConfigId == change.itemConfigId) {
+                exsitIndex = i;
+                break;
+            }
+        }
+        if (exsitIndex >= 0) {
+            this._data[exsitIndex].count += change.count;
+            if (change.count < 0 && this._data[exsitIndex].count <= 0) {
+                this._data.splice(exsitIndex, 1);
+            }
+        } else {
+            if (change.count > 0) {
+                this._data.push(change);
+            }
+        }
+        if (change.count > 0) {
+            if (config.itemType == ItemType.Resource) {
+                NotificationMgr.triggerEvent(NotificationName.RESOURCE_GETTED, { item: change });
+            }
+        } else if (change.count < 0) {
+            if (config.itemType == ItemType.Resource) {
+                NotificationMgr.triggerEvent(NotificationName.RESOURCE_CONSUMED, { item: change });
+            }
+        }
+        NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
+    }
     public addObj_item(items: ItemData[], needSettlement: boolean = true): void {
         if (items.length <= 0) {
             return;
@@ -107,7 +133,7 @@ export class ItemDataMgr {
                 continue;
             }
             if (itemConfig.itemType == ItemType.Resource) {
-                NotificationMgr.triggerEvent(NotificationName.RESOURCE_GETTED, { item: item, needSettlement: needSettlement });
+                NotificationMgr.triggerEvent(NotificationName.RESOURCE_GETTED, { item: item });
             } else if (this.itemIsFull()) {
                 continue;
             }
@@ -118,7 +144,6 @@ export class ItemDataMgr {
             this.getObj_item_sort(BackpackArrangeType.Recently);
         }
         if (changed) {
-            this.saveObj();
             NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
         }
     }
@@ -166,7 +191,6 @@ export class ItemDataMgr {
         if (this._data[idx].count <= 0) {
             this._data.splice(idx, 1);
         }
-        this.saveObj();
         NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
 
         result.succeed = true;
@@ -185,7 +209,18 @@ export class ItemDataMgr {
         return count >= this._maxItemLength;
     }
 
-    public async saveObj() {
-        localStorage.setItem(this._key, JSON.stringify(this._data));
+    private _initData() {
+        if (NetGlobalData.storehouse == null) {
+            return;
+        }
+        this._data = [];
+
+        const netItems = NetGlobalData.storehouse.items;
+        for (const key in netItems) {
+            const item = new ItemData(netItems[key].itemConfigId, netItems[key].count);
+            item.addTimeStamp = netItems[key].addTimeStamp;
+            this._data.push(item);
+        }
+        console.log("exce item:", this._data);
     }
 }

@@ -88,6 +88,7 @@ export default class UserInfoMgr {
             }
         }
         if (data.rewards.length > 0) {
+            // upload resource changed levelup
             ItemConfigDropTool.getItemByConfig(data.rewards);
         }
     }
@@ -106,6 +107,7 @@ export default class UserInfoMgr {
         if (data.generateNum <= 0) {
             return;
         }
+        // upload resource changed inner_building-generate_troop
         DataMgr.s.item.addObj_item([new ItemData(ResourceCorrespondingItem.Troop, data.generateNum)]);
     }
     private _generateEnergyNumToChange() {

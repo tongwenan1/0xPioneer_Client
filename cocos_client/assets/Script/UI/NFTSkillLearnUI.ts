@@ -10,6 +10,9 @@ import { BackpackItem } from "./BackpackItem";
 import ItemConfig from "../Config/ItemConfig";
 import { ItemInfoUI } from "./ItemInfoUI";
 import { DataMgr } from "../Data/DataMgr";
+import { NetworkMgr } from "../Net/NetworkMgr";
+import NotificationMgr from "../Basic/NotificationMgr";
+import { NotificationName } from "../Const/Notification";
 const { ccclass, property } = _decorator;
 
 @ccclass("NFTSkillLearnUI")
@@ -40,12 +43,15 @@ export class NFTSkillLearnUI extends ViewController {
         // useLanMgr
         // this._bookItem.getChildByPath("LearnBtn/Label").getComponent(Label).string = LanMgr.getLanById("107549")
         this._bookItem.removeFromParent();
+
+        NotificationMgr.addListener(NotificationName.NFTDIDLEARNSKILL, this._refreshUI, this);
     }
     protected viewDidStart(): void {
         super.viewDidStart();
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
+        NotificationMgr.removeListener(NotificationName.NFTDIDLEARNSKILL, this._refreshUI, this);
     }
     protected viewPopAnimation(): boolean {
         return true;
@@ -107,9 +113,15 @@ export class NFTSkillLearnUI extends ViewController {
             return;
         }
         result.node.getComponent(AlterView).showTip(LanMgr.replaceLanById("106005", [this._data.name, LanMgr.getLanById(config.itemName)]), async () => {
-            DataMgr.s.nftPioneer.NFTLearnSkill(this._data.uniqueId, config.skill_learn);
-            DataMgr.s.item.subObj_item(itemConfigId, 1);
-            this._refreshUI();
+            DataMgr.setTempSendData("player_nft_skill_learn_res", {
+                nftId: this._data.uniqueId,
+                skillId: config.skill_learn,
+                subItems: [new ItemData(itemConfigId, 1)],
+            });
+            NetworkMgr.websocketMsg.player_nft_skill_learn({
+                nftId: this._data.uniqueId,
+                skillId: config.skill_learn,
+            });
         });
     }
 }

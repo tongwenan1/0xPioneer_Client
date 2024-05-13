@@ -44,6 +44,7 @@ export enum MapPioneerActionType {
     exploring = "exploring",
     eventing = "eventing",
     addingtroops = "addingtroops",
+    wormhole = "wormhole"
 }
 
 export enum MapPioneerType {
@@ -51,7 +52,7 @@ export enum MapPioneerType {
     npc = "2",
     hred = "4",
     gangster = "3",
-}
+} 
 
 export enum MapPioneerLogicType {
     stepmove = 2,

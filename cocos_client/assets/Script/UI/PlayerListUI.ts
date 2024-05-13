@@ -1,25 +1,23 @@
-import { _decorator, Button, Component, EventHandler, instantiate, Layout, Node } from 'cc';
-import { PlayerItemUI } from './PlayerItemUI';
-import NotificationMgr from '../Basic/NotificationMgr';
-import { NotificationName } from '../Const/Notification';
-import GameMainHelper from '../Game/Helper/GameMainHelper';
-import { DataMgr } from '../Data/DataMgr';
-import { MapPlayerPioneerObject } from '../Const/PioneerDefine';
+import { _decorator, Button, Component, EventHandler, instantiate, Layout, Node } from "cc";
+import { PlayerItemUI } from "./PlayerItemUI";
+import NotificationMgr from "../Basic/NotificationMgr";
+import { NotificationName } from "../Const/Notification";
+import GameMainHelper from "../Game/Helper/GameMainHelper";
+import { DataMgr } from "../Data/DataMgr";
+import { MapPlayerPioneerObject } from "../Const/PioneerDefine";
 const { ccclass, property } = _decorator;
 
-@ccclass('PlayerListUI')
+@ccclass("PlayerListUI")
 export class PlayerListUI extends Component {
-
-    @property(Node)
-    playerLayout: Node = null;
-
+    private _playerItemContent: Node = null;
     private _playerItem: Node = null;
     private _playerItems: Node[] = [];
 
     private _pioneers: MapPlayerPioneerObject[] = [];
 
     protected onLoad(): void {
-        this._playerItem = this.playerLayout.children[0];
+        this._playerItemContent = this.node.getChildByPath("Content/ScrollView/View/Content");
+        this._playerItem = this._playerItemContent.getChildByPath("Item");
         {
             const itemButton = this._playerItem.getComponent(Button);
             const evthandler = new EventHandler();
@@ -67,10 +65,8 @@ export class PlayerListUI extends Component {
 
     private _refreshPlayerList() {
         this._pioneers = [];
-        ;
         for (const temple of DataMgr.s.pioneer.getAllPlayers()) {
-            if (temple.show ||
-                (!temple.show && temple.rebirthCountTime > 0)) {
+            if (temple.show || (!temple.show && temple.rebirthCountTime > 0)) {
                 this._pioneers.push(temple);
             }
         }
@@ -81,9 +77,8 @@ export class PlayerListUI extends Component {
                 item = this._playerItems[i];
             } else {
                 item = instantiate(this._playerItem);
-                item.setParent(this.playerLayout);
+                item.setParent(this._playerItemContent);
                 this._playerItems.push(item);
-                this.playerLayout.getComponent(Layout).updateLayout();
             }
             item.active = true;
             item.getComponent(PlayerItemUI).refreshUI(this._pioneers[i]);
@@ -94,11 +89,10 @@ export class PlayerListUI extends Component {
             this._playerItems.splice(i, 1);
             i -= 1;
         }
+        this._playerItemContent.getComponent(Layout).updateLayout();
     }
 
-    update(deltaTime: number) {
-
-    }
+    update(deltaTime: number) {}
 
     private onTapPlayerItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
@@ -117,5 +111,3 @@ export class PlayerListUI extends Component {
         }
     }
 }
-
-

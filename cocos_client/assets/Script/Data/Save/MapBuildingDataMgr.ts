@@ -10,6 +10,10 @@ import {
     MapBuildingObject,
     MapBuildingResourceData,
     MapBuildingResourceObject,
+    MapBuildingTavernData,
+    MapBuildingTavernObject,
+    MapBuildingWormholeData,
+    MapBuildingWormholeObject,
     MapDecorateData,
     MapDecorateObject,
     StayMapPosition,
@@ -19,6 +23,7 @@ import { MapMemberFactionType } from "../../Const/ConstDefine";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import CLog from "../../Utils/CLog";
+import { NFTPioneerObject } from "../../Const/NFTPioneerDefine";
 
 export class MapBuildingDataMgr {
     private _building_data: MapBuildingObject[];
@@ -64,8 +69,39 @@ export class MapBuildingDataMgr {
             }
         }
 
+        this._initInterval();
         CLog.debug("MapBuildingDataMgr: loadObj/building_data, ", this._building_data);
         CLog.debug("MapBuildingDataMgr: loadObj/decorate_data, ", this._decorate_data);
+    }
+
+    private _initInterval() {
+        setInterval(() => {
+            for (const obj of this._building_data) {
+                if (obj.type == MapBuildingType.wormhole) {
+                    const wormhole = obj as MapBuildingWormholeObject;
+                    if (wormhole.wormholdCountdownTime > 0) {
+                        wormhole.wormholdCountdownTime -= 1;
+                        this.saveObj_building();
+                        NotificationMgr.triggerEvent(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_CHANGE, { id: wormhole.id });
+
+                        if (wormhole.wormholdCountdownTime == 0) {
+                            NotificationMgr.triggerEvent(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_FINISH, { id: wormhole.id });
+                        }
+                    }
+                } else if (obj.type == MapBuildingType.tavern) {
+                    const tavern = obj as MapBuildingTavernObject;
+                    if (tavern.tavernCountdownTime > 0) {
+                        tavern.tavernCountdownTime -= 1;
+                        this.saveObj_building();
+                        NotificationMgr.triggerEvent(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, { id: tavern.id });
+
+                        if (tavern.tavernCountdownTime == 0) {
+                            NotificationMgr.triggerEvent(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_FINISH, { id: tavern.id });
+                        }
+                    }
+                }
+            }
+        }, 1000);
     }
 
     // create buiding obj
@@ -81,6 +117,12 @@ export class MapBuildingDataMgr {
                     break;
                 case MapBuildingType.resource:
                     this._building_data.push(this._createObj_building_resource(temple));
+                    break;
+                case MapBuildingType.wormhole:
+                    this._building_data.push(this._createObj_building_wormhole(temple));
+                    break;
+                case MapBuildingType.tavern:
+                    this._building_data.push(this._createObj_building_tavern(temple));
                     break;
                 default:
                     this._building_data.push(this._createObj_building_base(temple));
@@ -148,6 +190,63 @@ export class MapBuildingDataMgr {
         };
         return obj;
     }
+    private _createObj_building_wormhole(temple: MapBuildingConfigData) {
+        const mapPositions: Vec2[] = [];
+        if (temple.positions.length == 2) {
+            mapPositions.push(new Vec2(temple.positions[0], temple.positions[1]));
+        }
+
+        const obj: MapBuildingWormholeObject = {
+            show: !!temple.show,
+            id: temple.id,
+            type: temple.type,
+            name: temple.name,
+            faction: MapMemberFactionType.neutral, // temple.faction, // TODO: ???
+            defendPioneerIds: temple.defendPioneerIds,
+            level: temple.level,
+            stayMapPositions: mapPositions,
+            stayPosType: temple.pos_type,
+
+            showHideStruct: null,
+            progress: temple.progress ? temple.progress : 0,
+            winprogress: temple.winprogress ? temple.winprogress : 0,
+            eventId: temple.event ? temple.event : null,
+            originalEventId: temple.event ? temple.event : null,
+            exp: temple.exp ? temple.exp : 0,
+            animType: temple.node ? temple.node : null,
+            wormholdCountdownTime: 0,
+        };
+        return obj;
+    }
+    private _createObj_building_tavern(temple: MapBuildingConfigData) {
+        const mapPositions: Vec2[] = [];
+        if (temple.positions.length == 2) {
+            mapPositions.push(new Vec2(temple.positions[0], temple.positions[1]));
+        }
+
+        const obj: MapBuildingTavernObject = {
+            show: !!temple.show,
+            id: temple.id,
+            type: temple.type,
+            name: temple.name,
+            faction: MapMemberFactionType.neutral, // temple.faction, // TODO: ???
+            defendPioneerIds: temple.defendPioneerIds,
+            level: temple.level,
+            stayMapPositions: mapPositions,
+            stayPosType: temple.pos_type,
+
+            showHideStruct: null,
+            progress: temple.progress ? temple.progress : 0,
+            winprogress: temple.winprogress ? temple.winprogress : 0,
+            eventId: temple.event ? temple.event : null,
+            originalEventId: temple.event ? temple.event : null,
+            exp: temple.exp ? temple.exp : 0,
+            animType: temple.node ? temple.node : null,
+            tavernCountdownTime: 0,
+            nft: null,
+        };
+        return obj;
+    }
     private _createObj_building_base(temple: MapBuildingConfigData) {
         const mapPositions: Vec2[] = [];
         if (temple.positions.length == 2) {
@@ -185,6 +284,12 @@ export class MapBuildingDataMgr {
                     break;
                 case MapBuildingType.resource:
                     this._building_data.push(this._loadObj_building_resource(temple as MapBuildingResourceData));
+                    break;
+                case MapBuildingType.wormhole:
+                    this._building_data.push(this._loadObj_building_wormhole(temple as MapBuildingWormholeData));
+                    break;
+                case MapBuildingType.tavern:
+                    this._building_data.push(this._loadObj_building_tavern(temple as MapBuildingTavernData));
                     break;
                 default:
                     this._building_data.push(this._loadObj_building_base(temple as MapBuildingBaseData));
@@ -240,6 +345,57 @@ export class MapBuildingDataMgr {
 
             resources: temple.resources,
             quota: temple.quota,
+        };
+
+        return obj;
+    }
+    private _loadObj_building_wormhole(temple: MapBuildingWormholeData): MapBuildingWormholeObject {
+        const obj: MapBuildingWormholeObject = {
+            show: temple.show,
+            id: temple.id,
+            type: temple.type,
+            name: temple.name,
+            faction: temple.faction,
+            defendPioneerIds: temple.defendPioneerIds,
+            level: temple.level,
+            stayMapPositions: this._loadObj_mapPositions(temple.stayMapPositions),
+            stayPosType: temple.stayPosType,
+
+            showHideStruct: temple.showHideStruct,
+            progress: temple.progress,
+            winprogress: temple.winprogress,
+            eventId: temple.eventId,
+            originalEventId: temple.originalEventId,
+            exp: temple.exp,
+            animType: temple.animType,
+
+            wormholdCountdownTime: temple.wormholdCountdownTime,
+        };
+
+        return obj;
+    }
+    private _loadObj_building_tavern(temple: MapBuildingTavernData): MapBuildingTavernObject {
+        const obj: MapBuildingTavernObject = {
+            show: temple.show,
+            id: temple.id,
+            type: temple.type,
+            name: temple.name,
+            faction: temple.faction,
+            defendPioneerIds: temple.defendPioneerIds,
+            level: temple.level,
+            stayMapPositions: this._loadObj_mapPositions(temple.stayMapPositions),
+            stayPosType: temple.stayPosType,
+
+            showHideStruct: temple.showHideStruct,
+            progress: temple.progress,
+            winprogress: temple.winprogress,
+            eventId: temple.eventId,
+            originalEventId: temple.originalEventId,
+            exp: temple.exp,
+            animType: temple.animType,
+
+            tavernCountdownTime: temple.tavernCountdownTime,
+            nft: temple.nft,
         };
 
         return obj;
@@ -330,8 +486,12 @@ export class MapBuildingDataMgr {
     public insertDefendPioneer(buildingId: string, pioneerId: string) {
         const findBuilding = this.getBuildingById(buildingId);
         if (findBuilding == null) return;
-
         findBuilding.defendPioneerIds.push(pioneerId);
+
+        if (findBuilding.type == MapBuildingType.wormhole && findBuilding.defendPioneerIds.length == 3) {
+            // go wormhole fight countdown
+            (findBuilding as MapBuildingWormholeObject).wormholdCountdownTime = 30;
+        }
         this.saveObj_building();
         NotificationMgr.triggerEvent(NotificationName.BUILDING_INSERT_DEFEND_PIONEER);
     }
@@ -344,7 +504,6 @@ export class MapBuildingDataMgr {
             CLog.error(`MapBuildingDataMgr: removeDefendPioneer, buildingId[${buildingId}] don't have pioneerid[${pioneerId}]`);
             return;
         }
-
         findBuilding.defendPioneerIds.splice(index, 1);
         this.saveObj_building();
         NotificationMgr.triggerEvent(NotificationName.BUILDING_REMOVE_DEFEND_PIONEER);
@@ -389,6 +548,11 @@ export class MapBuildingDataMgr {
             return buiding.type === MapBuildingType.stronghold;
         });
     }
+    public getWormholeBuildings() {
+        return this._building_data.filter((buiding) => {
+            return buiding.type === MapBuildingType.wormhole;
+        });
+    }
     public changeBuildingFaction(buildingId: string, faction: MapMemberFactionType) {
         const findBuilding = this.getBuildingById(buildingId);
         if (findBuilding == null) return;
@@ -402,6 +566,23 @@ export class MapBuildingDataMgr {
         }
 
         NotificationMgr.triggerEvent(NotificationName.BUILDING_FACTION_CHANGED);
+    }
+    public beginRecruitNewNft(buildingId: string, recruitTime: number) {
+        const findBuilding = this.getBuildingById(buildingId);
+        if (findBuilding == null) return;
+        if (findBuilding.type != MapBuildingType.tavern) return;
+        const tavern = findBuilding as MapBuildingTavernObject;
+        tavern.tavernCountdownTime = recruitTime;
+        this.saveObj_building();
+    }
+    public changeBuildingNewNft(buildingId: string, nft: NFTPioneerObject) {
+        const findBuilding = this.getBuildingById(buildingId);
+        if (findBuilding == null) return;
+        if (findBuilding.type != MapBuildingType.tavern) return;
+        const tavern = findBuilding as MapBuildingTavernObject;
+        tavern.nft = nft;
+        this.saveObj_building();
+        NotificationMgr.triggerEvent(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, { id: buildingId });
     }
     public showBuilding(buildingId: string) {
         let temple: MapBuildingObject | MapDecorateObject;

@@ -54,10 +54,11 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
             return;
         }
         if (this._building.buildLevel > 0) {
-            const result = await UIPanelManger.inst.pushPanel(UIName.TransformToEnergyUI);
-            if (result.success) {
-                result.node.getComponent(TransformToEnergyUI).refreshUI(true);
-            }
+            // function hide
+            // const result = await UIPanelManger.inst.pushPanel(UIName.TransformToEnergyUI);
+            // if (result.success) {
+            //     result.node.getComponent(TransformToEnergyUI).refreshUI(true);
+            // }
         }
     }
 
@@ -99,26 +100,28 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
         } else {
             this._produceInfoView.active = false;
         }
+        this._produceInfoView.active = true;
     }
 
     //------------------------------- action
     private onTapGetPSYC() {
-        if (this._building.upgradeTotalTime > 0) {
-            UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
-            // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
-            return;
-        }
-        if (DataMgr.s.userInfo.data.generateEnergyInfo == null) {
-            return;
-        }
-        const produceNum: number = DataMgr.s.userInfo.data.generateEnergyInfo.totalEnergyNum;
-        if (produceNum <= 0) {
-            // useLanMgr
-            // UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
-            UIHUDController.showCenterTip("No PSYC to collect");
-            return;
-        }
-        DataMgr.setTempSendData("player_get_auto_energy_res", { num: produceNum });
-        NetworkMgr.websocketMsg.player_get_auto_energy({});
+        // function hide
+        // if (this._building.upgradeTotalTime > 0) {
+        //     UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
+        //     // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
+        //     return;
+        // }
+        // if (DataMgr.s.userInfo.data.generateEnergyInfo == null) {
+        //     return;
+        // }
+        // const produceNum: number = DataMgr.s.userInfo.data.generateEnergyInfo.totalEnergyNum;
+        // if (produceNum <= 0) {
+        //     // useLanMgr
+        //     // UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
+        //     UIHUDController.showCenterTip("No PSYC to collect");
+        //     return;
+        // }
+        // DataMgr.setTempSendData("player_get_auto_energy_res", { num: produceNum });
+        // NetworkMgr.websocketMsg.player_get_auto_energy({});
     }
 }

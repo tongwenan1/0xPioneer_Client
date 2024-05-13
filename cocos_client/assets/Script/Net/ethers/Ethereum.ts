@@ -298,6 +298,40 @@ export class Ethereum extends EventEmitter {
         let balance = await provider["balanceOf"](this._signer.address, id);
         return balance;
     }
+    public async transferETH(fee_value: number, fee_wallet: string, fee_len: number = 8) {
+        let decimals = await this.getDecimalsETH();
+
+        let value = Math.ceil(fee_value * 10 ** fee_len);
+        let eth = BigInt(value) * BigInt(10 ** (Number(decimals.toString()) - fee_len));
+
+        const tx = await this._signer.sendTransaction({
+            to: fee_wallet,
+            value: eth.toString(),
+        });
+        const res = await tx.wait();
+
+        CLog.info('Etherium, transferETH, res: ', res);
+
+        return res;
+    }
+    public async transferPSYC(psyc_value: number, psyc_wallet: string, psyc_len: number = 8) {
+        // transfer(address to, uint256 amount) returns (bool)
+
+        const PSYC = 'PSYC';
+
+        let decimals = await this.getDecimalsErc20ByName(PSYC);
+
+        let value = Math.ceil(psyc_value * 10 ** psyc_len);
+        let psyc = BigInt(value) * BigInt(10 ** (Number(decimals.toString()) - psyc_len));
+
+        let contract: any = this.getContract(PSYC);
+        let res = await contract.transfer(psyc_wallet, psyc);
+
+        CLog.info('Etherium, transferPSYC, res: ', res);
+
+        return res;
+    }
+
     // approve 1155
     public async setApprovalForAllErc1155(erc1155_name: contractNames, operator_name: contractNames): Promise<boolean> {
         // setApprovalForAll(address operator, bool approved)

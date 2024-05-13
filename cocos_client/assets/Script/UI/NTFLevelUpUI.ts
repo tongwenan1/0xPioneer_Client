@@ -9,6 +9,7 @@ import CommonTools from "../Tool/CommonTools";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import { DataMgr } from "../Data/DataMgr";
+import { NetworkMgr } from "../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("NTFLevelUpUI")
@@ -102,7 +103,9 @@ export class NTFLevelUpUI extends ViewController {
 
         // resource
         this._currentCost = LvlupConfig.getNFTLevelUpCost(this._data.level, this._data.level + this._levelUpNum);
-        contentView.getChildByPath("material/Item/Num/Limit").getComponent(Label).string = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.NFTExp).toString();
+        contentView.getChildByPath("material/Item/Num/Limit").getComponent(Label).string = DataMgr.s.item
+            .getObj_item_count(ResourceCorrespondingItem.NFTExp)
+            .toString();
         contentView.getChildByPath("material/Item/Num/Use").getComponent(Label).string = this._currentCost.toString();
 
         // action button
@@ -138,8 +141,12 @@ export class NTFLevelUpUI extends ViewController {
     }
     private onTapConfirmLevelUp() {
         if (this._data != null && this._currentCost > 0) {
-            DataMgr.s.item.subObj_item(ResourceCorrespondingItem.NFTExp, this._currentCost);
-            DataMgr.s.nftPioneer.NFTLevelUp(this._data.uniqueId, this._levelUpNum);
+            DataMgr.setTempSendData("player_nft_lvlup_res", {
+                nftId: this._data.uniqueId,
+                levelUpNum: this._levelUpNum,
+                nftExpCostNum: this._currentCost,
+            });
+            NetworkMgr.websocketMsg.player_nft_lvlup({ nftId: this._data.uniqueId, levelUpNum: this._levelUpNum });
         }
     }
 

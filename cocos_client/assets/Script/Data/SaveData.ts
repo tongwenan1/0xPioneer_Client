@@ -82,29 +82,26 @@ export class SaveData {
     }
 
     public async load(walletAddr: string) {
-        await this._pioneersDataMgr.loadObj(walletAddr);
+        this._userInfoDataMgr.loadObj();
+        this._itemDataMgr.loadObj();
+        this._pioneersDataMgr.loadObj();
         await this._nftPioneerDataMgr.loadObj(walletAddr);
         await this._eraseShadowDataMgr.loadObj(walletAddr);
         await this._mapBuildingDataMgr.loadObj(walletAddr);
         await this._countDataMgr.loadObj(walletAddr);
         await this._artifactDataMgr.loadObj(walletAddr);
         await this._battleReportDataMgr.loadObj(walletAddr);
-        await this._itemDataMgr.loadObj(walletAddr);
         await this._settlementDataMgr.loadObj(walletAddr);
-        await this._userInfoDataMgr.loadObj(walletAddr);
         await this._taskDataMgr.loadObj(walletAddr);
     }
     public async save() {
         await this._eraseShadowDataMgr.saveObj();
         await this._mapBuildingDataMgr.saveObj();
-        await this._pioneersDataMgr.saveObj();
         await this._nftPioneerDataMgr.saveObj();
         await this._countDataMgr.saveObj();
         await this._artifactDataMgr.saveObj();
         await this._battleReportDataMgr.saveObj();
-        await this._itemDataMgr.saveObj();
         await this._settlementDataMgr.saveObj();
-        await this._userInfoDataMgr.saveObj();
         await this._taskDataMgr.saveObj();
     }
 }

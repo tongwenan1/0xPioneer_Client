@@ -13,7 +13,7 @@ export default class ItemMgr {
     private _itemIconSpriteFrames = {};
     public constructor() {
         NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._onResourceItemDidGet, this);
-        NotificationMgr.addListener(NotificationName.RESOURCE_CONSUMED, this._onResourceItemDidConsume, this);
+        // NotificationMgr.addListener(NotificationName.RESOURCE_CONSUMED, this._onResourceItemDidConsume, this);
     }
 
     public async getItemIcon(iconName: string): Promise<SpriteFrame> {
@@ -28,63 +28,64 @@ export default class ItemMgr {
     }
 
     //---------------------------- notification
-    private _onResourceItemDidGet(data: { item: ItemData; needSettlement: boolean }) {
+    private _onResourceItemDidGet(data: { item: ItemData }) {
         // settlement
-        if (data.needSettlement) {
-            const item = data.item;
-            const itemConfig = ItemConfig.getById(item.itemConfigId);
-            if (itemConfig == null) {
-                return;
-            }
-            // add timestamp
-            if (itemConfig.itemType == ItemType.Resource) {
-                // settlementCount
-                if (
-                    itemConfig.configId == ResourceCorrespondingItem.Food ||
-                    itemConfig.configId == ResourceCorrespondingItem.Wood ||
-                    itemConfig.configId == ResourceCorrespondingItem.Stone
-                ) {
-                    DataMgr.s.settlement.addObj({
-                        level: DataMgr.s.userInfo.data.level,
-                        newPioneerIds: [],
-                        killEnemies: 0,
-                        gainResources: item.count,
-                        consumeResources: 0,
-                        gainTroops: 0,
-                        consumeTroops: 0,
-                        gainEnergy: 0,
-                        consumeEnergy: 0,
-                        exploredEvents: 0,
-                    });
-                } else if (itemConfig.configId == ResourceCorrespondingItem.Troop) {
-                    DataMgr.s.settlement.addObj({
-                        level: DataMgr.s.userInfo.data.level,
-                        newPioneerIds: [],
-                        killEnemies: 0,
-                        gainResources: 0,
-                        consumeResources: 0,
-                        gainTroops: item.count,
-                        consumeTroops: 0,
-                        gainEnergy: 0,
-                        consumeEnergy: 0,
-                        exploredEvents: 0,
-                    });
-                } else if (itemConfig.configId == ResourceCorrespondingItem.Energy) {
-                    DataMgr.s.settlement.addObj({
-                        level: DataMgr.s.userInfo.data.level,
-                        newPioneerIds: [],
-                        killEnemies: 0,
-                        gainResources: 0,
-                        consumeResources: 0,
-                        gainTroops: 0,
-                        consumeTroops: 0,
-                        gainEnergy: item.count,
-                        consumeEnergy: 0,
-                        exploredEvents: 0,
-                    });
-                }
-            }
-        }
+        return;
+        // if (data.needSettlement) {
+        //     const item = data.item;
+        //     const itemConfig = ItemConfig.getById(item.itemConfigId);
+        //     if (itemConfig == null) {
+        //         return;
+        //     }
+        //     // add timestamp
+        //     if (itemConfig.itemType == ItemType.Resource) {
+        //         // settlementCount
+        //         if (
+        //             itemConfig.configId == ResourceCorrespondingItem.Food ||
+        //             itemConfig.configId == ResourceCorrespondingItem.Wood ||
+        //             itemConfig.configId == ResourceCorrespondingItem.Stone
+        //         ) {
+        //             DataMgr.s.settlement.addObj({
+        //                 level: DataMgr.s.userInfo.data.level,
+        //                 newPioneerIds: [],
+        //                 killEnemies: 0,
+        //                 gainResources: item.count,
+        //                 consumeResources: 0,
+        //                 gainTroops: 0,
+        //                 consumeTroops: 0,
+        //                 gainEnergy: 0,
+        //                 consumeEnergy: 0,
+        //                 exploredEvents: 0,
+        //             });
+        //         } else if (itemConfig.configId == ResourceCorrespondingItem.Troop) {
+        //             DataMgr.s.settlement.addObj({
+        //                 level: DataMgr.s.userInfo.data.level,
+        //                 newPioneerIds: [],
+        //                 killEnemies: 0,
+        //                 gainResources: 0,
+        //                 consumeResources: 0,
+        //                 gainTroops: item.count,
+        //                 consumeTroops: 0,
+        //                 gainEnergy: 0,
+        //                 consumeEnergy: 0,
+        //                 exploredEvents: 0,
+        //             });
+        //         } else if (itemConfig.configId == ResourceCorrespondingItem.Energy) {
+        //             DataMgr.s.settlement.addObj({
+        //                 level: DataMgr.s.userInfo.data.level,
+        //                 newPioneerIds: [],
+        //                 killEnemies: 0,
+        //                 gainResources: 0,
+        //                 consumeResources: 0,
+        //                 gainTroops: 0,
+        //                 consumeTroops: 0,
+        //                 gainEnergy: item.count,
+        //                 consumeEnergy: 0,
+        //                 exploredEvents: 0,
+        //             });
+        //         }
+        //     }
+        // }
     }
     private _onResourceItemDidConsume(data: { itemConfigId: string; count: number; getItem: GetPropData }) {
         const itemConfigId = data.itemConfigId;
@@ -136,6 +137,7 @@ export default class ItemMgr {
         }
 
         if (data.getItem != null) {
+            // upload resource changed item-use
             ItemConfigDropTool.getItemByConfig([data.getItem]);
         }
     }

@@ -1,11 +1,34 @@
-import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, instantiate, Sprite, Quat, UITransform, misc, Label, ProgressBar, log, v3, color, Event } from 'cc';
-import { LanMgr } from '../../../Utils/Global';
-import { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerObject } from '../../../Const/PioneerDefine';
+import {
+    _decorator,
+    Component,
+    Node,
+    Animation,
+    Vec2,
+    Vec3,
+    CCInteger,
+    CCFloat,
+    TweenAction,
+    tween,
+    Graphics,
+    Color,
+    instantiate,
+    Sprite,
+    Quat,
+    UITransform,
+    misc,
+    Label,
+    ProgressBar,
+    log,
+    v3,
+    color,
+    Event,
+} from "cc";
+import { LanMgr } from "../../../Utils/Global";
+import { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerObject } from "../../../Const/PioneerDefine";
 const { ccclass, property } = _decorator;
 
-@ccclass('MapPioneer')
+@ccclass("MapPioneer")
 export class MapPioneer extends Component {
-
     @property(Label)
     nameLabel: Label;
 
@@ -76,9 +99,7 @@ export class MapPioneer extends Component {
         topWalkView.active = false;
         bottomWalkView.active = false;
 
-
-        if (this._lastStatus != this._model.actionType ||
-            this._lastEventStatus != this._model.eventStatus) {
+        if (this._lastStatus != this._model.actionType || this._lastEventStatus != this._model.eventStatus) {
             this._lastStatus = this._model.actionType;
             this._lastEventStatus = this._model.eventStatus;
 
@@ -97,72 +118,86 @@ export class MapPioneer extends Component {
             this._eventWaitedView.active = false;
 
             switch (this._model.actionType) {
-                case MapPioneerActionType.dead: {
-                    this.node.active = true;
-                    deadView.active = true;
-                }
-                    break;
-
-                case MapPioneerActionType.wakeup: {
-                    this.node.active = true;
-                    wakeUpView.active = true;
-                    wakeUpView.getComponent(Animation).play();
-                }
-                    break;
-
-                case MapPioneerActionType.defend: {
-                    this.node.active = false; // not show
-                }
-                    break;
-
-                case MapPioneerActionType.idle: {
-                    this.node.active = true; // only show
-                    idleView.active = true;
-                    this._idleCountTime = 0;
-                    if (this._currnetIdleAnim != null) {
-                        this._currnetIdleAnim.play();
+                case MapPioneerActionType.dead:
+                    {
+                        this.node.active = true;
+                        deadView.active = true;
                     }
-                }
                     break;
 
-                case MapPioneerActionType.moving: {
-                    this.node.active = true; // show
-                }
-                    break;
-
-                case MapPioneerActionType.mining: {
-                    this.node.active = true;
-                    if (collectView != null) {
-                        collectView.active = true;
+                case MapPioneerActionType.wakeup:
+                    {
+                        this.node.active = true;
+                        wakeUpView.active = true;
+                        wakeUpView.getComponent(Animation).play();
                     }
-                }
                     break;
 
-                case MapPioneerActionType.addingtroops: {
-                    this.node.active = true;
-                    idleView.active = true;
-                    this._addingtroopsView.active = true;
-                }
-                    break;
-
-                case MapPioneerActionType.exploring: {
-                    this.node.active = true;
-                    idleView.active = true;
-                    this._exploringView.active = true;
-                }
-                    break;
-
-                case MapPioneerActionType.eventing: {
-                    this.node.active = true;
-                    idleView.active = true;
-                    if (this._model.eventStatus == MapPioneerEventStatus.None) {
-
-                    } else if (this._model.eventStatus == MapPioneerEventStatus.Waiting) {
-                        this._eventingView.active = true;
-                    } else if (this._model.eventStatus == MapPioneerEventStatus.Waited) {
-                        this._eventWaitedView.active = true;
+                case MapPioneerActionType.defend:
+                    {
+                        this.node.active = false; // not show
                     }
-                }
+                    break;
+
+                case MapPioneerActionType.idle:
+                    {
+                        this.node.active = true; // only show
+                        idleView.active = true;
+                        this._idleCountTime = 0;
+                        if (this._currnetIdleAnim != null) {
+                            this._currnetIdleAnim.play();
+                        }
+                    }
+                    break;
+
+                case MapPioneerActionType.moving:
+                    {
+                        this.node.active = true; // show
+                    }
+                    break;
+
+                case MapPioneerActionType.mining:
+                    {
+                        this.node.active = true;
+                        if (collectView != null) {
+                            collectView.active = true;
+                        }
+                    }
+                    break;
+
+                case MapPioneerActionType.addingtroops:
+                    {
+                        this.node.active = true;
+                        idleView.active = true;
+                        this._addingtroopsView.active = true;
+                    }
+                    break;
+
+                case MapPioneerActionType.exploring:
+                    {
+                        this.node.active = true;
+                        idleView.active = true;
+                        this._exploringView.active = true;
+                    }
+                    break;
+
+                case MapPioneerActionType.eventing:
+                    {
+                        this.node.active = true;
+                        idleView.active = true;
+                        if (this._model.eventStatus == MapPioneerEventStatus.None) {
+                        } else if (this._model.eventStatus == MapPioneerEventStatus.Waiting) {
+                            this._eventingView.active = true;
+                        } else if (this._model.eventStatus == MapPioneerEventStatus.Waited) {
+                            this._eventWaitedView.active = true;
+                        }
+                    }
+                    break;
+
+                case MapPioneerActionType.wormhole:
+                    {
+                        this.node.active = false;
+                    }
                     break;
 
                 default:
@@ -188,12 +223,7 @@ export class MapPioneer extends Component {
         const animView = instantiate(this._resourceAnimView);
         animView.active = true;
         animView.setParent(this.node);
-        const resourceName = [
-            "8001",
-            "8002",
-            "8003",
-            "8004",
-        ];
+        const resourceName = ["8001", "8002", "8003", "8004"];
         for (const name of resourceName) {
             animView.getChildByName(name).active = resourceId == name;
         }
@@ -258,12 +288,11 @@ export class MapPioneer extends Component {
         this._resourceAnimView = this.node.getChildByName("resourceGetted");
         this._resourceAnimView.active = false;
     }
-    start() {
-    }
+    start() {}
     update(deltaTime: number) {
         if (this._currnetIdleAnim != null) {
             this._idleCountTime += deltaTime;
-            if (this._idleCountTime >= (this._idleAnimTime + this._idleGapWaitTime)) {
+            if (this._idleCountTime >= this._idleAnimTime + this._idleGapWaitTime) {
                 this._idleCountTime = 0;
                 this._currnetIdleAnim.play();
             } else if (this._idleCountTime >= this._idleAnimTime) {
@@ -271,10 +300,8 @@ export class MapPioneer extends Component {
             }
         }
 
-
         const currentTimeStamp = new Date().getTime();
         if (this._actionTimeStamp > currentTimeStamp) {
-
             this._timeCountProgress.node.active = true;
             this._timeCountLabel.node.active = true;
 
@@ -293,5 +320,3 @@ export class MapPioneer extends Component {
         }
     }
 }
-
-

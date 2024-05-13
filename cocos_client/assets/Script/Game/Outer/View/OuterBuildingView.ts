@@ -1,23 +1,23 @@
-import { _decorator, Component, instantiate, Label, Layout, Node } from 'cc';
-import { LanMgr } from '../../../Utils/Global';
-import { MapBuildingType, InnerBuildingType, UserInnerBuildInfo } from '../../../Const/BuildingDefine';
-import ViewController from '../../../BasicView/ViewController';
-import NotificationMgr from '../../../Basic/NotificationMgr';
-import ConfigConfig from '../../../Config/ConfigConfig';
-import InnerBuildingLvlUpConfig from '../../../Config/InnerBuildingLvlUpConfig';
-import InnerBuildingConfig from '../../../Config/InnerBuildingConfig';
-import { NotificationName } from '../../../Const/Notification';
-import { MapMemberFactionType } from '../../../Const/ConstDefine';
-import { ConfigType, EnergyTipThresholdParam } from '../../../Const/Config';
-import { MapBuildingObject } from '../../../Const/MapBuilding';
-import { DataMgr } from '../../../Data/DataMgr';
+import { _decorator, Component, instantiate, Label, Layout, Node } from "cc";
+import { LanMgr } from "../../../Utils/Global";
+import { MapBuildingType, InnerBuildingType, UserInnerBuildInfo } from "../../../Const/BuildingDefine";
+import ViewController from "../../../BasicView/ViewController";
+import NotificationMgr from "../../../Basic/NotificationMgr";
+import ConfigConfig from "../../../Config/ConfigConfig";
+import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
+import InnerBuildingConfig from "../../../Config/InnerBuildingConfig";
+import { NotificationName } from "../../../Const/Notification";
+import { MapMemberFactionType } from "../../../Const/ConstDefine";
+import { ConfigType, EnergyTipThresholdParam } from "../../../Const/Config";
+import { MapBuildingObject, MapBuildingTavernObject, MapBuildingWormholeObject } from "../../../Const/MapBuilding";
+import { DataMgr } from "../../../Data/DataMgr";
+import CommonTools from "../../../Tool/CommonTools";
+import { CountDataMgr } from "../../../Data/Save/CountDataMgr";
 const { ccclass, property } = _decorator;
 
-@ccclass('OuterBuildingView')
+@ccclass("OuterBuildingView")
 export class OuterBuildingView extends ViewController {
-
     public refreshUI(building: MapBuildingObject) {
-
         this._building = building;
 
         this.node.getChildByPath("Title/Text").getComponent(Label).string = LanMgr.getLanById(building.name);
@@ -28,7 +28,12 @@ export class OuterBuildingView extends ViewController {
         }
 
         const strongholdView = this.node.getChildByPath("StrongholdContent");
+        const wormholdView = this.node.getChildByPath("WormholdView");
+        const tavernView = this.node.getChildByPath("TavernView");
+
         strongholdView.active = false;
+        wormholdView.active = false;
+        tavernView.active = false;
 
         const collectIcon = this.node.getChildByPath("Level/Collect");
         const exploreIcon = this.node.getChildByPath("Level/Explore");
@@ -48,10 +53,8 @@ export class OuterBuildingView extends ViewController {
             } else {
                 this.node.getChildByPath("Level").active = false;
             }
-
         } else if (building.type == MapBuildingType.explore) {
             exploreIcon.active = true;
-
         } else if (building.type == MapBuildingType.stronghold) {
             strongholdIcon.active = true;
             strongholdView.active = true;
@@ -80,18 +83,71 @@ export class OuterBuildingView extends ViewController {
                 this._strongholdViews.push(tempView);
             }
             this._strongholdItem.parent.getComponent(Layout).updateLayout();
-            
-            // if (isSelf) {
-                // this._selfView.active = true;
-            // } else {
-                // this._neturalView.active = true;
-            // }
 
+            // if (isSelf) {
+            // this._selfView.active = true;
+            // } else {
+            // this._neturalView.active = true;
+            // }
+        } else if (building.type == MapBuildingType.wormhole) {
+            strongholdIcon.active = true;
+            wormholdView.active = true;
+
+            const wormholeObj = building as MapBuildingWormholeObject;
+            const prepareDidFinish: boolean = wormholeObj.wormholdCountdownTime > 0;
+            const maxWormholdLength: number = 3;
+            for (let i = 0; i < maxWormholdLength; i++) {
+                const tempView = wormholdView.getChildByPath("WormholdContent/Item_" + i);
+
+                const emptyView = tempView.getChildByPath("Empty");
+                const prepareView = tempView.getChildByPath("Prepare");
+                if (i < building.defendPioneerIds.length) {
+                    const pioneerId = building.defendPioneerIds[i];
+                    emptyView.active = false;
+                    prepareView.active = true;
+                    prepareView.getChildByPath("Icon/pioneer_default").active = pioneerId == "pioneer_0";
+                    prepareView.getChildByPath("Icon/secretGuard").active = pioneerId == "pioneer_1";
+                    prepareView.getChildByPath("Icon/doomsdayGangSpy").active = pioneerId == "pioneer_2";
+                    prepareView.getChildByPath("Icon/rebels").active = pioneerId == "pioneer_3";
+                    prepareView.getChildByPath("IconGarrison").active = !prepareDidFinish;
+                } else {
+                    emptyView.active = true;
+                    prepareView.active = false;
+                }
+            }
+            if (prepareDidFinish) {
+                wormholdView.getChildByPath("Countdown").active = true;
+                // useLanMgr
+                // wormholdView.getChildByPath("Countdown").getComponent(Label).string = LanMgr.getLanById("107549") + ":" + CommonTools.formatSeconds(wormholeObj.wormholdCountdownTime);
+                wormholdView.getChildByPath("Countdown").getComponent(Label).string =
+                    "wormhold traveling: " + CommonTools.formatSeconds(wormholeObj.wormholdCountdownTime);
+            } else {
+                wormholdView.getChildByPath("Countdown").active = false;
+            }
         } else if (building.type == MapBuildingType.resource) {
             collectIcon.active = true;
-
         } else if (building.type == MapBuildingType.event) {
             exploreIcon.active = true;
+        } else if (building.type == MapBuildingType.tavern) {
+            exploreIcon.active = true;
+
+            const tavernObj = building as MapBuildingTavernObject;
+
+            const countdownView = tavernView.getChildByPath("CountdownView");
+            const newPioneerView = tavernView.getChildByPath("NewPioneerView");
+
+            countdownView.active = false;
+            newPioneerView.active = false;
+
+            if (tavernObj.nft != null) {
+                newPioneerView.active = true;
+            } else if (tavernObj.tavernCountdownTime > 0) {
+                countdownView.active = true;
+                // useLanMgr
+                // countdownView.getChildByPath("Text").getComponent(Label).string = LanMgr.getLanById("107549") + ":" + CommonTools.formatSeconds(tavernObj.tavernCountdownTime);
+                countdownView.getChildByPath("Text").getComponent(Label).string = "recruiting: " + CommonTools.formatSeconds(tavernObj.tavernCountdownTime);
+            }
+            tavernView.active = countdownView.active || newPioneerView.active;
         }
 
         this._levelShowing = this.node.getChildByPath("Level").active;
@@ -109,7 +165,6 @@ export class OuterBuildingView extends ViewController {
         }
     }
 
-
     private _toGetEnergyTip: Node = null;
     private _toBuildBuildingTip: Node = null;
 
@@ -126,7 +181,7 @@ export class OuterBuildingView extends ViewController {
         "ancient_ruins",
         "Aquatic_Relics_Group",
         "Tree_Group",
-        "Pyramid_Group"
+        "Pyramid_Group",
     ];
     private _levelShowing: boolean = false;
     private _building: MapBuildingObject = null;
@@ -152,11 +207,13 @@ export class OuterBuildingView extends ViewController {
         NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE, this._onEnergyNumChanged, this);
         NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
         NotificationMgr.addListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
+        NotificationMgr.addListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_CHANGE, this._onWormholeCountDownTimeDidChange, this);
+        NotificationMgr.addListener(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, this._onTavernCountDownTimeDidChange, this);
+        NotificationMgr.addListener(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, this._onTavernNewPioneerDidChange, this);
     }
 
     protected viewDidAppear(): void {
         super.viewDidAppear();
-
     }
 
     protected viewDidDisAppear(): void {
@@ -169,6 +226,9 @@ export class OuterBuildingView extends ViewController {
         NotificationMgr.removeListener(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE, this._onEnergyNumChanged, this);
         NotificationMgr.removeListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
         NotificationMgr.removeListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
+        NotificationMgr.removeListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_CHANGE, this._onWormholeCountDownTimeDidChange, this);
+        NotificationMgr.removeListener(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, this._onTavernCountDownTimeDidChange, this);
+        NotificationMgr.removeListener(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, this._onTavernNewPioneerDidChange, this);
     }
 
     //-------------------------------- function
@@ -181,7 +241,7 @@ export class OuterBuildingView extends ViewController {
                 const energyStationData = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.EnergyStation];
                 const psycData = InnerBuildingLvlUpConfig.getEnergyLevelData(energyStationData.buildLevel);
                 if (psycData != null) {
-                    if ((energyInfo.totalEnergyNum / psycData.storage) >= threshold) {
+                    if (energyInfo.totalEnergyNum / psycData.storage >= threshold) {
                         this._toGetEnergyTip.active = true;
                     }
                 }
@@ -225,6 +285,22 @@ export class OuterBuildingView extends ViewController {
     private _onResourceChanged() {
         this._refreshBuildTipShow();
     }
+    private _onWormholeCountDownTimeDidChange(data: { id: string }) {
+        if (this._building == null || this._building.id != data.id) {
+            return;
+        }
+        this.refreshUI(this._building);
+    }
+    private _onTavernCountDownTimeDidChange(data: { id: string }) {
+        if (this._building == null || this._building.id != data.id) {
+            return;
+        }
+        this.refreshUI(this._building);
+    }
+    private _onTavernNewPioneerDidChange(data: { id: string }) {
+        if (this._building == null || this._building.id != data.id) {
+            return;
+        }
+        this.refreshUI(this._building);
+    }
 }
-
-

@@ -7,7 +7,9 @@ export enum MapBuildingType {
     stronghold = 2,
     city = 0,
     event = 4,
-    decorate = 5
+    decorate = 5,
+    wormhole = 6,
+    tavern = 7
 }
 
 export enum BuildingStayPosType {
@@ -37,8 +39,9 @@ export interface UserInnerBuildInfo {
     buildBeginLatticeIndex: number;
     buildType: InnerBuildingType;
     buildLevel: number;
-    upgradeCountTime: number;
-    upgradeTotalTime: number;
+    upgradeBeginTimestamp: number;
+    upgradeEndTimestamp: number;
+    upgrading: boolean;
 }
 
 export type InnerBuildingStaffLevelUpType = string;

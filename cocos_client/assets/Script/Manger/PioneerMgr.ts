@@ -22,10 +22,13 @@ import {
     MapPioneerEventAttributesChangeType,
 } from "../Const/PioneerDefine";
 import { DataMgr } from "../Data/DataMgr";
-import { MapBuildingMainCityObject, MapBuildingObject } from "../Const/MapBuilding";
+import { MapBuildingMainCityObject, MapBuildingObject, MapBuildingTavernObject } from "../Const/MapBuilding";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import { PioneersDataMgr } from "../Data/Save/PioneersDataMgr";
 import { NetworkMgr } from "../Net/NetworkMgr";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import { UIName } from "../Const/ConstUIDefine";
+import { TavernUI } from "../UI/Outer/TavernUI";
 
 export default class PioneerMgr {
     public initData() {
@@ -106,7 +109,15 @@ export default class PioneerMgr {
     public pioneerToIdle(pioneerId: string) {
         DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.idle);
         DataMgr.s.pioneer.changeEventStatus(pioneerId, MapPioneerEventStatus.None);
+        // check defend to idle
         for (const building of DataMgr.s.mapBuilding.getStrongholdBuildings()) {
+            if (building.defendPioneerIds.indexOf(pioneerId) != -1) {
+                DataMgr.s.mapBuilding.removeDefendPioneer(building.id, pioneerId);
+                break;
+            }
+        }
+        // check wormhold to idle
+        for (const building of DataMgr.s.mapBuilding.getWormholeBuildings()) {
             if (building.defendPioneerIds.indexOf(pioneerId) != -1) {
                 DataMgr.s.mapBuilding.removeDefendPioneer(building.id, pioneerId);
                 break;
@@ -197,7 +208,7 @@ export default class PioneerMgr {
     private _movingTargetDataMap: Map<string, { target: MapMemberTargetType; id: string }> = new Map();
     public constructor() {}
 
-    private _moveMeeted(pioneerId: string, isStay: boolean = true) {
+    private async _moveMeeted(pioneerId: string, isStay: boolean = true) {
         const pioneerDataMgr: PioneersDataMgr = DataMgr.s.pioneer;
         const pioneer: MapPioneerObject = pioneerDataMgr.getById(pioneerId);
         if (pioneer == undefined) {
@@ -246,28 +257,26 @@ export default class PioneerMgr {
                             pioneerId: pioneerId,
                             isExporeBuilding: false,
                             exploreId: interactPioneer.id,
-                            actionType: MapPioneerActionType.exploring
+                            actionType: MapPioneerActionType.exploring,
                         });
                         NetworkMgr.websocketMsg.player_explore({
                             pioneerId: pioneerId,
                             isExporeBuilding: false,
-                            exploreId: interactPioneer.id
+                            exploreId: interactPioneer.id,
                         });
-
                     } else if (interactPioneer.type == MapPioneerType.gangster) {
                         // get more hp
                         DataMgr.setTempSendData("player_explore_res", {
                             pioneerId: pioneerId,
                             isExporeBuilding: false,
                             exploreId: interactPioneer.id,
-                            actionType: MapPioneerActionType.addingtroops
+                            actionType: MapPioneerActionType.addingtroops,
                         });
                         NetworkMgr.websocketMsg.player_explore({
                             pioneerId: pioneerId,
                             isExporeBuilding: false,
-                            exploreId: interactPioneer.id
+                            exploreId: interactPioneer.id,
                         });
-
                     } else {
                         pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
                     }
@@ -333,14 +342,13 @@ export default class PioneerMgr {
                         pioneerId: pioneerId,
                         isExporeBuilding: true,
                         exploreId: stayBuilding.id,
-                        actionType: MapPioneerActionType.exploring
+                        actionType: MapPioneerActionType.exploring,
                     });
                     NetworkMgr.websocketMsg.player_explore({
                         pioneerId: pioneerId,
                         isExporeBuilding: true,
-                        exploreId: stayBuilding.id
+                        exploreId: stayBuilding.id,
                     });
-
                 } else {
                     if (pioneer.name == "gangster_3") {
                         DataMgr.s.mapBuilding.hideBuilding(stayBuilding.id, pioneer.id);
@@ -358,15 +366,14 @@ export default class PioneerMgr {
                             pioneerId: pioneerId,
                             isExporeBuilding: true,
                             exploreId: stayBuilding.id,
-                            actionType: MapPioneerActionType.defend
+                            actionType: MapPioneerActionType.defend,
                         });
                         NetworkMgr.websocketMsg.player_explore({
                             pioneerId: pioneerId,
                             isExporeBuilding: true,
-                            exploreId: stayBuilding.id
+                            exploreId: stayBuilding.id,
                         });
                         tempAction = 2;
-
                     } else {
                         tempAction = 1;
                     }
@@ -395,13 +402,33 @@ export default class PioneerMgr {
                 } else if (tempAction == 1) {
                     this.fight(pioneer, null, stayBuilding);
                 } else if (tempAction == 2) {
-                    
+                }
+            } else if (stayBuilding.type == MapBuildingType.wormhole) {
+                if (pioneer.type == MapPioneerType.player) {
+                    if (stayBuilding.faction != MapMemberFactionType.enemy) {
+                        DataMgr.setTempSendData("player_explore_res", {
+                            pioneerId: pioneerId,
+                            isExporeBuilding: true,
+                            exploreId: stayBuilding.id,
+                            actionType: MapPioneerActionType.wormhole,
+                        });
+                        NetworkMgr.websocketMsg.player_explore({
+                            pioneerId: pioneerId,
+                            isExporeBuilding: true,
+                            exploreId: stayBuilding.id,
+                        });
+                    } else {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                    }
+                } else {
+                    if (isStay) {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                    }
                 }
             } else if (stayBuilding.type == MapBuildingType.resource) {
                 if (pioneer.type == MapPioneerType.player && pioneer.faction != MapMemberFactionType.enemy) {
                     DataMgr.setTempSendData("player_gather_res", { pioneerId: pioneerId, buildingId: stayBuilding.id });
                     NetworkMgr.websocketMsg.player_gather({ pioneerId: pioneerId, resourceBuildingId: stayBuilding.id });
-
                 } else {
                     if (isStay) {
                         pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
@@ -412,6 +439,20 @@ export default class PioneerMgr {
                     let currentEvent = EventConfig.getById(stayBuilding.eventId);
                     if (currentEvent != null) {
                         this.pioneerDealWithEvent(pioneer.id, stayBuilding.id, currentEvent);
+                    }
+                } else {
+                    if (isStay) {
+                        pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
+                    }
+                }
+            } else if (stayBuilding.type == MapBuildingType.tavern) {
+                if (pioneer.type == MapPioneerType.player) {
+                    const tavern = stayBuilding as MapBuildingTavernObject;
+                    if (tavern.tavernCountdownTime <= 0) {
+                        const result = await UIPanelManger.inst.pushPanel(UIName.TavernUI);
+                        if (result.success) {
+                            result.node.getComponent(TavernUI).configuration(stayBuilding.id);
+                        }
                     }
                 } else {
                     if (isStay) {

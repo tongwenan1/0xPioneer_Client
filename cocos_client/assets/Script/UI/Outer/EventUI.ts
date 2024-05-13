@@ -341,6 +341,7 @@ export class EventUI extends ViewController {
             }
         }
         if (itemDatas.length > 0) {
+            // upload resource changed event-select
             DataMgr.s.item.addObj_item(itemDatas);
 
             let hasItem: boolean = false;

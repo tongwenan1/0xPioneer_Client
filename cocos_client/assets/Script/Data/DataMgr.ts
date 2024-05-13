@@ -18,6 +18,7 @@ import { RunData } from "./RunData";
 import { SaveData } from "./SaveData";
 import { MapBuildingMainCityObject } from "../Const/MapBuilding";
 import { GameMgr, LanMgr } from "../Utils/Global";
+import NetGlobalData from "./Save/Data/NetGlobalData";
 
 export class DataMgr {
     public static r: RunData;
@@ -31,10 +32,6 @@ export class DataMgr {
         return true;
     }
 
-    public static async load() {
-        await this.s.load(this.r.wallet.addr);
-    }
-
     public static async save() {
         await this.s.save();
     }
@@ -43,11 +40,18 @@ export class DataMgr {
         CLog.debug("DataMgr/onmsg: e => " + JSON.stringify(e));
     };
 
-    public static enter_game_res = (e: any) => {
+    public static enter_game_res = async (e: any) => {
         let p: s2c_user.Ienter_game_res = e.data;
         if (p.res === 1) {
             if (p.data) {
-                DataMgr.r.userInfo = p.data.info.sinfo;
+                // set new global data
+                NetGlobalData.userInfo = p.data.info.sinfo;
+                NetGlobalData.innerBuildings = p.data.info.buildings;
+                NetGlobalData.storehouse = p.data.info.storehouse;
+                NetGlobalData.usermap = p.data.info.usermap;
+                // load save data
+                await DataMgr.s.load(this.r.wallet.addr);
+
                 NotificationMgr.triggerEvent(NotificationName.USER_LOGIN_SUCCEED);
             }
             // reconnect
@@ -56,20 +60,46 @@ export class DataMgr {
             }
         }
     };
+    // item
+    public static storhouse_change = (e: any) => {
+        const p: s2c_user.Istorhouse_change = e.data;
+        for (const item of p.iteminfo) {
+            const change = new ItemData(item.itemConfigId, item.count);
+            change.addTimeStamp = item.addTimeStamp;
+            DataMgr.s.item.countChanged(change);
+        }
+    };
+    public static player_item_use_res = (e: any) => {
+        const p: s2c_user.Iplayer_item_use_res = e.data;
+        if (p.res === 1) {
+        }
+    };
+
+    // inner building
+    public static player_building_levelup_res = (e: any) => {
+        const p: s2c_user.Iplayer_building_levelup_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        DataMgr.s.userInfo.beginInnerBuildingUpgrade(p.data.id as InnerBuildingType, p.data.upgradeCountTime, p.data.upgradeTotalTime);
+    };
+
+    // map
+    public static player_move_res = (e: any) => {
+        const p: s2c_user.Iplayer_move_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        if (!DataMgr.socketSendData.has("player_move_res")) {
+            return;
+        }
+        const localData: s2c_user.Iplayer_move_res_local_data = DataMgr.socketSendData.get("player_move_res") as s2c_user.Iplayer_move_res_local_data;
+        DataMgr.s.pioneer.beginMove(localData.pioneerId, localData.movePath);
+    };
 
     public static get_pioneers_res = (e: any) => {
         let p: s2c_user.Iget_pioneers_res = e.data;
         // TODO: update all pioneers data
-    };
-
-    public static player_move_res = (e: any) => {
-        if (DataMgr.socketSendData.has("player_move_res")) {
-            const data: s2c_user.Iplayer_move_res = DataMgr.socketSendData.get("player_move_res") as s2c_user.Iplayer_move_res;
-            if (data.costEnergyNum > 0) {
-                DataMgr.s.item.subObj_item(ResourceCorrespondingItem.Energy, data.costEnergyNum);
-            }
-            DataMgr.s.pioneer.beginMove(data.pioneerId, data.movePath);
-        }
     };
 
     public static player_talk_select_res = (e: any) => {};
@@ -107,6 +137,10 @@ export class DataMgr {
                         DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.idle);
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: exploreId });
                     }, actionTime);
+                } else if (actionType == MapPioneerActionType.wormhole) {
+                    DataMgr.s.pioneer.changeActionType(pioneerId, actionType);
+                    DataMgr.s.mapBuilding.insertDefendPioneer(exploreId, pioneerId);
+                    NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: exploreId });
                 }
             } else {
                 if (actionType == MapPioneerActionType.addingtroops) {
@@ -364,6 +398,7 @@ export class DataMgr {
                             DataMgr.s.userInfo.gainTreasureProgress(effectProgress);
                         }
                         if (selfKillPioneer.drop != null) {
+                            // upload resource changed fight
                             NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_PROP_GET, { props: selfKillPioneer.drop });
                         }
                         // settle
@@ -428,7 +463,9 @@ export class DataMgr {
 
                     if (killerId != null && selfDeadName != null) {
                         pioneerDataMgr.changeBeKilled(playerPioneerId, killerId);
-                        NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_CENTER_TIP, { tip: LanMgr.replaceLanById("106001", [LanMgr.getLanById(selfDeadName)]) });
+                        NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_CENTER_TIP, {
+                            tip: LanMgr.replaceLanById("106001", [LanMgr.getLanById(selfDeadName)]),
+                        });
                     }
                     if (fightOverCallback != null) {
                         fightOverCallback(isSelfWin);
@@ -474,17 +511,12 @@ export class DataMgr {
             }
         }
     };
-    public static player_item_use_res = (e: any) => {
-        const key: string = "player_item_use_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_item_use_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_item_use_res;
-            DataMgr.s.item.subObj_item(data.itemId, data.num);
-        }
-    };
+
     public static player_treasure_open_res = (e: any) => {
         const key: string = "player_treasure_open_res";
         if (DataMgr.socketSendData.has(key)) {
             const data: s2c_user.Iplayer_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_treasure_open_res;
+            // upload resource changed treasure-open
             if (data.items != null && data.items.length > 0) {
                 DataMgr.s.item.addObj_item(data.items);
             }
@@ -503,6 +535,7 @@ export class DataMgr {
         const key: string = "player_point_treasure_open_res";
         if (DataMgr.socketSendData.has(key)) {
             const data: s2c_user.Iplayer_point_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_point_treasure_open_res;
+            // upload resource changed point_treasure-open
             if (data.items != null && data.items.length > 0) {
                 DataMgr.s.item.addObj_item(data.items);
             }
@@ -531,20 +564,12 @@ export class DataMgr {
             DataMgr.s.artifact.changeObj_artifact_effectIndex(data.artifactId, data.effectIndex);
         }
     };
-    public static player_building_levelup_res = (e: any) => {
-        const key: string = "player_building_levelup_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_building_levelup_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_building_levelup_res;
-            for (const temple of data.subItems) {
-                DataMgr.s.item.subObj_item(temple.itemConfigId, temple.count);
-            }
-            DataMgr.s.userInfo.beginUpgrade(data.innerBuildingType, data.time);
-        }
-    };
+
     public static player_get_auto_energy_res = (e: any) => {
         const key: string = "player_get_auto_energy_res";
         if (DataMgr.socketSendData.has(key)) {
             const data: s2c_user.Iplayer_get_auto_energy_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_get_auto_energy_res;
+            // upload resource changed inner_building-get_auto_energy
             DataMgr.s.item.addObj_item([new ItemData(ResourceCorrespondingItem.Energy, data.num)]);
             DataMgr.s.userInfo.generateEnergyGetted();
         }
@@ -556,6 +581,7 @@ export class DataMgr {
             for (const temple of data.subItems) {
                 DataMgr.s.item.subObj_item(temple.itemConfigId, temple.count);
             }
+            // upload resource changed inner_building-generate_energy
             DataMgr.s.item.addObj_item([new ItemData(ResourceCorrespondingItem.Energy, data.num)]);
         }
     };
@@ -574,6 +600,74 @@ export class DataMgr {
         if (DataMgr.socketSendData.has(key)) {
             const data: s2c_user.Iplayer_building_delegate_nft_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_building_delegate_nft_res;
             DataMgr.s.nftPioneer.NFTChangeWork(data.nftId, data.innerBuildingId as InnerBuildingType);
+        }
+    };
+    public static player_nft_lvlup_res = (e: any) => {
+        const key: string = "player_nft_lvlup_res";
+        if (DataMgr.socketSendData.has(key)) {
+            const data: s2c_user.Iplayer_nft_lvlup_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_lvlup_res;
+            DataMgr.s.item.subObj_item(ResourceCorrespondingItem.NFTExp, data.nftExpCostNum);
+            DataMgr.s.nftPioneer.NFTLevelUp(data.nftId, data.levelUpNum);
+        }
+    };
+    public static player_nft_rankup_res = (e: any) => {
+        const key: string = "player_nft_rankup_res";
+        if (DataMgr.socketSendData.has(key)) {
+            const data: s2c_user.Iplayer_nft_rankup_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_rankup_res;
+            for (const cost of data.subItems) {
+                DataMgr.s.item.subObj_item(cost.itemConfigId, cost.count);
+            }
+            DataMgr.s.nftPioneer.NFTRankUp(data.nftId, data.rankUpNum);
+        }
+    };
+    public static player_nft_skill_learn_res = (e: any) => {
+        const key: string = "player_nft_skill_learn_res";
+        if (DataMgr.socketSendData.has(key)) {
+            const data: s2c_user.Iplayer_nft_skill_learn_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_skill_learn_res;
+            for (const cost of data.subItems) {
+                DataMgr.s.item.subObj_item(cost.itemConfigId, cost.count);
+            }
+            DataMgr.s.nftPioneer.NFTLearnSkill(data.nftId, data.skillId);
+        }
+    };
+    public static player_nft_skill_forget_res = (e: any) => {
+        const key: string = "player_nft_skill_forget_res";
+        if (DataMgr.socketSendData.has(key)) {
+            const data: s2c_user.Iplayer_nft_skill_forget_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_skill_forget_res;
+            DataMgr.s.nftPioneer.NFTForgetSkill(data.nftId, data.skillIndex);
+        }
+    };
+
+    public static player_heat_value_change_res = (e: any) => {
+        const data: s2c_user.Iplayer_heat_value_change_res = e.data;
+        DataMgr.s.userInfo.data.heatValue.currentHeatValue = data.currentHeatValue;
+    };
+    public static player_world_treasure_lottery_res = (e: any) => {
+        const data: s2c_user.Iplayer_world_treasure_lottery_res = e.data;
+        // upload resource changed player_world_treasure_lottery
+        DataMgr.s.item.addObj_item([new ItemData(data.itemId, data.num)]);
+    };
+
+    public static player_rookie_finish_res = (e: any) => {
+        DataMgr.s.userInfo.finishRookie();
+        // DataMgr.s.task.gameStarted();
+        // DataMgr.s.item.addObj_item(
+        //     [
+        //         new ItemData(ResourceCorrespondingItem.Energy, 2000),
+        //         new ItemData(ResourceCorrespondingItem.Food, 2000),
+        //         new ItemData(ResourceCorrespondingItem.Stone, 2000),
+        //         new ItemData(ResourceCorrespondingItem.Wood, 2000),
+        //         new ItemData(ResourceCorrespondingItem.Troop, 2000),
+        //     ],
+        //     false
+        // );
+    };
+
+    public static player_wormhole_set_defender_res = (e: any) => {
+        const key: string = "player_wormhole_set_defender_res";
+        if (DataMgr.socketSendData.has(key)) {
+            const data: s2c_user.Iplayer_wormhole_set_defender_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_wormhole_set_defender_res;
+            DataMgr.s.userInfo.setWormholeDefenderId(data.pioneerId, data.index);
         }
     };
 

@@ -2,7 +2,7 @@ import { InnerBuildingType, UserInnerBuildInfo } from "./BuildingDefine";
 
 export interface ResourceModel {
     id: string;
-    num: number
+    num: number;
 }
 
 export interface GenerateTroopInfo {
@@ -11,8 +11,13 @@ export interface GenerateTroopInfo {
 }
 
 export interface GenerateEnergyInfo {
-    countTime: number,
-    totalEnergyNum: number
+    countTime: number;
+    totalEnergyNum: number;
+}
+
+export interface HeatValueObject {
+    getTimestamp: number;
+    currentHeatValue: number;
 }
 
 export interface UserInfoObject {
@@ -21,10 +26,11 @@ export interface UserInfoObject {
     level: number;
     exp: number;
     treasureProgress: number;
-    heatValue: number;
+    heatValue: HeatValueObject;
+    tavernGetPioneerTimestamp: number;
     treasureDidGetRewards: string[];
     pointTreasureDidGetRewards: string[];
-    
+
     cityRadialRange: number;
 
     didFinishRookie: boolean;
@@ -32,4 +38,6 @@ export interface UserInfoObject {
     generateTroopInfo: GenerateTroopInfo;
     generateEnergyInfo: GenerateEnergyInfo;
     innerBuildings: { [key: string]: UserInnerBuildInfo };
+
+    wormholeDefenderIds: [string, string, string];
 }

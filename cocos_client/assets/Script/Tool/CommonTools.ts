@@ -35,6 +35,22 @@ export default class CommonTools {
         );
         return nextDay.getTime();
     }
+    public static getDayAMTimestamp(hour: number): number {
+        // current date
+        const now = new Date();
+
+        // next day hour date
+        const nextDay = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            hour, //
+            0, //
+            0, //
+            0 //
+        );
+        return nextDay.getTime();
+    }
 
     public static getDayOfWeek(): number {
         const today = new Date().getDay();
@@ -62,7 +78,7 @@ export default class CommonTools {
     public static formatSeconds(seconds: number, format: string = "HH:MM:SS"): string {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
-        const remainingSeconds = seconds % 60;
+        const remainingSeconds = Math.floor(seconds % 60);
 
         const formattedHours = (hours < 10 ? "0" : "") + hours;
         const formattedMinutes = (minutes < 10 ? "0" : "") + minutes;

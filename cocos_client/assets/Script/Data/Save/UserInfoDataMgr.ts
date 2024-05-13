@@ -7,20 +7,18 @@ import { GetPropData } from "../../Const/ConstDefine";
 import { LvlupConfigData } from "../../Const/Lvlup";
 import { NotificationName } from "../../Const/Notification";
 import { UserInfoObject } from "../../Const/UserInfoDefine";
+import { NetworkMgr } from "../../Net/NetworkMgr";
+import { WebsocketMsg, share } from "../../Net/msg/WebsocketMsg";
+import NetGlobalData from "./Data/NetGlobalData";
 
 export default class UserInfoDataMgr {
-    private _baseKey: string = "user_Info";
     private _key: string = "";
 
     private _data: UserInfoObject = null;
     public constructor() {}
     //--------------------------------
-    public loadObj(walletAddr: string) {
-        this._key = walletAddr + "|" + this._baseKey;
+    public loadObj() {
         this._initData();
-    }
-    public saveObj() {
-        localStorage.setItem(this._key, JSON.stringify(this._data));
     }
     //--------------------------------
     public get data() {
@@ -41,14 +39,14 @@ export default class UserInfoDataMgr {
         return level;
     }
     //--------------------------------
-    public beginUpgrade(buildingType: InnerBuildingType, upgradeTime: number) {
+    public beginInnerBuildingUpgrade(buildingType: InnerBuildingType, beginTimeStamp: number, endTimeStamp: number) {
         const buildInfo = this._data.innerBuildings[buildingType];
         if (buildInfo == null) {
             return;
         }
-        buildInfo.upgradeCountTime = 0;
-        buildInfo.upgradeTotalTime = upgradeTime;
-        this.saveObj();
+        buildInfo.upgrading = true;
+        buildInfo.upgradeBeginTimestamp = beginTimeStamp * 1000;
+        buildInfo.upgradeEndTimestamp = endTimeStamp * 1000;
         NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_BEGIN_UPGRADE, buildingType);
     }
 
@@ -58,16 +56,13 @@ export default class UserInfoDataMgr {
             return;
         }
         buildInfo.buildBeginLatticeIndex = beginIndex;
-        this.saveObj();
     }
 
     public getExplorationReward(boxId: string) {
         this._data.treasureDidGetRewards.push(boxId);
-        this.saveObj();
     }
     public getPointExplorationReward(boxId: string) {
         this._data.pointTreasureDidGetRewards.push(boxId);
-        this.saveObj();
     }
 
     public beginGenerateTroop(leftTime: number, troopNum: number) {
@@ -75,17 +70,14 @@ export default class UserInfoDataMgr {
             countTime: leftTime,
             troopNum: troopNum,
         };
-        this.saveObj();
     }
 
     public finishRookie() {
         this._data.didFinishRookie = true;
-        this.saveObj();
     }
 
     public changePlayerName(name: string) {
         this._data.name = name;
-        this.saveObj();
 
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_NAME);
     }
@@ -116,8 +108,6 @@ export default class UserInfoDataMgr {
                 parseLv = false;
             }
         } while (parseLv);
-
-        this.saveObj();
 
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_EXP, { exp: exp });
 
@@ -164,7 +154,6 @@ export default class UserInfoDataMgr {
         }
 
         this._data.treasureProgress += progress;
-        this.saveObj();
 
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS);
     }
@@ -182,7 +171,6 @@ export default class UserInfoDataMgr {
             return;
         }
         this._data.generateEnergyInfo.totalEnergyNum = Math.min(this._data.generateEnergyInfo.totalEnergyNum + energy, generateConfig.storage);
-        this.saveObj();
         NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE);
     }
     public generateEnergyGetted() {
@@ -193,40 +181,63 @@ export default class UserInfoDataMgr {
         NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE);
     }
 
+    public setWormholeDefenderId(pioneerId: string, index: number) {
+        if (index < 0 || index >= this._data.wormholeDefenderIds.length) {
+            return;
+        }
+        this._data.wormholeDefenderIds[index] = pioneerId;
+    }
     //------------------------------------------------------------------------
     private async _initData() {
-        const localDataString: string = localStorage.getItem(this._key);
-        if (localDataString == null) {
-            this._data = {
-                id: "1001",
-                name: "Player",
-                level: 1,
-                exp: 0,
-                treasureProgress: 0,
-                heatValue: 0,
-                treasureDidGetRewards: [],
-                pointTreasureDidGetRewards: [],
-                cityRadialRange: 7,
-                didFinishRookie: false,
-                generateTroopInfo: null,
-                generateEnergyInfo: null,
-                innerBuildings: {},
-            };
-            const buildingInfo = InnerBuildingConfig.getConfs();
-            for (const key in buildingInfo) {
-                this._data.innerBuildings[key] = {
-                    buildBeginLatticeIndex: null,
-                    buildType: buildingInfo[key].id,
-                    buildLevel: 0,
-                    upgradeCountTime: 0,
-                    upgradeTotalTime: 0,
-                };
-            }
-            this.saveObj();
-        } else {
-            this._data = JSON.parse(localDataString);
+        if (NetGlobalData.userInfo == null || NetGlobalData.innerBuildings == null) {
+            return;
         }
-
+        const globalData: share.Iplayer_sinfo = NetGlobalData.userInfo;
+        const innerBuildings: share.Ibuilding_data[] = NetGlobalData.innerBuildings;
+        this._data = {
+            id: globalData.playerid.toString(),
+            name: globalData.pname,
+            level: globalData.level,
+            exp: globalData.exp,
+            treasureProgress: globalData.treasureProgress,
+            treasureDidGetRewards: globalData.treasureDidGetRewards,
+            pointTreasureDidGetRewards: globalData.pointTreasureDidGetRewards,
+            heatValue: {
+                getTimestamp: globalData.heatValue.getTimestamp,
+                currentHeatValue: globalData.heatValue.currentHeatValue,
+            },
+            generateTroopInfo:
+                globalData.generateTroopInfo == null
+                    ? null
+                    : {
+                          countTime: globalData.generateTroopInfo.countTime,
+                          troopNum: globalData.generateTroopInfo.troopNum,
+                      },
+            generateEnergyInfo:
+                globalData.generateEnergyInfo == null
+                    ? null
+                    : {
+                          countTime: globalData.generateEnergyInfo.countTime,
+                          totalEnergyNum: globalData.generateEnergyInfo.totalEnergyNum,
+                      },
+            cityRadialRange: globalData.cityRadialRange,
+            didFinishRookie: globalData.didFinishRookie,
+            innerBuildings: {},
+            // lost
+            tavernGetPioneerTimestamp: 0,
+            wormholeDefenderIds: ["", "", ""],
+        };
+        for (const building of innerBuildings) {
+            this._data.innerBuildings[building.id] = {
+                buildBeginLatticeIndex: null,
+                buildLevel: building.level,
+                buildType: building.id as InnerBuildingType,
+                upgradeBeginTimestamp: building.upgradeCountTime * 1000,
+                upgradeEndTimestamp: building.upgradeTotalTime * 1000,
+                upgrading: building.upgradeIng
+            };
+        }
+        console.log("exce _data: ", this._data);
         this._initInterval();
     }
     private _initInterval() {
@@ -235,31 +246,39 @@ export default class UserInfoDataMgr {
             if (this._data.innerBuildings != null) {
                 for (const key in this._data.innerBuildings) {
                     const value = this._data.innerBuildings[key];
-                    if (value.upgradeCountTime < value.upgradeTotalTime) {
-                        value.upgradeCountTime += 1;
-                        this.saveObj();
-                        NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED);
-
-                        if (value.upgradeCountTime >= value.upgradeTotalTime) {
-                            value.upgradeCountTime = 0;
-                            value.upgradeTotalTime = 0;
-                            value.buildLevel += 1;
-                            // buildingConfig
-                            const innerData = InnerBuildingConfig.getByBuildingType(key as InnerBuildingType);
-                            if (innerData != null) {
-                                const expValue = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel, innerData.lvlup_exp);
-                                if (expValue != null && expValue > 0) {
-                                    this.gainExp(expValue);
-                                }
-                                const progressValue = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel, innerData.lvlup_progress);
-                                if (progressValue != null && progressValue > 0) {
-                                    this.gainTreasureProgress(progressValue);
-                                }
-                            }
-                            this.saveObj();
-                            NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, key);
-                        }
+                    if (!value.upgrading) {
+                        continue;
                     }
+                    const currentTimestamp: number = new Date().getTime();
+                    if (currentTimestamp < value.upgradeEndTimestamp) {
+                        NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED);
+                    } else {
+                        value.upgrading = true;
+                        NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, key);
+                    }
+                    // if (value.upgradeCountTime < value.upgradeTotalTime) {
+                    //     value.upgradeCountTime += 1;
+                    //     NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED);
+
+                    //     if (value.upgradeCountTime >= value.upgradeTotalTime) {
+                    //         value.upgradeCountTime = 0;
+                    //         value.upgradeTotalTime = 0;
+                    //         value.buildLevel += 1;
+                    //         // buildingConfig
+                    //         const innerData = InnerBuildingConfig.getByBuildingType(key as InnerBuildingType);
+                    //         if (innerData != null) {
+                    //             const expValue = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel, innerData.lvlup_exp);
+                    //             if (expValue != null && expValue > 0) {
+                    //                 this.gainExp(expValue);
+                    //             }
+                    //             const progressValue = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel, innerData.lvlup_progress);
+                    //             if (progressValue != null && progressValue > 0) {
+                    //                 this.gainTreasureProgress(progressValue);
+                    //             }
+                    //         }
+                    //         NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, key);
+                    //     }
+                    // }
                 }
             }
 
@@ -267,47 +286,44 @@ export default class UserInfoDataMgr {
             if (this._data.generateTroopInfo != null) {
                 if (this._data.generateTroopInfo.countTime > 0) {
                     this._data.generateTroopInfo.countTime -= 1;
-                    this.saveObj();
                     NotificationMgr.triggerEvent(NotificationName.GENERATE_TROOP_TIME_COUNT_CHANGED);
 
                     if (this._data.generateTroopInfo.countTime <= 0) {
                         this._data.generateTroopInfo = null;
-                        this.saveObj();
                         NotificationMgr.triggerEvent(NotificationName.GENERATE_TROOP_NUM_TO_CHANGE, { generateNum: this._data.generateTroopInfo.troopNum });
                     }
                 }
             }
             // generate energy
-            let energyStationBuilded: boolean = false;
-            if (this._data.innerBuildings != null && InnerBuildingType.EnergyStation in this._data.innerBuildings) {
-                energyStationBuilded = this._data.innerBuildings[InnerBuildingType.EnergyStation].buildLevel > 0;
-            }
-            if (energyStationBuilded) {
-                const energyBuildingData = this._data.innerBuildings[InnerBuildingType.EnergyStation];
-                const generateConfig = InnerBuildingLvlUpConfig.getEnergyLevelData(energyBuildingData.buildLevel);
-                const perGenerateTime: number = 5;
-                if (this._data.generateEnergyInfo == null) {
-                    this._data.generateEnergyInfo = {
-                        countTime: perGenerateTime,
-                        totalEnergyNum: 0,
-                    };
-                }
-                if (this._data.generateEnergyInfo.totalEnergyNum >= generateConfig.storage) {
-                    this._data.generateEnergyInfo.countTime = perGenerateTime;
-                } else {
-                    if (this._data.generateEnergyInfo.countTime > 0) {
-                        this._data.generateEnergyInfo.countTime -= 1;
-                        this.saveObj();
-                        NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_TIME_COUNT_CHANGED);
+            // function hide
+            // let energyStationBuilded: boolean = false;
+            // if (this._data.innerBuildings != null && InnerBuildingType.EnergyStation in this._data.innerBuildings) {
+            //     energyStationBuilded = this._data.innerBuildings[InnerBuildingType.EnergyStation].buildLevel > 0;
+            // }
+            // if (energyStationBuilded) {
+            //     const energyBuildingData = this._data.innerBuildings[InnerBuildingType.EnergyStation];
+            //     const generateConfig = InnerBuildingLvlUpConfig.getEnergyLevelData(energyBuildingData.buildLevel);
+            //     const perGenerateTime: number = 5;
+            //     if (this._data.generateEnergyInfo == null) {
+            //         this._data.generateEnergyInfo = {
+            //             countTime: perGenerateTime,
+            //             totalEnergyNum: 0,
+            //         };
+            //     }
+            //     if (this._data.generateEnergyInfo.totalEnergyNum >= generateConfig.storage) {
+            //         this._data.generateEnergyInfo.countTime = perGenerateTime;
+            //     } else {
+            //         if (this._data.generateEnergyInfo.countTime > 0) {
+            //             this._data.generateEnergyInfo.countTime -= 1;
+            //             NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_TIME_COUNT_CHANGED);
 
-                        if (this._data.generateEnergyInfo.countTime <= 0) {
-                            this._data.generateEnergyInfo.countTime = perGenerateTime;
-                            this.saveObj();
-                            NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_NUM_TO_CHANGE);
-                        }
-                    }
-                }
-            }
+            //             if (this._data.generateEnergyInfo.countTime <= 0) {
+            //                 this._data.generateEnergyInfo.countTime = perGenerateTime;
+            //                 NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_NUM_TO_CHANGE);
+            //             }
+            //         }
+            //     }
+            // }
         }, 1000);
     }
 }

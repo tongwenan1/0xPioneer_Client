@@ -93,10 +93,10 @@ export class InnerBuildingView extends ViewController {
 
         // info
         this._infoView.refreshUI(this._building);
-        this._infoView.setProgressTime(this._building.upgradeCountTime, this._building.upgradeTotalTime);
+        this._infoView.setProgressTime(this._building.upgradeBeginTimestamp, this._building.upgradeEndTimestamp);
 
         // building anim
-        if (building.upgradeTotalTime > 0) {
+        if (this._building.upgrading) {
             this._buildingAnim.active = true;
         } else {
             this._buildingAnim.active = false;
@@ -173,7 +173,8 @@ export class InnerBuildingView extends ViewController {
         if (this._building == null) {
             return;
         }
-        if (this._building.upgradeTotalTime > 0) {
+        const currentTimestamp: number = new Date().getTime();
+        if (currentTimestamp < this._building.upgradeEndTimestamp) {
             UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
             // UIHUDController.showCenterTip("The building is being upgraded, please wait.");
             return;

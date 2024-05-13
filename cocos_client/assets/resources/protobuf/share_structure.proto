@@ -14,8 +14,21 @@ message user_data {
 // player simple info
 message player_sinfo {
     required uint32 playerid = 1; // player id
-    required uint32 gender = 2; // gender
-    required string pname = 3; // player name
+    required uint32 mapid = 2;
+    required string pname = 3;
+    required uint32 speed = 4;
+    required uint32 level = 5;
+    required uint32 exp = 6;
+    optional uint32 lastAPRecTms = 7;
+    required pos2d pos = 8;
+    required uint32 treasureProgress = 9;
+    required heat_value_data heatValue = 10;
+    repeated string treasureDidGetRewards = 11;
+    repeated string pointTreasureDidGetRewards = 12;
+    required uint32 cityRadialRange = 13;
+    required bool didFinishRookie = 14;
+    optional troop_info_data generateTroopInfo = 15;
+    optional energy_info_data generateEnergyInfo = 16;
 }
 
 // self player data
@@ -26,9 +39,97 @@ message player_data {
 // player info 
 message player_info {
     required player_sinfo sinfo = 1; // player simple info
+    repeated building_data buildings = 2;
+    optional storehouse_data storehouse = 3;
+    optional artifact_data artifact = 4;
+    optional usermap_data usermap = 5;
+}
 
-    required uint32 level = 2; // user level
-    required uint32 exp = 3; // user exp
+message storehouse_data {
+    map<string,item_data> items = 1; // goods/commodities in storehouse, itemid=>count map
+}
+
+message artifact_data {
+    map<string,artifact_info_data> items = 1; // goods/commodities in storehouse, itemid=>count map
+}
+
+message usermap_data {
+    map<string,pioneer_data> pioneer = 1; // goods/commodities in storehouse, itemid=>count map
+}
+
+message artifact_info_data {
+    optional string uniqueId = 1;
+    optional string artifactConfigId = 2; // artifact config id
+    optional uint32 count = 3; // count
+    optional uint32 addTimeStamp = 4;
+    optional uint32 effectIndex = 5;
+}
+
+message pioneer_data {
+    required string id = 1;
+    required bool show = 2;
+    required uint32 faction = 3;
+    required string type = 4;
+    required pos2d stayPos = 5;
+    required uint32 hpMax = 6;
+    required uint32 hp = 7;
+    required uint32 attack = 8;
+    required uint32 defend = 9;
+    required uint32 speed = 10;
+    required string actionType = 11;
+    required uint32 eventStatus = 12;
+    required uint32 actionBeginTimeStamp = 13;
+    required uint32 actionEndTimeStamp = 14;
+    optional uint32 winProgress = 15;
+    required uint32 winExp = 16;
+    optional user_map_member_status showHideStruct = 17;
+    optional string actionEventId = 18;
+    optional string NFTInitLinkId = 19;
+    optional int32 rebirthCountTime = 20;
+    optional string killerId = 21;
+    optional string NFTId = 22;
+    optional string talkId = 23;
+    optional user_map_member_status talkCountStruct = 24;
+}
+
+message user_map_member_status {
+    optional uint32 countTime = 1;
+    optional bool isShow = 2;
+}
+
+message building_data {
+    required string id = 1;
+    required string anim = 2;
+    required uint32 level = 3;
+    required uint32 upgradeCountTime = 4;
+    required uint32 upgradeTotalTime = 5;
+    required bool upgradeIng = 6;
+}
+
+message pos2d {
+    required uint32 x = 1;
+    required uint32 y = 2;
+}
+
+message heat_value_data {
+    required uint32 getTimestamp = 1;
+    required uint32 currentHeatValue = 2;
+}
+
+message energy_info_data {
+    required uint32 countTime = 1;
+    required uint32 totalEnergyNum = 2;
+}
+
+message troop_info_data {
+    required uint32 countTime = 1;
+    required uint32 troopNum = 2;
+}
+
+message item_data {
+    required string itemConfigId = 1; // item id, see in item config
+    required int32 count = 2; // count
+    required uint32 addTimeStamp = 3;
 }
 
 message tran_data {

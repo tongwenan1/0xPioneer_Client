@@ -101,7 +101,7 @@ export class WebsocketMsg {
     // public change_pioneer(d: c2s_user.Ichange_pioneer) {
     //     this._websocket.emit("change_pioneer_res", d);
     // }
-    
+
     public player_move(d: c2s_user.Iplayer_move) {
         this.send_packet("player_move", d);
     }
@@ -149,6 +149,40 @@ export class WebsocketMsg {
     }
     public player_building_delegate_nft(d: c2s_user.Iplayer_building_delegate_nft) {
         this.send_packet("player_building_delegate_nft", d);
+    }
+    public player_nft_lvlup(d: c2s_user.Iplayer_nft_lvlup) {
+        this.send_packet("player_nft_lvlup", d);
+    }
+    public player_nft_rankup(d: c2s_user.Iplayer_nft_rankup) {
+        this.send_packet("player_nft_rankup", d);
+    }
+    public player_nft_skill_learn(d: c2s_user.Iplayer_nft_skill_learn) {
+        this.send_packet("player_nft_skill_learn", d);
+    }
+    public player_nft_skill_forget(d: c2s_user.Iplayer_nft_skill_forget) {
+        this.send_packet("player_nft_skill_forget", d);
+    }
+
+    public player_add_heat_value(d: c2s_user.Iplayer_add_heat_value) {
+        this.send_packet("player_add_heat_value", d);
+    }
+    public player_world_treasure_lottery(d: c2s_user.Iplayer_world_treasure_lottery) {
+        this.send_packet("player_world_treasure_lottery", d);
+    }
+
+    public player_rookie_finish(d: c2s_user.Iplayer_rookie_finish) {
+        this.send_packet("player_rookie_finish", d);
+    }
+
+    public player_wormhole_set_defender(d: c2s_user.Iplayer_wormhole_set_defender) {
+        this.send_packet("player_wormhole_set_defender", d);
+    }
+    public player_wormhole_set_attacker(d: c2s_user.Iplayer_wormhole_set_attacker) {
+        this.send_packet("player_wormhole_set_attacker", d);
+    }
+
+    public save_archives(d: c2s_user.Isave_archives) {
+        this.send_packet("save_archives", d);
     }
 }
 
@@ -209,7 +243,7 @@ export namespace c2s_user {
         actionType?: Ichange_pioneer_actionType;
         newTalk?: Ichange_pioneer_newTalk;
     }
-    
+
     export interface Iplayer_move {
         pioneerId: string;
         movePath: string;
@@ -269,6 +303,43 @@ export namespace c2s_user {
         innerBuildingId: string;
         nftId: string;
     }
+    export interface Iplayer_nft_lvlup {
+        nftId: string;
+        levelUpNum: number;
+    }
+    export interface Iplayer_nft_rankup {
+        nftId: string;
+        rankUpNum: number;
+    }
+    export interface Iplayer_nft_skill_learn {
+        nftId: string;
+        skillId: string;
+    }
+    export interface Iplayer_nft_skill_forget {
+        nftId: string;
+        skillIndex: number;
+    }
+
+    export interface Iplayer_add_heat_value {
+        num: number;
+    }
+    export interface Iplayer_world_treasure_lottery {}
+
+    export interface Iplayer_rookie_finish {}
+
+    export interface Iplayer_wormhole_set_defender {
+        poineerId: string;
+        index: number;
+    }
+    export interface Iplayer_wormhole_set_attacker {
+        poineerId: string;
+        index: number;
+    }
+    export interface Iplayer_wormhole_fight {}
+
+    export interface Isave_archives {
+        archives: string;
+    }
 }
 
 export namespace s2c_user {
@@ -286,6 +357,8 @@ export namespace s2c_user {
 
         /** login_res data */
         data?: share.Iuser_data | null;
+
+        archives: string;
     }
 
     export interface Icreate_player_res {
@@ -302,6 +375,9 @@ export namespace s2c_user {
 
         /** enter_game_res data */
         data?: share.Iplayer_data | null;
+    }
+    export interface Istorhouse_change {
+        iteminfo: share.Iitem_data[];
     }
 
     export interface Imark_data_dirty {
@@ -322,8 +398,10 @@ export namespace s2c_user {
         newTalk: Ichange_pioneer_newTalk;
     }
 
-   
     export interface Iplayer_move_res {
+        res: number;
+    }
+    export interface Iplayer_move_res_local_data {
         pioneerId: string;
         movePath: TilePos[];
         costEnergyNum: number;
@@ -343,7 +421,7 @@ export namespace s2c_user {
         actionType: MapPioneerActionType;
     }
     export interface Iplayer_fight_res {
-        isAttackBuilding: boolean,
+        isAttackBuilding: boolean;
         isSelfAttack: boolean;
         attacker: MapPioneerObject;
         pioneerDefender: MapPioneerObject;
@@ -359,8 +437,7 @@ export namespace s2c_user {
         eventData: EventConfigData;
     }
     export interface Iplayer_item_use_res {
-        itemId: string;
-        num: number;
+        res: number;
     }
     export interface Iplayer_treasure_open_res {
         boxId: string;
@@ -383,9 +460,8 @@ export namespace s2c_user {
         effectIndex: number;
     }
     export interface Iplayer_building_levelup_res {
-        innerBuildingType: InnerBuildingType;
-        time: number;
-        subItems: ItemData[];
+        res: number;
+        data?: share.Ibuilding_data;
     }
     export interface Iplayer_get_auto_energy_res {
         num: number;
@@ -402,6 +478,40 @@ export namespace s2c_user {
     export interface Iplayer_building_delegate_nft_res {
         innerBuildingId: string;
         nftId: string;
+    }
+    export interface Iplayer_nft_lvlup_res {
+        nftId: string;
+        levelUpNum: number;
+        nftExpCostNum: number;
+    }
+    export interface Iplayer_nft_rankup_res {
+        nftId: string;
+        rankUpNum: number;
+        subItems: ItemData[];
+    }
+    export interface Iplayer_nft_skill_learn_res {
+        nftId: string;
+        skillId: string;
+        subItems: ItemData[];
+    }
+    export interface Iplayer_nft_skill_forget_res {
+        nftId: string;
+        skillIndex: number;
+    }
+
+    export interface Iplayer_heat_value_change_res {
+        res: number;
+        currentHeatValue: number;
+    }
+    export interface Iplayer_world_treasure_lottery_res {
+        res: number;
+        itemId: string;
+        num: number;
+    }
+
+    export interface Iplayer_wormhole_set_defender_res {
+        pioneerId: string;
+        index: number;
     }
 }
 
@@ -420,6 +530,22 @@ export namespace share {
         lastlogintm: number;
     }
 
+    export interface energy_info_data {
+        countTime: number;
+        totalEnergyNum: number;
+    }
+    export interface troop_info_data {
+        countTime: number;
+        troopNum: number;
+    }
+    export interface pos2d {
+        x: number;
+        y: number;
+    }
+    export interface heat_value_data {
+        getTimestamp: number;
+        currentHeatValue: number;
+    }
     export interface Iplayer_sinfo {
         /** player_sinfo playerid */
         playerid: number;
@@ -429,17 +555,87 @@ export namespace share {
 
         /** player_sinfo gender */
         gender: number;
+
+        mapid: number;
+        speed: number;
+        level: number;
+        exp: number;
+        lastAPRecTms: number;
+        pos: pos2d;
+        treasureProgress: number;
+        heatValue: heat_value_data;
+        treasureDidGetRewards: string[];
+        pointTreasureDidGetRewards: string[];
+        cityRadialRange: number;
+        didFinishRookie: boolean;
+        generateTroopInfo?: troop_info_data;
+        generateEnergyInfo?: energy_info_data;
+    }
+    export interface Ibuilding_data {
+        id: string;
+        anim: string;
+        level: number;
+        upgradeCountTime: number;
+        upgradeTotalTime: number;
+        upgradeIng: boolean;
     }
 
     export interface Iplayer_data {
         /** player_data info */
-        info: share.Iplayer_info;
+        info: Iplayer_info;
     }
 
     export interface Iplayer_info {
         /** player_info sinfo */
-        sinfo: share.Iplayer_sinfo;
+        sinfo: Iplayer_sinfo;
+        buildings: Ibuilding_data[];
+        storehouse?: Istorehouse_data;
+        usermap?: Iusermap_data;
     }
+
+    export interface Istorehouse_data {
+        items: { [key: string]: Iitem_data };
+    }
+    export interface Iitem_data {
+        itemConfigId: string;
+        count: number;
+        addTimeStamp: number;
+    }
+
+    export interface Iusermap_data {
+        pioneer: { [key: string]: Ipioneer_data };
+    }
+    export interface Ipioneer_data {
+        id: string;
+        show: boolean;
+        faction: number;
+        type: string;
+        stayPos: pos2d;
+        hpMax: number;
+        hp: number;
+        attack: number;
+        defend: number;
+        speed: number;
+        actionType: string;
+        eventStatus: number;
+        actionBeginTimeStamp: number;
+        actionEndTimeStamp: number;
+        winProgress?: number;
+        winExp: number;
+        showHideStruct: Iuser_map_member_status;
+        actionEventId?: string;
+        NFTInitLinkId?: string;
+        rebirthCountTime?: number;
+        killerId?: string;
+        NFTId?: string;
+        talkId?: string;
+        talkCountStruct: Iuser_map_member_status;
+    }
+    export interface Iuser_map_member_status {
+        countTime: number;
+        isShow: boolean;
+    }
+
 
     export interface Ipioneer_info {
         type: string;

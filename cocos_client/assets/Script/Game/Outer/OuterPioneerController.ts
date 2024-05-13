@@ -25,7 +25,7 @@ import ViewController from "../../BasicView/ViewController";
 import { TaskShowHideStatus } from "../../Const/TaskDefine";
 import { EventConfigData } from "../../Const/Event";
 import UIPanelManger from "../../Basic/UIPanelMgr";
-import { MapBuildingObject, MapBuildingResourceObject } from "../../Const/MapBuilding";
+import { MapBuildingObject, MapBuildingResourceObject, MapBuildingWormholeObject } from "../../Const/MapBuilding";
 import { InnerBuildingType, MapBuildingType } from "../../Const/BuildingDefine";
 import { DataMgr } from "../../Data/DataMgr";
 import {
@@ -38,6 +38,7 @@ import {
     MapPioneerObject,
     MapPioneerType,
 } from "../../Const/PioneerDefine";
+import { NetworkMgr } from "../../Net/NetworkMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -174,6 +175,9 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_BEGIN, this._onBeginFight, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_DID_ATTACK, this._onFightDidAttack, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_END, this._onEndFight, this);
+
+        NotificationMgr.addListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_FINISH, this._onWormholeCountDownTimeDidFinish, this);
+
     }
 
     protected viewDidStart() {
@@ -267,6 +271,8 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_BEGIN, this._onBeginFight, this);
         NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_DID_ATTACK, this._onFightDidAttack, this);
         NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_END, this._onEndFight, this);
+
+        NotificationMgr.removeListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_FINISH, this._onWormholeCountDownTimeDidFinish, this);
     }
 
     private _refreshUI() {
@@ -573,19 +579,7 @@ export class OuterPioneerController extends ViewController {
                 const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
                 if (result.success) {
                     result.node.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), () => {
-                        DataMgr.s.userInfo.finishRookie();
-                        DataMgr.s.task.gameStarted();
-                        // init resource
-                        DataMgr.s.item.addObj_item(
-                            [
-                                new ItemData(ResourceCorrespondingItem.Energy, 2000),
-                                new ItemData(ResourceCorrespondingItem.Food, 2000),
-                                new ItemData(ResourceCorrespondingItem.Stone, 2000),
-                                new ItemData(ResourceCorrespondingItem.Wood, 2000),
-                                new ItemData(ResourceCorrespondingItem.Troop, 2000),
-                            ],
-                            false
-                        );
+                        NetworkMgr.websocketMsg.player_rookie_finish({});
                     });
                 }
             }, 10);
@@ -649,6 +643,7 @@ export class OuterPioneerController extends ViewController {
         const pioneer = DataMgr.s.pioneer.getById(data.id);
         if (pioneer != null) {
             if (pioneer.type == MapPioneerType.gangster) {
+                // upload resource changed explore
                 DataMgr.s.item.addObj_item([new ItemData(ResourceCorrespondingItem.Troop, pioneer.hpMax)]);
             } else if (pioneer.type == MapPioneerType.npc) {
                 const npcModel = pioneer as MapNpcPioneerObject;
@@ -689,6 +684,7 @@ export class OuterPioneerController extends ViewController {
             }
             const resultNum: number = Math.floor(building.resources.num * (1 + LvlupConfig.getTotalExtraRateByLvl(DataMgr.s.userInfo.data.level)));
             actionView.getComponent(MapPioneer).playGetResourceAnim(building.resources.id, resultNum, () => {
+                // upload resource changed gather
                 DataMgr.s.item.addObj_item([new ItemData(building.resources.id, resultNum)]);
             });
 
@@ -809,6 +805,20 @@ export class OuterPioneerController extends ViewController {
 
         if (data.playerPioneerId != null) {
             this._checkInMainCityRangeAndHealHpToMax(data.playerPioneerId);
+        }
+    }
+
+    private _onWormholeCountDownTimeDidFinish(data: { id: string }) {
+        const building = DataMgr.s.mapBuilding.getBuildingById(data.id);
+        if (building == null) {
+            return;
+        }
+        // fake wormhole fight
+        GameMgr.fakeWormholeFight(building.defendPioneerIds);
+
+        const tempIds = building.defendPioneerIds.slice();
+        for (const pioneerId of tempIds) {
+            PioneerMgr.pioneerToIdle(pioneerId);
         }
     }
 }

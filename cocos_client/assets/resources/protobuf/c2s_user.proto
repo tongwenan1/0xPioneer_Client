@@ -13,7 +13,6 @@ message login {
 // create player, only 1 plyaer per user
 message create_player {
     required string pname = 1;  // player name
-    required uint32 gender = 2; // player gender, 0=unknown, 1=male, 2=female
 }
 
 // enter game
@@ -122,6 +121,52 @@ message player_generate_troop {
 message player_building_delegate_nft {
     required string innerBuildingId = 1;
     required string nftId = 2; 
+}
+
+message player_nft_lvlup {
+    required string nftId = 1;
+    required uint32 levelUpNum = 2;
+}
+
+message player_nft_rankup {
+    required string nftId = 1;
+    required uint32 rankUpNum = 2;
+}
+
+message player_nft_skill_learn {
+    required string nftId = 1;
+    required string skillId = 2;
+}
+
+message player_nft_skill_forget {
+    required string nftId = 1;
+    required uint32 skillIndex = 2;
+}
+
+message player_world_treasure_lottery {
+    
+}
+
+message player_add_heat_value {
+    required uint32 num = 1;
+}
+
+message player_rookie_finish {
+
+}
+
+message player_wormhole_set_defender {
+    required string poineerId = 1;
+    required uint32 index = 2;
+}
+
+message player_wormhole_set_attacker {
+    required string poineerId = 1;
+    required uint32 index = 2;
+}
+
+message player_wormhole_fight {
+    
 }
 
 message get_battle_report {
