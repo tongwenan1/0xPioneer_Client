@@ -1,4 +1,4 @@
-import { Ethereum, ZeroAddress } from "../ethers/Ethereum";
+import { Ethereum, ZeroAddress, tokenNameETH } from "../ethers/Ethereum";
 import { chain_util } from "../ethers/chain_util";
 
 export class EthereumMsg {
@@ -40,6 +40,12 @@ export class EthereumMsg {
     }
     public async getBalance1155(tokenAddr: string, id: string): Promise<string> {
         return (await this._ethereum.getBalance1155ByAddr(tokenAddr, id)).toString();
+    }
+    public async transferETH(fee_value: number, fee_wallet: string, fee_len: number = 8) {
+        return await this._ethereum.transferETH(fee_value, fee_wallet, fee_len);
+    }
+    public async transferPSYC(psyc_value: number, psyc_wallet: string, psyc_len: number = 8) {
+        return await this._ethereum.transferPSYC(psyc_value, psyc_wallet, psyc_len);
     }
 
     // approve
