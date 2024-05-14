@@ -138,10 +138,12 @@ message player_building_delegate_nft_res {
 
 message player_nft_lvlup_res {
     required uint32 res = 1;
+    required share.nfts_info_data nftData = 2;
 }
 
 message player_nft_rankup_res {
     required uint32 res = 1;
+    required share.nfts_info_data nftData = 2;
 }
 
 message player_nft_skill_learn_res {
@@ -191,8 +193,8 @@ message player_wormhole_fight_res {
 
 message player_bind_nft_res {
     required uint32 res = 1;
-    required share.pioneer_data pioneer_data = 2;
-    required share.artifact_info_data nft_data = 3;
+    required share.pioneer_data pioneerData = 2;
+    required share.nfts_info_data nftData = 3;
 }
 
 message get_battle_report_res {

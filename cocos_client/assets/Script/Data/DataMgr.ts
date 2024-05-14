@@ -104,8 +104,22 @@ export class DataMgr {
         if (p.res !== 1) {
             return;
         }
-        const newNFTObj = DataMgr.s.nftPioneer.NFTGetNew(p.nft_data);
-        DataMgr.s.pioneer.bindPlayerNFT(p.data.id, newNFTObj);
+        const newNFTObj = DataMgr.s.nftPioneer.NFTGetNew(p.nftData);
+        DataMgr.s.pioneer.bindPlayerNFT(p.pioneerData.id, newNFTObj);
+    };
+    public static player_nft_lvlup_res = (e: any) => {
+        const p: s2c_user.Iplayer_nft_lvlup_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        DataMgr.s.nftPioneer.NFTLevelUp(p.nftData);
+    };
+    public static player_nft_rankup_res = (e: any) => {
+        const p: s2c_user.Iplayer_nft_rankup_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        DataMgr.s.nftPioneer.NFTRankUp(p.nftData);
     };
 
     public static get_pioneers_res = (e: any) => {
@@ -613,24 +627,8 @@ export class DataMgr {
             DataMgr.s.nftPioneer.NFTChangeWork(data.nftId, data.innerBuildingId as InnerBuildingType);
         }
     };
-    public static player_nft_lvlup_res = (e: any) => {
-        const key: string = "player_nft_lvlup_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_nft_lvlup_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_lvlup_res;
-            DataMgr.s.item.subObj_item(ResourceCorrespondingItem.NFTExp, data.nftExpCostNum);
-            DataMgr.s.nftPioneer.NFTLevelUp(data.nftId, data.levelUpNum);
-        }
-    };
-    public static player_nft_rankup_res = (e: any) => {
-        const key: string = "player_nft_rankup_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_nft_rankup_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_rankup_res;
-            for (const cost of data.subItems) {
-                DataMgr.s.item.subObj_item(cost.itemConfigId, cost.count);
-            }
-            DataMgr.s.nftPioneer.NFTRankUp(data.nftId, data.rankUpNum);
-        }
-    };
+
+    
     public static player_nft_skill_learn_res = (e: any) => {
         const key: string = "player_nft_skill_learn_res";
         if (DataMgr.socketSendData.has(key)) {

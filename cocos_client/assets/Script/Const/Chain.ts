@@ -20,5 +20,6 @@ export interface ChainConfigsConfigData {
         ws_host: string;
         http_host: string;
         init: boolean;
-    }
+        fee_psyc: string;
+    };
 }

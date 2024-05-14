@@ -25,7 +25,6 @@ export class NTFRankUpUI extends ViewController {
 
         const resourceLimitMaxNum = LvlupConfig.getMaxNFTRankUpNum(this._data.rarity, this._data.rank, DataMgr.s.item.getObj());
         this._maxRankUpNum = Math.min(resourceLimitMaxNum, this._data.rankLimit - this._data.rank);
-
         this._refreshUI();
     }
 
@@ -81,6 +80,7 @@ export class NTFRankUpUI extends ViewController {
         for (const view of this._allShowItems) {
             view.destroy();
         }
+        let satisfyCost: boolean = true;
         this._allShowItems = [];
         this._currentCost = LvlupConfig.getNFTRankUpCost(this._data.rarity, this._data.rank, this._data.rank + this._rankUpNum);
         for (const templeItem of this._currentCost) {
@@ -88,18 +88,26 @@ export class NTFRankUpUI extends ViewController {
             if (itemConfig == null) {
                 continue;
             }
+            const ownItem: number = DataMgr.s.item.getObj_item_count(templeItem.itemConfigId);
+            const needItem: number = templeItem.count;
+
             const view = instantiate(this._itemView);
             view.active = true;
             view.parent = this.node.getChildByPath("__ViewContent/material");
             view.getChildByPath("Icon/Image").getComponent(Sprite).spriteFrame = await ItemMgr.getItemIcon(itemConfig.icon);
-            view.getChildByPath("Num/Limit").getComponent(Label).string = DataMgr.s.item.getObj_item_count(templeItem.itemConfigId).toString();
-            view.getChildByPath("Num/Use").getComponent(Label).string = templeItem.count.toString();
+            view.getChildByPath("Num/Limit").getComponent(Label).string = ownItem.toString();
+            view.getChildByPath("Num/Use").getComponent(Label).string = needItem.toString();
             this._allShowItems.push(view);
+
+            if (needItem > ownItem) {
+                satisfyCost = false;
+            }
         }
 
         // action button
-        contentView.getChildByPath("btnUse").getComponent(Sprite).grayscale = this._rankUpNum > this._maxRankUpNum;
-        contentView.getChildByPath("btnUse").getComponent(Button).interactable = this._rankUpNum <= this._maxRankUpNum;
+        const canRankUp: boolean = satisfyCost && this._data.level >= this._data.levelLimit && this._rankUpNum <= this._maxRankUpNum;
+        contentView.getChildByPath("btnUse").getComponent(Sprite).grayscale = !canRankUp;
+        contentView.getChildByPath("btnUse").getComponent(Button).interactable = canRankUp;
     }
 
     //------------------------ action
@@ -110,20 +118,15 @@ export class NTFRankUpUI extends ViewController {
 
     private onTapConfirmRankUp() {
         if (this._data != null && this._currentCost.length > 0) {
-            DataMgr.setTempSendData("player_nft_rankup_res", {
-                nftId: this._data.uniqueId,
-                rankUpNum: this._rankUpNum,
-                subItems: this._currentCost
-            });
             NetworkMgr.websocketMsg.player_nft_rankup({ nftId: this._data.uniqueId, rankUpNum: this._rankUpNum });
         }
     }
 
     //------------------------ notification
-    private _onNFTDidRankUp() {
+    private _onNFTDidRankUp(data: { nft: NFTPioneerObject }) {
         this._rankUpNum = 1;
         this._maxRankUpNum = 0;
         this._currentCost = [];
-        this.showUI(this._data);
+        this.showUI(data.nft);
     }
 }

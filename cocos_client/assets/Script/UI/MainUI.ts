@@ -162,29 +162,14 @@ export class MainUI extends ViewController {
     private onTapChangeBuildingSetPos() {
         GameMainHelper.instance.changeInnerBuildingLatticeEdit();
     }
-
-    private onTapRandomNFT() {
-        DataMgr.s.nftPioneer.generateNewNFT();
-    }
-    private onTapRandomPioneer() {
-        const pioneerIds: string[] = ["pioneer_1", "pioneer_2", "pioneer_3"];
-        for (let i = 0; i < pioneerIds.length; i++) {
-            if (DataMgr.s.pioneer.getById(pioneerIds[i], true) == undefined) {
-                continue;
-            }
-            pioneerIds.splice(i, 1);
-            i--;
-        }
-        if (pioneerIds.length > 0) {
-            const randomId = CommonTools.getRandomItem(pioneerIds);
-            PioneerMgr.showPioneer(randomId);
-        }
-    }
     private async onTapSetDefender() {
         UIPanelManger.inst.pushPanel(UIName.DefenderSetUI);
     }
     private onTapAddHeat() {
         NetworkMgr.websocketMsg.player_add_heat_value({ num: 50 });
+    }
+    private onTapTest() {
+        NetworkMgr.websocketMsg.player_bind_nft({ pioneerId: "pioneer_0" });
     }
     //----------------------------------------------------- notification
     private _onPioneerShowChanged(data: { id: string; show: boolean }) {

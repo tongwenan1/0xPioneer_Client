@@ -15,7 +15,8 @@
             "api": {
                 "ws_host": "",
                 "http_host": "",
-                "init": false
+                "init": false,
+                "fee_psyc": "0xD7AeFD4E76Cd20955cce13f062DF51df96BdADcf"
             }
         },
         "534351": {
@@ -32,7 +33,8 @@
             "api": {
                 "ws_host": "wss://apitest.0xpioneerdev.com/wss",
                 "http_host": "https://apitest.0xpioneerdev.com/api",
-                "init": true
+                "init": true,
+                "fee_psyc": "0xD7AeFD4E76Cd20955cce13f062DF51df96BdADcf"
             }
         },
         "123456": {
@@ -49,7 +51,8 @@
             "api": {
                 "ws_host": "ws://10.1.6.36:4091",
                 "http_host": "http://10.1.6.36:8080",
-                "init": true
+                "init": true,
+                "fee_psyc": "0xD7AeFD4E76Cd20955cce13f062DF51df96BdADcf"
             }
         },
         "23456": {
@@ -66,7 +69,8 @@
             "api": {
                 "ws_host": "ws://127.0.0.1:4091",
                 "http_host": "http://127.0.0.1:8080",
-                "init": true
+                "init": true,
+                "fee_psyc": "0xD7AeFD4E76Cd20955cce13f062DF51df96BdADcf"
             }
         }
     }

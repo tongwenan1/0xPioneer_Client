@@ -251,6 +251,7 @@ export namespace c2s_user {
         pioneerId: string;
         movePath: string;
         targetPos: string;
+        feeTxhash: string;
     }
     export interface Iplayer_talk_select {
         talkId: string;
@@ -487,14 +488,12 @@ export namespace s2c_user {
         nftId: string;
     }
     export interface Iplayer_nft_lvlup_res {
-        nftId: string;
-        levelUpNum: number;
-        nftExpCostNum: number;
+        res: number;
+        nftData: share.Infts_info_data;
     }
     export interface Iplayer_nft_rankup_res {
-        nftId: string;
-        rankUpNum: number;
-        subItems: ItemData[];
+        res: number;
+        nftData: share.Infts_info_data;
     }
     export interface Iplayer_nft_skill_learn_res {
         nftId: string;
@@ -523,8 +522,8 @@ export namespace s2c_user {
 
     export interface Iplayer_bind_nft_res {
         res: number;
-        data: share.Ipioneer_data;
-        nft_data: share.Infts_info_data;   
+        pioneerData: share.Ipioneer_data;
+        nftData: share.Infts_info_data;
     }
 }
 

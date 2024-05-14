@@ -4,7 +4,7 @@ import CLog from "../Utils/CLog";
 import ItemData from "../Const/Item";
 
 export default class LvlupConfig {
-    private static _confs: LvlupConfigData[] = [];
+    private static _confs: { [index: string]: LvlupConfigData } = {};
     private static _extras: { [index: string]: number } = {};
     private static _hpmaxs: { [index: string]: number } = {};
     private static _visions: { [index: string]: number } = {};
@@ -24,9 +24,7 @@ export default class LvlupConfig {
             return false;
         }
 
-        for (const key in obj) {
-            this._confs.push(obj[key]);
-        }
+        this._confs = obj;
 
         const keys = Object.keys(obj);
         keys.sort((a, b) => {
@@ -36,10 +34,8 @@ export default class LvlupConfig {
             if (na < nb) return -1;
             return 0;
         });
-
         for (let i = 0; i < keys.length; i++) {
             const lvlStr = keys[i];
-
             const conf = obj[lvlStr] as LvlupConfigData;
             this._extras[lvlStr] = conf.extra_res;
             this._hpmaxs[lvlStr] = conf.hp_max;
@@ -58,13 +54,7 @@ export default class LvlupConfig {
     }
 
     public static getById(lvlId: string): LvlupConfigData | null {
-        const findConf = this._confs.filter((conf) => {
-            return conf.id === lvlId;
-        });
-        if (findConf.length > 0) {
-            return findConf[0];
-        }
-        return null;
+        return this._confs[lvlId];
     }
 
     public static getTotalExtraRateByLvl(lvl: number) {
@@ -80,7 +70,7 @@ export default class LvlupConfig {
         return this._visions[lvlStr] != undefined ? this._visions[lvlStr] : 0;
     }
     public static getMaxLevel() {
-        return this._confs.length;
+        return Object.keys(this._confs).length;
     }
     public static getNFTLevelUpCost(fromLevel: number, toLevel: number) {
         if (fromLevel >= toLevel) {
@@ -126,7 +116,7 @@ export default class LvlupConfig {
                     if (costMap.has(tempItem[0])) {
                         costMap.get(tempItem[0]).count += tempItem[1];
                     } else {
-                        costMap.set(tempItem[0], new ItemData(tempItem[0], tempItem[1]))
+                        costMap.set(tempItem[0], new ItemData(tempItem[0], tempItem[1]));
                     }
                 }
             }
@@ -144,7 +134,7 @@ export default class LvlupConfig {
             const lvlStr = i.toString();
             if (this._confs[lvlStr] != null && this._confs[lvlStr][valueKey] != null) {
                 const rankNeedItems = this._confs[lvlStr][valueKey];
-                let canUp: boolean = true
+                let canUp: boolean = true;
                 for (const tempItem of rankNeedItems) {
                     let ownNum: number = 0;
                     for (const ownItem of allItems) {

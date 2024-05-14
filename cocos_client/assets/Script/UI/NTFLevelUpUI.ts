@@ -141,20 +141,15 @@ export class NTFLevelUpUI extends ViewController {
     }
     private onTapConfirmLevelUp() {
         if (this._data != null && this._currentCost > 0) {
-            DataMgr.setTempSendData("player_nft_lvlup_res", {
-                nftId: this._data.uniqueId,
-                levelUpNum: this._levelUpNum,
-                nftExpCostNum: this._currentCost,
-            });
             NetworkMgr.websocketMsg.player_nft_lvlup({ nftId: this._data.uniqueId, levelUpNum: this._levelUpNum });
         }
     }
 
     //------------------------ notification
-    private _onNFTDidLevelUp() {
+    private _onNFTDidLevelUp(data: { nft: NFTPioneerObject }) {
         this._levelUpNum = 1;
         this._maxLevelUpNum = 0;
         this._currentCost = 0;
-        this.showUI(this._data);
+        this.showUI(data.nft);
     }
 }
