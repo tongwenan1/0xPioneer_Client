@@ -163,8 +163,23 @@ export class MainUI extends ViewController {
         UIPanelManger.inst.pushPanel(UIName.DefenderSetUI);
     }
     private onTapTest() {
-        NetworkMgr.websocketMsg.player_bind_nft({ pioneerId: "pioneer_0" });
+        const pioneerIds: string[] = ["pioneer_1", "pioneer_2", "pioneer_3"];
+        for (let i = 0; i < pioneerIds.length; i++) {
+            if (DataMgr.s.pioneer.getById(pioneerIds[i], true) == undefined) {
+                continue;
+            }
+            pioneerIds.splice(i, 1);
+            i--;
+        }
+        if (pioneerIds.length > 0) {
+            const randomId = CommonTools.getRandomItem(pioneerIds);
+            NetworkMgr.websocketMsg.player_pioneer_change_show({
+                pioneerId: randomId,
+                show: true,
+            });
+        }
     }
+
     //----------------------------------------------------- notification
     private _onPioneerShowChanged(data: { id: string; show: boolean }) {
         this.checkCanShowGansterComingTip(data.id);

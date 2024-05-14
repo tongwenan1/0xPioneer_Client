@@ -61,12 +61,14 @@ message player_talk_select {
 message player_gather {
     required string pioneerId = 1;
     required string resourceBuildingId = 2;
+    required string feeTxhash = 3;
 }
 
 message player_explore {
     required string pioneerId = 1;
     required bool isExporeBuilding = 2;
     required string exploreId = 3;
+    required string feeTxhash = 4;
 }
 
 message player_fight {
@@ -164,14 +166,20 @@ message player_wormhole_set_defender {
 message player_wormhole_set_attacker {
     required string pioneerId = 1;
     required uint32 index = 2;
+    required string buildingId = 3;
 }
 
 message player_wormhole_fight {
-    
+    required string buildingId = 1;
 }
 
 message player_bind_nft {
     required string pioneerId = 1;
+}
+
+message player_pioneer_change_show {
+    required string pioneerId = 1;
+    required bool show = 2;
 }
 
 message get_battle_report {

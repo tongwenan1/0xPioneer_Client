@@ -72,15 +72,15 @@ message storhouse_change {
 // ----------------------------------------------------------------------------
 
 message player_move_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_talk_select_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_gather_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_explore_res {
@@ -88,121 +88,142 @@ message player_explore_res {
 }
 
 message player_fight_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_event_select_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_item_use_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_treasure_open_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_point_treasure_open_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_artifact_equip_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_artifact_remove_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_building_levelup_res {
-    required uint32 res = 1;
+    required int32 res = 1;
     optional share.building_data data = 2;
 }
 
 message player_get_auto_energy_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_generate_energy_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_generate_troop_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_building_delegate_nft_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_nft_lvlup_res {
-    required uint32 res = 1;
+    required int32 res = 1;
     required share.nfts_info_data nftData = 2;
 }
 
 message player_nft_rankup_res {
-    required uint32 res = 1;
+    required int32 res = 1;
     required share.nfts_info_data nftData = 2;
 }
 
 message player_nft_skill_learn_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_nft_skill_forget_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_world_treasure_lottery_res {
-    required uint32 res = 1;
+    required int32 res = 1;
     required string itemId = 2;
     required uint32 num = 3;
 }
 
 message player_heat_value_change_res {
-    required uint32 res = 1;
+    required int32 res = 1;
     required uint32 currentHeatValue = 2;
 }
 
 message player_world_treasure_pool_change_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_add_heat_value_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_rookie_finish_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_wormhole_set_defender_res {
-    required uint32 res = 1;
+    required int32 res = 1;
+    map<string,string> defender = 2;
 }
 
 message player_wormhole_set_attacker_res {
-    required uint32 res = 1;
+    required int32 res = 1;
+    map<string,share.attacker_data> attacker = 2;
 }
 
 message player_wormhole_fight_res {
-    required uint32 res = 1;
+    required int32 res = 1;
     required string defenderWallet = 2;
-    required string defenderData = 3;
+    map<string,string> defenderData = 3;
+    required bool fightResult = 4;
+    required string buildingId = 5;
 }
 
 message player_bind_nft_res {
-    required uint32 res = 1;
+    required int32 res = 1;
     required share.pioneer_data pioneerData = 2;
     required share.nfts_info_data nftData = 3;
 }
 
 message get_battle_report_res {
-    required uint32 res = 1;
+    required int32 res = 1;
     repeated share.battle_report_data data = 2;
 }
 
+message player_pioneer_change_show_res {
+    required int32 res = 1;
+    required string pioneerId = 2;
+    required bool show = 3;
+}
+
 // ----------------------------------------------------------------------------
+
+message player_exp_change {
+    required int32 addExp = 1; // exp change value
+    required uint32 newExp = 2; // player new exp after change
+    optional uint32 newLevel = 3; // player new level after change if exist
+}
+
+message player_treasure_progress_change {
+    required int32 addProgress = 1;
+    required uint32 newProgress = 2;
+}
 
 message save_archives_res {
     required int32 res = 1;

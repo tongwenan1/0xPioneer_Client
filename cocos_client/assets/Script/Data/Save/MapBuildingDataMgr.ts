@@ -24,6 +24,7 @@ import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import CLog from "../../Utils/CLog";
 import { NFTPioneerObject } from "../../Const/NFTPioneerDefine";
+import NetGlobalData from "./Data/NetGlobalData";
 
 export class MapBuildingDataMgr {
     private _building_data: MapBuildingObject[];
@@ -55,6 +56,24 @@ export class MapBuildingDataMgr {
                 this._loadObj_building(data);
             } else {
                 this._createObj_building();
+            }
+        }
+        if (NetGlobalData.userInfo != null && NetGlobalData.userInfo.attacker != null) {
+            for (const building of this._building_data) {
+                if (building.type != MapBuildingType.wormhole) {
+                    continue;
+                }
+                building.defendPioneerIds = [];
+            }
+            const useAttacker = NetGlobalData.userInfo.attacker;
+            for (const key in useAttacker) {
+                const temp = useAttacker[key];
+                const building = this.getBuildingById(temp.buildingId);
+                if (building == undefined) {
+                    continue;
+                }
+                building.defendPioneerIds[parseInt(key)] = temp.pioneerId;
+                console.log("exce b:", building.defendPioneerIds);
             }
         }
 
@@ -505,7 +524,6 @@ export class MapBuildingDataMgr {
             return;
         }
         findBuilding.defendPioneerIds.splice(index, 1);
-        this.saveObj_building();
         NotificationMgr.triggerEvent(NotificationName.BUILDING_REMOVE_DEFEND_PIONEER);
     }
     public buildingGetTask(buildingId: string, task) {

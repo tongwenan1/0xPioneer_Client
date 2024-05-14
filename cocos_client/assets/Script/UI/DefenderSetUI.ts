@@ -84,12 +84,8 @@ export class DefenderSetUI extends ViewController {
     }
 
     private _sendRequestSetDefender(pioneerId: string, index: number) {
-        DataMgr.setTempSendData("player_wormhole_set_defender_res", {
-            pioneerId: pioneerId,
-            index: index,
-        });
         NetworkMgr.websocketMsg.player_wormhole_set_defender({
-            poineerId: pioneerId,
+            pioneerId: pioneerId,
             index: index,
         });
     }

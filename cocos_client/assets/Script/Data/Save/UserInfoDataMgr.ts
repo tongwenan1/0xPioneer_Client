@@ -172,14 +172,7 @@ export default class UserInfoDataMgr {
     public generateEnergyGetted() {
         NotificationMgr.triggerEvent(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE);
     }
-
-    public setWormholeDefenderId(pioneerId: string, index: number) {
-        if (index < 0 || index >= this._data.wormholeDefenderIds.length) {
-            return;
-        }
-        this._data.wormholeDefenderIds[index] = pioneerId;
-        console.log("exce de: " + JSON.stringify(this._data.wormholeDefenderIds));
-    }
+    
     //------------------------------------------------------------------------
     private async _initData() {
         if (NetGlobalData.userInfo == null || NetGlobalData.innerBuildings == null) {
@@ -224,6 +217,11 @@ export default class UserInfoDataMgr {
                 upgradeEndTimestamp: building.upgradeTotalTime * 1000,
                 upgrading: building.upgradeIng,
             };
+        }
+        if (globalData.defender != null) {
+            for (const key in globalData.defender) {
+                this._data.wormholeDefenderIds[parseInt(key)] = globalData.defender[key];
+            }
         }
         console.log("exce _data: ", this._data);
         this._initInterval();

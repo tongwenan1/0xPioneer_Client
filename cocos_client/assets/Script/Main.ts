@@ -175,10 +175,16 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_building_levelup_res", DataMgr.player_building_levelup_res);
         // map
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
-        // nft 
+        NetworkMgr.websocket.on("player_pioneer_change_show_res", DataMgr.player_pioneer_change_show_res);
+
+        // nft
         NetworkMgr.websocket.on("player_bind_nft_res", DataMgr.player_bind_nft_res);
         NetworkMgr.websocket.on("player_nft_lvlup_res", DataMgr.player_nft_lvlup_res);
         NetworkMgr.websocket.on("player_nft_rankup_res", DataMgr.player_nft_rankup_res);
+        // wormhole
+        NetworkMgr.websocket.on("player_wormhole_set_defender_res", DataMgr.player_wormhole_set_defender_res);
+        NetworkMgr.websocket.on("player_wormhole_set_attacker_res", DataMgr.player_wormhole_set_attacker_res);
+        NetworkMgr.websocket.on("player_wormhole_fight_res", DataMgr.player_wormhole_fight_res);
 
         // pioneernft func
         NetworkMgr.websocket.on("get_pioneers_res", DataMgr.get_pioneers_res);
@@ -203,8 +209,6 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_world_treasure_lottery_res", DataMgr.player_world_treasure_lottery_res);
 
         NetworkMgr.websocket.on("player_rookie_finish_res", DataMgr.player_rookie_finish_res);
-
-        NetworkMgr.websocket.on("player_wormhole_set_defender_res", DataMgr.player_wormhole_set_defender_res);
     }
 
     private async reconnect() {

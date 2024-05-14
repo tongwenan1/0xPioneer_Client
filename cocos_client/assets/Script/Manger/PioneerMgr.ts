@@ -38,8 +38,11 @@ export default class PioneerMgr {
 
         const originalPioneer = DataMgr.s.pioneer.getCurrentPlayer();
         if (!!originalPioneer && originalPioneer.NFTId == null) {
-            this._bindPlayerNFT(originalPioneer.id);
+            this.bindPlayerNFT(originalPioneer.id);
         }
+    }
+    public bindPlayerNFT(id: string) {
+        NetworkMgr.websocketMsg.player_bind_nft({ pioneerId: id });
     }
     public pioneerHealHpToMax(pioneerId: string) {
         const costTroops: number = DataMgr.s.pioneer.gainHp(pioneerId, DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop));
@@ -94,7 +97,7 @@ export default class PioneerMgr {
                 });
                 const player = pioneer as MapPlayerPioneerObject;
                 if (!!player && player.NFTId == null) {
-                    this._bindPlayerNFT(player.id);
+                    this.bindPlayerNFT(player.id);
                 }
             }
         }
@@ -116,9 +119,13 @@ export default class PioneerMgr {
                 break;
             }
         }
-        // check wormhold to idle
+        // check wormhole to idle
         for (const building of DataMgr.s.mapBuilding.getWormholeBuildings()) {
             if (building.defendPioneerIds.indexOf(pioneerId) != -1) {
+                NetworkMgr.websocketMsg.player_pioneer_change_show({
+                    pioneerId: pioneerId,
+                    show: true,
+                });
                 DataMgr.s.mapBuilding.removeDefendPioneer(building.id, pioneerId);
                 break;
             }
@@ -406,17 +413,24 @@ export default class PioneerMgr {
             } else if (stayBuilding.type == MapBuildingType.wormhole) {
                 if (pioneer.type == MapPioneerType.player) {
                     if (stayBuilding.faction != MapMemberFactionType.enemy) {
-                        DataMgr.setTempSendData("player_explore_res", {
-                            pioneerId: pioneerId,
-                            isExporeBuilding: true,
-                            exploreId: stayBuilding.id,
-                            actionType: MapPioneerActionType.wormhole,
-                        });
-                        NetworkMgr.websocketMsg.player_explore({
-                            pioneerId: pioneerId,
-                            isExporeBuilding: true,
-                            exploreId: stayBuilding.id,
-                        });
+                        let emptyIndex: number = -1;
+                        for (let i = 0; i < 3; i++) {
+                            if (
+                                stayBuilding.defendPioneerIds[i] == "" ||
+                                stayBuilding.defendPioneerIds[i] == null ||
+                                stayBuilding.defendPioneerIds[i] == undefined
+                            ) {
+                                emptyIndex = i;
+                                break;
+                            }
+                        }
+                        if (emptyIndex >= 0) {
+                            NetworkMgr.websocketMsg.player_wormhole_set_attacker({
+                                buildingId: stayBuilding.id,
+                                pioneerId: pioneerId,
+                                index: emptyIndex,
+                            });
+                        }
                     } else {
                         pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
                     }
@@ -463,9 +477,7 @@ export default class PioneerMgr {
         }
     }
 
-    private _bindPlayerNFT(id: string) {
-        NetworkMgr.websocketMsg.player_bind_nft({ pioneerId: id });
-    }
+   
 
     //------------------------------- notification
     private _onPioneerMoveMeeted(data: { pioneerId: string; isStay: boolean }) {

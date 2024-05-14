@@ -11,14 +11,16 @@ import {
     MapPioneerEventStatus,
     MapPioneerObject,
     MapPioneerType,
+    MapPlayerPioneerObject,
 } from "../Const/PioneerDefine";
 import { c2s_user, s2c_user, share } from "../Net/msg/WebsocketMsg";
 import CLog from "../Utils/CLog";
 import { RunData } from "./RunData";
 import { SaveData } from "./SaveData";
-import { MapBuildingMainCityObject } from "../Const/MapBuilding";
-import { GameMgr, LanMgr } from "../Utils/Global";
+import { MapBuildingMainCityObject, MapBuildingWormholeObject } from "../Const/MapBuilding";
+import { GameMgr, LanMgr, PioneerMgr } from "../Utils/Global";
 import NetGlobalData from "./Save/Data/NetGlobalData";
+import { NetworkMgr } from "../Net/NetworkMgr";
 
 export class DataMgr {
     public static r: RunData;
@@ -61,7 +63,7 @@ export class DataMgr {
             }
         }
     };
-    // item
+    //------------------------------------- item
     public static storhouse_change = (e: any) => {
         const p: s2c_user.Istorhouse_change = e.data;
         for (const item of p.iteminfo) {
@@ -76,7 +78,7 @@ export class DataMgr {
         }
     };
 
-    // inner building
+    //------------------------------------- inner building
     public static player_building_levelup_res = (e: any) => {
         const p: s2c_user.Iplayer_building_levelup_res = e.data;
         if (p.res !== 1) {
@@ -85,7 +87,30 @@ export class DataMgr {
         DataMgr.s.userInfo.beginInnerBuildingUpgrade(p.data.id as InnerBuildingType, p.data.upgradeCountTime, p.data.upgradeTotalTime);
     };
 
-    // map
+    //------------------------------------- map
+    public static player_pioneer_change_show_res = (e: any) => {
+        const p: s2c_user.Iplayer_pioneer_change_show_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        const pioneer = DataMgr.s.pioneer.getById(p.pioneerId);
+        if (pioneer == undefined) {
+            return;
+        }
+        if (pioneer.show == p.show) {
+            return;
+        }
+        pioneer.show = p.show;
+
+        if (pioneer.type == MapPioneerType.player) {
+            const player = pioneer as MapPlayerPioneerObject;
+            if (!!player && player.NFTId == null) {
+                PioneerMgr.bindPlayerNFT(player.id);
+            }
+        }
+
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: p.pioneerId, show: p.show });
+    };
     public static player_move_res = (e: any) => {
         const p: s2c_user.Iplayer_move_res = e.data;
         if (p.res !== 1) {
@@ -98,7 +123,7 @@ export class DataMgr {
         DataMgr.s.pioneer.beginMove(localData.pioneerId, localData.movePath);
     };
 
-    // nft
+    //------------------------------------- nft
     public static player_bind_nft_res = (e: any) => {
         const p: s2c_user.Iplayer_bind_nft_res = e.data;
         if (p.res !== 1) {
@@ -106,6 +131,22 @@ export class DataMgr {
         }
         const newNFTObj = DataMgr.s.nftPioneer.NFTGetNew(p.nftData);
         DataMgr.s.pioneer.bindPlayerNFT(p.pioneerData.id, newNFTObj);
+
+        // bind succeed then set defender
+        let emptyIndex: number = -1;
+        const defenderIds: string[] = DataMgr.s.userInfo.data.wormholeDefenderIds;
+        for (let i = 0; i < defenderIds.length; i++) {
+            if (defenderIds[i] == "") {
+                emptyIndex = i;
+                break;
+            }
+        }
+        if (emptyIndex >= 0) {
+            NetworkMgr.websocketMsg.player_wormhole_set_defender({
+                pioneerId: p.pioneerData.id,
+                index: emptyIndex,
+            });
+        }
     };
     public static player_nft_lvlup_res = (e: any) => {
         const p: s2c_user.Iplayer_nft_lvlup_res = e.data;
@@ -120,6 +161,97 @@ export class DataMgr {
             return;
         }
         DataMgr.s.nftPioneer.NFTRankUp(p.nftData);
+    };
+
+    //------------------------------------- wormhole
+    public static player_wormhole_set_defender_res = (e: any) => {
+        const p: s2c_user.Iplayer_wormhole_set_defender_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        for (const key in p.defender) {
+            DataMgr.s.userInfo.data.wormholeDefenderIds[parseInt(key)] = p.defender[key];
+        }
+        console.log("exce w: " + JSON.stringify(DataMgr.s.userInfo.data.wormholeDefenderIds));
+    };
+    public static player_wormhole_set_attacker_res = (e: any) => {
+        const p: s2c_user.Iplayer_wormhole_set_attacker_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        let buildingId: string = null;
+        const useAttacker = p.attacker;
+        for (const key in useAttacker) {
+            const temp = useAttacker[key];
+            const building = DataMgr.s.mapBuilding.getBuildingById(temp.buildingId);
+            if (building == undefined) {
+                continue;
+            }
+            building.defendPioneerIds[parseInt(key)] = temp.pioneerId;
+            DataMgr.s.pioneer.changeActionType(temp.pioneerId, MapPioneerActionType.wormhole);
+
+            buildingId = building.id;
+
+            if (temp.pioneerId != null && temp.pioneerId != undefined && temp.pioneerId.length > 0) {
+                NetworkMgr.websocketMsg.player_pioneer_change_show({
+                    pioneerId: temp.pioneerId,
+                    show: false,
+                });
+            }
+        }
+        const buildingData = DataMgr.s.mapBuilding.getBuildingById(buildingId);
+        if (buildingData.type == MapBuildingType.wormhole) {
+            const wormholeBuilding = buildingData as MapBuildingWormholeObject;
+            if (!!wormholeBuilding) {
+                let canWormholeAttack: boolean = true;
+                for (let i = 0; i < 3; i++) {
+                    if (buildingData.defendPioneerIds[i] == "" || buildingData.defendPioneerIds[i] == undefined || buildingData.defendPioneerIds[i] == null) {
+                        canWormholeAttack = false;
+                        break;
+                    }
+                }
+                if (canWormholeAttack) {
+                    wormholeBuilding.wormholdCountdownTime = 30;
+                    DataMgr.s.mapBuilding.saveObj_building();
+                }
+            }
+        }
+        console.log("exce defner: " + JSON.stringify(DataMgr.s.mapBuilding.getBuildingById(buildingId).defendPioneerIds));
+        NotificationMgr.triggerEvent(NotificationName.BUILDING_INSERT_DEFEND_PIONEER);
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: buildingId });
+    };
+    public static player_wormhole_fight_res = (e: any) => {
+        const p: s2c_user.Iplayer_wormhole_fight_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        const building = DataMgr.s.mapBuilding.getBuildingById(p.buildingId);
+        if (building == null) {
+            return;
+        }
+        const tempIds = building.defendPioneerIds.slice();
+        for (const pioneerId of tempIds) {
+            PioneerMgr.pioneerToIdle(pioneerId);
+        }
+        NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
+            attacker: {
+                name: DataMgr.s.userInfo.data.name,
+                avatarIcon: "icon_player_avatar", // todo
+                hp: 100,
+                hpMax: 100,
+            },
+            defender: {
+                name: p.defenderWallet,
+                avatarIcon: "icon_player_avatar",
+                hp: 50,
+                hpMax: 50,
+            },
+            attackerIsSelf: true,
+            buildingId: null,
+            position: null,
+            fightResult: p.fightResult ? "win" : "lose",
+            rewards: [],
+        });
     };
 
     public static get_pioneers_res = (e: any) => {
@@ -162,10 +294,6 @@ export class DataMgr {
                         DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.idle);
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: exploreId });
                     }, actionTime);
-                } else if (actionType == MapPioneerActionType.wormhole) {
-                    DataMgr.s.pioneer.changeActionType(pioneerId, actionType);
-                    DataMgr.s.mapBuilding.insertDefendPioneer(exploreId, pioneerId);
-                    NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: exploreId });
                 }
             } else {
                 if (actionType == MapPioneerActionType.addingtroops) {
@@ -628,7 +756,6 @@ export class DataMgr {
         }
     };
 
-    
     public static player_nft_skill_learn_res = (e: any) => {
         const key: string = "player_nft_skill_learn_res";
         if (DataMgr.socketSendData.has(key)) {
@@ -670,14 +797,6 @@ export class DataMgr {
         //     ],
         //     false
         // );
-    };
-
-    public static player_wormhole_set_defender_res = (e: any) => {
-        const key: string = "player_wormhole_set_defender_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_wormhole_set_defender_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_wormhole_set_defender_res;
-            DataMgr.s.userInfo.setWormholeDefenderId(data.pioneerId, data.index);
-        }
     };
 
     ///////////////// websocketTempData

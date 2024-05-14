@@ -137,7 +137,11 @@ export class BattleReportListItemUI extends Component {
         this.eventTimeLabel.string = CommonTools.formatDateTime(report.timestamp);
 
         this._locationInfo = { type: "pos", pos: data.position };
-        this.eventLocationLabel.string = this._locationString(this._locationInfo);
+        if (data.position != null) {
+            this.eventLocationLabel.string = this._locationString(this._locationInfo);
+        } else {
+            this.eventLocationLabel.string = "";
+        }
 
         this._loots = data.rewards;
         this.lootsButton.node.active = data.rewards.length != 0;

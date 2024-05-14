@@ -21,6 +21,7 @@ import {
 import { InnerBuildingType, MapBuildingType } from "../../Const/BuildingDefine";
 import {
     ECursorType,
+    GAME_ENV_IS_DEBUG,
     GameExtraEffectType,
     MapMemberFactionType,
     MapMemberTargetType,
@@ -715,11 +716,14 @@ export class OuterTiledMapActionController extends ViewController {
                     this._mapActionCursorView.hide();
                     outPioneerController.hideMovingPioneerAction();
 
-                    const r = await NetworkMgr.ethereumMsg.transferETH(0.0001, ChainConfig.getCurrentChainConfig().api.fee_psyc);
-                    if (r.status == 1) {
+                    if (GAME_ENV_IS_DEBUG) {
                         const uploadPath: { x: number; y: number }[] = [];
                         for (const path of movePaths) {
                             uploadPath.push({ x: path.x, y: path.y });
+                        }
+                        let targetPosString: string = "";
+                        if (uploadPath.length > 0) {
+                            targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
                         }
                         DataMgr.setTempSendData("player_move_res", {
                             pioneerId: currentActionPioneer.id,
@@ -729,9 +733,32 @@ export class OuterTiledMapActionController extends ViewController {
                         NetworkMgr.websocketMsg.player_move({
                             pioneerId: currentActionPioneer.id,
                             movePath: JSON.stringify(uploadPath),
-                            targetPos: JSON.stringify(uploadPath[uploadPath.length - 1]),
-                            feeTxhash: r.hash,
+                            targetPos: targetPosString,
+                            feeTxhash: "abc",
                         });
+                    } else {
+                        const r = await NetworkMgr.ethereumMsg.transferETH(0.0001, ChainConfig.getCurrentChainConfig().api.fee_psyc);
+                        if (r.status == 1) {
+                            const uploadPath: { x: number; y: number }[] = [];
+                            for (const path of movePaths) {
+                                uploadPath.push({ x: path.x, y: path.y });
+                            }
+                            let targetPosString: string = "";
+                            if (uploadPath.length > 0) {
+                                targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
+                            }
+                            DataMgr.setTempSendData("player_move_res", {
+                                pioneerId: currentActionPioneer.id,
+                                movePath: movePaths,
+                                costEnergyNum: costEnergy,
+                            });
+                            NetworkMgr.websocketMsg.player_move({
+                                pioneerId: currentActionPioneer.id,
+                                movePath: JSON.stringify(uploadPath),
+                                targetPos: targetPosString,
+                                feeTxhash: r.hash,
+                            });
+                        }
                     }
                 },
                 () => {

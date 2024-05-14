@@ -79,7 +79,7 @@ export default class BuildingMgr {
         DataMgr.s.mapBuilding.changeBuildingFaction(action.id, action.faction);
     }
     private _onBuildingTavernCountdownTimeDidFinish(data: { id: string }) {
-        const nft = DataMgr.s.nftPioneer.generateNewNFT();
-        DataMgr.s.mapBuilding.changeBuildingNewNft(data.id, nft);
+        // const nft = DataMgr.s.nftPioneer.generateNewNFT();
+        // DataMgr.s.mapBuilding.changeBuildingNewNft(data.id, nft);
     }
 }

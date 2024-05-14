@@ -101,7 +101,9 @@ export class WebsocketMsg {
     // public change_pioneer(d: c2s_user.Ichange_pioneer) {
     //     this._websocket.emit("change_pioneer_res", d);
     // }
-
+    public player_pioneer_change_show(d: c2s_user.Iplayer_pioneer_change_show) {
+        this.send_packet("player_pioneer_change_show", d);
+    }
     public player_move(d: c2s_user.Iplayer_move) {
         this.send_packet("player_move", d);
     }
@@ -183,6 +185,9 @@ export class WebsocketMsg {
     public player_wormhole_set_attacker(d: c2s_user.Iplayer_wormhole_set_attacker) {
         this.send_packet("player_wormhole_set_attacker", d);
     }
+    public player_wormhole_fight(d: c2s_user.Iplayer_wormhole_fight) {
+        this.send_packet("player_wormhole_fight", d);
+    }
 
     public save_archives(d: c2s_user.Isave_archives) {
         this.send_packet("save_archives", d);
@@ -247,6 +252,10 @@ export namespace c2s_user {
         newTalk?: Ichange_pioneer_newTalk;
     }
 
+    export interface Iplayer_pioneer_change_show {
+        pioneerId: string;
+        show: boolean;
+    }
     export interface Iplayer_move {
         pioneerId: string;
         movePath: string;
@@ -332,14 +341,17 @@ export namespace c2s_user {
     export interface Iplayer_rookie_finish {}
 
     export interface Iplayer_wormhole_set_defender {
-        poineerId: string;
+        pioneerId: string;
         index: number;
     }
     export interface Iplayer_wormhole_set_attacker {
-        poineerId: string;
+        buildingId: string;
+        pioneerId: string;
         index: number;
     }
-    export interface Iplayer_wormhole_fight {}
+    export interface Iplayer_wormhole_fight {
+        buildingId: string;
+    }
 
     export interface Iplayer_bind_nft {
         pioneerId: string;
@@ -406,8 +418,15 @@ export namespace s2c_user {
         newTalk: Ichange_pioneer_newTalk;
     }
 
+    export interface Iplayer_pioneer_change_show_res {
+        res: number;
+        pioneerId: string;
+        show: boolean;
+    }
     export interface Iplayer_move_res {
         res: number;
+        pioneerId: string;
+        show: boolean;
     }
     export interface Iplayer_move_res_local_data {
         pioneerId: string;
@@ -516,8 +535,19 @@ export namespace s2c_user {
     }
 
     export interface Iplayer_wormhole_set_defender_res {
-        pioneerId: string;
-        index: number;
+        res: number;
+        defender: { [key: string]: string };
+    }
+    export interface Iplayer_wormhole_set_attacker_res {
+        res: number;
+        attacker: { [key: string]: share.Iattacker_data };
+    }
+    export interface Iplayer_wormhole_fight_res {
+        res: number;
+        defenderWallet: string;
+        defenderData: { [key: string]: string };
+        fightResult: boolean;
+        buildingId: string;
     }
 
     export interface Iplayer_bind_nft_res {
@@ -582,6 +612,9 @@ export namespace share {
         didFinishRookie: boolean;
         generateTroopInfo?: troop_info_data;
         generateEnergyInfo?: energy_info_data;
+
+        attacker: { [key: string]: Iattacker_data };
+        defender: { [key: string]: string };
     }
     export interface Ibuilding_data {
         id: string;
@@ -681,6 +714,11 @@ export namespace share {
     export interface Inft_pioneer_skil {
         id: string;
         isOriginal: boolean;
+    }
+
+    export interface Iattacker_data {
+        pioneerId: string;
+        buildingId: string;
     }
 
     export interface Ipioneer_info {

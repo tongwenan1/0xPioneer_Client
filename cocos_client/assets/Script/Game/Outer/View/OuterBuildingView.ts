@@ -101,7 +101,12 @@ export class OuterBuildingView extends ViewController {
 
                 const emptyView = tempView.getChildByPath("Empty");
                 const prepareView = tempView.getChildByPath("Prepare");
-                if (i < building.defendPioneerIds.length) {
+                if (
+                    i < building.defendPioneerIds.length &&
+                    building.defendPioneerIds[i] != null &&
+                    building.defendPioneerIds[i] != "" &&
+                    building.defendPioneerIds[i] != undefined
+                ) {
                     const pioneerId = building.defendPioneerIds[i];
                     emptyView.active = false;
                     prepareView.active = true;
