@@ -19,6 +19,26 @@
     "id": "105005",
     "eng": "Relic the Genesis"
   },
+  "105101": {
+    "id": "105101",
+    "eng": "Common Box"
+  },
+  "105102": {
+    "id": "105102",
+    "eng": "Rare Box"
+  },
+  "105103": {
+    "id": "105103",
+    "eng": "Legend Box"
+  },
+  "105104": {
+    "id": "105104",
+    "eng": "Box the Mythic"
+  },
+  "105105": {
+    "id": "105105",
+    "eng": "Box the Genesis"
+  },
   "106001": {
     "id": "106001",
     "eng": "%s is dead, please wait for the rebirth…"
@@ -274,14 +294,6 @@
   "110013": {
     "id": "110013",
     "eng": "Ruin"
-  },
-  "110014": {
-    "id": "110014",
-    "eng": "Wormhole"
-  },
-  "110015": {
-    "id": "110015",
-    "eng": "Tavern"
   },
   "117001": {
     "id": "117001",
