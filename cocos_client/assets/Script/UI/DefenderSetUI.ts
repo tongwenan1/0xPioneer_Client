@@ -4,8 +4,10 @@ import { UIName } from "../Const/ConstUIDefine";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import ViewController from "../BasicView/ViewController";
-import { DefenderSelectUI } from "./DefenderSelectUI";
 import { NetworkMgr } from "../Net/NetworkMgr";
+import { NTFBackpackItem } from "./View/NTFBackpackItem";
+import { MapPlayerPioneerObject } from "../Const/PioneerDefine";
+import { DefenderSelectUI } from "./DefenderSelectUI";
 const { ccclass, property } = _decorator;
 
 @ccclass("DefenderSetUI")
@@ -59,31 +61,36 @@ export class DefenderSetUI extends ViewController {
         return this.node.getChildByPath("__ViewContent");
     }
     private _addDefender(pioneerId: string, index: number) {
-        const pioneer = DataMgr.s.pioneer.getById(pioneerId);
+        const pioneer = DataMgr.s.pioneer.getById(pioneerId) as MapPlayerPioneerObject;
         if (pioneer == undefined) {
+            return;
+        }
+        const nft = DataMgr.s.nftPioneer.getNFTById(pioneer.NFTId);
+        if (nft == undefined) {
             return;
         }
         const item = instantiate(this._defenderItem);
         item["defenderId"] = pioneerId;
         item.setParent(this._defenderContent);
-        item.getChildByPath("Icon/self").active = pioneer.animType == "self";
-        item.getChildByPath("Icon/doomsdayGangSpy").active = pioneer.animType == "doomsdayGangSpy";
-        item.getChildByPath("Icon/rebels").active = pioneer.animType == "rebels";
-        item.getChildByPath("Icon/secretGuard").active = pioneer.animType == "secretGuard";
-        item.getChildByPath("Name").getComponent(Label).string = LanMgr.getLanById(pioneer.name);
-        item.getChildByPath("DeleteButton").getComponent(Button).clickEvents[0].customEventData = index.toString();
+        item.getComponent(NTFBackpackItem).refreshUI(nft);
         item.worldPosition = this._tbdItems[index].worldPosition;
         this._allDefenderItemMap.set(index, item);
+        this._refreshTBDTip();
+    }
+    private _refreshTBDTip() {
+        for (let i = 0; i < this._tbdItems.length; i++) {
+            this._tbdItems[i].getChildByPath("Tip").active = !this._allDefenderItemMap.has(i);
+        }
     }
 
     private _sendRequestSetDefender(pioneerId: string, index: number) {
         DataMgr.setTempSendData("player_wormhole_set_defender_res", {
             pioneerId: pioneerId,
-            index: index
+            index: index,
         });
         NetworkMgr.websocketMsg.player_wormhole_set_defender({
             poineerId: pioneerId,
-            index: index
+            index: index,
         });
     }
 
@@ -191,13 +198,13 @@ export class DefenderSetUI extends ViewController {
         if (interactableItemIndex >= 0 && interactableItem != null) {
             // interact pioneer exchange their pos
             movingItem.worldPosition = this._tbdItems[interactableItemIndex].worldPosition;
-            movingItem.getChildByPath("DeleteButton").getComponent(Button).clickEvents[0].customEventData = interactableItemIndex.toString();
 
             interactableItem.worldPosition = this._tbdItems[this._movingItemIndex].worldPosition;
-            interactableItem.getChildByPath("DeleteButton").getComponent(Button).clickEvents[0].customEventData = this._movingItemIndex.toString();
 
             this._allDefenderItemMap.set(interactableItemIndex, movingItem);
             this._allDefenderItemMap.set(this._movingItemIndex, interactableItem);
+
+            this._refreshTBDTip();
 
             this._sendRequestSetDefender(movingItem["defenderId"], interactableItemIndex);
             this._sendRequestSetDefender(interactableItem["defenderId"], this._movingItemIndex);
@@ -232,10 +239,11 @@ export class DefenderSetUI extends ViewController {
         if (interactableItemIndex >= 0 && interactableItem != null && interactableItemIndex != this._movingItemIndex) {
             // interact pioneer exchange their pos
             movingItem.worldPosition = this._tbdItems[interactableItemIndex].worldPosition;
-            movingItem.getChildByPath("DeleteButton").getComponent(Button).clickEvents[0].customEventData = interactableItemIndex.toString();
 
             this._allDefenderItemMap.set(interactableItemIndex, movingItem);
             this._allDefenderItemMap.delete(this._movingItemIndex);
+
+            this._refreshTBDTip();
 
             this._sendRequestSetDefender(movingItem["defenderId"], interactableItemIndex);
             this._sendRequestSetDefender("", this._movingItemIndex);

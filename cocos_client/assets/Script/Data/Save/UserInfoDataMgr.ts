@@ -178,6 +178,7 @@ export default class UserInfoDataMgr {
             return;
         }
         this._data.wormholeDefenderIds[index] = pioneerId;
+        console.log("exce de: " + JSON.stringify(this._data.wormholeDefenderIds));
     }
     //------------------------------------------------------------------------
     private async _initData() {

@@ -1,6 +1,6 @@
 import { resources } from "cc";
 import CLog from "../Utils/CLog";
-import { ConfigData, ConfigType } from "../Const/Config";
+import { ConfigData, ConfigType, WorldTreasureBoxRarityParam } from "../Const/Config";
 
 export default class ConfigConfig {
     public static getConfig(type: ConfigType): ConfigData | null {
@@ -8,6 +8,19 @@ export default class ConfigConfig {
             return this._config.get(type);
         }
         return null;
+    }
+    public static getWorldTreasureRarityByCLv(clv: number): number {
+        const clvRange: number[] = (this.getConfig(ConfigType.WorldTreasureBoxRarity) as WorldTreasureBoxRarityParam).rarityNeedCLvDatas;
+
+        let rarity: number = 0;
+        for (let i = 0; i < clvRange.length; i++) {
+            if (clv >= clvRange[i]) {
+                rarity += 1;
+            } else {
+                break;
+            }
+        }
+        return rarity;
     }
 
     public static async init(): Promise<boolean> {

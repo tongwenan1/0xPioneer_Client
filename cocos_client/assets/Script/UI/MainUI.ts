@@ -13,10 +13,7 @@ import UIPanelManger from "../Basic/UIPanelMgr";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import { DataMgr } from "../Data/DataMgr";
 import { NFTBackpackUI } from "./NFTBackpackUI";
-import ItemData from "../Const/Item";
-import ArtifactData from "../Model/ArtifactData";
 import CommonTools from "../Tool/CommonTools";
-import { DefenderSetUI } from "./DefenderSetUI";
 import { NetworkMgr } from "../Net/NetworkMgr";
 
 const { ccclass, property } = _decorator;
@@ -164,9 +161,6 @@ export class MainUI extends ViewController {
     }
     private async onTapSetDefender() {
         UIPanelManger.inst.pushPanel(UIName.DefenderSetUI);
-    }
-    private onTapAddHeat() {
-        NetworkMgr.websocketMsg.player_add_heat_value({ num: 50 });
     }
     private onTapTest() {
         NetworkMgr.websocketMsg.player_bind_nft({ pioneerId: "pioneer_0" });

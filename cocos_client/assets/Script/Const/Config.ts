@@ -90,6 +90,6 @@ export interface WorldTreasureChanceLimitHeatValueCoefficientParam extends Confi
     coefficient: number;
 }
 
-export interface WorldTreasureBoxRarity extends ConfigData {
+export interface WorldTreasureBoxRarityParam extends ConfigData {
     rarityNeedCLvDatas: number[];
 }

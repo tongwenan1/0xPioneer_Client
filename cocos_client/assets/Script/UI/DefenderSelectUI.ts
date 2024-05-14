@@ -1,51 +1,41 @@
-import { _decorator, Button, instantiate, Label, Layout, Node, RichText } from "cc";
-import { ItemMgr, LanMgr } from "../Utils/Global";
+import { _decorator, Button, instantiate, Label, Layout, Node, RichText, Sprite } from "cc";
 import ViewController from "../BasicView/ViewController";
-import UIPanelManger, { UIPanelLayerType } from "../Basic/UIPanelMgr";
-import { NFTPioneerObject, NFTPioneerSkillConfigData } from "../Const/NFTPioneerDefine";
-import { HUDName, UIName } from "../Const/ConstUIDefine";
-import { AlterView } from "./View/AlterView";
-import ItemData from "../Const/Item";
-import { BackpackItem } from "./BackpackItem";
-import ItemConfig from "../Config/ItemConfig";
-import { ItemInfoUI } from "./ItemInfoUI";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import { NFTPioneerObject } from "../Const/NFTPioneerDefine";
 import { DataMgr } from "../Data/DataMgr";
-import { MapPioneerObject } from "../Const/PioneerDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("DefenderSelectUI")
 export class DefenderSelectUI extends ViewController {
-    //----------------------------------------- data
     private _selectCallback: (selectPioneerId: string) => void = null;
 
-    private _pioneerDatas: MapPioneerObject[] = null;
-    //----------------------------------------- view
-    private _pioneerItem: Node = null;
-    private _pioneerContent: Node = null;
-    //----------------------------------------- public
+    private _pioneerIds: string[] = [];
+    private _datas: NFTPioneerObject[] = [];
+    private _selectIndex: number = -1;
+
+    private _NFTContent: Node = null;
+    private _NFTItem: Node = null;
+    private _allNFTItems: Node[] = [];
+
     public configuration(selectCallback: (selectPioneerId: string) => void) {
         this._selectCallback = selectCallback;
     }
-    //----------------------------------------- lifecycle
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        this._pioneerDatas = DataMgr.s.pioneer.getAllPlayers(true);
-        for (let i = 0; i < this._pioneerDatas.length; i++) {
-            if (DataMgr.s.userInfo.data.wormholeDefenderIds.indexOf(this._pioneerDatas[i].id) != -1) {
-                this._pioneerDatas.splice(i, 1);
-                i--;
-            }
-        }
-
-        this._pioneerContent = this.node.getChildByPath("__ViewContent/BgTaskListWord/ScrollView/View/Content");
-        this._pioneerItem = this._pioneerContent.getChildByPath("Item");
         // useLanMgr
-        // this._pioneerItem.getChildByPath("SelectButton/Label").getComponent(Label).string = LanMgr.getLanById("107549")
-        this._pioneerItem.removeFromParent();
+        // this.node.getChildByPath("__ViewContent/Info/NoOccupied/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("__ViewContent/ConfirmButton/item").getComponent(Label).string = LanMgr.getLanById("107549");
+
+        this._NFTContent = this.node.getChildByPath("__ViewContent/Pioneers/ScrollView/View/Content");
+        this._NFTItem = this._NFTContent.getChildByPath("Item");
+        // useLanMgr
+        // this._NFTItem.getChildByPath("Working/Working").getComponent(Label).string = LanMgr.getLanById("107549");
+        this._NFTItem.removeFromParent();
     }
     protected viewDidStart(): void {
         super.viewDidStart();
+
         this._refreshUI();
     }
     protected viewDidDestroy(): void {
@@ -58,35 +48,91 @@ export class DefenderSelectUI extends ViewController {
         return this.node.getChildByName("__ViewContent");
     }
 
-    private _refreshUI() {
-        if (this._pioneerDatas.length <= 0) {
-            this.node.getChildByPath("__ViewContent/Empty").active = true;
-        } else {
-            this.node.getChildByPath("__ViewContent/Empty").active = false;
+    private async _refreshUI() {
+        for (const item of this._allNFTItems) {
+            item.destroy();
+        }
+        this._allNFTItems = [];
 
-            for (let i = 0; i < this._pioneerDatas.length; i++) {
-                const pioneer = this._pioneerDatas[i];
-                const item = instantiate(this._pioneerItem);
-                item.setParent(this._pioneerContent);
-                item.getChildByPath("Defender/Icon/self").active = pioneer.animType == "self";
-                item.getChildByPath("Defender/Icon/doomsdayGangSpy").active = pioneer.animType == "doomsdayGangSpy";
-                item.getChildByPath("Defender/Icon/rebels").active = pioneer.animType == "rebels";
-                item.getChildByPath("Defender/Icon/secretGuard").active = pioneer.animType == "secretGuard";
-                item.getChildByPath("Name").getComponent(Label).string = LanMgr.getLanById(pioneer.name);
-                item.getChildByPath("SelectButton").getComponent(Button).clickEvents[0].customEventData = i.toString();
+        this._datas = [];
+        this._pioneerIds = [];
+        const playerDatas = DataMgr.s.pioneer.getAllPlayers(true);
+        for (let i = 0; i < playerDatas.length; i++) {
+            if (DataMgr.s.userInfo.data.wormholeDefenderIds.indexOf(playerDatas[i].id) == -1) {
+                const nft = DataMgr.s.nftPioneer.getNFTById(playerDatas[i].NFTId);
+                if (nft == undefined) {
+                    continue;
+                }
+                this._pioneerIds.push(playerDatas[i].id);
+                this._datas.push(nft);
             }
-            this._pioneerContent.getComponent(Layout).updateLayout();
+        }
+        for (let i = 0; i < this._datas.length; i++) {
+            const data = this._datas[i];
+            const itemView = instantiate(this._NFTItem);
+            itemView.active = true;
+            // await itemView.getComponent(NTFBackpackItem).refreshUI(data);
+            itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
+            itemView.getChildByPath("Working").active = data.workingBuildingId != null;
+            itemView.getChildByPath("Working").active = false;
+            itemView.parent = this._NFTContent;
+            this._allNFTItems.push(itemView);
+            // if (data.workingBuildingId == this._buildingId) {
+            //     this._selectIndex = i;
+            // }
+        }
+        this._NFTContent.getComponent(Layout).updateLayout();
+
+        this._refreshInfoUI();
+    }
+    private _refreshInfoUI() {
+        const noOccupiedView = this.node.getChildByPath("__ViewContent/Info/NoOccupied");
+        const selectOccupiedView = this.node.getChildByPath("__ViewContent/Info/SelectOccupied");
+        const confirmButton = this.node.getChildByPath("__ViewContent/ConfirmButton");
+        if (this._selectIndex >= 0) {
+            noOccupiedView.active = false;
+            selectOccupiedView.active = true;
+            confirmButton.getComponent(Sprite).grayscale = false;
+            confirmButton.getComponent(Button).interactable = true;
+
+            const data = this._datas[this._selectIndex];
+            // selectOccupiedView.getChildByPath("NFTBackpackItem").getComponent(NTFBackpackItem).refreshUI(data);
+            selectOccupiedView.getChildByPath("Level/Level").getComponent(Label).string = "Lv." + data.level;
+            selectOccupiedView.getChildByPath("Rank/Rank").getComponent(Label).string = "Rank." + data.level;
+            selectOccupiedView.getChildByPath("Name/Name").getComponent(Label).string = data.name;
+            selectOccupiedView.getChildByPath("Ability/Ability").getComponent(Label).string = "Ability:" + data.iq;
+
+            // const buildingConfig = InnerBuildingConfig.getByBuildingType(this._buildingId);
+            // if (buildingConfig != null && buildingConfig.staff_des != null) {
+            //     selectOccupiedView.getChildByPath("Desc/Effect").getComponent(Label).string = LanMgr.getLanById(buildingConfig.staff_des);
+            // }
+        } else {
+            noOccupiedView.active = true;
+            selectOccupiedView.active = false;
+            confirmButton.getComponent(Sprite).grayscale = true;
+            confirmButton.getComponent(Button).interactable = false;
         }
     }
+
     //---------------------------------------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
         UIPanelManger.inst.popPanel();
     }
-    private async onTapSelect(event: Event, customEventData: string) {
+    private onTapItem(event: Event, customEventData: string) {
         const index: number = parseInt(customEventData);
+        if (index != this._selectIndex) {
+            this._selectIndex = index;
+            this._refreshInfoUI();
+        }
+    }
+    private async onTapConfirm() {
+        if (this._selectIndex < 0 || this._selectIndex >= this._pioneerIds.length) {
+            return;
+        }
+
         if (this._selectCallback != null) {
-            this._selectCallback(this._pioneerDatas[index].id);
+            this._selectCallback(this._pioneerIds[this._selectIndex]);
         }
         await this.playExitAnimation();
         UIPanelManger.inst.popPanel();

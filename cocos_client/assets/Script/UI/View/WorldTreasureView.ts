@@ -1,17 +1,13 @@
-import { _decorator, Component, Label, Layout, Node, ProgressBar, Sprite, tween, v3 } from "cc";
+import { _decorator, Button, Component, Label, Layout, Node, ProgressBar, Sprite, tween, v3 } from "cc";
 import { UIName } from "../../Const/ConstUIDefine";
 import UIPanelManger from "../../Basic/UIPanelMgr";
-import { PointTreasureUI } from "../PointTreasureUI";
 import { BoxInfoConfigData } from "../../Const/BoxInfo";
 import BoxInfoConfig from "../../Config/BoxInfoConfig";
 import { DataMgr } from "../../Data/DataMgr";
-import { TreasureGettedUI } from "../TreasureGettedUI";
-import ItemData from "../../Const/Item";
-import ArtifactData from "../../Model/ArtifactData";
-import { NetworkMgr } from "../../Net/NetworkMgr";
-import { LanMgr } from "../../Utils/Global";
 import CommonTools from "../../Tool/CommonTools";
 import { GameRankColor } from "../../Const/ConstDefine";
+import ConfigConfig from "../../Config/ConfigConfig";
+import { ConfigType, WorldTreasureChanceLimitHeatValueCoefficientParam, WorldTreasureChancePerBoxExploreProgressParam } from "../../Const/Config";
 const { ccclass, property } = _decorator;
 
 @ccclass("WorldTreasureView")
@@ -38,21 +34,8 @@ export class WorldTreasureView extends Component {
         this._nextDayEightTimestamp = CommonTools.getNextDayAMTimestamp(8);
 
         //----------------------------------------- view
-        this._boxView = this.node.getChildByPath("BoxView");
-        this._treasureBoxView = this._boxView.getChildByPath("Icon");
-        tween()
-            .target(this._treasureBoxView)
-            .repeatForever(
-                tween().sequence(
-                    tween().by(0.05, { position: v3(0, 10, 0) }),
-                    tween().by(0.1, { position: v3(0, -20, 0) }),
-                    tween().by(0.1, { position: v3(0, 20, 0) }),
-                    tween().by(0.05, { position: v3(0, -10, 0) }),
-                    tween().delay(1)
-                )
-            )
-            .start();
-        this._treasureBoxView.active = false;
+        this._boxView = this.node.getChildByPath("BoxContent");
+        this._treasureBoxView = this._boxView.getChildByPath("BoxView/Treasure");
 
         this._getTimeLabel = this.node.getChildByPath("OpenButton/GetTimes").getComponent(Label);
         this._countDownLabel = this.node.getChildByPath("OpenButton/LimitCountdownTime").getComponent(Label);
@@ -70,6 +53,9 @@ export class WorldTreasureView extends Component {
             )
             .start();
         this._treasureCanGetIcon.active = false;
+
+        // useLanMgr
+        // this._boxView.getChildByPath("BoxView/Title").getComponent(Label).string = LanMgr.getLanById("107549");
     }
 
     start() {
@@ -83,33 +69,43 @@ export class WorldTreasureView extends Component {
     update(deltaTime: number) {}
 
     private _refreshUI() {
-        const perTimeNeedProgress: number = 50;
+        const perTimeNeedProgress: number = (
+            ConfigConfig.getConfig(ConfigType.WorldTreasureChancePerBoxExploreProgress) as WorldTreasureChancePerBoxExploreProgressParam
+        ).progress;
+        const perGetTimeNeedHeatValue: number = (
+            ConfigConfig.getConfig(ConfigType.WorldTreasureChanceLimitHeatValueCoefficient) as WorldTreasureChanceLimitHeatValueCoefficientParam
+        ).coefficient;
+
         const progress: number = DataMgr.s.userInfo.data.exploreProgress;
         const heatValue: number = 200;
-
-        const limitTimes: number = Math.floor(heatValue / 80);
+        const limitTimes: number = Math.floor(heatValue * perGetTimeNeedHeatValue);
         const canGeTimes: number = Math.min(limitTimes, Math.floor(progress / perTimeNeedProgress));
         const didGetTimes: number = DataMgr.s.userInfo.data.worldTreasureTodayDidGetTimes;
+        const canGetBox: boolean = didGetTimes < canGeTimes;
         // get times
         this._getTimeLabel.string = canGeTimes + "/" + limitTimes;
         // box open
         this._boxView.active = this._isOpenBox;
         // box can get tip
-        this._treasureCanGetIcon.active = didGetTimes < canGeTimes;
+        this._treasureCanGetIcon.active = canGetBox;
 
         if (this._isOpenBox) {
             const currentProgress: number = progress - perTimeNeedProgress * canGeTimes;
             const totalProgress: number = perTimeNeedProgress;
-            this._boxView.getChildByPath("PropgressView/Label").getComponent(Label).string = currentProgress + "/" + totalProgress;
-            this._boxView.getChildByPath("PropgressView/ProgressBar").getComponent(ProgressBar).progress = Math.min(1, currentProgress / totalProgress);
+            this._boxView.getChildByPath("BoxView/Progress/Value").getComponent(Label).string = currentProgress.toString();
+            this._boxView.getChildByPath("BoxView/Progress/Total").getComponent(Label).string = totalProgress.toString();
+            this._boxView.getChildByPath("BoxView/ProgressBar").getComponent(ProgressBar).progress = Math.min(1, currentProgress / totalProgress);
 
-            const treasureBoxView = this._boxView.getChildByPath("Icon");
-            treasureBoxView.active = didGetTimes < canGeTimes;
-            if (treasureBoxView.active) {
-                const boxRank: number = 3;
-                treasureBoxView.getComponent(Sprite).color = GameRankColor[boxRank - 1];
+            const currentBoxRank: number = ConfigConfig.getWorldTreasureRarityByCLv(DataMgr.s.userInfo.data.level);
+            for (let i = 1; i <= 5; i++) {
+                const currentView = this._treasureBoxView.getChildByPath("Treasure_box_" + i);
+                currentView.active = i == currentBoxRank;
+                if (currentView.active) {
+                    currentView.getChildByPath("Common").active = !canGetBox;
+                    currentView.getChildByPath("Light").active = canGetBox;
+                }
             }
-            this._boxView.getComponent(Layout).updateLayout();
+            this._treasureBoxView.getComponent(Button).interactable = canGetBox;
         }
     }
     private _refreshCountDownTime() {
