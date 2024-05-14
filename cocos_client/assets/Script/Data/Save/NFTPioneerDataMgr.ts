@@ -148,7 +148,6 @@ export default class NFTPioneerDataMgr {
         }
         this._data = [];
         const netNfts = NetGlobalData.nfts.nfts;
-        console.log("exce alln: ", netNfts);
         for (const key in netNfts) {
             this._data.push(this._convertNetDataToObject(netNfts[key]));
         }

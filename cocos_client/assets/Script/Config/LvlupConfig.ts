@@ -4,7 +4,7 @@ import CLog from "../Utils/CLog";
 import ItemData from "../Const/Item";
 
 export default class LvlupConfig {
-    private static _confs: LvlupConfigData[] = [];
+    private static _confs: { [index: string]: LvlupConfigData } = {};
     private static _extras: { [index: string]: number } = {};
     private static _hpmaxs: { [index: string]: number } = {};
     private static _visions: { [index: string]: number } = {};
@@ -24,9 +24,7 @@ export default class LvlupConfig {
             return false;
         }
 
-        for (const key in obj) {
-            this._confs.push(obj[key]);
-        }
+        this._confs = obj;
 
         const keys = Object.keys(obj);
         keys.sort((a, b) => {
@@ -36,10 +34,8 @@ export default class LvlupConfig {
             if (na < nb) return -1;
             return 0;
         });
-
         for (let i = 0; i < keys.length; i++) {
             const lvlStr = keys[i];
-
             const conf = obj[lvlStr] as LvlupConfigData;
             this._extras[lvlStr] = conf.extra_res;
             this._hpmaxs[lvlStr] = conf.hp_max;
@@ -58,13 +54,7 @@ export default class LvlupConfig {
     }
 
     public static getById(lvlId: string): LvlupConfigData | null {
-        const findConf = this._confs.filter((conf) => {
-            return conf.id === lvlId;
-        });
-        if (findConf.length > 0) {
-            return findConf[0];
-        }
-        return null;
+        return this._confs[lvlId];
     }
 
     public static getTotalExtraRateByLvl(lvl: number) {
@@ -80,7 +70,7 @@ export default class LvlupConfig {
         return this._visions[lvlStr] != undefined ? this._visions[lvlStr] : 0;
     }
     public static getMaxLevel() {
-        return this._confs.length;
+        return Object.keys(this._confs).length;
     }
     public static getNFTLevelUpCost(fromLevel: number, toLevel: number) {
         if (fromLevel >= toLevel) {
@@ -116,8 +106,6 @@ export default class LvlupConfig {
         if (fromLevel >= toLevel) {
             return [];
         }
-        console.log("exce r: " + NFTRarity + ", f: " + fromLevel + ", to: " + toLevel);
-        console.log("exce con:", this._confs);
         let costMap: Map<string, ItemData> = new Map();
         const valueKey: string = "p_rank_" + NFTRarity;
         for (let i = fromLevel + 1; i <= toLevel; i++) {
@@ -133,7 +121,6 @@ export default class LvlupConfig {
                 }
             }
         }
-        console.log("exce cost:", costMap);
         const cost: ItemData[] = [];
         costMap.forEach((value: ItemData, key: string) => {
             cost.push(value);
