@@ -20,7 +20,8 @@
     "attack": 20,
     "winprogress": 20,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 0
   },
   {
     "id": "building_2",
@@ -43,7 +44,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_3",
@@ -66,7 +68,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_4",
@@ -89,7 +92,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_5",
@@ -115,7 +119,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_6",
@@ -141,7 +146,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_7",
@@ -167,7 +173,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_8",
@@ -193,7 +200,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_9",
@@ -219,7 +227,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_10",
@@ -245,7 +254,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_11",
@@ -271,7 +281,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_12",
@@ -297,7 +308,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_13",
@@ -320,7 +332,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_14",
@@ -343,7 +356,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_15",
@@ -366,7 +380,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_18",
@@ -389,7 +404,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_19",
@@ -412,7 +428,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_20",
@@ -435,7 +452,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_21",
@@ -458,7 +476,8 @@
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   },
   {
     "id": "building_22",
@@ -476,11 +495,12 @@
     "resources": null,
     "quota": null,
     "exp": null,
-    "event": null,
+    "event": "",
     "hp": null,
     "attack": null,
     "winprogress": null,
     "faction": 0,
-    "defendPioneerIds": []
+    "defendPioneerIds": [],
+    "cost": 5
   }
 ]
