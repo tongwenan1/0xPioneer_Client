@@ -439,7 +439,8 @@ export namespace s2c_user {
     export interface Iplayer_exp_change {
         addExp: number;
         newExp: number;
-        newLevel: number;
+        newLevel?: number;
+        newPsycLimit?: number;
     }
     export interface Iplayer_treasure_progress_change {
         addProgress: number;

@@ -69,6 +69,9 @@ export class DataMgr {
         if (p.newLevel != null) {
             DataMgr.s.userInfo.data.level = p.newLevel;
         }
+        if (p.newPsycLimit != null) {
+            DataMgr.s.userInfo.data.energyGetLimitTimes = p.newPsycLimit;
+        }
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_EXP, { exp: p.addExp });
     };
     public static player_treasure_progress_change = (e: any) => {
@@ -267,7 +270,7 @@ export class DataMgr {
             },
             attackerIsSelf: true,
             buildingId: null,
-            position: building.stayMapPositions,
+            position: null,
             fightResult: p.fightResult ? "win" : "lose",
             rewards: [],
         });

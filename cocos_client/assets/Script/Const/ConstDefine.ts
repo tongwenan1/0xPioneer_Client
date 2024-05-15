@@ -2,8 +2,8 @@ import { Color } from "cc";
 import { s2c_user } from "../Net/msg/WebsocketMsg";
 import { ItemConfigType } from "./Item";
 
-export const GAME_ENV_IS_DEBUG = true;
-export const PioneerGameTest = true;
+export const GAME_ENV_IS_DEBUG = false;
+export const PioneerGameTest = false;
 
 export type DataMgrResData =
     | s2c_user.Iplayer_move_res_local_data

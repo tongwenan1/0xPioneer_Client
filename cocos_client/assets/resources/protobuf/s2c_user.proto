@@ -231,6 +231,7 @@ message player_exp_change {
     required int32 addExp = 1; // exp change value
     required uint32 newExp = 2; // player new exp after change
     optional uint32 newLevel = 3; // player new level after change if exist
+    optional uint32 newPsycLimit = 4; // player new level after change if exist
 }
 
 message player_treasure_progress_change {

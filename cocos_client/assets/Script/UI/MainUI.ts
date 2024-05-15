@@ -15,6 +15,7 @@ import { DataMgr } from "../Data/DataMgr";
 import { NFTBackpackUI } from "./NFTBackpackUI";
 import CommonTools from "../Tool/CommonTools";
 import { NetworkMgr } from "../Net/NetworkMgr";
+import ArtifactData from "../Model/ArtifactData";
 
 const { ccclass, property } = _decorator;
 
@@ -72,7 +73,7 @@ export class MainUI extends ViewController {
         //DataMgr.n.websocketMsg.create_pioneer({
         //    type: "0"
         //});
-        // DataMgr.s.item.addObj_item([new ItemData("8005", 1000)]);
+        DataMgr.s.artifact.addObj_artifact([new ArtifactData("7001", 2)]);
         // DataMgr.s.item.addObj_item([new ItemData("8001", 1000)]);
         // DataMgr.s.item.addObj_item([new ItemData("8002", 1000)]);
         // DataMgr.s.item.addObj_item([new ItemData("8003", 1000)]);

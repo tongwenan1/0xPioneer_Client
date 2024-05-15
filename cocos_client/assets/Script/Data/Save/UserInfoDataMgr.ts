@@ -164,7 +164,8 @@ export default class UserInfoDataMgr {
                     if (currentTimestamp < value.upgradeEndTimestamp) {
                         NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED);
                     } else {
-                        value.upgrading = true;
+                        value.upgrading = false;
+                        value.buildLevel += 1;
                         NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, key);
                     }
                     // if (value.upgradeCountTime < value.upgradeTotalTime) {
