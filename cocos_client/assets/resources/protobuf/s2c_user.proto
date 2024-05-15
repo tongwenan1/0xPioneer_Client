@@ -242,3 +242,8 @@ message player_actiontype_change {
 message save_archives_res {
     required int32 res = 1;
 }
+
+message player_heat_change {
+    required uint32 change = 1;
+    required uint32 newval = 2;
+}

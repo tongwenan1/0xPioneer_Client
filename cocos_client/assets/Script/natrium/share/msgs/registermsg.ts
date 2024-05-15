@@ -77,6 +77,8 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.fetch_user_psyc_res, "fetch_user_psyc_res", "s2c_user.fetch_user_psyc_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_actiontype_change, "player_actiontype_change", "s2c_user.player_actiontype_change");
 
+    pcodec.register_protobuf_msg(protobuf_s2c.player_heat_change, "player_heat_change", "s2c_user.player_heat_change");
+
     // register client msg
     pcodec.register_protobuf_msg(protobuf_c2s.login, "login", "c2s_user.login");
     pcodec.register_protobuf_msg(protobuf_c2s.create_player, "create_player", "c2s_user.create_player");

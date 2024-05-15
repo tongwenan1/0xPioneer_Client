@@ -96,5 +96,7 @@ export enum protobuf_s2c {
     player_treasure_progress_change = 20302,
     player_actiontype_change = 20303,
 
-    fetch_user_psyc_res = 20400
+    fetch_user_psyc_res = 20400,
+
+    player_heat_change = 20500,
 }
