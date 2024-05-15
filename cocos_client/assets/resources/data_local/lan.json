@@ -351,6 +351,10 @@
     "id": "120004",
     "eng": "Energy Station"
   },
+  "120005": {
+    "id": "120005",
+    "eng": "Babel Tower"
+  },
   "121001": {
     "id": "121001",
     "eng": "More buildings are able to be constructed"
