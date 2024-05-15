@@ -34,6 +34,9 @@ export class ArtifactDataMgr {
     public getObj_by_uniqueId(uniqueId: string) {
         return this._data.find((artifact) => artifact.uniqueId == uniqueId);
     }
+    public getObj_artifact_equiped() {
+        return this._data.filter((artifact) => artifact.effectIndex >= 0);
+    }
     public getObj_artifact_maxLength() {
         return this._maxArtifactLength;
     }
@@ -145,6 +148,7 @@ export class ArtifactDataMgr {
         }
         artifact.effectIndex = effectIndex;
         this.saveObj();
+        NotificationMgr.triggerEvent(NotificationName.ARTIFACT_EQUIP_DID_CHANGE);
     }
 
     // public getPropEffValue(buildingLv: number) {

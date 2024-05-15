@@ -1,5 +1,5 @@
-import { _decorator, Component, instantiate, Label, Layout, Node } from "cc";
-import { LanMgr } from "../../../Utils/Global";
+import { _decorator, Component, instantiate, Label, Layout, Node, Prefab } from "cc";
+import { LanMgr, ResourcesMgr } from "../../../Utils/Global";
 import { MapBuildingType, InnerBuildingType, UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import ViewController from "../../../BasicView/ViewController";
 import NotificationMgr from "../../../Basic/NotificationMgr";
@@ -13,11 +13,13 @@ import { MapBuildingObject, MapBuildingTavernObject, MapBuildingWormholeObject }
 import { DataMgr } from "../../../Data/DataMgr";
 import CommonTools from "../../../Tool/CommonTools";
 import { CountDataMgr } from "../../../Data/Save/CountDataMgr";
+import ArtifactConfig from "../../../Config/ArtifactConfig";
+import { ArtifactConfigData } from "../../../Const/Artifact";
 const { ccclass, property } = _decorator;
 
 @ccclass("OuterBuildingView")
 export class OuterBuildingView extends ViewController {
-    public refreshUI(building: MapBuildingObject) {
+    public async refreshUI(building: MapBuildingObject) {
         this._building = building;
 
         this.node.getChildByPath("Title/Text").getComponent(Label).string = LanMgr.getLanById(building.name);
@@ -52,6 +54,30 @@ export class OuterBuildingView extends ViewController {
                 battleIcon.active = true;
             } else {
                 this.node.getChildByPath("Level").active = false;
+            }
+            let tempShowAni: string = null;
+            const effectArtifac = DataMgr.s.artifact.getObj_artifact_equiped();
+            for (const temp of effectArtifac) {
+                const config: ArtifactConfigData = ArtifactConfig.getById(temp.artifactConfigId);
+                if (config == null) {
+                    return;
+                }
+                if (config.rank == 5) {
+                    tempShowAni = config.ani;
+                    break;
+                }
+            }
+            if (tempShowAni != this._showArtifactAni) {
+                if (this._artifactShowView != null) {
+                    this._artifactShowView.destroy();
+                    this._artifactShowView = null;
+                }
+                if (tempShowAni != null) {
+                    const prb = await ResourcesMgr.LoadABResource("prefab/artifactX5/Prefab/artifact/" + tempShowAni, Prefab);
+                    this._artifactShowView = instantiate(prb);
+                    this.node.getChildByPath("ArtifactShow").addChild(this._artifactShowView);
+                }
+                this._showArtifactAni = tempShowAni;
             }
         } else if (building.type == MapBuildingType.explore) {
             exploreIcon.active = true;
@@ -190,9 +216,11 @@ export class OuterBuildingView extends ViewController {
     ];
     private _levelShowing: boolean = false;
     private _building: MapBuildingObject = null;
+    private _showArtifactAni: string = null;
 
     private _strongholdItem: Node = null;
     private _strongholdViews: Node[] = [];
+    private _artifactShowView: Node = null;
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
@@ -215,6 +243,7 @@ export class OuterBuildingView extends ViewController {
         NotificationMgr.addListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_CHANGE, this._onWormholeCountDownTimeDidChange, this);
         NotificationMgr.addListener(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, this._onTavernCountDownTimeDidChange, this);
         NotificationMgr.addListener(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, this._onTavernNewPioneerDidChange, this);
+        NotificationMgr.addListener(NotificationName.ARTIFACT_EQUIP_DID_CHANGE, this._onArtifactEquipDidChange, this);
     }
 
     protected viewDidAppear(): void {
@@ -234,6 +263,7 @@ export class OuterBuildingView extends ViewController {
         NotificationMgr.removeListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_CHANGE, this._onWormholeCountDownTimeDidChange, this);
         NotificationMgr.removeListener(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, this._onTavernCountDownTimeDidChange, this);
         NotificationMgr.removeListener(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, this._onTavernNewPioneerDidChange, this);
+        NotificationMgr.removeListener(NotificationName.ARTIFACT_EQUIP_DID_CHANGE, this._onArtifactEquipDidChange, this);
     }
 
     //-------------------------------- function
@@ -297,6 +327,12 @@ export class OuterBuildingView extends ViewController {
     }
     private _onTavernNewPioneerDidChange(data: { id: string }) {
         if (this._building == null || this._building.id != data.id) {
+            return;
+        }
+        this.refreshUI(this._building);
+    }
+    private _onArtifactEquipDidChange(data: {}) {
+        if (this._building == null || this._building.type != MapBuildingType.city) {
             return;
         }
         this.refreshUI(this._building);

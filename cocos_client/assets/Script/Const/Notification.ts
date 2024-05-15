@@ -37,6 +37,7 @@ export enum NotificationName {
 
     // artifact
     ARTIFACT_CHANGE,
+    ARTIFACT_EQUIP_DID_CHANGE,
 
     // item
     ITEM_CHANGE,

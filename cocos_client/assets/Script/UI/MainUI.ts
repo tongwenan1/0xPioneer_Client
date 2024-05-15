@@ -73,7 +73,7 @@ export class MainUI extends ViewController {
         //DataMgr.n.websocketMsg.create_pioneer({
         //    type: "0"
         //});
-        DataMgr.s.artifact.addObj_artifact([new ArtifactData("7001", 2)]);
+        // DataMgr.s.artifact.addObj_artifact([new ArtifactData("7001", 2)]);
         // DataMgr.s.item.addObj_item([new ItemData("8001", 1000)]);
         // DataMgr.s.item.addObj_item([new ItemData("8002", 1000)]);
         // DataMgr.s.item.addObj_item([new ItemData("8003", 1000)]);
