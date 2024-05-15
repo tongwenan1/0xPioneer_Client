@@ -737,28 +737,49 @@ export class OuterTiledMapActionController extends ViewController {
                             feeTxhash: "abc",
                         });
                     } else {
-                        const r = await NetworkMgr.ethereumMsg.transferETH(0.0001, ChainConfig.getCurrentChainConfig().api.fee_psyc);
-                        if (r.status == 1) {
-                            const uploadPath: { x: number; y: number }[] = [];
-                            for (const path of movePaths) {
-                                uploadPath.push({ x: path.x, y: path.y });
-                            }
-                            let targetPosString: string = "";
-                            if (uploadPath.length > 0) {
-                                targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
-                            }
-                            DataMgr.setTempSendData("player_move_res", {
-                                pioneerId: currentActionPioneer.id,
-                                movePath: movePaths,
-                                costEnergyNum: costEnergy,
-                            });
-                            NetworkMgr.websocketMsg.player_move({
-                                pioneerId: currentActionPioneer.id,
-                                movePath: JSON.stringify(uploadPath),
-                                targetPos: targetPosString,
-                                feeTxhash: r.hash,
-                            });
+                        // const r = await NetworkMgr.ethereumMsg.transferETH(0.0001, ChainConfig.getCurrentChainConfig().api.fee_psyc);
+                        // if (r.status == 1) {
+                        //     const uploadPath: { x: number; y: number }[] = [];
+                        //     for (const path of movePaths) {
+                        //         uploadPath.push({ x: path.x, y: path.y });
+                        //     }
+                        //     let targetPosString: string = "";
+                        //     if (uploadPath.length > 0) {
+                        //         targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
+                        //     }
+                        //     DataMgr.setTempSendData("player_move_res", {
+                        //         pioneerId: currentActionPioneer.id,
+                        //         movePath: movePaths,
+                        //         costEnergyNum: costEnergy,
+                        //     });
+                        //     NetworkMgr.websocketMsg.player_move({
+                        //         pioneerId: currentActionPioneer.id,
+                        //         movePath: JSON.stringify(uploadPath),
+                        //         targetPos: targetPosString,
+                        //         feeTxhash: r.hash,
+                        //     });
+                        // }
+
+
+                        const uploadPath: { x: number; y: number }[] = [];
+                        for (const path of movePaths) {
+                            uploadPath.push({ x: path.x, y: path.y });
                         }
+                        let targetPosString: string = "";
+                        if (uploadPath.length > 0) {
+                            targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
+                        }
+                        DataMgr.setTempSendData("player_move_res", {
+                            pioneerId: currentActionPioneer.id,
+                            movePath: movePaths,
+                            costEnergyNum: costEnergy,
+                        });
+                        NetworkMgr.websocketMsg.player_move({
+                            pioneerId: currentActionPioneer.id,
+                            movePath: JSON.stringify(uploadPath),
+                            targetPos: targetPosString,
+                            feeTxhash: "",
+                        });
                     }
                 },
                 () => {
