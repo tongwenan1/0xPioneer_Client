@@ -6,13 +6,6 @@
       [
         1,
         0,
-        "npc_1",
-        1,
-        0
-      ],
-      [
-        1,
-        0,
         "npc_3",
         1,
         0
@@ -29,6 +22,7 @@
       1,
       [
         3,
+        0,
         [
           "gangster_1"
         ],
@@ -41,7 +35,7 @@
         0,
         "gangster_3",
         1,
-        10
+        60
       ],
       [
         1,
@@ -56,10 +50,51 @@
         "npc_3",
         0,
         0
+      ],
+      [
+        5,
+        "talk17",
+        "npc_0",
+        0
+      ]
+    ],
+    "quit_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "npc_0"
+        ],
+        1
+      ]
+    ],
+    "progress": 20,
+    "exp": 20
+  },
+  "task0102": {
+    "id": "task0102",
+    "name": "",
+    "start_action": [],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk17",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "pioneer_1",
+        1,
+        0
       ]
     ],
     "quit_con": null,
-    "progress": 5,
+    "progress": 10,
     "exp": 10
   },
   "task0201": {
@@ -71,56 +106,127 @@
         0,
         "npc_0",
         0
+      ],
+      [
+        2,
+        0,
+        "gangster_1",
+        1
       ]
     ],
     "complete_con": [
       1,
-      0,
-      "gangster_1",
-      0,
-      0
+      [
+        3,
+        0,
+        [
+          "npc_0"
+        ],
+        1
+      ]
     ],
     "complete_action": [
-      3,
-      0,
       [
-        "npc_0"
+        3,
+        0,
+        [
+          "npc_0"
+        ],
+        1
       ],
-      1
-    ],
-    "quit_con": [
-      3,
-      0,
       [
-        "gangster_1"
-      ],
-      1
+        5,
+        "talk16",
+        "gangster_1",
+        0
+      ]
     ],
-    "progress": 5,
-    "exp": 10
+    "quit_con": null,
+    "progress": 20,
+    "exp": 20
   },
-  "null": {
-    "id": null,
-    "name": "501020",
+  "task0202": {
+    "id": "task0202",
+    "name": "",
     "start_action": [],
     "complete_con": [
-      3,
-      0,
+      1,
       [
-        "npc_0"
-      ],
-      1
+        1,
+        "talk16",
+        -1
+      ]
     ],
-    "complete_action": null,
-    "quit_con": [
-      3,
-      0,
+    "complete_action": [
       [
-        "npc_0"
+        1,
+        0,
+        "npc_3",
+        0,
+        0
       ],
-      1
+      [
+        1,
+        0,
+        "pioneer_2",
+        1,
+        0
+      ]
     ],
-    "progress": 5,
+    "quit_con": null,
+    "progress": 10,
     "exp": 10
+  },
+  "task0801": {
+    "id": "task0801",
+    "name": "",
+    "start_action": null,
+    "complete_con": null,
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 20,
+    "exp": 20
+  },
+  "task1101": {
+    "id": "task1101",
+    "name": "",
+    "start_action": [
+      [
+        2,
+        1,
+        "building_1",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        3,
+        1,
+        [
+          "building_1"
+        ],
+        1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "pioneer_1",
+        1,
+        0
+      ],
+      [
+        1,
+        0,
+        "pioneer_3",
+        1,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": 20,
+    "exp": 20
   }
 }

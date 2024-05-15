@@ -72,7 +72,8 @@
     ],
     "fail_con": null,
     "steps": [
-      "task0201"
+      "task0201",
+      "task0202"
     ]
   },
   "task03": {
@@ -244,25 +245,27 @@
     "pre_con": [],
     "pre_action": null,
     "close_con": null,
-    "take_con": null,
+    "take_con": [
+      2,
+      [
+        4,
+        0,
+        [
+          "gangster_3"
+        ],
+        1
+      ]
+    ],
     "fail_con": null,
-    "steps": null
+    "steps": [
+      "task0801"
+    ]
   },
   "task09": {
     "id": "task09",
     "name": "501010",
     "type": 1,
-    "pre_con": [
-      2,
-      [
-        3,
-        0,
-        [
-          "gangster_1"
-        ],
-        1
-      ]
-    ],
+    "pre_con": [],
     "pre_action": null,
     "close_con": null,
     "take_con": [
@@ -317,5 +320,25 @@
     ],
     "fail_con": null,
     "steps": null
+  },
+  "task11": {
+    "id": "task11",
+    "name": "",
+    "type": 1,
+    "pre_con": [],
+    "pre_action": [],
+    "close_con": [],
+    "take_con": [
+      2,
+      [
+        1,
+        "talk16",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "task1101"
+    ]
   }
 }
