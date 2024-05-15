@@ -121,13 +121,15 @@ export class BattleReportListItemUI extends Component {
     private _initWithFightReport(report: BattleReportData): void {
         const data = report.data as FIGHT_FINISHED_DATA;
         const selfRoleInfo = data.attackerIsSelf ? data.attacker : data.defender;
-        this.leftNameLabel.string = LanMgr.getLanById(selfRoleInfo.name);
+        this.leftNameLabel.string =
+            LanMgr.getLanById(selfRoleInfo.name).indexOf("LanguageErr") == -1 ? LanMgr.getLanById(selfRoleInfo.name) : selfRoleInfo.name;
         this.leftHpBar.progress = selfRoleInfo.hp / selfRoleInfo.hpMax;
         this.leftHpText.string = `${selfRoleInfo.hp} / ${selfRoleInfo.hpMax}`;
         this.leftAttackerOrDefenderSign.spriteFrame = data.attackerIsSelf ? this.attackerSign : this.defenderSign;
 
         const enemyRoleInfo = !data.attackerIsSelf ? data.attacker : data.defender;
-        this.rightNameLabel.string = LanMgr.getLanById(enemyRoleInfo.name);
+        this.rightNameLabel.string =
+            LanMgr.getLanById(enemyRoleInfo.name).indexOf("LanguageErr") == -1 ? LanMgr.getLanById(enemyRoleInfo.name) : enemyRoleInfo.name;
         this.rightHpBar.progress = enemyRoleInfo.hp / enemyRoleInfo.hpMax;
         this.rightHpText.string = `${enemyRoleInfo.hp} / ${enemyRoleInfo.hpMax}`;
         this.rightAttackerOrDefenderSign.spriteFrame = !data.attackerIsSelf ? this.attackerSign : this.defenderSign;

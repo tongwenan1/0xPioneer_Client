@@ -451,6 +451,8 @@ export default class PioneerMgr {
                 }
             } else if (stayBuilding.type == MapBuildingType.event) {
                 if (pioneer.type == MapPioneerType.player) {
+                    NetworkMgr.websocketMsg.player_event({ pioneerId: pioneer.id, buildingId: stayBuilding.id });
+                    
                     let currentEvent = EventConfig.getById(stayBuilding.eventId);
                     if (currentEvent != null) {
                         this.pioneerDealWithEvent(pioneer.id, stayBuilding.id, currentEvent);

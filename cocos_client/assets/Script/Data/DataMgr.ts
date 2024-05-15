@@ -142,6 +142,12 @@ export class DataMgr {
         const localData: s2c_user.Iplayer_move_res_local_data = DataMgr.socketSendData.get("player_move_res") as s2c_user.Iplayer_move_res_local_data;
         DataMgr.s.pioneer.beginMove(localData.pioneerId, localData.movePath);
     };
+    public static player_event_res = (e: any) => {
+        const p: s2c_user.Iplayer_event_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+    };
 
     //------------------------------------- nft
     public static player_bind_nft_res = (e: any) => {
@@ -250,7 +256,7 @@ export class DataMgr {
             attacker: {
                 name: DataMgr.s.userInfo.data.name,
                 avatarIcon: "icon_player_avatar", // todo
-                hp: 100,
+                hp: p.fightResult ? 100 : 0,
                 hpMax: 100,
             },
             defender: {
@@ -261,7 +267,7 @@ export class DataMgr {
             },
             attackerIsSelf: true,
             buildingId: null,
-            position: null,
+            position: building.stayMapPositions,
             fightResult: p.fightResult ? "win" : "lose",
             rewards: [],
         });

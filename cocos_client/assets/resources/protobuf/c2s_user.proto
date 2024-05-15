@@ -84,6 +84,11 @@ message player_event_select {
     required string eventId = 3;
 }
 
+message player_event {
+    required string pioneerId = 1;
+    required string buildingId = 2;
+}
+
 message player_item_use {
     required string itemId = 1;
     required uint32 num = 2;

@@ -95,6 +95,10 @@ message player_event_select_res {
     required int32 res = 1;
 }
 
+message player_event_res {
+    required int32 res = 1;
+}
+
 message player_item_use_res {
     required int32 res = 1;
 }

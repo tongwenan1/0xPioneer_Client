@@ -763,7 +763,6 @@ export class OuterTiledMapActionController extends ViewController {
                         //     });
                         // }
 
-
                         const uploadPath: { x: number; y: number }[] = [];
                         for (const path of movePaths) {
                             uploadPath.push({ x: path.x, y: path.y });

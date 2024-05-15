@@ -41,6 +41,7 @@ export enum protobuf_c2s {
     player_wormhole_fight = 225,
     player_bind_nft = 226,
     player_pioneer_change_show = 227,
+    player_event = 228,
     get_battle_report = 299,
 
     fetch_user_psyc = 400
@@ -89,6 +90,7 @@ export enum protobuf_s2c {
     player_wormhole_fight_res = 20227,
     player_bind_nft_res = 20228,
     player_pioneer_change_show_res = 20229,
+    player_event_res = 20230,
     get_battle_report_res = 20299,
 
     storhouse_change = 20300,

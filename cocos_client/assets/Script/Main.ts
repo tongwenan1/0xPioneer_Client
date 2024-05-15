@@ -177,6 +177,7 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_building_levelup_res", DataMgr.player_building_levelup_res);
         // map
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
+        NetworkMgr.websocket.on("player_event_res", DataMgr.player_event_res);
         NetworkMgr.websocket.on("player_pioneer_change_show_res", DataMgr.player_pioneer_change_show_res);
         NetworkMgr.websocket.on("player_actiontype_change", DataMgr.player_actiontype_change);
         // nft

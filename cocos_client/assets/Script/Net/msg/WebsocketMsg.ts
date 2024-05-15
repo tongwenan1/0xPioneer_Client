@@ -113,6 +113,9 @@ export class WebsocketMsg {
     public player_gather(d: c2s_user.Iplayer_gather) {
         this.send_packet("player_gather", d);
     }
+    public player_event(d: c2s_user.Iplayer_event) {
+        this.send_packet("player_event", d);
+    }
     public player_explore(d: c2s_user.Iplayer_explore) {
         this.send_packet("player_explore", d);
     }
@@ -273,6 +276,10 @@ export namespace c2s_user {
     export interface Iplayer_gather {
         pioneerId: string;
         resourceBuildingId: string;
+    }
+    export interface Iplayer_event {
+        pioneerId: string;
+        buildingId: string;
     }
     export interface Iplayer_explore {
         pioneerId: string;
@@ -446,6 +453,9 @@ export namespace s2c_user {
         res: number;
         pioneerId: string;
         show: boolean;
+    }
+    export interface Iplayer_event_res {
+        res: number;
     }
     export interface Iplayer_move_res_local_data {
         pioneerId: string;
