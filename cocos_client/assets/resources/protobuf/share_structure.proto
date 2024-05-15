@@ -30,8 +30,11 @@ message player_sinfo {
     optional troop_info_data generateTroopInfo = 15;
     optional energy_info_data generateEnergyInfo = 16;
 
-    map<string,attacker_data> attacker = 17;
-    map<string,string> defender = 18;
+    optional uint32 currFetchTimes = 17;
+    optional uint32 limitFetchTimes = 18;
+
+    map<string,attacker_data> attacker = 19;
+    map<string,string> defender = 20;
 }
 
 // self player data
@@ -182,6 +185,11 @@ message tran_data {
 message attacker_data {
     optional string pioneerId = 1;
     optional string buildingId = 2;
+}
+
+message actiontype_change_data {
+    optional string pioneerId = 1;
+    optional string actiontype = 2;
 }
 
 message battle_report_data {

@@ -214,6 +214,15 @@ message player_pioneer_change_show_res {
 
 // ----------------------------------------------------------------------------
 
+message fetch_user_psyc_res {
+    required int32 res = 1;
+    optional float psycfetched = 2; // mint gold transaction hash, see in contract
+    optional string txhash = 3; // mint gold transaction hash, see in contract
+    optional string logid = 4; // mint gold transaction log id 
+}
+
+// ----------------------------------------------------------------------------
+
 message player_exp_change {
     required int32 addExp = 1; // exp change value
     required uint32 newExp = 2; // player new exp after change
@@ -223,6 +232,11 @@ message player_exp_change {
 message player_treasure_progress_change {
     required int32 addProgress = 1;
     required uint32 newProgress = 2;
+}
+
+message player_actiontype_change {
+    required int32 res = 1;
+    optional share.actiontype_change_data data = 2;
 }
 
 message save_archives_res {

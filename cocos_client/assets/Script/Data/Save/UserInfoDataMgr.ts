@@ -82,82 +82,6 @@ export default class UserInfoDataMgr {
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_NAME);
     }
 
-    public gainExp(exp: number): void {
-        if (exp <= 0) {
-            return;
-        }
-        this._data.exp += exp;
-
-        let isLvlup: boolean = false;
-        let parseLv: boolean = true;
-        const nextLvConfigs: LvlupConfigData[] = [];
-        do {
-            const lvlConfig = LvlupConfig.getById(this._data.level.toString());
-            const nextLvConfig = LvlupConfig.getById((this._data.level + 1).toString());
-            if (nextLvConfig != null) {
-                if (this._data.exp >= lvlConfig.exp) {
-                    isLvlup = true;
-                    this._data.level += 1;
-                    this._data.exp -= lvlConfig.exp;
-                    this._data.cityRadialRange += nextLvConfig.city_vision;
-                    nextLvConfigs.push(nextLvConfig);
-                } else {
-                    parseLv = false;
-                }
-            } else {
-                parseLv = false;
-            }
-        } while (parseLv);
-
-        NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_EXP, { exp: exp });
-
-        if (isLvlup) {
-            for (let i = 0; i < nextLvConfigs.length; i++) {
-                const nextLvConfig = nextLvConfigs[i];
-                // hpmax
-                let hpMaxChangeValue: number = 0;
-                if (nextLvConfig.hp_max > 0) {
-                    hpMaxChangeValue += nextLvConfig.hp_max;
-                }
-
-                // event_building
-                const showBuildingIds: string[] = [];
-                if (nextLvConfig.event_building != null) {
-                    for (const buidingId of nextLvConfig.event_building) {
-                        showBuildingIds.push(buidingId);
-                    }
-                }
-
-                // reward
-                const rewards: GetPropData[] = [];
-                if (nextLvConfig.reward != null) {
-                    for (const propData of nextLvConfig.reward) {
-                        rewards.push({
-                            type: propData[0],
-                            propId: propData[1],
-                            num: propData[2],
-                        });
-                    }
-                }
-                NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_LEVEL, {
-                    hpMaxChangeValue: hpMaxChangeValue,
-                    showBuildingIds: showBuildingIds,
-                    rewards: rewards,
-                });
-            }
-        }
-    }
-
-    public gainTreasureProgress(progress: number): void {
-        if (progress <= 0) {
-            return;
-        }
-
-        this._data.exploreProgress += progress;
-
-        NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS);
-    }
-
     public gainGenerateEnergy(energy: number): void {
         const energyBuildingData = this._data.innerBuildings[InnerBuildingType.EnergyStation];
         if (energyBuildingData == null) {
@@ -200,7 +124,8 @@ export default class UserInfoDataMgr {
                           countTime: globalData.generateTroopInfo.countTime,
                           troopNum: globalData.generateTroopInfo.troopNum,
                       },
-            energyDidGetTimes: 1,
+            energyDidGetTimes: globalData.currFetchTimes,
+            energyGetLimitTimes: globalData.limitFetchTimes,
             cityRadialRange: globalData.cityRadialRange,
             didFinishRookie: globalData.didFinishRookie,
             innerBuildings: {},

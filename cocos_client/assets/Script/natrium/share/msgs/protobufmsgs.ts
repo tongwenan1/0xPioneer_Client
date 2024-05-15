@@ -42,6 +42,8 @@ export enum protobuf_c2s {
     player_bind_nft = 226,
     player_pioneer_change_show = 227,
     get_battle_report = 299,
+
+    fetch_user_psyc = 400
 }
 
 export enum protobuf_s2c {
@@ -91,5 +93,8 @@ export enum protobuf_s2c {
 
     storhouse_change = 20300,
     player_exp_change = 20301,
-    player_treasure_progress_change = 20302
+    player_treasure_progress_change = 20302,
+    player_actiontype_change = 20303,
+
+    fetch_user_psyc_res = 20400
 }

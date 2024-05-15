@@ -121,12 +121,13 @@ export default class PioneerMgr {
         }
         // check wormhole to idle
         for (const building of DataMgr.s.mapBuilding.getWormholeBuildings()) {
-            if (building.defendPioneerIds.indexOf(pioneerId) != -1) {
-                NetworkMgr.websocketMsg.player_pioneer_change_show({
-                    pioneerId: pioneerId,
-                    show: true,
+            const index: number = building.defendPioneerIds.indexOf(pioneerId);
+            if (index >= 0) {
+                NetworkMgr.websocketMsg.player_wormhole_set_attacker({
+                    pioneerId: "",
+                    buildingId: building.id,
+                    index: index
                 });
-                DataMgr.s.mapBuilding.removeDefendPioneer(building.id, pioneerId);
                 break;
             }
         }

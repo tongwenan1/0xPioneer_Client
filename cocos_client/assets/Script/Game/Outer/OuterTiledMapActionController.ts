@@ -495,6 +495,9 @@ export class OuterTiledMapActionController extends ViewController {
             ) {
                 actionType = 6;
                 stayPositons = stayBuilding.stayMapPositions;
+                if (stayBuilding.type == MapBuildingType.wormhole && stayBuilding.defendPioneerIds.length >= 3) {
+                    return;
+                }
             } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing) {
                 if (stayBuilding.eventId == currentActionPioneer.actionEventId) {
                     const currentEvent = EventConfig.getById(stayBuilding.eventId);

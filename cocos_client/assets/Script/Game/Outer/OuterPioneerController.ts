@@ -661,11 +661,7 @@ export class OuterPioneerController extends ViewController {
         // const building = BuildingMgr.getBuildingById(buildingId);
         const building = DataMgr.s.mapBuilding.getBuildingById(data.id);
         if (building != null) {
-            if (building.progress > 0) {
-                const effectProgress = GameMgr.getAfterExtraEffectPropertyByPioneer(null, GameExtraEffectType.TREASURE_PROGRESS, building.progress);
-                DataMgr.s.userInfo.gainTreasureProgress(effectProgress);
-            }
-            if (building.exp > 0) DataMgr.s.userInfo.gainExp(building.exp);
+            
         }
     }
     private _onMiningBuilding(data: { actionId: string; id: string }): void {
@@ -698,9 +694,7 @@ export class OuterPioneerController extends ViewController {
 
         if (building.progress > 0) {
             const effectProgress = GameMgr.getAfterExtraEffectPropertyByPioneer(null, GameExtraEffectType.TREASURE_PROGRESS, building.progress);
-            DataMgr.s.userInfo.gainTreasureProgress(effectProgress);
         }
-        if (building.exp > 0) DataMgr.s.userInfo.gainExp(building.exp);
     }
     private async _onEventBuilding(data: { pioneerId: string; buildingId: string; eventId: string }): Promise<void> {
         const actionPioneerId = data.pioneerId;

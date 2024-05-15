@@ -17,6 +17,7 @@ export interface MapBuildingConfigData {
     progress: null;
     resources: null;
     quota: null;
+    origialQuota: null;
     exp: null;
     event: string;
     hp: number;
@@ -64,6 +65,7 @@ export interface MapBuildingMainCityData extends MapBuildingBaseData {
 export interface MapBuildingResourceData extends MapBuildingBaseData {
     resources: { id: string; num: number };
     quota: number;
+    orginalQuota: number;
 }
 export interface MapBuildingWormholeData extends MapBuildingBaseData {
     wormholdCountdownTime: number;

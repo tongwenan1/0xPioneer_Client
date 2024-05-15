@@ -17,6 +17,22 @@ export default class CommonTools {
         const randomIndex = Math.floor(Math.random() * items.length);
         return items[randomIndex];
     }
+    public static getRandomItemByWeights<T>(elements: T[], weights: number[]): T {
+        if (elements.length !== weights.length) {
+            return null;
+        }
+
+        const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+        let random = Math.random() * totalWeight;
+
+        for (let i = 0; i < weights.length; i++) {
+            if (random < weights[i]) {
+                return elements[i];
+            }
+            random -= weights[i];
+        }
+        return null;
+    }
 
     //------------------------------------------- time
     public static getNextDayAMTimestamp(hour: number): number {

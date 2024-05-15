@@ -168,6 +168,8 @@ export class Main extends ViewController {
         // websocket
         NetworkMgr.websocket.on("onmsg", DataMgr.onmsg);
         NetworkMgr.websocket.on("enter_game_res", DataMgr.enter_game_res);
+        NetworkMgr.websocket.on("player_exp_change", DataMgr.player_exp_change);
+        NetworkMgr.websocket.on("player_treasure_progress_change", DataMgr.player_treasure_progress_change);
         // item changed
         NetworkMgr.websocket.on("storhouse_change", DataMgr.storhouse_change);
         NetworkMgr.websocket.on("player_item_use_res", DataMgr.player_item_use_res);
@@ -176,7 +178,7 @@ export class Main extends ViewController {
         // map
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
         NetworkMgr.websocket.on("player_pioneer_change_show_res", DataMgr.player_pioneer_change_show_res);
-
+        NetworkMgr.websocket.on("player_actiontype_change", DataMgr.player_actiontype_change);
         // nft
         NetworkMgr.websocket.on("player_bind_nft_res", DataMgr.player_bind_nft_res);
         NetworkMgr.websocket.on("player_nft_lvlup_res", DataMgr.player_nft_lvlup_res);
@@ -185,7 +187,8 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_wormhole_set_defender_res", DataMgr.player_wormhole_set_defender_res);
         NetworkMgr.websocket.on("player_wormhole_set_attacker_res", DataMgr.player_wormhole_set_attacker_res);
         NetworkMgr.websocket.on("player_wormhole_fight_res", DataMgr.player_wormhole_fight_res);
-
+        // psyc
+        NetworkMgr.websocket.on("fetch_user_psyc_res", DataMgr.fetch_user_psyc_res);
         // pioneernft func
         NetworkMgr.websocket.on("get_pioneers_res", DataMgr.get_pioneers_res);
 

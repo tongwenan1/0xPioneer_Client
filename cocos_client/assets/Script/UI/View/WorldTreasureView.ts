@@ -72,13 +72,13 @@ export class WorldTreasureView extends Component {
         const perTimeNeedProgress: number = (
             ConfigConfig.getConfig(ConfigType.WorldTreasureChancePerBoxExploreProgress) as WorldTreasureChancePerBoxExploreProgressParam
         ).progress;
-        const perGetTimeNeedHeatValue: number = (
+        const perGetTimeNeedHeatValue: number = (1 / (
             ConfigConfig.getConfig(ConfigType.WorldTreasureChanceLimitHeatValueCoefficient) as WorldTreasureChanceLimitHeatValueCoefficientParam
-        ).coefficient;
+        ).coefficient);
 
         const progress: number = DataMgr.s.userInfo.data.exploreProgress;
         const heatValue: number = 200;
-        const limitTimes: number = Math.floor(heatValue * perGetTimeNeedHeatValue);
+        const limitTimes: number = Math.floor(heatValue / perGetTimeNeedHeatValue);
         const canGeTimes: number = Math.min(limitTimes, Math.floor(progress / perTimeNeedProgress));
         const didGetTimes: number = DataMgr.s.userInfo.data.worldTreasureTodayDidGetTimes;
         const canGetBox: boolean = didGetTimes < canGeTimes;

@@ -188,6 +188,11 @@ message get_battle_report {
 
 // ----------------------------------------------------------------------------
 
+message fetch_user_psyc {
+}
+
+// ----------------------------------------------------------------------------
+
 message save_archives {
     required string archives = 1;
 }

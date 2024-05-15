@@ -13,6 +13,7 @@ import { GameExtraEffectType, ResourceCorrespondingItem } from "../../../Const/C
 import UIPanelManger from "../../../Basic/UIPanelMgr";
 import { DataMgr } from "../../../Data/DataMgr";
 import { NetworkMgr } from "../../../Net/NetworkMgr";
+import LvlupConfig from "../../../Config/LvlupConfig";
 
 const { ccclass, property } = _decorator;
 
@@ -26,23 +27,7 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
     public async refreshUI(building: UserInnerBuildInfo, canAction: boolean = true) {
         await super.refreshUI(building, canAction);
 
-        this._getInfoView.active = false;
-        if (this._building.buildLevel > 0) {
-            this._getInfoView.active = true;
-
-            const infoViewY = InnerBuildingLvlUpConfig.getBuildingLevelData(this._building.buildLevel, "info_y_energy");
-            if (infoViewY != null) {
-                this._produceInfoView.position = v3(0, infoViewY, 0);
-                this._getInfoView.position = v3(0, infoViewY, 0);
-            }
-
-            this._getInfoView.getChildByPath("TopContent/CurrentNum").getComponent(Label).string = "123";
-            this._getInfoView.getChildByPath("TopContent").getComponent(Layout).updateLayout();
-
-            this._getInfoView.getChildByPath("BottomContent/CurrentTime").getComponent(Label).string = "1";
-            this._getInfoView.getChildByPath("BottomContent/PerNum").getComponent(Label).string = this._limitGetTimes.toString();
-            this._getInfoView.getChildByPath("BottomContent").getComponent(Layout).updateLayout();
-        }
+        this._viewRefresh();
     }
     //-------------------------------------------------lifecycle
     protected innerBuildingLoad(): void {
@@ -52,6 +37,8 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
         this._produceInfoView.active = false;
 
         this._getInfoView = this.node.getChildByName("GetInfoView");
+
+        NetworkMgr.websocket.on("fetch_user_psyc_res", this._onFetchUserPsycRes.bind(this));
     }
 
     protected viewDidDestroy(): void {
@@ -111,7 +98,28 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
     //         this._produceInfoView.active = false;
     //     }
     // }
+    private _viewRefresh() {
+        this._getInfoView.active = false;
+        if (this._building.buildLevel > 0) {
+            this._getInfoView.active = true;
 
+            const infoViewY = InnerBuildingLvlUpConfig.getBuildingLevelData(this._building.buildLevel, "info_y_energy");
+            if (infoViewY != null) {
+                this._produceInfoView.position = v3(0, infoViewY, 0);
+                this._getInfoView.position = v3(0, infoViewY, 0);
+            }
+
+            const perEnergyGetNum: number = InnerBuildingLvlUpConfig.getBuildingLevelData(this._building.buildLevel, "psyc_output");
+
+            this._getInfoView.getChildByPath("TopContent/CurrentNum").getComponent(Label).string = (perEnergyGetNum == null ? 1 : perEnergyGetNum).toString();
+            this._getInfoView.getChildByPath("TopContent").getComponent(Layout).updateLayout();
+
+            this._limitGetTimes = DataMgr.s.userInfo.data.energyGetLimitTimes;
+            this._getInfoView.getChildByPath("BottomContent/CurrentTime").getComponent(Label).string = DataMgr.s.userInfo.data.energyDidGetTimes.toString();
+            this._getInfoView.getChildByPath("BottomContent/PerNum").getComponent(Label).string = this._limitGetTimes.toString();
+            this._getInfoView.getChildByPath("BottomContent").getComponent(Layout).updateLayout();
+        }
+    }
     //------------------------------- action
     private onTapGetEnergy() {
         if (DataMgr.s.userInfo.data.energyDidGetTimes >= this._limitGetTimes) {
@@ -120,6 +128,7 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
             UIHUDController.showCenterTip("No PSYC to collect");
             return;
         }
+        NetworkMgr.websocketMsg.fetch_user_psyc({});
     }
     // private onTapGetPSYC() {
     // if (this._building.upgradeTotalTime > 0) {
@@ -140,4 +149,8 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
     // DataMgr.setTempSendData("player_get_auto_energy_res", { num: produceNum });
     // NetworkMgr.websocketMsg.player_get_auto_energy({});
     // }
+    //------------------------------- notification
+    private _onFetchUserPsycRes() {
+        this._viewRefresh();
+    }
 }

@@ -74,6 +74,9 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_exp_change, "player_exp_change", "s2c_user.player_exp_change");
     pcodec.register_protobuf_msg(protobuf_s2c.player_treasure_progress_change, "player_treasure_progress_change", "s2c_user.player_treasure_progress_change");
 
+    pcodec.register_protobuf_msg(protobuf_s2c.fetch_user_psyc_res, "fetch_user_psyc_res", "s2c_user.fetch_user_psyc_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_actiontype_change, "player_actiontype_change", "s2c_user.player_actiontype_change");
+
     // register client msg
     pcodec.register_protobuf_msg(protobuf_c2s.login, "login", "c2s_user.login");
     pcodec.register_protobuf_msg(protobuf_c2s.create_player, "create_player", "c2s_user.create_player");
@@ -118,4 +121,6 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.player_bind_nft, "player_bind_nft", "c2s_user.player_bind_nft");
     pcodec.register_protobuf_msg(protobuf_c2s.player_pioneer_change_show, "player_pioneer_change_show", "c2s_user.player_pioneer_change_show");
     pcodec.register_protobuf_msg(protobuf_c2s.get_battle_report, "get_battle_report", "c2s_user.get_battle_report");
+
+    pcodec.register_protobuf_msg(protobuf_c2s.fetch_user_psyc, "fetch_user_psyc", "c2s_user.fetch_user_psyc");
 };

@@ -25,6 +25,7 @@ import { NotificationName } from "../../Const/Notification";
 import CLog from "../../Utils/CLog";
 import { NFTPioneerObject } from "../../Const/NFTPioneerDefine";
 import NetGlobalData from "./Data/NetGlobalData";
+import CommonTools from "../../Tool/CommonTools";
 
 export class MapBuildingDataMgr {
     private _building_data: MapBuildingObject[];
@@ -94,6 +95,8 @@ export class MapBuildingDataMgr {
     }
 
     private _initInterval() {
+        let timeEightUpdate: boolean = false;
+        let timeTwoUpdate: boolean = false;
         setInterval(() => {
             for (const obj of this._building_data) {
                 if (obj.type == MapBuildingType.wormhole) {
@@ -118,6 +121,55 @@ export class MapBuildingDataMgr {
                             NotificationMgr.triggerEvent(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_FINISH, { id: tavern.id });
                         }
                     }
+                }
+            }
+            let canUpdateBuilding: boolean = false;
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            if (hours === 8 && minutes === 0 && !timeEightUpdate) {
+                canUpdateBuilding = true;
+                timeEightUpdate = true;
+            } else if (hours === 14 && minutes === 0 && !timeTwoUpdate) {
+                canUpdateBuilding = true;
+                timeTwoUpdate = true;
+            }
+            if (canUpdateBuilding) {
+                // update building show
+                let hideactionBuildingNum: number = 0;
+                for (let i = 0; i < this._building_data.length; i++) {
+                    const temp = this._building_data[i];
+                    if (temp.show) {
+                        continue;
+                    }
+                    if (temp.type != MapBuildingType.resource && temp.type != MapBuildingType.event) {
+                        continue;
+                    }
+                    hideactionBuildingNum += 1;
+                }
+                const rateAddCof: number = hideactionBuildingNum === 0 ? 0.5 : 0.5 / hideactionBuildingNum;
+                let rate: number = 0.5;
+                let random: boolean[] = [true, false];
+                for (let i = 0; i < this._building_data.length; i++) {
+                    const temp = this._building_data[i];
+                    if (temp.show) {
+                        continue;
+                    }
+                    const canShow: boolean = CommonTools.getRandomItemByWeights(random, [rate, 1 - rate]);
+                    if (!canShow) {
+                        rate += rateAddCof;
+                        continue;
+                    }
+                    rate = 0.5;
+                    if (temp.type == MapBuildingType.resource) {
+                        const resource = temp as MapBuildingResourceObject;
+                        resource.quota = resource.orginalQuota;
+                        this.saveObj_building();
+                    } else if (temp.type == MapBuildingType.event) {
+                        temp.eventId = temp.originalEventId;
+                        this.saveObj_building();
+                    }
+                    this.showBuilding(temp.id);
                 }
             }
         }, 1000);
@@ -206,6 +258,7 @@ export class MapBuildingDataMgr {
             animType: temple.node ? temple.node : null,
             resources: temple.resources ? { id: temple.resources[0], num: temple.resources[1] } : null,
             quota: temple.quota ? temple.quota : 1,
+            orginalQuota: temple.quota ? temple.quota : 1,
         };
         return obj;
     }
@@ -364,6 +417,7 @@ export class MapBuildingDataMgr {
 
             resources: temple.resources,
             quota: temple.quota,
+            orginalQuota: temple.orginalQuota,
         };
 
         return obj;

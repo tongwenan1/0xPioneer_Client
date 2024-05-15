@@ -69,10 +69,6 @@ export default class UserInfoMgr {
 
                 if (finishedStep.progress != null && finishedStep.progress > 0) {
                     const effectProgress = GameMgr.getAfterExtraEffectPropertyByPioneer(null, GameExtraEffectType.TREASURE_PROGRESS, finishedStep.progress);
-                    DataMgr.s.userInfo.gainTreasureProgress(effectProgress);
-                }
-                if (finishedStep.exp != null && finishedStep.exp > 0) {
-                    DataMgr.s.userInfo.gainExp(finishedStep.exp);
                 }
             }
         }

@@ -156,4 +156,8 @@ export default class LvlupConfig {
         }
         return maxNum;
     }
+    public static getEnergyLimitTimes(lvl: number) {
+        const lvlStr = lvl.toString();
+        return this._confs[lvlStr] != undefined ? this._confs[lvlStr].psyc_limit : 0;
+    }
 }

@@ -80,7 +80,6 @@ export class MainUI extends ViewController {
         // DataMgr.s.item.addObj_item([new ItemData("10", 1)]);
         // DataMgr.s.item.addObj_item([new ItemData("11", 1)]);
         // DataMgr.s.nftPioneer.generateNewNFT();
-        // DataMgr.s.userInfo.gainTreasureProgress(80);
     }
 
     protected viewDidDestroy(): void {

@@ -189,6 +189,10 @@ export class WebsocketMsg {
         this.send_packet("player_wormhole_fight", d);
     }
 
+    public fetch_user_psyc(d: c2s_user.Ifetch_user_psyc) {
+        this.send_packet("fetch_user_psyc", d);
+    }
+
     public save_archives(d: c2s_user.Isave_archives) {
         this.send_packet("save_archives", d);
     }
@@ -353,6 +357,8 @@ export namespace c2s_user {
         buildingId: string;
     }
 
+    export interface Ifetch_user_psyc {}
+
     export interface Iplayer_bind_nft {
         pioneerId: string;
     }
@@ -422,6 +428,19 @@ export namespace s2c_user {
         res: number;
         pioneerId: string;
         show: boolean;
+    }
+    export interface Iplayer_exp_change {
+        addExp: number;
+        newExp: number;
+        newLevel: number;
+    }
+    export interface Iplayer_treasure_progress_change {
+        addProgress: number;
+        newProgress: number;
+    }
+    export interface Iplayer_actiontype_change {
+        res: number;
+        data: share.Iactiontype_change_data;
     }
     export interface Iplayer_move_res {
         res: number;
@@ -555,6 +574,13 @@ export namespace s2c_user {
         pioneerData: share.Ipioneer_data;
         nftData: share.Infts_info_data;
     }
+
+    export interface Ifetch_user_psyc_res {
+        res: number;
+        psycfetched: number;
+        txhash: string;
+        logid: string;
+    }
 }
 
 export namespace share {
@@ -612,6 +638,9 @@ export namespace share {
         didFinishRookie: boolean;
         generateTroopInfo?: troop_info_data;
         generateEnergyInfo?: energy_info_data;
+
+        currFetchTimes: number;
+        limitFetchTimes: number;
 
         attacker: { [key: string]: Iattacker_data };
         defender: { [key: string]: string };
@@ -719,6 +748,11 @@ export namespace share {
     export interface Iattacker_data {
         pioneerId: string;
         buildingId: string;
+    }
+
+    export interface Iactiontype_change_data {
+        pioneerId: string;
+        actiontype: string;
     }
 
     export interface Ipioneer_info {

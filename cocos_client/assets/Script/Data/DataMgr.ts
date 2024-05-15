@@ -63,6 +63,19 @@ export class DataMgr {
             }
         }
     };
+    public static player_exp_change = (e: any) => {
+        const p: s2c_user.Iplayer_exp_change = e.data;
+        DataMgr.s.userInfo.data.exp = p.newExp;
+        if (p.newLevel != null) {
+            DataMgr.s.userInfo.data.level = p.newLevel;
+        }
+        NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_EXP, { exp: p.addExp });
+    };
+    public static player_treasure_progress_change = (e: any) => {
+        const p: s2c_user.Iplayer_treasure_progress_change = e.data;
+        DataMgr.s.userInfo.data.exploreProgress = p.newProgress;
+        NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS);
+    };
     //------------------------------------- item
     public static storhouse_change = (e: any) => {
         const p: s2c_user.Istorhouse_change = e.data;
@@ -110,6 +123,13 @@ export class DataMgr {
         }
 
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: p.pioneerId, show: p.show });
+    };
+    public static player_actiontype_change = (e: any) => {
+        const p: s2c_user.Iplayer_actiontype_change = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        DataMgr.s.pioneer.changeActionType(p.data.pioneerId, p.data.actiontype as MapPioneerActionType);
     };
     public static player_move_res = (e: any) => {
         const p: s2c_user.Iplayer_move_res = e.data;
@@ -188,17 +208,10 @@ export class DataMgr {
                 continue;
             }
             building.defendPioneerIds[parseInt(key)] = temp.pioneerId;
-            DataMgr.s.pioneer.changeActionType(temp.pioneerId, MapPioneerActionType.wormhole);
 
             buildingId = building.id;
-
-            if (temp.pioneerId != null && temp.pioneerId != undefined && temp.pioneerId.length > 0) {
-                NetworkMgr.websocketMsg.player_pioneer_change_show({
-                    pioneerId: temp.pioneerId,
-                    show: false,
-                });
-            }
         }
+        // currentBuilding
         const buildingData = DataMgr.s.mapBuilding.getBuildingById(buildingId);
         if (buildingData.type == MapBuildingType.wormhole) {
             const wormholeBuilding = buildingData as MapBuildingWormholeObject;
@@ -252,6 +265,15 @@ export class DataMgr {
             fightResult: p.fightResult ? "win" : "lose",
             rewards: [],
         });
+    };
+
+    //----------------------------------- psyc
+    public static fetch_user_psyc_res = (e: any) => {
+        const p: s2c_user.Ifetch_user_psyc_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        DataMgr.s.userInfo.data.energyDidGetTimes += 1;
     };
 
     public static get_pioneers_res = (e: any) => {
@@ -513,7 +535,6 @@ export class DataMgr {
                                         GameExtraEffectType.TREASURE_PROGRESS,
                                         buildingDefender.winprogress
                                     );
-                                    DataMgr.s.userInfo.gainTreasureProgress(effectProgress);
                                 }
                             } else {
                                 selfKillPioneer = pioneerDefender;
@@ -541,14 +562,12 @@ export class DataMgr {
                         // task
                         DataMgr.s.task.pioneerKilled(selfKillPioneer.id);
                         // pioneer win reward
-                        DataMgr.s.userInfo.gainExp(selfKillPioneer.winExp);
                         if (selfKillPioneer.winProgress > 0) {
                             const effectProgress = GameMgr.getAfterExtraEffectPropertyByPioneer(
                                 null,
                                 GameExtraEffectType.TREASURE_PROGRESS,
                                 selfKillPioneer.winProgress
                             );
-                            DataMgr.s.userInfo.gainTreasureProgress(effectProgress);
                         }
                         if (selfKillPioneer.drop != null) {
                             // upload resource changed fight

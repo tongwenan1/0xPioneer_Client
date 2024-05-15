@@ -34,6 +34,7 @@ export interface UserInfoObject {
 
     generateTroopInfo: GenerateTroopInfo;
     energyDidGetTimes: number;
+    energyGetLimitTimes: number;
     innerBuildings: { [key: string]: UserInnerBuildInfo };
 
     wormholeDefenderIds: [string, string, string];
