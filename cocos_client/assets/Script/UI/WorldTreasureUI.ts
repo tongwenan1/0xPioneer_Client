@@ -168,7 +168,7 @@ export class WorldTreasureUI extends ViewController {
         if (NetGlobalData.worldTreasureTodayRewards == null) {
             return;
         }
-        const currentRankRewards: share.Itreasure_level[] = NetGlobalData.worldTreasureTodayRewards.rankData[this._boxRank.toString()].levels;
+        const currentRankRewards: share.Itreasure_level[] = NetGlobalData.worldTreasureTodayRewards.rankData[this._boxRank.toString()]?.levels;
         if (currentRankRewards == null) {
             return;
         }
