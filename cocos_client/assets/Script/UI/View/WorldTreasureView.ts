@@ -8,14 +8,15 @@ import CommonTools from "../../Tool/CommonTools";
 import { GameRankColor } from "../../Const/ConstDefine";
 import ConfigConfig from "../../Config/ConfigConfig";
 import { ConfigType, WorldTreasureChanceLimitHeatValueCoefficientParam, WorldTreasureChancePerBoxExploreProgressParam } from "../../Const/Config";
+import NotificationMgr from "../../Basic/NotificationMgr";
+import { NotificationName } from "../../Const/Notification";
+import { NetworkMgr } from "../../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("WorldTreasureView")
 export class WorldTreasureView extends Component {
     //----------------------------------------- data
     private _isOpenBox: boolean = true;
-    private _boxDatas: BoxInfoConfigData[] = [];
-    private _currentTreasureData: BoxInfoConfigData = null;
 
     private _todayEigthTimestamp: number = 0;
     private _nextDayEightTimestamp: number = 0;
@@ -28,8 +29,6 @@ export class WorldTreasureView extends Component {
     private _treasureCanGetIcon: Node = null;
 
     protected onLoad(): void {
-        this._boxDatas = BoxInfoConfig.getAllBox();
-
         this._todayEigthTimestamp = CommonTools.getDayAMTimestamp(8);
         this._nextDayEightTimestamp = CommonTools.getNextDayAMTimestamp(8);
 
@@ -63,24 +62,28 @@ export class WorldTreasureView extends Component {
 
         this._refreshCountDownTime();
         this.schedule(this._refreshCountDownTime, 1);
+
+        NetworkMgr.websocket.on("player_world_treasure_lottery_res", this._onWorldTreasureLotteryRes.bind(this));
+        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
     }
 
-    protected onDestroy(): void {}
+    protected onDestroy(): void {
+        NetworkMgr.websocket.off("player_world_treasure_lottery_res", this._onWorldTreasureLotteryRes.bind(this));
+        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
+    }
     update(deltaTime: number) {}
 
     private _refreshUI() {
         const perTimeNeedProgress: number = (
             ConfigConfig.getConfig(ConfigType.WorldTreasureChancePerBoxExploreProgress) as WorldTreasureChancePerBoxExploreProgressParam
         ).progress;
-        const perGetTimeNeedHeatValue: number = (1 / (
-            ConfigConfig.getConfig(ConfigType.WorldTreasureChanceLimitHeatValueCoefficient) as WorldTreasureChanceLimitHeatValueCoefficientParam
-        ).coefficient);
 
         const progress: number = DataMgr.s.userInfo.data.exploreProgress;
-        const heatValue: number = 200;
-        const limitTimes: number = Math.floor(heatValue / perGetTimeNeedHeatValue);
-        const canGeTimes: number = Math.min(limitTimes, Math.floor(progress / perTimeNeedProgress));
-        const didGetTimes: number = DataMgr.s.userInfo.data.worldTreasureTodayDidGetTimes;
+        const limitTimes: number = DataMgr.s.userInfo.data.heatValue.lotteryTimesLimit;
+        const canGeTimes: number = DataMgr.s.userInfo.data.heatValue.lotteryProcessLimit;
+        const didGetTimes: number = DataMgr.s.userInfo.data.heatValue.lotteryTimes;
         const canGetBox: boolean = didGetTimes < canGeTimes;
         // get times
         this._getTimeLabel.string = canGeTimes + "/" + limitTimes;
@@ -144,10 +147,11 @@ export class WorldTreasureView extends Component {
         UIPanelManger.inst.pushPanel(UIName.WorldTreasureUI);
     }
     private async onTapTreasure() {
-        if (this._currentTreasureData == null) {
-            return;
-        }
+        NetworkMgr.websocketMsg.player_world_treasure_lottery({});
     }
 
     //---------------------------- socket notification
+    private _onWorldTreasureLotteryRes(e: any) {
+        this._refreshUI();
+    }
 }

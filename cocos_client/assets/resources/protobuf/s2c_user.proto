@@ -84,7 +84,7 @@ message player_gather_res {
 }
 
 message player_explore_res {
-    required uint32 res = 1;
+    required int32 res = 1;
 }
 
 message player_fight_res {
@@ -171,6 +171,8 @@ message player_heat_value_change_res {
 
 message player_world_treasure_pool_change_res {
     required int32 res = 1;
+    required string itemId = 2;
+    required uint32 num = 3;
 }
 
 message player_add_heat_value_res {
@@ -216,6 +218,11 @@ message player_pioneer_change_show_res {
     required bool show = 3;
 }
 
+message get_treasure_info_res {
+    required int32 res = 1;
+    map<string, share.treasure_day_data> data = 2;
+}
+
 // ----------------------------------------------------------------------------
 
 message fetch_user_psyc_res {
@@ -237,6 +244,7 @@ message player_exp_change {
 message player_treasure_progress_change {
     required int32 addProgress = 1;
     required uint32 newProgress = 2;
+    required uint32 newLotteryProcessLimit = 3;
 }
 
 message player_actiontype_change {
@@ -251,4 +259,6 @@ message save_archives_res {
 message player_heat_change {
     required uint32 change = 1;
     required uint32 newval = 2;
+    required uint32 newlotteryTimesLimit = 3;
+    required uint32 newlotteryProcessLimit = 4;
 }

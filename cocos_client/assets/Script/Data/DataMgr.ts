@@ -77,7 +77,15 @@ export class DataMgr {
     public static player_treasure_progress_change = (e: any) => {
         const p: s2c_user.Iplayer_treasure_progress_change = e.data;
         DataMgr.s.userInfo.data.exploreProgress = p.newProgress;
+        DataMgr.s.userInfo.data.heatValue.lotteryProcessLimit = p.newLotteryProcessLimit;
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS);
+    };
+    public static player_heat_change = (e: any) => {
+        const p: s2c_user.Iplayer_heat_change = e.data;
+        DataMgr.s.userInfo.data.heatValue.currentHeatValue = p.newval;
+        DataMgr.s.userInfo.data.heatValue.lotteryTimesLimit = p.newlotteryTimesLimit;
+        DataMgr.s.userInfo.data.heatValue.lotteryProcessLimit = p.newlotteryProcessLimit;
+        NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_HEAT);
     };
     //------------------------------------- item
     public static storhouse_change = (e: any) => {
@@ -201,7 +209,6 @@ export class DataMgr {
         for (const key in p.defender) {
             DataMgr.s.userInfo.data.wormholeDefenderIds[parseInt(key)] = p.defender[key];
         }
-        console.log("exce w: " + JSON.stringify(DataMgr.s.userInfo.data.wormholeDefenderIds));
     };
     public static player_wormhole_set_attacker_res = (e: any) => {
         const p: s2c_user.Iplayer_wormhole_set_attacker_res = e.data;
@@ -238,7 +245,6 @@ export class DataMgr {
                 }
             }
         }
-        console.log("exce defner: " + JSON.stringify(DataMgr.s.mapBuilding.getBuildingById(buildingId).defendPioneerIds));
         NotificationMgr.triggerEvent(NotificationName.BUILDING_INSERT_DEFEND_PIONEER);
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: buildingId });
     };
@@ -283,6 +289,32 @@ export class DataMgr {
             return;
         }
         DataMgr.s.userInfo.data.energyDidGetTimes += 1;
+    };
+
+    //----------------------------------- world treasure
+    public static player_world_treasure_lottery_res = (e: any) => {
+        const p: s2c_user.Iplayer_world_treasure_lottery_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        DataMgr.s.userInfo.data.heatValue.lotteryTimes += 1;
+    };
+    public static get_treasure_info_res = (e: any) => {
+        const p: s2c_user.Iget_treasure_info_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        for (const key in p.data) {
+            NetGlobalData.worldTreasureTodayRewards = p.data[key];
+            break;
+        }
+    };
+    public static player_world_treasure_pool_change_res = (e: any) => {
+        const p: s2c_user.Iplayer_world_treasure_pool_change_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        NetworkMgr.websocketMsg.get_treasure_info({});
     };
 
     public static get_pioneers_res = (e: any) => {
@@ -800,16 +832,6 @@ export class DataMgr {
             const data: s2c_user.Iplayer_nft_skill_forget_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_skill_forget_res;
             DataMgr.s.nftPioneer.NFTForgetSkill(data.nftId, data.skillIndex);
         }
-    };
-
-    public static player_heat_value_change_res = (e: any) => {
-        const data: s2c_user.Iplayer_heat_value_change_res = e.data;
-        DataMgr.s.userInfo.data.heatValue.currentHeatValue = data.currentHeatValue;
-    };
-    public static player_world_treasure_lottery_res = (e: any) => {
-        const data: s2c_user.Iplayer_world_treasure_lottery_res = e.data;
-        // upload resource changed player_world_treasure_lottery
-        DataMgr.s.item.addObj_item([new ItemData(data.itemId, data.num)]);
     };
 
     public static player_rookie_finish_res = (e: any) => {

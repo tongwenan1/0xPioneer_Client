@@ -125,6 +125,9 @@ message pos2d {
 message heat_value_data {
     required uint32 getTimestamp = 1;
     required uint32 currentHeatValue = 2;
+    required uint32 lotteryTimes = 3;
+    required uint32 lotteryTimesLimit = 4;
+    required uint32 lotteryProcessLimit = 5;
 }
 
 message energy_info_data {
@@ -190,6 +193,25 @@ message attacker_data {
 message actiontype_change_data {
     optional string pioneerId = 1;
     optional string actiontype = 2;
+}
+
+message treasure_day_data {
+    map<string, treasure_level_arr> rankData = 1;
+}
+
+message treasure_level_arr {
+    repeated treasure_level levels = 1;
+}
+
+message treasure_level {
+    required uint32 level = 1;
+    repeated reward_data reward = 2;
+}
+
+message reward_data {
+    required string itemId = 1;
+    required uint32 count = 2;
+    required uint32 num = 3;
 }
 
 message battle_report_data {

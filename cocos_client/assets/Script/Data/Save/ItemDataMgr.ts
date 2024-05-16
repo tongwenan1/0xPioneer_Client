@@ -221,6 +221,5 @@ export class ItemDataMgr {
             item.addTimeStamp = netItems[key].addTimeStamp;
             this._data.push(item);
         }
-        console.log("exce item:", this._data);
     }
 }

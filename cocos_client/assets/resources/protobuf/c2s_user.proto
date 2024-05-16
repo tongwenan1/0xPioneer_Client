@@ -187,6 +187,10 @@ message player_pioneer_change_show {
     required bool show = 2;
 }
 
+message get_treasure_info {
+
+}
+
 message get_battle_report {
 
 }

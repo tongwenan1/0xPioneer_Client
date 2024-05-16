@@ -27,7 +27,7 @@ export class PointActionView extends Component {
         this._userInfoTreasureValue = DataMgr.s.userInfo.data.exploreProgress;
         this._boxDatas = BoxInfoConfig.getAllBox();
 
-        this._boxView = this.node.getChildByPath("BoxView");
+        this._boxView = this.node.getChildByPath("BoxContent");
         this._treasureCanGetIcon = this.node.getChildByPath("OpenButton/CanGetIcon");
         tween()
             .target(this._treasureCanGetIcon)
@@ -82,20 +82,20 @@ export class PointActionView extends Component {
                 lastTreasureIndex = i - 1;
                 break;
             }
-            const treasureView = this._boxView.getChildByPath("Treasure");
+            const treasureView = this._boxView.getChildByPath("BoxView/Treasure");
             if (this._currentTreasureData == null) {
                 treasureView.active = false;
                 // useLanMgr
-                // this._boxView.getChildByPath("PropgressView/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-                this._boxView.getChildByPath("PropgressView/Title").getComponent(Label).string = "All Obtained";
-                this._boxView.getChildByPath("PropgressView/Label").active = false;
-                this._boxView.getChildByPath("PropgressView/ProgressBar").active = false;
+                // this._boxView.getChildByPath("BoxView/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+                this._boxView.getChildByPath("BoxView/Title").getComponent(Label).string = "All Obtained";
+                this._boxView.getChildByPath("BoxView/Progress").active = false;
+                this._boxView.getChildByPath("BoxView/ProgressBar").active = false;
             } else {
                 const canGet: boolean = this._userInfoTreasureValue >= this._currentTreasureData.threshold;
                 treasureView.active = true;
-                for (let j = 0; j < 3; j++) {
+                for (let j = 1; j <= 5; j++) {
                     const showBoxView = treasureView.getChildByPath("Treasure_box_" + j);
-                    showBoxView.active = j == this._currentTreasureData.icon;
+                    showBoxView.active = j == this._currentTreasureData.icon + 1;
                     if (showBoxView.active) {
                         showBoxView.getChildByName("Common").active = !canGet;
                         showBoxView.getChildByName("Light").active = canGet;
@@ -123,19 +123,19 @@ export class PointActionView extends Component {
                 }
 
                 // useLanMgr
-                // this._boxView.getChildByPath("PropgressView/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-                this._boxView.getChildByPath("PropgressView/Title").getComponent(Label).string = "Next:";
+                // this._boxView.getChildByPath("BoxView/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+                this._boxView.getChildByPath("BoxView/Title").getComponent(Label).string = "Next:";
 
                 const lastThreshold: number = lastTreasureIndex < 0 ? 0 : this._boxDatas[lastTreasureIndex].threshold;
                 const totalProgress: number = this._currentTreasureData.threshold - lastThreshold;
                 const progress: number = this._userInfoTreasureValue - lastThreshold;
 
-                this._boxView.getChildByPath("PropgressView/Label").active = true;
-                this._boxView.getChildByPath("PropgressView/Label").getComponent(Label).string = progress + "/" + totalProgress;
-                this._boxView.getChildByPath("PropgressView/ProgressBar").active = true;
-                this._boxView.getChildByPath("PropgressView/ProgressBar").getComponent(ProgressBar).progress = Math.min(1, progress / totalProgress);
+                this._boxView.getChildByPath("BoxView/Progress").active = true;
+                this._boxView.getChildByPath("BoxView/Progress/Value").getComponent(Label).string = progress.toString();
+                this._boxView.getChildByPath("BoxView/Progress/Total").getComponent(Label).string = totalProgress.toString();
+                this._boxView.getChildByPath("BoxView/ProgressBar").active = true;
+                this._boxView.getChildByPath("BoxView/ProgressBar").getComponent(ProgressBar).progress = Math.min(1, progress / totalProgress);
             }
-            this._boxView.getComponent(Layout).updateLayout();
         }
     }
 

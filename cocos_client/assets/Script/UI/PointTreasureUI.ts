@@ -51,7 +51,10 @@ export class PointTreasureUI extends ViewController {
 
         this._boxDatas = BoxInfoConfig.getAllBox();
 
-        this._currentPointLabel = this.node.getChildByPath("__ViewContent/Point").getComponent(Label);
+        // useLanMgr
+        // this.node.getChildByPath("__ViewContent/Point/Title").getComponent(Label).string = LanMgr.getLanById("200001") + "";
+
+        this._currentPointLabel = this.node.getChildByPath("__ViewContent/Point/Value").getComponent(Label);
 
         this._treasureProgress = this.node.getChildByPath("__ViewContent/ScrollView/view/content/ProgressBar").getComponent(ProgressBar);
         this._treasureContent = this.node.getChildByPath("__ViewContent/ScrollView/view/content/RewardContent");
@@ -112,8 +115,8 @@ export class PointTreasureUI extends ViewController {
         for (let i = 0; i < this._boxDatas.length; i++) {
             let item = instantiate(this._treasureItem);
             item.setParent(this._treasureContent);
-            for (let j = 0; j < 3; j++) {
-                item.getChildByPath("Treasure/Treasure_box_" + j).active = j == this._boxDatas[i].icon;
+            for (let j = 1; j <= 5; j++) {
+                item.getChildByPath("Treasure/Treasure_box_" + j).active = j == this._boxDatas[i].icon + 1;
             }
             item.getChildByName("Progress").getComponent(Label).string = this._boxDatas[i].threshold.toString();
             item.getChildByName("Treasure").getComponent(Button).clickEvents[0].customEventData = i.toString();
@@ -129,7 +132,7 @@ export class PointTreasureUI extends ViewController {
     private _refreshUI() {
         let value = DataMgr.s.userInfo.data.exploreProgress;
 
-        this._currentPointLabel.string = "Current Points: " + value;
+        this._currentPointLabel.string = value.toString();
 
         for (let i = 0; i < this._boxViews.length; i++) {
             if (i < this._boxDatas.length) {
@@ -143,9 +146,9 @@ export class PointTreasureUI extends ViewController {
                 }
                 this._boxViews[i].getChildByPath("Treasure").active = getStatus != 2;
                 if (getStatus != 2) {
-                    for (let j = 0; j < 3; j++) {
+                    for (let j = 1; j <= 5; j++) {
                         const treasureView = this._boxViews[i].getChildByPath("Treasure/Treasure_box_" + j);
-                        treasureView.active = j == this._boxDatas[i].icon;
+                        treasureView.active = j == this._boxDatas[i].icon + 1;
                         if (treasureView.active) {
                             treasureView.getChildByName("Common").active = getStatus == 0;
                             treasureView.getChildByName("Light").active = getStatus == 1;

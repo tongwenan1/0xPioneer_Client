@@ -18,14 +18,16 @@ import { GameRankColor, GetPropRankColor } from "../Const/ConstDefine";
 import { BackpackItem } from "./BackpackItem";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import { LanMgr } from "../Utils/Global";
+import NotificationMgr from "../Basic/NotificationMgr";
+import { NotificationName } from "../Const/Notification";
+import { share } from "../Net/msg/WebsocketMsg";
+import NetGlobalData from "../Data/Save/Data/NetGlobalData";
 const { ccclass, property } = _decorator;
 
 @ccclass("WorldTreasureUI")
 export class WorldTreasureUI extends ViewController {
     //----------------------------------------- data
-    private _boxDatas: WorldBoxConfigData[] = [];
     private _boxRank: number = 0;
-    private _canClaimBoxIndex: number = -1;
     private _boxNames: string[] = [];
     private _todayEightTimestamp: number = 0;
     private _nextDayEightTimestamp: number = 0;
@@ -34,6 +36,7 @@ export class WorldTreasureUI extends ViewController {
     private _currentBoxRewardItemItem: Node = null;
     private _currentBoxRewardItem: Node = null;
     private _currentBoxRewardContent: Node = null;
+    private _allBoxRewardItems: Node[] = [];
 
     private _claimButton: Button = null;
     private _claimCountDownLabel: Label = null;
@@ -42,7 +45,6 @@ export class WorldTreasureUI extends ViewController {
         super.viewDidLoad();
 
         this._boxRank = ConfigConfig.getWorldTreasureRarityByCLv(DataMgr.s.userInfo.data.level);
-        this._boxRank = 5;
         // useLanMgr
         this._boxNames = [
             LanMgr.getLanById("105101") + ":",
@@ -73,6 +75,7 @@ export class WorldTreasureUI extends ViewController {
         // this.node.getChildByPath("__ViewContent/LeftContent/TimeProgressView/Times/Title").getComponent(Label).string = LanMgr.getLanById("107549") + " ";
         // this.node.getChildByPath("__ViewContent/LeftContent/TimeProgressView/ClaimButton/name").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/CountdonwContent/Title").getComponent(Label).string = LanMgr.getLanById("107549");
+        NetworkMgr.websocketMsg.get_treasure_info({});
     }
     protected viewDidStart(): void {
         super.viewDidStart();
@@ -81,9 +84,19 @@ export class WorldTreasureUI extends ViewController {
         // next day eight hour timestamp
         this._refreshCountDownTime();
         this.schedule(this._refreshCountDownTime, 1);
+
+        NetworkMgr.websocket.on("player_world_treasure_lottery_res", this._onWorldTreasureLotteryRes);
+        NetworkMgr.websocket.on("get_treasure_info_res", this._onWorldTreasureDataChanged);
+        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
+
+        NetworkMgr.websocket.off("player_world_treasure_lottery_res", this._onWorldTreasureLotteryRes);
+        NetworkMgr.websocket.off("get_treasure_info_res", this._onWorldTreasureDataChanged);
+        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
     }
     protected viewPopAnimation(): boolean {
         return true;
@@ -101,11 +114,11 @@ export class WorldTreasureUI extends ViewController {
             (ConfigConfig.getConfig(ConfigType.WorldTreasureChanceLimitHeatValueCoefficient) as WorldTreasureChanceLimitHeatValueCoefficientParam).coefficient;
         const psycToHeatCoefficient: number = (ConfigConfig.getConfig(ConfigType.PSYCToHeatCoefficient) as PSYCToHeatCoefficientParam).coefficient;
         const progress: number = DataMgr.s.userInfo.data.exploreProgress;
-        const heatValue: number = 200;
-        const limitTimes: number = Math.floor(heatValue / perGetTimeNeedHeatValue);
-        const canGeTimes: number = Math.min(limitTimes, Math.floor(progress / perTimeNeedProgress));
-        const didGetTimes: number = DataMgr.s.userInfo.data.worldTreasureTodayDidGetTimes;
-        const canGet: boolean = canGeTimes < didGetTimes;
+        const heatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
+        const limitTimes: number = DataMgr.s.userInfo.data.heatValue.lotteryTimesLimit;
+        const canGeTimes: number = DataMgr.s.userInfo.data.heatValue.lotteryProcessLimit;
+        const didGetTimes: number = DataMgr.s.userInfo.data.heatValue.lotteryTimes;
+        const canGet: boolean = didGetTimes < canGeTimes;
 
         const currentIndex: number = Math.max(0, Math.min(this._boxRank - 1, 4));
 
@@ -151,19 +164,25 @@ export class WorldTreasureUI extends ViewController {
         this._currentBoxTitleLabel.color = GameRankColor[currentIndex];
 
         this._currentBoxRewardContent.destroyAllChildren();
-
-        let rewardDataDay: number = CommonTools.getDayOfWeek() - 1;
-        if (rewardDataDay == 0) {
-            rewardDataDay = 7;
+        const todayRewards: share.Itreasure_day_data = NetGlobalData.worldTreasureTodayRewards; 
+        if (NetGlobalData.worldTreasureTodayRewards == null) {
+            return;
         }
-        this._boxDatas = WorldBoxConfig.getByDayAndRank(rewardDataDay, this._boxRank);
+        const currentRankRewards: share.Itreasure_level[] = NetGlobalData.worldTreasureTodayRewards.rankData[this._boxRank.toString()].levels;
+        if (currentRankRewards == null) {
+            return;
+        }
         const rewardNames: string[] = [
             "Third Rewards:", //LanMgr.getLanById("105101") + ":",
             "Second Rewards:", //LanMgr.getLanById("105101") + ":",
             "First Rewards:", //LanMgr.getLanById("105101") + ":",
         ];
+        currentRankRewards.sort((a, b)=> {
+            return a.level - b.level;
+        });
+        console.log("exce cr: ", currentRankRewards)
         const rewardItemMap: Map<number, Node> = new Map();
-        for (const data of this._boxDatas) {
+        for (const data of currentRankRewards) {
             let itemView = null;
             if (!rewardItemMap.has(data.level)) {
                 itemView = instantiate(this._currentBoxRewardItem);
@@ -176,9 +195,9 @@ export class WorldTreasureUI extends ViewController {
             for (const itemData of data.reward) {
                 const rewardItemItem = instantiate(this._currentBoxRewardItemItem);
                 itemView.getChildByPath("RewardContent").addChild(rewardItemItem);
-                rewardItemItem.getComponent(BackpackItem).refreshUI(new ItemData(itemData[0], itemData[1]));
-                rewardItemItem.getChildByPath("Prop/img_IconNumBg/Count").getComponent(Label).string = itemData[1].toString();
-                rewardItemItem.getChildByPath("LimitNum").getComponent(Label).string = "totalTime";
+                rewardItemItem.getComponent(BackpackItem).refreshUI(new ItemData(itemData.itemId.toString(), itemData.count));
+                rewardItemItem.getChildByPath("Prop/img_IconNumBg/Count").getComponent(Label).string = itemData.count.toString();
+                rewardItemItem.getChildByPath("LimitNum").getComponent(Label).string = itemData.num.toString();
             }
         }
     }
@@ -209,4 +228,11 @@ export class WorldTreasureUI extends ViewController {
     }
 
     //----------------------------------------- notification
+    private _onWorldTreasureLotteryRes = (e: any) => {
+        this._refreshUI();
+    }
+   
+    private _onWorldTreasureDataChanged = (e: any) => {
+        this._refreshUI();
+    }
 }

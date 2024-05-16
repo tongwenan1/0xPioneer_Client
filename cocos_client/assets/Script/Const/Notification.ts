@@ -71,6 +71,7 @@ export enum NotificationName {
     USERINFO_DID_CHANGE_EXP,
     USERINFO_DID_CHANGE_LEVEL,
     USERINFO_DID_CHANGE_TREASURE_PROGRESS,
+    USERINFO_DID_CHANGE_HEAT,
     //---------------------- task
     TASK_CANNOTGET,
     TASK_NEW_GETTED,

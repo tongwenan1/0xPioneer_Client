@@ -13,6 +13,13 @@ export interface GenerateTroopInfo {
 export interface HeatValueObject {
     getTimestamp: number;
     currentHeatValue: number;
+    // get times
+    lotteryTimes: number;
+    // can get limit
+    lotteryProcessLimit: number;
+
+    // can get limit limit
+    lotteryTimesLimit: number;
 }
 
 export interface UserInfoObject {
@@ -22,7 +29,6 @@ export interface UserInfoObject {
     exp: number;
     exploreProgress: number;
     heatValue: HeatValueObject;
-    worldTreasureTodayDidGetTimes: number;
 
     tavernGetPioneerTimestamp: number;
     treasureDidGetRewards: string[];

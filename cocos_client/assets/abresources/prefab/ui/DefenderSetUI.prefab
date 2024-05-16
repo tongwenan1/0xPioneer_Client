@@ -617,7 +617,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 631,
+      "width": 570,
       "height": 10
     },
     "_anchorPoint": {
@@ -657,9 +657,9 @@
       "__uuid__": "2cae76d7-593d-4483-b0f3-f3d8e9c1cb79@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
-    "_type": 0,
+    "_type": 1,
     "_fillType": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -688,10 +688,10 @@
     "__prefab": {
       "__id__": 27
     },
-    "_alignFlags": 1,
+    "_alignFlags": 41,
     "_target": null,
-    "_left": 0,
-    "_right": 0,
+    "_left": 40,
+    "_right": 40,
     "_top": 71.36500000000001,
     "_bottom": 0,
     "_horizontalCenter": 0,
@@ -702,7 +702,7 @@
     "_isAbsBottom": true,
     "_isAbsHorizontalCenter": true,
     "_isAbsVerticalCenter": true,
-    "_originalWidth": 0,
+    "_originalWidth": 631,
     "_originalHeight": 0,
     "_alignMode": 2,
     "_lockFlags": 0,

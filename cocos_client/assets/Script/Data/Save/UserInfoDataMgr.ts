@@ -110,12 +110,14 @@ export default class UserInfoDataMgr {
             level: globalData.level,
             exp: globalData.exp,
             exploreProgress: globalData.treasureProgress,
-            worldTreasureTodayDidGetTimes: 0,
             treasureDidGetRewards: globalData.treasureDidGetRewards,
             pointTreasureDidGetRewards: globalData.pointTreasureDidGetRewards,
             heatValue: {
                 getTimestamp: globalData.heatValue.getTimestamp,
                 currentHeatValue: globalData.heatValue.currentHeatValue,
+                lotteryTimes: globalData.heatValue.lotteryTimes,
+                lotteryProcessLimit: globalData.heatValue.lotteryProcessLimit,
+                lotteryTimesLimit: globalData.heatValue.lotteryTimesLimit
             },
             generateTroopInfo:
                 globalData.generateTroopInfo == null
