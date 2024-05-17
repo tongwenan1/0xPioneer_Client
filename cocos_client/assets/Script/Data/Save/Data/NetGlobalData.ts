@@ -6,6 +6,7 @@ export default class NetGlobalData {
     public static storehouse: share.Istorehouse_data = null;
     public static usermap: share.Iusermap_data = null;
     public static nfts: share.Infts_data = null;
+    public static tasks: share.Itask_data[] = null;
 
     public static worldTreasureTodayRewards: share.Itreasure_day_data = null;
 

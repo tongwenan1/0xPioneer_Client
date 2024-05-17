@@ -52,6 +52,7 @@ export class DataMgr {
                 NetGlobalData.storehouse = p.data.info.storehouse;
                 NetGlobalData.usermap = p.data.info.usermap;
                 NetGlobalData.nfts = p.data.info.nfts;
+                NetGlobalData.tasks = p.data.info.tasks;
                 // load save data
                 await DataMgr.s.load(this.r.wallet.addr);
 
@@ -823,5 +824,11 @@ export class DataMgr {
     ///////////////// websocketTempData
     public static setTempSendData(key: string, data: DataMgrResData) {
         DataMgr.socketSendData.set(key, data);
+    }
+
+    /////////////// task
+    public static user_task_action_getnewtalk = (e: any) => {
+        let p: s2c_user.Iuser_task_action_getnewtalk = e.data;
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_NEW_TALK, p);
     }
 }

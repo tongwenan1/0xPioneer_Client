@@ -124,31 +124,31 @@ export interface TaskAction {
     npcGetNewTalk?: TaskNpcGetNewTalkAction;
 }
 
-export interface TaskObject {
-    taskId: string;
-    name: string;
-    type: TaskUseTimeType;
-    preCon: TaskSatisfyCondition;
-    preAction: TaskAction[];
-    closeCon: TaskSatisfyCondition;
-    takeCon: TaskSatisfyCondition;
-    failCon: TaskSatisfyCondition;
-    steps: string[];
+// export interface TaskObject {
+//     taskId: string;
+//     name: string;
+//     type: TaskUseTimeType;
+//     preCon: TaskSatisfyCondition;
+//     preAction: TaskAction[];
+//     closeCon: TaskSatisfyCondition;
+//     takeCon: TaskSatisfyCondition;
+//     failCon: TaskSatisfyCondition;
+//     steps: string[];
 
-    stepIndex: number;
-    isFinished: boolean;
-    isFailed: boolean;
-    canGet: boolean;
-    isGetted: boolean;
-}
-export interface TaskStepObject {
-    id: string;
-    name: string;
-    startAction: TaskAction[];
-    completeCon: TaskSatisfyCondition;
-    completeIndex: number;
-    completeAction: TaskAction[];
-    quitCon: TaskSatisfyCondition;
-    progress: number;
-    exp: number;
-}
+//     stepIndex: number;
+//     isFinished: boolean;
+//     isFailed: boolean;
+//     canGet: boolean;
+//     isGetted: boolean;
+// }
+// export interface TaskStepObject {
+//     id: string;
+//     name: string;
+//     startAction: TaskAction[];
+//     completeCon: TaskSatisfyCondition;
+//     completeIndex: number;
+//     completeAction: TaskAction[];
+//     quitCon: TaskSatisfyCondition;
+//     progress: number;
+//     exp: number;
+// }
