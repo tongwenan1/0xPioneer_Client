@@ -46,9 +46,6 @@ export default class PioneerMgr {
     }
     public pioneerHealHpToMax(pioneerId: string) {
         const costTroops: number = DataMgr.s.pioneer.gainHp(pioneerId, DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop));
-        if (costTroops > 0) {
-            DataMgr.s.item.subObj_item(ResourceCorrespondingItem.Troop, costTroops);
-        }
     }
     public pioneerChangeHpMax(pioneerId: string, num: number) {
         DataMgr.s.pioneer.changeHpMax(pioneerId, num);
@@ -565,7 +562,6 @@ export default class PioneerMgr {
                 }
             }
             let rebirthHp: number = Math.max(1, Math.min(DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop), pioneer.hpMax));
-            DataMgr.s.item.subObj_item(ResourceCorrespondingItem.Troop, rebirthHp);
             DataMgr.s.pioneer.rebirth(data.id, rebirthHp, rebirthMapPos);
         }
     }

@@ -8638,7 +8638,7 @@
         "__id__": 938
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 946
@@ -8710,7 +8710,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 276.515,
+      "y": -93.69,
       "z": 0
     },
     "_lrot": {
@@ -8939,9 +8939,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 243,
+      "g": 228,
+      "b": 177,
       "a": 255
     },
     "_string": "T.B.D.",
@@ -10186,9 +10186,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 243,
+      "g": 228,
+      "b": 177,
       "a": 255
     },
     "_string": "T.B.D.",
@@ -11433,9 +11433,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 243,
+      "g": 228,
+      "b": 177,
       "a": 255
     },
     "_string": "T.B.D.",
@@ -12583,7 +12583,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 368.922,
+      "y": 319.417,
       "z": 0
     },
     "_lrot": {
@@ -12623,7 +12623,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 182.96484375,
+      "width": 200.861328125,
       "height": 54.4
     },
     "_anchorPoint": {
@@ -12662,8 +12662,8 @@
     "_string": "wormhold traveling: ",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 20,
-    "_fontSize": 20,
+    "_actualFontSize": 22,
+    "_fontSize": 22,
     "_fontFamily": "Arial",
     "_lineHeight": 40,
     "_overflow": 0,

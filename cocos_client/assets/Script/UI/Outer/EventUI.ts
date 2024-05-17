@@ -320,8 +320,6 @@ export class EventUI extends ViewController {
                     for (const item of DataMgr.s.item.getObj()) {
                         if (item.itemConfigId == id) {
                             const itemConf = ItemConfig.getById(id);
-                            DataMgr.s.item.subObj_item(item.itemConfigId, num);
-
                             // useLanMgr
                             showTip += LanMgr.replaceLanById("207008", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
                             // showTip += ("You lost" + num + " " + itemConf.itemName + "\n");
@@ -342,8 +340,6 @@ export class EventUI extends ViewController {
         }
         if (itemDatas.length > 0) {
             // upload resource changed event-select
-            DataMgr.s.item.addObj_item(itemDatas);
-
             let hasItem: boolean = false;
             for (const item of itemDatas) {
                 const config = ItemConfig.getById(item.itemConfigId);

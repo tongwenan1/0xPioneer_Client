@@ -23,15 +23,18 @@ export class ResOprView extends Component {
     @property(Button)
     btnMove: Button = null;
 
+    private _wormholeButton: Node = null;
+
     /**
      *
-     * @param actionType -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel
+     * @param actionType -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel 7-tavern 8-worm 9-wormcancel
      */
     public show(
         worldPos: Vec3,
         actionType: number,
         moveStep: number,
         confirmCallback: (actionType: number, useEnergy: number) => void,
+        wormholeAttackCallback: (useEnergy: number) => void,
         closeCallback: () => void
     ) {
         this.node.active = true;
@@ -41,8 +44,9 @@ export class ResOprView extends Component {
         this.btnSearch.node.active = actionType == 1 || actionType == 5;
         this.btnGetRes.node.active = actionType == 2;
         this.btnAttack.node.active = actionType == 3;
-        this.btnCamp.node.active = actionType == 4;
-        this.btnMove.node.active = actionType == 6 || actionType == -1;
+        this.btnCamp.node.active = actionType == 4 || actionType == 8;
+        this.btnMove.node.active = actionType == 6 || actionType == 9 || actionType == -1;
+        this._wormholeButton.active = actionType == 8 || actionType == 9;
         this.node.getChildByPath("btnRemove").active = true;
 
         // action cost
@@ -55,6 +59,7 @@ export class ResOprView extends Component {
             this.node.getChildByPath("CostView").active = false;
         }
         this._confirmCallback = confirmCallback;
+        this._wormholeAttackCallback = wormholeAttackCallback;
         this._closeCallback = closeCallback;
     }
     public hide() {
@@ -67,8 +72,12 @@ export class ResOprView extends Component {
     private _actionType: number = -1;
     private _cost: number = 0;
     private _confirmCallback: (actionType: number, useEnergy: number) => void = null;
+    private _wormholeAttackCallback: (useEnergy: number) => void;
     private _closeCallback: () => void = null;
 
+    protected onLoad(): void {
+        this._wormholeButton = this.node.getChildByPath("btnWormhole");
+    }
     start() {}
 
     update(deltaTime: number) {}
@@ -120,6 +129,12 @@ export class ResOprView extends Component {
             this._confirmCallback(this._actionType, this._cost);
         }
         this.hide();
+    }
+
+    private onTapWormholeAttack() {
+        if (this._wormholeAttackCallback != null) {
+            this._wormholeAttackCallback(this._cost);
+        }
     }
 
     onCloseClick() {

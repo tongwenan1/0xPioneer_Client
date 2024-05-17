@@ -85,7 +85,6 @@ export class ItemDataMgr {
             return config.itemType != ItemType.Resource;
         });
     }
-
     public countChanged(change: ItemData): void {
         if (change.count == 0) {
             return;
@@ -122,93 +121,6 @@ export class ItemDataMgr {
         }
         NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
     }
-    public addObj_item(items: ItemData[], needSettlement: boolean = true): void {
-        if (items.length <= 0) {
-            return;
-        }
-        let changed: boolean = false;
-        for (const item of items) {
-            const itemConfig = ItemConfig.getById(item.itemConfigId);
-            if (itemConfig == null) {
-                continue;
-            }
-            if (itemConfig.itemType == ItemType.Resource) {
-                NotificationMgr.triggerEvent(NotificationName.RESOURCE_GETTED, { item: item });
-            } else if (this.itemIsFull()) {
-                continue;
-            }
-            changed = true;
-            // add timestamp
-            item.addTimeStamp = new Date().getTime();
-            this._data.push(item);
-            this.getObj_item_sort(BackpackArrangeType.Recently);
-        }
-        if (changed) {
-            NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
-        }
-    }
-    public subObj_item(itemConfigId: string, count: number): { succeed: boolean; getItem: GetPropData } {
-        const result = {
-            succeed: false,
-            getItem: null,
-        };
-        let idx = this._data.findIndex((v) => {
-            return v.itemConfigId == itemConfigId;
-        });
-
-        if (idx < 0) {
-            return result;
-        }
-
-        if (this._data[idx].count < count) {
-            return result;
-        }
-
-        this._data[idx].count -= count;
-
-        const itemConfig = ItemConfig.getById(itemConfigId);
-        if (itemConfig != null) {
-            if (itemConfig.gain_item != null) {
-                result.getItem = {
-                    type: itemConfig.gain_item[0],
-                    propId: itemConfig.gain_item[1],
-                    num: itemConfig.gain_item[2],
-                };
-            }
-        }
-
-        if (
-            itemConfigId == ResourceCorrespondingItem.Food ||
-            itemConfigId == ResourceCorrespondingItem.Wood ||
-            itemConfigId == ResourceCorrespondingItem.Stone ||
-            itemConfigId == ResourceCorrespondingItem.Gold ||
-            itemConfigId == ResourceCorrespondingItem.Troop ||
-            itemConfigId == ResourceCorrespondingItem.Energy
-        ) {
-            NotificationMgr.triggerEvent(NotificationName.RESOURCE_CONSUMED, { itemConfigId: itemConfigId, count: count, getItem: result.getItem });
-        }
-
-        if (this._data[idx].count <= 0) {
-            this._data.splice(idx, 1);
-        }
-        NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
-
-        result.succeed = true;
-
-        return result;
-    }
-
-    public itemIsFull(): boolean {
-        let count: number = 0;
-        for (const temple of this._data) {
-            const itemConf = ItemConfig.getById(temple.itemConfigId);
-            if (itemConf != null && itemConf.itemType != ItemType.Resource) {
-                count += 1;
-            }
-        }
-        return count >= this._maxItemLength;
-    }
-
     private _initData() {
         if (NetGlobalData.storehouse == null) {
             return;

@@ -644,7 +644,6 @@ export class OuterPioneerController extends ViewController {
         if (pioneer != null) {
             if (pioneer.type == MapPioneerType.gangster) {
                 // upload resource changed explore
-                DataMgr.s.item.addObj_item([new ItemData(ResourceCorrespondingItem.Troop, pioneer.hpMax)]);
             } else if (pioneer.type == MapPioneerType.npc) {
                 const npcModel = pioneer as MapNpcPioneerObject;
                 if (!!npcModel && npcModel.talkId != null) {
@@ -681,7 +680,6 @@ export class OuterPioneerController extends ViewController {
             const resultNum: number = Math.floor(building.resources.num * (1 + LvlupConfig.getTotalExtraRateByLvl(DataMgr.s.userInfo.data.level)));
             actionView.getComponent(MapPioneer).playGetResourceAnim(building.resources.id, resultNum, () => {
                 // upload resource changed gather
-                DataMgr.s.item.addObj_item([new ItemData(building.resources.id, resultNum)]);
             });
 
             NotificationMgr.triggerEvent(NotificationName.MINING_FINISHED, {
