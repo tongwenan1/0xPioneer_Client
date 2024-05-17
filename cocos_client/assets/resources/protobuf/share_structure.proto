@@ -50,6 +50,8 @@ message player_info {
     optional artifact_data artifact = 4;
     optional usermap_data usermap = 5;
     optional nfts_data nfts = 6;
+    optional mapbuilding_data mapbuilding = 7;
+    repeated task_data tasks = 8;
 }
 
 message storehouse_data {
@@ -66,6 +68,10 @@ message usermap_data {
 
 message nfts_data {
     map<string,nfts_info_data> nfts = 1;
+}
+
+message mapbuilding_data {
+    map<string,mapbuilding_info_data> buildings = 1;
 }
 
 message artifact_info_data {
@@ -172,6 +178,34 @@ message nfts_info_data {
     optional uint32 addTimeStamp = 20;
 }
 
+message mapbuilding_info_data {
+    required string id = 1;
+    required string name = 2;
+    optional uint32 type = 3;
+    required uint32 level = 4;
+    required bool show = 5;
+    optional user_map_member_status showHideStruct = 6;
+    optional uint32 faction = 7;
+    repeated string defendPioneerIds = 8;
+
+    repeated pos2d stayMapPositions = 9;
+    optional uint32 stayPosType = 10;
+    optional uint32 progress = 11;
+    optional uint32 winprogress = 12;
+    optional string eventId = 13;
+
+    optional string originalEventId = 14;
+    required uint32 exp = 15;
+    optional string animType = 16;
+
+    optional uint32 hpMax = 17;
+    optional uint32 hp = 18;
+    optional uint32 attack = 19;
+    optional string taskObj = 20;
+}
+
+
+
 message nft_pioneer_skil {
     optional string id = 1;
     optional bool isOriginal = 2;
@@ -219,3 +253,18 @@ message battle_report_data {
     required string params = 2;
     required uint32 createdtm = 3;
 }
+
+message task_data {
+    required string taskId = 1;
+    required uint32 stepIndex = 2;
+    required bool isFinished = 3;
+    required bool isFailed = 4;
+    required bool canGet = 5;
+    required bool isGetted = 6;
+    repeated task_step_data steps = 7;
+}
+message task_step_data {
+    required string stepId = 1;
+    required uint32 completeIndex = 2;
+}
+

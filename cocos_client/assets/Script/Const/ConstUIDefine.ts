@@ -34,6 +34,9 @@ export enum UIName {
 
     PointTreasureUI = "prefab/ui/PointTreasureUI",
     WorldTreasureUI = "prefab/ui/WorldTreasureUI",
+    WorldTreasureUIRe = "prefab/ui/WorldTreasureUIRe",
+    WorldTreasureTipUI = "prefab/ui/WorldTreasureTipUI",
+    WorldTreasureDetailUI = "prefab/ui/WorldTreasureDetailUI",
 
     DefenderSelectUI = "prefab/ui/DefenderSelectUI",
     DefenderSetUI = "prefab/ui/DefenderSetUI",

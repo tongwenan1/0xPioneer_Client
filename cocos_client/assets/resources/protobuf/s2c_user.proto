@@ -262,3 +262,50 @@ message player_heat_change {
     required uint32 newlotteryTimesLimit = 3;
     required uint32 newlotteryProcessLimit = 4;
 }
+
+message player_map_building_show_change {
+    required string buildingId = 1;
+    required uint32 isShow = 2;
+}
+
+message player_map_pioneer_show_change {
+    required string pioneerId = 1;
+    required uint32 isShow = 2;
+}
+
+message player_map_building_faction_change {
+    required string buildingId = 1;
+    required uint32 faction = 2;
+}
+
+message player_map_pioneer_faction_change {
+    required string pioneerId = 1;
+    required uint32 faction = 2;
+}
+
+// ----------------------------------------------------------------------------
+
+message user_task_did_fail {
+    required string taskId= 1;
+}
+
+message user_task_did_get {
+    required string taskId= 1;
+}
+
+message user_task_step_did_finish {
+    required string taskId= 1;
+}
+
+message user_task_did_finish {
+    required string taskId= 1;
+}
+
+message user_task_action_talk {
+    required string taskId= 1;
+}
+
+message user_task_action_getnewtalk {
+    required string npcId= 1;
+    required string talkId= 2;
+}

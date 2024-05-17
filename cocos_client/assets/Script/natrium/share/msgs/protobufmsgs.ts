@@ -103,4 +103,14 @@ export enum protobuf_s2c {
     fetch_user_psyc_res = 20400,
 
     player_heat_change = 20500,
+    player_map_building_show_change = 20501,
+    player_map_pioneer_show_change = 20502,
+    user_task_did_fail = 20503,
+    user_task_did_get = 20504,
+    user_task_step_did_finish = 20505,
+    user_task_did_finish = 20506,
+    user_task_action_talk = 20507,
+    player_map_building_faction_change = 20508,
+    player_map_pioneer_faction_change = 20509,
+    user_task_action_getnewtalk = 20510
 }

@@ -1,29 +1,20 @@
-import { _decorator, Button, Component, Label, log, Node, UITransform, v2, v3, Vec2, Vec3 } from "cc";
+import { _decorator, Button, Component, Label, Layout, log, Node, UITransform, v2, v3, Vec2, Vec3 } from "cc";
 import ConfigConfig from "../../../Config/ConfigConfig";
 import { ConfigType, OneStepCostEnergyParam } from "../../../Const/Config";
 const { ccclass, property } = _decorator;
 
 @ccclass("ResOprView")
 export class ResOprView extends Component {
-    @property(Button)
-    btnAttack: Button = null;
-
-    @property(Button)
-    btnGetRes: Button = null;
-
-    @property(Button)
-    btnInfo: Button = null;
-
-    @property(Button)
-    btnSearch: Button = null;
-
-    @property(Button)
-    btnCamp: Button = null;
-
-    @property(Button)
-    btnMove: Button = null;
-
     private _wormholeButton: Node = null;
+
+    private _infoButton: Node = null;
+    private _searchButton: Node = null;
+    private _getButton: Node = null;
+    private _attackButton: Node = null;
+    private _campButton: Node = null;
+    private _moveButton: Node = null;
+
+    private _cancelButton: Node = null;
 
     /**
      *
@@ -40,23 +31,35 @@ export class ResOprView extends Component {
         this.node.active = true;
         this.node.worldPosition = worldPos;
         this._actionType = actionType;
-        this.btnInfo.node.active = actionType == 0;
-        this.btnSearch.node.active = actionType == 1 || actionType == 5;
-        this.btnGetRes.node.active = actionType == 2;
-        this.btnAttack.node.active = actionType == 3;
-        this.btnCamp.node.active = actionType == 4 || actionType == 8;
-        this.btnMove.node.active = actionType == 6 || actionType == 9 || actionType == -1;
+        this._infoButton.active = actionType == 0;
+        this._searchButton.active = actionType == 1 || actionType == 5;
+        this._getButton.active = actionType == 2;
+        this._attackButton.active = actionType == 3;
+        this._campButton.active = actionType == 4 || actionType == 8;
+        this._moveButton.active = actionType == 6 || actionType == 9 || actionType == -1;
         this._wormholeButton.active = actionType == 8 || actionType == 9;
-        this.node.getChildByPath("btnRemove").active = true;
+        this._cancelButton.active = true;
+
+        this.node.getChildByPath("ContentView/ButtonView_0").active = this._wormholeButton.active;
+        this.node.getChildByPath("ContentView/ButtonView_1").active =
+            this._infoButton.active ||
+            this._searchButton.active ||
+            this._getButton.active ||
+            this._attackButton.active ||
+            this._campButton.active ||
+            this._moveButton.active;
+        this.node.getChildByPath("ContentView/ButtonView_2").active = this._cancelButton.active;
+        this.node.getChildByPath("ContentView").getComponent(Layout).updateLayout();
 
         // action cost
         const oneStepCostEnergy = (ConfigConfig.getConfig(ConfigType.OneStepCostEnergy) as OneStepCostEnergyParam).cost;
         this._cost = oneStepCostEnergy * moveStep;
+        const costView = this.node.getChildByPath("ContentView/ButtonView_1/CostView");
         if (this._cost > 0) {
-            this.node.getChildByPath("CostView").active = true;
-            this.node.getChildByPath("CostView/CostLabel").getComponent(Label).string = "-" + this._cost;
+            costView.active = true;
+            costView.getChildByPath("CostLabel").getComponent(Label).string = "-" + this._cost;
         } else {
-            this.node.getChildByPath("CostView").active = false;
+            costView.active = false;
         }
         this._confirmCallback = confirmCallback;
         this._wormholeAttackCallback = wormholeAttackCallback;
@@ -76,7 +79,16 @@ export class ResOprView extends Component {
     private _closeCallback: () => void = null;
 
     protected onLoad(): void {
-        this._wormholeButton = this.node.getChildByPath("btnWormhole");
+        this._wormholeButton = this.node.getChildByPath("ContentView/ButtonView_0/btnWormhole");
+
+        this._infoButton = this.node.getChildByPath("ContentView/ButtonView_1/btnInfo");
+        this._searchButton = this.node.getChildByPath("ContentView/ButtonView_1/btnSearch");
+        this._getButton = this.node.getChildByPath("ContentView/ButtonView_1/btnGet");
+        this._attackButton = this.node.getChildByPath("ContentView/ButtonView_1/btnAttack");
+        this._campButton = this.node.getChildByPath("ContentView/ButtonView_1/btnCamp");
+        this._moveButton = this.node.getChildByPath("ContentView/ButtonView_1/btnMove");
+
+        this._cancelButton = this.node.getChildByPath("ContentView/ButtonView_2/btnRemove");
     }
     start() {}
 

@@ -144,7 +144,7 @@ export class WorldTreasureView extends Component {
         this._refreshUI();
     }
     private async onTapProgress() {
-        UIPanelManger.inst.pushPanel(UIName.WorldTreasureUI);
+        UIPanelManger.inst.pushPanel(UIName.WorldTreasureUIRe);
     }
     private async onTapTreasure() {
         NetworkMgr.websocketMsg.player_world_treasure_lottery({});
