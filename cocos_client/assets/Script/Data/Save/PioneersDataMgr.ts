@@ -548,7 +548,6 @@ export class PioneersDataMgr {
     private _addListeners() {
         NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, this._onPioneerChangeShow, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_NEW_TALK, this._onPioneerGetTalk, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_USE_NEW_TALK, this._onPioneerUseTalk, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_FACTION, this._onPioneerChangeFaction, this);
         NotificationMgr.addListener(NotificationName.NFTDIDLEVELUP, this._onNFTPioneerDidLevelUp, this);
     }
@@ -561,17 +560,6 @@ export class PioneersDataMgr {
     }
     private _onPioneerGetTalk(action: TaskNpcGetNewTalkAction) {
         this.changeTalk(action.npcId, action.talkId, action.delayTime);
-    }
-    private _onPioneerUseTalk(talkId: string) {
-        for (const pioneer of this._pioneers) {
-            const npc = pioneer as MapNpcPioneerObject;
-            if (!!npc) {
-                if (npc.talkId == talkId) {
-                    this.changeTalk(npc.id, null);
-                    break;
-                }
-            }
-        }
     }
     private _onPioneerChangeFaction(action: TaskFactionAction) {
         if (action.type == MapMemberTargetType.pioneer) {

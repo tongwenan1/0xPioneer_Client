@@ -294,12 +294,10 @@ export class OuterBuildingController extends Component {
         this._refreshUI();
     }
     buildingDidHide(buildingId: string): void {
-        DataMgr.s.task.showHideChanged(MapMemberTargetType.building, buildingId, TaskShowHideStatus.hide);
         this._refreshUI();
         // this._refreshDecorationUI();
     }
     buildingDidShow(buildingId: string): void {
-        DataMgr.s.task.showHideChanged(MapMemberTargetType.building, buildingId, TaskShowHideStatus.show);
         this._refreshUI();
         // this._refreshDecorationUI();
     }

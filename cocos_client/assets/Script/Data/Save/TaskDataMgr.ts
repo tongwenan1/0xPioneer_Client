@@ -1,48 +1,16 @@
-import NotificationMgr from "../../Basic/NotificationMgr";
-import TaskConfig from "../../Config/TaskConfig";
 import TaskStepConfig from "../../Config/TaskStepConfig";
-import { GetPropData, MapMemberTargetType } from "../../Const/ConstDefine";
-import { NotificationName } from "../../Const/Notification";
-import {
-    TaskAction,
-    TaskActionType,
-    TaskCondition,
-    TaskConditionSatisfyType,
-    TaskConditionType,
-    TaskConfigData,
-    TaskFactionAction,
-    TaskFinishCondition,
-    TaskFinishResultType,
-    TaskKillCondition,
-    TaskNpcGetNewTalkAction,
-    // TaskObject,
-    TaskParentChildType,
-    TaskSatisfyCondition,
-    TaskShowHideAction,
-    TaskShowHideCondition,
-    TaskShowHideStatus,
-    TaskStepConfigData,
-    // TaskStepObject,
-    TaskTalkAction,
-    TaskTalkCondition,
-} from "../../Const/TaskDefine";
+import { GetPropData } from "../../Const/ConstDefine";
+import { TaskStepConfigData, TaskAction, TaskCondition, TaskConditionType, TaskFinishCondition, TaskKillCondition, TaskSatisfyCondition, TaskShowHideCondition, TaskTalkCondition, TaskActionType, TaskFactionAction, TaskNpcGetNewTalkAction, TaskShowHideAction, TaskTalkAction, TaskStepObject } from "../../Const/TaskDefine";
 import { share } from "../../Net/msg/WebsocketMsg";
 import NetGlobalData from "./Data/NetGlobalData";
 
 export default class TaskDataMgr {
-    private _baseKey: string = "local_task";
-    private _key: string = "";
-
     private _data: share.Itask_data[] = [];
-    private _taskStepMap: Map<string, share.Itask_step_data> = new Map();
+    private _taskStepMap: Map<string, TaskStepObject> = new Map();
     public constructor() {}
     //--------------------------------
-    public loadObj(walletAddr: string) {
-        this._key = walletAddr + "|" + this._baseKey;
+    public loadObj() {
         this._initData();
-    }
-    public saveObj() {
-        localStorage.setItem(this._key, JSON.stringify(this._data));
     }
     //--------------------------------
     public getAll(): share.Itask_data[] {
@@ -58,16 +26,16 @@ export default class TaskDataMgr {
         }
         return null;
     }
-    // public getTaskStep(taskStepId: string): share.Itask_step_data | null {
-    //     if (this._taskStepMap.has(taskStepId)) {
-    //         return this._taskStepMap.get(taskStepId);
-    //     }
-    //     const config: TaskStepConfigData = TaskStepConfig.getById(taskStepId);
-    //     if (config == null) {
-    //         return null;
-    //     }
-    //     return this._convertTaskStepConfigToObject(config);
-    // }
+    public getTaskStep(taskStepId: string): TaskStepObject | null {
+        if (this._taskStepMap.has(taskStepId)) {
+            return this._taskStepMap.get(taskStepId);
+        }
+        const config: TaskStepConfigData = TaskStepConfig.getById(taskStepId);
+        if (config == null) {
+            return null;
+        }
+        return this._convertTaskStepConfigToObject(config);
+    }
     //--------------------------------
     // public talkSelected(talkId: string, talkSelectedIndex: number) {
     //     const con: TaskCondition = {
@@ -115,19 +83,6 @@ export default class TaskDataMgr {
     // }
     //--------------------------------
     private _initData() {
-        // const localDataString = localStorage.getItem(this._key);
-        // if (localDataString == null) {
-        //     const config = TaskConfig.getAll();
-        //     for (const key in config) {
-        //         if (Object.prototype.hasOwnProperty.call(config, key)) {
-        //             const element = config[key];
-        //             this._data.push(this._convertTaskConfigToObject(element));
-        //         }
-        //     }
-        //     this.saveObj();
-        // } else {
-        //     this._data = JSON.parse(localDataString);
-        // }
         this._data = NetGlobalData.tasks;
     }
     // private _convertTaskConfigToObject(config: TaskConfigData): share.Itask_data {
@@ -154,136 +109,136 @@ export default class TaskDataMgr {
     //         isGetted: false,
     //     };
     // }
-    // private _convertConditionConfigToObject(conditionConfig: any[]): TaskSatisfyCondition {
-    //     if (conditionConfig == null || conditionConfig.length <= 0) {
-    //         return null;
-    //     }
-    //     const satisfyType = conditionConfig[0];
-    //     const conditions: TaskCondition[] = [];
-    //     if (conditionConfig.length > 1) {
-    //         for (let i = 1; i < conditionConfig.length; i++) {
-    //             const temple = conditionConfig[i];
-    //             const conditionType = temple[0];
+    private _convertConditionConfigToObject(conditionConfig: any[]): TaskSatisfyCondition {
+        if (conditionConfig == null || conditionConfig.length <= 0) {
+            return null;
+        }
+        const satisfyType = conditionConfig[0];
+        const conditions: TaskCondition[] = [];
+        if (conditionConfig.length > 1) {
+            for (let i = 1; i < conditionConfig.length; i++) {
+                const temple = conditionConfig[i];
+                const conditionType = temple[0];
 
-    //             let talk: TaskTalkCondition = null;
-    //             let finish: TaskFinishCondition = null;
-    //             let kill: TaskKillCondition = null;
-    //             let showHide: TaskShowHideCondition = null;
-    //             if (conditionType == TaskConditionType.Talk) {
-    //                 talk = {
-    //                     talkId: temple[1],
-    //                     talkSelectCanGetTaskIndex: temple[2],
-    //                 };
-    //             } else if (conditionType == TaskConditionType.Finish) {
-    //                 finish = {
-    //                     type: temple[1],
-    //                     taskId: temple[2],
-    //                     taskResult: temple[3],
-    //                     finishTime: temple[4],
-    //                 };
-    //             } else if (conditionType == TaskConditionType.Kill) {
-    //                 kill = {
-    //                     target: temple[1],
-    //                     enemyIds: temple[2],
-    //                     killTime: temple[3],
-    //                 };
-    //             } else if (conditionType == TaskConditionType.ShowHide) {
-    //                 showHide = {
-    //                     type: temple[1],
-    //                     id: temple[2],
-    //                     status: temple[3],
-    //                 };
-    //             }
-    //             conditions.push({
-    //                 type: conditionType,
-    //                 isSatisfied: false,
-    //                 talk: talk,
-    //                 finish: finish,
-    //                 kill: kill,
-    //                 showHide: showHide,
-    //             });
-    //         }
-    //     }
-    //     return {
-    //         satisfyType: satisfyType,
-    //         conditions: conditions,
-    //     };
-    // }
-    // private _convertActionConfigToObject(actionConfig: any[]): TaskAction {
-    //     const actionType: TaskActionType = actionConfig[0];
+                let talk: TaskTalkCondition = null;
+                let finish: TaskFinishCondition = null;
+                let kill: TaskKillCondition = null;
+                let showHide: TaskShowHideCondition = null;
+                if (conditionType == TaskConditionType.Talk) {
+                    talk = {
+                        talkId: temple[1],
+                        talkSelectCanGetTaskIndex: temple[2],
+                    };
+                } else if (conditionType == TaskConditionType.Finish) {
+                    finish = {
+                        type: temple[1],
+                        taskId: temple[2],
+                        taskResult: temple[3],
+                        finishTime: temple[4],
+                    };
+                } else if (conditionType == TaskConditionType.Kill) {
+                    kill = {
+                        target: temple[1],
+                        enemyIds: temple[2],
+                        killTime: temple[3],
+                    };
+                } else if (conditionType == TaskConditionType.ShowHide) {
+                    showHide = {
+                        type: temple[1],
+                        id: temple[2],
+                        status: temple[3],
+                    };
+                }
+                conditions.push({
+                    type: conditionType,
+                    isSatisfied: false,
+                    talk: talk,
+                    finish: finish,
+                    kill: kill,
+                    showHide: showHide,
+                });
+            }
+        }
+        return {
+            satisfyType: satisfyType,
+            conditions: conditions,
+        };
+    }
+    private _convertActionConfigToObject(actionConfig: any[]): TaskAction {
+        const actionType: TaskActionType = actionConfig[0];
 
-    //     let showHide: TaskShowHideAction = null;
-    //     let faction: TaskFactionAction = null;
-    //     let talk: TaskTalkAction = null;
-    //     let getProp: GetPropData = null;
-    //     let npcGetNewTalk: TaskNpcGetNewTalkAction = null;
-    //     if (actionType == TaskActionType.ShowHide) {
-    //         showHide = {
-    //             type: actionConfig[1],
-    //             id: actionConfig[2],
-    //             status: actionConfig[3],
-    //             delayTime: actionConfig[4],
-    //         };
-    //     } else if (actionType == TaskActionType.Faction) {
-    //         faction = {
-    //             type: actionConfig[1],
-    //             id: actionConfig[2],
-    //             faction: actionConfig[3],
-    //         };
-    //     } else if (actionType == TaskActionType.Talk) {
-    //         talk = {
-    //             talkId: actionConfig[1],
-    //         };
-    //     } else if (actionType == TaskActionType.GetProp) {
-    //         getProp = {
-    //             type: actionConfig[1],
-    //             propId: actionConfig[2],
-    //             num: actionConfig[3],
-    //         };
-    //     } else if (actionType == TaskActionType.NpcGetNewTalk) {
-    //         npcGetNewTalk = {
-    //             talkId: actionConfig[1],
-    //             npcId: actionConfig[2],
-    //             delayTime: actionConfig[3],
-    //         };
-    //     }
+        let showHide: TaskShowHideAction = null;
+        let faction: TaskFactionAction = null;
+        let talk: TaskTalkAction = null;
+        let getProp: GetPropData = null;
+        let npcGetNewTalk: TaskNpcGetNewTalkAction = null;
+        if (actionType == TaskActionType.ShowHide) {
+            showHide = {
+                type: actionConfig[1],
+                id: actionConfig[2],
+                status: actionConfig[3],
+                delayTime: actionConfig[4],
+            };
+        } else if (actionType == TaskActionType.Faction) {
+            faction = {
+                type: actionConfig[1],
+                id: actionConfig[2],
+                faction: actionConfig[3],
+            };
+        } else if (actionType == TaskActionType.Talk) {
+            talk = {
+                talkId: actionConfig[1],
+            };
+        } else if (actionType == TaskActionType.GetProp) {
+            getProp = {
+                type: actionConfig[1],
+                propId: actionConfig[2],
+                num: actionConfig[3],
+            };
+        } else if (actionType == TaskActionType.NpcGetNewTalk) {
+            npcGetNewTalk = {
+                talkId: actionConfig[1],
+                npcId: actionConfig[2],
+                delayTime: actionConfig[3],
+            };
+        }
 
-    //     return {
-    //         type: actionType,
-    //         showHide: showHide,
-    //         faction: faction,
-    //         talk: talk,
-    //         getProp: getProp,
-    //         npcGetNewTalk: npcGetNewTalk,
-    //     };
-    // }
-    // private _convertTaskStepConfigToObject(config: TaskStepConfigData): share.Itask_step_data {
-    //     const startAction: TaskAction[] = [];
-    //     if (config.start_action != null) {
-    //         for (const action of config.start_action) {
-    //             startAction.push(this._convertActionConfigToObject(action));
-    //         }
-    //     }
+        return {
+            type: actionType,
+            showHide: showHide,
+            faction: faction,
+            talk: talk,
+            getProp: getProp,
+            npcGetNewTalk: npcGetNewTalk,
+        };
+    }
+    private _convertTaskStepConfigToObject(config: TaskStepConfigData): TaskStepObject {
+        const startAction: TaskAction[] = [];
+        if (config.start_action != null) {
+            for (const action of config.start_action) {
+                startAction.push(this._convertActionConfigToObject(action));
+            }
+        }
 
-    //     const completeAction: TaskAction[] = [];
-    //     if (config.complete_action != null) {
-    //         for (const action of config.complete_action) {
-    //             completeAction.push(this._convertActionConfigToObject(action));
-    //         }
-    //     }
+        const completeAction: TaskAction[] = [];
+        if (config.complete_action != null) {
+            for (const action of config.complete_action) {
+                completeAction.push(this._convertActionConfigToObject(action));
+            }
+        }
 
-    //     return {
-    //         id: config.id,
-    //         name: config.name,
-    //         startAction: startAction,
-    //         completeCon: this._convertConditionConfigToObject(config.complete_con),
-    //         completeAction: completeAction,
-    //         quitCon: this._convertConditionConfigToObject(config.quit_con),
-    //         progress: config.progress,
-    //         exp: config.exp,
-    //         completeIndex: 0,
-    //     };
-    // }
+        return {
+            id: config.id,
+            name: config.name,
+            startAction: startAction,
+            completeCon: this._convertConditionConfigToObject(config.complete_con),
+            completeAction: completeAction,
+            quitCon: this._convertConditionConfigToObject(config.quit_con),
+            progress: config.progress,
+            exp: config.exp,
+            completeIndex: 0,
+        };
+    }
 
     // private _checkTask(checkCon: TaskCondition) {
     //     for (const task of this._data) {

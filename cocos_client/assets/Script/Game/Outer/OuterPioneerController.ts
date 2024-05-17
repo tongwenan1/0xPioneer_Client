@@ -617,7 +617,6 @@ export class OuterPioneerController extends ViewController {
     }
     private _onPioneerShowChanged(data: { id: string; show: boolean }): void {
         if (data.show) {
-            DataMgr.s.task.showHideChanged(MapMemberTargetType.pioneer, data.id, TaskShowHideStatus.show);
             if (data.id == "pioneer_1" || data.id == "pioneer_2" || data.id == "pioneer_3") {
                 // get secret guard
                 const pioneer = DataMgr.s.pioneer.getById(data.id);
@@ -634,8 +633,6 @@ export class OuterPioneerController extends ViewController {
                     });
                 }
             }
-        } else {
-            DataMgr.s.task.showHideChanged(MapMemberTargetType.pioneer, data.id, TaskShowHideStatus.hide);
         }
         this._refreshUI();
     }

@@ -612,7 +612,6 @@ export class DataMgr {
                     }
                     if (selfKillPioneer != null) {
                         // task
-                        DataMgr.s.task.pioneerKilled(selfKillPioneer.id);
                         // pioneer win reward
                         if (selfKillPioneer.winProgress > 0) {
                             const effectProgress = GameMgr.getAfterExtraEffectPropertyByPioneer(

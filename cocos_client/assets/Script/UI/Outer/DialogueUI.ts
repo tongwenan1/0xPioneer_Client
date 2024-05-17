@@ -132,7 +132,6 @@ export class DialogueUI extends ViewController {
             });
         }
         // talk used
-        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_USE_NEW_TALK, this._talk.id);
         if (this._talkOverCallback != null) {
             this._talkOverCallback();
         }
@@ -153,6 +152,7 @@ export class DialogueUI extends ViewController {
         NetworkMgr.websocketMsg.player_talk_select({
             talkId: this._talk.id,
             selectIndex: -1,
+            currStep: this._dialogStep + 1
         });
     }
 
@@ -168,6 +168,7 @@ export class DialogueUI extends ViewController {
         NetworkMgr.websocketMsg.player_talk_select({
             talkId: this._talk.id,
             selectIndex: selectIndex,
+            currStep: this._dialogStep + 1
         });
     }
 
@@ -197,7 +198,6 @@ export class DialogueUI extends ViewController {
                 this._refreshUI();
             }
         } else {
-            // DataMgr.s.task.talkSelected(this._talk.id, selectIndex);
             DataMgr.s.count.addObj_selectDialog({
                 selectText: selectIndex.toString(),
             });

@@ -77,7 +77,7 @@ export class OuterOtherPioneerView extends Component {
         // taskhide
         const npcPioneer: MapNpcPioneerObject = pioneer as MapNpcPioneerObject;
         if (!!npcPioneer) {
-            this._hasTaskView.active = npcPioneer.talkId != null;
+            this._hasTaskView.active = npcPioneer.talkId != null && npcPioneer.talkId != "";
             if (npcPioneer.talkCountStruct != null && npcPioneer.talkCountStruct.countTime > 0) {
                 this._taskPreparingView.active = true;
                 this._taskPreparingView.getComponent(Label).string = LanMgr.replaceLanById("202002", [npcPioneer.talkCountStruct.countTime]);

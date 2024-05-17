@@ -276,6 +276,7 @@ export namespace c2s_user {
     export interface Iplayer_talk_select {
         talkId: string;
         selectIndex: number;
+        currStep: number;
     }
     export interface Iplayer_gather {
         pioneerId: string;

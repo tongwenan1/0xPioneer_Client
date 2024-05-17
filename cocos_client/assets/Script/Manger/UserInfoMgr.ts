@@ -17,7 +17,6 @@ export default class UserInfoMgr {
     private _afterCivilizationClosedShowPioneerDatas: MapPioneerObject[] = [];
 
     public constructor() {
-        NotificationMgr.addListener(NotificationName.TASK_STEP_FINISHED, this._onTaskStepFinished, this);
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onUserInfoDidChangeLevel, this);
         NotificationMgr.addListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._onInnerBuildingDidFinishUpgrade, this);
 
@@ -60,19 +59,6 @@ export default class UserInfoMgr {
         this._afterCivilizationClosedShowPioneerDatas = pioneerDatas;
     }
     //-------------------------------------------------- notification
-    private _onTaskStepFinished(taskId: string) {
-        const task = DataMgr.s.task.getTask(taskId);
-        if (task != null) {
-            const finishedStepIndex: number = task.stepIndex - 1;
-            if (finishedStepIndex >= 0 && finishedStepIndex < task.steps.length) {
-                const finishedStep = DataMgr.s.task.getTaskStep(task.steps[finishedStepIndex]);
-
-                if (finishedStep.progress != null && finishedStep.progress > 0) {
-                    const effectProgress = GameMgr.getAfterExtraEffectPropertyByPioneer(null, GameExtraEffectType.TREASURE_PROGRESS, finishedStep.progress);
-                }
-            }
-        }
-    }
     private _onUserInfoDidChangeLevel(data: { hpMaxChangeValue: number; showBuildingIds: string[]; rewards: GetPropData[] }) {
         if (data.hpMaxChangeValue > 0) {
             DataMgr.s.pioneer.changeAllPlayerHpMax(data.hpMaxChangeValue);

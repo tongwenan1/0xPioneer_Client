@@ -3,12 +3,15 @@ import { LanMgr } from '../Utils/Global';
 import ViewController from '../BasicView/ViewController';
 import NotificationMgr from '../Basic/NotificationMgr';
 import { NotificationName } from '../Const/Notification';
-import { TaskCondition, TaskConditionType, TaskObject, TaskStepObject } from '../Const/TaskDefine';
+import { TaskCondition, TaskConditionType, TaskStepObject } from '../Const/TaskDefine';
 import GameMainHelper from '../Game/Helper/GameMainHelper';
 import CommonTools from '../Tool/CommonTools';
 import UIPanelManger from '../Basic/UIPanelMgr';
 import { DataMgr } from '../Data/DataMgr';
 import { MapNpcPioneerObject, MapPioneerObject } from '../Const/PioneerDefine';
+import { share } from '../Net/msg/WebsocketMsg';
+import TaskConfig from '../Config/TaskConfig';
+import TaskStepConfig from '../Config/TaskStepConfig';
 
 const { ccclass, property } = _decorator;
 
@@ -40,8 +43,8 @@ export class TaskListUI extends ViewController {
         }
         this._detailProgressList = [];
 
-        const finishedTasks: TaskObject[] = [];
-        const toDoTasks: TaskObject[] = [];
+        const finishedTasks: share.Itask_data[] = [];
+        const toDoTasks: share.Itask_data[] = [];
         const allGettedTasks = DataMgr.s.task.getAllGettedTasks();
         for (const task of allGettedTasks) {
             if (task.isFinished || task.isFailed) {
@@ -59,13 +62,18 @@ export class TaskListUI extends ViewController {
                 break;
             }
             actionTaskShowCount += 1;
-            const currentTask: TaskObject = toDoTasks[i];
-            const currentStep: TaskStepObject = DataMgr.s.task.getTaskStep(currentTask.steps[currentTask.stepIndex]);
-
+            const currentTask: share.Itask_data = toDoTasks[i];
+            const currentStep: share.Itask_step_data = currentTask.steps[currentTask.stepIndex];
+            if (currentStep == null) {
+                continue;
+            }
+            const taskConfig = TaskConfig.getById(currentTask.taskId);
+            const taskStepConfig = TaskStepConfig.getById(currentStep?.stepId);
+            console.log("exce confi: ", taskStepConfig);
             const action = instantiate(this._actionItem);
             action.active = true;
-            action.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(toDoTasks[i].name);
-            action.getChildByName("SubTitle").getComponent(Label).string = LanMgr.getLanById(currentStep.name);
+            action.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(taskConfig.name);
+            action.getChildByName("SubTitle").getComponent(Label).string = taskStepConfig == null ? "" : LanMgr.getLanById(taskStepConfig.name);
             action.getChildByName("Progress").getComponent(Label).string = currentTask.stepIndex + "/" + currentTask.steps.length;
             action.getComponent(Button).clickEvents[0].customEventData = i.toString();
             action.setParent(this._actionItem.getParent());
@@ -77,18 +85,22 @@ export class TaskListUI extends ViewController {
 
         this._detailTaskView.active = this._isDetailShow;
         if (this._isDetailShow) {
-            let showTasks: TaskObject[] = null;
+            let showTasks: share.Itask_data[] = null;
             if (this._isDetailToDoShow) {
                 showTasks = toDoTasks;
             } else {
                 showTasks = finishedTasks;
             }
-            showTasks.sort((a: TaskObject, b: TaskObject) => a.taskId.localeCompare(b.taskId));
+            showTasks.sort((a: share.Itask_data, b: share.Itask_data) => a.taskId.localeCompare(b.taskId));
             for (let i = 0; i < showTasks.length; i++) {
                 const detail = instantiate(this._detailTaskItem);
                 detail.active = true;
 
-                detail.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById(showTasks[i].name);
+                const taskConfig = TaskConfig.getById(showTasks[i].taskId);
+                if (taskConfig == null) {
+                    continue;
+                }
+                detail.getChildByName("Label").getComponent(Label).string = LanMgr.getLanById(taskConfig.name);
                 detail.getChildByName("Selected").active = i == this._detailSelectedIndex;
                 detail.getComponent(Button).clickEvents[0].customEventData = i.toString();
                 detail.setParent(this._detailTaskItem.getParent());
@@ -98,7 +110,7 @@ export class TaskListUI extends ViewController {
 
             if (this._detailSelectedIndex < showTasks.length) {
                 this._detailTaskView.getChildByName("ProgressList").active = true;
-                const currentTask: TaskObject = showTasks[this._detailSelectedIndex];
+                const currentTask: share.Itask_data = showTasks[this._detailSelectedIndex];
                 if (currentTask.isFailed) {
                     const unDoneTitleItem = instantiate(this._detailProgressUndoneTitleItem);
                     unDoneTitleItem.active = true;
@@ -110,12 +122,12 @@ export class TaskListUI extends ViewController {
                     // 2- finished task
                     // 3- todo title
                     // 4- todo task
-                    const finishedDatas: { status: number, stepData: TaskStepObject }[] = [];
-                    const todoDatas: { status: number, stepData: TaskStepObject }[] = [];
+                    const finishedDatas: { status: number, stepData: share.Itask_step_data }[] = [];
+                    const todoDatas: { status: number, stepData: share.Itask_step_data }[] = [];
                     let hasFinishedTitle: boolean = false;
                     let hasToDoTitle: boolean = false;
                     for (let i = 0; i < currentTask.steps.length; i++) {
-                        const currentStep = DataMgr.s.task.getTaskStep(currentTask.steps[currentTask.stepIndex]);
+                        const currentStep = currentTask.steps[currentTask.stepIndex];
                         if (i < currentTask.stepIndex) {
                             // step finished
                             if (!hasFinishedTitle) {
@@ -139,11 +151,13 @@ export class TaskListUI extends ViewController {
                             this._detailProgressList.push(finishTitleItem);
 
                         } else if (temple.status == 2) {
+                            const stepObj = DataMgr.s.task.getTaskStep(temple.stepData.stepId);
+
                             const finish = instantiate(this._detailProgressFinishItem);
                             finish.active = true;
                             finish.setParent(this._detailProgressFinishItem.getParent());
-                            finish.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(temple.stepData.name);
-                            finish.getChildByName("Progress").getComponent(Label).string = temple.stepData.completeIndex + "/" + temple.stepData.completeCon.conditions.length;
+                            finish.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(stepObj.name);
+                            finish.getChildByName("Progress").getComponent(Label).string = temple.stepData.completeIndex + "/" + stepObj.completeCon.conditions.length;
                             this._detailProgressList.push(finish);
 
                         } else if (temple.status == 3) {
@@ -153,11 +167,13 @@ export class TaskListUI extends ViewController {
                             this._detailProgressList.push(toDoTitleItem);
 
                         } else if (temple.status == 4) {
+                            const stepObj = DataMgr.s.task.getTaskStep(temple.stepData.stepId);
+
                             const finish = instantiate(this._detailProgressToDoItem);
                             finish.active = true;
                             finish.setParent(this._detailProgressToDoItem.getParent());
-                            finish.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(temple.stepData.name);
-                            finish.getChildByName("Progress").getComponent(Label).string = temple.stepData.completeIndex + "/" + temple.stepData.completeCon.conditions.length;
+                            finish.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(stepObj.name);
+                            finish.getChildByName("Progress").getComponent(Label).string = temple.stepData.completeIndex + "/" + stepObj.completeCon.conditions.length;
                             this._detailProgressList.push(finish);
                         }
                     }
@@ -179,7 +195,7 @@ export class TaskListUI extends ViewController {
 
     private _isDetailShow: boolean = false;
     private _isDetailToDoShow: boolean = true;
-    private _toDoTaskList: TaskObject[] = [];
+    private _toDoTaskList: share.Itask_data[] = [];
     private _detailSelectedIndex: number = 0;
 
     private _actionTaskList: Node[] = [];
@@ -266,8 +282,8 @@ export class TaskListUI extends ViewController {
         if (index >= this._toDoTaskList.length) {
             return;
         }
-        const templeTask: TaskObject = this._toDoTaskList[index];
-        const currentStepTask: TaskStepObject = DataMgr.s.task.getTaskStep(templeTask.steps[templeTask.stepIndex]);
+        const templeTask: share.Itask_data = this._toDoTaskList[index];
+        const currentStepTask: TaskStepObject = DataMgr.s.task.getTaskStep(templeTask.steps[templeTask.stepIndex].stepId);
         if (currentStepTask == null) {
             return;
         }
