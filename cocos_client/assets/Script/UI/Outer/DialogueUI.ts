@@ -197,7 +197,7 @@ export class DialogueUI extends ViewController {
                 this._refreshUI();
             }
         } else {
-            DataMgr.s.task.talkSelected(this._talk.id, selectIndex);
+            // DataMgr.s.task.talkSelected(this._talk.id, selectIndex);
             DataMgr.s.count.addObj_selectDialog({
                 selectText: selectIndex.toString(),
             });

@@ -613,6 +613,10 @@ export namespace s2c_user {
         txhash: string;
         logid: string;
     }
+    export interface Iuser_task_action_getnewtalk {
+        pioneerId: string;
+        talkId: string;
+    }
 }
 
 export namespace share {
@@ -701,6 +705,7 @@ export namespace share {
         storehouse?: Istorehouse_data;
         usermap?: Iusermap_data;
         nfts?: Infts_data;
+        tasks?: Itask_data[];
     }
 
     export interface Istorehouse_data {
@@ -808,5 +813,19 @@ export namespace share {
         itemId: number;
         count: number;
         num: number;
+    }
+
+    export interface Itask_data {
+        taskId: string;
+        stepIndex: number;
+        isFinished: boolean;
+        isFailed: boolean;
+        canGet: boolean;
+        isGetted: boolean;
+        steps: Itask_step_data[];
+    }
+    export interface Itask_step_data {
+        stepId: string;
+        completeIndex: number;
     }
 }
