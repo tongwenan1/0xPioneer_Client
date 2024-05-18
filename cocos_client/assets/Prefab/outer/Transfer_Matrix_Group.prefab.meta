@@ -1,0 +1,13 @@
+{
+  "ver": "1.1.49",
+  "importer": "prefab",
+  "imported": true,
+  "uuid": "e4555d32-3f4f-43e0-b058-9abe5d59a96c",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {},
+  "userData": {
+    "syncNodeName": "Transfer_Matrix_Group"
+  }
+}

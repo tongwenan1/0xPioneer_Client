@@ -161,9 +161,9 @@
     "show": 1,
     "level": 1,
     "nft_pioneer": "30001",
-    "hp": 120,
-    "attack": 25,
-    "def": 0,
+    "hp": 100,
+    "attack": 15,
+    "def": 10,
     "winprogress": null,
     "exp": 5,
     "animType": "self",
@@ -183,7 +183,7 @@
     "show": 0,
     "level": 1,
     "nft_pioneer": "30001",
-    "hp": 80,
+    "hp": 100,
     "attack": 15,
     "def": 10,
     "winprogress": null,
@@ -220,7 +220,7 @@
     "show": 0,
     "level": 1,
     "nft_pioneer": "30001",
-    "hp": 80,
+    "hp": 100,
     "attack": 15,
     "def": 10,
     "winprogress": null,
@@ -242,7 +242,7 @@
     "show": 0,
     "level": 1,
     "nft_pioneer": "30001",
-    "hp": 80,
+    "hp": 100,
     "attack": 15,
     "def": 10,
     "winprogress": null,
@@ -900,6 +900,34 @@
         "range": 2,
         "speed": 80,
         "cond": ""
+      }
+    ]
+  },
+  "test": {
+    "id": "test",
+    "name": "109034",
+    "type": "4",
+    "friendly": 0,
+    "show": 1,
+    "level": 1,
+    "nft_pioneer": "",
+    "hp": 40,
+    "attack": 10,
+    "def": 10,
+    "winprogress": 3,
+    "exp": 5,
+    "animType": "monster_a_1",
+    "drop": [
+      [
+        4,
+        "20006",
+        1
+      ]
+    ],
+    "pos": [
+      {
+        "x": 48,
+        "y": 15
       }
     ]
   }
