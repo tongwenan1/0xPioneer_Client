@@ -21,6 +21,7 @@ import { MapBuildingMainCityObject, MapBuildingWormholeObject } from "../Const/M
 import { GameMgr, LanMgr, PioneerMgr } from "../Utils/Global";
 import NetGlobalData from "./Save/Data/NetGlobalData";
 import { NetworkMgr } from "../Net/NetworkMgr";
+import ArtifactData from "../Model/ArtifactData";
 
 export class DataMgr {
     public static r: RunData;
@@ -818,6 +819,7 @@ export class DataMgr {
 
     public static player_rookie_finish_res = (e: any) => {
         DataMgr.s.userInfo.finishRookie();
+        DataMgr.s.artifact.addObj_artifact([new ArtifactData("7001", 1)]);
     };
 
     ///////////////// websocketTempData
