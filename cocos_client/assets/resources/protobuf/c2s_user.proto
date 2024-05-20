@@ -206,3 +206,8 @@ message fetch_user_psyc {
 message save_archives {
     required string archives = 1;
 }
+
+// ----------------------------- task
+message get_user_task_info {
+
+}

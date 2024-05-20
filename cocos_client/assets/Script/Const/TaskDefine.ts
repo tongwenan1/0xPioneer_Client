@@ -106,6 +106,15 @@ export interface TaskFactionAction {
     id: string;
     faction: MapMemberFactionType;
 }
+export interface MapBuildingFactionAction {
+    buildingId: string;
+    faction: MapMemberFactionType;
+}
+export interface PioneerFactionAction {
+    pioneerId: string;
+    faction: MapMemberFactionType;
+}
+
 export interface TaskTalkAction {
     talkId: string;
 }

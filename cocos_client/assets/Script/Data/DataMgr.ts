@@ -1,7 +1,14 @@
 import { Vec2 } from "cc";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { InnerBuildingType, MapBuildingType } from "../Const/BuildingDefine";
-import { AttrChangeType, DataMgrResData, GameExtraEffectType, GetPropData, MapMemberFactionType, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import {
+    AttrChangeType,
+    DataMgrResData,
+    GameExtraEffectType,
+    GetPropData,
+    MapMemberFactionType,
+    ResourceCorrespondingItem,
+} from "../Const/ConstDefine";
 import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import {
@@ -137,6 +144,34 @@ export class DataMgr {
 
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: p.pioneerId, show: p.show });
     };
+    public static player_map_pioneer_show_change = (e: any) => {
+        const p: s2c_user.Iplayer_map_pioneer_show_change = e.data;
+        const pioneer = DataMgr.s.pioneer.getById(p.pioneerId);
+        if (pioneer == undefined) {
+            return;
+        }
+        if (pioneer.show == !!p.isShow) {
+            return;
+        }
+        pioneer.show = !!p.isShow;
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: p.pioneerId, show: !!p.isShow });
+    }
+    public static player_map_pioneer_faction_change = (e: any) => {
+        const p: s2c_user.Iplayer_map_pioneer_faction_change = e.data;
+        const pioneer = DataMgr.s.pioneer.getById(p.pioneerId);
+        if (pioneer == undefined) {
+            return;
+        }
+        if (pioneer.faction == p.faction) {
+            return;
+        }
+        pioneer.faction = p.faction;
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, p);
+    }
+    public static player_map_building_faction_change = (e: any) => {
+        const p: s2c_user.Iplayer_map_building_faction_change = e.data;
+        DataMgr.s.mapBuilding.changeBuildingFaction(p.buildingId, p.faction);
+    }
     public static player_actiontype_change = (e: any) => {
         const p: s2c_user.Iplayer_actiontype_change = e.data;
         if (p.res !== 1) {
@@ -246,7 +281,11 @@ export class DataMgr {
             if (!!wormholeBuilding) {
                 let canWormholeAttack: boolean = true;
                 for (let i = 0; i < 3; i++) {
-                    if (buildingData.defendPioneerIds[i] == "" || buildingData.defendPioneerIds[i] == undefined || buildingData.defendPioneerIds[i] == null) {
+                    if (
+                        buildingData.defendPioneerIds[i] == "" ||
+                        buildingData.defendPioneerIds[i] == undefined ||
+                        buildingData.defendPioneerIds[i] == null
+                    ) {
                         canWormholeAttack = false;
                         break;
                     }
@@ -831,5 +870,25 @@ export class DataMgr {
     public static user_task_action_getnewtalk = (e: any) => {
         let p: s2c_user.Iuser_task_action_getnewtalk = e.data;
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_NEW_TALK, p);
+    };
+    public static user_task_did_get = (e: any) => {
+        let p: s2c_user.Iuser_task_did_get = e.data;
+        NotificationMgr.triggerEvent(NotificationName.TASK_NEW_GETTED, p.taskId);
+    }
+    public static user_task_did_fail = (e: any) => {
+        let p: s2c_user.Iuser_task_did_fail = e.data;
+        NotificationMgr.triggerEvent(NotificationName.TASK_FAILED, p.taskId);
+    };
+    public static user_task_step_did_finish = (e: any) => {
+        let p: s2c_user.Iuser_task_step_did_finish = e.data;
+        NotificationMgr.triggerEvent(NotificationName.TASK_STEP_FINISHED, p.taskId);
+    };
+    public static get_user_task_info_res = (e: any)  => {
+        let p: s2c_user.Iget_user_task_info_res = e.data;
+        if (p.res == 1) {
+            NetGlobalData.tasks = p.tasks;
+            DataMgr.s.task.loadObj();
+            NotificationMgr.triggerEvent(NotificationName.TASK_LIST);
+        }
     }
 }

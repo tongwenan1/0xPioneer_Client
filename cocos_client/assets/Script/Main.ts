@@ -180,7 +180,10 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
         NetworkMgr.websocket.on("player_event_res", DataMgr.player_event_res);
         NetworkMgr.websocket.on("player_pioneer_change_show_res", DataMgr.player_pioneer_change_show_res);
+        NetworkMgr.websocket.on("player_map_pioneer_show_change", DataMgr.player_map_pioneer_show_change);
+        NetworkMgr.websocket.on("player_map_pioneer_faction_change", DataMgr.player_map_pioneer_faction_change);
         NetworkMgr.websocket.on("player_actiontype_change", DataMgr.player_actiontype_change);
+        NetworkMgr.websocket.on("player_map_building_faction_change", DataMgr.player_map_building_faction_change);
         // nft
         NetworkMgr.websocket.on("player_bind_nft_res", DataMgr.player_bind_nft_res);
         NetworkMgr.websocket.on("player_nft_lvlup_res", DataMgr.player_nft_lvlup_res);
@@ -219,6 +222,10 @@ export class Main extends ViewController {
 
         // task
         NetworkMgr.websocket.on("user_task_action_getnewtalk", DataMgr.user_task_action_getnewtalk);
+        NetworkMgr.websocket.on("user_task_did_get", DataMgr.user_task_did_get);
+        NetworkMgr.websocket.on("user_task_did_fail", DataMgr.user_task_did_fail);
+        NetworkMgr.websocket.on("user_task_step_did_finish", DataMgr.user_task_step_did_finish);
+        NetworkMgr.websocket.on("get_user_task_info_res", DataMgr.get_user_task_info_res);
     }
 
     private async reconnect() {

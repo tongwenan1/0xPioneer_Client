@@ -78,9 +78,10 @@ export enum NotificationName {
     TASK_FAILED,
     TASK_STEP_FINISHED,
     TASK_FINISHED,
+    TASK_LIST,
     //---------------------- map member
     MAP_MEMBER_CHANGE_SHOW_HIDE,
-    MAP_MEMBER_CHANGE_FACTION,
+    // MAP_MEMBER_CHANGE_FACTION,
 
     MAP_MEMEBER_FIGHT_BEGIN,
     MAP_MEMEBER_FIGHT_DID_ATTACK,
@@ -115,6 +116,8 @@ export enum NotificationName {
     MAP_PIONEER_EXPLORED_BUILDING,
     MAP_PIONEER_MINING_BUILDING,
     MAP_PIONEER_EVENT_BUILDING,
+
+    MAP_BUILDING_FACTION_CHANGE,
     //---------------------- dialog
     DIALOG_SHOW,
     CHOOSE_GANGSTER_ROUTE,

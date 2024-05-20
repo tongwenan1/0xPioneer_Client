@@ -70,6 +70,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_pioneer_change_show_res, "player_pioneer_change_show_res", "s2c_user.player_pioneer_change_show_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_event_res, "player_event_res", "s2c_user.player_event_res");
     pcodec.register_protobuf_msg(protobuf_s2c.get_treasure_info_res, "get_treasure_info_res", "s2c_user.get_treasure_info_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.get_user_task_info_res, "get_user_task_info_res", "s2c_user.get_user_task_info_res");
     pcodec.register_protobuf_msg(protobuf_s2c.get_battle_report_res, "get_battle_report_res", "s2c_user.get_battle_report_res");
 
     pcodec.register_protobuf_msg(protobuf_s2c.storhouse_change, "storhouse_change", "s2c_user.storhouse_change");
@@ -136,6 +137,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.player_pioneer_change_show, "player_pioneer_change_show", "c2s_user.player_pioneer_change_show");
     pcodec.register_protobuf_msg(protobuf_c2s.player_event, "player_event", "c2s_user.player_event");
     pcodec.register_protobuf_msg(protobuf_c2s.get_treasure_info, "get_treasure_info", "c2s_user.get_treasure_info");
+    pcodec.register_protobuf_msg(protobuf_c2s.get_user_task_info, "get_user_task_info", "c2s_user.get_user_task_info");
     pcodec.register_protobuf_msg(protobuf_c2s.get_battle_report, "get_battle_report", "c2s_user.get_battle_report");
 
     pcodec.register_protobuf_msg(protobuf_c2s.fetch_user_psyc, "fetch_user_psyc", "c2s_user.fetch_user_psyc");

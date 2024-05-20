@@ -43,6 +43,7 @@ export enum protobuf_c2s {
     player_pioneer_change_show = 227,
     player_event = 228,
     get_treasure_info = 229,
+    get_user_task_info = 230,
     get_battle_report = 299,
 
     fetch_user_psyc = 400
@@ -93,6 +94,7 @@ export enum protobuf_s2c {
     player_pioneer_change_show_res = 20229,
     player_event_res = 20230,
     get_treasure_info_res = 20231,
+    get_user_task_info_res = 20232,
     get_battle_report_res = 20299,
 
     storhouse_change = 20300,

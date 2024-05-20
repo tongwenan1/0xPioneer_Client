@@ -631,7 +631,7 @@ export class MapBuildingDataMgr {
         if (findBuilding.faction == faction) return;
 
         findBuilding.faction = faction;
-        this.saveObj_building();
+        // this.saveObj_building();
 
         if (findBuilding.id == "building_1" && findBuilding.faction == MapMemberFactionType.enemy) {
             NotificationMgr.triggerEvent(NotificationName.CHOOSE_GANGSTER_ROUTE);

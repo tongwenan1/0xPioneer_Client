@@ -285,6 +285,11 @@ message player_map_pioneer_faction_change {
 
 // ----------------------------------------------------------------------------
 
+message get_user_task_info_res {
+    required int32 res = 1;
+    repeated share.task_data tasks = 2;
+}
+
 message user_task_did_fail {
     required string taskId= 1;
 }

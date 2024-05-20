@@ -21,7 +21,7 @@ import { NotificationName } from "../../Const/Notification";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { Ichange_pioneer_type, s2c_user } from "../../Net/msg/WebsocketMsg";
 import CommonTools from "../../Tool/CommonTools";
-import { TaskFactionAction, TaskNpcGetNewTalkAction, TaskShowHideAction, TaskShowHideStatus } from "../../Const/TaskDefine";
+import { PioneerFactionAction, TaskFactionAction, TaskNpcGetNewTalkAction, TaskShowHideAction, TaskShowHideStatus } from "../../Const/TaskDefine";
 import { NFTPioneerObject } from "../../Const/NFTPioneerDefine";
 import NetGlobalData from "./Data/NetGlobalData";
 
@@ -160,18 +160,6 @@ export class PioneersDataMgr {
 
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_TALK_CHANGED, { id: pioneerId, talkId: npcObj.talkId });
         }
-    }
-    public changeFaction(pioneerId: string, faction: MapMemberFactionType) {
-        const pioneer = this.getById(pioneerId);
-        if (pioneer == undefined) {
-            return;
-        }
-        if (pioneer.faction == faction) {
-            return;
-        }
-        pioneer.faction = faction;
-
-        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, { id: pioneerId, faction: pioneer.faction });
     }
 
     public changeBeKilled(pioneerId: string, killerId: string) {
@@ -548,7 +536,6 @@ export class PioneersDataMgr {
     private _addListeners() {
         NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, this._onPioneerChangeShow, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_NEW_TALK, this._onPioneerGetTalk, this);
-        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_FACTION, this._onPioneerChangeFaction, this);
         NotificationMgr.addListener(NotificationName.NFTDIDLEVELUP, this._onNFTPioneerDidLevelUp, this);
     }
 
@@ -560,11 +547,6 @@ export class PioneersDataMgr {
     }
     private _onPioneerGetTalk(action: TaskNpcGetNewTalkAction) {
         this.changeTalk(action.npcId, action.talkId, action.delayTime);
-    }
-    private _onPioneerChangeFaction(action: TaskFactionAction) {
-        if (action.type == MapMemberTargetType.pioneer) {
-            this.changeFaction(action.id, action.faction);
-        }
     }
 
     private _onNFTPioneerDidLevelUp(NFT: NFTPioneerObject) {

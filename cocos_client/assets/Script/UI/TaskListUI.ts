@@ -251,6 +251,7 @@ export class TaskListUI extends ViewController {
         NotificationMgr.addListener(NotificationName.TASK_FAILED, this.refreshUI, this);
         NotificationMgr.addListener(NotificationName.TASK_STEP_FINISHED, this.refreshUI, this);
         NotificationMgr.addListener(NotificationName.TASK_FINISHED, this.refreshUI, this);
+        NotificationMgr.addListener(NotificationName.TASK_LIST, this.refreshUI, this);
 
         this.refreshUI();
     }
@@ -263,6 +264,7 @@ export class TaskListUI extends ViewController {
         NotificationMgr.removeListener(NotificationName.TASK_FAILED, this.refreshUI, this);
         NotificationMgr.removeListener(NotificationName.TASK_STEP_FINISHED, this.refreshUI, this);
         NotificationMgr.removeListener(NotificationName.TASK_FINISHED, this.refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.TASK_LIST, this.refreshUI, this);
     }
     //---------------------------------------------------
     // action

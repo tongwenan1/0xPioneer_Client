@@ -442,6 +442,18 @@ export namespace s2c_user {
         pioneerId: string;
         show: boolean;
     }
+    export interface Iplayer_map_pioneer_show_change {
+        pioneerId: string;
+        isShow: number;
+    }
+    export interface Iplayer_map_pioneer_faction_change {
+        pioneerId: string;
+        faction: number;
+    }
+    export interface Iplayer_map_building_faction_change {
+        buildingId: string;
+        faction: number;
+    }
     export interface Iplayer_exp_change {
         addExp: number;
         newExp: number;
@@ -617,6 +629,19 @@ export namespace s2c_user {
     export interface Iuser_task_action_getnewtalk {
         pioneerId: string;
         talkId: string;
+    }
+    export interface Iuser_task_did_get {
+        taskId: string;
+    }
+    export interface Iuser_task_did_fail {
+        taskId: string;
+    }
+    export interface Iuser_task_step_did_finish {
+        taskId: string;
+    }
+    export interface Iget_user_task_info_res {
+        res: number;
+        tasks: share.Itask_data[];
     }
 }
 
