@@ -253,6 +253,7 @@ message player_lvlup_change {
     required uint32 newPsycLimit = 3;
     required uint32 newLv = 4;
     repeated share.item_data items = 5;
+    repeated share.artifact_info_data artifacts = 6;
 }
 
 message player_treasure_progress_change {

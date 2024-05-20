@@ -79,7 +79,7 @@ message artifact_info_data {
     optional string artifactConfigId = 2; // artifact config id
     optional uint32 count = 3; // count
     optional uint32 addTimeStamp = 4;
-    optional uint32 effectIndex = 5;
+    optional int32 effectIndex = 5;
 }
 
 message pioneer_data {

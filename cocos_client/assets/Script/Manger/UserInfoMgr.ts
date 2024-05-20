@@ -12,6 +12,7 @@ import { MapPioneerObject } from "../Const/PioneerDefine";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { UIName } from "../Const/ConstUIDefine";
 import { ItemGettedUI } from "../UI/ItemGettedUI";
+import { ArtifactInfoUI } from "../UI/ArtifactInfoUI";
 
 export default class UserInfoMgr {
     private _afterTalkItemGetData: Map<string, ItemData[]> = new Map();
@@ -89,8 +90,18 @@ export default class UserInfoMgr {
                 }
             });
         }
-        // if (data.artifacts.length > 0) {
-        // }
+        if (data.artifacts.length > 0) {
+            setTimeout(async () => {
+                if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI) || UIPanelManger.inst.panelIsShow(UIName.SecretGuardGettedUI)) {
+                    this._afterCivilizationClosedShowArtifactDatas.push(...data.artifacts);
+                } else {
+                    const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+                    if (result.success) {
+                        result.node.getComponent(ArtifactInfoUI).showItem(data.artifacts);
+                    }
+                }
+            });
+        }
     }
     private _onInnerBuildingDidFinishUpgrade(type: InnerBuildingType) {
         const info = DataMgr.s.userInfo.data.innerBuildings[type];

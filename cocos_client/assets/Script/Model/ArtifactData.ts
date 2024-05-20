@@ -5,11 +5,12 @@ export default class ArtifactData {
     public addTimeStamp: number;
     public effectIndex: number;
 
-    public constructor(artifactConfigId: string, count: number) {
+    public constructor(artifactConfigId: string, count: number, uniqueId:string = "", addTimeStamp = 0, effectIndex = -1) {
         this.artifactConfigId = artifactConfigId;
         this.count = count;
-        this.addTimeStamp = 0;
-        this.effectIndex = -1;
+        this.addTimeStamp = addTimeStamp;
+        this.effectIndex = effectIndex;
+        this.uniqueId = uniqueId;
     }
 }
 

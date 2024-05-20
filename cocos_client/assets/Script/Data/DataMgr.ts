@@ -1,7 +1,14 @@
 import { Vec2 } from "cc";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { InnerBuildingType, MapBuildingType } from "../Const/BuildingDefine";
-import { AttrChangeType, DataMgrResData, GameExtraEffectType, GetPropData, MapMemberFactionType, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import {
+    AttrChangeType,
+    DataMgrResData,
+    GameExtraEffectType,
+    GetPropData,
+    MapMemberFactionType,
+    ResourceCorrespondingItem,
+} from "../Const/ConstDefine";
 import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import {
@@ -280,7 +287,11 @@ export class DataMgr {
             if (!!wormholeBuilding) {
                 let canWormholeAttack: boolean = true;
                 for (let i = 0; i < 3; i++) {
-                    if (buildingData.defendPioneerIds[i] == "" || buildingData.defendPioneerIds[i] == undefined || buildingData.defendPioneerIds[i] == null) {
+                    if (
+                        buildingData.defendPioneerIds[i] == "" ||
+                        buildingData.defendPioneerIds[i] == undefined ||
+                        buildingData.defendPioneerIds[i] == null
+                    ) {
                         canWormholeAttack = false;
                         break;
                     }
@@ -858,7 +869,7 @@ export class DataMgr {
 
     public static player_rookie_finish_res = (e: any) => {
         DataMgr.s.userInfo.finishRookie();
-        DataMgr.s.artifact.addObj_artifact([new ArtifactData("7001", 1)]);
+        // DataMgr.s.artifact.addObj_artifact([new ArtifactData("7001", 1)]);
     };
 
     public static player_lvlup_change = (e: any) => {
@@ -871,8 +882,24 @@ export class DataMgr {
             }
             p.items = items;
         }
+        if (p.artifacts.length > 0) {
+            let artifacts: ArtifactData[] = [];
+
+            for (let i = 0; i < p.artifacts.length; i++) {
+                artifacts.push(
+                    new ArtifactData(
+                        p.artifacts[i].artifactConfigId,
+                        p.artifacts[i].count,
+                        p.artifacts[i].uniqueId,
+                        p.artifacts[i].addTimeStamp,
+                        p.artifacts[i].effectIndex
+                    )
+                );
+            }
+            p.artifacts = artifacts;
+        }
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_LEVEL, p);
-    }
+    };
 
     ///////////////// websocketTempData
     public static setTempSendData(key: string, data: DataMgrResData) {
