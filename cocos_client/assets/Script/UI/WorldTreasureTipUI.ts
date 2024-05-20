@@ -10,7 +10,7 @@ export class WorldTreasureTipUI extends ViewController {
         super.viewDidLoad();
 
 
-        this.node.getChildByPath("Content/Tip").getComponent(Label).string = LanMgr.getLanById("310340");
+        this.node.getChildByPath("Content/Tip").getComponent(Label).string = LanMgr.getLanById("106008");
     }
 
     protected viewPopAnimation(): boolean {

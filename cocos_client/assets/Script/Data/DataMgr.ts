@@ -326,7 +326,7 @@ export class DataMgr {
             fightResult: p.fightResult ? "win" : "lose",
             rewards: [],
         });
-        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("777777"));
+        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("106007"));
     };
 
     //----------------------------------- psyc
