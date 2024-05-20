@@ -201,7 +201,7 @@ export class DataMgr {
         }
     };
     public static mappioneer_reborn_change = (e: any) => {
-        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("777777"));
+        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("106009"));
     }
     public static player_move_res = (e: any) => {
         const p: s2c_user.Iplayer_move_res = e.data;
@@ -234,7 +234,7 @@ export class DataMgr {
         DataMgr.s.mapBuilding.changeBuildingFaction(p.buildingId, p.faction);
     };
     public static mapbuilding_reborn_change = (e: any) => {
-        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("777777"));
+        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("106010"));
     }
     
 
