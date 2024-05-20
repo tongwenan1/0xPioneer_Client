@@ -30,7 +30,6 @@ export default class BuildingMgr {
                     building.showHideStruct = null;
                 }
 
-                DataMgr.s.mapBuilding.saveObj_building();
             }
         }, 1000);
     }
@@ -62,7 +61,6 @@ export default class BuildingMgr {
                 countTime: action.delayTime,
                 isShow: action.status == TaskShowHideStatus.show,
             };
-            DataMgr.s.mapBuilding.saveObj_building();
             return;
         }
 

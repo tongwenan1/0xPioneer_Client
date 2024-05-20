@@ -1,14 +1,7 @@
 import { Vec2 } from "cc";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { InnerBuildingType, MapBuildingType } from "../Const/BuildingDefine";
-import {
-    AttrChangeType,
-    DataMgrResData,
-    GameExtraEffectType,
-    GetPropData,
-    MapMemberFactionType,
-    ResourceCorrespondingItem,
-} from "../Const/ConstDefine";
+import { AttrChangeType, DataMgrResData, GameExtraEffectType, GetPropData, MapMemberFactionType, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import {
@@ -62,8 +55,10 @@ export class DataMgr {
                 NetGlobalData.userInfo = p.data.info.sinfo;
                 NetGlobalData.innerBuildings = p.data.info.buildings;
                 NetGlobalData.storehouse = p.data.info.storehouse;
+                NetGlobalData.artifacts = p.data.info.artifact;
                 NetGlobalData.usermap = p.data.info.usermap;
                 NetGlobalData.nfts = p.data.info.nfts;
+                NetGlobalData.mapBuildings = p.data.info.mapbuilding;
                 NetGlobalData.tasks = p.data.info.tasks;
                 // load save data
                 await DataMgr.s.load(this.r.wallet.addr);
@@ -103,10 +98,8 @@ export class DataMgr {
     //------------------------------------- item
     public static storhouse_change = async (e: any) => {
         const p: s2c_user.Istorhouse_change = e.data;
-        const items = [];
         for (const item of p.iteminfo) {
             const change = new ItemData(item.itemConfigId, item.count);
-            items.push(change);
             change.addTimeStamp = item.addTimeStamp;
             DataMgr.s.item.countChanged(change);
         }
@@ -117,6 +110,29 @@ export class DataMgr {
         }
     };
 
+    //------------------------------------ artifact
+    public static artifact_change = (e: any) => {
+        const p: s2c_user.Iartifact_change = e.data;
+        for (const artifact of p.iteminfo) {
+            const change = new ArtifactData(artifact.artifactConfigId, artifact.count);
+            change.addTimeStamp = artifact.addTimeStamp;
+            DataMgr.s.artifact.countChanged(change);
+        }
+    };
+    public static player_artifact_equip_res = (e: any) => {
+        const p: s2c_user.Iplayer_artifact_equip_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        DataMgr.s.artifact.changeObj_artifact_effectIndex(p.data.artifactConfigId, p.data.effectIndex);
+    };
+    public static player_artifact_remove_res = (e: any) => {
+        const p: s2c_user.Iplayer_artifact_equip_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        DataMgr.s.artifact.changeObj_artifact_effectIndex(p.data.artifactConfigId, p.data.effectIndex);
+    };
     //------------------------------------- inner building
     public static player_building_levelup_res = (e: any) => {
         const p: s2c_user.Iplayer_building_levelup_res = e.data;
@@ -189,7 +205,6 @@ export class DataMgr {
                 const useBuilding = DataMgr.s.mapBuilding.getBuildingById(NetGlobalData.wormholeAttackBuildingId) as MapBuildingWormholeObject;
                 if (!!useBuilding) {
                     useBuilding.wormholdCountdownTime = 30;
-                    DataMgr.s.mapBuilding.saveObj_building();
                 }
                 NetGlobalData.wormholeAttackBuildingId = null;
             }
@@ -287,18 +302,13 @@ export class DataMgr {
             if (!!wormholeBuilding) {
                 let canWormholeAttack: boolean = true;
                 for (let i = 0; i < 3; i++) {
-                    if (
-                        buildingData.defendPioneerIds[i] == "" ||
-                        buildingData.defendPioneerIds[i] == undefined ||
-                        buildingData.defendPioneerIds[i] == null
-                    ) {
+                    if (buildingData.defendPioneerIds[i] == "" || buildingData.defendPioneerIds[i] == undefined || buildingData.defendPioneerIds[i] == null) {
                         canWormholeAttack = false;
                         break;
                     }
                 }
                 if (canWormholeAttack) {
                     wormholeBuilding.wormholdCountdownTime = 30;
-                    DataMgr.s.mapBuilding.saveObj_building();
                 }
             }
         }
@@ -396,8 +406,13 @@ export class DataMgr {
             DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.mining, currentTimeStamp, actionTime);
             setTimeout(() => {
                 DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.idle);
-                DataMgr.s.mapBuilding.resourceBuildingCollected(buildingId);
-                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MINING_BUILDING, { actionId: pioneerId, id: buildingId });
+
+                NotificationMgr.triggerEvent(NotificationName.MINING_FINISHED, {
+                    buildingId: buildingId,
+                    pioneerId: pioneerId,
+                    duration: 3000, //todo see assets/Script/Manger/PioneerMgr.ts:1225
+                    rewards: [], // no item loots by now
+                });
             }, actionTime);
         }
     };
@@ -790,9 +805,6 @@ export class DataMgr {
         const key: string = "player_treasure_open_res";
         if (DataMgr.socketSendData.has(key)) {
             const data: s2c_user.Iplayer_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_treasure_open_res;
-            if (data.artifacts != null && data.artifacts.length > 0) {
-                DataMgr.s.artifact.addObj_artifact(data.artifacts);
-            }
             DataMgr.s.userInfo.getExplorationReward(data.boxId);
         }
     };
@@ -800,25 +812,7 @@ export class DataMgr {
         const key: string = "player_point_treasure_open_res";
         if (DataMgr.socketSendData.has(key)) {
             const data: s2c_user.Iplayer_point_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_point_treasure_open_res;
-            // upload resource changed point_treasure-open
-            if (data.artifacts != null && data.artifacts.length > 0) {
-                DataMgr.s.artifact.addObj_artifact(data.artifacts);
-            }
             DataMgr.s.userInfo.getPointExplorationReward(data.boxId);
-        }
-    };
-    public static player_artifact_equip_res = (e: any) => {
-        const key: string = "player_artifact_equip_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_artifact_equip_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_artifact_equip_res;
-            DataMgr.s.artifact.changeObj_artifact_effectIndex(data.artifactId, data.effectIndex);
-        }
-    };
-    public static player_artifact_remove_res = (e: any) => {
-        const key: string = "player_artifact_remove_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_artifact_remove_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_artifact_remove_res;
-            DataMgr.s.artifact.changeObj_artifact_effectIndex(data.artifactId, data.effectIndex);
         }
     };
 
@@ -869,7 +863,6 @@ export class DataMgr {
 
     public static player_rookie_finish_res = (e: any) => {
         DataMgr.s.userInfo.finishRookie();
-        // DataMgr.s.artifact.addObj_artifact([new ArtifactData("7001", 1)]);
     };
 
     public static player_lvlup_change = (e: any) => {
@@ -881,22 +874,6 @@ export class DataMgr {
                 items.push(new ItemData(p.items[i].itemConfigId, p.items[i].count, p.items[i].addTimeStamp));
             }
             p.items = items;
-        }
-        if (p.artifacts.length > 0) {
-            let artifacts: ArtifactData[] = [];
-
-            for (let i = 0; i < p.artifacts.length; i++) {
-                artifacts.push(
-                    new ArtifactData(
-                        p.artifacts[i].artifactConfigId,
-                        p.artifacts[i].count,
-                        p.artifacts[i].uniqueId,
-                        p.artifacts[i].addTimeStamp,
-                        p.artifacts[i].effectIndex
-                    )
-                );
-            }
-            p.artifacts = artifacts;
         }
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_LEVEL, p);
     };

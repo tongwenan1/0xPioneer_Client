@@ -67,13 +67,9 @@ export class MainUI extends ViewController {
         );
 
         // test
-        // for (let i = 1; i <= 10; i++) {
-        //     DataMgr.s.artifact.addObj_artifact([new ArtifactData("700" + i, 1)]);
-        // }
         //DataMgr.n.websocketMsg.create_pioneer({
         //    type: "0"
         //});
-        // DataMgr.s.artifact.addObj_artifact([new ArtifactData("7001", 2)]);
         // DataMgr.s.item.addObj_item([new ItemData("8001", 1000)]);
         // DataMgr.s.item.addObj_item([new ItemData("8002", 1000)]);
         // DataMgr.s.item.addObj_item([new ItemData("8003", 1000)]);

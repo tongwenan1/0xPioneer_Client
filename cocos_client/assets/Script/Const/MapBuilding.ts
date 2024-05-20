@@ -62,11 +62,6 @@ export interface MapBuildingMainCityData extends MapBuildingBaseData {
     attack: number;
     taskObj: any;
 }
-export interface MapBuildingResourceData extends MapBuildingBaseData {
-    resources: { id: string; num: number };
-    quota: number;
-    orginalQuota: number;
-}
 export interface MapBuildingWormholeData extends MapBuildingBaseData {
     wormholdCountdownTime: number;
 }
@@ -75,15 +70,12 @@ export interface MapBuildingTavernData extends MapBuildingBaseData {
     nft: NFTPioneerObject;
 }
 
-export type MapBuildingData = MapBuildingMainCityData | MapBuildingResourceData | MapBuildingWormholeData | MapBuildingTavernData | MapBuildingBaseData;
+export type MapBuildingData = MapBuildingMainCityData | MapBuildingWormholeData | MapBuildingTavernData | MapBuildingBaseData;
 
 export interface MapBuildingBaseObject extends MapBuildingBaseData {
     stayMapPositions: Vec2[];
 }
 export interface MapBuildingMainCityObject extends MapBuildingMainCityData {
-    stayMapPositions: Vec2[];
-}
-export interface MapBuildingResourceObject extends MapBuildingResourceData {
     stayMapPositions: Vec2[];
 }
 export interface MapBuildingWormholeObject extends MapBuildingWormholeData {
@@ -95,7 +87,6 @@ export interface MapBuildingTavernObject extends MapBuildingTavernData {
 
 export type MapBuildingObject =
     | MapBuildingMainCityObject
-    | MapBuildingResourceObject
     | MapBuildingWormholeObject
     | MapBuildingTavernObject
     | MapBuildingBaseObject;

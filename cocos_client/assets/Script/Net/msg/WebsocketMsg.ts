@@ -314,6 +314,7 @@ export namespace c2s_user {
     }
     export interface Iplayer_artifact_equip {
         artifactId: string;
+        artifactEffectIndex: number;
     }
     export interface Iplayer_artifact_remove {
         artifactId: string;
@@ -417,6 +418,10 @@ export namespace s2c_user {
     }
     export interface Istorhouse_change {
         iteminfo: share.Iitem_data[];
+    }
+
+    export interface Iartifact_change {
+        iteminfo: share.Iartifact_info_data[];
     }
 
     export interface Imark_data_dirty {
@@ -534,12 +539,12 @@ export namespace s2c_user {
         subItems?: ItemData[];
     }
     export interface Iplayer_artifact_equip_res {
-        artifactId: string;
-        effectIndex: number;
+        res: number;
+        data: share.Iartifact_info_data;
     }
     export interface Iplayer_artifact_remove_res {
-        artifactId: string;
-        effectIndex: number;
+        res: number;
+        data: share.Iartifact_info_data;
     }
     export interface Iplayer_building_levelup_res {
         res: number;
@@ -736,8 +741,10 @@ export namespace share {
         sinfo: Iplayer_sinfo;
         buildings: Ibuilding_data[];
         storehouse?: Istorehouse_data;
+        artifact?: Iartifact_data;
         usermap?: Iusermap_data;
         nfts?: Infts_data;
+        mapbuilding?: Imapbuilding_data;
         tasks?: Itask_data[];
     }
 
@@ -748,6 +755,17 @@ export namespace share {
         itemConfigId: string;
         count: number;
         addTimeStamp: number;
+    }
+
+    export interface Iartifact_data {
+        items: { [key: string]: Iartifact_info_data };
+    }
+    export interface Iartifact_info_data {
+        uniqueId: string;
+        artifactConfigId: string;
+        count: number;
+        addTimeStamp: number;
+        effectIndex: number;
     }
 
     export interface Iusermap_data {
@@ -816,6 +834,33 @@ export namespace share {
     export interface Inft_pioneer_skil {
         id: string;
         isOriginal: boolean;
+    }
+
+    export interface Imapbuilding_data {
+        buildings: { [key: string]: Imapbuilding_info_data }; 
+    }
+    export interface Imapbuilding_info_data {
+        id: string;
+        name: string;
+        type: number;
+        level: number;
+        show: boolean;
+        faction: number;
+        defendPioneerIds: string[];
+        stayPosType: number;
+        stayMapPositions: pos2d[],
+        progress: number;
+        winprogress: number;
+        eventId: string;
+        originalEventId: string;
+        exp: number;
+        animType: string;
+
+        hpMax: number;
+        hp: number;
+        attack: number;
+
+        taskObj: string;
     }
 
     export interface Iattacker_data {

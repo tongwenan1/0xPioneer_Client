@@ -122,11 +122,11 @@ export class ItemDataMgr {
         NotificationMgr.triggerEvent(NotificationName.ITEM_CHANGE);
     }
     private _initData() {
+        this._data = [];
+        
         if (NetGlobalData.storehouse == null) {
             return;
         }
-        this._data = [];
-
         const netItems = NetGlobalData.storehouse.items;
         for (const key in netItems) {
             const item = new ItemData(netItems[key].itemConfigId, netItems[key].count);

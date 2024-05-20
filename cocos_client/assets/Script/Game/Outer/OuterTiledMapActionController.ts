@@ -843,7 +843,6 @@ export class OuterTiledMapActionController extends ViewController {
                                 if (!!useBuilding) {
                                     console.log("exce step3");
                                     useBuilding.wormholdCountdownTime = 30;
-                                    DataMgr.s.mapBuilding.saveObj_building();
                                 }
                             }
                         }

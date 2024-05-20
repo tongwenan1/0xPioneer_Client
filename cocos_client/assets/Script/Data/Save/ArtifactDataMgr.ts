@@ -5,43 +5,28 @@ import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import { BackpackArrangeType, GameExtraEffectType } from "../../Const/ConstDefine";
 import CommonTools from "../../Tool/CommonTools";
+import NetGlobalData from "./Data/NetGlobalData";
 
 export class ArtifactDataMgr {
-    private _data: ArtifactData[];
-    private _baseKey: string = "artifact_data";
-    private _key: string = "";
     private _maxArtifactLength: number = 100;
-
+    private _data: ArtifactData[];
     public constructor() {}
 
-    public async loadObj(walletAddr: string) {
-        this._key = walletAddr + "|" + this._baseKey;
-        if (this._data == null) {
-            this._data = [];
-            const data = localStorage.getItem(this._key);
-            if (data) {
-                this._data = JSON.parse(data);
-            }
-        }
-    }
-    public async saveObj() {
-        localStorage.setItem(this._key, JSON.stringify(this._data));
+    public async loadObj() {
+        this._initData();
     }
     //------------------------------------------------------------
     public getObj() {
         return this._data;
     }
-    public getObj_by_uniqueId(uniqueId: string) {
-        return this._data.find((artifact) => artifact.uniqueId == uniqueId);
+    public getObj_by_id(id: string) {
+        return this._data.find((artifact) => artifact.artifactConfigId == id);
     }
     public getObj_artifact_equiped() {
         return this._data.filter((artifact) => artifact.effectIndex >= 0);
     }
     public getObj_artifact_maxLength() {
         return this._maxArtifactLength;
-    }
-    public artifactIsFull(): boolean {
-        return this._data.length >= this._maxArtifactLength;
     }
     public getObj_artifact_count(artifactConfigId: string): number {
         let count: number = 0;
@@ -107,50 +92,57 @@ export class ArtifactDataMgr {
         return effectNum;
     }
     //-------------------------------------------------------
-    public addObj_artifact(artifacts: ArtifactData[]) {
-        if (artifacts.length <= 0) {
+    public countChanged(change: ArtifactData): void {
+        if (change.count == 0) {
             return;
         }
-        let changed: boolean = false;
-        for (const artifact of artifacts) {
-            const artifactConfig = ArtifactConfig.getById(artifact.artifactConfigId);
-            if (artifactConfig == null) continue;
-            if (this.artifactIsFull()) continue;
-            changed = true;
-
-            const currentTimeStamp: number = new Date().getTime();
-            artifact.uniqueId = CommonTools.generateUUID() + currentTimeStamp;
-            artifact.addTimeStamp = currentTimeStamp;
-            this._data.push(artifact);
-            if (artifactConfig.effect != null) {
-                for (const temple of artifactConfig.effect) {
-                    const effectData = ArtifactEffectConfig.getById(temple);
-                }
-            }
-            if (artifactConfig.prop != null) {
-                for (let j = 0; j < artifactConfig.prop.length; j++) {
-                    const propType = artifactConfig.prop[j];
-                    const propValue = artifactConfig.prop_value[j];
-                }
+        const config = ArtifactConfig.getById(change.artifactConfigId);
+        if (config == null) {
+            return;
+        }
+        let exsitIndex: number = -1;
+        for (let i = 0; i < this._data.length; i++) {
+            if (this._data[i].artifactConfigId == change.artifactConfigId) {
+                exsitIndex = i;
+                break;
             }
         }
-        if (changed) {
-            this.saveObj();
-            NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
+        if (exsitIndex >= 0) {
+            this._data[exsitIndex].count += change.count;
+            if (change.count < 0 && this._data[exsitIndex].count <= 0) {
+                this._data.splice(exsitIndex, 1);
+            }
+        } else {
+            if (change.count > 0) {
+                this._data.push(change);
+            }
         }
         this.getObj_artifact_sort(BackpackArrangeType.Rarity);
-        return changed;
+        NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
     }
-    public changeObj_artifact_effectIndex(uniqueId: string, effectIndex: number) {
-        const artifact = this.getObj_by_uniqueId(uniqueId);
+    public changeObj_artifact_effectIndex(id: string, effectIndex: number) {
+        const artifact = this.getObj_by_id(id);
         if (artifact == undefined) {
             return;
         }
         artifact.effectIndex = effectIndex;
-        this.saveObj();
+
         NotificationMgr.triggerEvent(NotificationName.ARTIFACT_EQUIP_DID_CHANGE);
     }
 
+    private _initData() {
+        this._data = [];
+        if (NetGlobalData.artifacts == null) {
+            return;
+        }
+        const netItems = NetGlobalData.artifacts.items;
+        for (const key in netItems) {
+            const item = new ArtifactData(netItems[key].artifactConfigId, netItems[key].count);
+            item.addTimeStamp = netItems[key].addTimeStamp;
+            item.effectIndex = netItems[key].effectIndex;
+            this._data.push(item);
+        }
+    }
     // public getPropEffValue(buildingLv: number) {
     //     const r = {
     //         prop: {}, // propType => { add: 0, mul: 0}

@@ -25,7 +25,7 @@ import ViewController from "../../BasicView/ViewController";
 import { TaskShowHideStatus } from "../../Const/TaskDefine";
 import { EventConfigData } from "../../Const/Event";
 import UIPanelManger from "../../Basic/UIPanelMgr";
-import { MapBuildingObject, MapBuildingResourceObject, MapBuildingWormholeObject } from "../../Const/MapBuilding";
+import { MapBuildingObject } from "../../Const/MapBuilding";
 import { InnerBuildingType, MapBuildingType } from "../../Const/BuildingDefine";
 import { DataMgr } from "../../Data/DataMgr";
 import {
@@ -166,7 +166,6 @@ export class OuterPioneerController extends ViewController {
         // dealwith
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_EXPLORED_PIONEER, this._onExploredPioneer, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, this._onExploredBuilding, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_MINING_BUILDING, this._onMiningBuilding, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENT_BUILDING, this._onEventBuilding, this);
         // move
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_BEGIN_MOVE, this._onPioneerBeginMove, this);
@@ -262,7 +261,6 @@ export class OuterPioneerController extends ViewController {
         // dealwith
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EXPLORED_PIONEER, this._onExploredPioneer, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, this._onExploredBuilding, this);
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_MINING_BUILDING, this._onMiningBuilding, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENT_BUILDING, this._onEventBuilding, this);
         // move
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_BEGIN_MOVE, this._onPioneerBeginMove, this);
@@ -658,37 +656,6 @@ export class OuterPioneerController extends ViewController {
         const building = DataMgr.s.mapBuilding.getBuildingById(data.id);
         if (building != null) {
             
-        }
-    }
-    private _onMiningBuilding(data: { actionId: string; id: string }): void {
-        // const buildingObj: MapBuildingObject = BuildingMgr.getBuildingById(buildingId);
-        const buildingObj: MapBuildingObject = DataMgr.s.mapBuilding.getBuildingById(data.id);
-
-        if (buildingObj == null) return;
-        if (buildingObj.type != MapBuildingType.resource) return;
-
-        const building = buildingObj as MapBuildingResourceObject;
-
-        if (building.resources != null) {
-            let actionView = null;
-            if (this._pioneerMap.has(data.actionId)) {
-                actionView = this._pioneerMap.get(data.actionId);
-            }
-            const resultNum: number = Math.floor(building.resources.num * (1 + LvlupConfig.getTotalExtraRateByLvl(DataMgr.s.userInfo.data.level)));
-            actionView.getComponent(MapPioneer).playGetResourceAnim(building.resources.id, resultNum, () => {
-                // upload resource changed gather
-            });
-
-            NotificationMgr.triggerEvent(NotificationName.MINING_FINISHED, {
-                buildingId: data.id,
-                pioneerId: data.actionId,
-                duration: 3000, //todo see assets/Script/Manger/PioneerMgr.ts:1225
-                rewards: [], // no item loots by now
-            });
-        }
-
-        if (building.progress > 0) {
-            const effectProgress = GameMgr.getAfterExtraEffectPropertyByPioneer(null, GameExtraEffectType.TREASURE_PROGRESS, building.progress);
         }
     }
     private async _onEventBuilding(data: { pioneerId: string; buildingId: string; eventId: string }): Promise<void> {
