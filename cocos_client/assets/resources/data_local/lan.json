@@ -63,6 +63,14 @@
     "id": "106006",
     "eng": "Let %s LOSS %s, and NO skill book returned, confirm?"
   },
+  "106007": {
+    "id": "106007",
+    "eng": "Worm Hole Battle has finished."
+  },
+  "106008": {
+    "id": "106008",
+    "eng": "<this is world box tips>"
+  },
   "107001": {
     "id": "107001",
     "eng": "Eye of Pharaoh"
