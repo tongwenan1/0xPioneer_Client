@@ -101,6 +101,7 @@ export enum protobuf_s2c {
     player_exp_change = 20301,
     player_treasure_progress_change = 20302,
     player_actiontype_change = 20303,
+    artifact_change = 20304,
 
     fetch_user_psyc_res = 20400,
 

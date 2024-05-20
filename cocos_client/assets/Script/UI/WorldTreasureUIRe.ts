@@ -1,4 +1,4 @@
-import { _decorator, Node, instantiate, Label, Layout, UITransform, Button, ScrollView, v2, Color, Sprite, ProgressBar } from "cc";
+import { _decorator, Node, instantiate, Label, Layout, UITransform, Button, ScrollView, v2, Color, Sprite, ProgressBar, SpriteFrame } from "cc";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import ViewController from "../BasicView/ViewController";
@@ -27,6 +27,9 @@ const { ccclass, property } = _decorator;
 
 @ccclass("WorldTreasureUIRe")
 export class WorldTreasureUIRe extends ViewController {
+    @property([SpriteFrame])
+    private progressSprites: SpriteFrame[] = [];
+
     //----------------------------------------- view
     protected viewDidLoad(): void {
         super.viewDidLoad();
@@ -57,10 +60,7 @@ export class WorldTreasureUIRe extends ViewController {
         const perTimeNeedProgress: number = (
             ConfigConfig.getConfig(ConfigType.WorldTreasureChancePerBoxExploreProgress) as WorldTreasureChancePerBoxExploreProgressParam
         ).progress;
-        const perGetTimeNeedHeatValue: number =
-            1 /
-            (ConfigConfig.getConfig(ConfigType.WorldTreasureChanceLimitHeatValueCoefficient) as WorldTreasureChanceLimitHeatValueCoefficientParam).coefficient;
-        const psycToHeatCoefficient: number = (ConfigConfig.getConfig(ConfigType.PSYCToHeatCoefficient) as PSYCToHeatCoefficientParam).coefficient;
+        
         const progress: number = DataMgr.s.userInfo.data.exploreProgress;
         const heatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
         const limitTimes: number = DataMgr.s.userInfo.data.heatValue.lotteryTimesLimit;
@@ -68,6 +68,7 @@ export class WorldTreasureUIRe extends ViewController {
         const didGetTimes: number = DataMgr.s.userInfo.data.heatValue.lotteryTimes;
         const canGet: boolean = didGetTimes < canGeTimes;
 
+        let heatRank: number = 1;
         // left view
         const worldBoxThreshold: number[] = (ConfigConfig.getConfig(ConfigType.WorldBoxThreshold) as WorldBoxThresholdParam).thresholds;
         const leftView = this.node.getChildByPath("__ViewContent/LeftContent");
@@ -81,6 +82,8 @@ export class WorldTreasureUIRe extends ViewController {
         if (heatValue >= worldBoxThreshold[worldBoxThreshold.length - 1]) {
             emptyLabel.active = true;
             heatValueView.active = false;
+
+            heatRank = 5;
         } else {
             emptyLabel.active = false;
             heatValueView.active = true;
@@ -90,6 +93,7 @@ export class WorldTreasureUIRe extends ViewController {
             for (let i = 0; i < worldBoxThreshold.length; i++) {
                 if (heatValue < worldBoxThreshold[i]) {
                     totalValue = worldBoxThreshold[i];
+                    heatRank = i + 1;
                     break;
                 }
             }
@@ -106,9 +110,11 @@ export class WorldTreasureUIRe extends ViewController {
         const currentProgress: number = progress - perTimeNeedProgress * canGeTimes;
         const totalProgress: number = perTimeNeedProgress;
         rigthView.getChildByPath("Progress/Value").getComponent(Label).string = Math.floor(currentProgress / totalProgress) * 100 + "%";
+        rigthView.getChildByPath("Progress/Value").getComponent(Label).color = GameRankColor[heatRank - 1];
         rigthView.getChildByPath("Progress/ProgressBar").getComponent(ProgressBar).progress = currentProgress / totalProgress;
+        rigthView.getChildByPath("Progress/ProgressBar/Bar").getComponent(Sprite).spriteFrame = this.progressSprites[heatRank - 1];
 
-        rigthView.getChildByPath("KeyView/Content/Value").getComponent(Label).string = canGeTimes.toString();
+        rigthView.getChildByPath("KeyView/Content/Value").getComponent(Label).string = (canGeTimes - didGetTimes).toString();
         rigthView.getChildByPath("KeyView/Content/Total").getComponent(Label).string = limitTimes.toString();
     }
     //------------------------------------------ action

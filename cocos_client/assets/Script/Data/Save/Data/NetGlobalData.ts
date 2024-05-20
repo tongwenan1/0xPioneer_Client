@@ -11,4 +11,6 @@ export default class NetGlobalData {
     public static worldTreasureTodayRewards: share.Itreasure_day_data = null;
 
     public static wormholeAttackBuildingId: string = null;
+
+    public static worldTreasureGetted: boolean = false;
 }

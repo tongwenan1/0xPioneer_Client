@@ -69,6 +69,10 @@ message storhouse_change {
     repeated share.item_data iteminfo = 1;
 }
 
+message artifact_change {
+    repeated share.artifact_info_data iteminfo = 1;
+}
+
 // ----------------------------------------------------------------------------
 
 message player_move_res {
@@ -113,10 +117,12 @@ message player_point_treasure_open_res {
 
 message player_artifact_equip_res {
     required int32 res = 1;
+    required share.artifact_info_data data = 2;
 }
 
 message player_artifact_remove_res {
     required int32 res = 1;
+    required share.artifact_info_data data = 2;
 }
 
 message player_building_levelup_res {

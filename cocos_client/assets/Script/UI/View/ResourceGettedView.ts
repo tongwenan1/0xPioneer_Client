@@ -12,7 +12,7 @@ const { ccclass, property } = _decorator;
 @ccclass('ResourceGettedView')
 export class ResourceGettedView extends ViewController {
     //--------------------------------- public
-    public showTip(items: (ItemData | UserInnerBuildInfo)[]) {
+    public showTip(items: (ItemData | string)[]) {
         this._itemDatas = this._itemDatas.concat(items);
         this._addItemToContent();
     }
@@ -21,7 +21,7 @@ export class ResourceGettedView extends ViewController {
     private _showItem: Node = null;
     private _allShowItems: Node[] = [];
 
-    private _itemDatas: (ItemData | UserInnerBuildInfo)[] = [];
+    private _itemDatas: (ItemData | string)[] = [];
     private _isAddingItem: boolean = false;
     private _playingNode: Node = null;
     protected viewDidLoad(): void {
@@ -55,14 +55,11 @@ export class ResourceGettedView extends ViewController {
                 itemView.getChildByPath("IconTip/Name").getComponent(Label).string = LanMgr.getLanById(config.itemName);
                 itemView.getChildByPath("IconTip/Num").getComponent(Label).string = "+" + item.count;
 
-            } else if (!!(item as UserInnerBuildInfo)) {
+            } else if (!!(item as string)) {
                 itemView.getChildByPath("IconTip").active = false;
                 itemView.getChildByPath("TextTip").active = true;
-                const config = InnerBuildingConfig.getByBuildingType(item.buildType);
-                if (config == null) {
-                    return;
-                }
-                itemView.getChildByPath("TextTip/Tip").getComponent(Label).string = LanMgr.replaceLanById("106004", [LanMgr.getLanById(config.name), item.buildLevel]);
+
+                itemView.getChildByPath("TextTip/Tip").getComponent(Label).string = item;
             }
 
             itemView.setParent(this._showItem.parent);

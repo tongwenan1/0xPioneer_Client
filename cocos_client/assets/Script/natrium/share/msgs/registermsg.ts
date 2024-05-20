@@ -76,6 +76,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.storhouse_change, "storhouse_change", "s2c_user.storhouse_change");
     pcodec.register_protobuf_msg(protobuf_s2c.player_exp_change, "player_exp_change", "s2c_user.player_exp_change");
     pcodec.register_protobuf_msg(protobuf_s2c.player_treasure_progress_change, "player_treasure_progress_change", "s2c_user.player_treasure_progress_change");
+    pcodec.register_protobuf_msg(protobuf_s2c.artifact_change, "artifact_change", "s2c_user.artifact_change");
 
     pcodec.register_protobuf_msg(protobuf_s2c.fetch_user_psyc_res, "fetch_user_psyc_res", "s2c_user.fetch_user_psyc_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_actiontype_change, "player_actiontype_change", "s2c_user.player_actiontype_change");

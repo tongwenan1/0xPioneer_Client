@@ -11699,6 +11699,28 @@
     "__prefab": {
       "__id__": 532
     },
+    "progressSprites": [
+      {
+        "__uuid__": "520cec0b-788e-4fbb-a3c6-d486000d8559@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "b837d160-217d-4c53-9fb1-19fbaf7d62c3@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "32473850-1b25-47e3-8ad2-233cb051fda2@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "396e8f54-f933-4bdf-a88e-9ce77d014e8d@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "47820d12-ea47-4e48-9b6c-1b46f1726e1b@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      }
+    ],
     "_id": ""
   },
   {

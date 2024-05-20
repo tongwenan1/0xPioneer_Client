@@ -122,18 +122,18 @@ export class ClaimRewardUI extends Component {
         }
         if (getStatus == 2) {
         } else if (getStatus == 1) {
-            const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);
-            if (result.success) {
-                result.node.getComponent(TreasureGettedUI).dialogShow(data, (gettedData: { boxId: string; items: ItemData[]; artifacts: ArtifactData[]; subItems: ItemData[] }) => {
-                    DataMgr.setTempSendData("player_treasure_open_res", {
-                        boxId: gettedData.boxId,
-                        items: gettedData.items,
-                        artifacts: gettedData.artifacts,
-                        subItems: gettedData.subItems
-                    });
-                    NetworkMgr.websocketMsg.player_treasure_open({ boxId: gettedData.boxId });
-                });
-            }
+            // const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);
+            // if (result.success) {
+            //     result.node.getComponent(TreasureGettedUI).dialogShow(data, (gettedData: { boxId: string; items: ItemData[]; artifacts: ArtifactData[]; subItems: ItemData[] }) => {
+            //         DataMgr.setTempSendData("player_treasure_open_res", {
+            //             boxId: gettedData.boxId,
+            //             items: gettedData.items,
+            //             artifacts: gettedData.artifacts,
+            //             subItems: gettedData.subItems
+            //         });
+            //         NetworkMgr.websocketMsg.player_treasure_open({ boxId: gettedData.boxId });
+            //     });
+            // }
         } else if (getStatus == 0) {
             // useLanMgr
             UIHUDController.showCenterTip(LanMgr.getLanById("200002"));

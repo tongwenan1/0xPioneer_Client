@@ -117,43 +117,53 @@ export class OuterBuildingView extends ViewController {
             // }
         } else if (building.type == MapBuildingType.wormhole) {
             strongholdIcon.active = true;
-            wormholdView.active = true;
 
-            const wormholeObj = building as MapBuildingWormholeObject;
-            const prepareDidFinish: boolean = wormholeObj.wormholdCountdownTime > 0;
-            const maxWormholdLength: number = 3;
-            for (let i = 0; i < maxWormholdLength; i++) {
-                const tempView = wormholdView.getChildByPath("WormholdContent/Item_" + i);
-
-                const emptyView = tempView.getChildByPath("Empty");
-                const prepareView = tempView.getChildByPath("Prepare");
-                if (
-                    i < building.defendPioneerIds.length &&
-                    building.defendPioneerIds[i] != null &&
-                    building.defendPioneerIds[i] != "" &&
-                    building.defendPioneerIds[i] != undefined
-                ) {
-                    const pioneerId = building.defendPioneerIds[i];
-                    emptyView.active = false;
-                    prepareView.active = true;
-                    prepareView.getChildByPath("Icon/pioneer_default").active = pioneerId == "pioneer_0";
-                    prepareView.getChildByPath("Icon/secretGuard").active = pioneerId == "pioneer_1";
-                    prepareView.getChildByPath("Icon/doomsdayGangSpy").active = pioneerId == "pioneer_2";
-                    prepareView.getChildByPath("Icon/rebels").active = pioneerId == "pioneer_3";
-                    prepareView.getChildByPath("IconGarrison").active = !prepareDidFinish;
-                } else {
-                    emptyView.active = true;
-                    prepareView.active = false;
+            let wormholeHasPioneer: boolean = false;
+            for (let i = 0; i < 3; i++) {
+                if (building.defendPioneerIds[i] != null && building.defendPioneerIds[i] != "" && building.defendPioneerIds[i] != undefined) {
+                    wormholeHasPioneer = true;
+                    break;
                 }
             }
-            if (prepareDidFinish) {
-                wormholdView.getChildByPath("Countdown").active = true;
-                // useLanMgr
-                // wormholdView.getChildByPath("Countdown").getComponent(Label).string = LanMgr.getLanById("107549") + ":" + CommonTools.formatSeconds(wormholeObj.wormholdCountdownTime);
-                wormholdView.getChildByPath("Countdown").getComponent(Label).string =
-                    "wormhold traveling: " + CommonTools.formatSeconds(wormholeObj.wormholdCountdownTime);
-            } else {
-                wormholdView.getChildByPath("Countdown").active = false;
+            wormholdView.active = wormholeHasPioneer;
+
+            if (wormholdView.active) {
+                const wormholeObj = building as MapBuildingWormholeObject;
+                const prepareDidFinish: boolean = wormholeObj.wormholdCountdownTime > 0;
+                const maxWormholdLength: number = 3;
+                for (let i = 0; i < maxWormholdLength; i++) {
+                    const tempView = wormholdView.getChildByPath("WormholdContent/Item_" + i);
+
+                    const emptyView = tempView.getChildByPath("Empty");
+                    const prepareView = tempView.getChildByPath("Prepare");
+                    if (
+                        i < building.defendPioneerIds.length &&
+                        building.defendPioneerIds[i] != null &&
+                        building.defendPioneerIds[i] != "" &&
+                        building.defendPioneerIds[i] != undefined
+                    ) {
+                        const pioneerId = building.defendPioneerIds[i];
+                        emptyView.active = false;
+                        prepareView.active = true;
+                        prepareView.getChildByPath("Icon/pioneer_default").active = pioneerId == "pioneer_0";
+                        prepareView.getChildByPath("Icon/secretGuard").active = pioneerId == "pioneer_1";
+                        prepareView.getChildByPath("Icon/doomsdayGangSpy").active = pioneerId == "pioneer_2";
+                        prepareView.getChildByPath("Icon/rebels").active = pioneerId == "pioneer_3";
+                        prepareView.getChildByPath("IconGarrison").active = !prepareDidFinish;
+                    } else {
+                        emptyView.active = true;
+                        prepareView.active = false;
+                    }
+                }
+                if (prepareDidFinish) {
+                    wormholdView.getChildByPath("Countdown").active = true;
+                    // useLanMgr
+                    // wormholdView.getChildByPath("Countdown").getComponent(Label).string = LanMgr.getLanById("107549") + ":" + CommonTools.formatSeconds(wormholeObj.wormholdCountdownTime);
+                    wormholdView.getChildByPath("Countdown").getComponent(Label).string =
+                        "wormhold traveling: " + CommonTools.formatSeconds(wormholeObj.wormholdCountdownTime);
+                } else {
+                    wormholdView.getChildByPath("Countdown").active = false;
+                }
             }
         } else if (building.type == MapBuildingType.resource) {
             collectIcon.active = true;
@@ -213,6 +223,7 @@ export class OuterBuildingView extends ViewController {
         "Aquatic_Relics_Group",
         "Tree_Group",
         "Pyramid_Group",
+        "Transfer_Matrix_Group",
     ];
     private _levelShowing: boolean = false;
     private _building: MapBuildingObject = null;

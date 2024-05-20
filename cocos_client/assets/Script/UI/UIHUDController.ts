@@ -1,20 +1,21 @@
-import { _decorator, Component, Node } from 'cc';
-import { LanMgr } from '../Utils/Global';
-import { HUDName, UIName } from '../Const/ConstUIDefine';
-import { HUDView } from './View/HUDView';
-import ViewController from '../BasicView/ViewController';
-import NotificationMgr from '../Basic/NotificationMgr';
-import ItemData from '../Model/ItemData';
-import { ResourceGettedView } from './View/ResourceGettedView';
-import { InnerBuildingType, UserInnerBuildInfo } from '../Const/BuildingDefine';
-import { NotificationName } from '../Const/Notification';
-import UIPanelManger, { UIPanelLayerType } from '../Basic/UIPanelMgr';
-import { DataMgr } from '../Data/DataMgr';
+import { _decorator, Component, Node } from "cc";
+import { LanMgr } from "../Utils/Global";
+import { HUDName, UIName } from "../Const/ConstUIDefine";
+import { HUDView } from "./View/HUDView";
+import ViewController from "../BasicView/ViewController";
+import NotificationMgr from "../Basic/NotificationMgr";
+import ItemData from "../Model/ItemData";
+import { ResourceGettedView } from "./View/ResourceGettedView";
+import { InnerBuildingType, UserInnerBuildInfo } from "../Const/BuildingDefine";
+import { NotificationName } from "../Const/Notification";
+import UIPanelManger, { UIPanelLayerType } from "../Basic/UIPanelMgr";
+import { DataMgr } from "../Data/DataMgr";
+import { NetworkMgr } from "../Net/NetworkMgr";
+import InnerBuildingConfig from "../Config/InnerBuildingConfig";
 const { ccclass, property } = _decorator;
 
-@ccclass('UIHUDController')
+@ccclass("UIHUDController")
 export class UIHUDController extends ViewController {
-   
     public static async showCenterTip(tip: string) {
         const result = await UIPanelManger.inst.pushPanel(HUDName.CommonTip, UIPanelLayerType.HUD);
         if (result.success) {
@@ -31,7 +32,7 @@ export class UIHUDController extends ViewController {
 
     private _resourceGettedView: ResourceGettedView = null;
 
-    private _resoucesShowItems: (ItemData | UserInnerBuildInfo)[] = [];
+    private _resoucesShowItems: (ItemData | string)[] = [];
     protected async viewDidLoad(): Promise<void> {
         super.viewDidLoad();
 
@@ -43,13 +44,12 @@ export class UIHUDController extends ViewController {
         NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._resourceGetted, this);
         NotificationMgr.addListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
         NotificationMgr.addListener(NotificationName.TASK_NEW_GETTED, this._onGetNewTask, this);
+        NotificationMgr.addListener(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, this._onUseResourceGettedViewShowTip, this);
 
         this._showResouceGettedView();
     }
 
-    protected viewDidStart(): void {
-
-    }
+    protected viewDidStart(): void {}
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
@@ -57,7 +57,7 @@ export class UIHUDController extends ViewController {
         NotificationMgr.removeListener(NotificationName.RESOURCE_GETTED, this._resourceGetted, this);
         NotificationMgr.removeListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
         NotificationMgr.removeListener(NotificationName.TASK_NEW_GETTED, this._onGetNewTask, this);
-
+        NotificationMgr.removeListener(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, this._onUseResourceGettedViewShowTip, this);
     }
 
     private _showResouceGettedView() {
@@ -67,21 +67,29 @@ export class UIHUDController extends ViewController {
         }
     }
     //---------------------------------- notifiaction
-    private async _resourceGetted(data: {item: ItemData}) {
+    private async _resourceGetted(data: { item: ItemData }) {
         this._resoucesShowItems.push(data.item);
         this._showResouceGettedView();
     }
 
     private _innerBuildingUpgradeFinished(buildingType: InnerBuildingType) {
         if (buildingType in DataMgr.s.userInfo.data.innerBuildings) {
-            this._resoucesShowItems.push(DataMgr.s.userInfo.data.innerBuildings[buildingType]);
+            const config = InnerBuildingConfig.getByBuildingType(buildingType);
+            if (config == null) {
+                return;
+            }
+            this._resoucesShowItems.push(
+                LanMgr.replaceLanById("106004", [LanMgr.getLanById(config.name), DataMgr.s.userInfo.data.innerBuildings[buildingType].buildLevel])
+            );
             this._showResouceGettedView();
         }
+    }
+    private _onUseResourceGettedViewShowTip(tip: string) {
+        this._resoucesShowItems.push(tip);
+        this._showResouceGettedView();
     }
 
     private _onGetNewTask() {
         UIHUDController.showTaskTip(LanMgr.getLanById("202004"));
     }
 }
-
-

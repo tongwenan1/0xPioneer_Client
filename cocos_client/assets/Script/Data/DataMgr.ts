@@ -1,14 +1,7 @@
 import { Vec2 } from "cc";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { InnerBuildingType, MapBuildingType } from "../Const/BuildingDefine";
-import {
-    AttrChangeType,
-    DataMgrResData,
-    GameExtraEffectType,
-    GetPropData,
-    MapMemberFactionType,
-    ResourceCorrespondingItem,
-} from "../Const/ConstDefine";
+import { AttrChangeType, DataMgrResData, GameExtraEffectType, GetPropData, MapMemberFactionType, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import {
@@ -29,6 +22,10 @@ import { GameMgr, LanMgr, PioneerMgr } from "../Utils/Global";
 import NetGlobalData from "./Save/Data/NetGlobalData";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import ArtifactData from "../Model/ArtifactData";
+import { UIHUDController } from "../UI/UIHUDController";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import { UIName } from "../Const/ConstUIDefine";
+import { TreasureGettedUI } from "../UI/TreasureGettedUI";
 
 export class DataMgr {
     public static r: RunData;
@@ -97,10 +94,12 @@ export class DataMgr {
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_HEAT);
     };
     //------------------------------------- item
-    public static storhouse_change = (e: any) => {
+    public static storhouse_change = async (e: any) => {
         const p: s2c_user.Istorhouse_change = e.data;
+        const items = [];
         for (const item of p.iteminfo) {
             const change = new ItemData(item.itemConfigId, item.count);
+            items.push(change);
             change.addTimeStamp = item.addTimeStamp;
             DataMgr.s.item.countChanged(change);
         }
@@ -155,7 +154,7 @@ export class DataMgr {
         }
         pioneer.show = !!p.isShow;
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: p.pioneerId, show: !!p.isShow });
-    }
+    };
     public static player_map_pioneer_faction_change = (e: any) => {
         const p: s2c_user.Iplayer_map_pioneer_faction_change = e.data;
         const pioneer = DataMgr.s.pioneer.getById(p.pioneerId);
@@ -167,11 +166,11 @@ export class DataMgr {
         }
         pioneer.faction = p.faction;
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, p);
-    }
+    };
     public static player_map_building_faction_change = (e: any) => {
         const p: s2c_user.Iplayer_map_building_faction_change = e.data;
         DataMgr.s.mapBuilding.changeBuildingFaction(p.buildingId, p.faction);
-    }
+    };
     public static player_actiontype_change = (e: any) => {
         const p: s2c_user.Iplayer_actiontype_change = e.data;
         if (p.res !== 1) {
@@ -281,11 +280,7 @@ export class DataMgr {
             if (!!wormholeBuilding) {
                 let canWormholeAttack: boolean = true;
                 for (let i = 0; i < 3; i++) {
-                    if (
-                        buildingData.defendPioneerIds[i] == "" ||
-                        buildingData.defendPioneerIds[i] == undefined ||
-                        buildingData.defendPioneerIds[i] == null
-                    ) {
+                    if (buildingData.defendPioneerIds[i] == "" || buildingData.defendPioneerIds[i] == undefined || buildingData.defendPioneerIds[i] == null) {
                         canWormholeAttack = false;
                         break;
                     }
@@ -331,6 +326,7 @@ export class DataMgr {
             fightResult: p.fightResult ? "win" : "lose",
             rewards: [],
         });
+        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("777777"));
     };
 
     //----------------------------------- psyc
@@ -343,12 +339,16 @@ export class DataMgr {
     };
 
     //----------------------------------- world treasure
-    public static player_world_treasure_lottery_res = (e: any) => {
+    public static player_world_treasure_lottery_res = async (e: any) => {
         const p: s2c_user.Iplayer_world_treasure_lottery_res = e.data;
         if (p.res !== 1) {
             return;
         }
         DataMgr.s.userInfo.data.heatValue.lotteryTimes += 1;
+        const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);
+        if (result.success) {
+            result.node.getComponent(TreasureGettedUI).dialogShow([new ItemData(p.itemId, p.num)], []);
+        }
     };
     public static get_treasure_info_res = (e: any) => {
         const p: s2c_user.Iget_treasure_info_res = e.data;
@@ -874,7 +874,7 @@ export class DataMgr {
     public static user_task_did_get = (e: any) => {
         let p: s2c_user.Iuser_task_did_get = e.data;
         NotificationMgr.triggerEvent(NotificationName.TASK_NEW_GETTED, p.taskId);
-    }
+    };
     public static user_task_did_fail = (e: any) => {
         let p: s2c_user.Iuser_task_did_fail = e.data;
         NotificationMgr.triggerEvent(NotificationName.TASK_FAILED, p.taskId);
@@ -883,12 +883,12 @@ export class DataMgr {
         let p: s2c_user.Iuser_task_step_did_finish = e.data;
         NotificationMgr.triggerEvent(NotificationName.TASK_STEP_FINISHED, p.taskId);
     };
-    public static get_user_task_info_res = (e: any)  => {
+    public static get_user_task_info_res = (e: any) => {
         let p: s2c_user.Iget_user_task_info_res = e.data;
         if (p.res == 1) {
             NetGlobalData.tasks = p.tasks;
             DataMgr.s.task.loadObj();
             NotificationMgr.triggerEvent(NotificationName.TASK_LIST);
         }
-    }
+    };
 }

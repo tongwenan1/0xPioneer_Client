@@ -1,31 +1,49 @@
-import { _decorator, Color, Component, Label, Node, Sprite, tween, v3, Animation, ParticleSystem2D } from 'cc';
-import { GetPropRankColor } from '../Const/ConstDefine';
-import ArtifactData from '../Model/ArtifactData';
-import { ArtifactMgr, ItemMgr, UserInfoMgr } from '../Utils/Global';
-import ViewController from '../BasicView/ViewController';
-import { UIName } from '../Const/ConstUIDefine';
-import { ItemSelectFromThreeUI } from './ItemSelectFromThreeUI';
-import ArtifactConfig from '../Config/ArtifactConfig';
-import DropConfig from '../Config/DropConfig';
-import ItemConfigDropTool from '../Tool/ItemConfigDropTool';
-import ItemConfig from '../Config/ItemConfig';
-import ItemData, { ItemConfigType } from '../Const/Item';
-import { BoxInfoConfigData } from '../Const/BoxInfo';
-import UIPanelManger from '../Basic/UIPanelMgr';
-import { DataMgr } from '../Data/DataMgr';
-import { s2c_user } from '../Net/msg/WebsocketMsg';
-import { NetworkMgr } from '../Net/NetworkMgr';
+import { _decorator, Color, Component, Label, Node, Sprite, tween, v3, Animation, ParticleSystem2D } from "cc";
+import { GameRankColor, GetPropRankColor } from "../Const/ConstDefine";
+import ArtifactData from "../Model/ArtifactData";
+import { ArtifactMgr, ItemMgr, UserInfoMgr } from "../Utils/Global";
+import ViewController from "../BasicView/ViewController";
+import { UIName } from "../Const/ConstUIDefine";
+import { ItemSelectFromThreeUI } from "./ItemSelectFromThreeUI";
+import ArtifactConfig from "../Config/ArtifactConfig";
+import DropConfig from "../Config/DropConfig";
+import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
+import ItemConfig from "../Config/ItemConfig";
+import ItemData, { ItemConfigType } from "../Const/Item";
+import { BoxInfoConfigData } from "../Const/BoxInfo";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import { DataMgr } from "../Data/DataMgr";
+import { s2c_user } from "../Net/msg/WebsocketMsg";
+import { NetworkMgr } from "../Net/NetworkMgr";
+import ConfigConfig from "../Config/ConfigConfig";
+import { ConfigType, WorldBoxThresholdParam } from "../Const/Config";
 const { ccclass, property } = _decorator;
 
-@ccclass('TreasureGettedUI')
+@ccclass("TreasureGettedUI")
 export class TreasureGettedUI extends ViewController {
-    public async dialogShow(box: BoxInfoConfigData, gettedCallback: (gettedData: { boxId: string, items: ItemData[], artifacts: ArtifactData[], subItems?: ItemData[] }) => void) {
-        for (let i = 0; i < 3; i++) {
-            this.node.getChildByPath("Content/Treasure_box_" + i).active = i == box.icon;
+    public async dialogShow(items: ItemData[], artifacts: ArtifactData[]) {
+        const heatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
+        let heatRank: number = 1;
+        // left view
+        const worldBoxThreshold: number[] = (ConfigConfig.getConfig(ConfigType.WorldBoxThreshold) as WorldBoxThresholdParam).thresholds;
+        const maxHeatThreshold: number = worldBoxThreshold[worldBoxThreshold.length - 1];
+        if (heatValue >= maxHeatThreshold) {
+            heatRank = 5;
+        } else {
+            for (let i = 0; i < worldBoxThreshold.length; i++) {
+                if (heatValue < worldBoxThreshold[i]) {
+                    heatRank = i + 1;
+                    break;
+                }
+            }
+        }
+
+        for (let i = 1; i <= 5; i++) {
+            this.node.getChildByPath("Content/Treasure_box_" + i).active = i == heatRank;
         }
         // prepare treasure box node
-        let treasureBoxCameraNode = this.node.getChildByPath("Content/Treasure_box_" + box.icon + "/Treasure_box_camera");
-        let treasureBoxNode = this.node.getChildByPath("Content/Treasure_box_" + box.icon + "/Treasure_box");
+        let treasureBoxCameraNode = this.node.getChildByPath("Content/Treasure_box_" + heatRank + "/Treasure_box_camera");
+        let treasureBoxNode = this.node.getChildByPath("Content/Treasure_box_" + heatRank + "/Treasure_box");
 
         let tbcAni = treasureBoxCameraNode.getComponent(Animation);
         let tbAni = treasureBoxNode.getComponent(Animation);
@@ -38,96 +56,56 @@ export class TreasureGettedUI extends ViewController {
         tbAniState.play();
 
         // prepare item show node
-        let itemShowAnim = this.node.getChildByPath("Content/Treasure_box_" + box.icon + "/OpenAnim");
+        let itemShowAnim = this.node.getChildByPath("Content/Treasure_box_" + heatRank + "/OpenAnim");
         itemShowAnim.active = false;
 
-        let itemShowNode = this.node.getChildByPath("Content/Treasure_box_" + box.icon + "/itemShow");
+        let itemShowNode = this.node.getChildByPath("Content/Treasure_box_" + heatRank + "/itemShow");
         itemShowNode.scale = v3(0.01, 0.01, 0.01);
         itemShowNode.active = false;
 
-        const drop = DropConfig.getById(box.drop);
-        if (drop != null) {
-            if (drop.type == 2) {
-                // 1/3 select
-                this.scheduleOnce(async () => {
-                    UIPanelManger.inst.popPanel();
-                    const result = await UIPanelManger.inst.pushPanel(UIName.ItemSelectFromThreeUI);
-                    if (result.success) {
-                        result.node.getComponent(ItemSelectFromThreeUI).showItem(box.id, drop.id, (gettedData: { boxId: string, items: ItemData[], artifacts: ArtifactData[], subItems?: ItemData[] }) => {
-                            if (gettedCallback) {
-                                gettedCallback(gettedData);
-                            }
-                        });
-                    }
-                }, (5.5 + 1.1));
-            } else {
-                const dropResultProp = ItemConfigDropTool.getItemByDropConfig(drop.id);
-                if (dropResultProp != null) {
-                    let iconspr = itemShowNode.getChildByPath("icon").getComponent(Sprite);
-                    let framespr = itemShowNode.getChildByPath("Item_frame").getComponent(Sprite);
+        let data: ItemData | ArtifactData = null;
+        if (items.length > 0) {
+            data = items[0];
+        } else if (artifacts.length > 0) {
+            data = artifacts[0];
+        }
+        if (data == null) {
+            return;
+        }
 
-                    let rank: number = 0;
-                    if (dropResultProp.type == ItemConfigType.Item) {
-                        //item
-                        let itemConf = ItemConfig.getById(dropResultProp.propId);
-                        if (itemConf) {
-                            iconspr.spriteFrame = await ItemMgr.getItemIcon(itemConf.icon);
-                            rank = itemConf.grade;
-                        }
+        let iconspr = itemShowNode.getChildByPath("icon").getComponent(Sprite);
+        let framespr = itemShowNode.getChildByPath("Item_frame").getComponent(Sprite);
 
-                    } else if (dropResultProp.type == ItemConfigType.Artifact) {
-                        // artifact
-                        const artifactConf = ArtifactConfig.getById(dropResultProp.propId);
-                        if (artifactConf) {
-                            iconspr.spriteFrame = await ArtifactMgr.getItemIcon(artifactConf.icon);
-                            rank = artifactConf.rank;
-                        }
-                    }
-                    let useColor: Color = null;
-                    if (rank == 1) {
-                        useColor = new Color().fromHEX(GetPropRankColor.RANK1);
-                    } else if (rank == 2) {
-                        useColor = new Color().fromHEX(GetPropRankColor.RANK2);
-                    } else if (rank == 3) {
-                        useColor = new Color().fromHEX(GetPropRankColor.RANK3);
-                    } else if (rank == 4) {
-                        useColor = new Color().fromHEX(GetPropRankColor.RANK4);
-                    } else if (rank == 5) {
-                        useColor = new Color().fromHEX(GetPropRankColor.RANK5);
-                    }
-                    if (useColor != null) {
-                        framespr.color = useColor;
-                    } else {
-                        framespr.color = Color.WHITE;
-                    }
-                    tween(itemShowNode)
-                        .delay(5.5)
-                        .set({ active: true })
-                        .to(0.3, { scale: v3(0.1, 0.1, 0.1) })
-                        .to(0.1, { scale: v3(0.8, 0.8, 0.8) })
-                        .to(0.2, { scale: v3(0.7, 0.7, 0.7) })
-                        .delay(0.5)
-                        .call(() => {
-                            const gettedData: { boxId: string, items: ItemData[], artifacts: ArtifactData[] } = {
-                                boxId: box.id,
-                                items: [],
-                                artifacts: [],
-                            };
-                            if (dropResultProp.type == ItemConfigType.Item) {
-                                gettedData.items.push(new ItemData(dropResultProp.propId, dropResultProp.num));
-
-                            } else if (dropResultProp.type == ItemConfigType.Artifact) {
-                                gettedData.artifacts.push(new ArtifactData(dropResultProp.propId, dropResultProp.num));
-                            }
-                            UIPanelManger.inst.popPanel();
-                            if (gettedCallback) {
-                                gettedCallback(gettedData);
-                            }
-                        })
-                        .start();
-                }
+        let rank: number = 1;
+        if (data as ItemData) {
+            //item
+            const temple = data as ItemData;
+            let itemConf = ItemConfig.getById(temple.itemConfigId);
+            if (itemConf) {
+                iconspr.spriteFrame = await ItemMgr.getItemIcon(itemConf.icon);
+                rank = itemConf.grade;
+            }
+        } else if (data as ArtifactData) {
+            // artifact
+            const temple = data as ArtifactData;
+            const artifactConf = ArtifactConfig.getById(temple.artifactConfigId);
+            if (artifactConf) {
+                iconspr.spriteFrame = await ArtifactMgr.getItemIcon(artifactConf.icon);
+                rank = artifactConf.rank;
             }
         }
+        framespr.color = GameRankColor[rank - 1];
+        tween(itemShowNode)
+            .delay(5.5)
+            .set({ active: true })
+            .to(0.3, { scale: v3(0.1, 0.1, 0.1) })
+            .to(0.1, { scale: v3(0.8, 0.8, 0.8) })
+            .to(0.2, { scale: v3(0.7, 0.7, 0.7) })
+            .delay(0.5)
+            .call(() => {
+                UIPanelManger.inst.popPanel();
+            })
+            .start();
 
         tween(itemShowAnim)
             .delay(5.5)
@@ -139,5 +117,3 @@ export class TreasureGettedUI extends ViewController {
             .start();
     }
 }
-
-
