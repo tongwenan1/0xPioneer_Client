@@ -331,6 +331,14 @@ message user_task_action_getnewtalk {
     required string talkId= 2;
 }
 
+message mappioneer_reborn_change {
+    required int32 res = 1;
+}
+
+message mapbuilding_reborn_change {
+    required int32 res = 1;
+}
+
 message reborn_all_res {
     required int32 res = 1;
 }

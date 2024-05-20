@@ -184,19 +184,6 @@ export class DataMgr {
         pioneer.faction = p.faction;
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, p);
     };
-
-    public static player_map_building_show_change = (e: any) => {
-        const p: s2c_user.Iplayer_map_building_show_change = e.data;
-        if (p.isShow == 1) {
-            DataMgr.s.mapBuilding.showBuilding(p.buildingId);
-        } else {
-            DataMgr.s.mapBuilding.hideBuilding(p.buildingId);
-        }
-    }
-    public static player_map_building_faction_change = (e: any) => {
-        const p: s2c_user.Iplayer_map_building_faction_change = e.data;
-        DataMgr.s.mapBuilding.changeBuildingFaction(p.buildingId, p.faction);
-    };
     public static player_actiontype_change = (e: any) => {
         const p: s2c_user.Iplayer_actiontype_change = e.data;
         if (p.res !== 1) {
@@ -213,6 +200,9 @@ export class DataMgr {
             }
         }
     };
+    public static mappioneer_reborn_change = (e: any) => {
+        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("777777"));
+    }
     public static player_move_res = (e: any) => {
         const p: s2c_user.Iplayer_move_res = e.data;
         if (p.res !== 1) {
@@ -230,6 +220,23 @@ export class DataMgr {
             return;
         }
     };
+
+    public static player_map_building_show_change = (e: any) => {
+        const p: s2c_user.Iplayer_map_building_show_change = e.data;
+        if (p.isShow == 1) {
+            DataMgr.s.mapBuilding.showBuilding(p.buildingId);
+        } else {
+            DataMgr.s.mapBuilding.hideBuilding(p.buildingId);
+        }
+    }
+    public static player_map_building_faction_change = (e: any) => {
+        const p: s2c_user.Iplayer_map_building_faction_change = e.data;
+        DataMgr.s.mapBuilding.changeBuildingFaction(p.buildingId, p.faction);
+    };
+    public static mapbuilding_reborn_change = (e: any) => {
+        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("777777"));
+    }
+    
 
     //------------------------------------- nft
     public static player_bind_nft_res = (e: any) => {

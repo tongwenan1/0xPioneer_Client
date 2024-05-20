@@ -118,6 +118,8 @@ export enum protobuf_s2c {
     player_map_pioneer_faction_change = 20509,
     user_task_action_getnewtalk = 20510,
     reborn_all_res = 20511,
+    mappioneer_reborn_change = 20512,
+    mapbuilding_reborn_change = 20513,
 
     player_lvlup_change = 30100
 

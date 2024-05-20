@@ -93,6 +93,8 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_map_pioneer_faction_change, "player_map_pioneer_faction_change", "s2c_user.player_map_pioneer_faction_change");
     pcodec.register_protobuf_msg(protobuf_s2c.user_task_action_getnewtalk, "user_task_action_getnewtalk", "s2c_user.user_task_action_getnewtalk");
     pcodec.register_protobuf_msg(protobuf_s2c.reborn_all_res, "reborn_all_res", "s2c_user.reborn_all_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.mappioneer_reborn_change, "mappioneer_reborn_change", "s2c_user.mappioneer_reborn_change");
+    pcodec.register_protobuf_msg(protobuf_s2c.mapbuilding_reborn_change, "mapbuilding_reborn_change", "s2c_user.mapbuilding_reborn_change");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_lvlup_change, "player_lvlup_change", "s2c_user.player_lvlup_change");
 
