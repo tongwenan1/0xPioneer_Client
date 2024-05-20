@@ -74,12 +74,6 @@ export class DataMgr {
     public static player_exp_change = (e: any) => {
         const p: s2c_user.Iplayer_exp_change = e.data;
         DataMgr.s.userInfo.data.exp = p.newExp;
-        if (p.newLevel != null) {
-            DataMgr.s.userInfo.data.level = p.newLevel;
-        }
-        if (p.newPsycLimit != null) {
-            DataMgr.s.userInfo.data.energyGetLimitTimes = p.newPsycLimit;
-        }
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_EXP, { exp: p.addExp });
     };
     public static player_treasure_progress_change = (e: any) => {
@@ -867,6 +861,8 @@ export class DataMgr {
 
     public static player_lvlup_change = (e: any) => {
         const p: s2c_user.Iplayer_lvlup_change = e.data;
+        DataMgr.s.userInfo.data.level = p.newLv;
+        DataMgr.s.userInfo.data.energyGetLimitTimes = p.newPsycLimit;
         if (p.items.length > 0) {
             let items: ItemData[] = [];
 

@@ -652,6 +652,8 @@ export namespace s2c_user {
     export interface Iplayer_lvlup_change {
         hpMaxChangeValue: number;
         showBuildingIds: string[];
+        newPsycLimit: number;
+        newLv: number;
         items: any;
         artifacts: any;
     }
