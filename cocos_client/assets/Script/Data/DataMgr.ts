@@ -861,6 +861,19 @@ export class DataMgr {
         DataMgr.s.artifact.addObj_artifact([new ArtifactData("7001", 1)]);
     };
 
+    public static player_lvlup_change = (e: any) => {
+        const p: s2c_user.Iplayer_lvlup_change = e.data;
+        if (p.items.length > 0) {
+            let items: ItemData[] = [];
+
+            for (let i = 0; i < p.items.length; i++) {
+                items.push(new ItemData(p.items[i].itemConfigId, p.items[i].count, p.items[i].addTimeStamp));
+            }
+            p.items = items;
+        }
+        NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_LEVEL, p);
+    }
+
     ///////////////// websocketTempData
     public static setTempSendData(key: string, data: DataMgrResData) {
         DataMgr.socketSendData.set(key, data);

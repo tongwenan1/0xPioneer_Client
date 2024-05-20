@@ -643,6 +643,13 @@ export namespace s2c_user {
         res: number;
         tasks: share.Itask_data[];
     }
+
+    export interface Iplayer_lvlup_change {
+        hpMaxChangeValue: number;
+        showBuildingIds: string[];
+        items: any;
+        artifacts: any;
+    }
 }
 
 export namespace share {

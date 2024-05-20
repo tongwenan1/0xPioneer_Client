@@ -30,9 +30,9 @@ export default class ItemData {
     public count: number; // count
     public addTimeStamp: number;
 
-    public constructor(itemConfigId: string, count: number) {
+    public constructor(itemConfigId: string, count: number, addTimeStamp: number = 0) {
         this.itemConfigId = itemConfigId;
         this.count = count;
-        this.addTimeStamp = 0;
+        this.addTimeStamp = addTimeStamp;
     }
 }

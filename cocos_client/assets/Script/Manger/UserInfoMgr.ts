@@ -9,6 +9,9 @@ import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import { DataMgr } from "../Data/DataMgr";
 import { MapPioneerObject } from "../Const/PioneerDefine";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import { UIName } from "../Const/ConstUIDefine";
+import { ItemGettedUI } from "../UI/ItemGettedUI";
 
 export default class UserInfoMgr {
     private _afterTalkItemGetData: Map<string, ItemData[]> = new Map();
@@ -59,7 +62,7 @@ export default class UserInfoMgr {
         this._afterCivilizationClosedShowPioneerDatas = pioneerDatas;
     }
     //-------------------------------------------------- notification
-    private _onUserInfoDidChangeLevel(data: { hpMaxChangeValue: number; showBuildingIds: string[]; rewards: GetPropData[] }) {
+    private _onUserInfoDidChangeLevel(data: { hpMaxChangeValue: number; showBuildingIds: string[]; items: ItemData[]; artifacts: ArtifactData[] }) {
         if (data.hpMaxChangeValue > 0) {
             DataMgr.s.pioneer.changeAllPlayerHpMax(data.hpMaxChangeValue);
         }
@@ -68,10 +71,26 @@ export default class UserInfoMgr {
                 DataMgr.s.mapBuilding.showBuilding(buildingId);
             }
         }
-        if (data.rewards.length > 0) {
-            // upload resource changed levelup
-            ItemConfigDropTool.getItemByConfig(data.rewards);
+
+        // if (data.rewards.length > 0) {
+        //     // upload resource changed levelup
+        //     ItemConfigDropTool.getItemByConfig(data.rewards);
+        // }
+
+        if (data.items.length > 0) {
+            setTimeout(async () => {
+                if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI) || UIPanelManger.inst.panelIsShow(UIName.SecretGuardGettedUI)) {
+                    this._afterCivilizationClosedShowItemDatas.push(...data.items);
+                } else {
+                    const result = await UIPanelManger.inst.pushPanel(UIName.ItemGettedUI);
+                    if (result.success) {
+                        result.node.getComponent(ItemGettedUI).showItem(data.items);
+                    }
+                }
+            });
         }
+        // if (data.artifacts.length > 0) {
+        // }
     }
     private _onInnerBuildingDidFinishUpgrade(type: InnerBuildingType) {
         const info = DataMgr.s.userInfo.data.innerBuildings[type];

@@ -219,6 +219,7 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_nft_skill_forget", DataMgr.player_nft_skill_forget_res);
 
         NetworkMgr.websocket.on("player_rookie_finish_res", DataMgr.player_rookie_finish_res);
+        NetworkMgr.websocket.on("player_lvlup_change", DataMgr.player_lvlup_change);
 
         // task
         NetworkMgr.websocket.on("user_task_action_getnewtalk", DataMgr.user_task_action_getnewtalk);

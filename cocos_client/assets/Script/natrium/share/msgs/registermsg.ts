@@ -93,6 +93,8 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_map_pioneer_faction_change, "player_map_pioneer_faction_change", "s2c_user.player_map_pioneer_faction_change");
     pcodec.register_protobuf_msg(protobuf_s2c.user_task_action_getnewtalk, "user_task_action_getnewtalk", "s2c_user.user_task_action_getnewtalk");
 
+    pcodec.register_protobuf_msg(protobuf_s2c.player_lvlup_change, "player_lvlup_change", "s2c_user.player_lvlup_change");
+
     // register client msg
     pcodec.register_protobuf_msg(protobuf_c2s.login, "login", "c2s_user.login");
     pcodec.register_protobuf_msg(protobuf_c2s.create_player, "create_player", "c2s_user.create_player");

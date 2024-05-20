@@ -115,5 +115,8 @@ export enum protobuf_s2c {
     user_task_action_talk = 20507,
     player_map_building_faction_change = 20508,
     player_map_pioneer_faction_change = 20509,
-    user_task_action_getnewtalk = 20510
+    user_task_action_getnewtalk = 20510,
+
+    player_lvlup_change = 30100
+
 }

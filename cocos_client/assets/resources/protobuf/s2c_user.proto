@@ -247,6 +247,14 @@ message player_exp_change {
     optional uint32 newPsycLimit = 4; // player new level after change if exist
 }
 
+message player_lvlup_change {
+    required uint32 hpMaxChangeValue = 1;
+    repeated string showBuildingIds = 2;
+    required uint32 newPsycLimit = 3;
+    required uint32 newLv = 4;
+    repeated share.item_data items = 5;
+}
+
 message player_treasure_progress_change {
     required int32 addProgress = 1;
     required uint32 newProgress = 2;
@@ -320,3 +328,4 @@ message user_task_action_getnewtalk {
     required string npcId= 1;
     required string talkId= 2;
 }
+
