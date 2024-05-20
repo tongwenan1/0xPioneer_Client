@@ -41,6 +41,7 @@ export class MainUI extends ViewController {
 
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onPlayerLvlupChanged, this);
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._onPlayerExplorationValueChanged, this);
+
     }
 
     protected async viewDidStart(): Promise<void> {
@@ -175,7 +176,9 @@ export class MainUI extends ViewController {
             });
         }
     }
-
+    private onTapRefreshMap() {
+        NetworkMgr.websocketMsg.reborn_all();
+    }
     //----------------------------------------------------- notification
     private _onPioneerShowChanged(data: { id: string; show: boolean }) {
         this.checkCanShowGansterComingTip(data.id);

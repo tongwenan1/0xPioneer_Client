@@ -176,7 +176,6 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_END, this._onEndFight, this);
 
         NotificationMgr.addListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_FINISH, this._onWormholeCountDownTimeDidFinish, this);
-
     }
 
     protected viewDidStart() {
@@ -213,7 +212,7 @@ export class OuterPioneerController extends ViewController {
 
     protected viewUpdate(dt: number): void {
         super.viewUpdate(dt);
-        
+
         const allPioneers = DataMgr.s.pioneer.getAll(true);
         for (var i = 0; i < allPioneers.length; i++) {
             let pioneer = allPioneers[i];
@@ -459,6 +458,7 @@ export class OuterPioneerController extends ViewController {
                 attackView.active = false;
             }
         }
+        console.log("exce end: " + isEndFight);
         if (isAttackBuilding) {
             const buildingView = this.node.getComponent(OuterBuildingController).getBuildingView(defender.id);
             if (buildingView != null) {
@@ -468,6 +468,7 @@ export class OuterPioneerController extends ViewController {
             const defendView = this._pioneerMap.get(defender.id);
             if (isEndFight) {
                 const pioneer = DataMgr.s.pioneer.getById(defender.id);
+                console.log("exce P:" , pioneer)
                 if (pioneer != null && pioneer.show) {
                     this.scheduleOnce(() => {
                         defendView.active = true;
@@ -655,7 +656,6 @@ export class OuterPioneerController extends ViewController {
         // const building = BuildingMgr.getBuildingById(buildingId);
         const building = DataMgr.s.mapBuilding.getBuildingById(data.id);
         if (building != null) {
-            
         }
     }
     private async _onEventBuilding(data: { pioneerId: string; buildingId: string; eventId: string }): Promise<void> {
@@ -684,7 +684,15 @@ export class OuterPioneerController extends ViewController {
                         fightOver: (succeed: boolean) => void
                     ) => {
                         PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
-                        PioneerMgr.fight(DataMgr.s.pioneer.getById(attackerPioneerId), DataMgr.s.pioneer.getById(enemyPioneerId), null, true, DataMgr.s.mapBuilding.getBuildingById(buildingId).stayMapPositions, temporaryAttributes, fightOver);
+                        PioneerMgr.fight(
+                            DataMgr.s.pioneer.getById(attackerPioneerId),
+                            DataMgr.s.pioneer.getById(enemyPioneerId),
+                            null,
+                            true,
+                            DataMgr.s.mapBuilding.getBuildingById(buildingId).stayMapPositions,
+                            temporaryAttributes,
+                            fightOver
+                        );
                     },
                     (nextEvent: EventConfigData) => {
                         PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
@@ -758,7 +766,7 @@ export class OuterPioneerController extends ViewController {
             fightView.node.destroy();
             this._fightViewMap.delete(data.fightId);
         }
-
+        
         if (data.playerPioneerId != null) {
             this._checkInMainCityRangeAndHealHpToMax(data.playerPioneerId);
         }

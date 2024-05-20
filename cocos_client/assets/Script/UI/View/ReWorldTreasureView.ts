@@ -92,7 +92,7 @@ export class ReWorldTreasureView extends Component {
 
         const currentProgress: number = progress - perTimeNeedProgress * canGeTimes;
         const totalProgress: number = perTimeNeedProgress;
-        this.node.getChildByPath("OpenButton/Bg/Value").getComponent(Label).string = Math.floor(currentProgress / totalProgress) * 100 + "%";
+        this.node.getChildByPath("OpenButton/Bg/Value").getComponent(Label).string = Math.floor(currentProgress / totalProgress * 100) + "%";
         this.node.getChildByPath("OpenButton/Bg/Value").getComponent(Label).color = GameRankColor[heatRank - 1];
         this.node.getChildByPath("OpenButton/Bg/ProgressBar").getComponent(ProgressBar).progress = Math.min(1, currentProgress / totalProgress);
         this.node.getChildByPath("OpenButton/Bg/ProgressBar/Bar").getComponent(Sprite).spriteFrame = this.progressSprites[heatRank - 1];

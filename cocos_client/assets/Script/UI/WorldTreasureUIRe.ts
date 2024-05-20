@@ -109,7 +109,8 @@ export class WorldTreasureUIRe extends ViewController {
 
         const currentProgress: number = progress - perTimeNeedProgress * canGeTimes;
         const totalProgress: number = perTimeNeedProgress;
-        rigthView.getChildByPath("Progress/Value").getComponent(Label).string = Math.floor(currentProgress / totalProgress) * 100 + "%";
+        console.log("exce c: " + currentProgress + " t: " + totalProgress);
+        rigthView.getChildByPath("Progress/Value").getComponent(Label).string = Math.floor(currentProgress / totalProgress * 100) + "%";
         rigthView.getChildByPath("Progress/Value").getComponent(Label).color = GameRankColor[heatRank - 1];
         rigthView.getChildByPath("Progress/ProgressBar").getComponent(ProgressBar).progress = currentProgress / totalProgress;
         rigthView.getChildByPath("Progress/ProgressBar/Bar").getComponent(Sprite).spriteFrame = this.progressSprites[heatRank - 1];

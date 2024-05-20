@@ -93,6 +93,7 @@ message player_explore_res {
 
 message player_fight_res {
     required int32 res = 1;
+    optional string winnerId = 2;
 }
 
 message player_event_select_res {
@@ -330,3 +331,6 @@ message user_task_action_getnewtalk {
     required string talkId= 2;
 }
 
+message reborn_all_res {
+    required int32 res = 1;
+}

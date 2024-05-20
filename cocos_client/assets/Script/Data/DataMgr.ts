@@ -133,7 +133,7 @@ export class DataMgr {
         if (p.res !== 1) {
             return;
         }
-        DataMgr.s.userInfo.beginInnerBuildingUpgrade(p.data.id as InnerBuildingType, p.data.upgradeCountTime, p.data.upgradeTotalTime);
+        DataMgr.s.userInfo.innerBuildingUpgradeChanged(p.data.id as InnerBuildingType, p.data.level, p.data.upgradeIng, p.data.upgradeCountTime, p.data.upgradeTotalTime);
     };
 
     //------------------------------------- map
@@ -184,6 +184,15 @@ export class DataMgr {
         pioneer.faction = p.faction;
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, p);
     };
+
+    public static player_map_building_show_change = (e: any) => {
+        const p: s2c_user.Iplayer_map_building_show_change = e.data;
+        if (p.isShow == 1) {
+            DataMgr.s.mapBuilding.showBuilding(p.buildingId);
+        } else {
+            DataMgr.s.mapBuilding.hideBuilding(p.buildingId);
+        }
+    }
     public static player_map_building_faction_change = (e: any) => {
         const p: s2c_user.Iplayer_map_building_faction_change = e.data;
         DataMgr.s.mapBuilding.changeBuildingFaction(p.buildingId, p.faction);
@@ -445,8 +454,12 @@ export class DataMgr {
         }
     };
     public static player_fight_res = (e: any) => {
+        const p: s2c_user.Iplayer_fight_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
         if (DataMgr.socketSendData.has("player_fight_res")) {
-            const data: s2c_user.Iplayer_fight_res = DataMgr.socketSendData.get("player_fight_res") as s2c_user.Iplayer_fight_res;
+            const data: s2c_user.Ilocal_player_fight_res = DataMgr.socketSendData.get("player_fight_res") as s2c_user.Ilocal_player_fight_res;
 
             const {
                 isAttackBuilding,
@@ -542,16 +555,20 @@ export class DataMgr {
                     name: attacker.name,
                     hp: attacker.hp,
                     hpMax: attacker.hpMax,
+                    attack: attacker.attack,
+                    defend: attacker.defend
                 },
                 defenderInfo: {
                     id: defenderId,
                     name: defenderName,
                     hp: defenderHp,
                     hpMax: defenderHpMax,
+                    attack: defenderAttack,
+                    defend: defenderDefned
                 },
                 centerPos: defenderCenterPositions,
             };
-
+            console.log("exce userd:", useData);
             NotificationMgr.triggerEvent(NotificationName.MAP_MEMEBER_FIGHT_BEGIN, useData);
 
             let attackRound: boolean = true;
@@ -629,11 +646,11 @@ export class DataMgr {
 
                 if (fightOver) {
                     // fight end
-
                     let isSelfWin: boolean = false;
                     if ((isSelfAttack && isAttackWin) || (!isSelfAttack && !isAttackWin)) {
                         isSelfWin = true;
                     }
+
 
                     let selfKillPioneer: MapPioneerObject = null;
                     let killerId: string = null;

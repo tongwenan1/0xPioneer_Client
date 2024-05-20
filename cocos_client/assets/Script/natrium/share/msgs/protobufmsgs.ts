@@ -44,6 +44,7 @@ export enum protobuf_c2s {
     player_event = 228,
     get_treasure_info = 229,
     get_user_task_info = 230,
+    reborn_all = 231,
     get_battle_report = 299,
 
     fetch_user_psyc = 400
@@ -116,6 +117,7 @@ export enum protobuf_s2c {
     player_map_building_faction_change = 20508,
     player_map_pioneer_faction_change = 20509,
     user_task_action_getnewtalk = 20510,
+    reborn_all_res = 20511,
 
     player_lvlup_change = 30100
 

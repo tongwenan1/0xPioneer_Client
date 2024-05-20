@@ -197,7 +197,6 @@ export class PioneersDataMgr {
             if (pioneer.hp <= 0) {
                 isDead = true;
                 this.changeActionType(pioneerId, MapPioneerActionType.idle);
-                this.changeShow(pioneerId, false);
             }
         }
         return isDead;

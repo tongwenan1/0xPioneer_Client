@@ -39,15 +39,20 @@ export default class UserInfoDataMgr {
         return level;
     }
     //--------------------------------
-    public beginInnerBuildingUpgrade(buildingType: InnerBuildingType, beginTimeStamp: number, endTimeStamp: number) {
+    public innerBuildingUpgradeChanged(buildingType: InnerBuildingType, buildingLevel: number, isUpgrading: boolean, beginTimeStamp: number, endTimeStamp: number) {
         const buildInfo = this._data.innerBuildings[buildingType];
         if (buildInfo == null) {
             return;
         }
-        buildInfo.upgrading = true;
+        buildInfo.upgrading = isUpgrading;
+        buildInfo.buildLevel = buildingLevel;
         buildInfo.upgradeBeginTimestamp = beginTimeStamp * 1000;
         buildInfo.upgradeEndTimestamp = endTimeStamp * 1000;
-        NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_BEGIN_UPGRADE, buildingType);
+        if (buildInfo.upgrading) {
+            NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_BEGIN_UPGRADE, buildingType);
+        } else {
+            NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, buildingType);
+        }
     }
 
     public changeBuildingLatticeBeginIndex(buildingType: InnerBuildingType, beginIndex: number) {
@@ -163,36 +168,10 @@ export default class UserInfoDataMgr {
                         continue;
                     }
                     const currentTimestamp: number = new Date().getTime();
-                    if (currentTimestamp < value.upgradeEndTimestamp) {
+                    console.log("exce c: " + currentTimestamp + ", u: " + value.upgradeEndTimestamp);
+                    if (currentTimestamp < value.upgradeEndTimestamp) { 
                         NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED);
-                    } else {
-                        value.upgrading = false;
-                        value.buildLevel += 1;
-                        NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, key);
-                    }
-                    // if (value.upgradeCountTime < value.upgradeTotalTime) {
-                    //     value.upgradeCountTime += 1;
-                    //     NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED);
-
-                    //     if (value.upgradeCountTime >= value.upgradeTotalTime) {
-                    //         value.upgradeCountTime = 0;
-                    //         value.upgradeTotalTime = 0;
-                    //         value.buildLevel += 1;
-                    //         // buildingConfig
-                    //         const innerData = InnerBuildingConfig.getByBuildingType(key as InnerBuildingType);
-                    //         if (innerData != null) {
-                    //             const expValue = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel, innerData.lvlup_exp);
-                    //             if (expValue != null && expValue > 0) {
-                    //                 this.gainExp(expValue);
-                    //             }
-                    //             const progressValue = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel, innerData.lvlup_progress);
-                    //             if (progressValue != null && progressValue > 0) {
-                    //                 this.gainTreasureProgress(progressValue);
-                    //             }
-                    //         }
-                    //         NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, key);
-                    //     }
-                    // }
+                    } 
                 }
             }
 

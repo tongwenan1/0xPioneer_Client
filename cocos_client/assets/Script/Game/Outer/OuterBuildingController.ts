@@ -122,6 +122,7 @@ export class OuterBuildingController extends Component {
                     changed = true;
                 }
                 if (temple != null) {
+                    console.log("exce teml: ", temple);
                     temple.getComponent(OuterBuildingView).refreshUI(building);
                     if (building.stayMapPositions.length > 0) {
                         let worldPos = null;
@@ -293,12 +294,12 @@ export class OuterBuildingController extends Component {
     buildingDefendPioneerChanged(): void {
         this._refreshUI();
     }
-    buildingDidHide(buildingId: string): void {
-        this._refreshUI();
+    async buildingDidHide(buildingId: string) {
+        await this._refreshUI();
         // this._refreshDecorationUI();
     }
-    buildingDidShow(buildingId: string): void {
-        this._refreshUI();
+    async buildingDidShow(buildingId: string) {
+        await this._refreshUI();
         // this._refreshDecorationUI();
     }
     buildingInsertDefendPioneer(): void {

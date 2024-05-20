@@ -208,6 +208,10 @@ message save_archives {
     required string archives = 1;
 }
 
+message reborn_all {
+
+}
+
 // ----------------------------- task
 message get_user_task_info {
 

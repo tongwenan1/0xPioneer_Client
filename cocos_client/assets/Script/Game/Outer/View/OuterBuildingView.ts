@@ -279,6 +279,9 @@ export class OuterBuildingView extends ViewController {
 
     //-------------------------------- function
     private _refreshEnergyTipShow() {
+        if (this._toGetEnergyTip == null) {
+            return;
+        }
         this._toGetEnergyTip.active = false;
         if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != MapMemberFactionType.enemy) {
             const limitGetTimes: number = 3;
@@ -288,6 +291,9 @@ export class OuterBuildingView extends ViewController {
         }
     }
     private _refreshBuildTipShow() {
+        if (this._toBuildBuildingTip == null) {
+            return;
+        }
         this._toBuildBuildingTip.active = false;
         if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != MapMemberFactionType.enemy) {
             let canBuild: boolean = false;

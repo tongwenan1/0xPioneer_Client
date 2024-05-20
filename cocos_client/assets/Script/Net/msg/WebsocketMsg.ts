@@ -199,6 +199,9 @@ export class WebsocketMsg {
     public fetch_user_psyc(d: c2s_user.Ifetch_user_psyc) {
         this.send_packet("fetch_user_psyc", d);
     }
+    public reborn_all() {
+        this.send_packet("reborn_all", {});
+    }
 
     public save_archives(d: c2s_user.Isave_archives) {
         this.send_packet("save_archives", d);
@@ -455,6 +458,10 @@ export namespace s2c_user {
         pioneerId: string;
         faction: number;
     }
+    export interface Iplayer_map_building_show_change {
+        buildingId: string;
+        isShow: number;
+    }
     export interface Iplayer_map_building_faction_change {
         buildingId: string;
         faction: number;
@@ -507,7 +514,8 @@ export namespace s2c_user {
         exploreId: string;
         actionType: MapPioneerActionType;
     }
-    export interface Iplayer_fight_res {
+
+    export interface Ilocal_player_fight_res {
         isAttackBuilding: boolean;
         isSelfAttack: boolean;
         attacker: MapPioneerObject;
@@ -517,6 +525,10 @@ export namespace s2c_user {
         eventCenterPositions?: Vec2[];
         temporaryAttributes?: Map<string, MapPioneerAttributesChangeModel>;
         fightOverCallback?: (isSelfWin: boolean) => void;
+    }
+    export interface Iplayer_fight_res {
+        res: number;
+        winnerId: string;
     }
     export interface player_event_select_res {
         pioneerId: string;
@@ -839,7 +851,7 @@ export namespace share {
     }
 
     export interface Imapbuilding_data {
-        buildings: { [key: string]: Imapbuilding_info_data }; 
+        buildings: { [key: string]: Imapbuilding_info_data };
     }
     export interface Imapbuilding_info_data {
         id: string;
@@ -850,7 +862,7 @@ export namespace share {
         faction: number;
         defendPioneerIds: string[];
         stayPosType: number;
-        stayMapPositions: pos2d[],
+        stayMapPositions: pos2d[];
         progress: number;
         winprogress: number;
         eventId: string;

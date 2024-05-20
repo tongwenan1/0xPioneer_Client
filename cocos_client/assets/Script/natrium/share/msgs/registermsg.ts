@@ -92,6 +92,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_map_building_faction_change, "player_map_building_faction_change", "s2c_user.player_map_building_faction_change");
     pcodec.register_protobuf_msg(protobuf_s2c.player_map_pioneer_faction_change, "player_map_pioneer_faction_change", "s2c_user.player_map_pioneer_faction_change");
     pcodec.register_protobuf_msg(protobuf_s2c.user_task_action_getnewtalk, "user_task_action_getnewtalk", "s2c_user.user_task_action_getnewtalk");
+    pcodec.register_protobuf_msg(protobuf_s2c.reborn_all_res, "reborn_all_res", "s2c_user.reborn_all_res");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_lvlup_change, "player_lvlup_change", "s2c_user.player_lvlup_change");
 
@@ -141,6 +142,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.player_event, "player_event", "c2s_user.player_event");
     pcodec.register_protobuf_msg(protobuf_c2s.get_treasure_info, "get_treasure_info", "c2s_user.get_treasure_info");
     pcodec.register_protobuf_msg(protobuf_c2s.get_user_task_info, "get_user_task_info", "c2s_user.get_user_task_info");
+    pcodec.register_protobuf_msg(protobuf_c2s.reborn_all, "reborn_all", "c2s_user.reborn_all");
     pcodec.register_protobuf_msg(protobuf_c2s.get_battle_report, "get_battle_report", "c2s_user.get_battle_report");
 
     pcodec.register_protobuf_msg(protobuf_c2s.fetch_user_psyc, "fetch_user_psyc", "c2s_user.fetch_user_psyc");

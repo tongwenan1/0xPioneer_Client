@@ -89,7 +89,7 @@ message pioneer_data {
     optional string type = 4;
     optional pos2d stayPos = 5;
     optional uint32 hpMax = 6;
-    optional uint32 hp = 7;
+    optional int32 hp = 7;
     optional uint32 attack = 8;
     optional uint32 defend = 9;
     optional uint32 speed = 10;
@@ -158,7 +158,7 @@ message nfts_info_data {
     required string name = 3;
     optional uint32 attack = 4;
     optional uint32 defense = 5;
-    optional uint32 hp = 6;
+    optional int32 hp = 6;
     optional uint32 speed = 7;
     optional uint32 iq = 8;
     optional uint32 level = 9;
@@ -199,11 +199,20 @@ message mapbuilding_info_data {
     optional string animType = 16;
 
     optional uint32 hpMax = 17;
-    optional uint32 hp = 18;
+    optional int32 hp = 18;
     optional uint32 attack = 19;
     optional string taskObj = 20;
+
+    optional building_resource resources = 21;
+    optional uint32 quota = 22;
+    optional uint32 wormholdCountdownTime = 23;
+    optional uint32 tavernCountdownTime = 24;
 }
 
+message building_resource {
+    optional string id = 1;
+    optional uint32 num = 2;
+}
 
 
 message nft_pioneer_skil {
