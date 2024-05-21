@@ -111,14 +111,7 @@
       ]
     ],
     "close_con": null,
-    "take_con": [
-      2,
-      [
-        1,
-        "talk03",
-        0
-      ]
-    ],
+    "take_con": null,
     "fail_con": null,
     "steps": null
   },
@@ -143,14 +136,7 @@
       ]
     ],
     "close_con": null,
-    "take_con": [
-      2,
-      [
-        1,
-        "talk04",
-        0
-      ]
-    ],
+    "take_con": null,
     "fail_con": null,
     "steps": null
   },
@@ -186,14 +172,7 @@
         1
       ]
     ],
-    "take_con": [
-      2,
-      [
-        1,
-        "talk05",
-        -1
-      ]
-    ],
+    "take_con": null,
     "fail_con": null,
     "steps": null
   },
@@ -227,14 +206,7 @@
       ]
     ],
     "close_con": null,
-    "take_con": [
-      2,
-      [
-        1,
-        "talk06",
-        -1
-      ]
-    ],
+    "take_con": null,
     "fail_con": null,
     "steps": null
   },
@@ -268,14 +240,7 @@
     "pre_con": [],
     "pre_action": null,
     "close_con": null,
-    "take_con": [
-      2,
-      [
-        1,
-        "talk07",
-        0
-      ]
-    ],
+    "take_con": null,
     "fail_con": null,
     "steps": null
   },
@@ -310,20 +275,13 @@
         1
       ]
     ],
-    "take_con": [
-      2,
-      [
-        1,
-        "talk08",
-        0
-      ]
-    ],
+    "take_con": null,
     "fail_con": null,
     "steps": null
   },
   "task11": {
     "id": "task11",
-    "name": "",
+    "name": "501029",
     "type": 1,
     "pre_con": [],
     "pre_action": [],

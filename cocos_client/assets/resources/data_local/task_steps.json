@@ -181,8 +181,26 @@
     "id": "task0801",
     "name": "",
     "start_action": null,
-    "complete_con": null,
-    "complete_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "gangster_3"
+        ],
+        1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "pioneer_3",
+        1,
+        0
+      ]
+    ],
     "quit_con": null,
     "progress": 20,
     "exp": 20
