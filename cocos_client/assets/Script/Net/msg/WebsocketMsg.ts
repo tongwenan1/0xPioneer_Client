@@ -653,7 +653,13 @@ export namespace s2c_user {
     export interface Iuser_task_did_fail {
         taskId: string;
     }
+    export interface Iuser_task_step_progress_did_change {
+        taskId: string;
+    }
     export interface Iuser_task_step_did_finish {
+        taskId: string;
+    }
+    export interface Iuser_task_did_finish {
         taskId: string;
     }
     export interface Iget_user_task_info_res {

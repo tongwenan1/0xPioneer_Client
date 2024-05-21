@@ -86,6 +86,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_map_pioneer_show_change, "player_map_pioneer_show_change", "s2c_user.player_map_pioneer_show_change");
     pcodec.register_protobuf_msg(protobuf_s2c.user_task_did_fail, "user_task_did_fail", "s2c_user.user_task_did_fail");
     pcodec.register_protobuf_msg(protobuf_s2c.user_task_did_get, "user_task_did_get", "s2c_user.user_task_did_get");
+    pcodec.register_protobuf_msg(protobuf_s2c.user_task_step_progress_did_change, "user_task_step_progress_did_change", "s2c_user.user_task_step_progress_did_change");
     pcodec.register_protobuf_msg(protobuf_s2c.user_task_step_did_finish, "user_task_step_did_finish", "s2c_user.user_task_step_did_finish");
     pcodec.register_protobuf_msg(protobuf_s2c.user_task_did_finish, "user_task_did_finish", "s2c_user.user_task_did_finish");
     pcodec.register_protobuf_msg(protobuf_s2c.user_task_action_talk, "user_task_action_talk", "s2c_user.user_task_action_talk");
@@ -95,6 +96,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.reborn_all_res, "reborn_all_res", "s2c_user.reborn_all_res");
     pcodec.register_protobuf_msg(protobuf_s2c.mappioneer_reborn_change, "mappioneer_reborn_change", "s2c_user.mappioneer_reborn_change");
     pcodec.register_protobuf_msg(protobuf_s2c.mapbuilding_reborn_change, "mapbuilding_reborn_change", "s2c_user.mapbuilding_reborn_change");
+    pcodec.register_protobuf_msg(protobuf_s2c.pioneer_reborn_res, "pioneer_reborn_res", "s2c_user.pioneer_reborn_res");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_lvlup_change, "player_lvlup_change", "s2c_user.player_lvlup_change");
 

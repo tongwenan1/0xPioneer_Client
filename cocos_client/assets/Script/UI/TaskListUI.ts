@@ -1,23 +1,22 @@
-import { _decorator, Button, Color, instantiate, Label, Layout, Node, Vec2 } from 'cc';
-import { LanMgr } from '../Utils/Global';
-import ViewController from '../BasicView/ViewController';
-import NotificationMgr from '../Basic/NotificationMgr';
-import { NotificationName } from '../Const/Notification';
-import { TaskCondition, TaskConditionType, TaskStepObject } from '../Const/TaskDefine';
-import GameMainHelper from '../Game/Helper/GameMainHelper';
-import CommonTools from '../Tool/CommonTools';
-import UIPanelManger from '../Basic/UIPanelMgr';
-import { DataMgr } from '../Data/DataMgr';
-import { MapNpcPioneerObject, MapPioneerObject } from '../Const/PioneerDefine';
-import { share } from '../Net/msg/WebsocketMsg';
-import TaskConfig from '../Config/TaskConfig';
-import TaskStepConfig from '../Config/TaskStepConfig';
+import { _decorator, Button, Color, instantiate, Label, Layout, Node, Vec2 } from "cc";
+import { LanMgr } from "../Utils/Global";
+import ViewController from "../BasicView/ViewController";
+import NotificationMgr from "../Basic/NotificationMgr";
+import { NotificationName } from "../Const/Notification";
+import { TaskCondition, TaskConditionType, TaskStepObject } from "../Const/TaskDefine";
+import GameMainHelper from "../Game/Helper/GameMainHelper";
+import CommonTools from "../Tool/CommonTools";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import { DataMgr } from "../Data/DataMgr";
+import { MapNpcPioneerObject, MapPioneerObject } from "../Const/PioneerDefine";
+import { share } from "../Net/msg/WebsocketMsg";
+import TaskConfig from "../Config/TaskConfig";
+import TaskStepConfig from "../Config/TaskStepConfig";
 
 const { ccclass, property } = _decorator;
 
-@ccclass('TaskListUI')
+@ccclass("TaskListUI")
 export class TaskListUI extends ViewController {
-
     public refreshUI() {
         // useLanMgr
         // this._actionTaskView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.getLanById("107549");
@@ -49,7 +48,6 @@ export class TaskListUI extends ViewController {
         for (const task of allGettedTasks) {
             if (task.isFinished || task.isFailed) {
                 finishedTasks.push(task);
-
             } else {
                 toDoTasks.push(task);
             }
@@ -79,7 +77,8 @@ export class TaskListUI extends ViewController {
             this._actionTaskList.push(action);
         }
 
-        this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = LanMgr.replaceLanById("202003", [allGettedTasks.length]) + " >>";
+        this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string =
+            LanMgr.replaceLanById("202003", [allGettedTasks.length]) + " >>";
         // this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string = "All " + taskInfo.length + " Tasks";
 
         this._detailTaskView.active = this._isDetailShow;
@@ -117,12 +116,12 @@ export class TaskListUI extends ViewController {
                     this._detailProgressList.push(unDoneTitleItem);
                 } else {
                     // check has task finished
-                    // 1- finished title 
+                    // 1- finished title
                     // 2- finished task
                     // 3- todo title
                     // 4- todo task
-                    const finishedDatas: { status: number, stepData: share.Itask_step_data }[] = [];
-                    const todoDatas: { status: number, stepData: share.Itask_step_data }[] = [];
+                    const finishedDatas: { status: number; stepData: share.Itask_step_data }[] = [];
+                    const todoDatas: { status: number; stepData: share.Itask_step_data }[] = [];
                     let hasFinishedTitle: boolean = false;
                     let hasToDoTitle: boolean = false;
                     for (let i = 0; i < currentTask.steps.length; i++) {
@@ -148,7 +147,6 @@ export class TaskListUI extends ViewController {
                             finishTitleItem.active = true;
                             finishTitleItem.setParent(this._detailProgressFinishTitleItem.getParent());
                             this._detailProgressList.push(finishTitleItem);
-
                         } else if (temple.status == 2) {
                             const stepObj = DataMgr.s.task.getTaskStep(temple.stepData.stepId);
 
@@ -156,15 +154,14 @@ export class TaskListUI extends ViewController {
                             finish.active = true;
                             finish.setParent(this._detailProgressFinishItem.getParent());
                             finish.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(stepObj.name);
-                            finish.getChildByName("Progress").getComponent(Label).string = temple.stepData.completeIndex + "/" + stepObj.completeCon.conditions.length;
+                            finish.getChildByName("Progress").getComponent(Label).string =
+                                temple.stepData.completeIndex + "/" + stepObj.completeCon.conditions.length;
                             this._detailProgressList.push(finish);
-
                         } else if (temple.status == 3) {
                             const toDoTitleItem = instantiate(this._detailProgressToDoTitleItem);
                             toDoTitleItem.active = true;
                             toDoTitleItem.setParent(this._detailProgressToDoTitleItem.getParent());
                             this._detailProgressList.push(toDoTitleItem);
-
                         } else if (temple.status == 4) {
                             const stepObj = DataMgr.s.task.getTaskStep(temple.stepData.stepId);
 
@@ -172,23 +169,27 @@ export class TaskListUI extends ViewController {
                             finish.active = true;
                             finish.setParent(this._detailProgressToDoItem.getParent());
                             finish.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(stepObj.name);
-                            finish.getChildByName("Progress").getComponent(Label).string = temple.stepData.completeIndex + "/" + stepObj.completeCon.conditions.length;
+                            finish.getChildByName("Progress").getComponent(Label).string =
+                                temple.stepData.completeIndex + "/" + stepObj.completeCon.conditions.length;
                             this._detailProgressList.push(finish);
                         }
                     }
                 }
                 this._detailProgressToDoItem.getParent().getComponent(Layout).updateLayout();
-
             } else {
                 this._detailTaskView.getChildByName("ProgressList").active = false;
             }
             this._toDoButton.getChildByName("Focus").active = this._isDetailToDoShow;
             this._toDoButton.getChildByName("Common").active = !this._isDetailToDoShow;
-            this._toDoButton.getChildByName("Label").getComponent(Label).color = this._isDetailToDoShow ? new Color(66, 53, 36, 255) : new Color(123, 115, 112, 255);
+            this._toDoButton.getChildByName("Label").getComponent(Label).color = this._isDetailToDoShow
+                ? new Color(66, 53, 36, 255)
+                : new Color(123, 115, 112, 255);
 
             this._completedButton.getChildByName("Focus").active = !this._isDetailToDoShow;
             this._completedButton.getChildByName("Common").active = this._isDetailToDoShow;
-            this._completedButton.getChildByName("Label").getComponent(Label).color = !this._isDetailToDoShow ? new Color(66, 53, 36, 255) : new Color(123, 115, 112, 255);
+            this._completedButton.getChildByName("Label").getComponent(Label).color = !this._isDetailToDoShow
+                ? new Color(66, 53, 36, 255)
+                : new Color(123, 115, 112, 255);
         }
     }
 
@@ -239,7 +240,6 @@ export class TaskListUI extends ViewController {
 
         this._toDoButton = this.node.getChildByPath("TaskDetailView/ToDoButton");
         this._completedButton = this.node.getChildByPath("TaskDetailView/CompletedButton");
-
     }
 
     protected viewDidStart(): void {
@@ -248,6 +248,7 @@ export class TaskListUI extends ViewController {
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
         NotificationMgr.addListener(NotificationName.TASK_NEW_GETTED, this.refreshUI, this);
         NotificationMgr.addListener(NotificationName.TASK_FAILED, this.refreshUI, this);
+        NotificationMgr.addListener(NotificationName.TASK_STEP_PROGRESS_CHANGED, this.refreshUI, this);
         NotificationMgr.addListener(NotificationName.TASK_STEP_FINISHED, this.refreshUI, this);
         NotificationMgr.addListener(NotificationName.TASK_FINISHED, this.refreshUI, this);
         NotificationMgr.addListener(NotificationName.TASK_LIST, this.refreshUI, this);
@@ -261,6 +262,7 @@ export class TaskListUI extends ViewController {
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
         NotificationMgr.removeListener(NotificationName.TASK_NEW_GETTED, this.refreshUI, this);
         NotificationMgr.removeListener(NotificationName.TASK_FAILED, this.refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.TASK_STEP_PROGRESS_CHANGED, this.refreshUI, this);
         NotificationMgr.removeListener(NotificationName.TASK_STEP_FINISHED, this.refreshUI, this);
         NotificationMgr.removeListener(NotificationName.TASK_FINISHED, this.refreshUI, this);
         NotificationMgr.removeListener(NotificationName.TASK_LIST, this.refreshUI, this);
@@ -308,7 +310,6 @@ export class TaskListUI extends ViewController {
             if (targetPioneer != null) {
                 currentMapPos = targetPioneer.stayPos;
             }
-
         } else if (condition.type == TaskConditionType.Kill) {
             let targetPioneer: MapPioneerObject = null;
             if (condition.kill.enemyIds.length > 0) {
@@ -358,4 +359,3 @@ export class TaskListUI extends ViewController {
         this.refreshUI();
     }
 }
-

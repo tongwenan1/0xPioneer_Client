@@ -314,6 +314,10 @@ message user_task_did_get {
     required string taskId= 1;
 }
 
+message user_task_step_progress_did_change {
+    required string taskId = 1;
+}
+
 message user_task_step_did_finish {
     required string taskId= 1;
 }
@@ -341,4 +345,10 @@ message mapbuilding_reborn_change {
 
 message reborn_all_res {
     required int32 res = 1;
+}
+
+message pioneer_reborn_res {
+    required int32 res = 1;
+    required string pioneerId = 2;
+    required uint32 rebirthCountTime = 3;
 }

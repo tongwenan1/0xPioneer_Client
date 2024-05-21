@@ -179,6 +179,7 @@ export class Main extends ViewController {
         // inner builing
         NetworkMgr.websocket.on("player_building_levelup_res", DataMgr.player_building_levelup_res);
         // map
+        NetworkMgr.websocket.on("pioneer_reborn_res", DataMgr.pioneer_reborn_res);
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
         NetworkMgr.websocket.on("player_event_res", DataMgr.player_event_res);
         NetworkMgr.websocket.on("player_pioneer_change_show_res", DataMgr.player_pioneer_change_show_res);
@@ -231,7 +232,9 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("user_task_action_getnewtalk", DataMgr.user_task_action_getnewtalk);
         NetworkMgr.websocket.on("user_task_did_get", DataMgr.user_task_did_get);
         NetworkMgr.websocket.on("user_task_did_fail", DataMgr.user_task_did_fail);
+        NetworkMgr.websocket.on("user_task_step_progress_did_change", DataMgr.user_task_step_progress_did_change);
         NetworkMgr.websocket.on("user_task_step_did_finish", DataMgr.user_task_step_did_finish);
+        NetworkMgr.websocket.on("user_task_did_finish", DataMgr.user_task_did_finish);
         NetworkMgr.websocket.on("get_user_task_info_res", DataMgr.get_user_task_info_res);
     }
 

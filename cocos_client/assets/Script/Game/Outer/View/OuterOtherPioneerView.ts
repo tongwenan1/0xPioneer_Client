@@ -11,6 +11,7 @@ export class OuterOtherPioneerView extends Component {
     public refreshUI(pioneer: MapPioneerObject) {
         // name
         this.node.getChildByPath("name").getComponent(Label).string = LanMgr.getLanById(pioneer.name);
+        this.node.getChildByPath("name").getComponent(Label).string = pioneer.name;
         // role
         for (const name of this._roleNames) {
             const view = this.node.getChildByPath("role/" + name);
