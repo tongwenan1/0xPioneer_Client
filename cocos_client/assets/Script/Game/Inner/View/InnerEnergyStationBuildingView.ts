@@ -38,8 +38,8 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
 
         this._getInfoView = this.node.getChildByName("GetInfoView");
 
-        NetworkMgr.websocket.on("fetch_user_psyc_res", this._onFetchUserPsycRes.bind(this));
-        NetworkMgr.websocket.on("player_exp_change", this._onPlayerExpChange.bind(this));
+        NetworkMgr.websocket.on("fetch_user_psyc_res", this._onFetchUserPsycRes);
+        NetworkMgr.websocket.on("player_exp_change", this._onPlayerExpChange);
     }
 
     protected viewDidDestroy(): void {
@@ -151,10 +151,10 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
     // NetworkMgr.websocketMsg.player_get_auto_energy({});
     // }
     //------------------------------- notification
-    private _onFetchUserPsycRes() {
+    private _onFetchUserPsycRes = (e: any) => {
         this._viewRefresh();
     }
-    private _onPlayerExpChange() {
+    private _onPlayerExpChange = (e: any) => {
         this._viewRefresh();
     }
 }

@@ -836,12 +836,9 @@ export class OuterTiledMapActionController extends ViewController {
                             }
                         } else {
                             // attack wormhole countdonw
-                            console.log("exce step1");
                             if (purchaseMovingBuildingId != null) {
-                                console.log("exce step2");
                                 const useBuilding = DataMgr.s.mapBuilding.getBuildingById(purchaseMovingBuildingId) as MapBuildingWormholeObject;
                                 if (!!useBuilding) {
-                                    console.log("exce step3");
                                     useBuilding.wormholdCountdownTime = 30;
                                 }
                             }

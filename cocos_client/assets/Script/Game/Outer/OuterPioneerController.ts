@@ -458,7 +458,6 @@ export class OuterPioneerController extends ViewController {
                 attackView.active = false;
             }
         }
-        console.log("exce end: " + isEndFight);
         if (isAttackBuilding) {
             const buildingView = this.node.getComponent(OuterBuildingController).getBuildingView(defender.id);
             if (buildingView != null) {
@@ -468,7 +467,6 @@ export class OuterPioneerController extends ViewController {
             const defendView = this._pioneerMap.get(defender.id);
             if (isEndFight) {
                 const pioneer = DataMgr.s.pioneer.getById(defender.id);
-                console.log("exce P:" , pioneer)
                 if (pioneer != null && pioneer.show) {
                     this.scheduleOnce(() => {
                         defendView.active = true;

@@ -180,7 +180,6 @@ export class WorldTreasureUI extends ViewController {
         currentRankRewards.sort((a, b)=> {
             return a.level - b.level;
         });
-        console.log("exce cr: ", currentRankRewards)
         const rewardItemMap: Map<number, Node> = new Map();
         for (const data of currentRankRewards) {
             let itemView = null;

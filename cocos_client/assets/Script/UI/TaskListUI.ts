@@ -69,7 +69,6 @@ export class TaskListUI extends ViewController {
             }
             const taskConfig = TaskConfig.getById(currentTask.taskId);
             const taskStepConfig = TaskStepConfig.getById(currentStep?.stepId);
-            console.log("exce confi: ", taskStepConfig);
             const action = instantiate(this._actionItem);
             action.active = true;
             action.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(taskConfig.name);
@@ -127,7 +126,7 @@ export class TaskListUI extends ViewController {
                     let hasFinishedTitle: boolean = false;
                     let hasToDoTitle: boolean = false;
                     for (let i = 0; i < currentTask.steps.length; i++) {
-                        const currentStep = currentTask.steps[currentTask.stepIndex];
+                        let currentStep = currentTask.steps[i];
                         if (i < currentTask.stepIndex) {
                             // step finished
                             if (!hasFinishedTitle) {

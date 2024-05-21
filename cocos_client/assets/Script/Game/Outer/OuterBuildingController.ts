@@ -122,7 +122,6 @@ export class OuterBuildingController extends Component {
                     changed = true;
                 }
                 if (temple != null) {
-                    console.log("exce teml: ", temple);
                     temple.getComponent(OuterBuildingView).refreshUI(building);
                     if (building.stayMapPositions.length > 0) {
                         let worldPos = null;

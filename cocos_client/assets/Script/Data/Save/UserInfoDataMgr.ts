@@ -168,7 +168,6 @@ export default class UserInfoDataMgr {
                         continue;
                     }
                     const currentTimestamp: number = new Date().getTime();
-                    console.log("exce c: " + currentTimestamp + ", u: " + value.upgradeEndTimestamp);
                     if (currentTimestamp < value.upgradeEndTimestamp) { 
                         NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED);
                     } 

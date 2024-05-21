@@ -8,7 +8,7 @@ import ViewController from "../BasicView/ViewController";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import Config from "../Const/Config";
-import { MapMemberFactionType } from "../Const/ConstDefine";
+import { GAME_ENV_IS_DEBUG, MapMemberFactionType } from "../Const/ConstDefine";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import { DataMgr } from "../Data/DataMgr";
@@ -66,7 +66,9 @@ export class MainUI extends ViewController {
             },
             this
         );
-
+        let testButtonActive: boolean = GAME_ENV_IS_DEBUG;
+        this.node.getChildByPath("CommonContent/AddHeatButton-001").active = testButtonActive;
+        this.node.getChildByPath("CommonContent/AddHeatButton-002").active = testButtonActive;
         // test
         //DataMgr.n.websocketMsg.create_pioneer({
         //    type: "0"
@@ -121,6 +123,8 @@ export class MainUI extends ViewController {
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = true;
             this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = false;
         }
+
+        this._gangsterComingTipView.active = false;
     }
 
     //------------------------------------------------- action
@@ -196,6 +200,7 @@ export class MainUI extends ViewController {
                 CommonTools.formatSeconds(pioneer.showHideStruct.countTime),
             ]);
         }
+        this._gangsterComingTipView.active = false;
     }
 
     private _onInnerBuildingLatticeEditChanged() {

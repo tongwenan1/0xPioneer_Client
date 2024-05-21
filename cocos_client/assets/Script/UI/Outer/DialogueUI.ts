@@ -16,6 +16,10 @@ const { ccclass, property } = _decorator;
 @ccclass("DialogueUI")
 export class DialogueUI extends ViewController {
     public dialogShow(talk: TalkConfigData, talkOverCallback: () => void = null) {
+        if (talk.messsages == null || talk.messsages.length <= 0) {
+            UIPanelManger.inst.popPanel();
+            return;
+        }
         this._talk = talk;
         this._talkOverCallback = talkOverCallback;
         this._dialogStep = 0;

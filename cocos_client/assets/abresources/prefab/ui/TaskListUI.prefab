@@ -1776,7 +1776,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 318,
-      "height": 48
+      "height": 52
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1814,7 +1814,7 @@
     "_string": "XXXXXXXddddxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "_horizontalAlign": 0,
     "_verticalAlign": 0,
-    "_actualFontSize": 25,
+    "_actualFontSize": 28,
     "_fontSize": 28,
     "_fontFamily": "Arial",
     "_lineHeight": 26,
@@ -2980,7 +2980,7 @@
         "__id__": 388
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 415

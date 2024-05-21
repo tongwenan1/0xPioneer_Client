@@ -37,7 +37,6 @@ export class NetworkMgr {
     }
 
     public static init(http_host: string, ws_host: string): boolean {
-        console.log("exce init");
         this._httpmsg = new HttpMsg(http_host);
         this._websocketMsg = new WebsocketMsg(ws_host);
         this._ethereumMsg = new EthereumMsg();
