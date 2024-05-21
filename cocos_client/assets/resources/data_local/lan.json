@@ -1197,11 +1197,11 @@
   },
   "501005": {
     "id": "501005",
-    "eng": "defeat the gangster squad"
+    "eng": "Expel the gangsters"
   },
   "501006": {
     "id": "501006",
-    "eng": "kill prophetess"
+    "eng": "Don't trust the prophetess!"
   },
   "501007": {
     "id": "501007",
@@ -1213,7 +1213,7 @@
   },
   "501009": {
     "id": "501009",
-    "eng": "goahead doomsdayGangBigTeam"
+    "eng": "Defend the city"
   },
   "501010": {
     "id": "501010",
@@ -1269,7 +1269,7 @@
   },
   "501023": {
     "id": "501023",
-    "eng": "defeat the gangster squa"
+    "eng": "Defeat the gangsters outside the city."
   },
   "501024": {
     "id": "501024",
@@ -1297,15 +1297,15 @@
   },
   "501030": {
     "id": "501030",
-    "eng": "1111"
+    "eng": "Report back to the prophetess."
   },
   "501031": {
     "id": "501031",
-    "eng": "2222222"
+    "eng": "Kill the lying prophetess."
   },
   "501032": {
     "id": "501032",
-    "eng": "3334343"
+    "eng": "Defeat the gangsters and defend the city."
   },
   "501033": {
     "id": "501033",
@@ -1605,7 +1605,7 @@
   },
   "503067": {
     "id": "503067",
-    "eng": "test talk 16"
+    "eng": "dasa"
   },
   "503068": {
     "id": "503068",
@@ -1618,6 +1618,14 @@
   "503070": {
     "id": "503070",
     "eng": "p98grjwio"
+  },
+  "503071": {
+    "id": "503071",
+    "eng": "Well done!"
+  },
+  "503072": {
+    "id": "503072",
+    "eng": "You saved the city!"
   },
   "504001": {
     "id": "504001",
@@ -1722,6 +1730,10 @@
   "504026": {
     "id": "504026",
     "eng": "2"
+  },
+  "504027": {
+    "id": "504027",
+    "eng": "3333"
   },
   "601001": {
     "id": "601001",

@@ -40,13 +40,6 @@
       [
         1,
         0,
-        "pioneer_3",
-        1,
-        0
-      ],
-      [
-        1,
-        0,
         "npc_3",
         0,
         0
@@ -74,7 +67,7 @@
   },
   "task0102": {
     "id": "task0102",
-    "name": "",
+    "name": "501030",
     "start_action": [],
     "complete_con": [
       1,
@@ -147,7 +140,7 @@
   },
   "task0202": {
     "id": "task0202",
-    "name": "",
+    "name": "501031",
     "start_action": [],
     "complete_con": [
       1,
@@ -171,6 +164,13 @@
         "pioneer_2",
         1,
         0
+      ],
+      [
+        1,
+        0,
+        "pioneer_3",
+        1,
+        0
       ]
     ],
     "quit_con": null,
@@ -179,8 +179,8 @@
   },
   "task0801": {
     "id": "task0801",
-    "name": "",
-    "start_action": null,
+    "name": "501032",
+    "start_action": [],
     "complete_con": [
       1,
       [
@@ -207,7 +207,7 @@
   },
   "task1101": {
     "id": "task1101",
-    "name": "",
+    "name": "501033",
     "start_action": [
       [
         2,

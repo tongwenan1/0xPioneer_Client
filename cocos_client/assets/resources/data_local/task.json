@@ -28,48 +28,18 @@
     ],
     "fail_con": null,
     "steps": [
-      "task0101"
+      "task0101",
+      "task0102"
     ]
   },
   "task02": {
     "id": "task02",
     "name": "501006",
     "type": 1,
-    "pre_con": [
-      2,
-      [
-        1,
-        "talk01",
-        -1
-      ]
-    ],
-    "pre_action": [
-      [
-        5,
-        "talk02",
-        "npc_3",
-        0
-      ]
-    ],
-    "close_con": [
-      2,
-      [
-        3,
-        0,
-        [
-          "gangster_1"
-        ],
-        1
-      ]
-    ],
-    "take_con": [
-      2,
-      [
-        1,
-        "talk02",
-        0
-      ]
-    ],
+    "pre_con": null,
+    "pre_action": null,
+    "close_con": null,
+    "take_con": null,
     "fail_con": null,
     "steps": [
       "task0201",
@@ -80,7 +50,7 @@
     "id": "task03",
     "name": "501001",
     "type": 1,
-    "pre_con": [],
+    "pre_con": null,
     "pre_action": null,
     "close_con": null,
     "take_con": null,
@@ -91,25 +61,8 @@
     "id": "task04",
     "name": "501007",
     "type": 1,
-    "pre_con": [
-      2,
-      [
-        3,
-        0,
-        [
-          "gangster_1"
-        ],
-        1
-      ]
-    ],
-    "pre_action": [
-      [
-        5,
-        "talk03",
-        "npc_4",
-        0
-      ]
-    ],
+    "pre_con": null,
+    "pre_action": null,
     "close_con": null,
     "take_con": null,
     "fail_con": null,
@@ -119,22 +72,8 @@
     "id": "task05",
     "name": "501002",
     "type": 1,
-    "pre_con": [
-      2,
-      [
-        1,
-        "talk01",
-        -1
-      ]
-    ],
-    "pre_action": [
-      [
-        5,
-        "talk04",
-        "npc_0",
-        5
-      ]
-    ],
+    "pre_con": null,
+    "pre_action": null,
     "close_con": null,
     "take_con": null,
     "fail_con": null,
@@ -144,34 +83,9 @@
     "id": "task06",
     "name": "501008",
     "type": 1,
-    "pre_con": [
-      1,
-      [
-        0,
-        "task05",
-        0,
-        1
-      ]
-    ],
-    "pre_action": [
-      [
-        5,
-        "talk05",
-        "npc_2",
-        0
-      ]
-    ],
-    "close_con": [
-      2,
-      [
-        3,
-        0,
-        [
-          "gangster_1"
-        ],
-        1
-      ]
-    ],
+    "pre_con": null,
+    "pre_action": null,
+    "close_con": null,
     "take_con": null,
     "fail_con": null,
     "steps": null
@@ -180,31 +94,8 @@
     "id": "task07",
     "name": "501004",
     "type": 1,
-    "pre_con": [
-      1,
-      [
-        0,
-        "task05",
-        0,
-        1
-      ],
-      [
-        3,
-        0,
-        [
-          "gangster_1"
-        ],
-        1
-      ]
-    ],
-    "pre_action": [
-      [
-        5,
-        "talk06",
-        "npc_0",
-        5
-      ]
-    ],
+    "pre_con": null,
+    "pre_action": null,
     "close_con": null,
     "take_con": null,
     "fail_con": null,
@@ -237,7 +128,7 @@
     "id": "task09",
     "name": "501010",
     "type": 1,
-    "pre_con": [],
+    "pre_con": null,
     "pre_action": null,
     "close_con": null,
     "take_con": null,
@@ -248,33 +139,9 @@
     "id": "task10",
     "name": "501003",
     "type": 1,
-    "pre_con": [
-      2,
-      [
-        1,
-        "talk01",
-        -1
-      ]
-    ],
-    "pre_action": [
-      [
-        5,
-        "talk08",
-        "npc_1",
-        0
-      ]
-    ],
-    "close_con": [
-      2,
-      [
-        3,
-        0,
-        [
-          "npc_0"
-        ],
-        1
-      ]
-    ],
+    "pre_con": null,
+    "pre_action": null,
+    "close_con": null,
     "take_con": null,
     "fail_con": null,
     "steps": null
@@ -286,14 +153,7 @@
     "pre_con": [],
     "pre_action": [],
     "close_con": [],
-    "take_con": [
-      2,
-      [
-        1,
-        "talk16",
-        -1
-      ]
-    ],
+    "take_con": [],
     "fail_con": null,
     "steps": [
       "task1101"
