@@ -445,18 +445,8 @@ export namespace s2c_user {
         newTalk: Ichange_pioneer_newTalk;
     }
 
-    export interface Iplayer_pioneer_change_show_res {
-        res: number;
-        pioneerId: string;
-        show: boolean;
-    }
-    export interface Iplayer_map_pioneer_show_change {
-        pioneerId: string;
-        isShow: number;
-    }
-    export interface Iplayer_map_pioneer_faction_change {
-        pioneerId: string;
-        faction: number;
+    export interface Ipioneer_change {
+        pioneers: share.Ipioneer_data[];
     }
     export interface Iplayer_map_building_show_change {
         buildingId: string;

@@ -13,6 +13,8 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.get_pending_history_res, "get_pending_history_res", "s2c_user.get_pending_history_res");
     pcodec.register_protobuf_msg(protobuf_s2c.pending_change, "pending_change", "s2c_user.pending_change");
     pcodec.register_protobuf_msg(protobuf_s2c.upload_pending_res, "upload_pending_res", "s2c_user.upload_pending_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.get_pioneer_info_res, "get_pioneer_info_res", "s2c_user.get_pioneer_info_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.pioneer_change, "pioneer_change", "s2c_user.pioneer_change");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_move_res, "player_move_res", "s2c_user.player_move_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_talk_select_res, "player_talk_select_res", "s2c_user.player_talk_select_res");
@@ -108,6 +110,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.get_pending_history, "get_pending_history", "c2s_user.get_pending_history");
     pcodec.register_protobuf_msg(protobuf_c2s.upload_pending, "upload_pending", "c2s_user.upload_pending");
     pcodec.register_protobuf_msg(protobuf_c2s.get_block_height, "get_block_height", "c2s_user.get_block_height");
+    pcodec.register_protobuf_msg(protobuf_c2s.get_pioneer_info, "get_pioneer_info", "c2s_user.get_pioneer_info");
 
     pcodec.register_protobuf_msg(protobuf_c2s.player_move, "player_move", "c2s_user.player_move");
     pcodec.register_protobuf_msg(protobuf_c2s.player_talk_select, "player_talk_select", "c2s_user.player_talk_select");

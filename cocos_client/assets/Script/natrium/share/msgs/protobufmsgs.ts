@@ -12,6 +12,7 @@ export enum protobuf_c2s {
     upload_pending = 121,
     get_pending_history = 122,
     get_block_height = 124,
+    get_pioneer_info = 125,
 
     player_move = 200,
     player_talk_select = 201,
@@ -62,6 +63,8 @@ export enum protobuf_s2c {
     upload_pending_res = 10138,
     get_pending_history_res = 10139,
     get_block_height_res = 10142,
+    get_pioneer_info_res = 10143,
+    pioneer_change = 10144,
 
     player_move_res = 20000,
     player_talk_select_res = 20201,
@@ -109,7 +112,7 @@ export enum protobuf_s2c {
     player_heat_change = 20500,
     player_map_building_show_change = 20501,
     player_map_pioneer_show_change = 20502,
-    
+
     user_task_did_change = 20503,
 
     user_task_action_talk = 20508,

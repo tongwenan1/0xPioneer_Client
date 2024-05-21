@@ -26,6 +26,7 @@ export class InnerBuildingController extends ViewController {
     private _latticeNum: number = 2;
 
     private _latticeBuildingOriginalPos: Vec3 = null;
+    private _latticeBuildingOriginalStayLaticeItems: InnerBuildingLatticeStruct[] = [];
     private _latticeEditBuildingView: Node = null;
     private _ghostBuildingView: Node = null;
     protected viewDidLoad(): void {
@@ -285,17 +286,21 @@ export class InnerBuildingController extends ViewController {
         this._buildingMap.forEach((value: InnerBuildingView, key: InnerBuildingType) => {
             if (value.node.getComponent(UITransform).getBoundingBoxToWorld().contains(v2(data.worldPos.x, data.worldPos.y))) {
                 // ghost show
-                this._ghostBuildingView = instantiate(value.node);
-                this._ghostBuildingView.parent = value.node.parent;
-                this._ghostBuildingView.addComponent(UIOpacity).opacity = 150;
+                if (this._ghostBuildingView == null) {
+                    this._ghostBuildingView = instantiate(value.node);
+                    this._ghostBuildingView.parent = value.node.parent;
+                    this._ghostBuildingView.addComponent(UIOpacity).opacity = 150;
+                }
                 // moveBuilding
                 this._latticeBuildingOriginalPos = value.node.position.clone();
                 this._latticeEditBuildingView = value.node;
                 this._latticeEditBuildingView.setSiblingIndex(999);
+                this._latticeBuildingOriginalStayLaticeItems = [];
                 for (const item of this._allLatticeItems) {
                     if (!item.isEmpty && item.stayBuilding == this._latticeEditBuildingView) {
                         item.isEmpty = true;
                         item.stayBuilding = null;
+                        this._latticeBuildingOriginalStayLaticeItems.push(item);
                     }
                 }
                 this._checkEditBuildingCanSetLattice();
@@ -326,10 +331,23 @@ export class InnerBuildingController extends ViewController {
                 this._setBuildingPosByLattles(this._latticeEditBuildingView, useItems);
             } else {
                 this._latticeEditBuildingView.position = this._latticeBuildingOriginalPos;
+                for (const item of this._latticeBuildingOriginalStayLaticeItems) {
+                    item.isEmpty = false;
+                    item.stayBuilding = this._latticeEditBuildingView;
+                }
             }
             for (const item of this._allLatticeItems) {
                 item.showType = InnerBuildingLatticeShowType.None;
             }
+            // change index
+            this._buildingMap.forEach((value: InnerBuildingView, key: InnerBuildingType) => {
+                for (let i = 0; i < this._allLatticeItems.length; i++) {
+                    if (value.node == this._allLatticeItems[i].stayBuilding) {
+                        value.node.setSiblingIndex((i + 1) * 1000 + this._allLatticeItems[i].routerIndex);
+                        break;
+                    }
+                }
+            });
             this._refreshLattice();
         }
         if (this._ghostBuildingView != null) {

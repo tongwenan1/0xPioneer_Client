@@ -137,53 +137,30 @@ export class DataMgr {
     };
 
     //------------------------------------- map
-    public static player_pioneer_change_show_res = (e: any) => {
-        const p: s2c_user.Iplayer_pioneer_change_show_res = e.data;
-        if (p.res !== 1) {
-            return;
-        }
-        const pioneer = DataMgr.s.pioneer.getById(p.pioneerId);
-        if (pioneer == undefined) {
-            return;
-        }
-        if (pioneer.show == p.show) {
-            return;
-        }
-        pioneer.show = p.show;
+    public static pioneer_change = (e: any) => {
+        const p: s2c_user.Ipioneer_change = e.data;
+        const localDatas = DataMgr.s.pioneer.getAll();
+        for (const temple of p.pioneers) {
+            for (let i = 0; i < localDatas.length; i++) {
+                if (temple.id == localDatas[i].id) {
+                    const currentData = localDatas[i];
+                    DataMgr.s.pioneer.replaceData(i, temple);
 
-        if (pioneer.type == MapPioneerType.player) {
-            const player = pioneer as MapPlayerPioneerObject;
-            if (!!player && player.NFTId == null) {
-                PioneerMgr.bindPlayerNFT(player.id);
+                    if (currentData.show != temple.show) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: temple.id, show: temple.show });
+                    }
+                    if (currentData.faction != temple.faction) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, { id: temple.id, show: temple.show });
+                    }
+                    break;
+                }
             }
         }
-
-        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: p.pioneerId, show: p.show });
-    };
-    public static player_map_pioneer_show_change = (e: any) => {
-        const p: s2c_user.Iplayer_map_pioneer_show_change = e.data;
-        const pioneer = DataMgr.s.pioneer.getById(p.pioneerId);
-        if (pioneer == undefined) {
-            return;
-        }
-        if (pioneer.show == !!p.isShow) {
-            return;
-        }
-        pioneer.show = !!p.isShow;
-        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: p.pioneerId, show: !!p.isShow });
-    };
-    public static player_map_pioneer_faction_change = (e: any) => {
-        const p: s2c_user.Iplayer_map_pioneer_faction_change = e.data;
-        const pioneer = DataMgr.s.pioneer.getById(p.pioneerId);
-        if (pioneer == undefined) {
-            return;
-        }
-        if (pioneer.faction == p.faction) {
-            return;
-        }
-        pioneer.faction = p.faction;
-        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, p);
-    };
+    }
+    public static mappioneer_reborn_change = (e: any) => {
+        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("106009"));
+    }
+   
     public static player_actiontype_change = (e: any) => {
         const p: s2c_user.Iplayer_actiontype_change = e.data;
         if (p.res !== 1) {
@@ -200,9 +177,7 @@ export class DataMgr {
             }
         }
     };
-    public static mappioneer_reborn_change = (e: any) => {
-        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("106009"));
-    }
+    
     public static player_move_res = (e: any) => {
         const p: s2c_user.Iplayer_move_res = e.data;
         if (p.res !== 1) {
@@ -578,7 +553,6 @@ export class DataMgr {
                 },
                 centerPos: defenderCenterPositions,
             };
-            console.log("exce userd:", useData);
             NotificationMgr.triggerEvent(NotificationName.MAP_MEMEBER_FIGHT_BEGIN, useData);
 
             let attackRound: boolean = true;

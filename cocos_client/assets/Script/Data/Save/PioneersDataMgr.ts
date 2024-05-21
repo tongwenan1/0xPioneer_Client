@@ -19,7 +19,7 @@ import {
 } from "../../Const/PioneerDefine";
 import { NotificationName } from "../../Const/Notification";
 import NotificationMgr from "../../Basic/NotificationMgr";
-import { Ichange_pioneer_type, s2c_user } from "../../Net/msg/WebsocketMsg";
+import { Ichange_pioneer_type, s2c_user, share } from "../../Net/msg/WebsocketMsg";
 import CommonTools from "../../Tool/CommonTools";
 import { PioneerFactionAction, TaskFactionAction, TaskNpcGetNewTalkAction, TaskShowHideAction, TaskShowHideStatus } from "../../Const/TaskDefine";
 import { NFTPioneerObject } from "../../Const/NFTPioneerDefine";
@@ -93,6 +93,36 @@ export class PioneersDataMgr {
         return this._pioneers.find((p) => p.id === this._currentActionPioneerId && p.type === MapPioneerType.player) as MapPlayerPioneerObject;
     }
     //-------------- change
+    public replaceData(index: number, data: share.Ipioneer_data) {
+        const config = PioneerConfig.getById(data.id);
+        if (config == null) {
+            return;
+        }
+        this._pioneers[index] = {
+            id: data.id,
+            show: data.show,
+            faction: data.faction,
+            type: data.type as MapPioneerType,
+            animType: config.animType,
+            name: config.name,
+            hp: data.hp,
+            hpMax: data.hpMax,
+            attack: data.attack,
+            defend: data.defend,
+            speed: data.speed,
+            stayPos: v2(data.stayPos.x, data.stayPos.y),
+            movePaths: [],
+            actionType: data.actionType as MapPioneerActionType,
+            eventStatus: data.eventStatus,
+            actionBeginTimeStamp: data.actionBeginTimeStamp,
+            actionEndTimeStamp: data.actionEndTimeStamp,
+            logics: [],
+            winProgress: data.winProgress,
+            winExp: data.winExp,
+            drop: [],
+            showHideStruct: null,
+        };
+    }
     public changeCurrentAction(pioneerId: string) {
         this._currentActionPioneerId = pioneerId;
     }

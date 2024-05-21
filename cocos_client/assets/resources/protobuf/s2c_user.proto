@@ -73,6 +73,17 @@ message artifact_change {
     repeated share.artifact_info_data iteminfo = 1;
 }
 
+message pioneer_change {
+    repeated share.pioneer_data pioneers = 1;
+}
+
+// ----------------------------------------------------------------------------
+
+message get_pioneer_info_res {
+    required int32 res = 1;
+    required share.pioneer_data info = 2;
+}
+
 // ----------------------------------------------------------------------------
 
 message player_move_res {
