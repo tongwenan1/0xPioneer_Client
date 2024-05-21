@@ -911,58 +911,20 @@ export class DataMgr {
         let p: s2c_user.Iuser_task_action_getnewtalk = e.data;
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_NEW_TALK, p);
     };
-    public static user_task_did_get = (e: any) => {
-        let p: s2c_user.Iuser_task_did_get = e.data;    
-        for (const task of DataMgr.s.task.getAll()) {
-            if (task.taskId == p.taskId) {
-                task.isGetted = true;
-                break;
-            }
-        }
-        NotificationMgr.triggerEvent(NotificationName.TASK_NEW_GETTED, p.taskId);
-    };
-    public static user_task_did_fail = (e: any) => {
-        let p: s2c_user.Iuser_task_did_fail = e.data;
-        for (const task of DataMgr.s.task.getAll()) {
-            if (task.taskId == p.taskId) {
-                task.isFailed = true;
-                break;
-            }
-        }
-        NotificationMgr.triggerEvent(NotificationName.TASK_FAILED, p.taskId);
-    };
-    public static user_task_step_progress_did_change = (e: any) => {
-        let p: s2c_user.Iuser_task_step_progress_did_change = e.data;
-        for (const task of DataMgr.s.task.getAll()) {
-            if (task.taskId == p.taskId) {
-                if (task.stepIndex < task.steps.length) {
-                    task.steps[task.stepIndex].completeIndex += 1;
+    public static user_task_did_change = (e: any) => {
+        let p: s2c_user.Iuser_task_did_change = e.data;
+        const runDatas = DataMgr.s.task.getAll();
+        for (let i = 0; i < runDatas.length; i++) {
+            if (runDatas[i].taskId == p.task.taskId) {
+                if (!runDatas[i].isGetted && p.task.isGetted) {
+                    NotificationMgr.triggerEvent(NotificationName.TASK_NEW_GETTED);
                 }
+                runDatas[i] = p.task;
+                NotificationMgr.triggerEvent(NotificationName.TASK_DID_CHANGE);
                 break;
             }
         }
-        NotificationMgr.triggerEvent(NotificationName.TASK_STEP_PROGRESS_CHANGED, p.taskId);
     }
-    public static user_task_step_did_finish = (e: any) => {
-        let p: s2c_user.Iuser_task_step_did_finish = e.data;
-        for (const task of DataMgr.s.task.getAll()) {
-            if (task.taskId == p.taskId) {
-                task.stepIndex += 1;
-                break;
-            }
-        }
-        NotificationMgr.triggerEvent(NotificationName.TASK_STEP_FINISHED, p.taskId);
-    };
-    public static user_task_did_finish = (e: any) => {
-        let p: s2c_user.Iuser_task_did_finish = e.data;
-        for (const task of DataMgr.s.task.getAll()) {
-            if (task.taskId == p.taskId) {
-                task.isFinished = true;
-                break;
-            }
-        }
-        NotificationMgr.triggerEvent(NotificationName.TASK_FINISHED, p.taskId);
-    };
     public static get_user_task_info_res = (e: any) => {
         let p: s2c_user.Iget_user_task_info_res = e.data;
         if (p.res == 1) {

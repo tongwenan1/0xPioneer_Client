@@ -74,11 +74,9 @@ export enum NotificationName {
     USERINFO_DID_CHANGE_HEAT,
     //---------------------- task
     TASK_CANNOTGET,
+
+    TASK_DID_CHANGE,
     TASK_NEW_GETTED,
-    TASK_FAILED,
-    TASK_STEP_PROGRESS_CHANGED,
-    TASK_STEP_FINISHED,
-    TASK_FINISHED,
     TASK_LIST,
     //---------------------- map member
     MAP_MEMBER_CHANGE_SHOW_HIDE,

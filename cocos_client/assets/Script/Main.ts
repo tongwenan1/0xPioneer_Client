@@ -230,11 +230,7 @@ export class Main extends ViewController {
 
         // task
         NetworkMgr.websocket.on("user_task_action_getnewtalk", DataMgr.user_task_action_getnewtalk);
-        NetworkMgr.websocket.on("user_task_did_get", DataMgr.user_task_did_get);
-        NetworkMgr.websocket.on("user_task_did_fail", DataMgr.user_task_did_fail);
-        NetworkMgr.websocket.on("user_task_step_progress_did_change", DataMgr.user_task_step_progress_did_change);
-        NetworkMgr.websocket.on("user_task_step_did_finish", DataMgr.user_task_step_did_finish);
-        NetworkMgr.websocket.on("user_task_did_finish", DataMgr.user_task_did_finish);
+        NetworkMgr.websocket.on("user_task_did_change", DataMgr.user_task_did_change);
         NetworkMgr.websocket.on("get_user_task_info_res", DataMgr.get_user_task_info_res);
     }
 

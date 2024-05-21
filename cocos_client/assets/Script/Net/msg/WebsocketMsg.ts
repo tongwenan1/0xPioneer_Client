@@ -647,20 +647,8 @@ export namespace s2c_user {
         pioneerId: string;
         talkId: string;
     }
-    export interface Iuser_task_did_get {
-        taskId: string;
-    }
-    export interface Iuser_task_did_fail {
-        taskId: string;
-    }
-    export interface Iuser_task_step_progress_did_change {
-        taskId: string;
-    }
-    export interface Iuser_task_step_did_finish {
-        taskId: string;
-    }
-    export interface Iuser_task_did_finish {
-        taskId: string;
+    export interface Iuser_task_did_change {
+        task: share.Itask_data;
     }
     export interface Iget_user_task_info_res {
         res: number;
@@ -923,7 +911,7 @@ export namespace share {
         steps: Itask_step_data[];
     }
     export interface Itask_step_data {
-        stepId: string;
+        id: string;
         completeIndex: number;
     }
 }

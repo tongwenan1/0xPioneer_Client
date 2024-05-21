@@ -66,7 +66,7 @@ export class TaskListUI extends ViewController {
                 continue;
             }
             const taskConfig = TaskConfig.getById(currentTask.taskId);
-            const taskStepConfig = TaskStepConfig.getById(currentStep?.stepId);
+            const taskStepConfig = TaskStepConfig.getById(currentStep?.id);
             const action = instantiate(this._actionItem);
             action.active = true;
             action.getChildByName("Title").getComponent(Label).string = LanMgr.getLanById(taskConfig.name);
@@ -148,7 +148,7 @@ export class TaskListUI extends ViewController {
                             finishTitleItem.setParent(this._detailProgressFinishTitleItem.getParent());
                             this._detailProgressList.push(finishTitleItem);
                         } else if (temple.status == 2) {
-                            const stepObj = DataMgr.s.task.getTaskStep(temple.stepData.stepId);
+                            const stepObj = DataMgr.s.task.getTaskStep(temple.stepData.id);
 
                             const finish = instantiate(this._detailProgressFinishItem);
                             finish.active = true;
@@ -163,7 +163,7 @@ export class TaskListUI extends ViewController {
                             toDoTitleItem.setParent(this._detailProgressToDoTitleItem.getParent());
                             this._detailProgressList.push(toDoTitleItem);
                         } else if (temple.status == 4) {
-                            const stepObj = DataMgr.s.task.getTaskStep(temple.stepData.stepId);
+                            const stepObj = DataMgr.s.task.getTaskStep(temple.stepData.id);
 
                             const finish = instantiate(this._detailProgressToDoItem);
                             finish.active = true;
@@ -246,11 +246,7 @@ export class TaskListUI extends ViewController {
         super.viewDidStart();
 
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
-        NotificationMgr.addListener(NotificationName.TASK_NEW_GETTED, this.refreshUI, this);
-        NotificationMgr.addListener(NotificationName.TASK_FAILED, this.refreshUI, this);
-        NotificationMgr.addListener(NotificationName.TASK_STEP_PROGRESS_CHANGED, this.refreshUI, this);
-        NotificationMgr.addListener(NotificationName.TASK_STEP_FINISHED, this.refreshUI, this);
-        NotificationMgr.addListener(NotificationName.TASK_FINISHED, this.refreshUI, this);
+        NotificationMgr.addListener(NotificationName.TASK_DID_CHANGE, this.refreshUI, this);
         NotificationMgr.addListener(NotificationName.TASK_LIST, this.refreshUI, this);
 
         this.refreshUI();
@@ -260,11 +256,7 @@ export class TaskListUI extends ViewController {
         super.viewDidDestroy();
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.TASK_NEW_GETTED, this.refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.TASK_FAILED, this.refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.TASK_STEP_PROGRESS_CHANGED, this.refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.TASK_STEP_FINISHED, this.refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.TASK_FINISHED, this.refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.TASK_DID_CHANGE, this.refreshUI, this);
         NotificationMgr.removeListener(NotificationName.TASK_LIST, this.refreshUI, this);
     }
     //---------------------------------------------------
@@ -286,7 +278,7 @@ export class TaskListUI extends ViewController {
             return;
         }
         const templeTask: share.Itask_data = this._toDoTaskList[index];
-        const currentStepTask: TaskStepObject = DataMgr.s.task.getTaskStep(templeTask.steps[templeTask.stepIndex].stepId);
+        const currentStepTask: TaskStepObject = DataMgr.s.task.getTaskStep(templeTask.steps[templeTask.stepIndex].id);
         if (currentStepTask == null) {
             return;
         }

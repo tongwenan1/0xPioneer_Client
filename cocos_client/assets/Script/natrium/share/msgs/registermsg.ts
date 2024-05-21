@@ -84,11 +84,9 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_heat_change, "player_heat_change", "s2c_user.player_heat_change");
     pcodec.register_protobuf_msg(protobuf_s2c.player_map_building_show_change, "player_map_building_show_change", "s2c_user.player_map_building_show_change");
     pcodec.register_protobuf_msg(protobuf_s2c.player_map_pioneer_show_change, "player_map_pioneer_show_change", "s2c_user.player_map_pioneer_show_change");
-    pcodec.register_protobuf_msg(protobuf_s2c.user_task_did_fail, "user_task_did_fail", "s2c_user.user_task_did_fail");
-    pcodec.register_protobuf_msg(protobuf_s2c.user_task_did_get, "user_task_did_get", "s2c_user.user_task_did_get");
-    pcodec.register_protobuf_msg(protobuf_s2c.user_task_step_progress_did_change, "user_task_step_progress_did_change", "s2c_user.user_task_step_progress_did_change");
-    pcodec.register_protobuf_msg(protobuf_s2c.user_task_step_did_finish, "user_task_step_did_finish", "s2c_user.user_task_step_did_finish");
-    pcodec.register_protobuf_msg(protobuf_s2c.user_task_did_finish, "user_task_did_finish", "s2c_user.user_task_did_finish");
+
+    pcodec.register_protobuf_msg(protobuf_s2c.user_task_did_change, "user_task_did_change", "s2c_user.user_task_did_change");
+
     pcodec.register_protobuf_msg(protobuf_s2c.user_task_action_talk, "user_task_action_talk", "s2c_user.user_task_action_talk");
     pcodec.register_protobuf_msg(protobuf_s2c.player_map_building_faction_change, "player_map_building_faction_change", "s2c_user.player_map_building_faction_change");
     pcodec.register_protobuf_msg(protobuf_s2c.player_map_pioneer_faction_change, "player_map_pioneer_faction_change", "s2c_user.player_map_pioneer_faction_change");

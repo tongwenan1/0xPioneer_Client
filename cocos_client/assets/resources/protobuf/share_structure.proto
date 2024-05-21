@@ -273,7 +273,7 @@ message task_data {
     repeated task_step_data steps = 7;
 }
 message task_step_data {
-    required string stepId = 1;
+    required string id = 1;
     required uint32 completeIndex = 2;
 }
 
