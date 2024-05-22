@@ -930,5 +930,42 @@
         "y": 15
       }
     ]
+  },
+  "wormhole_token": {
+    "id": "wormhole_token",
+    "name": "",
+    "type": "3",
+    "friendly": 0,
+    "show": 0,
+    "level": 1,
+    "nft_pioneer": "",
+    "hp": null,
+    "attack": null,
+    "def": null,
+    "winprogress": null,
+    "exp": null,
+    "animType": "doomsdayGangBigTeam",
+    "drop": null,
+    "pos": [
+      {
+        "x": 28,
+        "y": 17
+      }
+    ],
+    "logics": [
+      {
+        "type": 2,
+        "posx": null,
+        "posy": null,
+        "step": 1,
+        "cd": 2,
+        "direction": 5,
+        "repeat": 9,
+        "interval": null,
+        "range": null,
+        "speed": null,
+        "cond": ""
+      }
+    ]
   }
 }
