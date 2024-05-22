@@ -1895,6 +1895,10 @@
     "__prefab": {
       "__id__": 105
     },
+    "onlyFightPrefab": {
+      "__uuid__": "5df2a489-2836-4c1a-8225-db635d4d677c",
+      "__expectedType__": "cc.Prefab"
+    },
     "selfPioneer": {
       "__uuid__": "5188d708-3946-4137-9228-b409c6a12a42",
       "__expectedType__": "cc.Prefab"

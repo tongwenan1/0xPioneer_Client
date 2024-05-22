@@ -201,8 +201,8 @@ export class WebsocketMsg {
     public player_wormhole_set_attacker(d: c2s_user.Iplayer_wormhole_set_attacker) {
         this.send_packet("player_wormhole_set_attacker", d);
     }
-    public player_wormhole_fight(d: c2s_user.Iplayer_wormhole_fight) {
-        this.send_packet("player_wormhole_fight", d);
+    public player_wormhole_fight_start(d: c2s_user.Iplayer_wormhole_fight_start) {
+        this.send_packet("player_wormhole_fight_start", d);
     }
 
     public fetch_user_psyc(d: c2s_user.Ifetch_user_psyc) {
@@ -391,7 +391,7 @@ export namespace c2s_user {
         pioneerId: string;
         index: number;
     }
-    export interface Iplayer_wormhole_fight {
+    export interface Iplayer_wormhole_fight_start {
         buildingId: string;
     }
 
@@ -621,14 +621,22 @@ export namespace s2c_user {
     }
     export interface Iplayer_wormhole_set_attacker_res {
         res: number;
-        attacker: { [key: string]: share.Iattacker_data };
+        buildingId: string;
+        attacker: { [key: string]: string };
+    }
+    export interface Iplayer_wormhole_fight_attacked_res {
+        res: number;
+        attackerName: string;
+        defenderUid: string;
     }
     export interface Iplayer_wormhole_fight_res {
         res: number;
-        defenderWallet: string;
+        buildingId: string;
+        defenderUid: string;
+        attackerName: string;
+        defenderName: string;
         defenderData: { [key: string]: string };
         fightResult: boolean;
-        buildingId: string;
     }
 
     export interface Iplayer_bind_nft_res {
@@ -727,7 +735,6 @@ export namespace share {
         currFetchTimes: number;
         limitFetchTimes: number;
 
-        attacker: { [key: string]: Iattacker_data };
         defender: { [key: string]: string };
     }
     export interface Ibuilding_data {
@@ -868,7 +875,11 @@ export namespace share {
         hp: number;
         attack: number;
 
-        taskObj: string;
+        wormholdCountdownTime: number;
+
+        gatherPioneerIds: string[];
+
+        attacker: { [key: string]: string };
     }
 
     export interface Iattacker_data {

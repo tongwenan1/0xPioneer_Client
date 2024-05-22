@@ -18,7 +18,7 @@ export class ResOprView extends Component {
 
     /**
      *
-     * @param actionType -999-no action -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel 7-tavern 8-worm 9-wormcancel
+     * @param actionType -999-no action -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel 7-tavern 8-worm 9-wormcancel 10-wormholeattack
      */
     public show(worldPos: Vec3, actionType: number, confirmCallback: (actionType: number) => void) {
         this.node.active = true;
@@ -124,7 +124,7 @@ export class ResOprView extends Component {
 
     private onTapWormholeAttack() {
         if (this._confirmCallback != null) {
-            this._confirmCallback(this._actionType);
+            this._confirmCallback(10);
         }
         this.hide();
     }

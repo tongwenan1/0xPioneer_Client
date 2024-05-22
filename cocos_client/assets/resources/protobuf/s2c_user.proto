@@ -114,6 +114,10 @@ message player_explore_res {
     required int32 res = 1;
 }
 
+message player_fight_start_res {
+    required int32 res = 1;
+}
+
 message player_fight_res {
     required int32 res = 1;
     optional string winnerId = 2;
@@ -220,22 +224,29 @@ message player_wormhole_set_defender_res {
 
 message player_wormhole_set_attacker_res {
     required int32 res = 1;
-    map<string,share.attacker_data> attacker = 2;
+    map<string,string> attacker = 2;
+    required string buildingId = 3;
 }
 
 message player_wormhole_fight_start_res {
     required int32 res = 1;
     required string buildingId = 2;
+}
+
+message player_wormhole_fight_attacked_res {
+    required int32 res = 1;
+    required string attackerName = 2;
     required string defenderUid = 3;
-    map<string,string> defenderData = 4;
 }
 
 message player_wormhole_fight_res {
     required int32 res = 1;
     required string buildingId = 2;
     required string defenderUid = 3;
-    map<string,string> defenderData = 4;
-    required bool fightResult = 5;
+    required string attackerName = 4;
+    required string defenderName = 5;
+    map<string,string> defenderData = 6;
+    required bool fightResult = 7;
 }
 
 message player_bind_nft_res {

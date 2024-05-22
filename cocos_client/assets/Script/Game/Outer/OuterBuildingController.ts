@@ -32,6 +32,9 @@ export class OuterBuildingController extends Component {
         NotificationMgr.addListener(NotificationName.BUILDING_FACTION_CHANGED, this.buildingFacitonChanged, this);
         NotificationMgr.addListener(NotificationName.BUILDING_INSERT_DEFEND_PIONEER, this.buildingInsertDefendPioneer, this);
         NotificationMgr.addListener(NotificationName.BUILDING_REMOVE_DEFEND_PIONEER, this.buildingRemoveDefendPioneer, this);
+
+        NotificationMgr.addListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACKER_CHANGE, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACK_COUNT_DONW_TIME_CHANGE, this._refreshUI, this);
     }
 
     start() {
@@ -96,6 +99,8 @@ export class OuterBuildingController extends Component {
         NotificationMgr.removeListener(NotificationName.BUILDING_FACTION_CHANGED, this.buildingFacitonChanged, this);
         NotificationMgr.removeListener(NotificationName.BUILDING_INSERT_DEFEND_PIONEER, this.buildingInsertDefendPioneer, this);
         NotificationMgr.removeListener(NotificationName.BUILDING_REMOVE_DEFEND_PIONEER, this.buildingRemoveDefendPioneer, this);
+        NotificationMgr.removeListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACKER_CHANGE, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACK_COUNT_DONW_TIME_CHANGE, this._refreshUI, this);
     }
 
     private _refreshUI() {

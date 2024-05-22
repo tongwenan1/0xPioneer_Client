@@ -22,7 +22,7 @@ export class MapActionConfrimTipUI extends ViewController {
         this._stepCount = stepCount;
         this._moveSpeed = moveSpeed;
         this._actionCallback = actionCallback;
-        if (this._targetPos == null || this._stepCount == null || this._moveSpeed == null || actionCallback == null) {
+        if (this._stepCount == null || this._moveSpeed == null || actionCallback == null) {
             return;
         }
         this._refreshUI();
@@ -45,7 +45,10 @@ export class MapActionConfrimTipUI extends ViewController {
     private _refreshUI() {
         this._cost = (ConfigConfig.getConfig(ConfigType.OneStepCostEnergy) as OneStepCostEnergyParam).cost * this._stepCount;
 
-        this.node.getChildByPath("Content/locationView/Label").getComponent(Label).string = "(" + this._targetPos.x + "," + this._targetPos.y + ")";
+        if (this._targetPos != null) {
+            this.node.getChildByPath("Content/locationView/Label").getComponent(Label).string = "(" + this._targetPos.x + "," + this._targetPos.y + ")";
+        }
+       
         this.node.getChildByPath("Content/CostView/Value").getComponent(Label).string = this._cost.toString();
         this.node.getChildByPath("Content/MoveCountView/Value").getComponent(Label).string = this._stepCount.toString();
 

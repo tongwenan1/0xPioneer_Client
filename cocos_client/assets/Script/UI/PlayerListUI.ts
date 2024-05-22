@@ -96,8 +96,6 @@ export class PlayerListUI extends Component {
 
     private onTapPlayerItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
-        // BuildingMgr.hideBuilding("decorate_2");
-        DataMgr.s.mapBuilding.hideBuilding("decorate_2");
         if (GameMainHelper.instance.isGameShowOuter) {
             if (index < this._pioneers.length) {
                 const currentMapPos = this._pioneers[index].stayPos;

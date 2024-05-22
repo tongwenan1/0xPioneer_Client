@@ -33,7 +33,6 @@ message player_sinfo {
     optional uint32 currFetchTimes = 17;
     optional uint32 limitFetchTimes = 18;
 
-    map<string,attacker_data> attacker = 19;
     map<string,string> defender = 20;
 }
 
@@ -107,6 +106,16 @@ message pioneer_data {
     optional string NFTId = 22;
     optional string talkId = 23;
     optional user_map_member_status talkCountStruct = 24;
+
+    repeated fight_res actionFightRes = 25;
+    optional string actionFightId = 26;
+    optional uint32 actionFightWinner = 27;
+    optional uint32 actionFightHp = 28;
+}
+message fight_res {
+    required string attackerId = 1;
+    required string defenderId = 2;
+    required uint32 hp = 3;
 }
 
 message user_map_member_status {
@@ -209,6 +218,8 @@ message mapbuilding_info_data {
     optional uint32 tavernCountdownTime = 24;
 
     repeated string gatherPioneerIds = 25;
+
+    map<string,string> attacker = 26;
 }
 
 message building_resource {

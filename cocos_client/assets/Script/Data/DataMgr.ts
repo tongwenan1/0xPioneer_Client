@@ -26,6 +26,7 @@ import { UIHUDController } from "../UI/UIHUDController";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { UIName } from "../Const/ConstUIDefine";
 import { TreasureGettedUI } from "../UI/TreasureGettedUI";
+import CommonTools from "../Tool/CommonTools";
 
 export class DataMgr {
     public static r: RunData;
@@ -161,7 +162,8 @@ export class DataMgr {
                     if (currentData.actionType != temple.actionType) {
                         if (temple.actionBeginTimeStamp > 0 && temple.actionEndTimeStamp > 0) {
                             localDatas[i].actionBeginTimeStamp = new Date().getTime();
-                            localDatas[i].actionEndTimeStamp = localDatas[i].actionBeginTimeStamp + (temple.actionEndTimeStamp- temple.actionBeginTimeStamp) * 1000;
+                            localDatas[i].actionEndTimeStamp =
+                                localDatas[i].actionBeginTimeStamp + (temple.actionEndTimeStamp - temple.actionBeginTimeStamp) * 1000;
                         }
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: temple.id });
                     }
@@ -187,6 +189,28 @@ export class DataMgr {
                     }
                     if (currentData.faction != currentData.faction) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_FACTION_CHANGE, { id: temple.id });
+                    }
+                    if (currentData.type == MapBuildingType.wormhole) {
+                        const wormObj = currentData as MapBuildingWormholeObject;
+                        const newAttackerMap: Map<number, string> = new Map();
+                        for (const key in temple.attacker) {
+                            if (temple.attacker[key] == null || temple.attacker[key] == "") {
+                                continue;
+                            }
+                            newAttackerMap.set(parseInt(key), temple.attacker[key]);
+                        }
+                        if (!CommonTools.mapsAreEqual(newAttackerMap, wormObj.attacker)) {
+                            NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_WORMHOLE_ATTACKER_CHANGE);
+                            if (NetGlobalData.wormholeAttackBuildingId != null) {
+                                NetworkMgr.websocketMsg.player_wormhole_fight_start({
+                                    buildingId: NetGlobalData.wormholeAttackBuildingId,
+                                });
+                                NetGlobalData.wormholeAttackBuildingId = null;
+                            }
+                        }
+                        if (wormObj.wormholdCountdownTime != temple.wormholdCountdownTime) {
+                            NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_WORMHOLE_ATTACK_COUNT_DONW_TIME_CHANGE);
+                        }
                     }
                     break;
                 }
@@ -217,30 +241,30 @@ export class DataMgr {
     };
 
     //------------------------------------- nft
-    public static player_bind_nft_res = (e: any) => {
-        const p: s2c_user.Iplayer_bind_nft_res = e.data;
-        if (p.res !== 1) {
-            return;
-        }
-        const newNFTObj = DataMgr.s.nftPioneer.NFTGetNew(p.nftData);
-        DataMgr.s.pioneer.bindPlayerNFT(p.pioneerData.id, newNFTObj);
+    // public static player_bind_nft_res = (e: any) => {
+    //     const p: s2c_user.Iplayer_bind_nft_res = e.data;
+    //     if (p.res !== 1) {
+    //         return;
+    //     }
+    //     const newNFTObj = DataMgr.s.nftPioneer.NFTGetNew(p.nftData);
+    //     DataMgr.s.pioneer.bindPlayerNFT(p.pioneerData.id, newNFTObj);
 
-        // bind succeed then set defender
-        let emptyIndex: number = -1;
-        const defenderIds: string[] = DataMgr.s.userInfo.data.wormholeDefenderIds;
-        for (let i = 0; i < defenderIds.length; i++) {
-            if (defenderIds[i] == "") {
-                emptyIndex = i;
-                break;
-            }
-        }
-        if (emptyIndex >= 0) {
-            NetworkMgr.websocketMsg.player_wormhole_set_defender({
-                pioneerId: p.pioneerData.id,
-                index: emptyIndex,
-            });
-        }
-    };
+    //     // bind succeed then set defender
+    //     let emptyIndex: number = -1;
+    //     const defenderIds: string[] = DataMgr.s.userInfo.data.wormholeDefenderIds;
+    //     for (let i = 0; i < defenderIds.length; i++) {
+    //         if (defenderIds[i] == "") {
+    //             emptyIndex = i;
+    //             break;
+    //         }
+    //     }
+    //     if (emptyIndex >= 0) {
+    //         NetworkMgr.websocketMsg.player_wormhole_set_defender({
+    //             pioneerId: p.pioneerData.id,
+    //             index: emptyIndex,
+    //         });
+    //     }
+    // };
     public static player_nft_lvlup_res = (e: any) => {
         const p: s2c_user.Iplayer_nft_lvlup_res = e.data;
         if (p.res !== 1) {
@@ -266,43 +290,16 @@ export class DataMgr {
             DataMgr.s.userInfo.data.wormholeDefenderIds[parseInt(key)] = p.defender[key];
         }
     };
-    public static player_wormhole_set_attacker_res = (e: any) => {
-        const p: s2c_user.Iplayer_wormhole_set_attacker_res = e.data;
+    public static player_wormhole_fight_attacked_res = (e: any) => {
+        const p: s2c_user.Iplayer_wormhole_fight_attacked_res = e.data;
         if (p.res !== 1) {
             return;
         }
-        let buildingId: string = null;
-        const useAttacker = p.attacker;
-        for (const key in useAttacker) {
-            const temp = useAttacker[key];
-            const building = DataMgr.s.mapBuilding.getBuildingById(temp.buildingId);
-            if (building == undefined) {
-                continue;
-            }
-            building.defendPioneerIds[parseInt(key)] = temp.pioneerId;
-
-            buildingId = building.id;
+        if (DataMgr.s.userInfo.data.id != p.defenderUid) {
+            return;
         }
-        // currentBuilding
-        const buildingData = DataMgr.s.mapBuilding.getBuildingById(buildingId);
-        if (buildingData.type == MapBuildingType.wormhole) {
-            const wormholeBuilding = buildingData as MapBuildingWormholeObject;
-            if (!!wormholeBuilding) {
-                let canWormholeAttack: boolean = true;
-                for (let i = 0; i < 3; i++) {
-                    if (buildingData.defendPioneerIds[i] == "" || buildingData.defendPioneerIds[i] == undefined || buildingData.defendPioneerIds[i] == null) {
-                        canWormholeAttack = false;
-                        break;
-                    }
-                }
-                if (canWormholeAttack) {
-                    wormholeBuilding.wormholdCountdownTime = 30;
-                }
-            }
-        }
-        NotificationMgr.triggerEvent(NotificationName.BUILDING_INSERT_DEFEND_PIONEER);
-        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: buildingId });
-    };
+        PioneerMgr.showFakeWormholeFight(p.attackerName);
+    }
     public static player_wormhole_fight_res = (e: any) => {
         const p: s2c_user.Iplayer_wormhole_fight_res = e.data;
         if (p.res !== 1) {
@@ -312,27 +309,27 @@ export class DataMgr {
         if (building == null) {
             return;
         }
-        const tempIds = building.defendPioneerIds.slice();
-        for (const pioneerId of tempIds) {
-            PioneerMgr.pioneerToIdle(pioneerId);
-        }
+        const isSelfAttack: boolean = DataMgr.s.userInfo.data.id != p.defenderUid;
+        const selfName: string = isSelfAttack ? p.attackerName : (p.defenderName + " " + LanMgr.getLanById("110010"));
+        const otherName: string = !isSelfAttack ? p.attackerName : (p.defenderName + " " + LanMgr.getLanById("110010"));
+        const isSelfWin: boolean = isSelfAttack && p.fightResult;
         NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
             attacker: {
-                name: DataMgr.s.userInfo.data.name,
+                name: selfName,
                 avatarIcon: "icon_player_avatar", // todo
-                hp: p.fightResult ? 100 : 0,
+                hp: isSelfWin ? 100 : 0,
                 hpMax: 100,
             },
             defender: {
-                name: p.defenderWallet,
+                name: otherName,
                 avatarIcon: "icon_player_avatar",
-                hp: 50,
+                hp: isSelfWin ? 0 : 50,
                 hpMax: 50,
             },
             attackerIsSelf: true,
             buildingId: null,
             position: null,
-            fightResult: p.fightResult ? "win" : "lose",
+            fightResult: isSelfWin ? "win" : "lose",
             rewards: [],
         });
         NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("106007"));

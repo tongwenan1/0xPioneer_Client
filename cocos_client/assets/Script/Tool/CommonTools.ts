@@ -144,6 +144,25 @@ export default class CommonTools {
         return `${year}/${month}/${day} ${this.formatTimestamp(timestamp)}`;
     }
 
+    public static mapsAreEqual<K, V>(map1: Map<K, V>, map2: Map<K, V>): boolean {
+        if (map1.size !== map2.size) {
+            return false;
+        }
+    
+        // 遍历第一个 Map 的每个键值对
+        for (let [key, value] of map1) {
+            if (!map2.has(key)) {
+                return false;
+            }
+    
+            if (map2.get(key) !== value) {
+                return false;
+            }
+        }
+    
+        return true;
+    }
+
     public static generateUUID() {
         var uuid = "",
             i,

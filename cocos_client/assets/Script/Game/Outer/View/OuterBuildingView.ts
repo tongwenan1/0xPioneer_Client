@@ -120,32 +120,18 @@ export class OuterBuildingView extends ViewController {
             // }
         } else if (building.type == MapBuildingType.wormhole) {
             strongholdIcon.active = true;
-
-            let wormholeHasPioneer: boolean = false;
-            for (let i = 0; i < 3; i++) {
-                if (building.defendPioneerIds[i] != null && building.defendPioneerIds[i] != "" && building.defendPioneerIds[i] != undefined) {
-                    wormholeHasPioneer = true;
-                    break;
-                }
-            }
-            wormholdView.active = wormholeHasPioneer;
-
+            const wormholeObj = building as MapBuildingWormholeObject;
+            wormholdView.active = wormholeObj.attacker.size > 0;
             if (wormholdView.active) {
-                const wormholeObj = building as MapBuildingWormholeObject;
-                const prepareDidFinish: boolean = wormholeObj.wormholdCountdownTime > 0;
+                const currentTimeStamp: number = new Date().getTime();
+                const prepareDidFinish: boolean = wormholeObj.wormholdCountdownTime > currentTimeStamp;
                 const maxWormholdLength: number = 3;
                 for (let i = 0; i < maxWormholdLength; i++) {
                     const tempView = wormholdView.getChildByPath("WormholdContent/Item_" + i);
-
                     const emptyView = tempView.getChildByPath("Empty");
                     const prepareView = tempView.getChildByPath("Prepare");
-                    if (
-                        i < building.defendPioneerIds.length &&
-                        building.defendPioneerIds[i] != null &&
-                        building.defendPioneerIds[i] != "" &&
-                        building.defendPioneerIds[i] != undefined
-                    ) {
-                        const pioneerId = building.defendPioneerIds[i];
+                    if (wormholeObj.attacker.has(i)) {
+                        const pioneerId = wormholeObj.attacker.get(i);
                         emptyView.active = false;
                         prepareView.active = true;
                         prepareView.getChildByPath("Icon/pioneer_default").active = pioneerId == "pioneer_0";
@@ -163,7 +149,7 @@ export class OuterBuildingView extends ViewController {
                     // useLanMgr
                     // wormholdView.getChildByPath("Countdown").getComponent(Label).string = LanMgr.getLanById("107549") + ":" + CommonTools.formatSeconds(wormholeObj.wormholdCountdownTime);
                     wormholdView.getChildByPath("Countdown").getComponent(Label).string =
-                        "wormhold traveling: " + CommonTools.formatSeconds(wormholeObj.wormholdCountdownTime);
+                        "wormhold traveling: " + CommonTools.formatSeconds((wormholeObj.wormholdCountdownTime - currentTimeStamp) / 1000);
                 } else {
                     wormholdView.getChildByPath("Countdown").active = false;
                 }
@@ -254,10 +240,22 @@ export class OuterBuildingView extends ViewController {
         NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE, this._onEnergyNumChanged, this);
         NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
         NotificationMgr.addListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
-        NotificationMgr.addListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_CHANGE, this._onWormholeCountDownTimeDidChange, this);
         NotificationMgr.addListener(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, this._onTavernCountDownTimeDidChange, this);
         NotificationMgr.addListener(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, this._onTavernNewPioneerDidChange, this);
         NotificationMgr.addListener(NotificationName.ARTIFACT_EQUIP_DID_CHANGE, this._onArtifactEquipDidChange, this);
+
+        this.schedule(()=> {
+            if (this._building != null) {
+                if (this._building.type == MapBuildingType.wormhole) {
+                    const wormObj = this._building as MapBuildingWormholeObject;
+                    const currentTimestamp: number = new Date().getTime();
+                    console.log("exce wt: " + wormObj.wormholdCountdownTime + ", c: " + currentTimestamp);
+                    if (wormObj.wormholdCountdownTime >= currentTimestamp) {
+                        this.refreshUI(this._building);
+                    }
+                }
+            }
+        }, 1);
     }
 
     protected viewDidAppear(): void {
@@ -274,10 +272,15 @@ export class OuterBuildingView extends ViewController {
         NotificationMgr.removeListener(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE, this._onEnergyNumChanged, this);
         NotificationMgr.removeListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
         NotificationMgr.removeListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
-        NotificationMgr.removeListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_CHANGE, this._onWormholeCountDownTimeDidChange, this);
         NotificationMgr.removeListener(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, this._onTavernCountDownTimeDidChange, this);
         NotificationMgr.removeListener(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, this._onTavernNewPioneerDidChange, this);
         NotificationMgr.removeListener(NotificationName.ARTIFACT_EQUIP_DID_CHANGE, this._onArtifactEquipDidChange, this);
+    }
+
+    protected viewUpdate(dt: number): void {
+        super.viewUpdate(dt);
+        
+        
     }
 
     //-------------------------------- function
@@ -332,12 +335,6 @@ export class OuterBuildingView extends ViewController {
     }
     private _onResourceChanged() {
         this._refreshBuildTipShow();
-    }
-    private _onWormholeCountDownTimeDidChange(data: { id: string }) {
-        if (this._building == null || this._building.id != data.id) {
-            return;
-        }
-        this.refreshUI(this._building);
     }
     private _onTavernCountDownTimeDidChange(data: { id: string }) {
         if (this._building == null || this._building.id != data.id) {

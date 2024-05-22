@@ -161,7 +161,6 @@ export interface MapPioneerData {
     winExp: number;
     drop: GetPropData[];
 
-    showHideStruct?: MapMemberShowHideCountStruct;
     moveDirection?: MapPioneerMoveDirection;
 
     actionEventId?: string;

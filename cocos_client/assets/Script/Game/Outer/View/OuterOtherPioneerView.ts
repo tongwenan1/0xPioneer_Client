@@ -1,16 +1,43 @@
-import { _decorator, Component, Node, Animation, Vec2, Vec3, CCInteger, CCFloat, TweenAction, tween, Graphics, Color, instantiate, Sprite, Quat, UITransform, misc, Label, ProgressBar, log, v3 } from 'cc';
-import { LanMgr } from '../../../Utils/Global';
-import { MapMemberFactionType } from '../../../Const/ConstDefine';
-import { MapNpcPioneerObject, MapPioneerActionType, MapPioneerMoveDirection, MapPioneerObject, MapPioneerType } from '../../../Const/PioneerDefine';
+import {
+    _decorator,
+    Component,
+    Node,
+    Animation,
+    Vec2,
+    Vec3,
+    CCInteger,
+    CCFloat,
+    TweenAction,
+    tween,
+    Graphics,
+    Color,
+    instantiate,
+    Sprite,
+    Quat,
+    UITransform,
+    misc,
+    Label,
+    ProgressBar,
+    log,
+    v3,
+} from "cc";
+import { LanMgr } from "../../../Utils/Global";
+import { MapMemberFactionType } from "../../../Const/ConstDefine";
+import { MapNpcPioneerObject, MapPioneerActionType, MapPioneerMoveDirection, MapPioneerObject, MapPioneerType } from "../../../Const/PioneerDefine";
 
 const { ccclass, property } = _decorator;
 
-@ccclass('OuterOtherPioneerView')
+@ccclass("OuterOtherPioneerView")
 export class OuterOtherPioneerView extends Component {
-
     public refreshUI(pioneer: MapPioneerObject) {
         // name
-        this.node.getChildByPath("name").getComponent(Label).string = LanMgr.getLanById(pioneer.name);
+        let name = "";
+        if (LanMgr.getLanById(pioneer.name).indexOf("LanguageErr") != -1) {
+            name = pioneer.name;
+        } else {
+            name = LanMgr.getLanById(pioneer.name);
+        }
+        this.node.getChildByPath("name").getComponent(Label).string = name;
         // role
         for (const name of this._roleNames) {
             const view = this.node.getChildByPath("role/" + name);
@@ -63,7 +90,6 @@ export class OuterOtherPioneerView extends Component {
             statusView.getChildByPath("Icon/Battle").active = true;
             statusView.getChildByPath("Icon/Search").active = false;
             statusView.getChildByName("Level").getComponent(Label).string = "Lv.1";
-
         } else if (pioneer.type == MapPioneerType.gangster && pioneer.faction == MapMemberFactionType.friend) {
             statusView.active = true;
             // useLanMgr
@@ -104,7 +130,7 @@ export class OuterOtherPioneerView extends Component {
         "chief",
         "rabbit",
         "doc",
-        "marauder"
+        "marauder",
     ];
     onLoad() {
         this._hasTaskView = this.node.getChildByPath("task_status/talkbubble");
@@ -112,20 +138,13 @@ export class OuterOtherPioneerView extends Component {
         this._taskPreparingView = this.node.getChildByPath("task_status/prepare_task");
         this._timeCountLabel = this.node.getChildByPath("task_status/task_hide_count").getComponent(Label);
 
-
         this._hasTaskView.active = false;
         this._playerChattingView.active = false;
         this._taskPreparingView.active = false;
         this._timeCountLabel.node.active = false;
     }
 
-    start() {
+    start() {}
 
-    }
-
-    update(deltaTime: number) {
-
-    }
+    update(deltaTime: number) {}
 }
-
-

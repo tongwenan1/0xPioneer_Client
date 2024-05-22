@@ -243,9 +243,9 @@ export class EventUI extends ViewController {
         if (event.map_pioneer_unlock != null) {
             for (const [pioneerId, type] of event.map_pioneer_unlock) {
                 if (type == 1) {
-                    PioneerMgr.showPioneer(pioneerId);
+                    // PioneerMgr.showPioneer(pioneerId);
                 } else {
-                    DataMgr.s.pioneer.changeShow(pioneerId, false);
+                    // DataMgr.s.pioneer.changeShow(pioneerId, false);
                 }
             }
         }

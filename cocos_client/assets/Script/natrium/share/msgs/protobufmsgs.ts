@@ -53,6 +53,7 @@ export enum protobuf_c2s {
 
     player_gather_start = 500,
     player_explore_start = 501,
+    player_fight_start = 502,
     player_wormhole_fight_start = 503,
 }
 
@@ -133,6 +134,8 @@ export enum protobuf_s2c {
 
     player_gather_start_res = 50000,
     player_explore_start_res = 50001,
-    player_wormhole_fight_start_res = 50002,
-    player_wormhole_fight_res = 50003,
+    player_fight_start_res = 50002,
+    player_wormhole_fight_start_res = 50003,
+    player_wormhole_fight_attacked_res = 50004,
+    player_wormhole_fight_res = 50005,
 }

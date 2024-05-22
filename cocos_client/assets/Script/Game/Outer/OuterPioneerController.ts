@@ -44,6 +44,9 @@ const { ccclass, property } = _decorator;
 
 @ccclass("OuterPioneerController")
 export class OuterPioneerController extends ViewController {
+    @property(Prefab)
+    private onlyFightPrefab: Prefab = null;
+
     public showMovingPioneerAction(tilePos: TilePos, movingPioneerId: string, usedCursor: OuterMapCursorView) {
         this._actionShowPioneerId = movingPioneerId;
         this._actionUsedCursor = usedCursor;
@@ -174,8 +177,7 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_BEGIN, this._onBeginFight, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_DID_ATTACK, this._onFightDidAttack, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_END, this._onEndFight, this);
-
-        NotificationMgr.addListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_FINISH, this._onWormholeCountDownTimeDidFinish, this);
+        NotificationMgr.addListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
     }
 
     protected viewDidStart() {
@@ -268,8 +270,6 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_BEGIN, this._onBeginFight, this);
         NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_DID_ATTACK, this._onFightDidAttack, this);
         NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_END, this._onEndFight, this);
-
-        NotificationMgr.removeListener(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_FINISH, this._onWormholeCountDownTimeDidFinish, this);
     }
 
     private _refreshUI() {
@@ -764,17 +764,26 @@ export class OuterPioneerController extends ViewController {
             fightView.node.destroy();
             this._fightViewMap.delete(data.fightId);
         }
-        
+
         if (data.playerPioneerId != null) {
             this._checkInMainCityRangeAndHealHpToMax(data.playerPioneerId);
         }
     }
 
-    private _onWormholeCountDownTimeDidFinish(data: { id: string }) {
-        const building = DataMgr.s.mapBuilding.getBuildingById(data.id);
-        if (building == null) {
-            return;
+    private _onMapFakeFightShow(data: { stayPositions: Vec2[] }) {
+        const fightView = instantiate(this.onlyFightPrefab);
+        fightView.setParent(this.node);
+        if (data.stayPositions.length == 7) {
+            fightView.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(data.stayPositions[3].x, data.stayPositions[3].y));
+        } else if (data.stayPositions.length == 3) {
+            const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(data.stayPositions[0].x, data.stayPositions[0].y);
+            const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(data.stayPositions[1].x, data.stayPositions[1].y);
+            fightView.setWorldPosition(v3(beginWorldPos.x, endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2, 0));
+        } else if (data.stayPositions.length > 0) {
+            fightView.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(data.stayPositions[0].x, data.stayPositions[0].y));
         }
-        NetworkMgr.websocketMsg.player_wormhole_fight({ buildingId: data.id });
+        this.scheduleOnce(()=> {
+            fightView.destroy();
+        }, 5);
     }
 }

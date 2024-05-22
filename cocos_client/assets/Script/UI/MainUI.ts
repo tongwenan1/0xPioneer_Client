@@ -181,6 +181,9 @@ export class MainUI extends ViewController {
         }
     }
     private onTapRefreshMap() {
+
+        PioneerMgr.showFakeWormholeFight("fake attacker");
+        return;
         NetworkMgr.websocketMsg.reborn_all();
     }
     //----------------------------------------------------- notification
@@ -192,14 +195,14 @@ export class MainUI extends ViewController {
         if (pioneer == undefined) {
             return;
         }
-        if (pioneer.id == "gangster_3" && pioneer.showHideStruct != null && pioneer.showHideStruct.countTime > 0 && pioneer.showHideStruct.isShow) {
-            this._gangsterComingTipView.active = true;
-            this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = false;
-            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
-            this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.replaceLanById("200003", [
-                CommonTools.formatSeconds(pioneer.showHideStruct.countTime),
-            ]);
-        }
+        // if (pioneer.id == "gangster_3" && pioneer.showHideStruct != null && pioneer.showHideStruct.countTime > 0 && pioneer.showHideStruct.isShow) {
+        //     this._gangsterComingTipView.active = true;
+        //     this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = false;
+        //     this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
+        //     this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.replaceLanById("200003", [
+        //         CommonTools.formatSeconds(pioneer.showHideStruct.countTime),
+        //     ]);
+        // }
         this._gangsterComingTipView.active = false;
     }
 

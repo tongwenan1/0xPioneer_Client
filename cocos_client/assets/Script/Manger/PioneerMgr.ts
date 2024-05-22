@@ -20,15 +20,18 @@ import {
     MapPlayerPioneerObject,
     MapPioneerAttributesChangeModel,
     MapPioneerEventAttributesChangeType,
+    PioneerConfigData,
 } from "../Const/PioneerDefine";
 import { DataMgr } from "../Data/DataMgr";
-import { MapBuildingMainCityObject, MapBuildingObject, MapBuildingTavernObject } from "../Const/MapBuilding";
+import { MapBuildingMainCityObject, MapBuildingObject, MapBuildingTavernObject, MapBuildingWormholeObject } from "../Const/MapBuilding";
 import ItemConfigDropTool from "../Tool/ItemConfigDropTool";
 import { PioneersDataMgr } from "../Data/Save/PioneersDataMgr";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { UIName } from "../Const/ConstUIDefine";
 import { TavernUI } from "../UI/Outer/TavernUI";
+import PioneerConfig from "../Config/PioneerConfig";
+import { TilePos } from "../Game/TiledMap/TileTool";
 
 export default class PioneerMgr {
     public initData() {
@@ -77,27 +80,27 @@ export default class PioneerMgr {
         }
     }
     public showPioneer(pioneerId: string) {
-        if (DataMgr.s.pioneer.changeShow(pioneerId, true)) {
-            const pioneer = DataMgr.s.pioneer.getById(pioneerId);
-            if (pioneer.type == MapPioneerType.player) {
-                DataMgr.s.settlement.addObj({
-                    level: DataMgr.s.userInfo.data.level,
-                    newPioneerIds: [pioneerId],
-                    killEnemies: 0,
-                    gainResources: 0,
-                    consumeResources: 0,
-                    gainTroops: 0,
-                    consumeTroops: 0,
-                    gainEnergy: 0,
-                    consumeEnergy: 0,
-                    exploredEvents: 0,
-                });
-                const player = pioneer as MapPlayerPioneerObject;
-                if (!!player && player.NFTId == null) {
-                    this.bindPlayerNFT(player.id);
-                }
-            }
-        }
+        // if (DataMgr.s.pioneer.changeShow(pioneerId, true)) {
+        //     const pioneer = DataMgr.s.pioneer.getById(pioneerId);
+        //     if (pioneer.type == MapPioneerType.player) {
+        //         DataMgr.s.settlement.addObj({
+        //             level: DataMgr.s.userInfo.data.level,
+        //             newPioneerIds: [pioneerId],
+        //             killEnemies: 0,
+        //             gainResources: 0,
+        //             consumeResources: 0,
+        //             gainTroops: 0,
+        //             consumeTroops: 0,
+        //             gainEnergy: 0,
+        //             consumeEnergy: 0,
+        //             exploredEvents: 0,
+        //         });
+        //         const player = pioneer as MapPlayerPioneerObject;
+        //         if (!!player && player.NFTId == null) {
+        //             this.bindPlayerNFT(player.id);
+        //         }
+        //     }
+        // }
     }
     // public linkNFTToPioneer(pioneerId: string, NFTId: string) {
     //     const findPioneer = this.getPioneerById(pioneerId);
@@ -113,18 +116,6 @@ export default class PioneerMgr {
         for (const building of DataMgr.s.mapBuilding.getStrongholdBuildings()) {
             if (building.defendPioneerIds.indexOf(pioneerId) != -1) {
                 DataMgr.s.mapBuilding.removeDefendPioneer(building.id, pioneerId);
-                break;
-            }
-        }
-        // check wormhole to idle
-        for (const building of DataMgr.s.mapBuilding.getWormholeBuildings()) {
-            const index: number = building.defendPioneerIds.indexOf(pioneerId);
-            if (index >= 0) {
-                NetworkMgr.websocketMsg.player_wormhole_set_attacker({
-                    pioneerId: "",
-                    buildingId: building.id,
-                    index: index,
-                });
                 break;
             }
         }
@@ -147,6 +138,24 @@ export default class PioneerMgr {
             eventData: currentEvent,
         });
         NetworkMgr.websocketMsg.player_event_select({ pioneerId: pioneerId, buildingId: buildingId, eventId: currentEvent.id });
+    }
+
+    public showFakeWormholeFight(attackerPlayerName: string) {
+        const wormholePioneer = DataMgr.s.pioneer.getById("wormhole_token");
+        const mainCity = DataMgr.s.mapBuilding.getBuildingById("building_1");
+
+        if (wormholePioneer == null || mainCity == null) {
+            return;
+        }
+        wormholePioneer.name = attackerPlayerName;
+        wormholePioneer.show = true;
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: wormholePioneer.id, show: wormholePioneer.show });
+
+        const moveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(wormholePioneer.stayPos, mainCity.stayMapPositions[0]);
+        if (!moveData.canMove) {
+            return;
+        }
+        DataMgr.s.pioneer.beginMove(wormholePioneer.id, moveData.path);
     }
 
     public fight(
@@ -308,6 +317,12 @@ export default class PioneerMgr {
                 });
             }
             if (stayBuilding.type == MapBuildingType.city) {
+                if (pioneer.id == "wormhole_token") {
+                    pioneer.show = false;
+                    NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: pioneer.id, show: pioneer.show });
+                    NotificationMgr.triggerEvent(NotificationName.MAP_FAKE_FIGHT_SHOW, { stayPositions: stayBuilding.stayMapPositions });
+                }
+                return;
                 if (
                     (pioneer.type == MapPioneerType.player &&
                         pioneer.faction == MapMemberFactionType.friend &&
@@ -402,15 +417,12 @@ export default class PioneerMgr {
                 } else if (tempAction == 2) {
                 }
             } else if (stayBuilding.type == MapBuildingType.wormhole) {
+                const wormholeObj = stayBuilding as MapBuildingWormholeObject;
                 if (pioneer.type == MapPioneerType.player) {
                     if (stayBuilding.faction != MapMemberFactionType.enemy) {
                         let emptyIndex: number = -1;
                         for (let i = 0; i < 3; i++) {
-                            if (
-                                stayBuilding.defendPioneerIds[i] == "" ||
-                                stayBuilding.defendPioneerIds[i] == null ||
-                                stayBuilding.defendPioneerIds[i] == undefined
-                            ) {
+                            if (!wormholeObj.attacker.has(i)) {
                                 emptyIndex = i;
                                 break;
                             }

@@ -500,7 +500,7 @@ export class OuterTiledMapActionController extends ViewController {
                 stayPositons = stayBuilding.stayMapPositions;
                 purchaseMovingBuildingId = stayBuilding.id;
                 const tempWormhole = stayBuilding as MapBuildingWormholeObject;
-                if (tempWormhole.wormholdCountdownTime > 0) {
+                if (tempWormhole.wormholdCountdownTime > new Date().getTime()) {
                     return;
                 }
             } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing) {
@@ -530,7 +530,7 @@ export class OuterTiledMapActionController extends ViewController {
                 } else if (stayBuilding.type == MapBuildingType.wormhole) {
                     actionType = 8;
                     const tempWormhole = stayBuilding as MapBuildingWormholeObject;
-                    if (tempWormhole.wormholdCountdownTime > 0) {
+                    if (tempWormhole.wormholdCountdownTime > new Date().getTime()) {
                         return;
                     }
                 } else if (stayBuilding.type == MapBuildingType.event) {
@@ -716,6 +716,7 @@ export class OuterTiledMapActionController extends ViewController {
                     result.node
                         .getComponent(MapActionConfrimTipUI)
                         .configuration(taregtPos, movePaths.length, currentActionPioneer.speed, async (confirmed: boolean, cost: number) => {
+                            console.log("exce con: " + confirmed);
                             if (confirmed) {
                                 if (cost > 0) {
                                     const ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
@@ -724,7 +725,8 @@ export class OuterTiledMapActionController extends ViewController {
                                         return;
                                     }
                                 }
-                                if (useActionType == 8) {
+                                console.log("exce uset: " + useActionType);
+                                if (useActionType == 10) {
                                     // wormhole
                                     const result = await UIPanelManger.inst.pushPanel(HUDName.Alter, UIPanelLayerType.HUD);
                                     if (!result.success) {
@@ -733,52 +735,69 @@ export class OuterTiledMapActionController extends ViewController {
                                     // useLanMgr
                                     // const alterString: string = LanMgr.getLanById("106006");
                                     const alterString: string = "Use Current Pioneers To Attack Wormhole?";
-                                    result.node.getComponent(AlterView).showTip(alterString, () => {
-                                        if (currentActionPioneer.actionType != MapPioneerActionType.wormhole) {
-                                            PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, purchaseMovingPioneerId);
-                                            PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, purchaseMovingBuildingId);
+                                    result.node.getComponent(AlterView).showTip(
+                                        alterString,
+                                        () => {
+                                            if (currentActionPioneer.actionType != MapPioneerActionType.wormhole) {
+                                                PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, purchaseMovingPioneerId);
+                                                PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, purchaseMovingBuildingId);
 
-                                            const uploadPath: { x: number; y: number }[] = [];
-                                            for (const path of movePaths) {
-                                                uploadPath.push({ x: path.x, y: path.y });
-                                            }
-                                            let targetPosString: string = "";
-                                            if (uploadPath.length > 0) {
-                                                targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
-                                            }
-                                            DataMgr.setTempSendData("player_move_res", {
-                                                pioneerId: currentActionPioneer.id,
-                                                movePath: movePaths,
-                                                costEnergyNum: cost,
-                                            });
-                                            NetworkMgr.websocketMsg.player_move({
-                                                pioneerId: currentActionPioneer.id,
-                                                movePath: JSON.stringify(uploadPath),
-                                                targetPos: targetPosString,
-                                                feeTxhash: "",
-                                            });
-                                            if (purchaseMovingBuildingId != null) {
-                                                NetGlobalData.wormholeAttackBuildingId = purchaseMovingBuildingId;
-                                            }
-                                        } else {
-                                            // attack wormhole countdonw
-                                            if (purchaseMovingBuildingId != null) {
-                                                const useBuilding = DataMgr.s.mapBuilding.getBuildingById(
-                                                    purchaseMovingBuildingId
-                                                ) as MapBuildingWormholeObject;
-                                                if (!!useBuilding) {
-                                                    useBuilding.wormholdCountdownTime = 30;
+                                                const uploadPath: { x: number; y: number }[] = [];
+                                                for (const path of movePaths) {
+                                                    uploadPath.push({ x: path.x, y: path.y });
+                                                }
+                                                let targetPosString: string = "";
+                                                if (uploadPath.length > 0) {
+                                                    targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
+                                                }
+                                                DataMgr.setTempSendData("player_move_res", {
+                                                    pioneerId: currentActionPioneer.id,
+                                                    movePath: movePaths,
+                                                    costEnergyNum: cost,
+                                                });
+                                                NetworkMgr.websocketMsg.player_move({
+                                                    pioneerId: currentActionPioneer.id,
+                                                    movePath: JSON.stringify(uploadPath),
+                                                    targetPos: targetPosString,
+                                                    feeTxhash: "",
+                                                });
+                                                if (purchaseMovingBuildingId != null) {
+                                                    NetGlobalData.wormholeAttackBuildingId = purchaseMovingBuildingId;
+                                                }
+                                            } else {
+                                                // attack wormhole countdonw
+                                                if (purchaseMovingBuildingId != null) {
+                                                    NetworkMgr.websocketMsg.player_wormhole_fight_start({
+                                                        buildingId: purchaseMovingBuildingId,
+                                                    });
                                                 }
                                             }
+                                        },
+                                        () => {
+                                            outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
                                         }
-                                    });
+                                    );
                                     return;
                                 }
 
                                 // other action
-                                if (useActionType === 6 || useActionType === 9) {
+                                if (useActionType === 6) {
                                     // cancel camp
                                     PioneerMgr.pioneerToIdle(currentActionPioneer.id);
+                                } else if (useActionType === 9) {
+                                    // cancel wormhole
+                                    for (const temple of DataMgr.s.mapBuilding.getWormholeBuildings()) {
+                                        const wormObj = temple as MapBuildingWormholeObject;
+                                        wormObj.attacker.forEach((value: string, key: number) => {
+                                            if (value == currentActionPioneer.id) {
+                                                NetworkMgr.websocketMsg.player_wormhole_set_attacker({
+                                                    pioneerId: "",
+                                                    buildingId: wormObj.id,
+                                                    index: key,
+                                                });
+                                            }
+                                        });
+                                    }
                                 } else {
                                     // move to near pioneer or building
                                     PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, purchaseMovingPioneerId);

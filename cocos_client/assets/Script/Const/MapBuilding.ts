@@ -39,10 +39,6 @@ export interface MapBuildingBaseData {
     type: MapBuildingType;
     level: number;
     show: boolean;
-    showHideStruct: {
-        countTime: number;
-        isShow: boolean;
-    };
     faction: MapMemberFactionType;
     defendPioneerIds: string[];
 
@@ -55,6 +51,8 @@ export interface MapBuildingBaseData {
     originalEventId: string;
     exp: number;
     animType: string;
+
+    gatherPioneerIds: string[];
 }
 export interface MapBuildingMainCityData extends MapBuildingBaseData {
     hpMax: number;
@@ -64,6 +62,7 @@ export interface MapBuildingMainCityData extends MapBuildingBaseData {
 }
 export interface MapBuildingWormholeData extends MapBuildingBaseData {
     wormholdCountdownTime: number;
+    attacker: Map<number, string>;
 }
 export interface MapBuildingTavernData extends MapBuildingBaseData {
     tavernCountdownTime: number;

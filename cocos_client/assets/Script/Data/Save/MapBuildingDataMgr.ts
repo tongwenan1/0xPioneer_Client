@@ -43,24 +43,7 @@ export class MapBuildingDataMgr {
             const element: share.Imapbuilding_info_data = mapBuilings[key];
             this._building_data.push(this._convertNetDataToObject(element));
         }
-        if (NetGlobalData.userInfo != null && NetGlobalData.userInfo.attacker != null) {
-            for (const building of this._building_data) {
-                if (building.type != MapBuildingType.wormhole) {
-                    continue;
-                }
-                building.defendPioneerIds = [];
-            }
-            const useAttacker = NetGlobalData.userInfo.attacker;
-            for (const key in useAttacker) {
-                const temp = useAttacker[key];
-                const building = this.getBuildingById(temp.buildingId);
-                if (building == undefined) {
-                    continue;
-                }
-                building.defendPioneerIds[parseInt(key)] = temp.pioneerId;
-                console.log("exce b:", building.defendPioneerIds);
-            }
-        }
+        console.log("exce m:", this._building_data);
         this._initInterval();
         CLog.debug("MapBuildingDataMgr: loadObj/building_data, ", this._building_data);
     }
@@ -75,7 +58,6 @@ export class MapBuildingDataMgr {
             type: element.type,
             level: element.level,
             show: element.show,
-            showHideStruct: null,
             faction: element.faction,
             defendPioneerIds: element.defendPioneerIds,
             stayPosType: element.stayPosType,
@@ -86,6 +68,7 @@ export class MapBuildingDataMgr {
             exp: element.exp,
             animType: element.animType,
             stayMapPositions: stayPos,
+            gatherPioneerIds: element.gatherPioneerIds,
         };
         if (baseObj.type == MapBuildingType.city) {
             const cityObj: MapBuildingMainCityObject = {
@@ -97,10 +80,19 @@ export class MapBuildingDataMgr {
             };
             return cityObj;
         } else if (baseObj.type == MapBuildingType.wormhole) {
+            const attackerMap: Map<number, string> = new Map();
+            for (const key in element.attacker) {
+                if (element.attacker[key] == null || element.attacker[key] == "") {
+                    continue;
+                }
+                attackerMap.set(parseInt(key), element.attacker[key]);
+            }
             const wormholeObj: MapBuildingWormholeObject = {
                 ...baseObj,
-                wormholdCountdownTime: 0,
+                wormholdCountdownTime: element.wormholdCountdownTime * 1000,
+                attacker: attackerMap,
             };
+            console.log('exce wobj:', wormholeObj);
             return wormholeObj;
         } else {
             return baseObj;
@@ -109,22 +101,11 @@ export class MapBuildingDataMgr {
     private _initInterval() {
         setInterval(() => {
             for (const obj of this._building_data) {
-                if (obj.type == MapBuildingType.wormhole) {
-                    const wormhole = obj as MapBuildingWormholeObject;
-                    if (wormhole.wormholdCountdownTime > 0) {
-                        wormhole.wormholdCountdownTime -= 1;
-                        
-                        NotificationMgr.triggerEvent(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_CHANGE, { id: wormhole.id });
-
-                        if (wormhole.wormholdCountdownTime == 0) {
-                            NotificationMgr.triggerEvent(NotificationName.BUILDING_WORMHOLE_COUNT_DOWN_TIME_DID_FINISH, { id: wormhole.id });
-                        }
-                    }
-                } else if (obj.type == MapBuildingType.tavern) {
+                if (obj.type == MapBuildingType.tavern) {
                     const tavern = obj as MapBuildingTavernObject;
                     if (tavern.tavernCountdownTime > 0) {
                         tavern.tavernCountdownTime -= 1;
-                        
+
                         NotificationMgr.triggerEvent(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, { id: tavern.id });
 
                         if (tavern.tavernCountdownTime == 0) {
@@ -136,8 +117,6 @@ export class MapBuildingDataMgr {
         }, 1000);
     }
 
-    
-    
     // get obj
     public getObj_building() {
         return this._building_data;
@@ -160,7 +139,7 @@ export class MapBuildingDataMgr {
             // go wormhole fight countdown
             (findBuilding as MapBuildingWormholeObject).wormholdCountdownTime = 30;
         }
-        
+
         NotificationMgr.triggerEvent(NotificationName.BUILDING_INSERT_DEFEND_PIONEER);
     }
     public removeDefendPioneer(buildingId: string, pioneerId: string) {
@@ -181,7 +160,6 @@ export class MapBuildingDataMgr {
         if (findBuilding.type != MapBuildingType.city) return;
 
         (findBuilding as MapBuildingMainCityObject).taskObj = task;
-        
     }
     public buildingClearTask(buildingId: string) {
         const findBuilding = this.getBuildingById(buildingId);
@@ -189,21 +167,18 @@ export class MapBuildingDataMgr {
         if (findBuilding.type != MapBuildingType.city) return;
 
         (findBuilding as MapBuildingMainCityObject).taskObj = null;
-        
     }
     public changeBuildingEventId(buidingId: string, eventId: string) {
         const findBuilding = this.getBuildingById(buidingId);
         if (findBuilding == null) return;
 
         findBuilding.eventId = eventId;
-        
     }
     public fillBuildingStayPos(buildingId: string, newPosions: Vec2[]) {
         const findBuilding = this.getBuildingById(buildingId);
         if (findBuilding == null) return;
 
         findBuilding.stayMapPositions = newPosions;
-        
     }
     public getResourceBuildings() {
         return this._building_data.filter((buiding) => {
@@ -226,7 +201,6 @@ export class MapBuildingDataMgr {
         if (findBuilding.type != MapBuildingType.tavern) return;
         const tavern = findBuilding as MapBuildingTavernObject;
         tavern.tavernCountdownTime = recruitTime;
-        
     }
     public changeBuildingNewNft(buildingId: string, nft: NFTPioneerObject) {
         const findBuilding = this.getBuildingById(buildingId);
@@ -234,7 +208,7 @@ export class MapBuildingDataMgr {
         if (findBuilding.type != MapBuildingType.tavern) return;
         const tavern = findBuilding as MapBuildingTavernObject;
         tavern.nft = nft;
-        
+
         NotificationMgr.triggerEvent(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, { id: buildingId });
     }
     public getShowBuildingsNearMapPos(mapPos: Vec2, range: number) {
