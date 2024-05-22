@@ -16,7 +16,7 @@ export enum protobuf_c2s {
 
     player_move = 200,
     player_talk_select = 201,
-    player_gather = 202,
+    
     player_explore = 203,
     player_fight = 204,
     player_event_select = 205,
@@ -53,6 +53,7 @@ export enum protobuf_c2s {
     fetch_user_psyc = 400,
 
     player_gather_start = 500,
+    player_explore_start = 501,
 }
 
 export enum protobuf_s2c {
@@ -73,7 +74,7 @@ export enum protobuf_s2c {
 
     player_move_res = 20000,
     player_talk_select_res = 20201,
-    player_gather_res = 20202,
+    
     player_explore_res = 20203,
     player_fight_res = 20204,
     player_event_select_res = 20205,
@@ -132,5 +133,5 @@ export enum protobuf_s2c {
     player_lvlup_change = 30100,
 
     player_gather_start_res = 50000,
-
+    player_explore_start_res = 50001,
 }

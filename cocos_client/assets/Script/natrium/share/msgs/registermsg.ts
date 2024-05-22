@@ -19,7 +19,7 @@ export const registermsg = (pcodec: packetcodec) => {
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_move_res, "player_move_res", "s2c_user.player_move_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_talk_select_res, "player_talk_select_res", "s2c_user.player_talk_select_res");
-    pcodec.register_protobuf_msg(protobuf_s2c.player_gather_res, "player_gather_res", "s2c_user.player_gather_res");
+    
     pcodec.register_protobuf_msg(protobuf_s2c.player_explore_res, "player_explore_res", "s2c_user.player_explore_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_fight_res, "player_fight_res", "s2c_user.player_fight_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_event_select_res, "player_event_select_res", "s2c_user.player_event_select_res");
@@ -103,6 +103,7 @@ export const registermsg = (pcodec: packetcodec) => {
 
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_gather_start_res, "player_gather_start_res", "s2c_user.player_gather_start_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_explore_start_res, "player_explore_start_res", "s2c_user.player_explore_start_res");
 
     // register client msg
     pcodec.register_protobuf_msg(protobuf_c2s.login, "login", "c2s_user.login");
@@ -118,7 +119,7 @@ export const registermsg = (pcodec: packetcodec) => {
 
     pcodec.register_protobuf_msg(protobuf_c2s.player_move, "player_move", "c2s_user.player_move");
     pcodec.register_protobuf_msg(protobuf_c2s.player_talk_select, "player_talk_select", "c2s_user.player_talk_select");
-    pcodec.register_protobuf_msg(protobuf_c2s.player_gather, "player_gather", "c2s_user.player_gather");
+    
     pcodec.register_protobuf_msg(protobuf_c2s.player_explore, "player_explore", "c2s_user.player_explore");
     pcodec.register_protobuf_msg(protobuf_c2s.player_fight, "player_fight", "c2s_user.player_fight");
     pcodec.register_protobuf_msg(protobuf_c2s.player_event_select, "player_event_select", "c2s_user.player_event_select");
@@ -157,4 +158,5 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.fetch_user_psyc, "fetch_user_psyc", "c2s_user.fetch_user_psyc");
 
     pcodec.register_protobuf_msg(protobuf_c2s.player_gather_start, "player_gather_start", "c2s_user.player_gather_start");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_explore_start, "player_explore_start", "c2s_user.player_explore_start");
 };

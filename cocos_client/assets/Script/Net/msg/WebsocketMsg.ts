@@ -119,6 +119,9 @@ export class WebsocketMsg {
     public player_event(d: c2s_user.Iplayer_event) {
         this.send_packet("player_event", d);
     }
+    public player_explore_start(d: c2s_user.Iplayer_explore_start) {
+        this.send_packet("player_explore_start", d);
+    }
     public player_explore(d: c2s_user.Iplayer_explore) {
         this.send_packet("player_explore", d);
     }
@@ -293,6 +296,10 @@ export namespace c2s_user {
         resourceBuildingId: string;
     }
     export interface Iplayer_event {
+        pioneerId: string;
+        buildingId: string;
+    }
+    export interface Iplayer_explore_start {
         pioneerId: string;
         buildingId: string;
     }

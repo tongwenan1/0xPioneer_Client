@@ -104,8 +104,10 @@ message player_gather_start_res {
     required string pioneerId = 3;
 }
 
-message player_gather_res {
+message player_explore_start_res {
     required int32 res = 1;
+    required string buildingId = 2;
+    required string pioneerId = 3;
 }
 
 message player_explore_res {

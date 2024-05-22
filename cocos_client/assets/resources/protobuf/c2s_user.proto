@@ -70,9 +70,9 @@ message player_gather_start {
     required string feeTxhash = 3;
 }
 
-message player_gather {
+message player_explore_start {
     required string pioneerId = 1;
-    required string resourceBuildingId = 2;
+    required string buildingId = 2;
     required string feeTxhash = 3;
 }
 
