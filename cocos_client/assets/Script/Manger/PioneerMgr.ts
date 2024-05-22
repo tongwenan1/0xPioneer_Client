@@ -63,14 +63,7 @@ export default class PioneerMgr {
             DataMgr.s.pioneer.changeAttack(pioneer.id, num);
         }
     }
-    private _t = null;
     public pioneerDidMoveOneStep(pioneerId: string) {
-        if (this._t == null) {
-            this._t = new Date().getTime();
-        }
-        const c = new Date().getTime();
-        console.log("exce gap:" + (c - this._t));
-        this._t = c;
         const findPioneer = DataMgr.s.pioneer.getById(pioneerId);
         if (findPioneer != undefined) {
             const allBuildings = DataMgr.s.mapBuilding.getObj_building();
@@ -350,16 +343,9 @@ export default class PioneerMgr {
                 }
             } else if (stayBuilding.type == MapBuildingType.explore) {
                 if (pioneer.type == MapPioneerType.player && pioneer.faction == MapMemberFactionType.friend) {
-                    DataMgr.setTempSendData("player_explore_res", {
+                    NetworkMgr.websocketMsg.player_explore_start({
                         pioneerId: pioneerId,
-                        isExporeBuilding: true,
-                        exploreId: stayBuilding.id,
-                        actionType: MapPioneerActionType.exploring,
-                    });
-                    NetworkMgr.websocketMsg.player_explore({
-                        pioneerId: pioneerId,
-                        isExporeBuilding: true,
-                        exploreId: stayBuilding.id,
+                        buildingId: stayBuilding.id,
                     });
                 } else {
                     if (pioneer.name == "gangster_3") {
@@ -446,8 +432,6 @@ export default class PioneerMgr {
                 }
             } else if (stayBuilding.type == MapBuildingType.resource) {
                 if (pioneer.type == MapPioneerType.player && pioneer.faction != MapMemberFactionType.enemy) {
-                    // DataMgr.setTempSendData("player_gather_res", { pioneerId: pioneerId, buildingId: stayBuilding.id });
-                    // NetworkMgr.websocketMsg.player_gather({ pioneerId: pioneerId, resourceBuildingId: stayBuilding.id });
                     NetworkMgr.websocketMsg.player_gather_start({ pioneerId: pioneerId, resourceBuildingId: stayBuilding.id });
                 } else {
                     if (isStay) {

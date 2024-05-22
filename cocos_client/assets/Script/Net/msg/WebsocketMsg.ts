@@ -466,7 +466,7 @@ export namespace s2c_user {
     export interface Imappbuilding_change {
         mapbuildings: share.Imapbuilding_info_data[];
     }
-    
+
     export interface Iplayer_exp_change {
         addExp: number;
         newExp: number;
@@ -500,10 +500,6 @@ export namespace s2c_user {
     export interface Iplayer_talk_select_res {
         talkId: string;
         selectIndex: number;
-    }
-    export interface Iplayer_gather_res {
-        pioneerId: string;
-        buildingId: string;
     }
     export interface Iplayer_explore_res {
         pioneerId: string;

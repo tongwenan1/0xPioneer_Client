@@ -2,7 +2,7 @@ import { Color } from "cc";
 import { s2c_user } from "../Net/msg/WebsocketMsg";
 import { ItemConfigType } from "./Item";
 
-export const GAME_ENV_IS_DEBUG = false;
+export const GAME_ENV_IS_DEBUG = true;
 export const PioneerGameTest = false;
 
 export type DataMgrResData =
@@ -17,7 +17,6 @@ export type DataMgrResData =
     | s2c_user.player_event_select_res
     | s2c_user.Ilocal_player_fight_res
     | s2c_user.Iplayer_explore_res
-    | s2c_user.Iplayer_gather_res
     | s2c_user.Iplayer_talk_select_res
     | s2c_user.Iplayer_nft_lvlup_res
     | s2c_user.Iplayer_nft_rankup_res

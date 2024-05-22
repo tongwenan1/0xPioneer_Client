@@ -159,6 +159,10 @@ export class DataMgr {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, { id: temple.id, show: temple.show });
                     }
                     if (currentData.actionType != temple.actionType) {
+                        if (temple.actionBeginTimeStamp > 0 && temple.actionEndTimeStamp > 0) {
+                            localDatas[i].actionBeginTimeStamp = new Date().getTime();
+                            localDatas[i].actionEndTimeStamp = localDatas[i].actionBeginTimeStamp + (temple.actionEndTimeStamp- temple.actionBeginTimeStamp) * 1000;
+                        }
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: temple.id });
                     }
                     break;
@@ -173,15 +177,12 @@ export class DataMgr {
     public static mapbuilding_change = (e: any) => {
         const p: s2c_user.Imappbuilding_change = e.data;
         const localDatas = DataMgr.s.mapBuilding.getObj_building();
-        console.log("exce p:", p);
         for (const temple of p.mapbuildings) {
             for (let i = 0; i < localDatas.length; i++) {
                 if (temple.id == localDatas[i].id) {
                     const currentData = localDatas[i];
                     DataMgr.s.mapBuilding.replaceData(i, temple);
-                    console.log("exce cu:", currentData + ", net: ", temple);
                     if (currentData.show != temple.show) {
-                        console.log("exce o2:");
                         NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_SHOW_CHANGE, { id: temple.id });
                     }
                     if (currentData.faction != currentData.faction) {
@@ -382,27 +383,27 @@ export class DataMgr {
     };
 
     public static player_talk_select_res = (e: any) => {};
-    public static player_gather_res = (e: any) => {
-        if (DataMgr.socketSendData.has("player_gather_res")) {
-            const data: s2c_user.Iplayer_gather_res = DataMgr.socketSendData.get("player_gather_res") as s2c_user.Iplayer_gather_res;
-            const { pioneerId, buildingId } = data;
-            const currentTimeStamp = new Date().getTime();
-            let actionTime: number = 3000;
-            actionTime = GameMgr.getAfterExtraEffectPropertyByPioneer(pioneerId, GameExtraEffectType.GATHER_TIME, actionTime);
-            if (actionTime <= 0) actionTime = 1;
-            DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.mining, currentTimeStamp, actionTime);
-            setTimeout(() => {
-                DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.idle);
+    // public static player_gather_res = (e: any) => {
+    //     if (DataMgr.socketSendData.has("player_gather_res")) {
+    //         const data: s2c_user.Iplayer_gather_res = DataMgr.socketSendData.get("player_gather_res") as s2c_user.Iplayer_gather_res;
+    //         const { pioneerId, buildingId } = data;
+    //         const currentTimeStamp = new Date().getTime();
+    //         let actionTime: number = 3000;
+    //         actionTime = GameMgr.getAfterExtraEffectPropertyByPioneer(pioneerId, GameExtraEffectType.GATHER_TIME, actionTime);
+    //         if (actionTime <= 0) actionTime = 1;
+    //         DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.mining, currentTimeStamp, actionTime);
+    //         setTimeout(() => {
+    //             DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.idle);
 
-                NotificationMgr.triggerEvent(NotificationName.MINING_FINISHED, {
-                    buildingId: buildingId,
-                    pioneerId: pioneerId,
-                    duration: 3000, //todo see assets/Script/Manger/PioneerMgr.ts:1225
-                    rewards: [], // no item loots by now
-                });
-            }, actionTime);
-        }
-    };
+    //             NotificationMgr.triggerEvent(NotificationName.MINING_FINISHED, {
+    //                 buildingId: buildingId,
+    //                 pioneerId: pioneerId,
+    //                 duration: 3000, //todo see assets/Script/Manger/PioneerMgr.ts:1225
+    //                 rewards: [], // no item loots by now
+    //             });
+    //         }, actionTime);
+    //     }
+    // };
     public static player_explore_res = (e: any) => {
         if (DataMgr.socketSendData.has("player_explore_res")) {
             const data: s2c_user.Iplayer_explore_res = DataMgr.socketSendData.get("player_explore_res") as s2c_user.Iplayer_explore_res;
