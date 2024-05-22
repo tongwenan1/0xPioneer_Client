@@ -28,8 +28,7 @@ export class OuterBuildingController extends Component {
     private _buildingMap: Map<string, { node: Node; stayPositons: Vec2[] }> = new Map();
 
     protected onLoad() {
-        NotificationMgr.addListener(NotificationName.BUILDING_DID_HIDE, this.buildingDidHide, this);
-        NotificationMgr.addListener(NotificationName.BUILDING_DID_SHOW, this.buildingDidShow, this);
+        NotificationMgr.addListener(NotificationName.MAP_BUILDING_SHOW_CHANGE, this._refreshUI, this);
         NotificationMgr.addListener(NotificationName.BUILDING_FACTION_CHANGED, this.buildingFacitonChanged, this);
         NotificationMgr.addListener(NotificationName.BUILDING_INSERT_DEFEND_PIONEER, this.buildingInsertDefendPioneer, this);
         NotificationMgr.addListener(NotificationName.BUILDING_REMOVE_DEFEND_PIONEER, this.buildingRemoveDefendPioneer, this);
@@ -93,8 +92,7 @@ export class OuterBuildingController extends Component {
 
     protected onDestroy(): void {
 
-        NotificationMgr.removeListener(NotificationName.BUILDING_DID_HIDE, this.buildingDidHide, this);
-        NotificationMgr.removeListener(NotificationName.BUILDING_DID_SHOW, this.buildingDidShow, this);
+        NotificationMgr.removeListener(NotificationName.MAP_BUILDING_SHOW_CHANGE, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.BUILDING_FACTION_CHANGED, this.buildingFacitonChanged, this);
         NotificationMgr.removeListener(NotificationName.BUILDING_INSERT_DEFEND_PIONEER, this.buildingInsertDefendPioneer, this);
         NotificationMgr.removeListener(NotificationName.BUILDING_REMOVE_DEFEND_PIONEER, this.buildingRemoveDefendPioneer, this);
@@ -292,14 +290,6 @@ export class OuterBuildingController extends Component {
     }
     buildingDefendPioneerChanged(): void {
         this._refreshUI();
-    }
-    async buildingDidHide(buildingId: string) {
-        await this._refreshUI();
-        // this._refreshDecorationUI();
-    }
-    async buildingDidShow(buildingId: string) {
-        await this._refreshUI();
-        // this._refreshDecorationUI();
     }
     buildingInsertDefendPioneer(): void {
         this._refreshUI();

@@ -1,4 +1,4 @@
-import { _decorator, Color, instantiate, math, Node, Prefab, v2, v3, Vec2, Vec3 } from "cc";
+import { _decorator, Color, Details, instantiate, math, Node, Prefab, v2, v3, Vec2, Vec3 } from "cc";
 import { TilePos } from "../TiledMap/TileTool";
 import { OuterFightView } from "./View/OuterFightView";
 import { OuterOtherPioneerView } from "./View/OuterOtherPioneerView";
@@ -372,6 +372,7 @@ export class OuterPioneerController extends ViewController {
         pioneer.stayPos = v2(nexttile.x, nexttile.y);
         var nextwpos = GameMainHelper.instance.tiledMapGetPosWorld(nexttile.x, nexttile.y);
         var dist = Vec3.distance(pioneermap.worldPosition, nextwpos);
+        console.log('exce speed: ' + speed + ", d: " + deltaTime + ", ns: " + this.node.scale.x);
         var add = (speed * deltaTime * this.node.scale.x) / 0.5; // calc map scale
         if (dist < add) {
             //havemove 2 target

@@ -455,14 +455,11 @@ export namespace s2c_user {
     export interface Ipioneer_change {
         pioneers: share.Ipioneer_data[];
     }
-    export interface Iplayer_map_building_show_change {
-        buildingId: string;
-        isShow: number;
+
+    export interface Imappbuilding_change {
+        mapbuildings: share.Imapbuilding_info_data[];
     }
-    export interface Iplayer_map_building_faction_change {
-        buildingId: string;
-        faction: number;
-    }
+    
     export interface Iplayer_exp_change {
         addExp: number;
         newExp: number;
@@ -479,10 +476,6 @@ export namespace s2c_user {
         newval: number;
         newlotteryTimesLimit: number;
         newlotteryProcessLimit: number;
-    }
-    export interface Iplayer_actiontype_change {
-        res: number;
-        data: share.Iactiontype_change_data;
     }
     export interface Iplayer_move_res {
         res: number;

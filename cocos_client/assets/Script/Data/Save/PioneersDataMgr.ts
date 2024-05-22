@@ -114,8 +114,8 @@ export class PioneersDataMgr {
             movePaths: [],
             actionType: data.actionType as MapPioneerActionType,
             eventStatus: data.eventStatus,
-            actionBeginTimeStamp: data.actionBeginTimeStamp,
-            actionEndTimeStamp: data.actionEndTimeStamp,
+            actionBeginTimeStamp: data.actionBeginTimeStamp * 1000,
+            actionEndTimeStamp: data.actionEndTimeStamp * 1000,
             logics: [],
             winProgress: data.winProgress,
             winExp: data.winExp,
@@ -416,8 +416,8 @@ export class PioneersDataMgr {
                 movePaths: [],
                 actionType: temple.actionType as MapPioneerActionType,
                 eventStatus: temple.eventStatus,
-                actionBeginTimeStamp: temple.actionBeginTimeStamp,
-                actionEndTimeStamp: temple.actionEndTimeStamp,
+                actionBeginTimeStamp: temple.actionBeginTimeStamp * 1000,
+                actionEndTimeStamp: temple.actionEndTimeStamp * 1000,
                 logics: [],
                 winProgress: temple.winProgress,
                 winExp: temple.winExp,
@@ -563,17 +563,11 @@ export class PioneersDataMgr {
     }
 
     private _addListeners() {
-        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, this._onPioneerChangeShow, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_NEW_TALK, this._onPioneerGetTalk, this);
         NotificationMgr.addListener(NotificationName.NFTDIDLEVELUP, this._onNFTPioneerDidLevelUp, this);
     }
 
     //--------------------------- notification
-    private _onPioneerChangeShow(action: TaskShowHideAction) {
-        if (action.type == MapMemberTargetType.pioneer) {
-            this.changeShow(action.id, action.status == TaskShowHideStatus.show, action.delayTime);
-        }
-    }
     private _onPioneerGetTalk(action: TaskNpcGetNewTalkAction) {
         this.changeTalk(action.npcId, action.talkId, action.delayTime);
     }

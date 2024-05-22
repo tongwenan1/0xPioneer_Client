@@ -133,7 +133,13 @@ export class DataMgr {
         if (p.res !== 1) {
             return;
         }
-        DataMgr.s.userInfo.innerBuildingUpgradeChanged(p.data.id as InnerBuildingType, p.data.level, p.data.upgradeIng, p.data.upgradeCountTime, p.data.upgradeTotalTime);
+        DataMgr.s.userInfo.innerBuildingUpgradeChanged(
+            p.data.id as InnerBuildingType,
+            p.data.level,
+            p.data.upgradeIng,
+            p.data.upgradeCountTime,
+            p.data.upgradeTotalTime
+        );
     };
 
     //------------------------------------- map
@@ -152,32 +158,41 @@ export class DataMgr {
                     if (currentData.faction != temple.faction) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, { id: temple.id, show: temple.show });
                     }
+                    if (currentData.actionType != temple.actionType) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: temple.id });
+                    }
                     break;
                 }
             }
         }
-    }
+    };
     public static mappioneer_reborn_change = (e: any) => {
         NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("106009"));
-    }
-   
-    public static player_actiontype_change = (e: any) => {
-        const p: s2c_user.Iplayer_actiontype_change = e.data;
-        if (p.res !== 1) {
-            return;
-        }
-        DataMgr.s.pioneer.changeActionType(p.data.pioneerId, p.data.actiontype as MapPioneerActionType);
-        if (p.data.actiontype == MapPioneerActionType.wormhole) {
-            if (NetGlobalData.wormholeAttackBuildingId != null) {
-                const useBuilding = DataMgr.s.mapBuilding.getBuildingById(NetGlobalData.wormholeAttackBuildingId) as MapBuildingWormholeObject;
-                if (!!useBuilding) {
-                    useBuilding.wormholdCountdownTime = 30;
+    };
+
+    public static mapbuilding_change = (e: any) => {
+        const p: s2c_user.Imappbuilding_change = e.data;
+        const localDatas = DataMgr.s.mapBuilding.getObj_building();
+        console.log("exce p:", p);
+        for (const temple of p.mapbuildings) {
+            for (let i = 0; i < localDatas.length; i++) {
+                if (temple.id == localDatas[i].id) {
+                    const currentData = localDatas[i];
+                    DataMgr.s.mapBuilding.replaceData(i, temple);
+                    console.log("exce cu:", currentData + ", net: ", temple);
+                    if (currentData.show != temple.show) {
+                        console.log("exce o2:");
+                        NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_SHOW_CHANGE, { id: temple.id });
+                    }
+                    if (currentData.faction != currentData.faction) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_FACTION_CHANGE, { id: temple.id });
+                    }
+                    break;
                 }
-                NetGlobalData.wormholeAttackBuildingId = null;
             }
         }
     };
-    
+
     public static player_move_res = (e: any) => {
         const p: s2c_user.Iplayer_move_res = e.data;
         if (p.res !== 1) {
@@ -195,26 +210,10 @@ export class DataMgr {
             return;
         }
     };
-    public static pioneer_reborn_res = (e: any) => {
-        
-    }
-
-    public static player_map_building_show_change = (e: any) => {
-        const p: s2c_user.Iplayer_map_building_show_change = e.data;
-        if (p.isShow == 1) {
-            DataMgr.s.mapBuilding.showBuilding(p.buildingId);
-        } else {
-            DataMgr.s.mapBuilding.hideBuilding(p.buildingId);
-        }
-    }
-    public static player_map_building_faction_change = (e: any) => {
-        const p: s2c_user.Iplayer_map_building_faction_change = e.data;
-        DataMgr.s.mapBuilding.changeBuildingFaction(p.buildingId, p.faction);
-    };
+    public static pioneer_reborn_res = (e: any) => {};
     public static mapbuilding_reborn_change = (e: any) => {
         NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("106010"));
-    }
-    
+    };
 
     //------------------------------------- nft
     public static player_bind_nft_res = (e: any) => {
@@ -412,7 +411,7 @@ export class DataMgr {
             if (isExporeBuilding) {
                 if (actionType == MapPioneerActionType.defend) {
                     DataMgr.s.pioneer.changeActionType(pioneerId, actionType);
-                    DataMgr.s.mapBuilding.changeBuildingFaction(exploreId, MapMemberFactionType.friend);
+                    // DataMgr.s.mapBuilding.changeBuildingFaction(exploreId, MapMemberFactionType.friend);
                     DataMgr.s.mapBuilding.insertDefendPioneer(exploreId, pioneerId);
                     NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, { id: exploreId });
                 } else if (actionType == MapPioneerActionType.exploring) {
@@ -541,7 +540,7 @@ export class DataMgr {
                     hp: attacker.hp,
                     hpMax: attacker.hpMax,
                     attack: attacker.attack,
-                    defend: attacker.defend
+                    defend: attacker.defend,
                 },
                 defenderInfo: {
                     id: defenderId,
@@ -549,7 +548,7 @@ export class DataMgr {
                     hp: defenderHp,
                     hpMax: defenderHpMax,
                     attack: defenderAttack,
-                    defend: defenderDefned
+                    defend: defenderDefned,
                 },
                 centerPos: defenderCenterPositions,
             };
@@ -606,7 +605,7 @@ export class DataMgr {
                                         }
                                     }
                                     if (useData.defenderInfo.hp <= 0) {
-                                        DataMgr.s.mapBuilding.hideBuilding(buildingDefender.id, attacker.id);
+                                        // DataMgr.s.mapBuilding.hideBuilding(buildingDefender.id, attacker.id);
                                         fightOver = true;
                                         isAttackWin = true;
                                     }
@@ -634,7 +633,6 @@ export class DataMgr {
                     if ((isSelfAttack && isAttackWin) || (!isSelfAttack && !isAttackWin)) {
                         isSelfWin = true;
                     }
-
 
                     let selfKillPioneer: MapPioneerObject = null;
                     let killerId: string = null;
@@ -898,7 +896,7 @@ export class DataMgr {
                 break;
             }
         }
-    }
+    };
     public static get_user_task_info_res = (e: any) => {
         let p: s2c_user.Iget_user_task_info_res = e.data;
         if (p.res == 1) {

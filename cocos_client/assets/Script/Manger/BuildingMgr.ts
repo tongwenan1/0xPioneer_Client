@@ -10,7 +10,6 @@ export default class BuildingMgr {
     public constructor() {}
 
     public async initData() {
-        NotificationMgr.addListener(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, this._onBuildingChangeShowHide, this);
         NotificationMgr.addListener(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_FINISH, this._onBuildingTavernCountdownTimeDidFinish, this);
 
         setInterval(() => {
@@ -21,14 +20,7 @@ export default class BuildingMgr {
 
                 building.showHideStruct.countTime -= 1;
 
-                if (building.showHideStruct.countTime == 0) {
-                    if (building.showHideStruct.isShow) {
-                        DataMgr.s.mapBuilding.showBuilding(building.id);
-                    } else {
-                        DataMgr.s.mapBuilding.hideBuilding(building.id);
-                    }
-                    building.showHideStruct = null;
-                }
+                
 
             }
         }, 1000);
@@ -64,11 +56,11 @@ export default class BuildingMgr {
             return;
         }
 
-        if (action.status == TaskShowHideStatus.show) {
-            DataMgr.s.mapBuilding.showBuilding(action.id);
-        } else if (action.status == TaskShowHideStatus.hide) {
-            DataMgr.s.mapBuilding.hideBuilding(action.id);
-        }
+        // if (action.status == TaskShowHideStatus.show) {
+        //     DataMgr.s.mapBuilding.showBuilding(action.id);
+        // } else if (action.status == TaskShowHideStatus.hide) {
+        //     DataMgr.s.mapBuilding.hideBuilding(action.id);
+        // }
     }
 
     // private _onBuildingChangeFaction(action: TaskFactionAction) {

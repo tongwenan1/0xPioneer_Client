@@ -182,15 +182,12 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("pioneer_change", DataMgr.pioneer_change);
         NetworkMgr.websocket.on("mappioneer_reborn_change", DataMgr.mappioneer_reborn_change);
 
+        NetworkMgr.websocket.on("mapbuilding_change", DataMgr.mapbuilding_change);
+        NetworkMgr.websocket.on("mapbuilding_reborn_change", DataMgr.mapbuilding_reborn_change);
 
         NetworkMgr.websocket.on("pioneer_reborn_res", DataMgr.pioneer_reborn_res);
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
         NetworkMgr.websocket.on("player_event_res", DataMgr.player_event_res);
-        NetworkMgr.websocket.on("player_actiontype_change", DataMgr.player_actiontype_change);
-
-        NetworkMgr.websocket.on("player_map_building_show_change", DataMgr.player_map_building_show_change);
-        NetworkMgr.websocket.on("player_map_building_faction_change", DataMgr.player_map_building_faction_change);
-        NetworkMgr.websocket.on("mapbuilding_reborn_change", DataMgr.mapbuilding_reborn_change);
         // nft
         NetworkMgr.websocket.on("player_bind_nft_res", DataMgr.player_bind_nft_res);
         NetworkMgr.websocket.on("player_nft_lvlup_res", DataMgr.player_nft_lvlup_res);

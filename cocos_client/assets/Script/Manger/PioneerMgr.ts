@@ -63,7 +63,14 @@ export default class PioneerMgr {
             DataMgr.s.pioneer.changeAttack(pioneer.id, num);
         }
     }
+    private _t = null;
     public pioneerDidMoveOneStep(pioneerId: string) {
+        if (this._t == null) {
+            this._t = new Date().getTime();
+        }
+        const c = new Date().getTime();
+        console.log("exce gap:" + (c - this._t));
+        this._t = c;
         const findPioneer = DataMgr.s.pioneer.getById(pioneerId);
         if (findPioneer != undefined) {
             const allBuildings = DataMgr.s.mapBuilding.getObj_building();
@@ -123,7 +130,7 @@ export default class PioneerMgr {
                 NetworkMgr.websocketMsg.player_wormhole_set_attacker({
                     pioneerId: "",
                     buildingId: building.id,
-                    index: index
+                    index: index,
                 });
                 break;
             }
@@ -356,7 +363,7 @@ export default class PioneerMgr {
                     });
                 } else {
                     if (pioneer.name == "gangster_3") {
-                        DataMgr.s.mapBuilding.hideBuilding(stayBuilding.id, pioneer.id);
+                        // DataMgr.s.mapBuilding.hideBuilding(stayBuilding.id, pioneer.id);
                     }
                     if (isStay) {
                         pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
@@ -386,7 +393,7 @@ export default class PioneerMgr {
                     if (pioneer.id == "gangster_3" && stayBuilding.id == "building_4") {
                         if (stayBuilding.faction != MapMemberFactionType.friend || stayBuilding.defendPioneerIds.length <= 0) {
                             tempAction = 0;
-                            DataMgr.s.mapBuilding.hideBuilding(stayBuilding.id, pioneer.id);
+                            // DataMgr.s.mapBuilding.hideBuilding(stayBuilding.id, pioneer.id);
                         } else {
                             // wait xx
                             // pioneer.loseHp(Math.floor(pioneer.hp / 2));
@@ -450,7 +457,7 @@ export default class PioneerMgr {
             } else if (stayBuilding.type == MapBuildingType.event) {
                 if (pioneer.type == MapPioneerType.player) {
                     NetworkMgr.websocketMsg.player_event({ pioneerId: pioneer.id, buildingId: stayBuilding.id });
-                    
+
                     let currentEvent = EventConfig.getById(stayBuilding.eventId);
                     if (currentEvent != null) {
                         this.pioneerDealWithEvent(pioneer.id, stayBuilding.id, currentEvent);
@@ -477,8 +484,6 @@ export default class PioneerMgr {
             }
         }
     }
-
-   
 
     //------------------------------- notification
     private _onPioneerMoveMeeted(data: { pioneerId: string; isStay: boolean }) {

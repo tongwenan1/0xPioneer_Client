@@ -68,9 +68,9 @@ export default class UserInfoMgr {
             DataMgr.s.pioneer.changeAllPlayerHpMax(data.hpMaxChangeValue);
         }
         if (data.showBuildingIds.length > 0) {
-            for (const buildingId of data.showBuildingIds) {
-                DataMgr.s.mapBuilding.showBuilding(buildingId);
-            }
+            // for (const buildingId of data.showBuildingIds) {
+            //     DataMgr.s.mapBuilding.showBuilding(buildingId);
+            // }
         }
 
         // if (data.rewards.length > 0) {

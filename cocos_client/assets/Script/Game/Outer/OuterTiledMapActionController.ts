@@ -50,6 +50,7 @@ import { NFTViewInfoUI } from "../../UI/NFTViewInfoUI";
 import ChainConfig from "../../Config/ChainConfig";
 import { AlterView } from "../../UI/View/AlterView";
 import NetGlobalData from "../../Data/Save/Data/NetGlobalData";
+import { MapActionConfrimTipUI } from "../../UI/MapActionConfrimTipUI";
 
 const { ccclass, property } = _decorator;
 
@@ -702,156 +703,136 @@ export class OuterTiledMapActionController extends ViewController {
             // show move path
             outPioneerController.showPioneerFootStep(currentActionPioneer.id, movePaths);
             // show action panel
-            this._actionView.show(
-                setWorldPosition,
-                actionType,
-                movePaths.length,
-                async (useActionType: number, costEnergy: number) => {
-                    this["_actionViewActioned"] = true;
-                    if (PioneerGameTest) {
-                    } else {
-                        if (costEnergy > 0) {
-                            const ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
-                            if (ownEnergy < costEnergy) {
-                                UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
-                                return;
-                            }
-                        }
-                    }
-                    if (useActionType == 6 || useActionType == 9) {
-                        // cancel camp
-                        PioneerMgr.pioneerToIdle(currentActionPioneer.id);
-                    } else {
-                        // move to near pioneer or building
-                        PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, purchaseMovingPioneerId);
-                        PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, purchaseMovingBuildingId);
-                    }
-                    this._mapActionCursorView.hide();
-                    outPioneerController.hideMovingPioneerAction();
-
-                    if (GAME_ENV_IS_DEBUG) {
-                        const uploadPath: { x: number; y: number }[] = [];
-                        for (const path of movePaths) {
-                            uploadPath.push({ x: path.x, y: path.y });
-                        }
-                        let targetPosString: string = "";
-                        if (uploadPath.length > 0) {
-                            targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
-                        }
-                        DataMgr.setTempSendData("player_move_res", {
-                            pioneerId: currentActionPioneer.id,
-                            movePath: movePaths,
-                            costEnergyNum: costEnergy,
-                        });
-                        NetworkMgr.websocketMsg.player_move({
-                            pioneerId: currentActionPioneer.id,
-                            movePath: JSON.stringify(uploadPath),
-                            targetPos: targetPosString,
-                            feeTxhash: "abc",
-                        });
-                    } else {
-                        // const r = await NetworkMgr.ethereumMsg.transferETH(0.0001, ChainConfig.getCurrentChainConfig().api.fee_psyc);
-                        // if (r.status == 1) {
-                        //     const uploadPath: { x: number; y: number }[] = [];
-                        //     for (const path of movePaths) {
-                        //         uploadPath.push({ x: path.x, y: path.y });
-                        //     }
-                        //     let targetPosString: string = "";
-                        //     if (uploadPath.length > 0) {
-                        //         targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
-                        //     }
-                        //     DataMgr.setTempSendData("player_move_res", {
-                        //         pioneerId: currentActionPioneer.id,
-                        //         movePath: movePaths,
-                        //         costEnergyNum: costEnergy,
-                        //     });
-                        //     NetworkMgr.websocketMsg.player_move({
-                        //         pioneerId: currentActionPioneer.id,
-                        //         movePath: JSON.stringify(uploadPath),
-                        //         targetPos: targetPosString,
-                        //         feeTxhash: r.hash,
-                        //     });
-                        // }
-
-                        const uploadPath: { x: number; y: number }[] = [];
-                        for (const path of movePaths) {
-                            uploadPath.push({ x: path.x, y: path.y });
-                        }
-                        let targetPosString: string = "";
-                        if (uploadPath.length > 0) {
-                            targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
-                        }
-                        DataMgr.setTempSendData("player_move_res", {
-                            pioneerId: currentActionPioneer.id,
-                            movePath: movePaths,
-                            costEnergyNum: costEnergy,
-                        });
-                        NetworkMgr.websocketMsg.player_move({
-                            pioneerId: currentActionPioneer.id,
-                            movePath: JSON.stringify(uploadPath),
-                            targetPos: targetPosString,
-                            feeTxhash: "",
-                        });
-                    }
-                },
-                async (costEnergy: number) => {
-                    this["_actionViewActioned"] = true;
+            this._actionView.show(setWorldPosition, actionType, async (useActionType: number) => {
+                this["_actionViewActioned"] = true;
+                if (useActionType === -999) {
                     this._mapActionCursorView.hide();
                     outPioneerController.hideMovingPioneerAction();
                     outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
-
-                    const result = await UIPanelManger.inst.pushPanel(HUDName.Alter, UIPanelLayerType.HUD);
-                    if (!result.success) {
-                        return;
-                    }
-                    // useLanMgr
-                    // const alterString: string = LanMgr.getLanById("106006");
-                    const alterString: string = "Use Current Pioneers To Attack Wormhole?";
-                    result.node.getComponent(AlterView).showTip(alterString, () => {
-                        if (currentActionPioneer.actionType != MapPioneerActionType.wormhole) {
-                            PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, purchaseMovingPioneerId);
-                            PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, purchaseMovingBuildingId);
-
-                            const uploadPath: { x: number; y: number }[] = [];
-                            for (const path of movePaths) {
-                                uploadPath.push({ x: path.x, y: path.y });
-                            }
-                            let targetPosString: string = "";
-                            if (uploadPath.length > 0) {
-                                targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
-                            }
-                            DataMgr.setTempSendData("player_move_res", {
-                                pioneerId: currentActionPioneer.id,
-                                movePath: movePaths,
-                                costEnergyNum: costEnergy,
-                            });
-                            NetworkMgr.websocketMsg.player_move({
-                                pioneerId: currentActionPioneer.id,
-                                movePath: JSON.stringify(uploadPath),
-                                targetPos: targetPosString,
-                                feeTxhash: "",
-                            });
-                            if (purchaseMovingBuildingId != null) {
-                                NetGlobalData.wormholeAttackBuildingId = purchaseMovingBuildingId;
-                            }
-                        } else {
-                            // attack wormhole countdonw
-                            if (purchaseMovingBuildingId != null) {
-                                const useBuilding = DataMgr.s.mapBuilding.getBuildingById(purchaseMovingBuildingId) as MapBuildingWormholeObject;
-                                if (!!useBuilding) {
-                                    useBuilding.wormholdCountdownTime = 30;
-                                }
-                            }
-                        }
-                    });
-                },
-                () => {
-                    this["_actionViewActioned"] = true;
-                    this._mapActionCursorView.hide();
-                    outPioneerController.hideMovingPioneerAction();
-                    outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
+                    return;
                 }
-            );
+                const result = await UIPanelManger.inst.pushPanel(UIName.MapActionConfrimTipUI);
+                if (result.success) {
+                    result.node
+                        .getComponent(MapActionConfrimTipUI)
+                        .configuration(taregtPos, movePaths.length, currentActionPioneer.speed, async (confirmed: boolean, cost: number) => {
+                            if (confirmed) {
+                                if (cost > 0) {
+                                    const ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
+                                    if (ownEnergy < cost) {
+                                        UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
+                                        return;
+                                    }
+                                }
+                                if (useActionType == 8) {
+                                    // wormhole
+                                    const result = await UIPanelManger.inst.pushPanel(HUDName.Alter, UIPanelLayerType.HUD);
+                                    if (!result.success) {
+                                        return;
+                                    }
+                                    // useLanMgr
+                                    // const alterString: string = LanMgr.getLanById("106006");
+                                    const alterString: string = "Use Current Pioneers To Attack Wormhole?";
+                                    result.node.getComponent(AlterView).showTip(alterString, () => {
+                                        if (currentActionPioneer.actionType != MapPioneerActionType.wormhole) {
+                                            PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, purchaseMovingPioneerId);
+                                            PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, purchaseMovingBuildingId);
+
+                                            const uploadPath: { x: number; y: number }[] = [];
+                                            for (const path of movePaths) {
+                                                uploadPath.push({ x: path.x, y: path.y });
+                                            }
+                                            let targetPosString: string = "";
+                                            if (uploadPath.length > 0) {
+                                                targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
+                                            }
+                                            DataMgr.setTempSendData("player_move_res", {
+                                                pioneerId: currentActionPioneer.id,
+                                                movePath: movePaths,
+                                                costEnergyNum: cost,
+                                            });
+                                            NetworkMgr.websocketMsg.player_move({
+                                                pioneerId: currentActionPioneer.id,
+                                                movePath: JSON.stringify(uploadPath),
+                                                targetPos: targetPosString,
+                                                feeTxhash: "",
+                                            });
+                                            if (purchaseMovingBuildingId != null) {
+                                                NetGlobalData.wormholeAttackBuildingId = purchaseMovingBuildingId;
+                                            }
+                                        } else {
+                                            // attack wormhole countdonw
+                                            if (purchaseMovingBuildingId != null) {
+                                                const useBuilding = DataMgr.s.mapBuilding.getBuildingById(
+                                                    purchaseMovingBuildingId
+                                                ) as MapBuildingWormholeObject;
+                                                if (!!useBuilding) {
+                                                    useBuilding.wormholdCountdownTime = 30;
+                                                }
+                                            }
+                                        }
+                                    });
+                                    return;
+                                }
+
+                                // other action
+                                if (useActionType === 6 || useActionType === 9) {
+                                    // cancel camp
+                                    PioneerMgr.pioneerToIdle(currentActionPioneer.id);
+                                } else {
+                                    // move to near pioneer or building
+                                    PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, purchaseMovingPioneerId);
+                                    PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, purchaseMovingBuildingId);
+                                }
+                                // const r = await NetworkMgr.ethereumMsg.transferETH(0.0001, ChainConfig.getCurrentChainConfig().api.fee_psyc);
+                                // if (r.status == 1) {
+                                //     const uploadPath: { x: number; y: number }[] = [];
+                                //     for (const path of movePaths) {
+                                //         uploadPath.push({ x: path.x, y: path.y });
+                                //     }
+                                //     let targetPosString: string = "";
+                                //     if (uploadPath.length > 0) {
+                                //         targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
+                                //     }
+                                //     DataMgr.setTempSendData("player_move_res", {
+                                //         pioneerId: currentActionPioneer.id,
+                                //         movePath: movePaths,
+                                //         costEnergyNum: costEnergy,
+                                //     });
+                                //     NetworkMgr.websocketMsg.player_move({
+                                //         pioneerId: currentActionPioneer.id,
+                                //         movePath: JSON.stringify(uploadPath),
+                                //         targetPos: targetPosString,
+                                //         feeTxhash: r.hash,
+                                //     });
+                                // }
+                                const uploadPath: { x: number; y: number }[] = [];
+                                for (const path of movePaths) {
+                                    uploadPath.push({ x: path.x, y: path.y });
+                                }
+                                let targetPosString: string = "";
+                                if (uploadPath.length > 0) {
+                                    targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
+                                }
+                                DataMgr.setTempSendData("player_move_res", {
+                                    pioneerId: currentActionPioneer.id,
+                                    movePath: movePaths,
+                                    costEnergyNum: cost,
+                                });
+                                NetworkMgr.websocketMsg.player_move({
+                                    pioneerId: currentActionPioneer.id,
+                                    movePath: JSON.stringify(uploadPath),
+                                    targetPos: targetPosString,
+                                    feeTxhash: "",
+                                });
+                            } else {
+                                outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
+                            }
+                            this._mapActionCursorView.hide();
+                            outPioneerController.hideMovingPioneerAction();
+                        });
+                }
+            });
             if (actionMovingPioneerId != null) {
                 outPioneerController.showMovingPioneerAction(tiledPos, actionMovingPioneerId, this._mapActionCursorView);
             }

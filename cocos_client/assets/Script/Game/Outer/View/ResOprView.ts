@@ -18,16 +18,9 @@ export class ResOprView extends Component {
 
     /**
      *
-     * @param actionType -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel 7-tavern 8-worm 9-wormcancel
+     * @param actionType -999-no action -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel 7-tavern 8-worm 9-wormcancel
      */
-    public show(
-        worldPos: Vec3,
-        actionType: number,
-        moveStep: number,
-        confirmCallback: (actionType: number, useEnergy: number) => void,
-        wormholeAttackCallback: (useEnergy: number) => void,
-        closeCallback: () => void
-    ) {
+    public show(worldPos: Vec3, actionType: number, confirmCallback: (actionType: number) => void) {
         this.node.active = true;
         this.node.worldPosition = worldPos;
         this._actionType = actionType;
@@ -52,18 +45,7 @@ export class ResOprView extends Component {
         this.node.getChildByPath("ContentView").getComponent(Layout).updateLayout();
 
         // action cost
-        const oneStepCostEnergy = (ConfigConfig.getConfig(ConfigType.OneStepCostEnergy) as OneStepCostEnergyParam).cost;
-        this._cost = oneStepCostEnergy * moveStep;
-        const costView = this.node.getChildByPath("ContentView/ButtonView_1/CostView");
-        if (this._cost > 0) {
-            costView.active = true;
-            costView.getChildByPath("CostLabel").getComponent(Label).string = "-" + this._cost;
-        } else {
-            costView.active = false;
-        }
         this._confirmCallback = confirmCallback;
-        this._wormholeAttackCallback = wormholeAttackCallback;
-        this._closeCallback = closeCallback;
     }
     public hide() {
         this.node.active = false;
@@ -72,11 +54,8 @@ export class ResOprView extends Component {
         return this.node.active;
     }
 
-    private _actionType: number = -1;
-    private _cost: number = 0;
-    private _confirmCallback: (actionType: number, useEnergy: number) => void = null;
-    private _wormholeAttackCallback: (useEnergy: number) => void;
-    private _closeCallback: () => void = null;
+    private _actionType: number = -999;
+    private _confirmCallback: (actionType: number) => void = null;
 
     protected onLoad(): void {
         this._wormholeButton = this.node.getChildByPath("ContentView/ButtonView_0/btnWormhole");
@@ -96,62 +75,63 @@ export class ResOprView extends Component {
 
     onSearchClick() {
         if (this._confirmCallback) {
-            this._confirmCallback(this._actionType, this._cost);
+            this._confirmCallback(this._actionType);
         }
         this.hide();
     }
 
     onGetResClick() {
         if (this._confirmCallback) {
-            this._confirmCallback(this._actionType, this._cost);
+            this._confirmCallback(this._actionType);
         }
         this.hide();
     }
 
     onAtkClick() {
         if (this._confirmCallback) {
-            this._confirmCallback(this._actionType, this._cost);
+            this._confirmCallback(this._actionType);
         }
         this.hide();
     }
 
     onStayClick() {
         if (this._confirmCallback) {
-            this._confirmCallback(this._actionType, this._cost);
+            this._confirmCallback(this._actionType);
         }
         this.hide();
     }
 
     onCampClick() {
         if (this._confirmCallback) {
-            this._confirmCallback(this._actionType, this._cost);
+            this._confirmCallback(this._actionType);
         }
         this.hide();
     }
 
     onInfoClick() {
         if (this._confirmCallback) {
-            this._confirmCallback(this._actionType, this._cost);
+            this._confirmCallback(this._actionType);
         }
         this.hide();
     }
 
     onMoveClick() {
         if (this._confirmCallback) {
-            this._confirmCallback(this._actionType, this._cost);
+            this._confirmCallback(this._actionType);
         }
         this.hide();
     }
 
     private onTapWormholeAttack() {
-        if (this._wormholeAttackCallback != null) {
-            this._wormholeAttackCallback(this._cost);
+        if (this._confirmCallback != null) {
+            this._confirmCallback(this._actionType);
         }
+        this.hide();
     }
 
     onCloseClick() {
-        if (this._closeCallback) {
-            this._closeCallback();
+        if (this._confirmCallback) {
+            this._confirmCallback(-999);
         }
         this.hide();
     }

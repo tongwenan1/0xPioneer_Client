@@ -22,6 +22,9 @@ export class MapBuildingDataMgr {
     private _building_data: MapBuildingObject[];
     public constructor() {}
 
+    public replaceData(index: number, data: share.Imapbuilding_info_data) {
+        this._building_data[index] = this._convertNetDataToObject(data);
+    }
     private _loadObj_mapPositions(data: StayMapPosition[]) {
         const mapPositions: Vec2[] = [];
         for (const pos of data) {
@@ -38,46 +41,7 @@ export class MapBuildingDataMgr {
         const mapBuilings = NetGlobalData.mapBuildings.buildings;
         for (const key in mapBuilings) {
             const element: share.Imapbuilding_info_data = mapBuilings[key];
-            const stayPos: Vec2[] = [];
-            for (const templePos of element.stayMapPositions) {
-                stayPos.push(new Vec2(templePos.x, templePos.y));
-            }
-            const baseObj: MapBuildingBaseObject = {
-                id: element.id,
-                name: element.name,
-                type: element.type,
-                level: element.level,
-                show: element.show,
-                showHideStruct: null,
-                faction: element.faction,
-                defendPioneerIds: element.defendPioneerIds,
-                stayPosType: element.stayPosType,
-                progress: element.progress,
-                winprogress: element.winprogress,
-                eventId: element.eventId,
-                originalEventId: element.originalEventId,
-                exp: element.exp,
-                animType: element.animType,
-                stayMapPositions: stayPos,
-            };
-            if (baseObj.type == MapBuildingType.city) {
-                const cityObj: MapBuildingMainCityObject = {
-                    ...baseObj,
-                    hpMax: element.hpMax,
-                    hp: element.hp,
-                    attack: element.attack,
-                    taskObj: null,
-                };
-                this._building_data.push(cityObj);
-            } else if (baseObj.type == MapBuildingType.wormhole) {
-                const wormholeObj: MapBuildingWormholeObject = {
-                    ...baseObj,
-                    wormholdCountdownTime: 0,
-                };
-                this._building_data.push(wormholeObj);
-            } else {
-                this._building_data.push(baseObj);
-            }
+            this._building_data.push(this._convertNetDataToObject(element));
         }
         if (NetGlobalData.userInfo != null && NetGlobalData.userInfo.attacker != null) {
             for (const building of this._building_data) {
@@ -100,10 +64,49 @@ export class MapBuildingDataMgr {
         this._initInterval();
         CLog.debug("MapBuildingDataMgr: loadObj/building_data, ", this._building_data);
     }
-
+    private _convertNetDataToObject(element: share.Imapbuilding_info_data): MapBuildingObject {
+        const stayPos: Vec2[] = [];
+        for (const templePos of element.stayMapPositions) {
+            stayPos.push(new Vec2(templePos.x, templePos.y));
+        }
+        const baseObj: MapBuildingBaseObject = {
+            id: element.id,
+            name: element.name,
+            type: element.type,
+            level: element.level,
+            show: element.show,
+            showHideStruct: null,
+            faction: element.faction,
+            defendPioneerIds: element.defendPioneerIds,
+            stayPosType: element.stayPosType,
+            progress: element.progress,
+            winprogress: element.winprogress,
+            eventId: element.eventId,
+            originalEventId: element.originalEventId,
+            exp: element.exp,
+            animType: element.animType,
+            stayMapPositions: stayPos,
+        };
+        if (baseObj.type == MapBuildingType.city) {
+            const cityObj: MapBuildingMainCityObject = {
+                ...baseObj,
+                hpMax: element.hpMax,
+                hp: element.hp,
+                attack: element.attack,
+                taskObj: null,
+            };
+            return cityObj;
+        } else if (baseObj.type == MapBuildingType.wormhole) {
+            const wormholeObj: MapBuildingWormholeObject = {
+                ...baseObj,
+                wormholdCountdownTime: 0,
+            };
+            return wormholeObj;
+        } else {
+            return baseObj;
+        }
+    }
     private _initInterval() {
-        let timeEightUpdate: boolean = false;
-        let timeTwoUpdate: boolean = false;
         setInterval(() => {
             for (const obj of this._building_data) {
                 if (obj.type == MapBuildingType.wormhole) {
@@ -128,55 +131,6 @@ export class MapBuildingDataMgr {
                             NotificationMgr.triggerEvent(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_FINISH, { id: tavern.id });
                         }
                     }
-                }
-            }
-            let canUpdateBuilding: boolean = false;
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            if (hours === 8 && minutes === 0 && !timeEightUpdate) {
-                canUpdateBuilding = true;
-                timeEightUpdate = true;
-            } else if (hours === 14 && minutes === 0 && !timeTwoUpdate) {
-                canUpdateBuilding = true;
-                timeTwoUpdate = true;
-            }
-            if (canUpdateBuilding) {
-                // update building show
-                let hideactionBuildingNum: number = 0;
-                for (let i = 0; i < this._building_data.length; i++) {
-                    const temp = this._building_data[i];
-                    if (temp.show) {
-                        continue;
-                    }
-                    if (temp.type != MapBuildingType.resource && temp.type != MapBuildingType.event) {
-                        continue;
-                    }
-                    hideactionBuildingNum += 1;
-                }
-                const rateAddCof: number = hideactionBuildingNum === 0 ? 0.5 : 0.5 / hideactionBuildingNum;
-                let rate: number = 0.5;
-                let random: boolean[] = [true, false];
-                for (let i = 0; i < this._building_data.length; i++) {
-                    const temp = this._building_data[i];
-                    if (temp.show) {
-                        continue;
-                    }
-                    const canShow: boolean = CommonTools.getRandomItemByWeights(random, [rate, 1 - rate]);
-                    if (!canShow) {
-                        rate += rateAddCof;
-                        continue;
-                    }
-                    rate = 0.5;
-                    // if (temp.type == MapBuildingType.resource) {
-                    //     const resource = temp as MapBuildingResourceObject;
-                    //     resource.quota = resource.orginalQuota;
-                        
-                    // } else if (temp.type == MapBuildingType.event) {
-                    //     temp.eventId = temp.originalEventId;
-                        
-                    // }
-                    this.showBuilding(temp.id);
                 }
             }
         }, 1000);
@@ -266,20 +220,6 @@ export class MapBuildingDataMgr {
             return buiding.type === MapBuildingType.wormhole;
         });
     }
-    public changeBuildingFaction(buildingId: string, faction: MapMemberFactionType) {
-        const findBuilding = this.getBuildingById(buildingId);
-        if (findBuilding == null) return;
-        if (findBuilding.faction == faction) return;
-
-        findBuilding.faction = faction;
-        // 
-
-        if (findBuilding.id == "building_1" && findBuilding.faction == MapMemberFactionType.enemy) {
-            NotificationMgr.triggerEvent(NotificationName.CHOOSE_GANGSTER_ROUTE);
-        }
-
-        NotificationMgr.triggerEvent(NotificationName.BUILDING_FACTION_CHANGED);
-    }
     public beginRecruitNewNft(buildingId: string, recruitTime: number) {
         const findBuilding = this.getBuildingById(buildingId);
         if (findBuilding == null) return;
@@ -296,47 +236,6 @@ export class MapBuildingDataMgr {
         tavern.nft = nft;
         
         NotificationMgr.triggerEvent(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, { id: buildingId });
-    }
-    public showBuilding(buildingId: string) {
-        let temple: MapBuildingObject | MapDecorateObject;
-        const actionTargetBuilding = this.getBuildingById(buildingId);
-
-        if (actionTargetBuilding != null) {
-            temple = actionTargetBuilding;
-        } else {
-            // const decorateBuiling = this.getDecorateById(buildingId);
-            // if (decorateBuiling != null) {
-            //     temple = decorateBuiling;
-            // }
-        }
-
-        if (temple == null) return;
-        if (temple.show) return;
-
-        temple.show = true;
-
-        
-        NotificationMgr.triggerEvent(NotificationName.BUILDING_DID_SHOW, temple.id);
-    }
-    public hideBuilding(buildingId: string, beacusePioneerId: string = null) {
-        let temple: MapBuildingObject | MapDecorateObject;
-        const actionTargetBuilding = this.getBuildingById(buildingId);
-        if (actionTargetBuilding != null) {
-            temple = actionTargetBuilding;
-        } else {
-            // const decorateBuiling = this.getDecorateById(buildingId);
-            // if (decorateBuiling != null) {
-            //     temple = decorateBuiling;
-            // }
-        }
-
-        if (temple == null) return;
-        if (!temple.show) return;
-
-        temple.show = false;
-
-        
-        NotificationMgr.triggerEvent(NotificationName.BUILDING_DID_HIDE, temple.id);
     }
     public getShowBuildingsNearMapPos(mapPos: Vec2, range: number) {
         return this._building_data.filter((buiding) => {

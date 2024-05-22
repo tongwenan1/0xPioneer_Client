@@ -230,15 +230,15 @@ export class EventUI extends ViewController {
         });
 
         if (event.map_building_refresh != null) {
-            for (const [buidingId, type] of event.map_building_refresh) {
-                if (type == 1) {
-                    // BuildingMgr.showBuilding(buidingId);
-                    DataMgr.s.mapBuilding.showBuilding(buidingId);
-                } else {
-                    // BuildingMgr.hideBuilding(buidingId);
-                    DataMgr.s.mapBuilding.hideBuilding(buidingId);
-                }
-            }
+            // for (const [buidingId, type] of event.map_building_refresh) {
+            //     if (type == 1) {
+            //         // BuildingMgr.showBuilding(buidingId);
+            //         DataMgr.s.mapBuilding.showBuilding(buidingId);
+            //     } else {
+            //         // BuildingMgr.hideBuilding(buidingId);
+            //         DataMgr.s.mapBuilding.hideBuilding(buidingId);
+            //     }
+            // }
         }
         if (event.map_pioneer_unlock != null) {
             for (const [pioneerId, type] of event.map_pioneer_unlock) {
@@ -377,7 +377,7 @@ export class EventUI extends ViewController {
                     // BuildingMgr.changeBuildingEventId(this._eventBuildingId, null);
                     // BuildingMgr.hideBuilding(this._eventBuildingId);
                     DataMgr.s.mapBuilding.changeBuildingEventId(this._eventBuildingId, null);
-                    DataMgr.s.mapBuilding.hideBuilding(this._eventBuildingId);
+                    // DataMgr.s.mapBuilding.hideBuilding(this._eventBuildingId);
                 } else if (eventId == "-2") {
                     // const building = BuildingMgr.getBuildingById(this._eventBuildingId);
                     const building = DataMgr.s.mapBuilding.getBuildingById(this._eventBuildingId);
