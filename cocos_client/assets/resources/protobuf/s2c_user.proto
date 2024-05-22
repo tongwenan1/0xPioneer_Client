@@ -223,12 +223,19 @@ message player_wormhole_set_attacker_res {
     map<string,share.attacker_data> attacker = 2;
 }
 
+message player_wormhole_fight_start_res {
+    required int32 res = 1;
+    required string buildingId = 2;
+    required string defenderUid = 3;
+    map<string,string> defenderData = 4;
+}
+
 message player_wormhole_fight_res {
     required int32 res = 1;
-    required string defenderWallet = 2;
-    map<string,string> defenderData = 3;
-    required bool fightResult = 4;
-    required string buildingId = 5;
+    required string buildingId = 2;
+    required string defenderUid = 3;
+    map<string,string> defenderData = 4;
+    required bool fightResult = 5;
 }
 
 message player_bind_nft_res {

@@ -16,7 +16,7 @@ export enum protobuf_c2s {
 
     player_move = 200,
     player_talk_select = 201,
-    
+
     player_explore = 203,
     player_fight = 204,
     player_event_select = 205,
@@ -39,7 +39,6 @@ export enum protobuf_c2s {
     player_rookie_finish = 222,
     player_wormhole_set_defender = 223,
     player_wormhole_set_attacker = 224,
-    player_wormhole_fight = 225,
     player_bind_nft = 226,
     player_pioneer_change_show = 227,
     player_event = 228,
@@ -54,6 +53,7 @@ export enum protobuf_c2s {
 
     player_gather_start = 500,
     player_explore_start = 501,
+    player_wormhole_fight_start = 503,
 }
 
 export enum protobuf_s2c {
@@ -74,7 +74,7 @@ export enum protobuf_s2c {
 
     player_move_res = 20000,
     player_talk_select_res = 20201,
-    
+
     player_explore_res = 20203,
     player_fight_res = 20204,
     player_event_select_res = 20205,
@@ -99,7 +99,6 @@ export enum protobuf_s2c {
     player_rookie_finish_res = 20224,
     player_wormhole_set_defender_res = 20225,
     player_wormhole_set_attacker_res = 20226,
-    player_wormhole_fight_res = 20227,
     player_bind_nft_res = 20228,
     player_pioneer_change_show_res = 20229,
     player_event_res = 20230,
@@ -134,4 +133,6 @@ export enum protobuf_s2c {
 
     player_gather_start_res = 50000,
     player_explore_start_res = 50001,
+    player_wormhole_fight_start_res = 50002,
+    player_wormhole_fight_res = 50003,
 }

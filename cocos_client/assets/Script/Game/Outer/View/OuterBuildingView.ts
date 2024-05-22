@@ -1,18 +1,15 @@
-import { _decorator, Component, instantiate, Label, Layout, Node, Prefab } from "cc";
+import { _decorator, instantiate, Label, Layout, Node, Prefab } from "cc";
 import { LanMgr, ResourcesMgr } from "../../../Utils/Global";
-import { MapBuildingType, InnerBuildingType, UserInnerBuildInfo } from "../../../Const/BuildingDefine";
+import { MapBuildingType, InnerBuildingType } from "../../../Const/BuildingDefine";
 import ViewController from "../../../BasicView/ViewController";
 import NotificationMgr from "../../../Basic/NotificationMgr";
-import ConfigConfig from "../../../Config/ConfigConfig";
 import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
 import InnerBuildingConfig from "../../../Config/InnerBuildingConfig";
 import { NotificationName } from "../../../Const/Notification";
 import { MapMemberFactionType } from "../../../Const/ConstDefine";
-import { ConfigType, EnergyTipThresholdParam } from "../../../Const/Config";
 import { MapBuildingObject, MapBuildingTavernObject, MapBuildingWormholeObject } from "../../../Const/MapBuilding";
 import { DataMgr } from "../../../Data/DataMgr";
 import CommonTools from "../../../Tool/CommonTools";
-import { CountDataMgr } from "../../../Data/Save/CountDataMgr";
 import ArtifactConfig from "../../../Config/ArtifactConfig";
 import { ArtifactConfigData } from "../../../Const/Artifact";
 const { ccclass, property } = _decorator;
@@ -22,7 +19,13 @@ export class OuterBuildingView extends ViewController {
     public async refreshUI(building: MapBuildingObject) {
         this._building = building;
 
-        this.node.getChildByPath("Title/Text").getComponent(Label).string = LanMgr.getLanById(building.name);
+        let name: string = "";
+        if (building.type == MapBuildingType.city) {
+            name = DataMgr.s.userInfo.data.name + " " + LanMgr.getLanById(building.name);
+        } else {
+            name = LanMgr.getLanById(building.name);
+        }
+        this.node.getChildByPath("Title/Text").getComponent(Label).string = name;
         this.node.getChildByPath("Level/Text").getComponent(Label).string = "Lv." + building.level;
 
         for (const buildingName of this._buildViewNames) {

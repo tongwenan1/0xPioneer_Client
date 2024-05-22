@@ -187,7 +187,7 @@ message player_wormhole_set_attacker {
     required string buildingId = 3;
 }
 
-message player_wormhole_fight {
+message player_wormhole_fight_start {
     required string buildingId = 1;
 }
 
