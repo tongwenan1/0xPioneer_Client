@@ -110,6 +110,9 @@ export class WebsocketMsg {
     public player_talk_select(d: c2s_user.Iplayer_talk_select) {
         this.send_packet("player_talk_select", d);
     }
+    public player_gather_start(d: c2s_user.Iplayer_gather_start) {
+        this.send_packet("player_gather_start", d);
+    }
     public player_gather(d: c2s_user.Iplayer_gather) {
         this.send_packet("player_gather", d);
     }
@@ -280,6 +283,10 @@ export namespace c2s_user {
         talkId: string;
         selectIndex: number;
         currStep: number;
+    }
+    export interface Iplayer_gather_start {
+        pioneerId: string;
+        resourceBuildingId: string;
     }
     export interface Iplayer_gather {
         pioneerId: string;

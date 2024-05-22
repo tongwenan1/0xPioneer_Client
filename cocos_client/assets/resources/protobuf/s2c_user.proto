@@ -77,6 +77,10 @@ message pioneer_change {
     repeated share.pioneer_data pioneers = 1;
 }
 
+message mapbuilding_change {
+    repeated share.mapbuilding_info_data mapbuildings = 1;
+}
+
 // ----------------------------------------------------------------------------
 
 message get_pioneer_info_res {
@@ -92,6 +96,12 @@ message player_move_res {
 
 message player_talk_select_res {
     required int32 res = 1;
+}
+
+message player_gather_start_res {
+    required int32 res = 1;
+    required string buildingId = 2;
+    required string pioneerId = 3;
 }
 
 message player_gather_res {

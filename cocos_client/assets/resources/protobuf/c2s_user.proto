@@ -64,6 +64,12 @@ message player_talk_select {
     required uint32 currStep = 3;
 }
 
+message player_gather_start {
+    required string pioneerId = 1;
+    required string resourceBuildingId = 2;
+    required string feeTxhash = 3;
+}
+
 message player_gather {
     required string pioneerId = 1;
     required string resourceBuildingId = 2;

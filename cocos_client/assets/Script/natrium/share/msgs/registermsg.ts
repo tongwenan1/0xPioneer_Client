@@ -15,6 +15,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.upload_pending_res, "upload_pending_res", "s2c_user.upload_pending_res");
     pcodec.register_protobuf_msg(protobuf_s2c.get_pioneer_info_res, "get_pioneer_info_res", "s2c_user.get_pioneer_info_res");
     pcodec.register_protobuf_msg(protobuf_s2c.pioneer_change, "pioneer_change", "s2c_user.pioneer_change");
+    pcodec.register_protobuf_msg(protobuf_s2c.mapbuilding_change, "mapbuilding_change", "s2c_user.mapbuilding_change");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_move_res, "player_move_res", "s2c_user.player_move_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_talk_select_res, "player_talk_select_res", "s2c_user.player_talk_select_res");
@@ -100,6 +101,9 @@ export const registermsg = (pcodec: packetcodec) => {
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_lvlup_change, "player_lvlup_change", "s2c_user.player_lvlup_change");
 
+
+    pcodec.register_protobuf_msg(protobuf_s2c.player_gather_start_res, "player_gather_start_res", "s2c_user.player_gather_start_res");
+
     // register client msg
     pcodec.register_protobuf_msg(protobuf_c2s.login, "login", "c2s_user.login");
     pcodec.register_protobuf_msg(protobuf_c2s.create_player, "create_player", "c2s_user.create_player");
@@ -151,4 +155,6 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.get_battle_report, "get_battle_report", "c2s_user.get_battle_report");
 
     pcodec.register_protobuf_msg(protobuf_c2s.fetch_user_psyc, "fetch_user_psyc", "c2s_user.fetch_user_psyc");
+
+    pcodec.register_protobuf_msg(protobuf_c2s.player_gather_start, "player_gather_start", "c2s_user.player_gather_start");
 };

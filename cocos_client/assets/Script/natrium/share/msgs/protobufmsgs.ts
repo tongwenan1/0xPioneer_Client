@@ -48,7 +48,11 @@ export enum protobuf_c2s {
     reborn_all = 231,
     get_battle_report = 299,
 
-    fetch_user_psyc = 400
+
+
+    fetch_user_psyc = 400,
+
+    player_gather_start = 500,
 }
 
 export enum protobuf_s2c {
@@ -65,6 +69,7 @@ export enum protobuf_s2c {
     get_block_height_res = 10142,
     get_pioneer_info_res = 10143,
     pioneer_change = 10144,
+    mapbuilding_change = 10145,
 
     player_move_res = 20000,
     player_talk_select_res = 20201,
@@ -124,6 +129,8 @@ export enum protobuf_s2c {
     mapbuilding_reborn_change = 20514,
     pioneer_reborn_res = 20515,
 
-    player_lvlup_change = 30100
+    player_lvlup_change = 30100,
+
+    player_gather_start_res = 50000,
 
 }

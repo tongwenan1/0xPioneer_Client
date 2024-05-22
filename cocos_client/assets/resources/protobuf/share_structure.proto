@@ -207,6 +207,8 @@ message mapbuilding_info_data {
     optional uint32 quota = 22;
     optional uint32 wormholdCountdownTime = 23;
     optional uint32 tavernCountdownTime = 24;
+
+    repeated string gatherPioneerIds = 25;
 }
 
 message building_resource {

@@ -439,8 +439,9 @@ export default class PioneerMgr {
                 }
             } else if (stayBuilding.type == MapBuildingType.resource) {
                 if (pioneer.type == MapPioneerType.player && pioneer.faction != MapMemberFactionType.enemy) {
-                    DataMgr.setTempSendData("player_gather_res", { pioneerId: pioneerId, buildingId: stayBuilding.id });
-                    NetworkMgr.websocketMsg.player_gather({ pioneerId: pioneerId, resourceBuildingId: stayBuilding.id });
+                    // DataMgr.setTempSendData("player_gather_res", { pioneerId: pioneerId, buildingId: stayBuilding.id });
+                    // NetworkMgr.websocketMsg.player_gather({ pioneerId: pioneerId, resourceBuildingId: stayBuilding.id });
+                    NetworkMgr.websocketMsg.player_gather_start({ pioneerId: pioneerId, resourceBuildingId: stayBuilding.id });
                 } else {
                     if (isStay) {
                         pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);
