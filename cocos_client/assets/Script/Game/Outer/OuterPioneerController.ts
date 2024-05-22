@@ -270,6 +270,7 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_BEGIN, this._onBeginFight, this);
         NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_DID_ATTACK, this._onFightDidAttack, this);
         NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_END, this._onEndFight, this);
+        NotificationMgr.removeListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
     }
 
     private _refreshUI() {
@@ -771,6 +772,7 @@ export class OuterPioneerController extends ViewController {
     }
 
     private _onMapFakeFightShow(data: { stayPositions: Vec2[] }) {
+        console.log("exce begin");
         const fightView = instantiate(this.onlyFightPrefab);
         fightView.setParent(this.node);
         if (data.stayPositions.length == 7) {
@@ -783,6 +785,7 @@ export class OuterPioneerController extends ViewController {
             fightView.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(data.stayPositions[0].x, data.stayPositions[0].y));
         }
         this.scheduleOnce(()=> {
+            console.log("exce end");
             fightView.destroy();
         }, 5);
     }

@@ -249,7 +249,6 @@ export class OuterBuildingView extends ViewController {
                 if (this._building.type == MapBuildingType.wormhole) {
                     const wormObj = this._building as MapBuildingWormholeObject;
                     const currentTimestamp: number = new Date().getTime();
-                    console.log("exce wt: " + wormObj.wormholdCountdownTime + ", c: " + currentTimestamp);
                     if (wormObj.wormholdCountdownTime >= currentTimestamp) {
                         this.refreshUI(this._building);
                     }

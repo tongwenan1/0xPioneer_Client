@@ -92,7 +92,6 @@ export class MapBuildingDataMgr {
                 wormholdCountdownTime: element.wormholdCountdownTime * 1000,
                 attacker: attackerMap,
             };
-            console.log('exce wobj:', wormholeObj);
             return wormholeObj;
         } else {
             return baseObj;

@@ -1,4 +1,4 @@
-import { CurveRange, Vec2 } from "cc";
+import { CurveRange, Vec2, v2 } from "cc";
 import CommonTools from "../Tool/CommonTools";
 import { AttrChangeType, GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { GameMgr, ItemMgr, LanMgr } from "../Utils/Global";
@@ -147,11 +147,13 @@ export default class PioneerMgr {
         if (wormholePioneer == null || mainCity == null) {
             return;
         }
+        wormholePioneer.stayPos = v2(28, 17);
         wormholePioneer.name = attackerPlayerName;
         wormholePioneer.show = true;
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: wormholePioneer.id, show: wormholePioneer.show });
 
         const moveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(wormholePioneer.stayPos, mainCity.stayMapPositions[0]);
+        console.log("exce d:", moveData);
         if (!moveData.canMove) {
             return;
         }
@@ -242,6 +244,9 @@ export default class PioneerMgr {
         }
         const currentTimeStamp = new Date().getTime();
         if (stayBuilding == null) {
+            if (pioneer.id == "wormhole_token") {
+                return;
+            }
             let stayPioneers;
             if (movingTargetData != null && movingTargetData.target == MapMemberTargetType.pioneer) {
                 // if target pioneer is moving, than try get it from near position;
@@ -319,6 +324,7 @@ export default class PioneerMgr {
             if (stayBuilding.type == MapBuildingType.city) {
                 if (pioneer.id == "wormhole_token") {
                     pioneer.show = false;
+                    console.log("exce stepstep");
                     NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: pioneer.id, show: pioneer.show });
                     NotificationMgr.triggerEvent(NotificationName.MAP_FAKE_FIGHT_SHOW, { stayPositions: stayBuilding.stayMapPositions });
                 }
