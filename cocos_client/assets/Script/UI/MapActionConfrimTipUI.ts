@@ -1,6 +1,5 @@
-import { _decorator, Component, Label, Node, tween, v3, Vec2 } from "cc";
+import { _decorator, Label, Node, Vec2 } from "cc";
 import ViewController from "../BasicView/ViewController";
-import { LanMgr } from "../Utils/Global";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import ConfigConfig from "../Config/ConfigConfig";
 import { ConfigType, OneStepCostEnergyParam } from "../Const/Config";
@@ -33,6 +32,11 @@ export class MapActionConfrimTipUI extends ViewController {
 
         // useLanMgr
         // this.node.getChildByPath("Content/Title").getComponent(Label).string = LanMgr.getLanById("106008");
+        // this.node.getChildByPath("Content/CostView/Title").getComponent(Label).string = LanMgr.getLanById("106008");
+        // this.node.getChildByPath("Content/MoveCountView/Title").getComponent(Label).string = LanMgr.getLanById("106008");
+        // this.node.getChildByPath("Content/CostTimeView/Title").getComponent(Label).string = LanMgr.getLanById("106008");
+        // this.node.getChildByPath("Content/ArriveTimeView/Title").getComponent(Label).string = LanMgr.getLanById("106008");
+        // this.node.getChildByPath("Content/Button/name").getComponent(Label).string = LanMgr.getLanById("106008");
     }
 
     protected viewPopAnimation(): boolean {
@@ -46,11 +50,11 @@ export class MapActionConfrimTipUI extends ViewController {
         this._cost = (ConfigConfig.getConfig(ConfigType.OneStepCostEnergy) as OneStepCostEnergyParam).cost * this._stepCount;
 
         if (this._targetPos != null) {
-            this.node.getChildByPath("Content/locationView/Label").getComponent(Label).string = "(" + this._targetPos.x + "," + this._targetPos.y + ")";
+            this.node.getChildByPath("Content/LocationView/Content/Label").getComponent(Label).string = "(" + this._targetPos.x + "," + this._targetPos.y + ")";
         }
-       
-        this.node.getChildByPath("Content/CostView/Value").getComponent(Label).string = this._cost.toString();
-        this.node.getChildByPath("Content/MoveCountView/Value").getComponent(Label).string = this._stepCount.toString();
+
+        this.node.getChildByPath("Content/CostView/Content/Value").getComponent(Label).string = this._cost.toString();
+        this.node.getChildByPath("Content/MoveCountView/Content/Value").getComponent(Label).string = this._stepCount.toString();
 
         const perStepTime: number = ((GameMainHelper.instance.tiledMapTilewidth * 0.5) / this._moveSpeed) * (1 / 60) * 1000;
         this.node.getChildByPath("Content/CostTimeView/Value").getComponent(Label).string = CommonTools.formatSeconds(perStepTime * this._stepCount);

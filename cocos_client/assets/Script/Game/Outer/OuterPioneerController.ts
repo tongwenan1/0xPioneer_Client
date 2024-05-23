@@ -772,7 +772,6 @@ export class OuterPioneerController extends ViewController {
     }
 
     private _onMapFakeFightShow(data: { stayPositions: Vec2[] }) {
-        console.log("exce begin");
         const fightView = instantiate(this.onlyFightPrefab);
         fightView.setParent(this.node);
         if (data.stayPositions.length == 7) {
@@ -785,7 +784,6 @@ export class OuterPioneerController extends ViewController {
             fightView.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(data.stayPositions[0].x, data.stayPositions[0].y));
         }
         this.scheduleOnce(()=> {
-            console.log("exce end");
             fightView.destroy();
         }, 5);
     }

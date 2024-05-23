@@ -716,7 +716,6 @@ export class OuterTiledMapActionController extends ViewController {
                     result.node
                         .getComponent(MapActionConfrimTipUI)
                         .configuration(taregtPos, movePaths.length, currentActionPioneer.speed, async (confirmed: boolean, cost: number) => {
-                            console.log("exce con: " + confirmed);
                             if (confirmed) {
                                 if (cost > 0) {
                                     const ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
@@ -725,7 +724,6 @@ export class OuterTiledMapActionController extends ViewController {
                                         return;
                                     }
                                 }
-                                console.log("exce uset: " + useActionType);
                                 if (useActionType == 10) {
                                     // wormhole
                                     const result = await UIPanelManger.inst.pushPanel(HUDName.Alter, UIPanelLayerType.HUD);

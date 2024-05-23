@@ -49,12 +49,6 @@ export class WorldTreasureUIRe extends ViewController {
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
     }
-    protected viewPopAnimation(): boolean {
-        return true;
-    }
-    protected contentView(): Node {
-        return this.node.getChildByPath("__ViewContent");
-    }
 
     private _refreshUI() {
         const perTimeNeedProgress: number = (
@@ -105,7 +99,7 @@ export class WorldTreasureUIRe extends ViewController {
         rigthView.getChildByPath("BoxView/NonGetView").active = !canGet;
         const claimButton = rigthView.getChildByPath("BoxView/ClaimButton");
         claimButton.getComponent(Button).interactable = canGet;
-        claimButton.getChildByPath("Title").getComponent(Label).color = canGet ? Color.BLACK : Color.GRAY;
+        claimButton.getChildByPath("Title").getComponent(Label).color = canGet ? Color.BLACK : new Color().fromHEX("#5B5850");
 
         const currentProgress: number = progress - perTimeNeedProgress * canGeTimes;
         const totalProgress: number = perTimeNeedProgress;
