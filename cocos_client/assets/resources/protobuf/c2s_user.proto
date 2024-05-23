@@ -47,7 +47,7 @@ message get_block_height {
 // ----------------------------------------------------------------------------
 
 message get_pioneer_info {
-    required string pioneerId = 1;
+    repeated string pioneerIds = 1;
 }
 
 // ----------------------------------------------------------------------------
@@ -141,8 +141,8 @@ message player_generate_energy {
     required string num = 1; 
 }
 
-message player_generate_troop {
-    required string num = 1;
+message player_generate_troop_start {
+    required uint32 num = 1;
 }
 
 message player_building_delegate_nft {

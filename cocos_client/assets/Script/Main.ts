@@ -177,16 +177,14 @@ export class Main extends ViewController {
         // artifact
         NetworkMgr.websocket.on("artifact_change", DataMgr.artifact_change);
         // inner builing
-        NetworkMgr.websocket.on("player_building_levelup_res", DataMgr.player_building_levelup_res);
+        NetworkMgr.websocket.on("building_change", DataMgr.building_change);
         // map
         NetworkMgr.websocket.on("pioneer_change", DataMgr.pioneer_change);
         NetworkMgr.websocket.on("mappioneer_reborn_change", DataMgr.mappioneer_reborn_change);
 
         NetworkMgr.websocket.on("mapbuilding_change", DataMgr.mapbuilding_change);
         NetworkMgr.websocket.on("mapbuilding_reborn_change", DataMgr.mapbuilding_reborn_change);
-
-        NetworkMgr.websocket.on("pioneer_reborn_res", DataMgr.pioneer_reborn_res);
-
+        
         NetworkMgr.websocket.on("player_explore_npc_start_res", DataMgr.player_explore_npc_start_res);
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
         NetworkMgr.websocket.on("player_event_res", DataMgr.player_event_res);
@@ -218,7 +216,6 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_artifact_remove_res", DataMgr.player_artifact_remove_res);
         NetworkMgr.websocket.on("player_get_auto_energy_res", DataMgr.player_get_auto_energy_res);
         NetworkMgr.websocket.on("player_generate_energy_res", DataMgr.player_generate_energy_res);
-        NetworkMgr.websocket.on("player_generate_troop_res", DataMgr.player_generate_troop_res);
         NetworkMgr.websocket.on("player_building_delegate_nft_res", DataMgr.player_building_delegate_nft_res);
         NetworkMgr.websocket.on("player_nft_skill_learn", DataMgr.player_nft_skill_learn_res);
         NetworkMgr.websocket.on("player_nft_skill_forget", DataMgr.player_nft_skill_forget_res);

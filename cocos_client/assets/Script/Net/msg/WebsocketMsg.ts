@@ -104,6 +104,9 @@ export class WebsocketMsg {
     public player_pioneer_change_show(d: c2s_user.Iplayer_pioneer_change_show) {
         this.send_packet("player_pioneer_change_show", d);
     }
+    public get_pioneer_info(d: c2s_user.Iget_pioneer_info) {
+        this.send_packet("get_pioneer_info", d);
+    }
     public player_move(d: c2s_user.Iplayer_move) {
         this.send_packet("player_move", d);
     }
@@ -161,8 +164,8 @@ export class WebsocketMsg {
     public player_generate_energy(d: c2s_user.Iplayer_generate_energy) {
         this.send_packet("player_generate_energy", d);
     }
-    public player_generate_troop(d: c2s_user.Iplayer_generate_troop) {
-        this.send_packet("player_generate_troop", d);
+    public player_generate_troop_start(d: c2s_user.Iplayer_generate_troop_start) {
+        this.send_packet("player_generate_troop_start", d);
     }
     public player_building_delegate_nft(d: c2s_user.Iplayer_building_delegate_nft) {
         this.send_packet("player_building_delegate_nft", d);
@@ -282,6 +285,10 @@ export namespace c2s_user {
         pioneerId: string;
         show: boolean;
     }
+
+    export interface Iget_pioneer_info {
+        pioneerIds: string[];
+    }
     export interface Iplayer_move {
         pioneerId: string;
         movePath: string;
@@ -357,7 +364,7 @@ export namespace c2s_user {
     export interface Iplayer_generate_energy {
         num: number;
     }
-    export interface Iplayer_generate_troop {
+    export interface Iplayer_generate_troop_start {
         num: number;
     }
     export interface Iplayer_building_delegate_nft {
@@ -570,20 +577,14 @@ export namespace s2c_user {
         res: number;
         data: share.Iartifact_info_data;
     }
-    export interface Iplayer_building_levelup_res {
-        res: number;
-        data?: share.Ibuilding_data;
+    export interface Ibuilding_change {
+        buildings: share.Ibuilding_data[];
     }
     export interface Iplayer_get_auto_energy_res {
         num: number;
     }
     export interface Iplayer_generate_energy_res {
         num: number;
-        subItems: ItemData[];
-    }
-    export interface Iplayer_generate_troop_res {
-        num: number;
-        time: number;
         subItems: ItemData[];
     }
     export interface Iplayer_building_delegate_nft_res {
@@ -756,6 +757,11 @@ export namespace share {
         upgradeCountTime: number;
         upgradeTotalTime: number;
         upgradeIng: boolean;
+
+        troopStartTime: number;
+        troopEndTime: number;
+        troopNum: number;
+        troopIng: boolean;
     }
 
     export interface Iplayer_data {
@@ -818,12 +824,15 @@ export namespace share {
         showHideStruct: Iuser_map_member_status;
         actionEventId?: string;
         NFTInitLinkId?: string;
-        rebirthCountTime?: number;
         killerId?: string;
         NFTId?: string;
         talkId?: string;
         talkCountStruct: Iuser_map_member_status;
+
         actionFightRes: Ifight_res[];
+        actionFightWinner: number;
+        rebirthStartTime?: number;
+        rebirthEndTime?: number;
     }
     export interface Ifight_res {
         attackerId: string;

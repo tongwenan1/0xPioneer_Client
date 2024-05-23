@@ -129,18 +129,19 @@ export class DataMgr {
         DataMgr.s.artifact.changeObj_artifact_effectIndex(p.data.artifactConfigId, p.data.effectIndex);
     };
     //------------------------------------- inner building
-    public static player_building_levelup_res = (e: any) => {
-        const p: s2c_user.Iplayer_building_levelup_res = e.data;
-        if (p.res !== 1) {
-            return;
+    public static building_change = (e: any) => {
+        const p: s2c_user.Ibuilding_change = e.data;
+        for (const netBuilding of p.buildings) {
+            const currentData = DataMgr.s.userInfo.data.innerBuildings[netBuilding.id];
+            DataMgr.s.userInfo.replaceData(netBuilding);
+            if (currentData.troopIng != netBuilding.troopIng || currentData.upgrading != netBuilding.upgradeIng) {
+                NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_DATA_CHANGE);
+            }
+            if (currentData.upgrading && !netBuilding.upgradeIng) {
+                // upgrade finish
+                NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, currentData.buildType);
+            }
         }
-        DataMgr.s.userInfo.innerBuildingUpgradeChanged(
-            p.data.id as InnerBuildingType,
-            p.data.level,
-            p.data.upgradeIng,
-            p.data.upgradeCountTime,
-            p.data.upgradeTotalTime
-        );
     };
 
     //------------------------------------- map
@@ -165,11 +166,6 @@ export class DataMgr {
                     }
                     // acion type
                     if (currentData.actionType != temple.actionType) {
-                        if (temple.actionBeginTimeStamp > 0 && temple.actionEndTimeStamp > 0) {
-                            localDatas[i].actionBeginTimeStamp = new Date().getTime();
-                            localDatas[i].actionEndTimeStamp =
-                                localDatas[i].actionBeginTimeStamp + (temple.actionEndTimeStamp - temple.actionBeginTimeStamp) * 1000;
-                        }
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: temple.id });
                     }
                     // fight
@@ -251,7 +247,6 @@ export class DataMgr {
             return;
         }
     };
-    public static pioneer_reborn_res = (e: any) => {};
     public static mapbuilding_reborn_change = (e: any) => {
         NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("106010"));
     };
@@ -758,7 +753,6 @@ export class DataMgr {
                     clearInterval(intervalId);
 
                     if (killerId != null && selfDeadName != null) {
-                        pioneerDataMgr.changeBeKilled(playerPioneerId, killerId);
                         NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_CENTER_TIP, {
                             tip: LanMgr.replaceLanById("106001", [LanMgr.getLanById(selfDeadName)]),
                         });
@@ -836,13 +830,6 @@ export class DataMgr {
         if (DataMgr.socketSendData.has(key)) {
             const data: s2c_user.Iplayer_generate_energy_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_generate_energy_res;
             // upload resource changed inner_building-generate_energy
-        }
-    };
-    public static player_generate_troop_res = (e: any) => {
-        const key: string = "player_generate_troop_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_generate_troop_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_generate_troop_res;
-            DataMgr.s.userInfo.beginGenerateTroop(data.time, data.num);
         }
     };
     public static player_building_delegate_nft_res = (e: any) => {

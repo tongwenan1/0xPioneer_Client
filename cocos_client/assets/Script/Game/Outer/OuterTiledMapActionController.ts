@@ -473,7 +473,7 @@ export class OuterTiledMapActionController extends ViewController {
             return;
         }
         // check is dead
-        if (!currentActionPioneer.show && currentActionPioneer.rebirthCountTime > 0) {
+        if (currentActionPioneer.actionType == MapPioneerActionType.dead) {
             // useLanMgr
             UIHUDController.showCenterTip(LanMgr.getLanById("203003"));
             // UIHUDController.showCenterTip("pioneer is dead");

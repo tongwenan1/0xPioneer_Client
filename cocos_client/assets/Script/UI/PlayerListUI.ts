@@ -4,7 +4,7 @@ import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import { DataMgr } from "../Data/DataMgr";
-import { MapPlayerPioneerObject } from "../Const/PioneerDefine";
+import { MapPioneerActionType, MapPlayerPioneerObject } from "../Const/PioneerDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("PlayerListUI")
@@ -66,7 +66,7 @@ export class PlayerListUI extends Component {
     private _refreshPlayerList() {
         this._pioneers = [];
         for (const temple of DataMgr.s.pioneer.getAllPlayers()) {
-            if (temple.show || (!temple.show && temple.rebirthCountTime > 0)) {
+            if (temple.show) {
                 this._pioneers.push(temple);
             }
         }
@@ -92,7 +92,9 @@ export class PlayerListUI extends Component {
         this._playerItemContent.getComponent(Layout).updateLayout();
     }
 
-    update(deltaTime: number) {}
+    update(deltaTime: number) {
+        
+    }
 
     private onTapPlayerItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);

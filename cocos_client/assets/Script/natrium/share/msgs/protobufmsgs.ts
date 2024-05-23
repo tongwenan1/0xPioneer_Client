@@ -27,7 +27,6 @@ export enum protobuf_c2s {
     player_building_levelup = 210,
     player_get_auto_energy = 211,
     player_generate_energy = 212,
-    player_generate_troop = 213,
     player_building_delegate_nft = 214,
     player_point_treasure_open = 215,
     player_nft_lvlup = 216,
@@ -54,6 +53,7 @@ export enum protobuf_c2s {
     player_explore_start = 510,
     player_explore_npc_start = 511,
     player_explore_gangster_start = 512,
+    player_generate_troop_start = 513,
 
     player_fight_start = 520,
 
@@ -75,6 +75,8 @@ export enum protobuf_s2c {
     get_pioneer_info_res = 10143,
     pioneer_change = 10144,
     mapbuilding_change = 10145,
+    building_change = 10146,
+    nft_change = 10147,
 
     player_move_res = 20000,
     player_talk_select_res = 20201,
@@ -89,7 +91,6 @@ export enum protobuf_s2c {
     player_building_levelup_res = 20210,
     player_get_auto_energy_res = 20211,
     player_generate_energy_res = 20212,
-    player_generate_troop_res = 20213,
     player_building_delegate_nft_res = 20214,
     player_point_treasure_open_res = 20215,
     player_nft_lvlup_res = 20216,
@@ -140,6 +141,7 @@ export enum protobuf_s2c {
     player_explore_start_res = 50010,
     player_explore_npc_start_res = 50011,
     player_explore_gangster_start_res = 50012,
+    player_generate_troop_start_res = 50213,
 
     player_fight_start_res = 50020,
 

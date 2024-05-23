@@ -10,6 +10,7 @@ import { NotificationName } from "../../../Const/Notification";
 import UIPanelManger from "../../../Basic/UIPanelMgr";
 import { UIName } from "../../../Const/ConstUIDefine";
 import { UIHUDController } from "../../../UI/UIHUDController";
+import { DataMgr } from "../../../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("InnerBuildingView")
@@ -93,15 +94,7 @@ export class InnerBuildingView extends ViewController {
 
         // info
         this._infoView.refreshUI(this._building);
-        this._infoView.setProgressTime(this._building.upgradeBeginTimestamp, this._building.upgradeEndTimestamp);
-
-        // building anim
-        if (this._building.upgrading) {
-            this._buildingAnim.active = true;
-        } else {
-            this._buildingAnim.active = false;
-        }
-
+        
         // can action
         this.node.getChildByPath("clickNode").getComponent(Button).interactable = canAction;
     }
@@ -111,6 +104,7 @@ export class InnerBuildingView extends ViewController {
 
     protected innerBuildingLoad() {}
     protected innerBuildingTaped() {}
+    protected innerBuildingUpdate() {}
 
     private _buildingAnim: Node = null;
     private _defaultBuildingView: Node = null;
@@ -141,33 +135,39 @@ export class InnerBuildingView extends ViewController {
     protected viewDidAppear(): void {
         super.viewDidAppear();
 
-        NotificationMgr.addListener(NotificationName.INNER_BUILDING_BEGIN_UPGRADE, this._beginUpgrade, this);
-        NotificationMgr.addListener(NotificationName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED, this._upgradeCountTimeChanged, this);
-        NotificationMgr.addListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._upgradeFinished, this);
+        NotificationMgr.addListener(NotificationName.INNER_BUILDING_DATA_CHANGE, this._onInnerBuildingDataChange, this);
     }
 
     protected viewDidDisAppear(): void {
         super.viewDidDisAppear();
 
-        NotificationMgr.removeListener(NotificationName.INNER_BUILDING_BEGIN_UPGRADE, this._beginUpgrade, this);
-        NotificationMgr.removeListener(NotificationName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED, this._upgradeCountTimeChanged, this);
-        NotificationMgr.removeListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._upgradeFinished, this);
+        NotificationMgr.removeListener(NotificationName.INNER_BUILDING_DATA_CHANGE, this._onInnerBuildingDataChange, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
     }
-    //---------------------------- function
-    private _beginUpgrade() {
-        this.refreshUI(this._building);
-    }
-    private _upgradeCountTimeChanged() {
-        this.refreshUI(this._building);
-    }
-    private _upgradeFinished() {
-        this.refreshUI(this._building);
-    }
 
+    protected viewUpdate(dt: number): void {
+        super.viewUpdate(dt);
+
+        if (this._building == null) {
+            return;
+        }
+        this._infoView.setProgressTime(this._building.upgradeBeginTimestamp, this._building.upgradeEndTimestamp);
+        // building anim
+        if (this._building.upgrading) {
+            this._buildingAnim.active = true;
+        } else {
+            this._buildingAnim.active = false;
+        }
+
+        this.innerBuildingUpdate();
+    }
+    //---------------------------- function
+    private _onInnerBuildingDataChange() {
+        this.refreshUI(DataMgr.s.userInfo.data.innerBuildings[this._building.buildType]);
+    }
     //---------------------------- action
     private onTapBuilding() {
         if (this._building == null) {

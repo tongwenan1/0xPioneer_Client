@@ -16,6 +16,8 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.get_pioneer_info_res, "get_pioneer_info_res", "s2c_user.get_pioneer_info_res");
     pcodec.register_protobuf_msg(protobuf_s2c.pioneer_change, "pioneer_change", "s2c_user.pioneer_change");
     pcodec.register_protobuf_msg(protobuf_s2c.mapbuilding_change, "mapbuilding_change", "s2c_user.mapbuilding_change");
+    pcodec.register_protobuf_msg(protobuf_s2c.building_change, "building_change", "s2c_user.building_change");
+    pcodec.register_protobuf_msg(protobuf_s2c.nft_change, "nft_change", "s2c_user.nft_change");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_move_res, "player_move_res", "s2c_user.player_move_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_talk_select_res, "player_talk_select_res", "s2c_user.player_talk_select_res");
@@ -29,7 +31,6 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_building_levelup_res, "player_building_levelup_res", "s2c_user.player_building_levelup_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_get_auto_energy_res, "player_get_auto_energy_res", "s2c_user.player_get_auto_energy_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_generate_energy_res, "player_generate_energy_res", "s2c_user.player_generate_energy_res");
-    pcodec.register_protobuf_msg(protobuf_s2c.player_generate_troop_res, "player_generate_troop_res", "s2c_user.player_generate_troop_res");
     pcodec.register_protobuf_msg(
         protobuf_s2c.player_building_delegate_nft_res,
         "player_building_delegate_nft_res",
@@ -104,6 +105,8 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_explore_start_res, "player_explore_start_res", "s2c_user.player_explore_start_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_explore_npc_start_res, "player_explore_npc_start_res", "s2c_user.player_explore_npc_start_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_explore_gangster_start_res, "player_explore_gangster_start_res", "s2c_user.player_explore_gangster_start_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_generate_troop_start_res, "player_generate_troop_start_res", "s2c_user.player_generate_troop_start_res");
+
     pcodec.register_protobuf_msg(protobuf_s2c.player_fight_start_res, "player_fight_start_res", "s2c_user.player_fight_start_res");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_wormhole_fight_start_res, "player_wormhole_fight_start_res", "s2c_user.player_wormhole_fight_start_res");
@@ -134,7 +137,6 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.player_building_levelup, "player_building_levelup", "c2s_user.player_building_levelup");
     pcodec.register_protobuf_msg(protobuf_c2s.player_get_auto_energy, "player_get_auto_energy", "c2s_user.player_get_auto_energy");
     pcodec.register_protobuf_msg(protobuf_c2s.player_generate_energy, "player_generate_energy", "c2s_user.player_generate_energy");
-    pcodec.register_protobuf_msg(protobuf_c2s.player_generate_troop, "player_generate_troop", "c2s_user.player_generate_troop");
     pcodec.register_protobuf_msg(protobuf_c2s.player_building_delegate_nft, "player_building_delegate_nft", "c2s_user.player_building_delegate_nft");
     pcodec.register_protobuf_msg(protobuf_c2s.player_point_treasure_open, "player_point_treasure_open", "c2s_user.player_point_treasure_open");
     pcodec.register_protobuf_msg(protobuf_c2s.player_nft_lvlup, "player_nft_lvlup", "c2s_user.player_nft_lvlup");
@@ -164,6 +166,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.player_explore_start, "player_explore_start", "c2s_user.player_explore_start");
     pcodec.register_protobuf_msg(protobuf_c2s.player_explore_npc_start, "player_explore_npc_start", "c2s_user.player_explore_npc_start");
     pcodec.register_protobuf_msg(protobuf_c2s.player_explore_gangster_start, "player_explore_gangster_start", "c2s_user.player_explore_gangster_start");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_generate_troop_start, "player_generate_troop_start", "c2s_user.player_generate_troop_start");
     pcodec.register_protobuf_msg(protobuf_c2s.player_fight_start, "player_fight_start", "c2s_user.player_fight_start");
     pcodec.register_protobuf_msg(protobuf_c2s.player_wormhole_fight_start, "player_wormhole_fight_start", "c2s_user.player_wormhole_fight_start");
 };

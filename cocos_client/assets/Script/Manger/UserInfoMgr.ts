@@ -22,9 +22,6 @@ export default class UserInfoMgr {
 
     public constructor() {
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onUserInfoDidChangeLevel, this);
-        NotificationMgr.addListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._onInnerBuildingDidFinishUpgrade, this);
-
-        NotificationMgr.addListener(NotificationName.GENERATE_TROOP_NUM_TO_CHANGE, this._generateTroopNumToChange, this);
     }
     //--------------------------------------------------
     public get afterTalkItemGetData() {
@@ -46,13 +43,7 @@ export default class UserInfoMgr {
             id: boxId,
         });
     }
-    public beginGenerateTroop(leftTime: number, troopNum: number) {
-        DataMgr.s.userInfo.beginGenerateTroop(leftTime, troopNum);
-        DataMgr.s.count.addObj_generateTroops({
-            num: troopNum,
-        });
-    }
-
+    
     public set afterCivilizationClosedShowItemDatas(itemDatas: ItemData[]) {
         this._afterCivilizationClosedShowItemDatas = itemDatas;
     }
@@ -101,22 +92,6 @@ export default class UserInfoMgr {
                     }
                 }
             });
-        }
-    }
-    private _onInnerBuildingDidFinishUpgrade(type: InnerBuildingType) {
-        const info = DataMgr.s.userInfo.data.innerBuildings[type];
-        if (info == null) {
-            return;
-        }
-        DataMgr.s.count.addObj_buildInnerBuilding({
-            bId: type,
-            level: info.buildLevel,
-        });
-    }
-
-    private _generateTroopNumToChange(data: { generateNum: number }) {
-        if (data.generateNum <= 0) {
-            return;
         }
     }
     private _generateEnergyNumToChange() {

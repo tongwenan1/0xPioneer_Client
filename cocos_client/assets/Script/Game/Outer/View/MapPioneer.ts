@@ -27,6 +27,8 @@ import { LanMgr } from "../../../Utils/Global";
 import { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerObject } from "../../../Const/PioneerDefine";
 import { OuterFightView } from "./OuterFightView";
 import { DataMgr } from "../../../Data/DataMgr";
+import { OuterFightResultView } from "./OuterFightResultView";
+import { NetworkMgr } from "../../../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("MapPioneer")
@@ -43,7 +45,11 @@ export class MapPioneer extends Component {
     private _actionTimeStamp: number = 0;
     private _actionTotalTime: number = 0;
 
+
     private _fightView: OuterFightView = null;
+    private _fightResultView: OuterFightResultView = null;
+    
+    private _contentView: Node = null;
     private _addingtroopsView: Node = null;
     private _exploringView: Node = null;
     private _eventingView: Node = null;
@@ -68,7 +74,7 @@ export class MapPioneer extends Component {
 
         let roleView = null;
         for (const name of this._roleNames) {
-            const templeView = this.node.getChildByPath("role/" + name);
+            const templeView = this._contentView.getChildByPath("role/" + name);
             templeView.active = name == model.animType;
             if (templeView.active) {
                 roleView = templeView;
@@ -120,18 +126,19 @@ export class MapPioneer extends Component {
             this._eventingView.active = false;
             this._eventWaitedView.active = false;
             this._fightView.node.active = false;
+            this._fightResultView.node.active = false;
 
             switch (this._model.actionType) {
                 case MapPioneerActionType.dead:
                     {
-                        this.node.active = true;
+                        this._contentView.active = true;
                         deadView.active = true;
                     }
                     break;
 
                 case MapPioneerActionType.wakeup:
                     {
-                        this.node.active = true;
+                        this._contentView.active = true;
                         wakeUpView.active = true;
                         wakeUpView.getComponent(Animation).play();
                     }
@@ -139,13 +146,13 @@ export class MapPioneer extends Component {
 
                 case MapPioneerActionType.defend:
                     {
-                        this.node.active = false; // not show
+                        this._contentView.active = false; // not show
                     }
                     break;
 
                 case MapPioneerActionType.idle:
                     {
-                        this.node.active = true; // only show
+                        this._contentView.active = true; // only show
                         idleView.active = true;
                         this._idleCountTime = 0;
                         if (this._currnetIdleAnim != null) {
@@ -156,53 +163,37 @@ export class MapPioneer extends Component {
 
                 case MapPioneerActionType.moving:
                     {
-                        this.node.active = true; // show
+                        this._contentView.active = true; // show
                     }
                     break;
 
                 case MapPioneerActionType.fighting:
                     {
-                        console.log("exce fight: ", this._model.fightData);
-                        this.node.active = false;
+                        this._contentView.active = false;
                         if (this._model.fightData != null && this._model.fightData.length > 0) {
                             this._fightView.node.active = true;
                             const fightDatas = this._model.fightData.slice();
-                            console.log("exce step1: " + fightDatas.length);
                             const attacker = this._model;
-                            let defender = null;
+                            let defender: MapPioneerObject = null;
                             if (fightDatas[0].attackerId == attacker.id) {
                                 defender = DataMgr.s.pioneer.getById(fightDatas[0].defenderId);
                             } else {
                                 defender = DataMgr.s.pioneer.getById(fightDatas[0].attackerId);
                             }
                             if (defender != null) {
-                                console.log("exce step2: ", defender);
-                                const data = fightDatas.shift();
-                                if (data.attackerId == attacker.id) {
-                                    // attacker action
-                                    defender.hp -= data.hp;
-                                } else {
-                                    attacker.hp -= data.hp;
-                                }
-                                this._fightView.refreshUI(
-                                    {
-                                        name: attacker.name,
-                                        hp: attacker.hp,
-                                        hpMax: attacker.hpMax,
-                                    },
-                                    {
-                                        name: defender.name,
-                                        hp: defender.hp,
-                                        hpMax: defender.hpmax,
-                                    },
-                                    true
-                                );
                                 const fightInterval: number = setInterval(() => {
                                     if (fightDatas.length <= 0) {
                                         clearInterval(fightInterval);
+                                        this._fightView.node.active = false;
+                                        this._fightResultView.node.active = true;
+                                        this._fightResultView.showResult(this._model.fightResultWin, ()=> {
+                                            this._fightResultView.node.active = false;
+                                            NetworkMgr.websocketMsg.get_pioneer_info({
+                                                pioneerIds: [attacker.id, defender.id]
+                                            });
+                                        });
                                         return;
                                     }
-                                    console.log("exce step3: " + fightDatas.length);
                                     const data = fightDatas.shift();
                                     if (data.attackerId == attacker.id) {
                                         // attacker action
@@ -219,11 +210,10 @@ export class MapPioneer extends Component {
                                         {
                                             name: defender.name,
                                             hp: defender.hp,
-                                            hpMax: defender.hpmax,
+                                            hpMax: defender.hpMax,
                                         },
                                         true
                                     );
-                                    
                                 }, 250);
                             }
                         }
@@ -232,7 +222,7 @@ export class MapPioneer extends Component {
 
                 case MapPioneerActionType.mining:
                     {
-                        this.node.active = true;
+                        this._contentView.active = true;
                         if (collectView != null) {
                             collectView.active = true;
                         }
@@ -241,7 +231,7 @@ export class MapPioneer extends Component {
 
                 case MapPioneerActionType.addingtroops:
                     {
-                        this.node.active = true;
+                        this._contentView.active = true;
                         idleView.active = true;
                         this._addingtroopsView.active = true;
                     }
@@ -249,7 +239,7 @@ export class MapPioneer extends Component {
 
                 case MapPioneerActionType.exploring:
                     {
-                        this.node.active = true;
+                        this._contentView.active = true;
                         idleView.active = true;
                         this._exploringView.active = true;
                     }
@@ -257,7 +247,7 @@ export class MapPioneer extends Component {
 
                 case MapPioneerActionType.eventing:
                     {
-                        this.node.active = true;
+                        this._contentView.active = true;
                         idleView.active = true;
                         if (this._model.eventStatus == MapPioneerEventStatus.None) {
                         } else if (this._model.eventStatus == MapPioneerEventStatus.Waiting) {
@@ -270,7 +260,7 @@ export class MapPioneer extends Component {
 
                 case MapPioneerActionType.wormhole:
                     {
-                        this.node.active = false;
+                        this._contentView.active = false;
                     }
                     break;
 
@@ -347,22 +337,27 @@ export class MapPioneer extends Component {
         this._fightView = this.node.getChildByPath("FightView").getComponent(OuterFightView);
         this._fightView.node.active = false;
 
-        this._addingtroopsView = this.node.getChildByName("Addingtroops");
+        this._fightResultView = this.node.getChildByPath("FightResultView").getComponent(OuterFightResultView);
+        this._fightResultView.node.active = false;
+
+        this._contentView = this.node.getChildByPath("Content");
+
+        this._addingtroopsView = this._contentView.getChildByName("Addingtroops");
         this._addingtroopsView.active = false;
 
-        this._exploringView = this.node.getChildByName("Exploring");
+        this._exploringView = this._contentView.getChildByName("Exploring");
         this._exploringView.active = false;
 
-        this._eventingView = this.node.getChildByName("Eventing");
+        this._eventingView = this._contentView.getChildByName("Eventing");
         this._eventingView.active = false;
 
-        this._eventWaitedView = this.node.getChildByName("EventWaited");
+        this._eventWaitedView = this._contentView.getChildByName("EventWaited");
         this._eventWaitedView.active = false;
 
-        this._timeCountProgress = this.node.getChildByPath("lastTIme/progressBar").getComponent(ProgressBar);
-        this._timeCountLabel = this.node.getChildByPath("lastTIme/time").getComponent(Label);
+        this._timeCountProgress = this._contentView.getChildByPath("lastTIme/progressBar").getComponent(ProgressBar);
+        this._timeCountLabel = this._contentView.getChildByPath("lastTIme/time").getComponent(Label);
 
-        this._resourceAnimView = this.node.getChildByName("resourceGetted");
+        this._resourceAnimView = this._contentView.getChildByName("resourceGetted");
         this._resourceAnimView.active = false;
     }
     start() {}

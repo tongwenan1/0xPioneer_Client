@@ -123,6 +123,9 @@ export class RecruitUI extends ViewController {
         if (configMaxTroop != null) {
             this._maxTroop = configMaxTroop;
         }
+        // test begin
+        this._maxTroop = 999999; 
+        // test end
         // perGenerateNum
         const configPerGenerateNum = InnerBuildingLvlUpConfig.getBuildingLevelData(barrackBuildingData.buildLevel, "time_barr");
         if (configPerGenerateNum != null) {
@@ -224,12 +227,8 @@ export class RecruitUI extends ViewController {
         for (const cost of this._costDatas) {
             cost.count = cost.count * this._selectGenerateNum;
         }
-        DataMgr.setTempSendData("player_generate_troop_res", {
-            num: this._selectGenerateNum,
-            time: this._generateTimeNum,
-            subItems: this._costDatas
-        });
-        NetworkMgr.websocketMsg.player_generate_troop({
+        console.log("exce type:" + typeof(this._selectGenerateNum));
+        NetworkMgr.websocketMsg.player_generate_troop_start({
             num: this._selectGenerateNum,
         });
         await this.playExitAnimation();

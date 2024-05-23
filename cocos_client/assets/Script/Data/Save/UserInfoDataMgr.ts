@@ -2,7 +2,7 @@ import NotificationMgr from "../../Basic/NotificationMgr";
 import InnerBuildingConfig from "../../Config/InnerBuildingConfig";
 import InnerBuildingLvlUpConfig from "../../Config/InnerBuildingLvlUpConfig";
 import LvlupConfig from "../../Config/LvlupConfig";
-import { InnerBuildingType } from "../../Const/BuildingDefine";
+import { InnerBuildingType, UserInnerBuildInfo } from "../../Const/BuildingDefine";
 import { GetPropData } from "../../Const/ConstDefine";
 import { LvlupConfigData } from "../../Const/Lvlup";
 import { NotificationName } from "../../Const/Notification";
@@ -39,20 +39,29 @@ export default class UserInfoDataMgr {
         return level;
     }
     //--------------------------------
-    public innerBuildingUpgradeChanged(buildingType: InnerBuildingType, buildingLevel: number, isUpgrading: boolean, beginTimeStamp: number, endTimeStamp: number) {
-        const buildInfo = this._data.innerBuildings[buildingType];
+    public convertNetDataToObject(netData: share.Ibuilding_data): UserInnerBuildInfo {
+        const currentTime: number = new Date().getTime();
+        return {
+            buildType: netData.id as InnerBuildingType,
+            buildLevel: netData.level,
+            upgrading: netData.upgradeIng,
+            upgradeBeginTimestamp: currentTime,
+            upgradeEndTimestamp: currentTime + (netData.upgradeTotalTime - netData.upgradeCountTime) * 1000,
+            troopIng: netData.troopIng,
+            troopStartTime: currentTime,
+            troopEndTime: currentTime + (netData.troopEndTime - netData.troopStartTime) * 1000,
+            troopNum: netData.troopNum,
+            buildBeginLatticeIndex: null
+        };
+    }
+
+    public replaceData(netBuilding: share.Ibuilding_data) {
+        const buildInfo = this._data.innerBuildings[netBuilding.id];
         if (buildInfo == null) {
             return;
         }
-        buildInfo.upgrading = isUpgrading;
-        buildInfo.buildLevel = buildingLevel;
-        buildInfo.upgradeBeginTimestamp = beginTimeStamp * 1000;
-        buildInfo.upgradeEndTimestamp = endTimeStamp * 1000;
-        if (buildInfo.upgrading) {
-            NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_BEGIN_UPGRADE, buildingType);
-        } else {
-            NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, buildingType);
-        }
+        this._data.innerBuildings[netBuilding.id] = this.convertNetDataToObject(netBuilding);
+        this._data.innerBuildings[netBuilding.id].buildBeginLatticeIndex = buildInfo.buildBeginLatticeIndex;
     }
 
     public changeBuildingLatticeBeginIndex(buildingType: InnerBuildingType, beginIndex: number) {
@@ -61,6 +70,7 @@ export default class UserInfoDataMgr {
             return;
         }
         buildInfo.buildBeginLatticeIndex = beginIndex;
+        
     }
 
     public getExplorationReward(boxId: string) {
@@ -69,14 +79,6 @@ export default class UserInfoDataMgr {
     public getPointExplorationReward(boxId: string) {
         this._data.pointTreasureDidGetRewards.push(boxId);
     }
-
-    public beginGenerateTroop(leftTime: number, troopNum: number) {
-        this._data.generateTroopInfo = {
-            countTime: leftTime,
-            troopNum: troopNum,
-        };
-    }
-
     public finishRookie() {
         this._data.didFinishRookie = true;
     }
@@ -124,13 +126,6 @@ export default class UserInfoDataMgr {
                 lotteryProcessLimit: globalData.heatValue.lotteryProcessLimit,
                 lotteryTimesLimit: globalData.heatValue.lotteryTimesLimit
             },
-            generateTroopInfo:
-                globalData.generateTroopInfo == null
-                    ? null
-                    : {
-                          countTime: globalData.generateTroopInfo.countTime,
-                          troopNum: globalData.generateTroopInfo.troopNum,
-                      },
             energyDidGetTimes: globalData.currFetchTimes,
             energyGetLimitTimes: globalData.limitFetchTimes,
             cityRadialRange: globalData.cityRadialRange,
@@ -141,14 +136,7 @@ export default class UserInfoDataMgr {
             wormholeDefenderIds: ["", "", ""],
         };
         for (const building of innerBuildings) {
-            this._data.innerBuildings[building.id] = {
-                buildBeginLatticeIndex: null,
-                buildLevel: building.level,
-                buildType: building.id as InnerBuildingType,
-                upgradeBeginTimestamp: building.upgradeCountTime * 1000,
-                upgradeEndTimestamp: building.upgradeTotalTime * 1000,
-                upgrading: building.upgradeIng,
-            };
+            this._data.innerBuildings[building.id] = this.convertNetDataToObject(building);
         }
         if (globalData.defender != null) {
             for (const key in globalData.defender) {
@@ -159,33 +147,6 @@ export default class UserInfoDataMgr {
         this._initInterval();
     }
     private _initInterval() {
-        setInterval(() => {
-            // upgrade building
-            if (this._data.innerBuildings != null) {
-                for (const key in this._data.innerBuildings) {
-                    const value = this._data.innerBuildings[key];
-                    if (!value.upgrading) {
-                        continue;
-                    }
-                    const currentTimestamp: number = new Date().getTime();
-                    if (currentTimestamp < value.upgradeEndTimestamp) { 
-                        NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_COUNT_TIME_CHANGED);
-                    } 
-                }
-            }
-
-            // generate troops
-            if (this._data.generateTroopInfo != null) {
-                if (this._data.generateTroopInfo.countTime > 0) {
-                    this._data.generateTroopInfo.countTime -= 1;
-                    NotificationMgr.triggerEvent(NotificationName.GENERATE_TROOP_TIME_COUNT_CHANGED);
-
-                    if (this._data.generateTroopInfo.countTime <= 0) {
-                        this._data.generateTroopInfo = null;
-                        NotificationMgr.triggerEvent(NotificationName.GENERATE_TROOP_NUM_TO_CHANGE, { generateNum: this._data.generateTroopInfo.troopNum });
-                    }
-                }
-            }
-        }, 1000);
+        
     }
 }

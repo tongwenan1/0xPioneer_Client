@@ -13,13 +13,10 @@ import { DataMgr } from "../../../Data/DataMgr";
 
 const { ccclass, property } = _decorator;
 
-@ccclass('InnerBarracksBuildingView')
+@ccclass("InnerBarracksBuildingView")
 export class InnerBarracksBuildingView extends InnerBuildingView {
-
     public async refreshUI(building: UserInnerBuildInfo, canAction: boolean = true) {
         await super.refreshUI(building, canAction);
-
-        this._countingGenerate();
     }
 
     private _generateTime: Label = null;
@@ -27,16 +24,15 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
     protected innerBuildingLoad(): void {
         super.innerBuildingLoad();
         this._generateTime = this.node.getChildByPath("RecruitTime").getComponent(Label);
-
-        NotificationMgr.addListener(NotificationName.GENERATE_TROOP_TIME_COUNT_CHANGED, this._countingGenerate, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
-
-        NotificationMgr.removeListener(NotificationName.GENERATE_TROOP_TIME_COUNT_CHANGED, this._countingGenerate, this);
     }
 
+    protected viewUpdate(dt: number): void {
+        super.viewUpdate(dt);
+    }
 
     protected async innerBuildingTaped(): Promise<void> {
         super.innerBuildingTaped();
@@ -45,7 +41,7 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
             return;
         }
         if (this._building.buildLevel > 0) {
-            if (DataMgr.s.userInfo.data.generateTroopInfo != null) {
+            if (this._building.troopIng) {
                 UIHUDController.showCenterTip(LanMgr.getLanById("201002"));
                 // UIHUDController.showCenterTip("Recruiting…Please wait…");
                 return;
@@ -56,15 +52,15 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
             }
         }
     }
-
-    //------------------------------- action
-    private _countingGenerate() {
-        if (this._building.buildLevel > 0 &&
-            DataMgr.s.userInfo.data.generateTroopInfo != null &&
-            DataMgr.s.userInfo.data.generateTroopInfo.countTime > 0) {
+    protected innerBuildingUpdate(): void {
+        super.innerBuildingUpdate();
+        if (this._building == null) {
+            return;
+        }
+        const currentTime: number = new Date().getTime();
+        if (this._building.troopEndTime > currentTime) {
             this._generateTime.node.active = true;
-            this._generateTime.string = CommonTools.formatSeconds(DataMgr.s.userInfo.data.generateTroopInfo.countTime);
-
+            this._generateTime.string = CommonTools.formatSeconds((this._building.troopEndTime - currentTime) / 1000);
         } else {
             this._generateTime.node.active = false;
         }

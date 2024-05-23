@@ -35,6 +35,8 @@ export class MapItemMonster extends Component {
                 view.getChildByPath("walk_bottom").active = model.actionType == MapPioneerActionType.moving && model.moveDirection == MapPioneerMoveDirection.bottom;
             }
         }
+
+        this.node.active = model.actionType != MapPioneerActionType.fighting;
     }
 
     public shadowMode() {

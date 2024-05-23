@@ -2,6 +2,7 @@ import { _decorator, Component, Label, log, Node, Sprite, SpriteFrame, Button, P
 import { LanMgr, PioneerMgr } from '../Utils/Global';
 import { MapPioneerActionType, MapPioneerEventStatus, MapPlayerPioneerObject } from '../Const/PioneerDefine';
 import { DataMgr } from '../Data/DataMgr';
+import CommonTools from '../Tool/CommonTools';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerItemUI')
@@ -40,12 +41,11 @@ export class PlayerItemUI extends Component {
         this.node.getChildByName("EventRemind").active = model.actionType == MapPioneerActionType.eventing && model.eventStatus == MapPioneerEventStatus.Waited;
         //selected
         this._selectedView.active = DataMgr.s.pioneer.getCurrentPlayer().id == model.id;
-        //rebirth
-        this._rebirthCountView.active = model.rebirthCountTime > 0;
-        this._rebirthCountView.getChildByName("Label").getComponent(Label).string = model.rebirthCountTime + "s";
         //hp
         this._hpView.getChildByName("progressBar").getComponent(ProgressBar).progress = model.hp / model.hpMax;
         this._hpView.getChildByName("Value").getComponent(Label).string = model.hp.toString();
+
+        this._model = model;
     }
 
     private _roleNames: string[] = [
@@ -53,6 +53,8 @@ export class PlayerItemUI extends Component {
         "doomsdayGangSpy",
         "rebels",
     ];
+
+    private _model: MapPlayerPioneerObject = null;
 
     private _nameLabel: Label = null;
     private _statusView: Node = null;
@@ -68,6 +70,20 @@ export class PlayerItemUI extends Component {
     }
     start() {
 
+    }
+
+    protected update(dt: number): void {
+        this._rebirthCountView.active = false;
+        if (this._model == null) {
+            return;
+        }
+        if (this._model.actionType == MapPioneerActionType.dead) {
+            const currentTimestamp = new Date().getTime();
+            if (currentTimestamp < this._model.rebirthEndTime) {
+                this._rebirthCountView.active = true;
+                this._rebirthCountView.getChildByName("Label").getComponent(Label).string = Math.floor((this._model.rebirthEndTime - currentTimestamp) / 1000) + "s";
+            }
+        } 
     }
 }
 

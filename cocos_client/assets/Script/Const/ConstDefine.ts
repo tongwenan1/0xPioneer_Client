@@ -8,7 +8,6 @@ export const PioneerGameTest = false;
 export type DataMgrResData =
     | s2c_user.Iplayer_move_res_local_data
     | s2c_user.Iplayer_building_delegate_nft_res
-    | s2c_user.Iplayer_generate_troop_res
     | s2c_user.Iplayer_generate_energy_res
     | s2c_user.Iplayer_get_auto_energy_res
     | s2c_user.Iplayer_artifact_remove_res

@@ -101,16 +101,17 @@ message pioneer_data {
     optional user_map_member_status showHideStruct = 17;
     optional string actionEventId = 18;
     optional string NFTInitLinkId = 19;
-    optional int32 rebirthCountTime = 20;
-    optional string killerId = 21;
-    optional string NFTId = 22;
-    optional string talkId = 23;
-    optional user_map_member_status talkCountStruct = 24;
+    optional int32 rebirthStartTime = 20;
+    optional int32 rebirthEndTime = 21;
+    optional string killerId = 22;
+    optional string NFTId = 23;
+    optional string talkId = 24;
+    optional user_map_member_status talkCountStruct = 25;
 
-    repeated fight_res actionFightRes = 25;
-    optional string actionFightId = 26;
-    optional uint32 actionFightWinner = 27;
-    optional uint32 actionFightHp = 28;
+    repeated fight_res actionFightRes = 26;
+    optional string actionFightId = 27;
+    optional uint32 actionFightWinner = 28;
+    optional uint32 actionFightHp = 29;
 }
 message fight_res {
     required string attackerId = 1;
@@ -130,6 +131,10 @@ message building_data {
     required uint32 upgradeCountTime = 4;
     required uint32 upgradeTotalTime = 5;
     required bool upgradeIng = 6;
+    required uint32 troopStartTime = 7;
+    required uint32 troopEndTime = 8;
+    required uint32 troopNum = 9;
+    required bool troopIng = 10;
 }
 
 message pos2d {

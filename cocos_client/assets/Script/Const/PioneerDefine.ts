@@ -172,10 +172,12 @@ export interface MapPioneerData {
     actionEventId?: string;
 
     fightData?: MapPioneerFightStuct[];
+    fightResultWin?: boolean;
 }
 
 export interface MapPlayerPioneerData extends MapPioneerData {
-    rebirthCountTime: number;
+    rebirthStartTime: number;
+    rebirthEndTime: number;
     killerId: string;
     NFTInitLinkId: string;
     NFTId: string;

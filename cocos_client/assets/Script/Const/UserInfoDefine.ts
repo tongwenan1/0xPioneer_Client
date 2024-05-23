@@ -38,7 +38,6 @@ export interface UserInfoObject {
 
     didFinishRookie: boolean;
 
-    generateTroopInfo: GenerateTroopInfo;
     energyDidGetTimes: number;
     energyGetLimitTimes: number;
     innerBuildings: { [key: string]: UserInnerBuildInfo };

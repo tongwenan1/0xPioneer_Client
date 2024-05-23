@@ -143,16 +143,6 @@ export class PioneersDataMgr {
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_TALK_CHANGED, { id: pioneerId, talkId: npcObj.talkId });
         }
     }
-
-    public changeBeKilled(pioneerId: string, killerId: string) {
-        const pioneer = this.getById(pioneerId);
-        if (pioneer != undefined && pioneer.type == MapPioneerType.player) {
-            const player = pioneer as MapPlayerPioneerObject;
-            player.rebirthCountTime = 10;
-            player.killerId = killerId;
-        }
-    }
-
     public gainHp(pioneerId: string, maxNum: number): number {
         const pioneer = this.getById(pioneerId);
         let cost: number = 0;
@@ -331,6 +321,7 @@ export class PioneersDataMgr {
         if (config == null) {
             return null;
         }
+        const currentTime = new Date().getTime();
         let obj = {
             id: temple.id,
             show: temple.show,
@@ -347,13 +338,14 @@ export class PioneersDataMgr {
             movePaths: [],
             actionType: temple.actionType as MapPioneerActionType,
             eventStatus: temple.eventStatus,
-            actionBeginTimeStamp: temple.actionBeginTimeStamp * 1000,
-            actionEndTimeStamp: temple.actionEndTimeStamp * 1000,
+            actionBeginTimeStamp: currentTime,
+            actionEndTimeStamp: currentTime + (temple.actionEndTimeStamp - temple.actionBeginTimeStamp) * 1000,
             logics: [],
             winProgress: temple.winProgress,
             winExp: temple.winExp,
             drop: [],
-            fightData: temple.actionFightRes
+            fightData: temple.actionFightRes,
+            fightResultWin: temple.actionFightWinner == 1
         };
         if (obj.type == MapPioneerType.player) {
             let playerObj: MapPlayerPioneerObject;
@@ -361,7 +353,8 @@ export class PioneersDataMgr {
                 ...obj,
                 NFTInitLinkId: temple.NFTInitLinkId,
                 NFTId: temple.NFTId,
-                rebirthCountTime: temple.rebirthCountTime,
+                rebirthStartTime: currentTime,
+                rebirthEndTime: currentTime + (temple.rebirthEndTime - temple.rebirthStartTime) * 1000,
                 killerId: temple.killerId,
             };
             return playerObj;
@@ -449,20 +442,6 @@ export class PioneersDataMgr {
                                         this.changeTalk(npcPioneer.id, npcPioneer.talkCountStruct.talkId);
                                         npcPioneer.talkCountStruct = null;
                                     }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if (pioneer.type == MapPioneerType.player) {
-                        const playerPioneer: MapPlayerPioneerObject = pioneer as MapPlayerPioneerObject;
-                        if (!!playerPioneer) {
-                            if (playerPioneer.rebirthCountTime > 0) {
-                                playerPioneer.rebirthCountTime -= 1;
-
-                                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_REBIRTH_COUNT_CHANGED, { id: playerPioneer.id });
-                                if (playerPioneer.rebirthCountTime == 0) {
-                                    NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_REBIRTH_BEGIN, { id: playerPioneer.id });
                                 }
                             }
                         }
