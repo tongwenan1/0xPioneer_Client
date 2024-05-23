@@ -79,12 +79,9 @@ message player_explore_npc_start {
     required string pioneerId = 1;
     required string npcId = 2;
 }
-
-message player_explore {
+message player_explore_gangster_start {
     required string pioneerId = 1;
-    required bool isExporeBuilding = 2;
-    required string exploreId = 3;
-    required string feeTxhash = 4;
+    required string gangsterId = 2;
 }
 
 message player_fight_start {

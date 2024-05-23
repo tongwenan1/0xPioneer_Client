@@ -111,6 +111,8 @@ export class OuterOtherPioneerView extends Component {
                 this._taskPreparingView.active = false;
             }
         }
+
+        this.node.active = pioneer.actionType != MapPioneerActionType.fighting;
     }
 
     private _hasTaskView: Node = null;

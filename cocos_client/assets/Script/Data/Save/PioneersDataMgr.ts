@@ -353,6 +353,7 @@ export class PioneersDataMgr {
             winProgress: temple.winProgress,
             winExp: temple.winExp,
             drop: [],
+            fightData: temple.actionFightRes
         };
         if (obj.type == MapPioneerType.player) {
             let playerObj: MapPlayerPioneerObject;

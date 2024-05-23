@@ -195,24 +195,30 @@ export default class PioneerMgr {
         if (!canFight) {
             return;
         }
-
-        DataMgr.setTempSendData("player_fight_res", {
-            isAttackBuilding: isAttackBuilding,
-            isSelfAttack: isSelfAttack,
-            attacker: attacker,
-            pioneerDefender: pioneerDefender,
-            buildingDefender: buildingDefender,
-            isEventFight: isEventFight,
-            eventCenterPositions: eventCenterPositions,
-            temporaryAttributes: temporaryAttributes,
-            fightOverCallback: fightOverCallback,
-        });
-        NetworkMgr.websocketMsg.player_fight({
-            isTakeTheInitiative: isSelfAttack,
-            isBuildingDefender: isAttackBuilding,
-            attackerId: attacker.id,
-            defenderId: isAttackBuilding ? buildingDefender.id : pioneerDefender.id,
-        });
+        if (attacker.type == MapPioneerType.player && pioneerDefender != null) {
+            NetworkMgr.websocketMsg.player_fight_start({
+                attackerId: attacker.id,
+                defenderId: pioneerDefender.id
+            });
+        } else {
+            DataMgr.setTempSendData("player_fight_res", {
+                isAttackBuilding: isAttackBuilding,
+                isSelfAttack: isSelfAttack,
+                attacker: attacker,
+                pioneerDefender: pioneerDefender,
+                buildingDefender: buildingDefender,
+                isEventFight: isEventFight,
+                eventCenterPositions: eventCenterPositions,
+                temporaryAttributes: temporaryAttributes,
+                fightOverCallback: fightOverCallback,
+            });
+            NetworkMgr.websocketMsg.player_fight({
+                isTakeTheInitiative: isSelfAttack,
+                isBuildingDefender: isAttackBuilding,
+                attackerId: attacker.id,
+                defenderId: isAttackBuilding ? buildingDefender.id : pioneerDefender.id,
+            });
+        }
     }
     public setMovingTarget(pioneerId: string, target: MapMemberTargetType, id: string) {
         if (pioneerId != null && id != null) {

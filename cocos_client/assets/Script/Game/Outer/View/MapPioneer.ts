@@ -25,6 +25,8 @@ import {
 } from "cc";
 import { LanMgr } from "../../../Utils/Global";
 import { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerObject } from "../../../Const/PioneerDefine";
+import { OuterFightView } from "./OuterFightView";
+import { DataMgr } from "../../../Data/DataMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("MapPioneer")
@@ -41,6 +43,7 @@ export class MapPioneer extends Component {
     private _actionTimeStamp: number = 0;
     private _actionTotalTime: number = 0;
 
+    private _fightView: OuterFightView = null;
     private _addingtroopsView: Node = null;
     private _exploringView: Node = null;
     private _eventingView: Node = null;
@@ -116,6 +119,7 @@ export class MapPioneer extends Component {
             this._exploringView.active = false;
             this._eventingView.active = false;
             this._eventWaitedView.active = false;
+            this._fightView.node.active = false;
 
             switch (this._model.actionType) {
                 case MapPioneerActionType.dead:
@@ -153,6 +157,76 @@ export class MapPioneer extends Component {
                 case MapPioneerActionType.moving:
                     {
                         this.node.active = true; // show
+                    }
+                    break;
+
+                case MapPioneerActionType.fighting:
+                    {
+                        console.log("exce fight: ", this._model.fightData);
+                        this.node.active = false;
+                        if (this._model.fightData != null && this._model.fightData.length > 0) {
+                            this._fightView.node.active = true;
+                            const fightDatas = this._model.fightData.slice();
+                            console.log("exce step1: " + fightDatas.length);
+                            const attacker = this._model;
+                            let defender = null;
+                            if (fightDatas[0].attackerId == attacker.id) {
+                                defender = DataMgr.s.pioneer.getById(fightDatas[0].defenderId);
+                            } else {
+                                defender = DataMgr.s.pioneer.getById(fightDatas[0].attackerId);
+                            }
+                            if (defender != null) {
+                                console.log("exce step2: ", defender);
+                                const data = fightDatas.shift();
+                                if (data.attackerId == attacker.id) {
+                                    // attacker action
+                                    defender.hp -= data.hp;
+                                } else {
+                                    attacker.hp -= data.hp;
+                                }
+                                this._fightView.refreshUI(
+                                    {
+                                        name: attacker.name,
+                                        hp: attacker.hp,
+                                        hpMax: attacker.hpMax,
+                                    },
+                                    {
+                                        name: defender.name,
+                                        hp: defender.hp,
+                                        hpMax: defender.hpmax,
+                                    },
+                                    true
+                                );
+                                const fightInterval: number = setInterval(() => {
+                                    if (fightDatas.length <= 0) {
+                                        clearInterval(fightInterval);
+                                        return;
+                                    }
+                                    console.log("exce step3: " + fightDatas.length);
+                                    const data = fightDatas.shift();
+                                    if (data.attackerId == attacker.id) {
+                                        // attacker action
+                                        defender.hp -= data.hp;
+                                    } else {
+                                        attacker.hp -= data.hp;
+                                    }
+                                    this._fightView.refreshUI(
+                                        {
+                                            name: attacker.name,
+                                            hp: attacker.hp,
+                                            hpMax: attacker.hpMax,
+                                        },
+                                        {
+                                            name: defender.name,
+                                            hp: defender.hp,
+                                            hpMax: defender.hpmax,
+                                        },
+                                        true
+                                    );
+                                    
+                                }, 250);
+                            }
+                        }
                     }
                     break;
 
@@ -270,6 +344,9 @@ export class MapPioneer extends Component {
             this.speedUpTag.active = false;
         }
 
+        this._fightView = this.node.getChildByPath("FightView").getComponent(OuterFightView);
+        this._fightView.node.active = false;
+
         this._addingtroopsView = this.node.getChildByName("Addingtroops");
         this._addingtroopsView.active = false;
 
@@ -300,6 +377,9 @@ export class MapPioneer extends Component {
             }
         }
 
+        if (this._model != null && this._model.actionType == MapPioneerActionType.fighting) {
+            return;
+        }
         const currentTimeStamp = new Date().getTime();
         if (this._actionTimeStamp > currentTimeStamp) {
             this._timeCountProgress.node.active = true;

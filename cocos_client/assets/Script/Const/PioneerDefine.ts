@@ -133,6 +133,12 @@ export interface MapPioneerLogicObject extends MapPioneerLogicData {
     targetMove?: MapPioneerLogicTargetMoveObject;
 }
 
+export interface MapPioneerFightStuct {
+    attackerId: string;
+    defenderId: string;
+    hp: number;
+}
+
 export interface MapPioneerData {
     id: string;
     show: boolean;
@@ -164,6 +170,8 @@ export interface MapPioneerData {
     moveDirection?: MapPioneerMoveDirection;
 
     actionEventId?: string;
+
+    fightData?: MapPioneerFightStuct[];
 }
 
 export interface MapPlayerPioneerData extends MapPioneerData {

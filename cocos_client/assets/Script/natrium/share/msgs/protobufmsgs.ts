@@ -53,6 +53,7 @@ export enum protobuf_c2s {
 
     player_explore_start = 510,
     player_explore_npc_start = 511,
+    player_explore_gangster_start = 512,
 
     player_fight_start = 520,
 
@@ -138,6 +139,7 @@ export enum protobuf_s2c {
 
     player_explore_start_res = 50010,
     player_explore_npc_start_res = 50011,
+    player_explore_gangster_start_res = 50012,
 
     player_fight_start_res = 50020,
 

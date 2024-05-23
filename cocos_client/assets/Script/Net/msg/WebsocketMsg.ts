@@ -823,6 +823,12 @@ export namespace share {
         NFTId?: string;
         talkId?: string;
         talkCountStruct: Iuser_map_member_status;
+        actionFightRes: Ifight_res[];
+    }
+    export interface Ifight_res {
+        attackerId: string;
+        defenderId: string;
+        hp: number;
     }
     export interface Iuser_map_member_status {
         countTime: number;

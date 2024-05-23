@@ -152,16 +152,18 @@ export class DataMgr {
                 if (temple.id == localDatas[i].id) {
                     const currentData = localDatas[i];
                     DataMgr.s.pioneer.replaceData(i, temple);
-
+                    // show
                     if (currentData.show != temple.show) {
                         if (temple.type == MapPioneerType.player && temple.show && temple.NFTId == null) {
                             PioneerMgr.bindPlayerNFT(temple.id);
                         }
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: temple.id, show: temple.show });
                     }
+                    // faction
                     if (currentData.faction != temple.faction) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, { id: temple.id, show: temple.show });
                     }
+                    // acion type
                     if (currentData.actionType != temple.actionType) {
                         if (temple.actionBeginTimeStamp > 0 && temple.actionEndTimeStamp > 0) {
                             localDatas[i].actionBeginTimeStamp = new Date().getTime();
@@ -169,6 +171,10 @@ export class DataMgr {
                                 localDatas[i].actionBeginTimeStamp + (temple.actionEndTimeStamp - temple.actionBeginTimeStamp) * 1000;
                         }
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: temple.id });
+                    }
+                    // fight
+                    if ((currentData.fightData == null && temple.actionFightRes != null) || (currentData.fightData != null && temple.actionFightRes == null)) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FIGHT_CHANGE);
                     }
                     break;
                 }
