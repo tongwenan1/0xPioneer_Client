@@ -154,6 +154,9 @@ export class DataMgr {
                     DataMgr.s.pioneer.replaceData(i, temple);
 
                     if (currentData.show != temple.show) {
+                        if (temple.type == MapPioneerType.player && temple.show && temple.NFTId == null) {
+                            PioneerMgr.bindPlayerNFT(temple.id);
+                        }
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: temple.id, show: temple.show });
                     }
                     if (currentData.faction != temple.faction) {
@@ -248,30 +251,30 @@ export class DataMgr {
     };
 
     //------------------------------------- nft
-    // public static player_bind_nft_res = (e: any) => {
-    //     const p: s2c_user.Iplayer_bind_nft_res = e.data;
-    //     if (p.res !== 1) {
-    //         return;
-    //     }
-    //     const newNFTObj = DataMgr.s.nftPioneer.NFTGetNew(p.nftData);
-    //     DataMgr.s.pioneer.bindPlayerNFT(p.pioneerData.id, newNFTObj);
+    public static player_bind_nft_res = (e: any) => {
+        const p: s2c_user.Iplayer_bind_nft_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        const newNFTObj = DataMgr.s.nftPioneer.NFTGetNew(p.nftData);
+        DataMgr.s.pioneer.bindPlayerNFT(p.pioneerData.id, newNFTObj);
 
-    //     // bind succeed then set defender
-    //     let emptyIndex: number = -1;
-    //     const defenderIds: string[] = DataMgr.s.userInfo.data.wormholeDefenderIds;
-    //     for (let i = 0; i < defenderIds.length; i++) {
-    //         if (defenderIds[i] == "") {
-    //             emptyIndex = i;
-    //             break;
-    //         }
-    //     }
-    //     if (emptyIndex >= 0) {
-    //         NetworkMgr.websocketMsg.player_wormhole_set_defender({
-    //             pioneerId: p.pioneerData.id,
-    //             index: emptyIndex,
-    //         });
-    //     }
-    // };
+        // bind succeed then set defender
+        // let emptyIndex: number = -1;
+        // const defenderIds: string[] = DataMgr.s.userInfo.data.wormholeDefenderIds;
+        // for (let i = 0; i < defenderIds.length; i++) {
+        //     if (defenderIds[i] == "") {
+        //         emptyIndex = i;
+        //         break;
+        //     }
+        // }
+        // if (emptyIndex >= 0) {
+        //     NetworkMgr.websocketMsg.player_wormhole_set_defender({
+        //         pioneerId: p.pioneerData.id,
+        //         index: emptyIndex,
+        //     });
+        // }
+    };
     public static player_nft_lvlup_res = (e: any) => {
         const p: s2c_user.Iplayer_nft_lvlup_res = e.data;
         if (p.res !== 1) {

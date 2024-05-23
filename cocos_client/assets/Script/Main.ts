@@ -191,6 +191,7 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
         NetworkMgr.websocket.on("player_event_res", DataMgr.player_event_res);
         // nft
+        NetworkMgr.websocket.on("player_bind_nft_res", DataMgr.player_bind_nft_res);
         NetworkMgr.websocket.on("player_nft_lvlup_res", DataMgr.player_nft_lvlup_res);
         NetworkMgr.websocket.on("player_nft_rankup_res", DataMgr.player_nft_rankup_res);
         // wormhole
