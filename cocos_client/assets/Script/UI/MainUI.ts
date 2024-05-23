@@ -181,9 +181,6 @@ export class MainUI extends ViewController {
         }
     }
     private onTapRefreshMap() {
-
-        PioneerMgr.showFakeWormholeFight("fake attacker");
-        return;
         NetworkMgr.websocketMsg.reborn_all();
     }
     //----------------------------------------------------- notification
