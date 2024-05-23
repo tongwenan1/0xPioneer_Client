@@ -47,14 +47,16 @@ export enum protobuf_c2s {
     reborn_all = 231,
     get_battle_report = 299,
 
-
-
     fetch_user_psyc = 400,
 
     player_gather_start = 500,
-    player_explore_start = 501,
-    player_fight_start = 502,
-    player_wormhole_fight_start = 503,
+
+    player_explore_start = 510,
+    player_explore_npc_start = 511,
+
+    player_fight_start = 520,
+
+    player_wormhole_fight_start = 530,
 }
 
 export enum protobuf_s2c {
@@ -133,9 +135,13 @@ export enum protobuf_s2c {
     player_lvlup_change = 30100,
 
     player_gather_start_res = 50000,
-    player_explore_start_res = 50001,
-    player_fight_start_res = 50002,
-    player_wormhole_fight_start_res = 50003,
-    player_wormhole_fight_attacked_res = 50004,
-    player_wormhole_fight_res = 50005,
+
+    player_explore_start_res = 50010,
+    player_explore_npc_start_res = 50011,
+
+    player_fight_start_res = 50020,
+
+    player_wormhole_fight_start_res = 50030,
+    player_wormhole_fight_attacked_res = 50031,
+    player_wormhole_fight_res = 50032,
 }

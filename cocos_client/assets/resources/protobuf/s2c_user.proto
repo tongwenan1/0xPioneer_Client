@@ -110,6 +110,12 @@ message player_explore_start_res {
     required string pioneerId = 3;
 }
 
+message player_explore_npc_start_res {
+    required int32 res = 1;
+    required string pioneerId = 2;
+    required string npcId = 3;
+}
+
 message player_explore_res {
     required int32 res = 1;
 }

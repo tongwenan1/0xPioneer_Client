@@ -272,16 +272,9 @@ export default class PioneerMgr {
                 if (pioneer.faction == MapMemberFactionType.friend && interactPioneer.faction == MapMemberFactionType.friend) {
                     if (interactPioneer.type == MapPioneerType.npc) {
                         // get task
-                        DataMgr.setTempSendData("player_explore_res", {
+                        NetworkMgr.websocketMsg.player_explore_npc_start({
                             pioneerId: pioneerId,
-                            isExporeBuilding: false,
-                            exploreId: interactPioneer.id,
-                            actionType: MapPioneerActionType.exploring,
-                        });
-                        NetworkMgr.websocketMsg.player_explore({
-                            pioneerId: pioneerId,
-                            isExporeBuilding: false,
-                            exploreId: interactPioneer.id,
+                            npcId: interactPioneer.id,
                         });
                     } else if (interactPioneer.type == MapPioneerType.gangster) {
                         // get more hp

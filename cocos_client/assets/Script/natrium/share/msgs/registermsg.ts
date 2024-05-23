@@ -103,6 +103,7 @@ export const registermsg = (pcodec: packetcodec) => {
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_gather_start_res, "player_gather_start_res", "s2c_user.player_gather_start_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_explore_start_res, "player_explore_start_res", "s2c_user.player_explore_start_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_explore_npc_start_res, "player_explore_npc_start_res", "s2c_user.player_explore_npc_start_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_fight_start_res, "player_fight_start_res", "s2c_user.player_fight_start_res");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_wormhole_fight_start_res, "player_wormhole_fight_start_res", "s2c_user.player_wormhole_fight_start_res");
@@ -162,6 +163,7 @@ export const registermsg = (pcodec: packetcodec) => {
 
     pcodec.register_protobuf_msg(protobuf_c2s.player_gather_start, "player_gather_start", "c2s_user.player_gather_start");
     pcodec.register_protobuf_msg(protobuf_c2s.player_explore_start, "player_explore_start", "c2s_user.player_explore_start");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_explore_npc_start, "player_explore_npc_start", "c2s_user.player_explore_npc_start");
     pcodec.register_protobuf_msg(protobuf_c2s.player_fight_start, "player_fight_start", "c2s_user.player_fight_start");
     pcodec.register_protobuf_msg(protobuf_c2s.player_wormhole_fight_start, "player_wormhole_fight_start", "c2s_user.player_wormhole_fight_start");
 };

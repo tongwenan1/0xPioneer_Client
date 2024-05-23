@@ -75,6 +75,10 @@ message player_explore_start {
     required string buildingId = 2;
     required string feeTxhash = 3;
 }
+message player_explore_npc_start {
+    required string pioneerId = 1;
+    required string npcId = 2;
+}
 
 message player_explore {
     required string pioneerId = 1;

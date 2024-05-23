@@ -217,7 +217,14 @@ export class DataMgr {
             }
         }
     };
-
+    public static player_explore_npc_start_res = (e: any) => {
+        const p: s2c_user.Iplayer_explore_npc_start_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        // DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.idle);
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_PIONEER, { id: p.npcId });
+    };
     public static player_move_res = (e: any) => {
         const p: s2c_user.Iplayer_move_res = e.data;
         if (p.res !== 1) {
@@ -299,7 +306,7 @@ export class DataMgr {
             return;
         }
         PioneerMgr.showFakeWormholeFight(p.attackerName);
-    }
+    };
     public static player_wormhole_fight_res = (e: any) => {
         const p: s2c_user.Iplayer_wormhole_fight_res = e.data;
         if (p.res !== 1) {
@@ -310,8 +317,8 @@ export class DataMgr {
             return;
         }
         const isSelfAttack: boolean = DataMgr.s.userInfo.data.id != p.defenderUid;
-        const selfName: string = isSelfAttack ? p.attackerName : (p.defenderName + " " + LanMgr.getLanById("110010"));
-        const otherName: string = !isSelfAttack ? p.attackerName : (p.defenderName + " " + LanMgr.getLanById("110010"));
+        const selfName: string = isSelfAttack ? p.attackerName : p.defenderName + " " + LanMgr.getLanById("110010");
+        const otherName: string = !isSelfAttack ? p.attackerName : p.defenderName + " " + LanMgr.getLanById("110010");
         const isSelfWin: boolean = isSelfAttack && p.fightResult;
         NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
             attacker: {

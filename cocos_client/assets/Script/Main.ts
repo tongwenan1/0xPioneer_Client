@@ -186,6 +186,8 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("mapbuilding_reborn_change", DataMgr.mapbuilding_reborn_change);
 
         NetworkMgr.websocket.on("pioneer_reborn_res", DataMgr.pioneer_reborn_res);
+
+        NetworkMgr.websocket.on("player_explore_npc_start_res", DataMgr.player_explore_npc_start_res);
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
         NetworkMgr.websocket.on("player_event_res", DataMgr.player_event_res);
         // nft

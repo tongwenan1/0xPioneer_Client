@@ -122,6 +122,9 @@ export class WebsocketMsg {
     public player_explore_start(d: c2s_user.Iplayer_explore_start) {
         this.send_packet("player_explore_start", d);
     }
+    public player_explore_npc_start(d: c2s_user.Iplayer_explore_npc_start) {
+        this.send_packet("player_explore_npc_start", d);
+    }
     public player_explore(d: c2s_user.Iplayer_explore) {
         this.send_packet("player_explore", d);
     }
@@ -305,6 +308,10 @@ export namespace c2s_user {
     export interface Iplayer_explore_start {
         pioneerId: string;
         buildingId: string;
+    }
+    export interface Iplayer_explore_npc_start {
+        pioneerId: string;
+        npcId: string;
     }
     export interface Iplayer_explore {
         pioneerId: string;
@@ -507,6 +514,11 @@ export namespace s2c_user {
     export interface Iplayer_talk_select_res {
         talkId: string;
         selectIndex: number;
+    }
+    export interface Iplayer_explore_npc_start_res {
+        res: number;
+        pioneerId: string;
+        npcId: string;
     }
     export interface Iplayer_explore_res {
         pioneerId: string;
