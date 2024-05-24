@@ -94,7 +94,9 @@ export class PioneersDataMgr {
     }
     //-------------- change
     public replaceData(index: number, data: share.Ipioneer_data) {
-        this._pioneers[index] = this._convertNetDataToObject(data);
+        const newObj = this._convertNetDataToObject(data);
+        this._pioneers[index] = newObj;
+        return newObj;
     }
     public changeCurrentAction(pioneerId: string) {
         this._currentActionPioneerId = pioneerId;
@@ -316,7 +318,7 @@ export class PioneersDataMgr {
         this._initInterval();
         this._addListeners();
     }
-    private _convertNetDataToObject(temple: share.Ipioneer_data) {
+    private _convertNetDataToObject(temple: share.Ipioneer_data): MapPioneerObject {
         const config = PioneerConfig.getById(temple.id);
         if (config == null) {
             return null;
@@ -345,7 +347,8 @@ export class PioneersDataMgr {
             winExp: temple.winExp,
             drop: [],
             fightData: temple.actionFightRes,
-            fightResultWin: temple.actionFightWinner == 1
+            fightResultWin: temple.actionFightWinner == 1,
+            actionEventId: temple.actionEventId
         };
         if (obj.type == MapPioneerType.player) {
             let playerObj: MapPlayerPioneerObject;

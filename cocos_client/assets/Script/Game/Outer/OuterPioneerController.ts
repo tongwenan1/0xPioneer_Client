@@ -168,7 +168,6 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_FACTION_CHANGED, this._refreshUI, this);
         // dealwith
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, this._onExploredBuilding, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENT_BUILDING, this._onEventBuilding, this);
         // move
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_BEGIN_MOVE, this._onPioneerBeginMove, this);
         NotificationMgr.addListener(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, this._onPlayerPioneerDidMoveOneStep, this);
@@ -177,7 +176,6 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_DID_ATTACK, this._onFightDidAttack, this);
         NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_END, this._onEndFight, this);
         NotificationMgr.addListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
-
 
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_FIGHT_CHANGE, this._refreshUI, this);
     }
@@ -263,7 +261,6 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_FACTION_CHANGED, this._refreshUI, this);
         // dealwith
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, this._onExploredBuilding, this);
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENT_BUILDING, this._onEventBuilding, this);
         // move
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_BEGIN_MOVE, this._onPioneerBeginMove, this);
         NotificationMgr.removeListener(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, this._onPlayerPioneerDidMoveOneStep, this);
@@ -306,7 +303,7 @@ export class OuterPioneerController extends ViewController {
                 if (temple != null) {
                     if (pioneer.type == MapPioneerType.player) {
                         temple.getComponent(MapPioneer).refreshUI(pioneer);
-                        temple.getComponent(MapPioneer).setEventWaitedCallback(() => {
+                        temple.getComponent(MapPioneer).setEventWaitedCallback(async () => {
                             GameMainHelper.instance.isTapEventWaited = true;
                             // const allBuildings = BuildingMgr.getAllBuilding();
                             const allBuildings = DataMgr.s.mapBuilding.getObj_building();
@@ -314,7 +311,10 @@ export class OuterPioneerController extends ViewController {
                                 if (building.eventId == pioneer.actionEventId) {
                                     const currentEvent = EventConfig.getById(building.eventId);
                                     if (currentEvent != null) {
-                                        PioneerMgr.pioneerDealWithEvent(pioneer.id, building.id, currentEvent);
+                                        const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
+                                        if (result.success) {
+                                            result.node.getComponent(EventUI).eventUIShow(pioneer.id, building.id, currentEvent);
+                                        }
                                     }
                                     break;
                                 }
@@ -642,50 +642,50 @@ export class OuterPioneerController extends ViewController {
         if (building != null) {
         }
     }
-    private async _onEventBuilding(data: { pioneerId: string; buildingId: string; eventId: string }): Promise<void> {
-        const actionPioneerId = data.pioneerId;
-        const buildingId = data.buildingId;
-        const eventId = data.eventId;
+    // private async _onEventBuilding(data: { pioneerId: string; buildingId: string; eventId: string }): Promise<void> {
+    //     const actionPioneerId = data.pioneerId;
+    //     const buildingId = data.buildingId;
+    //     const eventId = data.eventId;
 
-        DataMgr.s.battleReport.latestActiveEventState = {
-            pioneerId: actionPioneerId,
-            buildingId: buildingId,
-            eventId: eventId,
-            prevEventId: null,
-        };
-        const event = EventConfig.getById(eventId);
-        if (event != null) {
-            const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
-            if (result.success) {
-                result.node.getComponent(EventUI).eventUIShow(
-                    actionPioneerId,
-                    buildingId,
-                    event,
-                    (
-                        attackerPioneerId: string,
-                        enemyPioneerId: string,
-                        temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>,
-                        fightOver: (succeed: boolean) => void
-                    ) => {
-                        PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
-                        PioneerMgr.fight(
-                            DataMgr.s.pioneer.getById(attackerPioneerId),
-                            DataMgr.s.pioneer.getById(enemyPioneerId),
-                            null,
-                            true,
-                            DataMgr.s.mapBuilding.getBuildingById(buildingId).stayMapPositions,
-                            temporaryAttributes,
-                            fightOver
-                        );
-                    },
-                    (nextEvent: EventConfigData) => {
-                        PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
-                        PioneerMgr.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
-                    }
-                );
-            }
-        }
-    }
+    //     DataMgr.s.battleReport.latestActiveEventState = {
+    //         pioneerId: actionPioneerId,
+    //         buildingId: buildingId,
+    //         eventId: eventId,
+    //         prevEventId: null,
+    //     };
+    //     const event = EventConfig.getById(eventId);
+    //     if (event != null) {
+    //         const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
+    //         if (result.success) {
+    //             result.node.getComponent(EventUI).eventUIShow(
+    //                 actionPioneerId,
+    //                 buildingId,
+    //                 event,
+    //                 (
+    //                     attackerPioneerId: string,
+    //                     enemyPioneerId: string,
+    //                     temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>,
+    //                     fightOver: (succeed: boolean) => void
+    //                 ) => {
+    //                     PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
+    //                     PioneerMgr.fight(
+    //                         DataMgr.s.pioneer.getById(attackerPioneerId),
+    //                         DataMgr.s.pioneer.getById(enemyPioneerId),
+    //                         null,
+    //                         true,
+    //                         DataMgr.s.mapBuilding.getBuildingById(buildingId).stayMapPositions,
+    //                         temporaryAttributes,
+    //                         fightOver
+    //                     );
+    //                 },
+    //                 (nextEvent: EventConfigData) => {
+    //                     PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
+    //                     PioneerMgr.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
+    //                 }
+    //             );
+    //         }
+    //     }
+    // }
     private _onPioneerBeginMove(data: { id: string; showMovePath: boolean }): void {
         const pioneer = DataMgr.s.pioneer.getById(data.id);
         if (this._actionShowPioneerId == data.id) {
@@ -768,7 +768,7 @@ export class OuterPioneerController extends ViewController {
         } else if (data.stayPositions.length > 0) {
             fightView.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(data.stayPositions[0].x, data.stayPositions[0].y));
         }
-        this.scheduleOnce(()=> {
+        this.scheduleOnce(() => {
             fightView.destroy();
         }, 5);
     }

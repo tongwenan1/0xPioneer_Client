@@ -116,18 +116,19 @@ export class WebsocketMsg {
     public player_gather_start(d: c2s_user.Iplayer_gather_start) {
         this.send_packet("player_gather_start", d);
     }
-    public player_gather(d: c2s_user.Iplayer_gather) {
-        this.send_packet("player_gather", d);
-    }
-    public player_event(d: c2s_user.Iplayer_event) {
-        this.send_packet("player_event", d);
-    }
     public player_explore_start(d: c2s_user.Iplayer_explore_start) {
         this.send_packet("player_explore_start", d);
     }
     public player_explore_npc_start(d: c2s_user.Iplayer_explore_npc_start) {
         this.send_packet("player_explore_npc_start", d);
     }
+    public player_event_start(d: c2s_user.Iplayer_event_start) {
+        this.send_packet("player_event_start", d);
+    }
+    public player_event_select(d: c2s_user.Iplayer_event_select) {
+        this.send_packet("player_event_select", d);
+    }
+
     public player_explore(d: c2s_user.Iplayer_explore) {
         this.send_packet("player_explore", d);
     }
@@ -137,9 +138,7 @@ export class WebsocketMsg {
     public player_fight(d: c2s_user.Iplayer_fight) {
         this.send_packet("player_fight", d);
     }
-    public player_event_select(d: c2s_user.Iplayer_event_select) {
-        this.send_packet("player_event_select", d);
-    }
+    
     public player_item_use(d: c2s_user.Iplayer_item_use) {
         this.send_packet("player_item_use", d);
     }
@@ -298,14 +297,7 @@ export namespace c2s_user {
         pioneerId: string;
         resourceBuildingId: string;
     }
-    export interface Iplayer_gather {
-        pioneerId: string;
-        resourceBuildingId: string;
-    }
-    export interface Iplayer_event {
-        pioneerId: string;
-        buildingId: string;
-    }
+    
     export interface Iplayer_explore_start {
         pioneerId: string;
         buildingId: string;
@@ -313,6 +305,15 @@ export namespace c2s_user {
     export interface Iplayer_explore_npc_start {
         pioneerId: string;
         npcId: string;
+    }
+    export interface Iplayer_event_start {
+        pioneerId: string;
+        buildingId: string;
+    }
+    export interface Iplayer_event_select {
+        pioneerId: string;
+        buildingId: string;
+        selectIdx?: number;
     }
     export interface Iplayer_explore {
         pioneerId: string;
@@ -328,11 +329,6 @@ export namespace c2s_user {
         isBuildingDefender: boolean;
         attackerId: string;
         defenderId: string;
-    }
-    export interface Iplayer_event_select {
-        pioneerId: string;
-        buildingId: string;
-        eventId: string;
     }
     export interface Iplayer_item_use {
         itemId: string;
@@ -526,11 +522,6 @@ export namespace s2c_user {
     export interface Iplayer_fight_res {
         res: number;
         winnerId: string;
-    }
-    export interface player_event_select_res {
-        pioneerId: string;
-        buildingId: string;
-        eventData: EventConfigData;
     }
     export interface Iplayer_item_use_res {
         res: number;

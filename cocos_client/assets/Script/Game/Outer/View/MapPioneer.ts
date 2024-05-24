@@ -41,7 +41,7 @@ export class MapPioneer extends Component {
 
     private _model: MapPioneerObject = null;
     private _lastStatus: MapPioneerActionType = null;
-    private _lastEventStatus: MapPioneerEventStatus = null;
+    private _lastActionEndTimestamp: number = null;
     private _actionTimeStamp: number = 0;
     private _actionTotalTime: number = 0;
 
@@ -108,9 +108,9 @@ export class MapPioneer extends Component {
         topWalkView.active = false;
         bottomWalkView.active = false;
 
-        if (this._lastStatus != this._model.actionType || this._lastEventStatus != this._model.eventStatus) {
+        if (this._lastStatus != this._model.actionType || this._lastActionEndTimestamp != this._model.actionEndTimeStamp) {
             this._lastStatus = this._model.actionType;
-            this._lastEventStatus = this._model.eventStatus;
+            this._lastActionEndTimestamp = this._model.actionEndTimeStamp;
 
             idleView.active = false;
             collectView.active = false;
@@ -249,12 +249,10 @@ export class MapPioneer extends Component {
                     {
                         this._contentView.active = true;
                         idleView.active = true;
-                        if (this._model.eventStatus == MapPioneerEventStatus.None) {
-                        } else if (this._model.eventStatus == MapPioneerEventStatus.Waiting) {
-                            this._eventingView.active = true;
-                        } else if (this._model.eventStatus == MapPioneerEventStatus.Waited) {
-                            this._eventWaitedView.active = true;
-                        }
+
+                        const currentTime = new Date().getTime();
+                        this._eventWaitedView.active = currentTime >= this._model.actionEndTimeStamp;
+                        this._eventingView.active = currentTime < this._model.actionEndTimeStamp;
                     }
                     break;
 

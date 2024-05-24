@@ -206,7 +206,6 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_talk_select_res", DataMgr.player_talk_select_res);
         NetworkMgr.websocket.on("player_explore_res", DataMgr.player_explore_res);
         NetworkMgr.websocket.on("player_fight_res", DataMgr.player_fight_res);
-        NetworkMgr.websocket.on("player_event_select_res", DataMgr.player_event_select_res);
         NetworkMgr.websocket.on("player_treasure_open_res", DataMgr.player_treasure_open_res);
         NetworkMgr.websocket.on("player_point_treasure_open_res", DataMgr.player_point_treasure_open_res);
         NetworkMgr.websocket.on("player_artifact_equip_res", DataMgr.player_artifact_equip_res);

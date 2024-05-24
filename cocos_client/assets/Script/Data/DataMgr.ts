@@ -149,22 +149,22 @@ export class DataMgr {
         for (const temple of p.pioneers) {
             for (let i = 0; i < localDatas.length; i++) {
                 if (temple.id == localDatas[i].id) {
-                    const currentData = localDatas[i];
-                    DataMgr.s.pioneer.replaceData(i, temple);
+                    const oldData = localDatas[i];
+                    const newData = DataMgr.s.pioneer.replaceData(i, temple);
                     // show
-                    if (currentData.show != temple.show) {
-                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: temple.id, show: temple.show });
+                    if (oldData.show != newData.show) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: newData.id, show: newData.show });
                     }
                     // faction
-                    if (currentData.faction != temple.faction) {
-                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, { id: temple.id, show: temple.show });
+                    if (oldData.faction != newData.faction) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, { id: newData.id, show: newData.show });
                     }
-                    // acion type
-                    if (currentData.actionType != temple.actionType) {
-                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: temple.id });
+                    // action type
+                    if (oldData.actionType != newData.actionType) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: newData.id });
                     }
                     // fight
-                    if ((currentData.fightData == null && temple.actionFightRes != null) || (currentData.fightData != null && temple.actionFightRes == null)) {
+                    if ((oldData.fightData == null && newData.fightData != null) || (oldData.fightData != null && newData.fightData == null)) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FIGHT_CHANGE);
                     }
                     break;
@@ -730,43 +730,6 @@ export class DataMgr {
                     }
                 }
             }, 250);
-        }
-    };
-    public static player_event_select_res = (e: any) => {
-        if (DataMgr.socketSendData.has("player_event_select_res")) {
-            const data: s2c_user.player_event_select_res = DataMgr.socketSendData.get("player_event_select_res") as s2c_user.player_event_select_res;
-            const pioneerId = data.pioneerId;
-            const currentEvent = data.eventData;
-            const buildingId = data.buildingId;
-            const pioneer = DataMgr.s.pioneer.getById(pioneerId);
-            if (pioneer == undefined) {
-                return;
-            }
-
-            DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.eventing, 0, 0, currentEvent.id);
-
-            const currentTimeStamp = new Date().getTime();
-            let canShowDialog: boolean = false;
-            if (pioneer.eventStatus == MapPioneerEventStatus.Waited) {
-                canShowDialog = true;
-            } else if (pioneer.eventStatus == MapPioneerEventStatus.Waiting) {
-            } else if (pioneer.eventStatus == MapPioneerEventStatus.None) {
-                if (currentEvent.wait_time != null && currentEvent.wait_time > 0) {
-                    DataMgr.s.pioneer.changeEventStatus(pioneerId, MapPioneerEventStatus.Waiting, currentTimeStamp, currentEvent.wait_time * 1000);
-                    setTimeout(() => {
-                        DataMgr.s.pioneer.changeEventStatus(pioneerId, MapPioneerEventStatus.Waited, 0, 0);
-                    }, currentEvent.wait_time * 1000);
-                } else {
-                    canShowDialog = true;
-                }
-            }
-            if (canShowDialog) {
-                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENT_BUILDING, {
-                    pioneerId: pioneer.id,
-                    buildingId: buildingId,
-                    eventId: currentEvent.id,
-                });
-            }
         }
     };
 

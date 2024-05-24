@@ -295,3 +295,15 @@ message task_step_data {
     required uint32 completeIndex = 2;
 }
 
+message settlement_data {
+    required uint32 level = 1;
+    repeated string newPioneerIds = 2;
+    required uint32 killEnemies = 3;
+    required uint32 gainResources = 4;
+    required uint32 consumeResources = 5;
+    required uint32 gainTroops = 6;
+    required uint32 consumeTroops = 7;
+    required uint32 gainEnergy = 8;
+    required uint32 consumeEnergy = 9;
+    required uint32 exploredEvents = 10;
+}

@@ -41,7 +41,7 @@ import ViewController from "../../BasicView/ViewController";
 import EventConfig from "../../Config/EventConfig";
 import Config from "../../Const/Config";
 import { DataMgr } from "../../Data/DataMgr";
-import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType, MapPioneerObject } from "../../Const/PioneerDefine";
+import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType, MapPioneerObject, MapPioneerAttributesChangeModel } from "../../Const/PioneerDefine";
 import { MapBuildingObject, MapBuildingTavernObject, MapBuildingWormholeObject } from "../../Const/MapBuilding";
 import { NetworkMgr } from "../../Net/NetworkMgr";
 import UIPanelManger, { UIPanelLayerType } from "../../Basic/UIPanelMgr";
@@ -51,6 +51,7 @@ import ChainConfig from "../../Config/ChainConfig";
 import { AlterView } from "../../UI/View/AlterView";
 import NetGlobalData from "../../Data/Save/Data/NetGlobalData";
 import { MapActionConfrimTipUI } from "../../UI/MapActionConfrimTipUI";
+import { EventUI } from "../../UI/Outer/EventUI";
 
 const { ccclass, property } = _decorator;
 
@@ -504,9 +505,14 @@ export class OuterTiledMapActionController extends ViewController {
                     return;
                 }
             } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing) {
-                if (stayBuilding.eventId == currentActionPioneer.actionEventId) {
+                if (stayBuilding.eventId == currentActionPioneer.actionEventId && currentActionPioneer.actionEndTimeStamp <= new Date().getTime()) {
                     const currentEvent = EventConfig.getById(stayBuilding.eventId);
-                    PioneerMgr.pioneerDealWithEvent(currentActionPioneer.id, stayBuilding.id, currentEvent);
+                    if (currentEvent != null) {
+                        const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
+                        if (result.success) {
+                            result.node.getComponent(EventUI).eventUIShow(currentActionPioneer.id, stayBuilding.id, currentEvent);
+                        }
+                    }
                 } else {
                     UIHUDController.showCenterTip(LanMgr.getLanById("203005"));
                     // UIHUDController.showCenterTip("pioneer is processing event");

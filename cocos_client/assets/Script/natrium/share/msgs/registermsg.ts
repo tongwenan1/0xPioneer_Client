@@ -24,7 +24,6 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_talk_select_res, "player_talk_select_res", "s2c_user.player_talk_select_res");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_fight_res, "player_fight_res", "s2c_user.player_fight_res");
-    pcodec.register_protobuf_msg(protobuf_s2c.player_event_select_res, "player_event_select_res", "s2c_user.player_event_select_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_item_use_res, "player_item_use_res", "s2c_user.player_item_use_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_treasure_open_res, "player_treasure_open_res", "s2c_user.player_treasure_open_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_artifact_equip_res, "player_artifact_equip_res", "s2c_user.player_artifact_equip_res");
@@ -75,6 +74,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.get_treasure_info_res, "get_treasure_info_res", "s2c_user.get_treasure_info_res");
     pcodec.register_protobuf_msg(protobuf_s2c.get_user_task_info_res, "get_user_task_info_res", "s2c_user.get_user_task_info_res");
     pcodec.register_protobuf_msg(protobuf_s2c.get_battle_report_res, "get_battle_report_res", "s2c_user.get_battle_report_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.get_user_settlement_info_res, "get_user_settlement_info_res", "s2c_user.get_user_settlement_info_res");
 
     pcodec.register_protobuf_msg(protobuf_s2c.storhouse_change, "storhouse_change", "s2c_user.storhouse_change");
     pcodec.register_protobuf_msg(protobuf_s2c.player_exp_change, "player_exp_change", "s2c_user.player_exp_change");
@@ -114,6 +114,9 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.player_wormhole_fight_attacked_res, "player_wormhole_fight_attacked_res", "s2c_user.player_wormhole_fight_attacked_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_wormhole_fight_res, "player_wormhole_fight_res", "s2c_user.player_wormhole_fight_res");
 
+    pcodec.register_protobuf_msg(protobuf_s2c.player_event_start_res, "player_event_start_res", "s2c_user.player_event_start_res");
+    pcodec.register_protobuf_msg(protobuf_s2c.player_event_select_res, "player_event_select_res", "s2c_user.player_event_select_res");
+
     // register client msg
     pcodec.register_protobuf_msg(protobuf_c2s.login, "login", "c2s_user.login");
     pcodec.register_protobuf_msg(protobuf_c2s.create_player, "create_player", "c2s_user.create_player");
@@ -130,7 +133,6 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.player_talk_select, "player_talk_select", "c2s_user.player_talk_select");
 
     pcodec.register_protobuf_msg(protobuf_c2s.player_fight, "player_fight", "c2s_user.player_fight");
-    pcodec.register_protobuf_msg(protobuf_c2s.player_event_select, "player_event_select", "c2s_user.player_event_select");
     pcodec.register_protobuf_msg(protobuf_c2s.player_item_use, "player_item_use", "c2s_user.player_item_use");
     pcodec.register_protobuf_msg(protobuf_c2s.player_treasure_open, "player_treasure_open", "c2s_user.player_treasure_open");
     pcodec.register_protobuf_msg(protobuf_c2s.player_artifact_equip, "player_artifact_equip", "c2s_user.player_artifact_equip");
@@ -160,6 +162,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.get_user_task_info, "get_user_task_info", "c2s_user.get_user_task_info");
     pcodec.register_protobuf_msg(protobuf_c2s.reborn_all, "reborn_all", "c2s_user.reborn_all");
     pcodec.register_protobuf_msg(protobuf_c2s.get_battle_report, "get_battle_report", "c2s_user.get_battle_report");
+    pcodec.register_protobuf_msg(protobuf_c2s.get_user_settlement_info, "get_user_settlement_info", "c2s_user.get_user_settlement_info");
 
     pcodec.register_protobuf_msg(protobuf_c2s.fetch_user_psyc, "fetch_user_psyc", "c2s_user.fetch_user_psyc");
 
@@ -170,4 +173,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.player_generate_troop_start, "player_generate_troop_start", "c2s_user.player_generate_troop_start");
     pcodec.register_protobuf_msg(protobuf_c2s.player_fight_start, "player_fight_start", "c2s_user.player_fight_start");
     pcodec.register_protobuf_msg(protobuf_c2s.player_wormhole_fight_start, "player_wormhole_fight_start", "c2s_user.player_wormhole_fight_start");
+
+    pcodec.register_protobuf_msg(protobuf_c2s.player_event_start, "player_event_start", "c2s_user.player_event_start");
+    pcodec.register_protobuf_msg(protobuf_c2s.player_event_select, "player_event_select", "c2s_user.player_event_select");
 };

@@ -254,7 +254,7 @@ export class BattleReportListItemUI extends Component {
         }
         // UIPanelMgr.popPanel(UIName.BattleReportUI);
         UIPanelManger.inst.popPanel();
-        PioneerMgr.pioneerDealWithEvent(reportData.pioneerId, reportData.buildingId, currentEvent);
+        // PioneerMgr.pioneerDealWithEvent(reportData.pioneerId, reportData.buildingId, currentEvent);
     }
 
     private _locationString(locationInfo: LocationInfo): string {

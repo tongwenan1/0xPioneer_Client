@@ -15,6 +15,7 @@ import UIPanelManger from "../../Basic/UIPanelMgr";
 import { DataMgr } from "../../Data/DataMgr";
 import { MapPioneerAttributesChangeModel, MapPioneerEventAttributesChangeType } from "../../Const/PioneerDefine";
 import { AttrChangeType } from "../../Const/ConstDefine";
+import { NetworkMgr } from "../../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("EventUI")
@@ -22,19 +23,9 @@ export class EventUI extends ViewController {
     public eventUIShow(
         triggerPioneerId: string,
         eventBuildingId: string,
-        event: EventConfigData,
-        fightCallback: (
-            pioneerId: string,
-            enemyId: string,
-            temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>,
-            fightOver: (succeed: boolean) => void
-        ) => void,
-        dealWithNextEvent: (event: EventConfigData) => void
-    ) {
+        event: EventConfigData) {
         this._triggerPioneerId = triggerPioneerId;
         this._eventBuildingId = eventBuildingId;
-        this._fightCallback = fightCallback;
-        this._dealWithNextEvent = dealWithNextEvent;
         this._refreshUI(event);
     }
 
@@ -142,7 +133,7 @@ export class EventUI extends ViewController {
 
                     item.getComponent(Sprite).grayscale = conditionResult != null ? !conditionResult.satisfy : false;
                     item.getComponent(Button).interactable = conditionResult != null ? conditionResult.satisfy : true;
-                    item.getComponent(Button).clickEvents[0].customEventData = event.select[i] + "|" + event.select_txt[i];
+                    item.getComponent(Button).clickEvents[0].customEventData = i + "|" + event.select[i] + "|" + event.select_txt[i];
                     this._dialogSelectItems.push(item);
                 }
                 this._dialogSelectView.getComponent(Layout).updateLayout();
@@ -221,31 +212,6 @@ export class EventUI extends ViewController {
                         }
                     }
                     UIHUDController.showCenterTip(showTip);
-                }
-            }
-        }
-
-        DataMgr.s.count.addObj_showEvent({
-            eventId: event.id,
-        });
-
-        if (event.map_building_refresh != null) {
-            // for (const [buidingId, type] of event.map_building_refresh) {
-            //     if (type == 1) {
-            //         // BuildingMgr.showBuilding(buidingId);
-            //         DataMgr.s.mapBuilding.showBuilding(buidingId);
-            //     } else {
-            //         // BuildingMgr.hideBuilding(buidingId);
-            //         DataMgr.s.mapBuilding.hideBuilding(buidingId);
-            //     }
-            // }
-        }
-        if (event.map_pioneer_unlock != null) {
-            for (const [pioneerId, type] of event.map_pioneer_unlock) {
-                if (type == 1) {
-                    // PioneerMgr.showPioneer(pioneerId);
-                } else {
-                    // DataMgr.s.pioneer.changeShow(pioneerId, false);
                 }
             }
         }
@@ -424,13 +390,23 @@ export class EventUI extends ViewController {
     //------------------------------------------------ action
     private onTapNext(actionEvent: Event, customEventData: string) {
         const eventId = customEventData;
-        const hasNextStep = eventId != "-1";
-        // console.log(`eventStepEnd, source: onTapNext, eventId: ${this._event.id}, next: ${eventId}`);
-        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, { eventId: this._event.id, hasNextStep: hasNextStep } as EVENT_STEPEND_DATA);
-        // send socket
-        this._nextEvent(eventId);
+        // const hasNextStep = eventId != "-1";
+        // // console.log(`eventStepEnd, source: onTapNext, eventId: ${this._event.id}, next: ${eventId}`);
+        // NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, { eventId: this._event.id, hasNextStep: hasNextStep } as EVENT_STEPEND_DATA);
+        // // send socket
+        // this._nextEvent(eventId);
+        NetworkMgr.websocketMsg.player_event_select({
+            buildingId: this._eventBuildingId,
+            pioneerId: this._triggerPioneerId
+        });
+        UIPanelManger.inst.popPanel();
     }
     private onTapFight(event: Event, customEventData: string) {
+        NetworkMgr.websocketMsg.player_event_select({
+            buildingId: this._eventBuildingId,
+            pioneerId: this._triggerPioneerId,
+        });
+        UIPanelManger.inst.popPanel();
         const pioneerId = customEventData;
         this._contentView.active = false;
         if (this._fightCallback != null) {
@@ -462,21 +438,30 @@ export class EventUI extends ViewController {
             this._contentView.active = true;
         }
     }
-    private onTapSelect(actionEvent: Event, customEventData: string, use: string) {
+    private onTapSelect(actionEvent: Event, customEventData: string) {
         const datas = customEventData.split("|");
-        const eventId = datas[0];
+        const index = parseInt(datas[0]);
+        const eventId = datas[1];
+        const selectText = datas[2];
         const event = EventConfig.getById(eventId);
 
         if (this._triggerPioneerId != null) {
             if (Config.canSaveLocalData) {
-                localStorage.setItem("local_event_last_title_" + this._triggerPioneerId, datas[1]);
+                localStorage.setItem("local_event_last_title_" + this._triggerPioneerId, datas[2]);
             }
         }
+        NetworkMgr.websocketMsg.player_event_select({
+            buildingId: this._eventBuildingId,
+            pioneerId: this._triggerPioneerId,
+            selectIdx: index
+        });
+        UIPanelManger.inst.popPanel();
+        return;
         let hasNextStep = event != null;
 
         // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}, next: ${eventId}`);
         NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, { eventId: this._event.id, hasNextStep: hasNextStep } as EVENT_STEPEND_DATA);
 
-        this._nextEvent(eventId);
+        // this._nextEvent(eventId);
     }
 }

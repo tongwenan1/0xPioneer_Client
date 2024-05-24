@@ -96,10 +96,14 @@ message player_fight {
     required string defenderId = 4; 
 }
 
+message player_event_start {
+    required string pioneerId = 1;
+    required string buildingId = 2;
+}
 message player_event_select {
     required string pioneerId = 1;
     required string buildingId = 2;
-    required string eventId = 3;
+    optional uint32 selectIdx = 3;
 }
 
 message player_event {
@@ -231,5 +235,10 @@ message reborn_all {
 
 // ----------------------------- task
 message get_user_task_info {
+
+}
+
+// ----------------------------- settlement
+message get_user_settlement_info {
 
 }
