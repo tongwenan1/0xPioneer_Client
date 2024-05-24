@@ -67,7 +67,7 @@ export class ArtifactInfoUI extends ViewController {
                 content.getChildByName("Title").getComponent(Label).color = useColor;
     
                 // effect
-                const buildingLevel = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.ArtifactStore].buildLevel;
+                const buildingLevel = DataMgr.s.innerBuilding.getInnerBuildingLevel(InnerBuildingType.ArtifactStore);
                 if (config.effect.length > 0) {
                     const numStrings: string[] = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
                     let effectIndex: number = 0;

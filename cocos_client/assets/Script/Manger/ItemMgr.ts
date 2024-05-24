@@ -11,11 +11,7 @@ import { NotificationName } from "../Const/Notification";
 
 export default class ItemMgr {
     private _itemIconSpriteFrames = {};
-    public constructor() {
-        NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._onResourceItemDidGet, this);
-        // NotificationMgr.addListener(NotificationName.RESOURCE_CONSUMED, this._onResourceItemDidConsume, this);
-    }
-
+   
     public async getItemIcon(iconName: string): Promise<SpriteFrame> {
         if (iconName in this._itemIconSpriteFrames) {
             return this._itemIconSpriteFrames[iconName];

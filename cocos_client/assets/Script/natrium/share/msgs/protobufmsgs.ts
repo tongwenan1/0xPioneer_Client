@@ -77,6 +77,7 @@ export enum protobuf_s2c {
     mapbuilding_change = 10145,
     building_change = 10146,
     nft_change = 10147,
+    sinfo_change = 10148,
 
     player_move_res = 20000,
     player_talk_select_res = 20201,

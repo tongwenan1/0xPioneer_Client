@@ -167,7 +167,6 @@ export class OuterPioneerController extends ViewController {
         // faction
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_FACTION_CHANGED, this._refreshUI, this);
         // dealwith
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_EXPLORED_PIONEER, this._onExploredPioneer, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, this._onExploredBuilding, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENT_BUILDING, this._onEventBuilding, this);
         // move
@@ -263,7 +262,6 @@ export class OuterPioneerController extends ViewController {
         // faction
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_FACTION_CHANGED, this._refreshUI, this);
         // dealwith
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EXPLORED_PIONEER, this._onExploredPioneer, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, this._onExploredBuilding, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENT_BUILDING, this._onEventBuilding, this);
         // move
@@ -637,23 +635,6 @@ export class OuterPioneerController extends ViewController {
             }
         }
         this._refreshUI();
-    }
-    private async _onExploredPioneer(data: { id: string }): Promise<void> {
-        const pioneer = DataMgr.s.pioneer.getById(data.id);
-        if (pioneer != null) {
-            if (pioneer.type == MapPioneerType.gangster) {
-                // upload resource changed explore
-            } else if (pioneer.type == MapPioneerType.npc) {
-                const npcModel = pioneer as MapNpcPioneerObject;
-                if (!!npcModel && npcModel.talkId != null) {
-                    const talk = TalkConfig.getById(npcModel.talkId);
-                    const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
-                    if (result.success) {
-                        result.node.getComponent(DialogueUI).dialogShow(talk);
-                    }
-                }
-            }
-        }
     }
     private _onExploredBuilding(data: { id: string }): void {
         // const building = BuildingMgr.getBuildingById(buildingId);

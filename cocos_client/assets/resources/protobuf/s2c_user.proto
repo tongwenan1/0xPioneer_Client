@@ -65,6 +65,10 @@ message mint_package_res {
 
 // ----------------------------------------------------------------------------
 
+message sinfo_change {
+    required share.player_sinfo info = 1;
+}
+
 message storhouse_change {
     repeated share.item_data iteminfo = 1;
 }

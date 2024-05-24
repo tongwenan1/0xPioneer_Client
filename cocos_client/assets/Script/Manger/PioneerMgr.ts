@@ -38,14 +38,6 @@ export default class PioneerMgr {
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_MOVE_MEETTED, this._onPioneerMoveMeeted, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_LOGIC_MOVE, this._onPioneerLogicMove, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_REBIRTH_BEGIN, this._onPioneerRebirthBegin, this);
-
-        const originalPioneer = DataMgr.s.pioneer.getCurrentPlayer();
-        if (!!originalPioneer && originalPioneer.NFTId == null) {
-            this.bindPlayerNFT(originalPioneer.id);
-        }
-    }
-    public bindPlayerNFT(id: string) {
-        NetworkMgr.websocketMsg.player_bind_nft({ pioneerId: id });
     }
     public pioneerHealHpToMax(pioneerId: string) {
         const costTroops: number = DataMgr.s.pioneer.gainHp(pioneerId, DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop));
@@ -79,36 +71,6 @@ export default class PioneerMgr {
             DataMgr.s.pioneer.didMoveStep(pioneerId);
         }
     }
-    public showPioneer(pioneerId: string) {
-        // if (DataMgr.s.pioneer.changeShow(pioneerId, true)) {
-        //     const pioneer = DataMgr.s.pioneer.getById(pioneerId);
-        //     if (pioneer.type == MapPioneerType.player) {
-        //         DataMgr.s.settlement.addObj({
-        //             level: DataMgr.s.userInfo.data.level,
-        //             newPioneerIds: [pioneerId],
-        //             killEnemies: 0,
-        //             gainResources: 0,
-        //             consumeResources: 0,
-        //             gainTroops: 0,
-        //             consumeTroops: 0,
-        //             gainEnergy: 0,
-        //             consumeEnergy: 0,
-        //             exploredEvents: 0,
-        //         });
-        //         const player = pioneer as MapPlayerPioneerObject;
-        //         if (!!player && player.NFTId == null) {
-        //             this.bindPlayerNFT(player.id);
-        //         }
-        //     }
-        // }
-    }
-    // public linkNFTToPioneer(pioneerId: string, NFTId: string) {
-    //     const findPioneer = this.getPioneerById(pioneerId);
-    //     if (findPioneer != null) {
-    //         findPioneer.NFTId = NFTId;
-    //         this._savePioneerData();
-    //     }
-    // }
     public pioneerToIdle(pioneerId: string) {
         DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.idle);
         DataMgr.s.pioneer.changeEventStatus(pioneerId, MapPioneerEventStatus.None);

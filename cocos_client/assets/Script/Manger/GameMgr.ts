@@ -112,7 +112,7 @@ export default class GameMgr {
     //--------------------------- effect
     public getAfterExtraEffectPropertyByPioneer(pioneerId: string, type: GameExtraEffectType, originalValue: number): number {
         // artifact effect
-        let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(type, DataMgr.s.userInfo.artifactStoreLevel);
+        let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(type, DataMgr.s.innerBuilding.getInnerBuildingLevel(InnerBuildingType.ArtifactStore));
 
         // nft
         let nftChangeRate: number = 0;
@@ -125,7 +125,7 @@ export default class GameMgr {
     }
     public getAfterExtraEffectPropertyByBuilding(buildingType: InnerBuildingType, type: GameExtraEffectType, originalValue: number): number {
         // artifact effect
-        let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(type, DataMgr.s.userInfo.artifactStoreLevel);
+        let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(type, DataMgr.s.innerBuilding.getInnerBuildingLevel(InnerBuildingType.ArtifactStore));
 
         let resultValue = this._getEffectResultNum(type, originalValue, artifactChangeRate);
         //nft
@@ -135,7 +135,7 @@ export default class GameMgr {
             if (nft != undefined && buildingConfig.staff_effect != null) {
                 let nftEffect = 0;
                 for (const temple of buildingConfig.staff_effect) {
-                    if (temple[0] == "lvlup_time" && temple[1] == DataMgr.s.userInfo.getInnerBuildingLevel(buildingType) + 1) {
+                    if (temple[0] == "lvlup_time" && temple[1] == DataMgr.s.innerBuilding.getInnerBuildingLevel(buildingType) + 1) {
                         nftEffect += temple[2][0];
                     }
                 }

@@ -73,16 +73,18 @@ export class UIHUDController extends ViewController {
     }
 
     private _innerBuildingUpgradeFinished(buildingType: InnerBuildingType) {
-        if (buildingType in DataMgr.s.userInfo.data.innerBuildings) {
-            const config = InnerBuildingConfig.getByBuildingType(buildingType);
-            if (config == null) {
-                return;
-            }
-            this._resoucesShowItems.push(
-                LanMgr.replaceLanById("106004", [LanMgr.getLanById(config.name), DataMgr.s.userInfo.data.innerBuildings[buildingType].buildLevel])
-            );
-            this._showResouceGettedView();
+        const innerBuilding = DataMgr.s.innerBuilding.data;
+        if (!innerBuilding.has(buildingType)) {
+            return;
         }
+        const config = InnerBuildingConfig.getByBuildingType(buildingType);
+        if (config == null) {
+            return;
+        }
+        this._resoucesShowItems.push(
+            LanMgr.replaceLanById("106004", [LanMgr.getLanById(config.name), innerBuilding.get(buildingType).buildLevel])
+        );
+        this._showResouceGettedView();
     }
     private _onUseResourceGettedViewShowTip(tip: string) {
         this._resoucesShowItems.push(tip);

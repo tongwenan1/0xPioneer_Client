@@ -1,6 +1,6 @@
 import { _decorator, instantiate, Label, Layout, Node, Prefab } from "cc";
 import { LanMgr, ResourcesMgr } from "../../../Utils/Global";
-import { MapBuildingType, InnerBuildingType } from "../../../Const/BuildingDefine";
+import { MapBuildingType, InnerBuildingType, UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import ViewController from "../../../BasicView/ViewController";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
@@ -237,14 +237,13 @@ export class OuterBuildingView extends ViewController {
     protected viewDidStart(): void {
         super.viewDidStart();
 
-        NotificationMgr.addListener(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE, this._onEnergyNumChanged, this);
         NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
         NotificationMgr.addListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
         NotificationMgr.addListener(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, this._onTavernCountDownTimeDidChange, this);
         NotificationMgr.addListener(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, this._onTavernNewPioneerDidChange, this);
         NotificationMgr.addListener(NotificationName.ARTIFACT_EQUIP_DID_CHANGE, this._onArtifactEquipDidChange, this);
 
-        this.schedule(()=> {
+        this.schedule(() => {
             if (this._building != null) {
                 if (this._building.type == MapBuildingType.wormhole) {
                     const wormObj = this._building as MapBuildingWormholeObject;
@@ -268,7 +267,6 @@ export class OuterBuildingView extends ViewController {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(NotificationName.GENERATE_ENERGY_NUM_DID_CHANGE, this._onEnergyNumChanged, this);
         NotificationMgr.removeListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
         NotificationMgr.removeListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
         NotificationMgr.removeListener(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, this._onTavernCountDownTimeDidChange, this);
@@ -278,8 +276,6 @@ export class OuterBuildingView extends ViewController {
 
     protected viewUpdate(dt: number): void {
         super.viewUpdate(dt);
-        
-        
     }
 
     //-------------------------------- function
@@ -289,8 +285,7 @@ export class OuterBuildingView extends ViewController {
         }
         this._toGetEnergyTip.active = false;
         if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != MapMemberFactionType.enemy) {
-            const limitGetTimes: number = 3;
-            if (DataMgr.s.userInfo.data.energyDidGetTimes < limitGetTimes) {
+            if (DataMgr.s.userInfo.data.energyDidGetTimes < DataMgr.s.userInfo.data.energyGetLimitTimes) {
                 this._toGetEnergyTip.active = true;
             }
         }
@@ -302,9 +297,8 @@ export class OuterBuildingView extends ViewController {
         this._toBuildBuildingTip.active = false;
         if (this._building != null && this._building.type == MapBuildingType.city && this._building.faction != MapMemberFactionType.enemy) {
             let canBuild: boolean = false;
-            const innerBuildings = DataMgr.s.userInfo.data.innerBuildings;
-            for (const key in innerBuildings) {
-                const value = innerBuildings[key];
+            const innerBuildings = DataMgr.s.innerBuilding.data;
+            innerBuildings.forEach((value: UserInnerBuildInfo, key: InnerBuildingType) => {
                 const innerConfig = InnerBuildingConfig.getByBuildingType(key as InnerBuildingType);
                 const levelConfig = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel + 1, innerConfig.lvlup_cost);
                 if (levelConfig != null) {
@@ -321,7 +315,7 @@ export class OuterBuildingView extends ViewController {
                         canBuild = true;
                     }
                 }
-            }
+            });
             if (canBuild) {
                 this._toBuildBuildingTip.active = true;
             }
@@ -329,11 +323,9 @@ export class OuterBuildingView extends ViewController {
     }
 
     //-------------------------------- notification
-    private _onEnergyNumChanged() {
-        this._refreshEnergyTipShow();
-    }
     private _onResourceChanged() {
         this._refreshBuildTipShow();
+        this._refreshEnergyTipShow();
     }
     private _onTavernCountDownTimeDidChange(data: { id: string }) {
         if (this._building == null || this._building.id != data.id) {

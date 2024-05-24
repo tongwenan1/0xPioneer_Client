@@ -8,7 +8,6 @@ export enum UIName {
     TaskListUI = "prefab/ui/TaskListUI",
     BuildingUpgradeUI = "prefab/ui/BuildingUpgradeUI",
     RecruitUI = "prefab/ui/RecruitUI",
-    TransformToEnergyUI = "prefab/ui/TransformToEnergyUI",
     BrachEventUI = "prefab/ui/BrachEventUI",
     CivilizationLevelUpUI = "prefab/ui/CivilizationLevelUpUI",
     PlayerInfoUI = "prefab/ui/PlayerInfoUI",

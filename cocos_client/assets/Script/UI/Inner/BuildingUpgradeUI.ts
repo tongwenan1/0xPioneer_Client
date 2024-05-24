@@ -23,15 +23,12 @@ export class BuildingUpgradeUI extends ViewController {
 
         // useLanMgr
         // buildingInfoView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-
-        const innerData = DataMgr.s.userInfo.data.innerBuildings;
-        for (const key in innerData) {
-            const useKey = key as InnerBuildingType;
-            const value = innerData[key];
-            if (this._buildingMap.has(useKey)) {
-                const innerConfig = InnerBuildingConfig.getByBuildingType(useKey);
+        const innerData = DataMgr.s.innerBuilding.data;
+        innerData.forEach((value: UserInnerBuildInfo, key: InnerBuildingType)=> {
+            if (this._buildingMap.has(key)) {
+                const innerConfig = InnerBuildingConfig.getByBuildingType(key);
                 if (innerConfig != null) {
-                    const view = this._buildingMap.get(useKey);
+                    const view = this._buildingMap.get(key);
                     view.getChildByPath("Title/Label").getComponent(Label).string = LanMgr.getLanById(innerConfig.name);
                     view.getChildByPath("Level").getComponent(Label).string = "Lv." + value.buildLevel;
                     view.getComponent(Button).clickEvents[0].customEventData = value.buildType;
@@ -53,7 +50,7 @@ export class BuildingUpgradeUI extends ViewController {
                     }
                 }
             }
-        }
+        });
     }
 
     private _buildingMap: Map<InnerBuildingType, Node> = null;
@@ -103,7 +100,7 @@ export class BuildingUpgradeUI extends ViewController {
         if (buildingType == null) {
             return;
         }
-        const userInnerData = DataMgr.s.userInfo.data.innerBuildings[buildingType];
+        const userInnerData = DataMgr.s.innerBuilding.data.get(buildingType);
         const innerConfig = InnerBuildingConfig.getByBuildingType(buildingType);
 
         if (userInnerData == null || innerConfig == null) {
@@ -203,7 +200,7 @@ export class BuildingUpgradeUI extends ViewController {
     private async onTapBuildingUpgrade(event: Event, customEventData: string) {
         const buildingType: InnerBuildingType = customEventData as InnerBuildingType;
 
-        const userInnerData = DataMgr.s.userInfo.data.innerBuildings[buildingType];
+        const userInnerData = DataMgr.s.innerBuilding.data.get(buildingType);
         const innerConfig = InnerBuildingConfig.getByBuildingType(buildingType);
         if (userInnerData == null || innerConfig == null) {
             return;

@@ -6,7 +6,6 @@ import NotificationMgr from "../../../Basic/NotificationMgr";
 import { UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import InnerBuildingLvlUpConfig from "../../../Config/InnerBuildingLvlUpConfig";
 import { UIName } from "../../../Const/ConstUIDefine";
-import { TransformToEnergyUI } from "../../../UI/Inner/TransformToEnergyUI";
 import ItemData from "../../../Const/Item";
 import { NotificationName } from "../../../Const/Notification";
 import { GameExtraEffectType, ResourceCorrespondingItem } from "../../../Const/ConstDefine";
@@ -52,11 +51,7 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
             return;
         }
         if (this._building.buildLevel > 0) {
-            // function hide
-            // const result = await UIPanelManger.inst.pushPanel(UIName.TransformToEnergyUI);
-            // if (result.success) {
-            //     result.node.getComponent(TransformToEnergyUI).refreshUI(true);
-            // }
+            
         }
     }
 
@@ -147,8 +142,6 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
     //     UIHUDController.showCenterTip("No PSYC to collect");
     //     return;
     // }
-    // DataMgr.setTempSendData("player_get_auto_energy_res", { num: produceNum });
-    // NetworkMgr.websocketMsg.player_get_auto_energy({});
     // }
     //------------------------------- notification
     private _onFetchUserPsycRes = (e: any) => {

@@ -55,7 +55,7 @@ export class ArtifactStore extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        const buildingData = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.ArtifactStore];
+        const buildingData = DataMgr.s.innerBuilding.data.get(InnerBuildingType.ArtifactStore);
         if (buildingData != null) {
             this.node.getChildByPath("__ViewContent/Bg/LeftContent/LevelTitle").getComponent(Label).string = "Lv " + buildingData.buildLevel;
 

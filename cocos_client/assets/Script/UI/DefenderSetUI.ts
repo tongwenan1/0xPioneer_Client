@@ -45,11 +45,9 @@ export class DefenderSetUI extends ViewController {
         super.viewDidStart();
 
         const datas = DataMgr.s.userInfo.data.wormholeDefenderIds;
-        for (let i = 0; i < datas.length; i++) {
-            if (datas[i].length > 0) {
-                this._addDefender(datas[i], i);
-            }
-        }
+        datas.forEach((value: string, key: number)=> {
+            this._addDefender(value, key);
+        })
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();

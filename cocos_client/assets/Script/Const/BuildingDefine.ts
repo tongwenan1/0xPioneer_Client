@@ -18,15 +18,6 @@ export enum BuildingStayPosType {
     Seven = 2,
 }
 
-// export interface BuildingMgrEvent {
-//     buildingDidHide(buildingId: string, beacusePioneerId: string): void;
-//     buildingDidShow(buildingId: string): void;
-
-//     buildingFacitonChanged(buildingId: string, faction: MapMemberFactionType): void;
-//     buildingInsertDefendPioneer(buildingId: string, pioneerId: string): void;
-//     buildingRemoveDefendPioneer(buildingId: string, pioneerId: string): void;
-// }
-
 export enum InnerBuildingType {
     MainCity = "30001",
     Barrack = "30002",

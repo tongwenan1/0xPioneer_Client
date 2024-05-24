@@ -478,16 +478,4 @@ export class PioneersDataMgr {
         this.changeDefend(currentPlayer.id, NFT.defenseGrowValue);
         this.changeSpeed(currentPlayer.id, NFT.speedGrowValue);
     }
-    //---------------------------fake socket
-    private _onChangePioneer(e: any) {
-        const data: s2c_user.Ichange_pioneer_res = e;
-        const findPioneer = this._pioneers.find((p) => p.id == data.pioneerId);
-        if (findPioneer != undefined) {
-            if (data.type == Ichange_pioneer_type.showHide) {
-                findPioneer.show = data.showHide.show;
-            } else if (data.type == Ichange_pioneer_type.actionType) {
-                findPioneer.actionType = data.actionType.type;
-            }
-        }
-    }
 }

@@ -18,6 +18,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.mapbuilding_change, "mapbuilding_change", "s2c_user.mapbuilding_change");
     pcodec.register_protobuf_msg(protobuf_s2c.building_change, "building_change", "s2c_user.building_change");
     pcodec.register_protobuf_msg(protobuf_s2c.nft_change, "nft_change", "s2c_user.nft_change");
+    pcodec.register_protobuf_msg(protobuf_s2c.sinfo_change, "sinfo_change", "s2c_user.sinfo_change");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_move_res, "player_move_res", "s2c_user.player_move_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_talk_select_res, "player_talk_select_res", "s2c_user.player_talk_select_res");

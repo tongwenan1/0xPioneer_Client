@@ -94,21 +94,4 @@ export default class UserInfoMgr {
             });
         }
     }
-    private _generateEnergyNumToChange() {
-        const energyBuildingData = DataMgr.s.userInfo.data.innerBuildings[InnerBuildingType.EnergyStation];
-        if (energyBuildingData == null) {
-            return;
-        }
-        const generateConfig = InnerBuildingLvlUpConfig.getEnergyLevelData(energyBuildingData.buildLevel);
-        if (generateConfig == null) {
-            return;
-        }
-        let generateNumPerMin: number = generateConfig.output;
-        generateNumPerMin = GameMgr.getAfterExtraEffectPropertyByBuilding(
-            InnerBuildingType.EnergyStation,
-            GameExtraEffectType.ENERGY_GENERATE,
-            generateNumPerMin
-        );
-        DataMgr.s.userInfo.gainGenerateEnergy(generateNumPerMin);
-    }
 }

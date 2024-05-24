@@ -16,6 +16,7 @@ const { ccclass, property } = _decorator;
 @ccclass("InnerBuildingView")
 export class InnerBuildingView extends ViewController {
     public async refreshUI(building: UserInnerBuildInfo, canAction: boolean = true) {
+        console.log('exce b: ', building);
         if (building == null) {
             return;
         }
@@ -166,7 +167,7 @@ export class InnerBuildingView extends ViewController {
     }
     //---------------------------- function
     private _onInnerBuildingDataChange() {
-        this.refreshUI(DataMgr.s.userInfo.data.innerBuildings[this._building.buildType]);
+        this.refreshUI(DataMgr.s.innerBuilding.data.get(this._building.buildType));
     }
     //---------------------------- action
     private onTapBuilding() {

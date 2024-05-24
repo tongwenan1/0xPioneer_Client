@@ -1,6 +1,27 @@
-import { CCString, Color, Component, EventMouse, Layout, Node, Prefab, Rect, Sprite, SpriteFrame, UIOpacity, UITransform, Vec2, Vec3, _decorator, color, instantiate, rect, v2, v3 } from "cc";
+import {
+    CCString,
+    Color,
+    Component,
+    EventMouse,
+    Layout,
+    Node,
+    Prefab,
+    Rect,
+    Sprite,
+    SpriteFrame,
+    UIOpacity,
+    UITransform,
+    Vec2,
+    Vec3,
+    _decorator,
+    color,
+    instantiate,
+    rect,
+    v2,
+    v3,
+} from "cc";
 import ViewController from "../../BasicView/ViewController";
-import { InnerBuildingLatticeShowType, InnerBuildingLatticeStruct, InnerBuildingType } from "../../Const/BuildingDefine";
+import { InnerBuildingLatticeShowType, InnerBuildingLatticeStruct, InnerBuildingType, UserInnerBuildInfo } from "../../Const/BuildingDefine";
 import { InnerBuildingView } from "./View/InnerBuildingView";
 import InnerBuildingConfig from "../../Config/InnerBuildingConfig";
 import { ResourcesMgr } from "../../Utils/Global";
@@ -14,10 +35,8 @@ import { DataMgr } from "../../Data/DataMgr";
 
 const { ccclass, property } = _decorator;
 
-@ccclass('InnerBuildingController')
+@ccclass("InnerBuildingController")
 export class InnerBuildingController extends ViewController {
-
-
     private _buildingMap: Map<InnerBuildingType, InnerBuildingView> = new Map();
 
     private _latticeItem: Node = null;
@@ -47,7 +66,6 @@ export class InnerBuildingController extends ViewController {
 
     protected async viewDidAppear(): Promise<void> {
         super.viewDidAppear();
-        await this._refreshBuilding();
         this._refreshLattice();
 
         NotificationMgr.addListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
@@ -59,13 +77,13 @@ export class InnerBuildingController extends ViewController {
 
     protected viewDidDisAppear(): void {
         super.viewDidDisAppear();
+        this._refreshBuilding();
 
         NotificationMgr.removeListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
 
         NotificationMgr.removeListener(NotificationName.GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_DOWN, this._onEditActionMouseDown, this);
         NotificationMgr.removeListener(NotificationName.GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_UP, this._onEditActionMouseUp, this);
         NotificationMgr.removeListener(NotificationName.GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_MOVE, this._onEditActionMouseMove, this);
-
     }
 
     protected viewDidDestroy(): void {
@@ -85,37 +103,38 @@ export class InnerBuildingController extends ViewController {
                     node: lattice,
                     isEmpty: true,
                     showType: InnerBuildingLatticeShowType.None,
-                    stayBuilding: null
+                    stayBuilding: null,
                 });
             }
         }
     }
 
     private async _initBuilding() {
-        const innerBuilding = DataMgr.s.userInfo.data.innerBuildings;
+        const innerBuilding = DataMgr.s.innerBuilding.data;
         let index: number = 0;
-        for (const key in innerBuilding) {
-            const useKey = key as InnerBuildingType;
-            const config = InnerBuildingConfig.getByBuildingType(useKey);
+        const promise = [];
+        for (const [key, value] of innerBuilding.entries()) {
+            const config = InnerBuildingConfig.getByBuildingType(key);
             if (config != null) {
                 const buildingPrb = await ResourcesMgr.LoadABResource("prefab/game/inner/" + config.anim, Prefab);
+                promise.push(buildingPrb);
                 if (buildingPrb != null) {
                     const view = instantiate(buildingPrb);
                     view.setParent(this.node.getChildByPath("BuildingLattice"));
-                    if (useKey == InnerBuildingType.MainCity) {
-                        this._buildingMap.set(useKey, view.getComponent(InnerMainCityBuildingView));
-                    } else if (useKey == InnerBuildingType.Barrack) {
-                        this._buildingMap.set(useKey, view.getComponent(InnerBarracksBuildingView));
-                    } else if (useKey == InnerBuildingType.EnergyStation) {
-                        this._buildingMap.set(useKey, view.getComponent(InnerEnergyStationBuildingView));
+                    if (key == InnerBuildingType.MainCity) {
+                        this._buildingMap.set(key, view.getComponent(InnerMainCityBuildingView));
+                    } else if (key == InnerBuildingType.Barrack) {
+                        this._buildingMap.set(key, view.getComponent(InnerBarracksBuildingView));
+                    } else if (key == InnerBuildingType.EnergyStation) {
+                        this._buildingMap.set(key, view.getComponent(InnerEnergyStationBuildingView));
                     } else {
-                        this._buildingMap.set(useKey, view.getComponent(InnerBuildingView));
+                        this._buildingMap.set(key, view.getComponent(InnerBuildingView));
                     }
                     const size: number = config.size;
                     if (this._allLatticeItems.length > 0) {
                         const useItems: Node[] = [];
                         for (let i = 0; i < size; i++) {
-                            let beginIndex: number = innerBuilding[useKey].buildBeginLatticeIndex;
+                            let beginIndex: number = value.buildBeginLatticeIndex;
                             if (beginIndex == null) {
                                 let inSameRouter: boolean = true;
                                 let beginRouter: number = this._allLatticeItems[index].routerIndex;
@@ -135,7 +154,7 @@ export class InnerBuildingController extends ViewController {
                                         }
                                     }
                                 }
-                                DataMgr.s.userInfo.changeBuildingLatticeBeginIndex(useKey, beginIndex);
+                                DataMgr.s.innerBuilding.changeBuildingLatticeBeginIndex(key, beginIndex);
                             }
                             if (beginIndex + i < this._allLatticeItems.length) {
                                 const templeItem = this._allLatticeItems[beginIndex + i];
@@ -146,7 +165,7 @@ export class InnerBuildingController extends ViewController {
                                 const copyLattice = instantiate(templeItem.node);
                                 copyLattice.name = "buildingLattice_" + i;
                                 const copyWidth = copyLattice.getComponent(UITransform).width;
-                                copyLattice.position = v3(- ((size - 1) / 2 * copyWidth) + i * copyWidth, copyLattice.position.y, 0);
+                                copyLattice.position = v3(-(((size - 1) / 2) * copyWidth) + i * copyWidth, copyLattice.position.y, 0);
                                 view.addChild(copyLattice);
                             }
                         }
@@ -173,17 +192,22 @@ export class InnerBuildingController extends ViewController {
                 centerX = centerX / lattices.length;
                 centerY = centerY / lattices.length;
             }
-            const pos = building.parent.getComponent(UITransform).convertToNodeSpaceAR(currentParentView.getComponent(UITransform).convertToWorldSpaceAR(v3(centerX, centerY, 0)));
+            const pos = building.parent
+                .getComponent(UITransform)
+                .convertToNodeSpaceAR(currentParentView.getComponent(UITransform).convertToWorldSpaceAR(v3(centerX, centerY, 0)));
             building.position = pos;
         }
     }
 
     private _refreshBuilding() {
-        const innerBuilds = DataMgr.s.userInfo.data.innerBuildings;
+        const innerBuilds = DataMgr.s.innerBuilding.data;
+        console.log("exce ste[1]: ", innerBuilds);
         this._buildingMap.forEach(async (value: InnerBuildingView, key: InnerBuildingType) => {
-            if (key in innerBuilds) {
+            console.log("exce kye: " + key);
+            if (innerBuilds.has(key)) {
                 value.node.active = true;
-                await value.refreshUI(innerBuilds[key], !GameMainHelper.instance.isEditInnerBuildingLattice);
+                console.log("exce usein: " + JSON.stringify(innerBuilds.get(key)));
+                await value.refreshUI(innerBuilds.get(key), !GameMainHelper.instance.isEditInnerBuildingLattice);
             } else {
                 value.node.active = false;
             }
@@ -200,10 +224,8 @@ export class InnerBuildingController extends ViewController {
                 } else {
                     useColor = Color.YELLOW;
                 }
-
             } else if (item.showType == InnerBuildingLatticeShowType.Clean) {
                 useColor = Color.GREEN;
-
             } else if (item.showType == InnerBuildingLatticeShowType.Error) {
                 useColor = Color.RED;
             }
@@ -211,7 +233,7 @@ export class InnerBuildingController extends ViewController {
         }
     }
 
-    private _checkEditBuildingCanSetLattice(): { canSet: boolean, useLattices: InnerBuildingLatticeStruct[] } {
+    private _checkEditBuildingCanSetLattice(): { canSet: boolean; useLattices: InnerBuildingLatticeStruct[] } {
         for (const item of this._allLatticeItems) {
             item.showType = InnerBuildingLatticeShowType.None;
         }
@@ -228,7 +250,7 @@ export class InnerBuildingController extends ViewController {
         }
         let currentUseItems: InnerBuildingLatticeStruct[] = [];
         for (let i = 0; i < editBuildingBoxes.length; i++) {
-            const standbyLattice: { intersection: Rect, item: InnerBuildingLatticeStruct }[] = [];
+            const standbyLattice: { intersection: Rect; item: InnerBuildingLatticeStruct }[] = [];
             for (const item of this._allLatticeItems) {
                 const itemBox = item.node.getComponent(UITransform).getBoundingBoxToWorld();
                 const intersection: Rect = rect(0, 0, 0, 0);
@@ -236,7 +258,7 @@ export class InnerBuildingController extends ViewController {
                 if (intersection.width > 0 && intersection.height > 0) {
                     standbyLattice.push({
                         intersection: intersection,
-                        item: item
+                        item: item,
                     });
                 }
             }
@@ -252,7 +274,7 @@ export class InnerBuildingController extends ViewController {
         }
         // delete the same element
         currentUseItems = currentUseItems.reduce((accumulator: InnerBuildingLatticeStruct[], current: InnerBuildingLatticeStruct) => {
-            if (!accumulator.some(temple => temple == current)) {
+            if (!accumulator.some((temple) => temple == current)) {
                 accumulator.push(current);
             }
             return accumulator;
@@ -264,7 +286,7 @@ export class InnerBuildingController extends ViewController {
                 break;
             }
         }
-        const canSet: boolean = (isAllIntersectItemClean && editBuildingBoxes.length <= 0 && currentUseItems.length == buildingSize);
+        const canSet: boolean = isAllIntersectItemClean && editBuildingBoxes.length <= 0 && currentUseItems.length == buildingSize;
         for (const item of currentUseItems) {
             item.showType = canSet ? InnerBuildingLatticeShowType.Clean : InnerBuildingLatticeShowType.Error;
         }
@@ -325,7 +347,7 @@ export class InnerBuildingController extends ViewController {
                 }
                 this._buildingMap.forEach((value: InnerBuildingView, key: InnerBuildingType) => {
                     if (value.node == this._latticeEditBuildingView) {
-                        DataMgr.s.userInfo.changeBuildingLatticeBeginIndex(key, minIndex)
+                        DataMgr.s.innerBuilding.changeBuildingLatticeBeginIndex(key, minIndex);
                     }
                 });
                 this._setBuildingPosByLattles(this._latticeEditBuildingView, useItems);
@@ -356,13 +378,12 @@ export class InnerBuildingController extends ViewController {
         this._latticeBuildingOriginalPos = null;
         this._latticeEditBuildingView = null;
         this._ghostBuildingView = null;
-
     }
     private _onEditActionMouseMove(data: { movement: Vec2 }) {
         if (this._latticeEditBuildingView != null) {
             const currentPos = v3(
-                this._latticeEditBuildingView.position.x + (data.movement.x / this.node.scale.x),
-                this._latticeEditBuildingView.position.y + (data.movement.y / this.node.scale.y)
+                this._latticeEditBuildingView.position.x + data.movement.x / this.node.scale.x,
+                this._latticeEditBuildingView.position.y + data.movement.y / this.node.scale.y
             );
             this._latticeEditBuildingView.position = currentPos;
             this._checkEditBuildingCanSetLattice();

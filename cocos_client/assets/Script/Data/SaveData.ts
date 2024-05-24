@@ -9,6 +9,7 @@ import { SettlementDataMgr } from "./Save/SettlementDataMgr";
 import UserInfoDataMgr from "./Save/UserInfoDataMgr";
 import TaskDataMgr from "./Save/TaskDataMgr";
 import NFTPioneerDataMgr from "./Save/NFTPioneerDataMgr";
+import InnerBuildingDataMgr from "./Save/InnerBuildingDataMgr";
 
 export class SaveData {
     private _pioneersDataMgr: PioneersDataMgr;
@@ -21,6 +22,7 @@ export class SaveData {
     private _itemDataMgr: ItemDataMgr;
     private _settlementDataMgr: SettlementDataMgr;
     private _userInfoDataMgr: UserInfoDataMgr;
+    private _innerBuildingDataMgr: InnerBuildingDataMgr;
     private _taskDataMgr: TaskDataMgr;
 
     public get pioneer() {
@@ -63,6 +65,10 @@ export class SaveData {
         return this._userInfoDataMgr;
     }
 
+    public get innerBuilding() {
+        return this._innerBuildingDataMgr;
+    }
+
     public get task() {
         return this._taskDataMgr;
     }
@@ -78,17 +84,19 @@ export class SaveData {
         this._itemDataMgr = new ItemDataMgr();
         this._settlementDataMgr = new SettlementDataMgr();
         this._userInfoDataMgr = new UserInfoDataMgr();
+        this._innerBuildingDataMgr = new InnerBuildingDataMgr();
         this._taskDataMgr = new TaskDataMgr();
     }
 
     public async load(walletAddr: string) {
         this._userInfoDataMgr.loadObj();
+        this._taskDataMgr.loadObj();
         this._itemDataMgr.loadObj();
         this._artifactDataMgr.loadObj();
+        this._innerBuildingDataMgr.loadObj();
         this._pioneersDataMgr.loadObj();
         this._mapBuildingDataMgr.loadObj();
         this._nftPioneerDataMgr.loadObj();
-        this._taskDataMgr.loadObj();
 
         await this._eraseShadowDataMgr.loadObj(walletAddr);
         await this._countDataMgr.loadObj(walletAddr);

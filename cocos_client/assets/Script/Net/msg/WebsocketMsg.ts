@@ -158,9 +158,6 @@ export class WebsocketMsg {
     public player_building_levelup(d: c2s_user.Iplayer_building_levelup) {
         this.send_packet("player_building_levelup", d);
     }
-    public player_get_auto_energy(d: c2s_user.Iplayer_get_auto_energy) {
-        this.send_packet("player_get_auto_energy", d);
-    }
     public player_generate_energy(d: c2s_user.Iplayer_generate_energy) {
         this.send_packet("player_generate_energy", d);
     }
@@ -169,9 +166,6 @@ export class WebsocketMsg {
     }
     public player_building_delegate_nft(d: c2s_user.Iplayer_building_delegate_nft) {
         this.send_packet("player_building_delegate_nft", d);
-    }
-    public player_bind_nft(d: c2s_user.Iplayer_bind_nft) {
-        this.send_packet("player_bind_nft", d);
     }
     public player_nft_lvlup(d: c2s_user.Iplayer_nft_lvlup) {
         this.send_packet("player_nft_lvlup", d);
@@ -360,7 +354,6 @@ export namespace c2s_user {
     export interface Iplayer_building_levelup {
         innerBuildingId: string;
     }
-    export interface Iplayer_get_auto_energy {}
     export interface Iplayer_generate_energy {
         num: number;
     }
@@ -411,10 +404,6 @@ export namespace c2s_user {
 
     export interface Ifetch_user_psyc {}
 
-    export interface Iplayer_bind_nft {
-        pioneerId: string;
-    }
-
     export interface Isave_archives {
         archives: string;
     }
@@ -454,36 +443,25 @@ export namespace s2c_user {
         /** enter_game_res data */
         data?: share.Iplayer_data | null;
     }
+    export interface Isinfo_change {
+        info: share.Iplayer_sinfo;
+    }
     export interface Istorhouse_change {
         iteminfo: share.Iitem_data[];
     }
-
     export interface Iartifact_change {
         iteminfo: share.Iartifact_info_data[];
     }
-
-    export interface Imark_data_dirty {
-        type: string;
-    }
-
     export interface Iget_pioneers_res {
         res: number;
         data?: share.Ipioneer_info | null;
     }
-
-    export interface Ichange_pioneer_res {
-        res: number;
-        type: Ichange_pioneer_type;
-        pioneerId: string;
-        showHide?: Ichange_pioneer_showHide;
-        actionType?: Ichange_pioneer_actionType;
-        newTalk: Ichange_pioneer_newTalk;
-    }
-
     export interface Ipioneer_change {
         pioneers: share.Ipioneer_data[];
     }
-
+    export interface Inft_change {
+        nfts: share.Infts_info_data[];
+    }
     export interface Imappbuilding_change {
         mapbuildings: share.Imapbuilding_info_data[];
     }
@@ -580,9 +558,6 @@ export namespace s2c_user {
     export interface Ibuilding_change {
         buildings: share.Ibuilding_data[];
     }
-    export interface Iplayer_get_auto_energy_res {
-        num: number;
-    }
     export interface Iplayer_generate_energy_res {
         num: number;
         subItems: ItemData[];
@@ -627,11 +602,6 @@ export namespace s2c_user {
         itemId: string;
         num: number;
     }
-
-    export interface Iplayer_wormhole_set_defender_res {
-        res: number;
-        defender: { [key: string]: string };
-    }
     export interface Iplayer_wormhole_set_attacker_res {
         res: number;
         buildingId: string;
@@ -651,13 +621,6 @@ export namespace s2c_user {
         defenderData: { [key: string]: string };
         fightResult: boolean;
     }
-
-    export interface Iplayer_bind_nft_res {
-        res: number;
-        pioneerData: share.Ipioneer_data;
-        nftData: share.Infts_info_data;
-    }
-
     export interface Ifetch_user_psyc_res {
         res: number;
         psycfetched: number;

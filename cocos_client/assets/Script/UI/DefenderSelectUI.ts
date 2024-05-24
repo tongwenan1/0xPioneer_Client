@@ -58,14 +58,21 @@ export class DefenderSelectUI extends ViewController {
         this._pioneerIds = [];
         const playerDatas = DataMgr.s.pioneer.getAllPlayers(true);
         for (let i = 0; i < playerDatas.length; i++) {
-            if (DataMgr.s.userInfo.data.wormholeDefenderIds.indexOf(playerDatas[i].id) == -1) {
-                const nft = DataMgr.s.nftPioneer.getNFTById(playerDatas[i].NFTId);
-                if (nft == undefined) {
-                    continue;
+            let used: boolean = false;
+            DataMgr.s.userInfo.data.wormholeDefenderIds.forEach((value: string, key: number) => {
+                if (value == playerDatas[i].id) {
+                    used = true;
                 }
-                this._pioneerIds.push(playerDatas[i].id);
-                this._datas.push(nft);
+            });
+            if (used) {
+                continue;
             }
+            const nft = DataMgr.s.nftPioneer.getNFTById(playerDatas[i].NFTId);
+            if (nft == undefined) {
+                continue;
+            }
+            this._pioneerIds.push(playerDatas[i].id);
+            this._datas.push(nft);
         }
         for (let i = 0; i < this._datas.length; i++) {
             const data = this._datas[i];

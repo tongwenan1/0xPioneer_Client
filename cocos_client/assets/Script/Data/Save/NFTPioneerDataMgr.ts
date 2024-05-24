@@ -61,15 +61,18 @@ export default class NFTPioneerDataMgr {
     //-------------------------------- data action
 
     //-------------------------------- data action {
-    public refreshNFT(netData: share.Infts_info_data): NFTPioneerObject {
+    public replaceData(netData: share.Infts_info_data) {
+        const newObj = this._convertNetDataToObject(netData);
+        let isExit: boolean = false;
         for (let i = 0; i < this._data.length; i++) {
             if (this._data[i].uniqueId == netData.uniqueId) {
-                const newNFT = this._convertNetDataToObject(netData);
-                this._data[i] = newNFT;
-                return newNFT;
+                isExit = true;
+                this._data[i] = newObj;
             }
         }
-        return null;
+        if (!isExit) {
+            this._data.push(newObj);
+        }
     }
 
     public NFTGetNew(netData: share.Infts_info_data): NFTPioneerObject {
@@ -78,14 +81,14 @@ export default class NFTPioneerDataMgr {
         return obj;
     }
     public NFTLevelUp(netData: share.Infts_info_data) {
-        const obj = this.refreshNFT(netData);
+        const obj = this.replaceData(netData);
         if (obj == null) {
             return;
         }
         NotificationMgr.triggerEvent(NotificationName.NFTDIDLEVELUP, { nft: obj });
     }
     public NFTRankUp(netData: share.Infts_info_data) {
-        const obj = this.refreshNFT(netData);
+        const obj = this.replaceData(netData);
         if (obj == null) {
             return;
         }

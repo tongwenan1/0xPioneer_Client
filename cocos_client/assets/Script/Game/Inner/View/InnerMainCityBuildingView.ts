@@ -23,11 +23,9 @@ export class InnerMainCityBuildingView extends InnerBuildingView {
             this._buildingUpView.position = v3(0, this._buildingSize.height, 0);
         }
         let canBuild: boolean = false;
-        const innerBuildings = DataMgr.s.userInfo.data.innerBuildings;
-        for (const key in innerBuildings) {
-            const useKey = key as InnerBuildingType;
-            const value = innerBuildings[useKey];
-            const innerConfig = InnerBuildingConfig.getByBuildingType(useKey);
+        const innerBuildings = DataMgr.s.innerBuilding.data;
+        innerBuildings.forEach((value: UserInnerBuildInfo, key: InnerBuildingType)=> {
+            const innerConfig = InnerBuildingConfig.getByBuildingType(key);
             const levelConfig = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel + 1, innerConfig.lvlup_cost);
             if (levelConfig != null) {
                 let thisBuild: boolean = true;
@@ -43,7 +41,7 @@ export class InnerMainCityBuildingView extends InnerBuildingView {
                     canBuild = true;
                 }
             }
-        }
+        });
         this._buildingUpView.active = canBuild;
     }
 

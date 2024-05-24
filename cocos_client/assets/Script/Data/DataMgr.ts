@@ -5,6 +5,7 @@ import { AttrChangeType, DataMgrResData, GameExtraEffectType, GetPropData, MapMe
 import ItemData from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import {
+    MapNpcPioneerObject,
     MapPioneerActionType,
     MapPioneerAttributesChangeModel,
     MapPioneerEventAttributesChangeType,
@@ -72,23 +73,23 @@ export class DataMgr {
             }
         }
     };
-    public static player_exp_change = (e: any) => {
-        const p: s2c_user.Iplayer_exp_change = e.data;
-        DataMgr.s.userInfo.data.exp = p.newExp;
-        NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_EXP, { exp: p.addExp });
-    };
-    public static player_treasure_progress_change = (e: any) => {
-        const p: s2c_user.Iplayer_treasure_progress_change = e.data;
-        DataMgr.s.userInfo.data.exploreProgress = p.newProgress;
-        DataMgr.s.userInfo.data.heatValue.lotteryProcessLimit = p.newLotteryProcessLimit;
-        NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS);
-    };
-    public static player_heat_change = (e: any) => {
-        const p: s2c_user.Iplayer_heat_change = e.data;
-        DataMgr.s.userInfo.data.heatValue.currentHeatValue = p.newval;
-        DataMgr.s.userInfo.data.heatValue.lotteryTimesLimit = p.newlotteryTimesLimit;
-        DataMgr.s.userInfo.data.heatValue.lotteryProcessLimit = p.newlotteryProcessLimit;
-        NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_HEAT);
+
+    public static sinfo_change = (e: any) => {
+        const p: s2c_user.Isinfo_change = e.data;
+        const localData = DataMgr.s.userInfo.data;
+        DataMgr.s.userInfo.replaceData(p.info);
+        // exp
+        if (localData.exp < p.info.exp) {
+            NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_EXP, { exp: p.info.exp - localData.exp });
+        }
+        // treasure progress
+        if (localData.exploreProgress != p.info.treasureProgress) {
+            NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS);
+        }
+        // heat
+        if (localData.heatValue.currentHeatValue != p.info.heatValue.currentHeatValue) {
+            NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_HEAT);
+        }
     };
     //------------------------------------- item
     public static storhouse_change = async (e: any) => {
@@ -99,12 +100,6 @@ export class DataMgr {
             DataMgr.s.item.countChanged(change);
         }
     };
-    public static player_item_use_res = (e: any) => {
-        const p: s2c_user.Iplayer_item_use_res = e.data;
-        if (p.res === 1) {
-        }
-    };
-
     //------------------------------------ artifact
     public static artifact_change = (e: any) => {
         const p: s2c_user.Iartifact_change = e.data;
@@ -132,8 +127,11 @@ export class DataMgr {
     public static building_change = (e: any) => {
         const p: s2c_user.Ibuilding_change = e.data;
         for (const netBuilding of p.buildings) {
-            const currentData = DataMgr.s.userInfo.data.innerBuildings[netBuilding.id];
-            DataMgr.s.userInfo.replaceData(netBuilding);
+            const currentData = DataMgr.s.innerBuilding.data.get(netBuilding.id as InnerBuildingType);
+            if (currentData == null) {
+                continue;
+            }
+            DataMgr.s.innerBuilding.replaceData(netBuilding);
             if (currentData.troopIng != netBuilding.troopIng || currentData.upgrading != netBuilding.upgradeIng) {
                 NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_DATA_CHANGE);
             }
@@ -155,9 +153,6 @@ export class DataMgr {
                     DataMgr.s.pioneer.replaceData(i, temple);
                     // show
                     if (currentData.show != temple.show) {
-                        if (temple.type == MapPioneerType.player && temple.show && temple.NFTId == null) {
-                            PioneerMgr.bindPlayerNFT(temple.id);
-                        }
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: temple.id, show: temple.show });
                     }
                     // faction
@@ -227,8 +222,10 @@ export class DataMgr {
         if (p.res !== 1) {
             return;
         }
-        // DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.idle);
-        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_PIONEER, { id: p.npcId });
+        const npcObj = DataMgr.s.pioneer.getById(p.npcId) as MapNpcPioneerObject;
+        if (!!npcObj && npcObj.talkId != null) {
+            NotificationMgr.triggerEvent(NotificationName.DIALOG_SHOW, npcObj.talkId);
+        }
     };
     public static player_move_res = (e: any) => {
         const p: s2c_user.Iplayer_move_res = e.data;
@@ -252,29 +249,11 @@ export class DataMgr {
     };
 
     //------------------------------------- nft
-    public static player_bind_nft_res = (e: any) => {
-        const p: s2c_user.Iplayer_bind_nft_res = e.data;
-        if (p.res !== 1) {
-            return;
+    public static nft_change = (e: any) => {
+        const p: s2c_user.Inft_change = e.data;
+        for (const nft of p.nfts) {
+            DataMgr.s.nftPioneer.replaceData(nft);
         }
-        const newNFTObj = DataMgr.s.nftPioneer.NFTGetNew(p.nftData);
-        DataMgr.s.pioneer.bindPlayerNFT(p.pioneerData.id, newNFTObj);
-
-        // bind succeed then set defender
-        // let emptyIndex: number = -1;
-        // const defenderIds: string[] = DataMgr.s.userInfo.data.wormholeDefenderIds;
-        // for (let i = 0; i < defenderIds.length; i++) {
-        //     if (defenderIds[i] == "") {
-        //         emptyIndex = i;
-        //         break;
-        //     }
-        // }
-        // if (emptyIndex >= 0) {
-        //     NetworkMgr.websocketMsg.player_wormhole_set_defender({
-        //         pioneerId: p.pioneerData.id,
-        //         index: emptyIndex,
-        //     });
-        // }
     };
     public static player_nft_lvlup_res = (e: any) => {
         const p: s2c_user.Iplayer_nft_lvlup_res = e.data;
@@ -292,15 +271,6 @@ export class DataMgr {
     };
 
     //------------------------------------- wormhole
-    public static player_wormhole_set_defender_res = (e: any) => {
-        const p: s2c_user.Iplayer_wormhole_set_defender_res = e.data;
-        if (p.res !== 1) {
-            return;
-        }
-        for (const key in p.defender) {
-            DataMgr.s.userInfo.data.wormholeDefenderIds[parseInt(key)] = p.defender[key];
-        }
-    };
     public static player_wormhole_fight_attacked_res = (e: any) => {
         const p: s2c_user.Iplayer_wormhole_fight_attacked_res = e.data;
         if (p.res !== 1) {
@@ -437,11 +407,9 @@ export class DataMgr {
                     DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.addingtroops, currentTimeStamp, actionTime);
                     setTimeout(() => {
                         DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.idle);
-                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_PIONEER, { id: exploreId });
                     }, actionTime);
                 } else {
                     DataMgr.s.pioneer.changeActionType(pioneerId, MapPioneerActionType.idle);
-                    NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EXPLORED_PIONEER, { id: exploreId });
                 }
             }
         }
@@ -814,15 +782,6 @@ export class DataMgr {
         if (DataMgr.socketSendData.has(key)) {
             const data: s2c_user.Iplayer_point_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_point_treasure_open_res;
             DataMgr.s.userInfo.getPointExplorationReward(data.boxId);
-        }
-    };
-
-    public static player_get_auto_energy_res = (e: any) => {
-        const key: string = "player_get_auto_energy_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_get_auto_energy_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_get_auto_energy_res;
-            // upload resource changed inner_building-get_auto_energy
-            DataMgr.s.userInfo.generateEnergyGetted();
         }
     };
     public static player_generate_energy_res = (e: any) => {

@@ -40,7 +40,6 @@ export interface UserInfoObject {
 
     energyDidGetTimes: number;
     energyGetLimitTimes: number;
-    innerBuildings: { [key: string]: UserInnerBuildInfo };
 
-    wormholeDefenderIds: [string, string, string];
+    wormholeDefenderIds: Map<number, string>;
 }

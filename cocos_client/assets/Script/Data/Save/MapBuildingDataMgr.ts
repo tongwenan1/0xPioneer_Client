@@ -25,14 +25,6 @@ export class MapBuildingDataMgr {
     public replaceData(index: number, data: share.Imapbuilding_info_data) {
         this._building_data[index] = this._convertNetDataToObject(data);
     }
-    private _loadObj_mapPositions(data: StayMapPosition[]) {
-        const mapPositions: Vec2[] = [];
-        for (const pos of data) {
-            mapPositions.push(new Vec2(pos.x, pos.y));
-        }
-        return mapPositions;
-    }
-
     public async loadObj() {
         this._building_data = [];
         if (NetGlobalData.mapBuildings == null) {
@@ -46,74 +38,6 @@ export class MapBuildingDataMgr {
         console.log("exce m:", this._building_data);
         this._initInterval();
         CLog.debug("MapBuildingDataMgr: loadObj/building_data, ", this._building_data);
-    }
-    private _convertNetDataToObject(element: share.Imapbuilding_info_data): MapBuildingObject {
-        const stayPos: Vec2[] = [];
-        for (const templePos of element.stayMapPositions) {
-            stayPos.push(new Vec2(templePos.x, templePos.y));
-        }
-        const baseObj: MapBuildingBaseObject = {
-            id: element.id,
-            name: element.name,
-            type: element.type,
-            level: element.level,
-            show: element.show,
-            faction: element.faction,
-            defendPioneerIds: element.defendPioneerIds,
-            stayPosType: element.stayPosType,
-            progress: element.progress,
-            winprogress: element.winprogress,
-            eventId: element.eventId,
-            originalEventId: element.originalEventId,
-            exp: element.exp,
-            animType: element.animType,
-            stayMapPositions: stayPos,
-            gatherPioneerIds: element.gatherPioneerIds,
-        };
-        if (baseObj.type == MapBuildingType.city) {
-            const cityObj: MapBuildingMainCityObject = {
-                ...baseObj,
-                hpMax: element.hpMax,
-                hp: element.hp,
-                attack: element.attack,
-                taskObj: null,
-            };
-            return cityObj;
-        } else if (baseObj.type == MapBuildingType.wormhole) {
-            const attackerMap: Map<number, string> = new Map();
-            for (const key in element.attacker) {
-                if (element.attacker[key] == null || element.attacker[key] == "") {
-                    continue;
-                }
-                attackerMap.set(parseInt(key), element.attacker[key]);
-            }
-            const wormholeObj: MapBuildingWormholeObject = {
-                ...baseObj,
-                wormholdCountdownTime: element.wormholdCountdownTime * 1000,
-                attacker: attackerMap,
-            };
-            return wormholeObj;
-        } else {
-            return baseObj;
-        }
-    }
-    private _initInterval() {
-        setInterval(() => {
-            for (const obj of this._building_data) {
-                if (obj.type == MapBuildingType.tavern) {
-                    const tavern = obj as MapBuildingTavernObject;
-                    if (tavern.tavernCountdownTime > 0) {
-                        tavern.tavernCountdownTime -= 1;
-
-                        NotificationMgr.triggerEvent(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, { id: tavern.id });
-
-                        if (tavern.tavernCountdownTime == 0) {
-                            NotificationMgr.triggerEvent(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_FINISH, { id: tavern.id });
-                        }
-                    }
-                }
-            }
-        }, 1000);
     }
 
     // get obj
@@ -237,5 +161,74 @@ export class MapBuildingDataMgr {
             return findDatas[0];
         }
         return null;
+    }
+
+    private _convertNetDataToObject(element: share.Imapbuilding_info_data): MapBuildingObject {
+        const stayPos: Vec2[] = [];
+        for (const templePos of element.stayMapPositions) {
+            stayPos.push(new Vec2(templePos.x, templePos.y));
+        }
+        const baseObj: MapBuildingBaseObject = {
+            id: element.id,
+            name: element.name,
+            type: element.type,
+            level: element.level,
+            show: element.show,
+            faction: element.faction,
+            defendPioneerIds: element.defendPioneerIds,
+            stayPosType: element.stayPosType,
+            progress: element.progress,
+            winprogress: element.winprogress,
+            eventId: element.eventId,
+            originalEventId: element.originalEventId,
+            exp: element.exp,
+            animType: element.animType,
+            stayMapPositions: stayPos,
+            gatherPioneerIds: element.gatherPioneerIds,
+        };
+        if (baseObj.type == MapBuildingType.city) {
+            const cityObj: MapBuildingMainCityObject = {
+                ...baseObj,
+                hpMax: element.hpMax,
+                hp: element.hp,
+                attack: element.attack,
+                taskObj: null,
+            };
+            return cityObj;
+        } else if (baseObj.type == MapBuildingType.wormhole) {
+            const attackerMap: Map<number, string> = new Map();
+            for (const key in element.attacker) {
+                if (element.attacker[key] == null || element.attacker[key] == "") {
+                    continue;
+                }
+                attackerMap.set(parseInt(key), element.attacker[key]);
+            }
+            const wormholeObj: MapBuildingWormholeObject = {
+                ...baseObj,
+                wormholdCountdownTime: element.wormholdCountdownTime * 1000,
+                attacker: attackerMap,
+            };
+            return wormholeObj;
+        } else {
+            return baseObj;
+        }
+    }
+    private _initInterval() {
+        setInterval(() => {
+            for (const obj of this._building_data) {
+                if (obj.type == MapBuildingType.tavern) {
+                    const tavern = obj as MapBuildingTavernObject;
+                    if (tavern.tavernCountdownTime > 0) {
+                        tavern.tavernCountdownTime -= 1;
+
+                        NotificationMgr.triggerEvent(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, { id: tavern.id });
+
+                        if (tavern.tavernCountdownTime == 0) {
+                            NotificationMgr.triggerEvent(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_FINISH, { id: tavern.id });
+                        }
+                    }
+                }
+            }
+        }, 1000);
     }
 }
