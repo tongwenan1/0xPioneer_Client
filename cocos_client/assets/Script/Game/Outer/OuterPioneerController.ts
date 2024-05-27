@@ -154,14 +154,13 @@ export class OuterPioneerController extends ViewController {
 
         // talk
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_TALK_CHANGED, this._refreshUI, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_TALK_COUNT_CHANGED, this._refreshUI, this);
         // action
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._onPioneerActionChanged, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENTSTATUS_CHANGED, this._refreshUI, this);
+        // event 
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENTID_CHANGE, this._refreshUI, this);
         // hp
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_HP_CHANGED, this._onPioneerHpChanged, this);
-        // rebirth
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_REBIRTH_FINISHED, this._refreshUI, this);
         // show
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_SHOW_CHANGED, this._onPioneerShowChanged, this);
         // faction
@@ -247,14 +246,13 @@ export class OuterPioneerController extends ViewController {
 
         // talk
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_TALK_CHANGED, this._refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_GET_TALK_COUNT_CHANGED, this._refreshUI, this);
         // action
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._onPioneerActionChanged, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENTSTATUS_CHANGED, this._refreshUI, this);
+        // event 
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENTID_CHANGE, this._refreshUI, this);
         // hp
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_HP_CHANGED, this._onPioneerHpChanged, this);
-        // rebirth
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_REBIRTH_FINISHED, this._refreshUI, this);
         // show
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_SHOW_CHANGED, this._onPioneerShowChanged, this);
         // faction
@@ -642,50 +640,6 @@ export class OuterPioneerController extends ViewController {
         if (building != null) {
         }
     }
-    // private async _onEventBuilding(data: { pioneerId: string; buildingId: string; eventId: string }): Promise<void> {
-    //     const actionPioneerId = data.pioneerId;
-    //     const buildingId = data.buildingId;
-    //     const eventId = data.eventId;
-
-    //     DataMgr.s.battleReport.latestActiveEventState = {
-    //         pioneerId: actionPioneerId,
-    //         buildingId: buildingId,
-    //         eventId: eventId,
-    //         prevEventId: null,
-    //     };
-    //     const event = EventConfig.getById(eventId);
-    //     if (event != null) {
-    //         const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
-    //         if (result.success) {
-    //             result.node.getComponent(EventUI).eventUIShow(
-    //                 actionPioneerId,
-    //                 buildingId,
-    //                 event,
-    //                 (
-    //                     attackerPioneerId: string,
-    //                     enemyPioneerId: string,
-    //                     temporaryAttributes: Map<string, MapPioneerAttributesChangeModel>,
-    //                     fightOver: (succeed: boolean) => void
-    //                 ) => {
-    //                     PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
-    //                     PioneerMgr.fight(
-    //                         DataMgr.s.pioneer.getById(attackerPioneerId),
-    //                         DataMgr.s.pioneer.getById(enemyPioneerId),
-    //                         null,
-    //                         true,
-    //                         DataMgr.s.mapBuilding.getBuildingById(buildingId).stayMapPositions,
-    //                         temporaryAttributes,
-    //                         fightOver
-    //                     );
-    //                 },
-    //                 (nextEvent: EventConfigData) => {
-    //                     PioneerMgr.pioneerEventStatusToNone(actionPioneerId);
-    //                     PioneerMgr.pioneerDealWithEvent(actionPioneerId, buildingId, nextEvent);
-    //                 }
-    //             );
-    //         }
-    //     }
-    // }
     private _onPioneerBeginMove(data: { id: string; showMovePath: boolean }): void {
         const pioneer = DataMgr.s.pioneer.getById(data.id);
         if (this._actionShowPioneerId == data.id) {

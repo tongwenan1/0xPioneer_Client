@@ -31,6 +31,7 @@ import { NotificationName } from "../Const/Notification";
 import Config from "../Const/Config";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
+import { NetworkMgr } from "../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("PlayerInfoUI")
@@ -105,6 +106,9 @@ export class PlayerInfoUI extends ViewController {
 
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._onChangeLang, this);
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.SETTLEMENT_DATA_CHANGE, this._refreshUI, this);
+
+        NetworkMgr.websocketMsg.get_user_settlement_info({});
     }
 
     protected viewDidStart(): void {
@@ -124,6 +128,7 @@ export class PlayerInfoUI extends ViewController {
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._onChangeLang, this);
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.SETTLEMENT_DATA_CHANGE, this._refreshUI, this);
     }
 
     //-------------------------------- function

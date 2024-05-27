@@ -63,12 +63,6 @@ export default class UserInfoMgr {
             //     DataMgr.s.mapBuilding.showBuilding(buildingId);
             // }
         }
-
-        // if (data.rewards.length > 0) {
-        //     // upload resource changed levelup
-        //     ItemConfigDropTool.getItemByConfig(data.rewards);
-        // }
-
         if (data.items.length > 0) {
             setTimeout(async () => {
                 if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI) || UIPanelManger.inst.panelIsShow(UIName.SecretGuardGettedUI)) {

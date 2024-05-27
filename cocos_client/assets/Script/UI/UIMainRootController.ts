@@ -39,7 +39,6 @@ export class UIMainRootController extends ViewController {
 
         NotificationMgr.addListener(NotificationName.CHANGE_CURSOR, this._onCursorChanged, this);
         NotificationMgr.addListener(NotificationName.DIALOG_SHOW, this._onDialogShow, this);
-        NotificationMgr.addListener(NotificationName.GAME_SHOW_PROP_GET, this._onShowPropGet, this);
         NotificationMgr.addListener(NotificationName.GAME_SHOW_CENTER_TIP, this._onShowCenterTip, this);
     }
 
@@ -48,7 +47,6 @@ export class UIMainRootController extends ViewController {
 
         NotificationMgr.removeListener(NotificationName.CHANGE_CURSOR, this._onCursorChanged, this);
         NotificationMgr.removeListener(NotificationName.DIALOG_SHOW, this._onDialogShow, this);
-        NotificationMgr.removeListener(NotificationName.GAME_SHOW_PROP_GET, this._onShowPropGet, this);
         NotificationMgr.removeListener(NotificationName.GAME_SHOW_CENTER_TIP, this._onShowCenterTip, this);
     }
 
@@ -68,9 +66,6 @@ export class UIMainRootController extends ViewController {
         if (result.success) {
             result.node.getComponent(DialogueUI).dialogShow(talkData, null);
         }
-    }
-    private _onShowPropGet(data: { props: GetPropData[] }) {
-        ItemConfigDropTool.getItemByConfig(data.props);
     }
     private _onShowCenterTip(data: { tip: string }) {
         UIHUDController.showCenterTip(data.tip);

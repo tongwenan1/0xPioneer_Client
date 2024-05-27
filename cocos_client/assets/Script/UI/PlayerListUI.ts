@@ -32,11 +32,8 @@ export class PlayerListUI extends Component {
 
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_SHOW_CHANGED, this._refreshPlayerList, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._refreshPlayerList, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENTSTATUS_CHANGED, this._refreshPlayerList, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_HP_CHANGED, this._refreshPlayerList, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_HPMAX_CHANGED, this._refreshPlayerList, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_REBIRTH_COUNT_CHANGED, this._refreshPlayerList, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_REBIRTH_FINISHED, this._refreshPlayerList, this);
     }
 
     start() {
@@ -49,11 +46,8 @@ export class PlayerListUI extends Component {
 
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_SHOW_CHANGED, this._refreshPlayerList, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._refreshPlayerList, this);
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENTSTATUS_CHANGED, this._refreshPlayerList, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_HP_CHANGED, this._refreshPlayerList, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_HPMAX_CHANGED, this._refreshPlayerList, this);
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_REBIRTH_COUNT_CHANGED, this._refreshPlayerList, this);
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_REBIRTH_FINISHED, this._refreshPlayerList, this);
     }
 
     private changeLang() {

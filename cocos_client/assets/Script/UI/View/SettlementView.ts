@@ -8,7 +8,6 @@ export class SettlementView extends Component {
 
     public refreshUI(beginLevel: number, endLevel: number) {
         const model = DataMgr.s.settlement.getObj(beginLevel, endLevel);
-
         this.node.getChildByPath("Level/Before").getComponent(Label).string = "C.Lv " + beginLevel;
         this.node.getChildByPath("Level/After").getComponent(Label).string = "C.Lv " + endLevel;
 

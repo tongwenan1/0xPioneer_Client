@@ -2,20 +2,13 @@ import { Vec2, v2 } from "cc";
 import PioneerConfig from "../../Config/PioneerConfig";
 import { TileHexDirection, TilePos } from "../../Game/TiledMap/TileTool";
 import { GetPropData, MapMemberFactionType, MapMemberTargetType } from "../../Const/ConstDefine";
-import {
+import PioneerDefine, {
     MapNpcPioneerObject,
     MapPioneerActionType,
-    MapPioneerData,
-    MapPioneerEventStatus,
-    MapPioneerLogicObject,
-    MapPioneerLogicPatrolObject,
-    MapPioneerLogicStepMoveObject,
-    MapPioneerLogicTargetMoveObject,
     MapPioneerLogicType,
     MapPioneerObject,
     MapPioneerType,
     MapPlayerPioneerObject,
-    PioneerConfigData,
 } from "../../Const/PioneerDefine";
 import { NotificationName } from "../../Const/Notification";
 import NotificationMgr from "../../Basic/NotificationMgr";
@@ -94,7 +87,7 @@ export class PioneersDataMgr {
     }
     //-------------- change
     public replaceData(index: number, data: share.Ipioneer_data) {
-        const newObj = this._convertNetDataToObject(data);
+        const newObj = PioneerDefine.convertNetDataToObject(data);
         this._pioneers[index] = newObj;
         return newObj;
     }
@@ -112,17 +105,7 @@ export class PioneersDataMgr {
 
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: pioneerId });
     }
-    public changeEventStatus(pioneerId: string, status: MapPioneerEventStatus, beginTimeStamp: number = 0, useTime: number = 0) {
-        const findPioneer = this.getById(pioneerId);
-        if (findPioneer == undefined) return;
-
-        findPioneer.eventStatus = status;
-        findPioneer.actionBeginTimeStamp = beginTimeStamp;
-        findPioneer.actionEndTimeStamp = beginTimeStamp + useTime;
-
-        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENTSTATUS_CHANGED, { id: pioneerId });
-    }
-    public changeTalk(pioneerId: string, talkId: string, delayTime: number = 0) {
+    public changeTalk(pioneerId: string, talkId: string) {
         const pioneer = this.getById(pioneerId);
         if (pioneer == undefined) {
             return;
@@ -132,16 +115,7 @@ export class PioneersDataMgr {
             if (npcObj.talkId == talkId) {
                 return;
             }
-            if (delayTime > 0) {
-                npcObj.talkCountStruct = {
-                    talkId: talkId,
-                    countTime: delayTime,
-                };
-
-                return;
-            }
             npcObj.talkId = talkId;
-
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_TALK_CHANGED, { id: pioneerId, talkId: npcObj.talkId });
         }
     }
@@ -230,18 +204,6 @@ export class PioneersDataMgr {
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SPEED_CHANGED, { id: pioneerId });
         }
     }
-    public rebirth(pioneerId: string, recoverHp: number, rebirthPos: Vec2): void {
-        const pioneer = this.getById(pioneerId) as MapPlayerPioneerObject;
-        if (!!pioneer) {
-            pioneer.hp = recoverHp;
-            pioneer.stayPos = rebirthPos;
-            pioneer.killerId = null;
-            this.changeActionType(pioneerId, MapPioneerActionType.idle);
-            this.changeEventStatus(pioneerId, MapPioneerEventStatus.None);
-
-            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_REBIRTH_FINISHED, { id: pioneerId });
-        }
-    }
 
     public beginMove(pioneerId: string, movePaths: TilePos[], forceShowMovePath: boolean = false) {
         const findPioneer = this.getById(pioneerId);
@@ -308,70 +270,14 @@ export class PioneersDataMgr {
         this._pioneers = [];
         const netPioneers = NetGlobalData.usermap.pioneer;
         for (const key in netPioneers) {
-            this._pioneers.push(this._convertNetDataToObject(netPioneers[key]));
+            this._pioneers.push(PioneerDefine.convertNetDataToObject(netPioneers[key]));
         }
-        console.log("exce pioneer: ", this._pioneers);
         // default player id is "0"
         this._currentActionPioneerId = "pioneer_0";
 
         // NetworkMgr.websocket.on("change_pioneer_res", this._onChangePioneer);
         this._initInterval();
         this._addListeners();
-    }
-    private _convertNetDataToObject(temple: share.Ipioneer_data): MapPioneerObject {
-        const config = PioneerConfig.getById(temple.id);
-        if (config == null) {
-            return null;
-        }
-        const currentTime = new Date().getTime();
-        let obj = {
-            id: temple.id,
-            show: temple.show,
-            faction: temple.faction,
-            type: temple.type as MapPioneerType,
-            animType: config.animType,
-            name: config.name,
-            hp: temple.hp,
-            hpMax: temple.hpMax,
-            attack: temple.attack,
-            defend: temple.defend,
-            speed: temple.speed,
-            stayPos: v2(temple.stayPos.x, temple.stayPos.y),
-            movePaths: [],
-            actionType: temple.actionType as MapPioneerActionType,
-            eventStatus: temple.eventStatus,
-            actionBeginTimeStamp: currentTime,
-            actionEndTimeStamp: currentTime + (temple.actionEndTimeStamp - temple.actionBeginTimeStamp) * 1000,
-            logics: [],
-            winProgress: temple.winProgress,
-            winExp: temple.winExp,
-            drop: [],
-            fightData: temple.actionFightRes,
-            fightResultWin: temple.actionFightWinner == 1,
-            actionEventId: temple.actionEventId
-        };
-        if (obj.type == MapPioneerType.player) {
-            let playerObj: MapPlayerPioneerObject;
-            playerObj = {
-                ...obj,
-                NFTInitLinkId: temple.NFTInitLinkId,
-                NFTId: temple.NFTId,
-                rebirthStartTime: currentTime,
-                rebirthEndTime: currentTime + (temple.rebirthEndTime - temple.rebirthStartTime) * 1000,
-                killerId: temple.killerId,
-            };
-            return playerObj;
-        } else if (obj.type == MapPioneerType.npc) {
-            let npcObj: MapNpcPioneerObject;
-            npcObj = {
-                ...obj,
-                talkId: temple.talkId,
-                talkCountStruct: null,
-            };
-            return npcObj;
-        } else {
-            return obj;
-        }
     }
 
     private _initInterval() {
@@ -431,24 +337,6 @@ export class PioneersDataMgr {
                             }
                         }
                     }
-
-                    // get new talk time count
-                    if (pioneer.type == MapPioneerType.npc) {
-                        const npcPioneer: MapNpcPioneerObject = pioneer as MapNpcPioneerObject;
-                        if (!!npcPioneer) {
-                            if (npcPioneer.talkCountStruct != null) {
-                                if (npcPioneer.talkCountStruct.countTime > 0) {
-                                    npcPioneer.talkCountStruct.countTime -= 1;
-                                    NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_TALK_COUNT_CHANGED, { id: pioneer.id });
-
-                                    if (npcPioneer.talkCountStruct.countTime == 0) {
-                                        this.changeTalk(npcPioneer.id, npcPioneer.talkCountStruct.talkId);
-                                        npcPioneer.talkCountStruct = null;
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }, 1000);
@@ -460,8 +348,8 @@ export class PioneersDataMgr {
     }
 
     //--------------------------- notification
-    private _onPioneerGetTalk(action: TaskNpcGetNewTalkAction) {
-        this.changeTalk(action.npcId, action.talkId, action.delayTime);
+    private _onPioneerGetTalk(data: { npcId: string, talkId: string }) {
+        this.changeTalk(data.npcId, data.talkId);
     }
 
     private _onNFTPioneerDidLevelUp(NFT: NFTPioneerObject) {

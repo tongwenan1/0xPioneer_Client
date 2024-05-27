@@ -40,7 +40,6 @@ export default class InnerBuildingDataMgr {
         for (const building of NetGlobalData.innerBuildings) {
             this._data.set(building.id as InnerBuildingType, this._convertNetDataToObject(building));
         }
-        console.log("exce b:", this._data);
     }
 
     private _convertNetDataToObject(netData: share.Ibuilding_data): UserInnerBuildInfo {

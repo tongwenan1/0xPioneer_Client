@@ -63,14 +63,10 @@ export class EventUI extends ViewController {
         this._dialogSelectView = this._dialogView.getChildByName("selectView");
         this._selectItem = this._dialogSelectView.getChildByName("button");
         this._selectItem.active = false;
-
-        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
-
-        NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
     }
 
     private async _refreshUI(event: EventConfigData) {
@@ -144,77 +140,78 @@ export class EventUI extends ViewController {
         } else {
             this._dialogNextButton.active = true;
             this._dialogNextButton.getComponent(Button).clickEvents[0].customEventData = event.result;
-            if (event.type == 4) {
-                let showTip: string = "";
-                if (event.cost != null) {
-                    showTip += await this._loseOrGainItemAndResource(event.cost, true);
-                }
-                if (event.reward != null) {
-                    showTip += await this._loseOrGainItemAndResource(event.reward, false);
-                }
-                UIHUDController.showCenterTip(showTip);
-            } else if (event.type == 5) {
-                if (event.change != null) {
-                    let showTip: string = "";
-                    for (const tempChange of event.change) {
-                        const isPlayer: boolean = tempChange[0] == "-1";
-                        const pioneerId: string = isPlayer ? this._triggerPioneerId : tempChange[0];
-                        // 1-hp 2-attack
-                        const changedType: MapPioneerEventAttributesChangeType = tempChange[1];
-                        // 1-add 2-multi
-                        const changeMethod: AttrChangeType = tempChange[2];
-                        const changedValue: number = tempChange[3];
+            // if (event.type == 4) {
+            //     let showTip: string = "";
+            //     if (event.cost != null) {
+            //         showTip += await this._loseOrGainItemAndResource(event.cost, true);
+            //     }
+            //     if (event.reward != null) {
+            //         showTip += await this._loseOrGainItemAndResource(event.reward, false);
+            //     }
+            //     UIHUDController.showCenterTip(showTip);
+            // } else if (event.type == 5) {
+            //     if (event.change != null) {
+            //         let showTip: string = "";
+            //         for (const tempChange of event.change) {
+            //             const isPlayer: boolean = tempChange[0] == "-1";
+            //             const pioneerId: string = isPlayer ? this._triggerPioneerId : tempChange[0];
+            //             // 1-hp 2-attack
+            //             const changedType: MapPioneerEventAttributesChangeType = tempChange[1];
+            //             // 1-add 2-multi
+            //             const changeMethod: AttrChangeType = tempChange[2];
+            //             const changedValue: number = tempChange[3];
 
-                        if (isPlayer && changedType == 1) {
-                            let useValue: number = 0;
-                            if (changeMethod == AttrChangeType.ADD) {
-                                useValue = changedValue;
-                            } else if (changeMethod == AttrChangeType.MUL) {
-                                useValue = DataMgr.s.pioneer.getById(pioneerId)?.hpMax * changedValue;
-                            }
-                            DataMgr.s.pioneer.changeHpMax(pioneerId, useValue);
-                        } else {
-                            this._temporaryAttributes.set(pioneerId, { method: changeMethod, type: changedType, value: changedValue });
-                        }
-                        if (isPlayer) {
-                            if (changedType == 1) {
-                                // useLanMgr
-                                showTip += LanMgr.getLanById("207001") + "\n";
-                                // showTip += "Your HP has changed\n";
-                            } else {
-                                // useLanMgr
-                                showTip += LanMgr.getLanById("207002") + "\n";
-                                // showTip += "Your Attack has changed\n";
-                            }
-                        } else {
-                            const pioneerInfo = DataMgr.s.pioneer.getById(pioneerId);
-                            if (pioneerInfo == null) {
-                                if (changedType == 1) {
-                                    // useLanMgr
-                                    showTip += LanMgr.getLanById("207003") + "\n";
-                                    // showTip += "Enemy's HP has changed\n";
-                                } else {
-                                    // useLanMgr
-                                    showTip += LanMgr.getLanById("207004") + "\n";
-                                    // showTip += "Enemy's Attack has changed\n";
-                                }
-                            } else {
-                                if (changedType == 1) {
-                                    // useLanMgr
-                                    showTip += LanMgr.replaceLanById("207005", [pioneerInfo.name]) + "\n";
-                                    // showTip += pioneerInfo.name + " HP has changed\n";
-                                } else {
-                                    // useLanMgr
-                                    showTip += LanMgr.replaceLanById("207006", [pioneerInfo.name]) + "\n";
-                                    // showTip += pioneerInfo.name + " Attack has changed\n";
-                                }
-                            }
-                        }
-                    }
-                    UIHUDController.showCenterTip(showTip);
-                }
-            }
+            //             if (isPlayer && changedType == 1) {
+            //                 let useValue: number = 0;
+            //                 if (changeMethod == AttrChangeType.ADD) {
+            //                     useValue = changedValue;
+            //                 } else if (changeMethod == AttrChangeType.MUL) {
+            //                     useValue = DataMgr.s.pioneer.getById(pioneerId)?.hpMax * changedValue;
+            //                 }
+            //                 DataMgr.s.pioneer.changeHpMax(pioneerId, useValue);
+            //             } else {
+            //                 this._temporaryAttributes.set(pioneerId, { method: changeMethod, type: changedType, value: changedValue });
+            //             }
+            //             if (isPlayer) {
+            //                 if (changedType == 1) {
+            //                     // useLanMgr
+            //                     showTip += LanMgr.getLanById("207001") + "\n";
+            //                     // showTip += "Your HP has changed\n";
+            //                 } else {
+            //                     // useLanMgr
+            //                     showTip += LanMgr.getLanById("207002") + "\n";
+            //                     // showTip += "Your Attack has changed\n";
+            //                 }
+            //             } else {
+            //                 const pioneerInfo = DataMgr.s.pioneer.getById(pioneerId);
+            //                 if (pioneerInfo == null) {
+            //                     if (changedType == 1) {
+            //                         // useLanMgr
+            //                         showTip += LanMgr.getLanById("207003") + "\n";
+            //                         // showTip += "Enemy's HP has changed\n";
+            //                     } else {
+            //                         // useLanMgr
+            //                         showTip += LanMgr.getLanById("207004") + "\n";
+            //                         // showTip += "Enemy's Attack has changed\n";
+            //                     }
+            //                 } else {
+            //                     if (changedType == 1) {
+            //                         // useLanMgr
+            //                         showTip += LanMgr.replaceLanById("207005", [pioneerInfo.name]) + "\n";
+            //                         // showTip += pioneerInfo.name + " HP has changed\n";
+            //                     } else {
+            //                         // useLanMgr
+            //                         showTip += LanMgr.replaceLanById("207006", [pioneerInfo.name]) + "\n";
+            //                         // showTip += pioneerInfo.name + " Attack has changed\n";
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //         UIHUDController.showCenterTip(showTip);
+            //     }
+            // }
         }
+        // NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, { eventId: this._event.id, hasNextStep: true } as EVENT_STEPEND_DATA);
     }
 
     private _checkIsSatisfiedCondition(condition: EventSelectCond): { satisfy: boolean; tipText: string } {
@@ -347,26 +344,8 @@ export class EventUI extends ViewController {
                 } else if (eventId == "-2") {
                     // const building = BuildingMgr.getBuildingById(this._eventBuildingId);
                     const building = DataMgr.s.mapBuilding.getBuildingById(this._eventBuildingId);
-
-                    if (building != null) {
-                        // BuildingMgr.changeBuildingEventId(this._eventBuildingId, building.originalEventId);
-                        DataMgr.s.mapBuilding.changeBuildingEventId(this._eventBuildingId, building.originalEventId);
-                    }
                 }
             }
-            DataMgr.s.settlement.addObj({
-                level: DataMgr.s.userInfo.data.level,
-                newPioneerIds: [],
-                killEnemies: 0,
-                gainResources: 0,
-                consumeResources: 0,
-                gainTroops: 0,
-                consumeTroops: 0,
-                gainEnergy: 0,
-                consumeEnergy: 0,
-                exploredEvents: 1,
-            });
-
             if (this._triggerPioneerId != null) {
                 PioneerMgr.pioneerToIdle(this._triggerPioneerId);
             }
@@ -407,6 +386,7 @@ export class EventUI extends ViewController {
             pioneerId: this._triggerPioneerId,
         });
         UIPanelManger.inst.popPanel();
+        return;
         const pioneerId = customEventData;
         this._contentView.active = false;
         if (this._fightCallback != null) {

@@ -131,6 +131,7 @@ export class MainUI extends ViewController {
     private async onTapNewSettlementTip() {
         const currentData = localStorage.getItem("local_newSettle");
         if (currentData != null) {
+            NetworkMgr.websocketMsg.get_user_settlement_info({});
             const beginLevel = parseInt(currentData.split("|")[0]);
             const endLevel = parseInt(currentData.split("|")[1]);
             const result = await UIPanelManger.inst.pushPanel(UIName.NewSettlementUI);
@@ -214,8 +215,9 @@ export class MainUI extends ViewController {
 
     private _onPlayerLvlupChanged(): void {
         const currentLevel: number = DataMgr.s.userInfo.data.level;
-        const gap: number = 4;
+        let gap: number = 4;
         if (currentLevel % gap == 0) {
+            NetworkMgr.websocketMsg.get_user_settlement_info({});
             const currentSettle: number = currentLevel / gap - 1;
             const beginLevel: number = currentSettle * gap + 1;
             const endLevel: number = (currentSettle + 1) * gap;

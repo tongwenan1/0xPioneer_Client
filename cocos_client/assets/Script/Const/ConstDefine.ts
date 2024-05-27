@@ -129,20 +129,6 @@ export enum MapMemberTargetType {
     building = 1,
 }
 
-export interface MapMemberShowStruct {
-    target: MapMemberTargetType;
-    show: boolean;
-}
-
-export interface MapMemberShowHideCountStruct {
-    countTime: number;
-    isShow: boolean;
-}
-export interface MapMemberGetTalkCountStruct {
-    countTime: number;
-    talkId: string;
-}
-
 export const GameRankColor = [
     new Color().fromHEX(GetPropRankColor.RANK1),
     new Color().fromHEX(GetPropRankColor.RANK2),

@@ -2,17 +2,15 @@ import { Vec2 } from "cc";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { InnerBuildingType, MapBuildingType } from "../Const/BuildingDefine";
 import { AttrChangeType, DataMgrResData, GameExtraEffectType, GetPropData, MapMemberFactionType, ResourceCorrespondingItem } from "../Const/ConstDefine";
-import ItemData from "../Const/Item";
+import ItemData, { ItemConfigType, ItemType } from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import {
     MapNpcPioneerObject,
     MapPioneerActionType,
     MapPioneerAttributesChangeModel,
     MapPioneerEventAttributesChangeType,
-    MapPioneerEventStatus,
     MapPioneerObject,
     MapPioneerType,
-    MapPlayerPioneerObject,
 } from "../Const/PioneerDefine";
 import { c2s_user, s2c_user, share } from "../Net/msg/WebsocketMsg";
 import CLog from "../Utils/CLog";
@@ -28,6 +26,9 @@ import UIPanelManger from "../Basic/UIPanelMgr";
 import { UIName } from "../Const/ConstUIDefine";
 import { TreasureGettedUI } from "../UI/TreasureGettedUI";
 import CommonTools from "../Tool/CommonTools";
+import ItemConfig from "../Config/ItemConfig";
+import { ItemGettedUI } from "../UI/ItemGettedUI";
+import EventConfig from "../Config/EventConfig";
 
 export class DataMgr {
     public static r: RunData;
@@ -79,7 +80,7 @@ export class DataMgr {
         const localData = DataMgr.s.userInfo.data;
         DataMgr.s.userInfo.replaceData(p.info);
         // exp
-        if (localData.exp < p.info.exp) {
+        if (localData.exp != p.info.exp) {
             NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_EXP, { exp: p.info.exp - localData.exp });
         }
         // treasure progress
@@ -94,10 +95,25 @@ export class DataMgr {
     //------------------------------------- item
     public static storhouse_change = async (e: any) => {
         const p: s2c_user.Istorhouse_change = e.data;
+        const nonResourceGettedItems = [];
         for (const item of p.iteminfo) {
             const change = new ItemData(item.itemConfigId, item.count);
             change.addTimeStamp = item.addTimeStamp;
             DataMgr.s.item.countChanged(change);
+
+            if (item.count > 0) {
+                const config = ItemConfig.getById(item.itemConfigId);
+                if (config != null && config.itemType != ItemType.Resource) {
+                    nonResourceGettedItems.push(item);
+                }
+            }
+        }
+        if (nonResourceGettedItems.length > 0) {
+            const result = await UIPanelManger.inst.pushPanel(UIName.ItemGettedUI);
+            if (!result.success) {
+                return;
+            }
+            result.node.getComponent(ItemGettedUI).showItem(nonResourceGettedItems);
         }
     };
     //------------------------------------ artifact
@@ -163,6 +179,10 @@ export class DataMgr {
                     if (oldData.actionType != newData.actionType) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: newData.id });
                     }
+                    // event
+                    if (oldData.actionEventId != newData.actionEventId) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENTID_CHANGE);
+                    }
                     // fight
                     if ((oldData.fightData == null && newData.fightData != null) || (oldData.fightData != null && newData.fightData == null)) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FIGHT_CHANGE);
@@ -174,6 +194,9 @@ export class DataMgr {
     };
     public static mappioneer_reborn_change = (e: any) => {
         NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("106009"));
+    };
+    public static mapbuilding_reborn_change = (e: any) => {
+        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("106010"));
     };
 
     public static mapbuilding_change = (e: any) => {
@@ -238,14 +261,32 @@ export class DataMgr {
         const localData: s2c_user.Iplayer_move_res_local_data = DataMgr.socketSendData.get("player_move_res") as s2c_user.Iplayer_move_res_local_data;
         DataMgr.s.pioneer.beginMove(localData.pioneerId, localData.movePath);
     };
-    public static player_event_res = (e: any) => {
-        const p: s2c_user.Iplayer_event_res = e.data;
+    public static player_event_select_res = (e: any) => {
+        const p: s2c_user.Iplayer_event_select_res = e.data;
         if (p.res !== 1) {
             return;
         }
-    };
-    public static mapbuilding_reborn_change = (e: any) => {
-        NotificationMgr.triggerEvent(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, LanMgr.getLanById("106010"));
+        const eventConfig = EventConfig.getById(p.eventId);
+        if (eventConfig.type == 4) {
+            if (eventConfig.cost == null) {
+                return;
+            }
+            let showTip: string = "";
+            for (const temple of eventConfig.cost) {
+                const type: ItemConfigType = temple[0];
+                const id: string = temple[1];
+                const num: number = temple[2];
+                if (type == ItemConfigType.Item) {
+                    const itemConf = ItemConfig.getById(id);
+                    if (itemConf == null) {
+                        continue;
+                    }
+                    // useLanMgr
+                    showTip += LanMgr.replaceLanById("207008", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
+                }
+            }
+            UIHUDController.showCenterTip(showTip);
+        }
     };
 
     //------------------------------------- nft
@@ -656,23 +697,6 @@ export class DataMgr {
                                 selfKillPioneer.winProgress
                             );
                         }
-                        if (selfKillPioneer.drop != null) {
-                            // upload resource changed fight
-                            NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_PROP_GET, { props: selfKillPioneer.drop });
-                        }
-                        // settle
-                        DataMgr.s.settlement.addObj({
-                            level: DataMgr.s.userInfo.data.level,
-                            newPioneerIds: [],
-                            killEnemies: 1,
-                            gainResources: 0,
-                            consumeResources: 0,
-                            gainTroops: 0,
-                            consumeTroops: 0,
-                            gainEnergy: 0,
-                            consumeEnergy: 0,
-                            exploredEvents: 0,
-                        });
                     }
                     let playerPioneerId: string = null;
                     if (isSelfAttack) {
@@ -804,7 +828,7 @@ export class DataMgr {
     /////////////// task
     public static user_task_action_getnewtalk = (e: any) => {
         let p: s2c_user.Iuser_task_action_getnewtalk = e.data;
-        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_NEW_TALK, p);
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_NEW_TALK, { npcId: p.npcId, talkId: p.talkId });
     };
     public static user_task_did_change = (e: any) => {
         let p: s2c_user.Iuser_task_did_change = e.data;
@@ -828,4 +852,14 @@ export class DataMgr {
             NotificationMgr.triggerEvent(NotificationName.TASK_LIST);
         }
     };
+
+    //------------------------------------- settlement
+    public static get_user_settlement_info_res = (e: any) => {
+        const p: s2c_user.Iget_user_settlement_info_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        DataMgr.s.settlement.refreshData(p.data);
+        NotificationMgr.triggerEvent(NotificationName.SETTLEMENT_DATA_CHANGE);
+    }
 }
