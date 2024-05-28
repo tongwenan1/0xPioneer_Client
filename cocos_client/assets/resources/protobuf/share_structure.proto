@@ -88,26 +88,27 @@ message pioneer_data {
     required string type = 4;
     required pos2d stayPos = 5;
 
-    required uint32 hpMax = 6;
-    required int32 hp = 7;
-    required uint32 hpMaxbase = 8;
-    required int32 hpMaxadd = 9;
-    required int32 hpMaxmul = 10;
+    required int32 hp = 6;
+
+    required uint32 hpMax = 7;
+    // required uint32 hpMaxbase = 8;
+    // repeated int32 hpMaxadd = 9;
+    // repeated int32 hpMaxmul = 10;
     
     required int32 attack = 11;
-    required uint32 attackbase = 12;
-    required int32 attackadd = 13;
-    required int32 attackmul = 14;
+    // required uint32 attackbase = 12;
+    // repeated int32 attackadd = 13;
+    // repeated int32 attackmul = 14;
 
     required int32 defend = 15;
-    required uint32 defendbase = 16;
-    required int32 defendadd = 17;
-    required int32 defendmul = 18;
+    // required uint32 defendbase = 16;
+    // repeated int32 defendadd = 17;
+    // repeated int32 defendmul = 18;
 
     required int32 speed = 19;
-    required uint32 speedbase = 20;
-    required int32 speedadd = 21;
-    required int32 speedmul = 22;
+    // required uint32 speedbase = 20;
+    // repeated int32 speedadd = 21;
+    // repeated int32 speedmul = 22;
 
     required string actionType = 23;
     required uint32 actionBeginTimeStamp = 24;

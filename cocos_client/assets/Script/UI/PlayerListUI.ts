@@ -61,7 +61,16 @@ export class PlayerListUI extends Component {
         this._pioneers = [];
         for (const temple of DataMgr.s.pioneer.getAllPlayers()) {
             if (temple.show) {
-                this._pioneers.push(temple);
+                if (temple.actionType == MapPioneerActionType.eventing) {
+                    // eventing use building data
+                    const building = DataMgr.s.mapBuilding.getBuildingById(temple.actionBuildingId);
+                    if (building != null && building.eventPioneerDatas.has(temple.id)) {
+                        this._pioneers.push(building.eventPioneerDatas.get(temple.id) as MapPlayerPioneerObject);
+                        console.log("exce use event:", building.eventPioneerDatas.get(temple.id));
+                    }
+                } else {
+                    this._pioneers.push(temple);
+                }
             }
         }
         let i = 0;
@@ -86,9 +95,7 @@ export class PlayerListUI extends Component {
         this._playerItemContent.getComponent(Layout).updateLayout();
     }
 
-    update(deltaTime: number) {
-        
-    }
+    update(deltaTime: number) {}
 
     private onTapPlayerItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);

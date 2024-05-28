@@ -46,7 +46,7 @@ export enum MapPioneerActionType {
     exploring = "exploring",
     eventing = "eventing",
     addingtroops = "addingtroops",
-    wormhole = "wormhole"
+    wormhole = "wormhole",
 }
 
 export enum MapPioneerType {
@@ -54,7 +54,7 @@ export enum MapPioneerType {
     npc = "2",
     hred = "4",
     gangster = "3",
-} 
+}
 
 export enum MapPioneerLogicType {
     stepmove = 2,
@@ -72,11 +72,11 @@ export enum MapPioneerMoveDirection {
 
 export enum MapPioneerEventAttributesChangeType {
     HP = 1,
-    ATTACK = 2 
+    ATTACK = 2,
 }
 
 export interface MapPioneerAttributesChangeModel {
-    type: MapPioneerEventAttributesChangeType,
+    type: MapPioneerEventAttributesChangeType;
     method: AttrChangeType;
     value: number;
 }
@@ -164,6 +164,7 @@ export interface MapPioneerData {
 
     moveDirection?: MapPioneerMoveDirection;
 
+    actionBuildingId?: string;
     actionEventId?: string;
 
     fightData?: MapPioneerFightStuct[];
@@ -255,7 +256,8 @@ export default class PioneerDefine {
             drop: [],
             fightData: temple.actionFightRes,
             fightResultWin: temple.actionFightWinner == 1,
-            actionEventId: temple.actionEventId
+            actionEventId: temple.actionEventId,
+            actionBuildingId: temple.actionBuildingId,
         };
         if (obj.type == MapPioneerType.player) {
             let playerObj: MapPlayerPioneerObject;

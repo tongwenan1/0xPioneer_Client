@@ -108,6 +108,8 @@ export class MapPioneer extends Component {
         topWalkView.active = false;
         bottomWalkView.active = false;
 
+        console.log("exce _L: " + this._lastActionEndTimestamp + ", n: " + this._model.actionEndTimeStamp);
+        console.log("exce gap: " + (this._lastActionEndTimestamp - this._model.actionEndTimeStamp));
         if (this._lastStatus != this._model.actionType || this._lastActionEndTimestamp != this._model.actionEndTimeStamp) {
             this._lastStatus = this._model.actionType;
             this._lastActionEndTimestamp = this._model.actionEndTimeStamp;
@@ -217,8 +219,8 @@ export class MapPioneer extends Component {
                     break;
             }
 
-
             if (this._model.actionType == MapPioneerActionType.fighting || this._model.actionType == MapPioneerActionType.eventing) {
+                console.log("exce fight: " + JSON.stringify(model));
                 if (this._model.fightData != null && this._model.fightData.length > 0) {
                     this._fightView.node.active = true;
                     const fightDatas = this._model.fightData.slice();

@@ -794,6 +794,7 @@ export namespace share {
         winProgress?: number;
         winExp: number;
         actionEventId?: string;
+        actionBuildingId?: string;
         killerId?: string;
         NFTId?: string;
         talkId?: string;

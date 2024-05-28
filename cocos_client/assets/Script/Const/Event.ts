@@ -48,6 +48,8 @@ export interface EventConfigData {
 }
 
 export interface EVENT_STEPEND_DATA {
+    pioneerId: string;
+    buildingId: string;
     eventId: string;
     hasNextStep: boolean;
 }

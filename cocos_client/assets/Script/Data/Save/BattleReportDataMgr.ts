@@ -1,5 +1,5 @@
 import NotificationMgr from "../../Basic/NotificationMgr";
-import { ActiveEventState, BattleReportData, BattleReportExploringData, BattleReportType } from "../../Const/BattleReport";
+import { BattleReportData, BattleReportExploringData, BattleReportType } from "../../Const/BattleReport";
 import { NotificationName } from "../../Const/Notification";
 import { FIGHT_FINISHED_DATA, MINING_FINISHED_DATA } from "../../Const/PioneerDefine";
 import CLog from "../../Utils/CLog";
@@ -9,8 +9,6 @@ export class BattleReportDataMgr {
 
     private _baseKey: string = "local_battle_reports";
     private _key = "";
-
-    public latestActiveEventState: ActiveEventState;
 
     public constructor() {}
 
@@ -23,12 +21,6 @@ export class BattleReportDataMgr {
                 this._data = JSON.parse(data) as BattleReportData[];
             }
         }
-        this.latestActiveEventState = {
-            eventId: "",
-            prevEventId: "",
-            pioneerId: "",
-            buildingId: "",
-        };
         CLog.debug("BattleReportDataMgr: loadObj, ", this._data);
     }
 

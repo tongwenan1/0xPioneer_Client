@@ -275,7 +275,8 @@ export class PioneersDataMgr {
         // default player id is "0"
         this._currentActionPioneerId = "pioneer_0";
 
-        // NetworkMgr.websocket.on("change_pioneer_res", this._onChangePioneer);
+        console.log("exce pioneer: ", this._pioneers);
+
         this._initInterval();
         this._addListeners();
     }
@@ -348,7 +349,7 @@ export class PioneersDataMgr {
     }
 
     //--------------------------- notification
-    private _onPioneerGetTalk(data: { npcId: string, talkId: string }) {
+    private _onPioneerGetTalk(data: { npcId: string; talkId: string }) {
         this.changeTalk(data.npcId, data.talkId);
     }
 

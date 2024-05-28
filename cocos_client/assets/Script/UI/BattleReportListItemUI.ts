@@ -10,6 +10,8 @@ import GameMainHelper from "../Game/Helper/GameMainHelper";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import { FIGHT_FINISHED_DATA, MINING_FINISHED_DATA } from "../Const/PioneerDefine";
+import { NetworkMgr } from "../Net/NetworkMgr";
+import { EventUI } from "./Outer/EventUI";
 
 const { ccclass, property } = _decorator;
 
@@ -183,7 +185,7 @@ export class BattleReportListItemUI extends Component {
 
         let pioneerInfo = DataMgr.s.pioneer.getById(report.data.pioneerId);
 
-        const roleName = LanMgr.getLanById(pioneerInfo.name);
+        const roleName = LanMgr.getLanById(pioneerInfo == null ? "" : pioneerInfo.name);
         const rewards = report.data.rewards;
 
         this.leftNameLabel.string = roleName;
@@ -242,7 +244,7 @@ export class BattleReportListItemUI extends Component {
         }
     }
 
-    onClickBranchSelection() {
+    async onClickBranchSelection() {
         const reportData = this.report.data as BattleReportExploringData;
         // const building = BuildingMgr.getBuildingById(reportData.buildingId);
         const building = DataMgr.s.mapBuilding.getBuildingById(reportData.buildingId);
@@ -252,9 +254,12 @@ export class BattleReportListItemUI extends Component {
             UIHUDController.showCenterTip("Error");
             return;
         }
-        // UIPanelMgr.popPanel(UIName.BattleReportUI);
         UIPanelManger.inst.popPanel();
-        // PioneerMgr.pioneerDealWithEvent(reportData.pioneerId, reportData.buildingId, currentEvent);
+        
+        const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
+        if (result.success) {
+            result.node.getComponent(EventUI).eventUIShow(reportData.pioneerId, reportData.buildingId, currentEvent);
+        }
     }
 
     private _locationString(locationInfo: LocationInfo): string {

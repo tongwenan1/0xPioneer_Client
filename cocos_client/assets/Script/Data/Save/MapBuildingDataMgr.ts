@@ -27,7 +27,9 @@ export class MapBuildingDataMgr {
     public constructor() {}
 
     public replaceData(index: number, data: share.Imapbuilding_info_data) {
-        this._building_data[index] = this._convertNetDataToObject(data);
+        const newObj = this._convertNetDataToObject(data);
+        this._building_data[index] = newObj;
+        return newObj;
     }
     public async loadObj() {
         this._building_data = [];

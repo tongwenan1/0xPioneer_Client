@@ -29,6 +29,7 @@ import CommonTools from "../Tool/CommonTools";
 import ItemConfig from "../Config/ItemConfig";
 import { ItemGettedUI } from "../UI/ItemGettedUI";
 import EventConfig from "../Config/EventConfig";
+import { EVENT_STEPEND_DATA } from "../Const/Event";
 
 export class DataMgr {
     public static r: RunData;
@@ -176,12 +177,26 @@ export class DataMgr {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FACTION_CHANGED, { id: newData.id, show: newData.show });
                     }
                     // action type
-                    if (oldData.actionType != newData.actionType) {
+                    if (oldData.actionType != newData.actionType || oldData.actionEndTimeStamp != newData.actionEndTimeStamp) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: newData.id });
                     }
                     // event
                     if (oldData.actionEventId != newData.actionEventId) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENTID_CHANGE);
+                        if (newData.actionEventId != null) {
+                            const stepEndData: EVENT_STEPEND_DATA = {
+                                pioneerId: newData.id,
+                                buildingId: newData.actionBuildingId,
+                                eventId: newData.actionEventId,
+                                hasNextStep:
+                                    newData.actionEventId != "-1" &&
+                                    newData.actionEventId != "-2" &&
+                                    newData.actionEventId != "" &&
+                                    newData.actionEventId != null,
+                            };
+                            console.log("exce stepEndData: ", stepEndData);
+                            NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, stepEndData);
+                        }
                     }
                     // fight
                     if ((oldData.fightData == null && newData.fightData != null) || (oldData.fightData != null && newData.fightData == null)) {
@@ -205,24 +220,18 @@ export class DataMgr {
         for (const temple of p.mapbuildings) {
             for (let i = 0; i < localDatas.length; i++) {
                 if (temple.id == localDatas[i].id) {
-                    const currentData = localDatas[i];
-                    DataMgr.s.mapBuilding.replaceData(i, temple);
-                    if (currentData.show != temple.show) {
-                        NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_SHOW_CHANGE, { id: temple.id });
+                    const oldData = localDatas[i];
+                    const newData = DataMgr.s.mapBuilding.replaceData(i, temple);
+                    if (oldData.show != newData.show) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_SHOW_CHANGE, { id: newData.id });
                     }
-                    if (currentData.faction != currentData.faction) {
-                        NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_FACTION_CHANGE, { id: temple.id });
+                    if (oldData.faction != newData.faction) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_FACTION_CHANGE, { id: newData.id });
                     }
-                    if (currentData.type == MapBuildingType.wormhole) {
-                        const wormObj = currentData as MapBuildingWormholeObject;
-                        const newAttackerMap: Map<number, string> = new Map();
-                        for (const key in temple.attacker) {
-                            if (temple.attacker[key] == null || temple.attacker[key] == "") {
-                                continue;
-                            }
-                            newAttackerMap.set(parseInt(key), temple.attacker[key]);
-                        }
-                        if (!CommonTools.mapsAreEqual(newAttackerMap, wormObj.attacker)) {
+                    if (oldData.type == MapBuildingType.wormhole && newData.type == MapBuildingType.wormhole) {
+                        const oldWorm = oldData as MapBuildingWormholeObject;
+                        const newWorm = newData as MapBuildingWormholeObject;
+                        if (!CommonTools.mapsAreEqual(oldWorm.attacker, newWorm.attacker)) {
                             NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_WORMHOLE_ATTACKER_CHANGE);
                             if (NetGlobalData.wormholeAttackBuildingId != null) {
                                 NetworkMgr.websocketMsg.player_wormhole_fight_start({
@@ -231,7 +240,7 @@ export class DataMgr {
                                 NetGlobalData.wormholeAttackBuildingId = null;
                             }
                         }
-                        if (wormObj.wormholdCountdownTime != temple.wormholdCountdownTime) {
+                        if (oldWorm.wormholdCountdownTime != newWorm.wormholdCountdownTime) {
                             NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_WORMHOLE_ATTACK_COUNT_DONW_TIME_CHANGE);
                         }
                     }
@@ -268,6 +277,7 @@ export class DataMgr {
         }
         const eventConfig = EventConfig.getById(p.eventId);
         if (eventConfig.type == 4) {
+            // reward change
             if (eventConfig.cost == null) {
                 return;
             }
@@ -281,11 +291,43 @@ export class DataMgr {
                     if (itemConf == null) {
                         continue;
                     }
-                    // useLanMgr
                     showTip += LanMgr.replaceLanById("207008", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
                 }
             }
             UIHUDController.showCenterTip(showTip);
+        } else if (eventConfig.type == 5) {
+            // attributes change
+            if (eventConfig.change != null) {
+                let showTip: string = "";
+                for (const tempChange of eventConfig.change) {
+                    const isPlayer: boolean = tempChange[0] == "-1";
+                    // 1-hp 2-attack
+                    const changedType: MapPioneerEventAttributesChangeType = tempChange[1];
+                    if (isPlayer) {
+                        if (changedType == 1) {
+                            showTip += LanMgr.getLanById("207001") + "\n";
+                        } else {
+                            showTip += LanMgr.getLanById("207002") + "\n";
+                        }
+                    } else {
+                        const pioneerInfo = DataMgr.s.pioneer.getById(tempChange[0]);
+                        if (pioneerInfo == null) {
+                            if (changedType == 1) {
+                                showTip += LanMgr.getLanById("207003") + "\n";
+                            } else {
+                                showTip += LanMgr.getLanById("207004") + "\n";
+                            }
+                        } else {
+                            if (changedType == 1) {
+                                showTip += LanMgr.replaceLanById("207005", [pioneerInfo.name]) + "\n";
+                            } else {
+                                showTip += LanMgr.replaceLanById("207006", [pioneerInfo.name]) + "\n";
+                            }
+                        }
+                    }
+                }
+                UIHUDController.showCenterTip(showTip);
+            }
         }
     };
 
@@ -861,5 +903,5 @@ export class DataMgr {
         }
         DataMgr.s.settlement.refreshData(p.data);
         NotificationMgr.triggerEvent(NotificationName.SETTLEMENT_DATA_CHANGE);
-    }
+    };
 }

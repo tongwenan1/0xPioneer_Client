@@ -211,7 +211,6 @@ export class EventUI extends ViewController {
             //     }
             // }
         }
-        // NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, { eventId: this._event.id, hasNextStep: true } as EVENT_STEPEND_DATA);
     }
 
     private _checkIsSatisfiedCondition(condition: EventSelectCond): { satisfy: boolean; tipText: string } {
@@ -269,111 +268,8 @@ export class EventUI extends ViewController {
         // }
         return temple;
     }
-
-    private async _loseOrGainItemAndResource(datas: (EventReward | EventCost)[], cost: boolean): Promise<string> {
-        let showTip: string = "";
-        const itemDatas: ItemData[] = [];
-        for (const temple of datas) {
-            const type: ItemConfigType = temple[0];
-            const id: string = temple[1];
-            const num: number = temple[2];
-            if (type == ItemConfigType.Item) {
-                // item
-                if (cost) {
-                    for (const item of DataMgr.s.item.getObj()) {
-                        if (item.itemConfigId == id) {
-                            const itemConf = ItemConfig.getById(id);
-                            // useLanMgr
-                            showTip += LanMgr.replaceLanById("207008", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
-                            // showTip += ("You lost" + num + " " + itemConf.itemName + "\n");
-
-                            break;
-                        }
-                    }
-                } else {
-                    itemDatas.push(new ItemData(id, num));
-                    const itemConf = ItemConfig.getById(id);
-                    // useLanMgr
-                    showTip += LanMgr.replaceLanById("207009", [num, LanMgr.getLanById(itemConf.itemName)]) + "\n";
-                    // showTip += ("You obtained" + num + " " + itemConf.itemName + "\n");
-                }
-            } else if (type == ItemConfigType.Artifact) {
-                // donn't need support wait function
-            }
-        }
-        if (itemDatas.length > 0) {
-            // upload resource changed event-select
-            let hasItem: boolean = false;
-            for (const item of itemDatas) {
-                const config = ItemConfig.getById(item.itemConfigId);
-                if (config != null && config.itemType != ItemType.Resource) {
-                    hasItem = true;
-                    break;
-                }
-            }
-            if (hasItem) {
-                this._contentView.active = false;
-                const result = await UIPanelManger.inst.pushPanel(UIName.ItemGettedUI);
-                if (result.success) {
-                    result.node.getComponent(ItemGettedUI).showItem(itemDatas, () => {
-                        this._contentView.active = true;
-                    });
-                }
-            }
-        }
-        return showTip;
-    }
-
-    private _nextEvent(eventId: string) {
-        DataMgr.s.battleReport.latestActiveEventState.prevEventId = this._event.id;
-        DataMgr.s.battleReport.latestActiveEventState.eventId = eventId;
-
-        if (eventId == "-1" || eventId == "-2") {
-            // clear temp attributes
-            this._temporaryAttributes = new Map();
-
-            if (this._triggerPioneerId != null) {
-                localStorage.removeItem("local_event_last_title_" + this._triggerPioneerId);
-            }
-            if (this._eventBuildingId != null) {
-                if (eventId == "-1") {
-                    // BuildingMgr.changeBuildingEventId(this._eventBuildingId, null);
-                    // BuildingMgr.hideBuilding(this._eventBuildingId);
-                    DataMgr.s.mapBuilding.changeBuildingEventId(this._eventBuildingId, null);
-                    // DataMgr.s.mapBuilding.hideBuilding(this._eventBuildingId);
-                } else if (eventId == "-2") {
-                    // const building = BuildingMgr.getBuildingById(this._eventBuildingId);
-                    const building = DataMgr.s.mapBuilding.getBuildingById(this._eventBuildingId);
-                }
-            }
-            if (this._triggerPioneerId != null) {
-                PioneerMgr.pioneerToIdle(this._triggerPioneerId);
-            }
-            // useLanMgr
-            UIHUDController.showCenterTip(LanMgr.getLanById("207010"));
-            // UIHUDController.showCenterTip("Event Ended");
-            UIPanelManger.inst.popPanel();
-        } else {
-            const event = EventConfig.getById(eventId);
-            if (event != null) {
-                // BuildingMgr.changeBuildingEventId(this._eventBuildingId, event.id);
-                DataMgr.s.mapBuilding.changeBuildingEventId(this._eventBuildingId, event.id);
-                UIPanelManger.inst.popPanel();
-                if (this._dealWithNextEvent != null) {
-                    this._dealWithNextEvent(event);
-                }
-            }
-        }
-    }
-
     //------------------------------------------------ action
     private onTapNext(actionEvent: Event, customEventData: string) {
-        const eventId = customEventData;
-        // const hasNextStep = eventId != "-1";
-        // // console.log(`eventStepEnd, source: onTapNext, eventId: ${this._event.id}, next: ${eventId}`);
-        // NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, { eventId: this._event.id, hasNextStep: hasNextStep } as EVENT_STEPEND_DATA);
-        // // send socket
-        // this._nextEvent(eventId);
         NetworkMgr.websocketMsg.player_event_select({
             buildingId: this._eventBuildingId,
             pioneerId: this._triggerPioneerId
@@ -386,48 +282,15 @@ export class EventUI extends ViewController {
             pioneerId: this._triggerPioneerId,
         });
         UIPanelManger.inst.popPanel();
-        return;
-        const pioneerId = customEventData;
-        this._contentView.active = false;
-        if (this._fightCallback != null) {
-            this._fightCallback(this._triggerPioneerId, pioneerId, this._temporaryAttributes, (succeed: boolean) => {
-                let eventId = null;
-                if (this._event != null && this._event.enemy_result != null && this._event.enemy_result.length == 2) {
-                    eventId = succeed ? this._event.enemy_result[0] : this._event.enemy_result[1];
-                }
-
-                if (succeed) {
-                } else {
-                    const event = EventConfig.getById(eventId);
-                    if (event != null) {
-                        eventId = event.result;
-                    }
-                }
-                if (this._event) {
-                    const hasNextStep = eventId != null && eventId != -1 && eventId != -2;
-                    // console.log(`eventStepEnd, source: onTapFight, eventId: ${this._event.id}, next: ${eventId}`);
-                    NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, { eventId: this._event.id, hasNextStep: hasNextStep } as EVENT_STEPEND_DATA);
-                }
-                if (eventId != null) {
-                    this._nextEvent(eventId);
-                } else {
-                    this._contentView.active = true;
-                }
-            });
-        } else {
-            this._contentView.active = true;
-        }
     }
     private onTapSelect(actionEvent: Event, customEventData: string) {
         const datas = customEventData.split("|");
         const index = parseInt(datas[0]);
         const eventId = datas[1];
         const selectText = datas[2];
-        const event = EventConfig.getById(eventId);
-
         if (this._triggerPioneerId != null) {
             if (Config.canSaveLocalData) {
-                localStorage.setItem("local_event_last_title_" + this._triggerPioneerId, datas[2]);
+                localStorage.setItem("local_event_last_title_" + this._triggerPioneerId, selectText);
             }
         }
         NetworkMgr.websocketMsg.player_event_select({
@@ -436,12 +299,5 @@ export class EventUI extends ViewController {
             selectIdx: index
         });
         UIPanelManger.inst.popPanel();
-        return;
-        let hasNextStep = event != null;
-
-        // console.log(`eventStepEnd, source: onTapSelect, eventId: ${this._event.id}, next: ${eventId}`);
-        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, { eventId: this._event.id, hasNextStep: hasNextStep } as EVENT_STEPEND_DATA);
-
-        // this._nextEvent(eventId);
     }
 }
