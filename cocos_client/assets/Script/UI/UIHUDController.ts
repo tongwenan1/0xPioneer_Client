@@ -1,5 +1,5 @@
 import { _decorator, Component, Node } from "cc";
-import { LanMgr } from "../Utils/Global";
+import { GameMgr, LanMgr } from "../Utils/Global";
 import { HUDName, UIName } from "../Const/ConstUIDefine";
 import { HUDView } from "./View/HUDView";
 import ViewController from "../BasicView/ViewController";
@@ -87,6 +87,9 @@ export class UIHUDController extends ViewController {
         this._showResouceGettedView();
     }
     private _onUseResourceGettedViewShowTip(tip: string) {
+        if (!GameMgr.enterGameSence) {
+            return;
+        }
         this._resoucesShowItems.push(tip);
         this._showResouceGettedView();
     }

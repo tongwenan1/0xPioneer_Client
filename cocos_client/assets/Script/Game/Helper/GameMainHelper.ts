@@ -270,7 +270,6 @@ export default class GameMainHelper {
 
 
     private static _instance: GameMainHelper;
-
     private _gameCamera: Camera;
     private _gameCameraOriginalOrthoHeight: number;
     private _gameCameraZoom: number;

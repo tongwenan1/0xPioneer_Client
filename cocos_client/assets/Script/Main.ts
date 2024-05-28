@@ -148,6 +148,7 @@ export class Main extends ViewController {
         await UIPanelManger.inst.pushPanel(UIName.MainUI);
         await this.node.getChildByPath("UI_Canvas/UI_ROOT").getComponent(UIMainRootController).checkShowRookieGuide();
         await UIPanelManger.inst.pushPanel(GameName.GameMain, UIPanelLayerType.Game);
+        
     }
 
     private _addListener() {

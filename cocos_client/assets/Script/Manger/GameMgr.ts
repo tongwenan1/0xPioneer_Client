@@ -7,6 +7,8 @@ import { MapPlayerPioneerObject } from "../Const/PioneerDefine";
 import { DataMgr } from "../Data/DataMgr";
 
 export default class GameMgr {
+    public enterGameSence: boolean = false;
+
     public fakeWormholeFight(playPioneerIds: string[]): boolean {
         const enemies: {
             hpmax: number;

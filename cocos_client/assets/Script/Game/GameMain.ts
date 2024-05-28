@@ -4,6 +4,7 @@ import ViewController from '../BasicView/ViewController';
 import { NotificationName } from '../Const/Notification';
 import GameMainHelper from './Helper/GameMainHelper';
 import { ECursorType } from '../Const/ConstDefine';
+import { GameMgr } from '../Utils/Global';
 
 const { ccclass, property } = _decorator;
 
@@ -19,6 +20,8 @@ export class GameMain extends ViewController {
         super.viewDidStart();
 
         this._refreshUI();
+
+        GameMgr.enterGameSence = true;
     }
 
     protected viewDidAppear(): void {
