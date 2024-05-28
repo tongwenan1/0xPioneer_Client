@@ -63,14 +63,12 @@ export class PlayerListUI extends Component {
         this._pioneers = [];
         for (const temple of DataMgr.s.pioneer.getAllPlayers()) {
             if (temple.show) {
-                if (temple.actionType == MapPioneerActionType.eventing) {
+                const building = DataMgr.s.mapBuilding.getBuildingById(temple.actionBuildingId);
+                if (temple.actionType == MapPioneerActionType.eventing && building != null && building.eventPioneerDatas.has(temple.id)) {
                     // eventing use building data
-                    const building = DataMgr.s.mapBuilding.getBuildingById(temple.actionBuildingId);
-                    if (building != null && building.eventPioneerDatas.has(temple.id)) {
-                        const playerObj = building.eventPioneerDatas.get(temple.id) as MapPlayerPioneerObject;
-                        playerObj.actionEndTimeStamp = temple.actionEndTimeStamp;
-                        this._pioneers.push(playerObj);
-                    }
+                    const playerObj = building.eventPioneerDatas.get(temple.id) as MapPlayerPioneerObject;
+                    playerObj.actionEndTimeStamp = temple.actionEndTimeStamp;
+                    this._pioneers.push(playerObj);
                 } else {
                     this._pioneers.push(temple);
                 }
