@@ -239,18 +239,4 @@ export default class TaskDataMgr {
             completeIndex: 0,
         };
     }
-    // private _doAction(action: TaskAction) {
-    //     if (action.type == TaskActionType.ShowHide) {
-    //         NotificationMgr.triggerEvent(NotificationName.MAP_MEMBER_CHANGE_SHOW_HIDE, action.showHide);
-    //     } else if (action.type == TaskActionType.Faction) {
-    //         NotificationMgr.triggerEvent(NotificationName.MAP_MEMBER_CHANGE_FACTION, action.faction);
-    //     } else if (action.type == TaskActionType.Talk) {
-    //         NotificationMgr.triggerEvent(NotificationName.DIALOG_SHOW, action.talk);
-    //     } else if (action.type == TaskActionType.GetProp) {
-    //         // upload resource changed task end
-    //         NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_PROP_GET, { props: [action.getProp] });
-    //     } else if (action.type == TaskActionType.NpcGetNewTalk) {
-    //         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_GET_NEW_TALK, action.npcGetNewTalk);
-    //     }
-    // }
 }

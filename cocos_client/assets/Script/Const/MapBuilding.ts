@@ -2,6 +2,7 @@ import { Vec2 } from "cc";
 import { BuildingStayPosType, MapBuildingType } from "./BuildingDefine";
 import { MapMemberFactionType } from "./ConstDefine";
 import { NFTPioneerObject } from "./NFTPioneerDefine";
+import { MapPioneerObject } from "./PioneerDefine";
 
 export interface MapBuildingConfigData {
     block: any;
@@ -46,9 +47,11 @@ export interface MapBuildingBaseData {
     stayPosType: BuildingStayPosType;
     progress: number;
     winprogress: number;
-    eventId: string;
 
-    originalEventId: string;
+    eventId: string;
+    eventPioneerIds: string[];
+    eventPioneerDatas: Map<string, MapPioneerObject>;
+
     exp: number;
     animType: string;
 

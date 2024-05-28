@@ -227,7 +227,6 @@ export class RecruitUI extends ViewController {
         for (const cost of this._costDatas) {
             cost.count = cost.count * this._selectGenerateNum;
         }
-        console.log("exce type:" + typeof(this._selectGenerateNum));
         NetworkMgr.websocketMsg.player_generate_troop_start({
             num: this._selectGenerateNum,
         });

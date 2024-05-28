@@ -104,12 +104,6 @@ export class OuterOtherPioneerView extends Component {
         const npcPioneer: MapNpcPioneerObject = pioneer as MapNpcPioneerObject;
         if (!!npcPioneer) {
             this._hasTaskView.active = npcPioneer.talkId != null && npcPioneer.talkId != "";
-            if (npcPioneer.talkCountStruct != null && npcPioneer.talkCountStruct.countTime > 0) {
-                this._taskPreparingView.active = true;
-                this._taskPreparingView.getComponent(Label).string = LanMgr.replaceLanById("202002", [npcPioneer.talkCountStruct.countTime]);
-            } else {
-                this._taskPreparingView.active = false;
-            }
         }
 
         this.node.active = pioneer.actionType != MapPioneerActionType.fighting;

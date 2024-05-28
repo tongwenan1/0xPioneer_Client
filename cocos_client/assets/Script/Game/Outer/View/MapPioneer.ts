@@ -24,11 +24,13 @@ import {
     Event,
 } from "cc";
 import { LanMgr } from "../../../Utils/Global";
-import { MapPioneerActionType, MapPioneerEventStatus, MapPioneerMoveDirection, MapPioneerObject } from "../../../Const/PioneerDefine";
+import { MapPioneerActionType, MapPioneerMoveDirection, MapPioneerObject } from "../../../Const/PioneerDefine";
 import { OuterFightView } from "./OuterFightView";
 import { DataMgr } from "../../../Data/DataMgr";
 import { OuterFightResultView } from "./OuterFightResultView";
 import { NetworkMgr } from "../../../Net/NetworkMgr";
+import NotificationMgr from "../../../Basic/NotificationMgr";
+import { NotificationName } from "../../../Const/Notification";
 const { ccclass, property } = _decorator;
 
 @ccclass("MapPioneer")
@@ -41,14 +43,13 @@ export class MapPioneer extends Component {
 
     private _model: MapPioneerObject = null;
     private _lastStatus: MapPioneerActionType = null;
-    private _lastEventStatus: MapPioneerEventStatus = null;
+    private _lastActionEndTimestamp: number = null;
     private _actionTimeStamp: number = 0;
     private _actionTotalTime: number = 0;
 
-
     private _fightView: OuterFightView = null;
     private _fightResultView: OuterFightResultView = null;
-    
+
     private _contentView: Node = null;
     private _addingtroopsView: Node = null;
     private _exploringView: Node = null;
@@ -108,9 +109,9 @@ export class MapPioneer extends Component {
         topWalkView.active = false;
         bottomWalkView.active = false;
 
-        if (this._lastStatus != this._model.actionType || this._lastEventStatus != this._model.eventStatus) {
+        if (this._lastStatus != this._model.actionType || this._lastActionEndTimestamp != this._model.actionEndTimeStamp) {
             this._lastStatus = this._model.actionType;
-            this._lastEventStatus = this._model.eventStatus;
+            this._lastActionEndTimestamp = this._model.actionEndTimeStamp;
 
             idleView.active = false;
             collectView.active = false;
@@ -170,53 +171,6 @@ export class MapPioneer extends Component {
                 case MapPioneerActionType.fighting:
                     {
                         this._contentView.active = false;
-                        if (this._model.fightData != null && this._model.fightData.length > 0) {
-                            this._fightView.node.active = true;
-                            const fightDatas = this._model.fightData.slice();
-                            const attacker = this._model;
-                            let defender: MapPioneerObject = null;
-                            if (fightDatas[0].attackerId == attacker.id) {
-                                defender = DataMgr.s.pioneer.getById(fightDatas[0].defenderId);
-                            } else {
-                                defender = DataMgr.s.pioneer.getById(fightDatas[0].attackerId);
-                            }
-                            if (defender != null) {
-                                const fightInterval: number = setInterval(() => {
-                                    if (fightDatas.length <= 0) {
-                                        clearInterval(fightInterval);
-                                        this._fightView.node.active = false;
-                                        this._fightResultView.node.active = true;
-                                        this._fightResultView.showResult(this._model.fightResultWin, ()=> {
-                                            this._fightResultView.node.active = false;
-                                            NetworkMgr.websocketMsg.get_pioneer_info({
-                                                pioneerIds: [attacker.id, defender.id]
-                                            });
-                                        });
-                                        return;
-                                    }
-                                    const data = fightDatas.shift();
-                                    if (data.attackerId == attacker.id) {
-                                        // attacker action
-                                        defender.hp -= data.hp;
-                                    } else {
-                                        attacker.hp -= data.hp;
-                                    }
-                                    this._fightView.refreshUI(
-                                        {
-                                            name: attacker.name,
-                                            hp: attacker.hp,
-                                            hpMax: attacker.hpMax,
-                                        },
-                                        {
-                                            name: defender.name,
-                                            hp: defender.hp,
-                                            hpMax: defender.hpMax,
-                                        },
-                                        true
-                                    );
-                                }, 250);
-                            }
-                        }
                     }
                     break;
 
@@ -249,12 +203,6 @@ export class MapPioneer extends Component {
                     {
                         this._contentView.active = true;
                         idleView.active = true;
-                        if (this._model.eventStatus == MapPioneerEventStatus.None) {
-                        } else if (this._model.eventStatus == MapPioneerEventStatus.Waiting) {
-                            this._eventingView.active = true;
-                        } else if (this._model.eventStatus == MapPioneerEventStatus.Waited) {
-                            this._eventWaitedView.active = true;
-                        }
                     }
                     break;
 
@@ -266,6 +214,81 @@ export class MapPioneer extends Component {
 
                 default:
                     break;
+            }
+
+            if (this._model.actionType == MapPioneerActionType.fighting || this._model.actionType == MapPioneerActionType.eventing) {
+                if (this._model.fightData != null && this._model.fightData.length > 0) {
+                    let attacker = this._model;
+                    if (this._model.actionType == MapPioneerActionType.eventing && this._model.actionBuildingId != null) {
+                        const currentBuilding = DataMgr.s.mapBuilding.getBuildingById(this._model.actionBuildingId);
+                        if (currentBuilding != null && currentBuilding.eventPioneerDatas.has(this._model.id)) {
+                            attacker = currentBuilding.eventPioneerDatas.get(this._model.id);
+                        }
+                    }
+                    let defender: MapPioneerObject = null;
+                    const fightDatas = this._model.fightData.slice();
+                    if (fightDatas[0].attackerId == attacker.id) {
+                        defender = DataMgr.s.pioneer.getById(fightDatas[0].defenderId);
+                    } else {
+                        defender = DataMgr.s.pioneer.getById(fightDatas[0].attackerId);
+                    }
+                    if (defender != null) {
+                        this._fightView.node.active = true;
+                        this._fightView.refreshUI(
+                            {
+                                name: attacker.name,
+                                hp: attacker.hp,
+                                hpMax: attacker.hpMax,
+                            },
+                            {
+                                name: defender.name,
+                                hp: defender.hp,
+                                hpMax: defender.hpMax,
+                            },
+                            true
+                        );
+                        const fightInterval: number = setInterval(() => {
+                            if (fightDatas.length <= 0) {
+                                clearInterval(fightInterval);
+                                this._fightView.node.active = false;
+                                this._fightResultView.node.active = true;
+                                this._fightResultView.showResult(this._model.fightResultWin, () => {
+                                    this._fightResultView.node.active = false;
+                                    NetworkMgr.websocketMsg.get_pioneer_info({
+                                        pioneerIds: [attacker.id, defender.id],
+                                    });
+                                    if (attacker.actionBuildingId != null) {
+                                        NetworkMgr.websocketMsg.get_mapbuilding_info({
+                                            mapbuildingIds: [attacker.actionBuildingId],
+                                        });
+                                    }
+                                });
+                                return;
+                            }
+                            const data = fightDatas.shift();
+                            if (data.attackerId == attacker.id) {
+                                // attacker action
+                                defender.hp -= data.hp;
+                            } else {
+                                attacker.hp -= data.hp;
+                                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED);
+                            }
+                            this._fightView.refreshUI(
+                                {
+                                    name: attacker.name,
+                                    hp: attacker.hp,
+                                    hpMax: attacker.hpMax,
+                                },
+                                {
+                                    name: defender.name,
+                                    hp: defender.hp,
+                                    hpMax: defender.hpMax,
+                                },
+                                true
+                            );
+                        }, 250);
+                    }
+                }
             }
         }
 
@@ -371,12 +394,11 @@ export class MapPioneer extends Component {
                 this._currnetIdleAnim.stop();
             }
         }
-
-        if (this._model != null && this._model.actionType == MapPioneerActionType.fighting) {
+        if (this._model == null) {
             return;
         }
         const currentTimeStamp = new Date().getTime();
-        if (this._actionTimeStamp > currentTimeStamp) {
+        if (this._actionTimeStamp > currentTimeStamp && (this._model.fightData == null || this._model.fightData.length <= 0)) {
             this._timeCountProgress.node.active = true;
             this._timeCountLabel.node.active = true;
 
@@ -385,6 +407,12 @@ export class MapPioneer extends Component {
         } else {
             this._timeCountProgress.node.active = false;
             this._timeCountLabel.node.active = false;
+        }
+
+        // event tip
+        if (this._model != null && this._model.actionType == MapPioneerActionType.eventing) {
+            this._eventWaitedView.active = currentTimeStamp >= this._model.actionEndTimeStamp;
+            this._eventingView.active = currentTimeStamp < this._model.actionEndTimeStamp;
         }
     }
 

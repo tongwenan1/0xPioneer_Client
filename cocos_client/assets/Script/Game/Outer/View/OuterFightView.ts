@@ -6,7 +6,6 @@ const { ccclass, property } = _decorator;
 export class OuterFightView extends Component {
 
     public refreshUI(attacker: { name: string, hp: number, hpMax: number }, defender: { name: string, hp: number, hpMax: number }, attackerIsSelf: boolean) {
-        console.log('exce a:' + JSON.stringify(attacker) + ", d: " + JSON.stringify(defender));
         let selfInfo = null;
         let enemyInfo = null;
         if (attackerIsSelf) {

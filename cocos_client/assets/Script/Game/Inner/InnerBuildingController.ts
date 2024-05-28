@@ -201,12 +201,9 @@ export class InnerBuildingController extends ViewController {
 
     private _refreshBuilding() {
         const innerBuilds = DataMgr.s.innerBuilding.data;
-        console.log("exce ste[1]: ", innerBuilds);
         this._buildingMap.forEach(async (value: InnerBuildingView, key: InnerBuildingType) => {
-            console.log("exce kye: " + key);
             if (innerBuilds.has(key)) {
                 value.node.active = true;
-                console.log("exce usein: " + JSON.stringify(innerBuilds.get(key)));
                 await value.refreshUI(innerBuilds.get(key), !GameMainHelper.instance.isEditInnerBuildingLattice);
             } else {
                 value.node.active = false;

@@ -1,7 +1,9 @@
-import { Vec2 } from "cc";
+import { Vec2, v2 } from "cc";
 import { TileHexDirection, TilePos } from "../Game/TiledMap/TileTool";
-import { AttrChangeType, GetPropData, MapMemberFactionType, MapMemberGetTalkCountStruct, MapMemberShowHideCountStruct } from "./ConstDefine";
+import { AttrChangeType, GetPropData, MapMemberFactionType } from "./ConstDefine";
 import { ItemConfigType } from "./Item";
+import { share } from "../Net/msg/WebsocketMsg";
+import PioneerConfig from "../Config/PioneerConfig";
 
 export interface PioneerConfigData {
     id: string;
@@ -44,7 +46,7 @@ export enum MapPioneerActionType {
     exploring = "exploring",
     eventing = "eventing",
     addingtroops = "addingtroops",
-    wormhole = "wormhole"
+    wormhole = "wormhole",
 }
 
 export enum MapPioneerType {
@@ -52,7 +54,7 @@ export enum MapPioneerType {
     npc = "2",
     hred = "4",
     gangster = "3",
-} 
+}
 
 export enum MapPioneerLogicType {
     stepmove = 2,
@@ -68,19 +70,13 @@ export enum MapPioneerMoveDirection {
     bottom = "bottom",
 }
 
-export enum MapPioneerEventStatus {
-    None,
-    Waiting,
-    Waited,
-}
-
 export enum MapPioneerEventAttributesChangeType {
     HP = 1,
-    ATTACK = 2 
+    ATTACK = 2,
 }
 
 export interface MapPioneerAttributesChangeModel {
-    type: MapPioneerEventAttributesChangeType,
+    type: MapPioneerEventAttributesChangeType;
     method: AttrChangeType;
     value: number;
 }
@@ -157,7 +153,6 @@ export interface MapPioneerData {
     movePaths: MapPosStruct[];
 
     actionType: MapPioneerActionType;
-    eventStatus: MapPioneerEventStatus;
     actionBeginTimeStamp: number;
     actionEndTimeStamp: number;
 
@@ -169,6 +164,7 @@ export interface MapPioneerData {
 
     moveDirection?: MapPioneerMoveDirection;
 
+    actionBuildingId?: string;
     actionEventId?: string;
 
     fightData?: MapPioneerFightStuct[];
@@ -179,13 +175,11 @@ export interface MapPlayerPioneerData extends MapPioneerData {
     rebirthStartTime: number;
     rebirthEndTime: number;
     killerId: string;
-    NFTInitLinkId: string;
     NFTId: string;
 }
 
 export interface MapNpcPioneerData extends MapPioneerData {
     talkId: string;
-    talkCountStruct: MapMemberGetTalkCountStruct;
 }
 
 export interface MapPioneerObject extends MapPioneerData {
@@ -230,4 +224,60 @@ export interface MINING_FINISHED_DATA {
     pioneerId: string;
     duration: number;
     rewards: [];
+}
+
+export default class PioneerDefine {
+    public static convertNetDataToObject(temple: share.Ipioneer_data): MapPioneerObject {
+        const config = PioneerConfig.getById(temple.id);
+        if (config == null) {
+            return null;
+        }
+        const currentTime = new Date().getTime();
+        let obj = {
+            id: temple.id,
+            show: temple.show,
+            faction: temple.faction,
+            type: temple.type as MapPioneerType,
+            animType: config.animType,
+            name: config.name,
+            hp: temple.hp,
+            hpMax: temple.hpMax,
+            attack: temple.attack,
+            defend: temple.defend,
+            speed: temple.speed,
+            stayPos: v2(temple.stayPos.x, temple.stayPos.y),
+            movePaths: [],
+            actionType: temple.actionType as MapPioneerActionType,
+            actionBeginTimeStamp: currentTime,
+            actionEndTimeStamp: currentTime + (temple.actionEndTimeStamp - temple.actionBeginTimeStamp) * 1000,
+            logics: [],
+            winProgress: temple.winProgress,
+            winExp: temple.winExp,
+            drop: [],
+            fightData: temple.actionFightRes,
+            fightResultWin: temple.actionFightWinner == 1,
+            actionEventId: temple.actionEventId,
+            actionBuildingId: temple.actionBuildingId,
+        };
+        if (obj.type == MapPioneerType.player) {
+            let playerObj: MapPlayerPioneerObject;
+            playerObj = {
+                ...obj,
+                NFTId: temple.NFTId,
+                rebirthStartTime: currentTime,
+                rebirthEndTime: currentTime + (temple.rebirthEndTime - temple.rebirthStartTime) * 1000,
+                killerId: temple.killerId,
+            };
+            return playerObj;
+        } else if (obj.type == MapPioneerType.npc) {
+            let npcObj: MapNpcPioneerObject;
+            npcObj = {
+                ...obj,
+                talkId: temple.talkId,
+            };
+            return npcObj;
+        } else {
+            return obj;
+        }
+    }
 }

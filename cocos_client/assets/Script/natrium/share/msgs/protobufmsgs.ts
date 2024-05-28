@@ -13,13 +13,13 @@ export enum protobuf_c2s {
     get_pending_history = 122,
     get_block_height = 124,
     get_pioneer_info = 125,
+    get_mapbuilding_info = 126,
 
     player_move = 200,
     player_talk_select = 201,
 
     player_explore = 203,
     player_fight = 204,
-    player_event_select = 205,
     player_item_use = 206,
     player_treasure_open = 207,
     player_artifact_equip = 208,
@@ -44,6 +44,7 @@ export enum protobuf_c2s {
     get_treasure_info = 229,
     get_user_task_info = 230,
     reborn_all = 231,
+    get_user_settlement_info = 232,
     get_battle_report = 299,
 
     fetch_user_psyc = 400,
@@ -58,6 +59,9 @@ export enum protobuf_c2s {
     player_fight_start = 520,
 
     player_wormhole_fight_start = 530,
+
+    player_event_start = 540,
+    player_event_select = 541,
 }
 
 export enum protobuf_s2c {
@@ -78,13 +82,14 @@ export enum protobuf_s2c {
     building_change = 10146,
     nft_change = 10147,
     sinfo_change = 10148,
+    get_mapbuilding_info_res = 10149,
 
     player_move_res = 20000,
     player_talk_select_res = 20201,
 
     player_explore_res = 20203,
     player_fight_res = 20204,
-    player_event_select_res = 20205,
+
     player_item_use_res = 20206,
     player_treasure_open_res = 20207,
     player_artifact_equip_res = 20208,
@@ -134,6 +139,7 @@ export enum protobuf_s2c {
     mappioneer_reborn_change = 20513,
     mapbuilding_reborn_change = 20514,
     pioneer_reborn_res = 20515,
+    get_user_settlement_info_res = 20516,
 
     player_lvlup_change = 30100,
 
@@ -149,4 +155,7 @@ export enum protobuf_s2c {
     player_wormhole_fight_start_res = 50030,
     player_wormhole_fight_attacked_res = 50031,
     player_wormhole_fight_res = 50032,
+
+    player_event_start_res = 50040,
+    player_event_select_res = 50041,
 }

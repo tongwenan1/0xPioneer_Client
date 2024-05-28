@@ -100,10 +100,17 @@ message get_pioneer_info_res {
     repeated share.pioneer_data info = 2;
 }
 
+message get_mapbuilding_info_res {
+    required int32 res = 1;
+    repeated share.mapbuilding_info_data info = 2;
+}
+
 // ----------------------------------------------------------------------------
 
 message player_move_res {
     required int32 res = 1;
+    optional string pioneerId = 2;
+    repeated share.pos2d movePath = 3;
 }
 
 message player_talk_select_res {
@@ -141,8 +148,12 @@ message player_fight_res {
     optional string winnerId = 2;
 }
 
+message player_event_start_res {
+    required int32 res = 1;
+}
 message player_event_select_res {
     required int32 res = 1;
+    optional string eventId = 2;
 }
 
 message player_event_res {
@@ -395,4 +406,9 @@ message pioneer_reborn_res {
     required string pioneerId = 2;
     required uint32 rebirthStartTime = 3;
     required uint32 rebirthEndTime = 4;
+}
+
+message get_user_settlement_info_res {
+    required int32 res = 1;
+    map<string, share.settlement_data> data = 2;
 }

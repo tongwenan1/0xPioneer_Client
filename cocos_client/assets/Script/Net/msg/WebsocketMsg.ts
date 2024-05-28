@@ -107,6 +107,9 @@ export class WebsocketMsg {
     public get_pioneer_info(d: c2s_user.Iget_pioneer_info) {
         this.send_packet("get_pioneer_info", d);
     }
+    public get_mapbuilding_info(d: c2s_user.Iget_mapbuilding_info) {
+        this.send_packet("get_mapbuilding_info", d);
+    }
     public player_move(d: c2s_user.Iplayer_move) {
         this.send_packet("player_move", d);
     }
@@ -116,18 +119,19 @@ export class WebsocketMsg {
     public player_gather_start(d: c2s_user.Iplayer_gather_start) {
         this.send_packet("player_gather_start", d);
     }
-    public player_gather(d: c2s_user.Iplayer_gather) {
-        this.send_packet("player_gather", d);
-    }
-    public player_event(d: c2s_user.Iplayer_event) {
-        this.send_packet("player_event", d);
-    }
     public player_explore_start(d: c2s_user.Iplayer_explore_start) {
         this.send_packet("player_explore_start", d);
     }
     public player_explore_npc_start(d: c2s_user.Iplayer_explore_npc_start) {
         this.send_packet("player_explore_npc_start", d);
     }
+    public player_event_start(d: c2s_user.Iplayer_event_start) {
+        this.send_packet("player_event_start", d);
+    }
+    public player_event_select(d: c2s_user.Iplayer_event_select) {
+        this.send_packet("player_event_select", d);
+    }
+
     public player_explore(d: c2s_user.Iplayer_explore) {
         this.send_packet("player_explore", d);
     }
@@ -137,9 +141,7 @@ export class WebsocketMsg {
     public player_fight(d: c2s_user.Iplayer_fight) {
         this.send_packet("player_fight", d);
     }
-    public player_event_select(d: c2s_user.Iplayer_event_select) {
-        this.send_packet("player_event_select", d);
-    }
+
     public player_item_use(d: c2s_user.Iplayer_item_use) {
         this.send_packet("player_item_use", d);
     }
@@ -208,6 +210,11 @@ export class WebsocketMsg {
     public fetch_user_psyc(d: c2s_user.Ifetch_user_psyc) {
         this.send_packet("fetch_user_psyc", d);
     }
+
+    public get_user_settlement_info(d: c2s_user.Iget_user_settlement_info) {
+        this.send_packet("get_user_settlement_info", d);
+    }
+
     public reborn_all() {
         this.send_packet("reborn_all", {});
     }
@@ -283,10 +290,12 @@ export namespace c2s_user {
     export interface Iget_pioneer_info {
         pioneerIds: string[];
     }
+    export interface Iget_mapbuilding_info {
+        mapbuildingIds: string[];
+    }
     export interface Iplayer_move {
         pioneerId: string;
-        movePath: string;
-        targetPos: string;
+        movePath: share.pos2d[];
         feeTxhash: string;
     }
     export interface Iplayer_talk_select {
@@ -298,14 +307,7 @@ export namespace c2s_user {
         pioneerId: string;
         resourceBuildingId: string;
     }
-    export interface Iplayer_gather {
-        pioneerId: string;
-        resourceBuildingId: string;
-    }
-    export interface Iplayer_event {
-        pioneerId: string;
-        buildingId: string;
-    }
+
     export interface Iplayer_explore_start {
         pioneerId: string;
         buildingId: string;
@@ -313,6 +315,15 @@ export namespace c2s_user {
     export interface Iplayer_explore_npc_start {
         pioneerId: string;
         npcId: string;
+    }
+    export interface Iplayer_event_start {
+        pioneerId: string;
+        buildingId: string;
+    }
+    export interface Iplayer_event_select {
+        pioneerId: string;
+        buildingId: string;
+        selectIdx?: number;
     }
     export interface Iplayer_explore {
         pioneerId: string;
@@ -328,11 +339,6 @@ export namespace c2s_user {
         isBuildingDefender: boolean;
         attackerId: string;
         defenderId: string;
-    }
-    export interface Iplayer_event_select {
-        pioneerId: string;
-        buildingId: string;
-        eventId: string;
     }
     export interface Iplayer_item_use {
         itemId: string;
@@ -403,6 +409,8 @@ export namespace c2s_user {
     }
 
     export interface Ifetch_user_psyc {}
+
+    export interface Iget_user_settlement_info {}
 
     export interface Isave_archives {
         archives: string;
@@ -486,15 +494,11 @@ export namespace s2c_user {
     export interface Iplayer_move_res {
         res: number;
         pioneerId: string;
-        show: boolean;
+        movePath: share.pos2d[];
     }
-    export interface Iplayer_event_res {
+    export interface Iplayer_event_select_res {
         res: number;
-    }
-    export interface Iplayer_move_res_local_data {
-        pioneerId: string;
-        movePath: TilePos[];
-        costEnergyNum: number;
+        eventId: string;
     }
     export interface Iplayer_talk_select_res {
         talkId: string;
@@ -526,11 +530,6 @@ export namespace s2c_user {
     export interface Iplayer_fight_res {
         res: number;
         winnerId: string;
-    }
-    export interface player_event_select_res {
-        pioneerId: string;
-        buildingId: string;
-        eventData: EventConfigData;
     }
     export interface Iplayer_item_use_res {
         res: number;
@@ -628,7 +627,7 @@ export namespace s2c_user {
         logid: string;
     }
     export interface Iuser_task_action_getnewtalk {
-        pioneerId: string;
+        npcId: string;
         talkId: string;
     }
     export interface Iuser_task_did_change {
@@ -646,6 +645,11 @@ export namespace s2c_user {
         newLv: number;
         items: any;
         artifacts: any;
+    }
+
+    export interface Iget_user_settlement_info_res {
+        res: number;
+        data: { [key: string]: share.Isettlement_data };
     }
 }
 
@@ -773,24 +777,27 @@ export namespace share {
         faction: number;
         type: string;
         stayPos: pos2d;
+
         hpMax: number;
         hp: number;
+
         attack: number;
+
         defend: number;
+        
         speed: number;
+        
         actionType: string;
-        eventStatus: number;
         actionBeginTimeStamp: number;
         actionEndTimeStamp: number;
+        
         winProgress?: number;
         winExp: number;
-        showHideStruct: Iuser_map_member_status;
         actionEventId?: string;
-        NFTInitLinkId?: string;
+        actionBuildingId?: string;
         killerId?: string;
         NFTId?: string;
         talkId?: string;
-        talkCountStruct: Iuser_map_member_status;
 
         actionFightRes: Ifight_res[];
         actionFightWinner: number;
@@ -801,10 +808,6 @@ export namespace share {
         attackerId: string;
         defenderId: string;
         hp: number;
-    }
-    export interface Iuser_map_member_status {
-        countTime: number;
-        isShow: boolean;
     }
 
     export interface Infts_data {
@@ -851,24 +854,30 @@ export namespace share {
         level: number;
         show: boolean;
         faction: number;
-        defendPioneerIds: string[];
+
         stayPosType: number;
         stayMapPositions: pos2d[];
-        progress: number;
-        winprogress: number;
-        eventId: string;
-        originalEventId: string;
-        exp: number;
         animType: string;
+
+        defendPioneerIds: string[];
+        
+        gatherPioneerIds: string[];
+
+        
+        eventId: string;
+        eventPioneerIds: string[];
+        eventPioneerDatas: { [key: string]: share.Ipioneer_data };
+
+        exp: number;
+        progress: number;
+
 
         hpMax: number;
         hp: number;
         attack: number;
+        winprogress: number;
 
         wormholdCountdownTime: number;
-
-        gatherPioneerIds: string[];
-
         attacker: { [key: string]: string };
     }
 
@@ -914,5 +923,17 @@ export namespace share {
     export interface Itask_step_data {
         id: string;
         completeIndex: number;
+    }
+    export interface Isettlement_data {
+        level: number;
+        newPioneerIds: string[];
+        killEnemies: number;
+        gainResources: number;
+        consumeResources: number;
+        gainTroops: number;
+        consumeTroops: number;
+        gainEnergy: number;
+        consumeEnergy: number;
+        exploredEvents: number;
     }
 }

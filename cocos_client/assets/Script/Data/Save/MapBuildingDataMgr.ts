@@ -1,5 +1,5 @@
 import { Vec2, v2 } from "cc";
-import { MapBuildingType } from "../../Const/BuildingDefine";
+import { BuildingStayPosType, MapBuildingType } from "../../Const/BuildingDefine";
 import {
     MapBuildingBaseObject,
     MapBuildingMainCityObject,
@@ -17,13 +17,19 @@ import { NFTPioneerObject } from "../../Const/NFTPioneerDefine";
 import NetGlobalData from "./Data/NetGlobalData";
 import CommonTools from "../../Tool/CommonTools";
 import { share } from "../../Net/msg/WebsocketMsg";
+import GameMainHelper from "../../Game/Helper/GameMainHelper";
+import { TileHexDirection } from "../../Game/TiledMap/TileTool";
+import { DataMgr } from "../DataMgr";
+import PioneerDefine from "../../Const/PioneerDefine";
 
 export class MapBuildingDataMgr {
     private _building_data: MapBuildingObject[];
     public constructor() {}
 
     public replaceData(index: number, data: share.Imapbuilding_info_data) {
-        this._building_data[index] = this._convertNetDataToObject(data);
+        const newObj = this._convertNetDataToObject(data);
+        this._building_data[index] = newObj;
+        return newObj;
     }
     public async loadObj() {
         this._building_data = [];
@@ -35,7 +41,6 @@ export class MapBuildingDataMgr {
             const element: share.Imapbuilding_info_data = mapBuilings[key];
             this._building_data.push(this._convertNetDataToObject(element));
         }
-        console.log("exce m:", this._building_data);
         this._initInterval();
         CLog.debug("MapBuildingDataMgr: loadObj/building_data, ", this._building_data);
     }
@@ -168,6 +173,30 @@ export class MapBuildingDataMgr {
         for (const templePos of element.stayMapPositions) {
             stayPos.push(new Vec2(templePos.x, templePos.y));
         }
+        if (stayPos.length == 1) {
+            if (GameMainHelper.instance.isTiledMapHelperInited) {
+                const originalPos = stayPos[0];
+                if (element.stayPosType == BuildingStayPosType.Three) {
+                    const leftBottom = GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.LeftBottom);
+                    const rightBottom = GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.RightBottom);
+                    stayPos.push(v2(leftBottom.x, leftBottom.y));
+                    stayPos.push(v2(rightBottom.x, rightBottom.y));
+                } else if (element.stayPosType == BuildingStayPosType.Seven) {
+                    const leftTop = GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.LeftTop);
+                    const rightTop = GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.RightTop);
+                    const left = GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.Left);
+                    const right = GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.Right);
+                    const leftBottom = GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.LeftBottom);
+                    const rightBottom = GameMainHelper.instance.tiledMapGetAroundByDirection(originalPos, TileHexDirection.RightBottom);
+                    stayPos.splice(0, 0, v2(leftTop.x, leftTop.y));
+                    stayPos.splice(0, 0, v2(rightTop.x, rightTop.y));
+                    stayPos.splice(0, 0, v2(left.x, left.y));
+                    stayPos.push(v2(right.x, right.y));
+                    stayPos.push(v2(leftBottom.x, leftBottom.y));
+                    stayPos.push(v2(rightBottom.x, rightBottom.y));
+                }
+            }
+        }
         const baseObj: MapBuildingBaseObject = {
             id: element.id,
             name: element.name,
@@ -175,17 +204,31 @@ export class MapBuildingDataMgr {
             level: element.level,
             show: element.show,
             faction: element.faction,
-            defendPioneerIds: element.defendPioneerIds,
+
             stayPosType: element.stayPosType,
-            progress: element.progress,
-            winprogress: element.winprogress,
-            eventId: element.eventId,
-            originalEventId: element.originalEventId,
-            exp: element.exp,
-            animType: element.animType,
             stayMapPositions: stayPos,
+            animType: element.animType,
+
+            defendPioneerIds: element.defendPioneerIds,
+
             gatherPioneerIds: element.gatherPioneerIds,
+
+            eventId: element.eventId,
+            eventPioneerIds: element.eventPioneerIds,
+            eventPioneerDatas: new Map(),
+
+            progress: element.progress,
+            exp: element.exp,
+
+            winprogress: element.winprogress,
         };
+        if (element.eventPioneerDatas != null) {
+            for (const key in element.eventPioneerDatas) {
+                const temple = element.eventPioneerDatas[key];
+                baseObj.eventPioneerDatas.set(key, PioneerDefine.convertNetDataToObject(temple));
+            }
+        }
+
         if (baseObj.type == MapBuildingType.city) {
             const cityObj: MapBuildingMainCityObject = {
                 ...baseObj,

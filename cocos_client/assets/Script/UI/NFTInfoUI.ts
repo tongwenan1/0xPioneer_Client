@@ -14,6 +14,7 @@ import NFTSkillConfig from "../Config/NFTSkillConfig";
 import { NFTSkillDetailUI } from "./NFTSkillDetailUI";
 import { NFTSkillLearnUI } from "./NFTSkillLearnUI";
 import { DataMgr } from "../Data/DataMgr";
+import { NetworkMgr } from "../Net/NetworkMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("NFTInfoUI")

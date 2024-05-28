@@ -1,21 +1,16 @@
 import { SettlementModel } from "../../Const/SettlementDefine";
+import { share } from "../../Net/msg/WebsocketMsg";
 
 export class SettlementDataMgr {
     private _data: SettlementModel[];
-    private _baseKey: string = "localSettlement";
-    private _key: string = "";
 
-    public async loadObj(walletAddr: string) {
-        this._key = walletAddr + "|" + this._baseKey;
-        if (this._data == null) {
-            this._data = [];
-            const data = localStorage.getItem(this._key);
-            if (data) {
-                this._data = JSON.parse(data);
-            }
+    public refreshData(netData: { [key: string]: share.Isettlement_data }) {
+        this._data = [];
+        for (const key in netData) {
+            const element = netData[key];
+            this._data.push(this._convertNetDataToObject(element));
         }
     }
-
     public getObj(beginLevel: number, endLevel: number) {
         const newSettlement: SettlementModel = {
             level: -1,
@@ -45,27 +40,19 @@ export class SettlementDataMgr {
         return newSettlement;
     }
 
-    public addObj(newSettlement: SettlementModel) {
-        const index = this._data.findIndex(s => s.level == newSettlement.level);
-        if (index >= 0) {
-            const temple = this._data[index];
-            temple.newPioneerIds = temple.newPioneerIds.concat(newSettlement.newPioneerIds);
-            temple.killEnemies += newSettlement.killEnemies;
-            temple.gainResources += newSettlement.gainResources;
-            temple.consumeResources += newSettlement.consumeResources;
-            temple.gainTroops += newSettlement.gainTroops;
-            temple.consumeTroops += newSettlement.consumeTroops;
-            temple.gainEnergy += newSettlement.gainEnergy;
-            temple.consumeEnergy += newSettlement.consumeEnergy;
-            temple.exploredEvents += newSettlement.exploredEvents;
-        } else {
-            this._data.push(newSettlement);
-        }
-
-        this.saveObj()
-    }
-
-    public async saveObj() {
-        localStorage.setItem(this._key, JSON.stringify(this._data));
+    private _convertNetDataToObject(netData: share.Isettlement_data) {
+        const settlement: SettlementModel = {
+            level: netData.level,
+            newPioneerIds: netData.newPioneerIds,
+            killEnemies: netData.killEnemies,
+            gainResources: netData.gainResources,
+            consumeResources: netData.consumeResources,
+            gainTroops: netData.gainTroops,
+            consumeTroops: netData.consumeTroops,
+            gainEnergy: netData.gainEnergy,
+            consumeEnergy: netData.consumeEnergy,
+            exploredEvents: netData.exploredEvents,
+        };
+        return settlement;
     }
 }

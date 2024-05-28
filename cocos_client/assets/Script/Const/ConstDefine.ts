@@ -6,13 +6,11 @@ export const GAME_ENV_IS_DEBUG = true;
 export const PioneerGameTest = false;
 
 export type DataMgrResData =
-    | s2c_user.Iplayer_move_res_local_data
     | s2c_user.Iplayer_building_delegate_nft_res
     | s2c_user.Iplayer_generate_energy_res
     | s2c_user.Iplayer_artifact_remove_res
     | s2c_user.Iplayer_treasure_open_res
     | s2c_user.Iplayer_point_treasure_open_res
-    | s2c_user.player_event_select_res
     | s2c_user.Ilocal_player_fight_res
     | s2c_user.Iplayer_explore_res
     | s2c_user.Iplayer_talk_select_res
@@ -128,20 +126,6 @@ export enum MapMemberFactionType {
 export enum MapMemberTargetType {
     pioneer = 0,
     building = 1,
-}
-
-export interface MapMemberShowStruct {
-    target: MapMemberTargetType;
-    show: boolean;
-}
-
-export interface MapMemberShowHideCountStruct {
-    countTime: number;
-    isShow: boolean;
-}
-export interface MapMemberGetTalkCountStruct {
-    countTime: number;
-    talkId: string;
 }
 
 export const GameRankColor = [

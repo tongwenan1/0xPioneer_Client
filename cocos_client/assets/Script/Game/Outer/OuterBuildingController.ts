@@ -3,11 +3,9 @@ import { TileHexDirection, TilePos } from "../TiledMap/TileTool";
 import { OuterBuildingView } from "./View/OuterBuildingView";
 import GameMainHelper from "../Helper/GameMainHelper";
 import { OuterTiledMapActionController } from "./OuterTiledMapActionController";
-import { TaskShowHideStatus } from "../../Const/TaskDefine";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import { DataMgr } from "../../Data/DataMgr";
-import { MapMemberTargetType } from "../../Const/ConstDefine";
 import { BuildingStayPosType } from "../../Const/BuildingDefine";
 
 const { ccclass, property } = _decorator;

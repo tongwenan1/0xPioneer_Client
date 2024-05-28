@@ -41,7 +41,7 @@ import ViewController from "../../BasicView/ViewController";
 import EventConfig from "../../Config/EventConfig";
 import Config from "../../Const/Config";
 import { DataMgr } from "../../Data/DataMgr";
-import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType, MapPioneerObject } from "../../Const/PioneerDefine";
+import { MapPioneerType, MapPioneerActionType, MapPioneerLogicType, MapPioneerObject, MapPioneerAttributesChangeModel } from "../../Const/PioneerDefine";
 import { MapBuildingObject, MapBuildingTavernObject, MapBuildingWormholeObject } from "../../Const/MapBuilding";
 import { NetworkMgr } from "../../Net/NetworkMgr";
 import UIPanelManger, { UIPanelLayerType } from "../../Basic/UIPanelMgr";
@@ -51,6 +51,8 @@ import ChainConfig from "../../Config/ChainConfig";
 import { AlterView } from "../../UI/View/AlterView";
 import NetGlobalData from "../../Data/Save/Data/NetGlobalData";
 import { MapActionConfrimTipUI } from "../../UI/MapActionConfrimTipUI";
+import { EventUI } from "../../UI/Outer/EventUI";
+import { share } from "../../Net/msg/WebsocketMsg";
 
 const { ccclass, property } = _decorator;
 
@@ -504,9 +506,14 @@ export class OuterTiledMapActionController extends ViewController {
                     return;
                 }
             } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing) {
-                if (stayBuilding.eventId == currentActionPioneer.actionEventId) {
+                if (stayBuilding.eventId == currentActionPioneer.actionEventId && currentActionPioneer.actionEndTimeStamp <= new Date().getTime()) {
                     const currentEvent = EventConfig.getById(stayBuilding.eventId);
-                    PioneerMgr.pioneerDealWithEvent(currentActionPioneer.id, stayBuilding.id, currentEvent);
+                    if (currentEvent != null) {
+                        const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
+                        if (result.success) {
+                            result.node.getComponent(EventUI).eventUIShow(currentActionPioneer.id, stayBuilding.id, currentEvent);
+                        }
+                    }
                 } else {
                     UIHUDController.showCenterTip(LanMgr.getLanById("203005"));
                     // UIHUDController.showCenterTip("pioneer is processing event");
@@ -740,25 +747,19 @@ export class OuterTiledMapActionController extends ViewController {
                                                 PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, purchaseMovingPioneerId);
                                                 PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, purchaseMovingBuildingId);
 
-                                                const uploadPath: { x: number; y: number }[] = [];
-                                                for (const path of movePaths) {
-                                                    uploadPath.push({ x: path.x, y: path.y });
+                                                if (movePaths.length <= 0) {
+                                                    DataMgr.s.pioneer.beginMove(currentActionPioneer.id, []);
+                                                } else {
+                                                    const uploadPath: share.pos2d[] = [];
+                                                    for (const path of movePaths) {
+                                                        uploadPath.push({ x: path.x, y: path.y });
+                                                    }
+                                                    NetworkMgr.websocketMsg.player_move({
+                                                        pioneerId: currentActionPioneer.id,
+                                                        movePath: uploadPath,
+                                                        feeTxhash: "",
+                                                    });
                                                 }
-                                                let targetPosString: string = "";
-                                                if (uploadPath.length > 0) {
-                                                    targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
-                                                }
-                                                DataMgr.setTempSendData("player_move_res", {
-                                                    pioneerId: currentActionPioneer.id,
-                                                    movePath: movePaths,
-                                                    costEnergyNum: cost,
-                                                });
-                                                NetworkMgr.websocketMsg.player_move({
-                                                    pioneerId: currentActionPioneer.id,
-                                                    movePath: JSON.stringify(uploadPath),
-                                                    targetPos: targetPosString,
-                                                    feeTxhash: "",
-                                                });
                                                 if (purchaseMovingBuildingId != null) {
                                                     NetGlobalData.wormholeAttackBuildingId = purchaseMovingBuildingId;
                                                 }
@@ -823,25 +824,19 @@ export class OuterTiledMapActionController extends ViewController {
                                 //         feeTxhash: r.hash,
                                 //     });
                                 // }
-                                const uploadPath: { x: number; y: number }[] = [];
-                                for (const path of movePaths) {
-                                    uploadPath.push({ x: path.x, y: path.y });
+                                if (movePaths.length <= 0) {
+                                    DataMgr.s.pioneer.beginMove(currentActionPioneer.id, []);
+                                } else {
+                                    const uploadPath: share.pos2d[] = [];
+                                    for (const path of movePaths) {
+                                        uploadPath.push({ x: path.x, y: path.y });
+                                    }
+                                    NetworkMgr.websocketMsg.player_move({
+                                        pioneerId: currentActionPioneer.id,
+                                        movePath: uploadPath,
+                                        feeTxhash: "",
+                                    });
                                 }
-                                let targetPosString: string = "";
-                                if (uploadPath.length > 0) {
-                                    targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
-                                }
-                                DataMgr.setTempSendData("player_move_res", {
-                                    pioneerId: currentActionPioneer.id,
-                                    movePath: movePaths,
-                                    costEnergyNum: cost,
-                                });
-                                NetworkMgr.websocketMsg.player_move({
-                                    pioneerId: currentActionPioneer.id,
-                                    movePath: JSON.stringify(uploadPath),
-                                    targetPos: targetPosString,
-                                    feeTxhash: "",
-                                });
                             } else {
                                 outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
                             }

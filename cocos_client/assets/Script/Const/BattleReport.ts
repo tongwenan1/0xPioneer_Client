@@ -37,17 +37,3 @@ export class ReportFilterState {
     public filterType: ReportsFilterType = ReportsFilterType.None;
     public reportType: BattleReportType = null;
 }
-
-// export default class BattleReportsMgrDefine {
-//     public static isReportPending(report: BattleReportData): boolean {
-//         return report.type === BattleReportType.Exploring && report.data.hasNextStep && !report.data.nextStepFinished;
-//     }
-// }
-
-export interface ActiveEventState {
-    /** current event id */
-    eventId: string;
-    prevEventId: string;
-    pioneerId: string;
-    buildingId: string;
-}

@@ -90,14 +90,14 @@ export default class TopUI extends Component {
         resourceView.getChildByPath("Troops/Label").getComponent(Label).string = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop).toString();
     }
 
-    private _playExpGettedAnim(getExpValue: number, playOver: () => void = null) {
-        if (getExpValue <= 0) {
+    private _playExpGettedAnim(expValue: number, playOver: () => void = null) {
+        if (expValue == 0) {
             return;
         }
         const animNode: Node = instantiate(this._expAnimLabel.node);
         animNode.setParent(this._expAnimLabel.node.parent);
         animNode.active = true;
-        animNode.getComponent(Label).string = "+" + getExpValue;
+        animNode.getComponent(Label).string = expValue > 0 ? ("+" + expValue) : expValue.toString();
         animNode.position = v3(animNode.position.x, animNode.position.y - 30, animNode.position.z);
         tween(animNode)
             .to(0.4, { position: v3(animNode.position.x, animNode.position.y + 30, animNode.position.z) })

@@ -44,20 +44,17 @@ export default class BattleReportsMgr {
     }
     private onEventStepEnd(args: EVENT_STEPEND_DATA): void {
         DataMgr.s.battleReport.check_prev_report_state();
-
-        const currentEventId: string = args.eventId;
-        const hasNextStep: boolean = args.hasNextStep;
-
-        const activeEventState = DataMgr.s.battleReport.latestActiveEventState;
+        if (args.eventId == null) {
+            return;
+        }
         DataMgr.s.battleReport.addObj_exploring({
-            pioneerId: activeEventState.pioneerId,
-            eventId: currentEventId,
-            buildingId: activeEventState.buildingId,
-            hasNextStep: hasNextStep,
+            pioneerId: args.pioneerId,
+            eventId: args.eventId,
+            buildingId: args.buildingId,
+            hasNextStep: args.hasNextStep,
             nextStepFinished: false,
-            rewards: EventConfig.getRewards(currentEventId),
+            rewards: EventConfig.getRewards(args.eventId),
         });
-
         DataMgr.s.battleReport.saveObj();
     }
 }

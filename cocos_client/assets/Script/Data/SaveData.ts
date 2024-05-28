@@ -101,12 +101,10 @@ export class SaveData {
         await this._eraseShadowDataMgr.loadObj(walletAddr);
         await this._countDataMgr.loadObj(walletAddr);
         await this._battleReportDataMgr.loadObj(walletAddr);
-        await this._settlementDataMgr.loadObj(walletAddr);
     }
     public async save() {
         await this._eraseShadowDataMgr.saveObj();
         await this._countDataMgr.saveObj();
         await this._battleReportDataMgr.saveObj();
-        await this._settlementDataMgr.saveObj();
     }
 }

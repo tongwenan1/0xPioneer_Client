@@ -82,36 +82,57 @@ message artifact_info_data {
 }
 
 message pioneer_data {
-    optional string id = 1;
-    optional bool show = 2;
-    optional uint32 faction = 3;
-    optional string type = 4;
-    optional pos2d stayPos = 5;
-    optional uint32 hpMax = 6;
-    optional int32 hp = 7;
-    optional uint32 attack = 8;
-    optional uint32 defend = 9;
-    optional uint32 speed = 10;
-    optional string actionType = 11;
-    optional uint32 eventStatus = 12;
-    optional uint32 actionBeginTimeStamp = 13;
-    optional uint32 actionEndTimeStamp = 14;
-    optional uint32 winProgress = 15;
-    optional uint32 winExp = 16;
-    optional user_map_member_status showHideStruct = 17;
-    optional string actionEventId = 18;
-    optional string NFTInitLinkId = 19;
-    optional int32 rebirthStartTime = 20;
-    optional int32 rebirthEndTime = 21;
-    optional string killerId = 22;
-    optional string NFTId = 23;
-    optional string talkId = 24;
-    optional user_map_member_status talkCountStruct = 25;
+    required string id = 1;
+    required bool show = 2;
+    required uint32 faction = 3;
+    required string type = 4;
+    required pos2d stayPos = 5;
 
-    repeated fight_res actionFightRes = 26;
-    optional string actionFightId = 27;
-    optional uint32 actionFightWinner = 28;
-    optional uint32 actionFightHp = 29;
+    required int32 hp = 6;
+
+    required uint32 hpMax = 7;
+    // required uint32 hpMaxbase = 8;
+    // repeated int32 hpMaxadd = 9;
+    // repeated int32 hpMaxmul = 10;
+    
+    required int32 attack = 11;
+    // required uint32 attackbase = 12;
+    // repeated int32 attackadd = 13;
+    // repeated int32 attackmul = 14;
+
+    required int32 defend = 15;
+    // required uint32 defendbase = 16;
+    // repeated int32 defendadd = 17;
+    // repeated int32 defendmul = 18;
+
+    required int32 speed = 19;
+    // required uint32 speedbase = 20;
+    // repeated int32 speedadd = 21;
+    // repeated int32 speedmul = 22;
+
+    required string actionType = 23;
+    required uint32 actionBeginTimeStamp = 24;
+    required uint32 actionEndTimeStamp = 25;
+    optional string actionEventId = 26;
+    optional string actionBuildingId = 27;
+
+    repeated fight_res actionFightRes = 28;
+    optional string actionFightId = 29;
+    optional uint32 actionFightWinner = 30;
+    optional uint32 actionFightHp = 31;
+
+    required uint32 eventStatus = 32;
+    
+    required uint32 winProgress = 33;
+    required uint32 winExp = 34;
+    
+    optional string NFTInitLinkId = 36;
+    optional int32 rebirthStartTime = 37;
+    optional int32 rebirthEndTime = 38;
+    optional string killerId = 39;
+    optional string NFTId = 40;
+    optional string talkId = 41;
+    optional user_map_member_status talkCountStruct = 42;
 }
 message fight_res {
     required string attackerId = 1;
@@ -195,36 +216,41 @@ message nfts_info_data {
 message mapbuilding_info_data {
     required string id = 1;
     required string name = 2;
-    optional uint32 type = 3;
+    required uint32 type = 3;
     required uint32 level = 4;
     required bool show = 5;
-    optional user_map_member_status showHideStruct = 6;
-    optional uint32 faction = 7;
-    repeated string defendPioneerIds = 8;
+    required uint32 faction = 6;
 
-    repeated pos2d stayMapPositions = 9;
-    optional uint32 stayPosType = 10;
-    optional uint32 progress = 11;
-    optional uint32 winprogress = 12;
-    optional string eventId = 13;
+    repeated pos2d stayMapPositions = 7;
+    required uint32 stayPosType = 8;
+    optional string animType = 9;
 
-    optional string originalEventId = 14;
-    required uint32 exp = 15;
-    optional string animType = 16;
+    repeated string defendPioneerIds = 10;
 
-    optional uint32 hpMax = 17;
-    optional int32 hp = 18;
-    optional uint32 attack = 19;
-    optional string taskObj = 20;
+    repeated string gatherPioneerIds = 11;
+    optional building_resource resources = 12;
+    optional uint32 quota = 13;
 
-    optional building_resource resources = 21;
-    optional uint32 quota = 22;
-    optional uint32 wormholdCountdownTime = 23;
-    optional uint32 tavernCountdownTime = 24;
+    repeated string explorePioneerIds = 14;
 
-    repeated string gatherPioneerIds = 25;
+    optional string eventId = 15;
+    repeated string eventPioneerIds = 16;
+    map<string,pioneer_data> eventPioneerDatas = 17;
 
-    map<string,string> attacker = 26;
+    optional uint32 progress = 18;
+    required uint32 exp = 19;
+    
+
+    optional uint32 hpMax = 20;
+    optional int32 hp = 21;
+    optional uint32 attack = 22;
+    optional uint32 winprogress = 23;
+
+    
+    optional uint32 wormholdCountdownTime = 24;
+    map<string,string> attacker = 25;
+
+    optional uint32 tavernCountdownTime = 26;
 }
 
 message building_resource {
@@ -295,3 +321,15 @@ message task_step_data {
     required uint32 completeIndex = 2;
 }
 
+message settlement_data {
+    required uint32 level = 1;
+    repeated string newPioneerIds = 2;
+    required uint32 killEnemies = 3;
+    required uint32 gainResources = 4;
+    required uint32 consumeResources = 5;
+    required uint32 gainTroops = 6;
+    required uint32 consumeTroops = 7;
+    required uint32 gainEnergy = 8;
+    required uint32 consumeEnergy = 9;
+    required uint32 exploredEvents = 10;
+}

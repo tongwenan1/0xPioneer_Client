@@ -185,7 +185,8 @@ export class Main extends ViewController {
         
         NetworkMgr.websocket.on("player_explore_npc_start_res", DataMgr.player_explore_npc_start_res);
         NetworkMgr.websocket.on("player_move_res", DataMgr.player_move_res);
-        NetworkMgr.websocket.on("player_event_res", DataMgr.player_event_res);
+        NetworkMgr.websocket.on("player_event_select_res", DataMgr.player_event_select_res);
+
         // nft
         NetworkMgr.websocket.on("nft_change", DataMgr.nft_change);
         NetworkMgr.websocket.on("player_nft_lvlup_res", DataMgr.player_nft_lvlup_res);
@@ -206,7 +207,6 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_talk_select_res", DataMgr.player_talk_select_res);
         NetworkMgr.websocket.on("player_explore_res", DataMgr.player_explore_res);
         NetworkMgr.websocket.on("player_fight_res", DataMgr.player_fight_res);
-        NetworkMgr.websocket.on("player_event_select_res", DataMgr.player_event_select_res);
         NetworkMgr.websocket.on("player_treasure_open_res", DataMgr.player_treasure_open_res);
         NetworkMgr.websocket.on("player_point_treasure_open_res", DataMgr.player_point_treasure_open_res);
         NetworkMgr.websocket.on("player_artifact_equip_res", DataMgr.player_artifact_equip_res);
@@ -223,6 +223,9 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("user_task_action_getnewtalk", DataMgr.user_task_action_getnewtalk);
         NetworkMgr.websocket.on("user_task_did_change", DataMgr.user_task_did_change);
         NetworkMgr.websocket.on("get_user_task_info_res", DataMgr.get_user_task_info_res);
+
+        //settlement
+        NetworkMgr.websocket.on("get_user_settlement_info_res", DataMgr.get_user_settlement_info_res);
     }
 
     private async reconnect() {

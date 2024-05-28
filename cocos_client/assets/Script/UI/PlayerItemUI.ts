@@ -1,6 +1,6 @@
 import { _decorator, Component, Label, log, Node, Sprite, SpriteFrame, Button, ProgressBar } from 'cc';
 import { LanMgr, PioneerMgr } from '../Utils/Global';
-import { MapPioneerActionType, MapPioneerEventStatus, MapPlayerPioneerObject } from '../Const/PioneerDefine';
+import { MapPioneerActionType, MapPlayerPioneerObject } from '../Const/PioneerDefine';
 import { DataMgr } from '../Data/DataMgr';
 import CommonTools from '../Tool/CommonTools';
 const { ccclass, property } = _decorator;
@@ -37,8 +37,6 @@ export class PlayerItemUI extends Component {
         } else {
             busy.active = true;
         }
-        // eventremind
-        this.node.getChildByName("EventRemind").active = model.actionType == MapPioneerActionType.eventing && model.eventStatus == MapPioneerEventStatus.Waited;
         //selected
         this._selectedView.active = DataMgr.s.pioneer.getCurrentPlayer().id == model.id;
         //hp
@@ -77,13 +75,16 @@ export class PlayerItemUI extends Component {
         if (this._model == null) {
             return;
         }
+        this.node.getChildByName("EventRemind").active = false;
+        const currentTimestamp = new Date().getTime();
         if (this._model.actionType == MapPioneerActionType.dead) {
-            const currentTimestamp = new Date().getTime();
             if (currentTimestamp < this._model.rebirthEndTime) {
                 this._rebirthCountView.active = true;
                 this._rebirthCountView.getChildByName("Label").getComponent(Label).string = Math.floor((this._model.rebirthEndTime - currentTimestamp) / 1000) + "s";
             }
-        } 
+        } else if (this._model.actionType == MapPioneerActionType.eventing) {
+            this.node.getChildByName("EventRemind").active = currentTimestamp >= this._model.actionEndTimeStamp;
+        }
     }
 }
 
