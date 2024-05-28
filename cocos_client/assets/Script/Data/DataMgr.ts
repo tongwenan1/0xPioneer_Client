@@ -30,6 +30,8 @@ import ItemConfig from "../Config/ItemConfig";
 import { ItemGettedUI } from "../UI/ItemGettedUI";
 import EventConfig from "../Config/EventConfig";
 import { EVENT_STEPEND_DATA } from "../Const/Event";
+import { TilePos } from "../Game/TiledMap/TileTool";
+import GameMainHelper from "../Game/Helper/GameMainHelper";
 
 export class DataMgr {
     public static r: RunData;
@@ -196,6 +198,9 @@ export class DataMgr {
                     if ((oldData.fightData == null && newData.fightData != null) || (oldData.fightData != null && newData.fightData == null)) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FIGHT_CHANGE);
                     }
+                    if (oldData.stayPos.x != newData.stayPos.x || oldData.stayPos.y != newData.stayPos.y) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_STAY_POSITION_CHANGE, { id: newData.id });
+                    }
                     break;
                 }
             }
@@ -258,11 +263,11 @@ export class DataMgr {
         if (p.res !== 1) {
             return;
         }
-        if (!DataMgr.socketSendData.has("player_move_res")) {
-            return;
+        const movePath: TilePos[] = [];
+        for (const temple of p.movePath) {
+            movePath.push(GameMainHelper.instance.tiledMapGetTiledPos(temple.x, temple.y));
         }
-        const localData: s2c_user.Iplayer_move_res_local_data = DataMgr.socketSendData.get("player_move_res") as s2c_user.Iplayer_move_res_local_data;
-        DataMgr.s.pioneer.beginMove(localData.pioneerId, localData.movePath);
+        DataMgr.s.pioneer.beginMove(p.pioneerId, movePath);
     };
     public static player_event_select_res = (e: any) => {
         const p: s2c_user.Iplayer_event_select_res = e.data;

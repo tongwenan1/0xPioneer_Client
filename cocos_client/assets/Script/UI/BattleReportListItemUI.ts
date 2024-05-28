@@ -251,9 +251,7 @@ export class BattleReportListItemUI extends Component {
         const pioneer = DataMgr.s.pioneer.getById(reportData.pioneerId);
 
         if (pioneer.actionEndTimeStamp > new Date().getTime()) {
-            // useLanMgr
-            // UIHUDController.showCenterTip(LanMgr.getLanById("107549"));
-            UIHUDController.showCenterTip("Please Wait");
+            UIHUDController.showCenterTip(LanMgr.getLanById("203005"));
             return;
         }
 

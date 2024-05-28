@@ -156,7 +156,7 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_TALK_CHANGED, this._refreshUI, this);
         // action
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._onPioneerActionChanged, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENTSTATUS_CHANGED, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_STAY_POSITION_CHANGE, this._onPioneerStayPositionChanged, this);
         // event 
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENTID_CHANGE, this._refreshUI, this);
         // hp
@@ -248,7 +248,7 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_TALK_CHANGED, this._refreshUI, this);
         // action
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._onPioneerActionChanged, this);
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENTSTATUS_CHANGED, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_STAY_POSITION_CHANGE, this._onPioneerStayPositionChanged, this);
         // event 
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENTID_CHANGE, this._refreshUI, this);
         // hp
@@ -606,6 +606,17 @@ export class OuterPioneerController extends ViewController {
             }
             this._refreshUI();
         }
+    }
+    private _onPioneerStayPositionChanged(data: { id: string }) {
+        const pioneer = DataMgr.s.pioneer.getById(data.id);
+        if (pioneer == undefined) {
+            return;
+        }
+        if (!this._pioneerMap.has(data.id)) {
+            return;
+        }
+        const view = this._pioneerMap.get(data.id);
+        view.worldPosition = GameMainHelper.instance.tiledMapGetPosWorld(pioneer.stayPos.x, pioneer.stayPos.y);
     }
     private _onPioneerHpChanged(): void {
         // const actionView = this._pioneerMap.get(data.id);

@@ -57,9 +57,8 @@ message get_mapbuilding_info {
 // ----------------------------------------------------------------------------
 message player_move {
     required string pioneerId = 1;
-    required string movePath = 2; 
-    required string targetPos = 3; 
-    required string feeTxhash = 4;
+    repeated share.pos2d movePath = 2; 
+    required string feeTxhash = 3;
 }
 
 message player_talk_select {

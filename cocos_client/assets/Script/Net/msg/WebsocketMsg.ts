@@ -295,8 +295,7 @@ export namespace c2s_user {
     }
     export interface Iplayer_move {
         pioneerId: string;
-        movePath: string;
-        targetPos: string;
+        movePath: share.pos2d[];
         feeTxhash: string;
     }
     export interface Iplayer_talk_select {
@@ -495,16 +494,11 @@ export namespace s2c_user {
     export interface Iplayer_move_res {
         res: number;
         pioneerId: string;
-        show: boolean;
+        movePath: share.pos2d[];
     }
     export interface Iplayer_event_select_res {
         res: number;
         eventId: string;
-    }
-    export interface Iplayer_move_res_local_data {
-        pioneerId: string;
-        movePath: TilePos[];
-        costEnergyNum: number;
     }
     export interface Iplayer_talk_select_res {
         talkId: string;

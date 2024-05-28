@@ -109,6 +109,8 @@ message get_mapbuilding_info_res {
 
 message player_move_res {
     required int32 res = 1;
+    optional string pioneerId = 2;
+    repeated share.pos2d movePath = 3;
 }
 
 message player_talk_select_res {
