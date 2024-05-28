@@ -218,11 +218,8 @@ export class MapPioneer extends Component {
 
             if (this._model.actionType == MapPioneerActionType.fighting || this._model.actionType == MapPioneerActionType.eventing) {
                 if (this._model.fightData != null && this._model.fightData.length > 0) {
-                    this._fightView.node.active = true;
                     let attacker = this._model;
-                    if (this._model.actionType == MapPioneerActionType.eventing &&
-                        this._model.actionBuildingId != null
-                    ) {
+                    if (this._model.actionType == MapPioneerActionType.eventing && this._model.actionBuildingId != null) {
                         const currentBuilding = DataMgr.s.mapBuilding.getBuildingById(this._model.actionBuildingId);
                         if (currentBuilding != null && currentBuilding.eventPioneerDatas.has(this._model.id)) {
                             attacker = currentBuilding.eventPioneerDatas.get(this._model.id);
@@ -236,6 +233,20 @@ export class MapPioneer extends Component {
                         defender = DataMgr.s.pioneer.getById(fightDatas[0].attackerId);
                     }
                     if (defender != null) {
+                        this._fightView.node.active = true;
+                        this._fightView.refreshUI(
+                            {
+                                name: attacker.name,
+                                hp: attacker.hp,
+                                hpMax: attacker.hpMax,
+                            },
+                            {
+                                name: defender.name,
+                                hp: defender.hp,
+                                hpMax: defender.hpMax,
+                            },
+                            true
+                        );
                         const fightInterval: number = setInterval(() => {
                             if (fightDatas.length <= 0) {
                                 clearInterval(fightInterval);
@@ -260,7 +271,7 @@ export class MapPioneer extends Component {
                                 defender.hp -= data.hp;
                             } else {
                                 attacker.hp -= data.hp;
-                                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED)
+                                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED);
                             }
                             this._fightView.refreshUI(
                                 {

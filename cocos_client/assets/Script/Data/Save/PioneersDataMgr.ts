@@ -197,15 +197,7 @@ export class PioneersDataMgr {
             }
         }
     }
-    private _t = null;
     public didMoveStep(pioneerId: string) {
-        if (this._t == null) {
-            this._t = new Date().getTime();
-        }
-        const c = new Date().getTime();
-        console.log("exce step gap: " + (c - this._t));
-        this._t = c;
-        
         const findPioneer = this.getById(pioneerId);
         if (findPioneer != undefined) {
             if (findPioneer.movePaths.length > 0) {
