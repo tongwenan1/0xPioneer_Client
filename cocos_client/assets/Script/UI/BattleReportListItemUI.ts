@@ -246,8 +246,16 @@ export class BattleReportListItemUI extends Component {
 
     async onClickBranchSelection() {
         const reportData = this.report.data as BattleReportExploringData;
-        // const building = BuildingMgr.getBuildingById(reportData.buildingId);
+
         const building = DataMgr.s.mapBuilding.getBuildingById(reportData.buildingId);
+        const pioneer = DataMgr.s.pioneer.getById(reportData.pioneerId);
+
+        if (pioneer.actionEndTimeStamp > new Date().getTime()) {
+            // useLanMgr
+            // UIHUDController.showCenterTip(LanMgr.getLanById("107549"));
+            UIHUDController.showCenterTip("Please Wait");
+            return;
+        }
 
         const currentEvent = EventConfig.getById(building.eventId);
         if (currentEvent == null) {
@@ -255,7 +263,6 @@ export class BattleReportListItemUI extends Component {
             return;
         }
         UIPanelManger.inst.popPanel();
-        
         const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
         if (result.success) {
             result.node.getComponent(EventUI).eventUIShow(reportData.pioneerId, reportData.buildingId, currentEvent);

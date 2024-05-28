@@ -183,20 +183,14 @@ export class DataMgr {
                     // event
                     if (oldData.actionEventId != newData.actionEventId) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENTID_CHANGE);
-                        if (newData.actionEventId != null) {
-                            const stepEndData: EVENT_STEPEND_DATA = {
-                                pioneerId: newData.id,
-                                buildingId: newData.actionBuildingId,
-                                eventId: newData.actionEventId,
-                                hasNextStep:
-                                    newData.actionEventId != "-1" &&
-                                    newData.actionEventId != "-2" &&
-                                    newData.actionEventId != "" &&
-                                    newData.actionEventId != null,
-                            };
-                            console.log("exce stepEndData: ", stepEndData);
-                            NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, stepEndData);
-                        }
+                        const stepEndData: EVENT_STEPEND_DATA = {
+                            pioneerId: newData.id,
+                            buildingId: newData.actionBuildingId,
+                            eventId: newData.actionEventId,
+                            hasNextStep:
+                                newData.actionEventId != "-1" && newData.actionEventId != "-2" && newData.actionEventId != "" && newData.actionEventId != null,
+                        };
+                        NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, stepEndData);
                     }
                     // fight
                     if ((oldData.fightData == null && newData.fightData != null) || (oldData.fightData != null && newData.fightData == null)) {
@@ -645,11 +639,10 @@ export class DataMgr {
                             }
                         } else {
                             if (!isAttackBuilding) {
-                                const isDead: boolean = pioneerDataMgr.loseHp(pioneerDefender.id, damage);
-                                if (isDead) {
-                                    fightOver = true;
-                                    isAttackWin = true;
-                                }
+                                // if (isDead) {
+                                //     fightOver = true;
+                                //     isAttackWin = true;
+                                // }
                             } else {
                                 if (buildingDefender.type == MapBuildingType.city) {
                                     if (useData.defenderInfo.hp <= 0) {
@@ -660,7 +653,6 @@ export class DataMgr {
                                     for (const pioneerId of buildingDefender.defendPioneerIds) {
                                         const findPioneer = pioneerDataMgr.getById(pioneerId);
                                         if (findPioneer != undefined && findPioneer.hp > 0) {
-                                            pioneerDataMgr.loseHp(findPioneer.id, damage);
                                             break;
                                         }
                                     }
@@ -677,11 +669,10 @@ export class DataMgr {
                     const damage: number = Math.max(1, defenderAttack - attacker.defend);
                     if (damage > 0) {
                         useData.attackerInfo.hp = Math.max(0, attacker.hp - damage);
-                        const isDead: boolean = pioneerDataMgr.loseHp(attacker.id, damage);
-                        if (isDead) {
-                            fightOver = true;
-                            isAttackWin = false;
-                        }
+                        // if (isDead) {
+                        //     fightOver = true;
+                        //     isAttackWin = false;
+                        // }
                     }
                 }
                 attackRound = !attackRound;

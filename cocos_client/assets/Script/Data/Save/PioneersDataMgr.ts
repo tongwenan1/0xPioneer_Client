@@ -119,36 +119,6 @@ export class PioneersDataMgr {
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_TALK_CHANGED, { id: pioneerId, talkId: npcObj.talkId });
         }
     }
-    public gainHp(pioneerId: string, maxNum: number): number {
-        const pioneer = this.getById(pioneerId);
-        let cost: number = 0;
-        if (pioneer != undefined) {
-            cost = Math.min(pioneer.hpMax - pioneer.hp, maxNum);
-            if (cost > 0) {
-                pioneer.hp += cost;
-
-                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED, { id: pioneerId, gainValue: cost });
-            }
-        }
-        return cost;
-    }
-    public loseHp(pioneerId: string, num: number): boolean {
-        const pioneer = this.getById(pioneerId);
-        let isDead: boolean = false;
-        if (pioneer != undefined) {
-            const cost = Math.min(pioneer.hp, num);
-            if (cost > 0) {
-                pioneer.hp -= cost;
-
-                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED, { id: pioneerId, loseValue: cost });
-            }
-            if (pioneer.hp <= 0) {
-                isDead = true;
-                this.changeActionType(pioneerId, MapPioneerActionType.idle);
-            }
-        }
-        return isDead;
-    }
     public changeHpMax(pioneerId: string, num: number): void {
         if (num == 0) {
             return;

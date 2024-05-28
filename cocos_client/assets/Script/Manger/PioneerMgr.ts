@@ -37,9 +37,6 @@ export default class PioneerMgr {
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_MOVE_MEETTED, this._onPioneerMoveMeeted, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_LOGIC_MOVE, this._onPioneerLogicMove, this);
     }
-    public pioneerHealHpToMax(pioneerId: string) {
-        const costTroops: number = DataMgr.s.pioneer.gainHp(pioneerId, DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Troop));
-    }
     public pioneerChangeHpMax(pioneerId: string, num: number) {
         DataMgr.s.pioneer.changeHpMax(pioneerId, num);
     }
@@ -339,7 +336,6 @@ export default class PioneerMgr {
                             // DataMgr.s.mapBuilding.hideBuilding(stayBuilding.id, pioneer.id);
                         } else {
                             // wait xx
-                            // pioneer.loseHp(Math.floor(pioneer.hp / 2));
                             // pioneer.changeAttack({
                             //     type: AttrChangeType.MUL,
                             //     value: -0.5,

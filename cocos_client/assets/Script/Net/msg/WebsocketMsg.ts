@@ -107,6 +107,9 @@ export class WebsocketMsg {
     public get_pioneer_info(d: c2s_user.Iget_pioneer_info) {
         this.send_packet("get_pioneer_info", d);
     }
+    public get_mapbuilding_info(d: c2s_user.Iget_mapbuilding_info) {
+        this.send_packet("get_mapbuilding_info", d);
+    }
     public player_move(d: c2s_user.Iplayer_move) {
         this.send_packet("player_move", d);
     }
@@ -286,6 +289,9 @@ export namespace c2s_user {
 
     export interface Iget_pioneer_info {
         pioneerIds: string[];
+    }
+    export interface Iget_mapbuilding_info {
+        mapbuildingIds: string[];
     }
     export interface Iplayer_move {
         pioneerId: string;

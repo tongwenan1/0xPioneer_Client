@@ -19,6 +19,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_s2c.building_change, "building_change", "s2c_user.building_change");
     pcodec.register_protobuf_msg(protobuf_s2c.nft_change, "nft_change", "s2c_user.nft_change");
     pcodec.register_protobuf_msg(protobuf_s2c.sinfo_change, "sinfo_change", "s2c_user.sinfo_change");
+    pcodec.register_protobuf_msg(protobuf_s2c.get_mapbuilding_info_res, "get_mapbuilding_info_res", "s2c_user.get_mapbuilding_info_res");
 
     pcodec.register_protobuf_msg(protobuf_s2c.player_move_res, "player_move_res", "s2c_user.player_move_res");
     pcodec.register_protobuf_msg(protobuf_s2c.player_talk_select_res, "player_talk_select_res", "s2c_user.player_talk_select_res");
@@ -128,6 +129,7 @@ export const registermsg = (pcodec: packetcodec) => {
     pcodec.register_protobuf_msg(protobuf_c2s.upload_pending, "upload_pending", "c2s_user.upload_pending");
     pcodec.register_protobuf_msg(protobuf_c2s.get_block_height, "get_block_height", "c2s_user.get_block_height");
     pcodec.register_protobuf_msg(protobuf_c2s.get_pioneer_info, "get_pioneer_info", "c2s_user.get_pioneer_info");
+    pcodec.register_protobuf_msg(protobuf_c2s.get_mapbuilding_info, "get_mapbuilding_info", "c2s_user.get_mapbuilding_info");
 
     pcodec.register_protobuf_msg(protobuf_c2s.player_move, "player_move", "c2s_user.player_move");
     pcodec.register_protobuf_msg(protobuf_c2s.player_talk_select, "player_talk_select", "c2s_user.player_talk_select");

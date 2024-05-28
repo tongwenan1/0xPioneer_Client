@@ -32,8 +32,9 @@ export class PlayerListUI extends Component {
 
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_SHOW_CHANGED, this._refreshPlayerList, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENTID_CHANGE, this._refreshPlayerList, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_HP_CHANGED, this._refreshPlayerList, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_HPMAX_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_FIGHT_CHANGE, this._refreshPlayerList, this);
     }
 
     start() {
@@ -46,8 +47,9 @@ export class PlayerListUI extends Component {
 
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_SHOW_CHANGED, this._refreshPlayerList, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENTID_CHANGE, this._refreshPlayerList, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_HP_CHANGED, this._refreshPlayerList, this);
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_HPMAX_CHANGED, this._refreshPlayerList, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_FIGHT_CHANGE, this._refreshPlayerList, this);
     }
 
     private changeLang() {
@@ -65,8 +67,9 @@ export class PlayerListUI extends Component {
                     // eventing use building data
                     const building = DataMgr.s.mapBuilding.getBuildingById(temple.actionBuildingId);
                     if (building != null && building.eventPioneerDatas.has(temple.id)) {
-                        this._pioneers.push(building.eventPioneerDatas.get(temple.id) as MapPlayerPioneerObject);
-                        console.log("exce use event:", building.eventPioneerDatas.get(temple.id));
+                        const playerObj = building.eventPioneerDatas.get(temple.id) as MapPlayerPioneerObject;
+                        playerObj.actionEndTimeStamp = temple.actionEndTimeStamp;
+                        this._pioneers.push(playerObj);
                     }
                 } else {
                     this._pioneers.push(temple);

@@ -100,6 +100,11 @@ message get_pioneer_info_res {
     repeated share.pioneer_data info = 2;
 }
 
+message get_mapbuilding_info_res {
+    required int32 res = 1;
+    repeated share.mapbuilding_info_data info = 2;
+}
+
 // ----------------------------------------------------------------------------
 
 message player_move_res {

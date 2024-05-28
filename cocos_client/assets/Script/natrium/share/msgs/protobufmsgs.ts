@@ -13,6 +13,7 @@ export enum protobuf_c2s {
     get_pending_history = 122,
     get_block_height = 124,
     get_pioneer_info = 125,
+    get_mapbuilding_info = 126,
 
     player_move = 200,
     player_talk_select = 201,
@@ -81,13 +82,14 @@ export enum protobuf_s2c {
     building_change = 10146,
     nft_change = 10147,
     sinfo_change = 10148,
+    get_mapbuilding_info_res = 10149,
 
     player_move_res = 20000,
     player_talk_select_res = 20201,
 
     player_explore_res = 20203,
     player_fight_res = 20204,
-    
+
     player_item_use_res = 20206,
     player_treasure_open_res = 20207,
     player_artifact_equip_res = 20208,

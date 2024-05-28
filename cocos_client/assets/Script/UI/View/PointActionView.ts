@@ -163,23 +163,23 @@ export class PointActionView extends Component {
         }
         const canGet: boolean = this._userInfoTreasureValue >= this._currentTreasureData.threshold;
         if (canGet) {
-            const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);
-            if (result.success) {
-                result.node
-                    .getComponent(TreasureGettedUI)
-                    .dialogShow(
-                        this._currentTreasureData,
-                        (gettedData: { boxId: string; items: ItemData[]; artifacts: ArtifactData[]; subItems: ItemData[] }) => {
-                            DataMgr.setTempSendData("player_point_treasure_open_res", {
-                                boxId: gettedData.boxId,
-                                items: gettedData.items,
-                                artifacts: gettedData.artifacts,
-                                subItems: gettedData.subItems,
-                            });
-                            NetworkMgr.websocketMsg.player_point_treasure_open({ boxId: gettedData.boxId });
-                        }
-                    );
-            }
+            // const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);
+            // if (result.success) {
+            //     result.node
+            //         .getComponent(TreasureGettedUI)
+            //         .dialogShow(
+            //             this._currentTreasureData,
+            //             (gettedData: { boxId: string; items: ItemData[]; artifacts: ArtifactData[]; subItems: ItemData[] }) => {
+            //                 DataMgr.setTempSendData("player_point_treasure_open_res", {
+            //                     boxId: gettedData.boxId,
+            //                     items: gettedData.items,
+            //                     artifacts: gettedData.artifacts,
+            //                     subItems: gettedData.subItems,
+            //                 });
+            //                 NetworkMgr.websocketMsg.player_point_treasure_open({ boxId: gettedData.boxId });
+            //             }
+            //         );
+            // }
         }
     }
 

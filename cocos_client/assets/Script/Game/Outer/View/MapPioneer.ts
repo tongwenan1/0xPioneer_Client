@@ -29,6 +29,8 @@ import { OuterFightView } from "./OuterFightView";
 import { DataMgr } from "../../../Data/DataMgr";
 import { OuterFightResultView } from "./OuterFightResultView";
 import { NetworkMgr } from "../../../Net/NetworkMgr";
+import NotificationMgr from "../../../Basic/NotificationMgr";
+import { NotificationName } from "../../../Const/Notification";
 const { ccclass, property } = _decorator;
 
 @ccclass("MapPioneer")
@@ -45,10 +47,9 @@ export class MapPioneer extends Component {
     private _actionTimeStamp: number = 0;
     private _actionTotalTime: number = 0;
 
-
     private _fightView: OuterFightView = null;
     private _fightResultView: OuterFightResultView = null;
-    
+
     private _contentView: Node = null;
     private _addingtroopsView: Node = null;
     private _exploringView: Node = null;
@@ -108,8 +109,6 @@ export class MapPioneer extends Component {
         topWalkView.active = false;
         bottomWalkView.active = false;
 
-        console.log("exce _L: " + this._lastActionEndTimestamp + ", n: " + this._model.actionEndTimeStamp);
-        console.log("exce gap: " + (this._lastActionEndTimestamp - this._model.actionEndTimeStamp));
         if (this._lastStatus != this._model.actionType || this._lastActionEndTimestamp != this._model.actionEndTimeStamp) {
             this._lastStatus = this._model.actionType;
             this._lastActionEndTimestamp = this._model.actionEndTimeStamp;
@@ -204,8 +203,6 @@ export class MapPioneer extends Component {
                     {
                         this._contentView.active = true;
                         idleView.active = true;
-
-                        
                     }
                     break;
 
@@ -220,12 +217,19 @@ export class MapPioneer extends Component {
             }
 
             if (this._model.actionType == MapPioneerActionType.fighting || this._model.actionType == MapPioneerActionType.eventing) {
-                console.log("exce fight: " + JSON.stringify(model));
                 if (this._model.fightData != null && this._model.fightData.length > 0) {
                     this._fightView.node.active = true;
-                    const fightDatas = this._model.fightData.slice();
-                    const attacker = this._model;
+                    let attacker = this._model;
+                    if (this._model.actionType == MapPioneerActionType.eventing &&
+                        this._model.actionBuildingId != null
+                    ) {
+                        const currentBuilding = DataMgr.s.mapBuilding.getBuildingById(this._model.actionBuildingId);
+                        if (currentBuilding != null && currentBuilding.eventPioneerDatas.has(this._model.id)) {
+                            attacker = currentBuilding.eventPioneerDatas.get(this._model.id);
+                        }
+                    }
                     let defender: MapPioneerObject = null;
+                    const fightDatas = this._model.fightData.slice();
                     if (fightDatas[0].attackerId == attacker.id) {
                         defender = DataMgr.s.pioneer.getById(fightDatas[0].defenderId);
                     } else {
@@ -237,11 +241,16 @@ export class MapPioneer extends Component {
                                 clearInterval(fightInterval);
                                 this._fightView.node.active = false;
                                 this._fightResultView.node.active = true;
-                                this._fightResultView.showResult(this._model.fightResultWin, ()=> {
+                                this._fightResultView.showResult(this._model.fightResultWin, () => {
                                     this._fightResultView.node.active = false;
                                     NetworkMgr.websocketMsg.get_pioneer_info({
-                                        pioneerIds: [attacker.id, defender.id]
+                                        pioneerIds: [attacker.id, defender.id],
                                     });
+                                    if (attacker.actionBuildingId != null) {
+                                        NetworkMgr.websocketMsg.get_mapbuilding_info({
+                                            mapbuildingIds: [attacker.actionBuildingId],
+                                        });
+                                    }
                                 });
                                 return;
                             }
@@ -251,6 +260,7 @@ export class MapPioneer extends Component {
                                 defender.hp -= data.hp;
                             } else {
                                 attacker.hp -= data.hp;
+                                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED)
                             }
                             this._fightView.refreshUI(
                                 {
@@ -373,12 +383,11 @@ export class MapPioneer extends Component {
                 this._currnetIdleAnim.stop();
             }
         }
-
-        if (this._model != null && this._model.actionType == MapPioneerActionType.fighting) {
+        if (this._model == null) {
             return;
         }
         const currentTimeStamp = new Date().getTime();
-        if (this._actionTimeStamp > currentTimeStamp) {
+        if (this._actionTimeStamp > currentTimeStamp && (this._model.fightData == null || this._model.fightData.length <= 0)) {
             this._timeCountProgress.node.active = true;
             this._timeCountLabel.node.active = true;
 
@@ -388,6 +397,8 @@ export class MapPioneer extends Component {
             this._timeCountProgress.node.active = false;
             this._timeCountLabel.node.active = false;
         }
+
+        // event tip
         if (this._model != null && this._model.actionType == MapPioneerActionType.eventing) {
             this._eventWaitedView.active = currentTimeStamp >= this._model.actionEndTimeStamp;
             this._eventingView.active = currentTimeStamp < this._model.actionEndTimeStamp;

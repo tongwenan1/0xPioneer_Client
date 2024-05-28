@@ -44,6 +44,9 @@ export default class BattleReportsMgr {
     }
     private onEventStepEnd(args: EVENT_STEPEND_DATA): void {
         DataMgr.s.battleReport.check_prev_report_state();
+        if (args.eventId == null) {
+            return;
+        }
         DataMgr.s.battleReport.addObj_exploring({
             pioneerId: args.pioneerId,
             eventId: args.eventId,

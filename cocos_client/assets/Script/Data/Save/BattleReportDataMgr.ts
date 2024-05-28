@@ -118,6 +118,7 @@ export class BattleReportDataMgr {
             const itemData = item.data as BattleReportExploringData;
             if (itemData.hasNextStep && !itemData.nextStepFinished) {
                 itemData.nextStepFinished = true;
+                this.saveObj();
                 break;
             }
         }

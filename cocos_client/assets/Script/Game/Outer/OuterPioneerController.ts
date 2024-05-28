@@ -555,7 +555,7 @@ export class OuterPioneerController extends ViewController {
 
             const isInCityRange: boolean = BuildingMgr.checkMapPosIsInBuilingRange(pioneer.stayPos, mainCityId, radialRange);
             if (isInCityRange && pioneer.hp < pioneer.hpMax) {
-                PioneerMgr.pioneerHealHpToMax(pioneerId);
+                // PioneerMgr.pioneerHealHpToMax(pioneerId);
             }
         }
     }
@@ -607,11 +607,11 @@ export class OuterPioneerController extends ViewController {
             this._refreshUI();
         }
     }
-    private _onPioneerHpChanged(data: { id: string; gainValue: number }): void {
-        const actionView = this._pioneerMap.get(data.id);
-        if (actionView != null && actionView.getComponent(MapPioneer) != null) {
-            actionView.getComponent(MapPioneer).playGetResourceAnim(ResourceCorrespondingItem.Troop, data.gainValue, null);
-        }
+    private _onPioneerHpChanged(): void {
+        // const actionView = this._pioneerMap.get(data.id);
+        // if (actionView != null && actionView.getComponent(MapPioneer) != null) {
+        //     actionView.getComponent(MapPioneer).playGetResourceAnim(ResourceCorrespondingItem.Troop, data.gainValue, null);
+        // }
     }
     private _onPioneerShowChanged(data: { id: string; show: boolean }): void {
         if (data.show) {
