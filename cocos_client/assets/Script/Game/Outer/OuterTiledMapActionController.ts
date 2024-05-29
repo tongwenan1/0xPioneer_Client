@@ -215,7 +215,6 @@ export class OuterTiledMapActionController extends ViewController {
                         if (tp != null) {
                             if (!GameMainHelper.instance.tiledMapIsAllBlackShadow(tp.x, tp.y)) {
                                 // check building first, because of building is block
-                                // const stayBuilding = BuildingMgr.getShowBuildingByMapPos(v2(tp.x, tp.y));
                                 const stayBuilding = DataMgr.s.mapBuilding.getShowBuildingByMapPos(v2(tp.x, tp.y));
 
                                 if (stayBuilding != null && stayBuilding.show) {
@@ -248,7 +247,6 @@ export class OuterTiledMapActionController extends ViewController {
                                             }
                                         }
                                         if (cursorShowTilePositions == null) {
-                                            // const decorate = BuildingMgr.getDecorateByMapPos(v2(tp.x, tp.y));
                                             // if (decorate != null) {
                                             //     cursorShowTilePositions = decorate.stayMapPositions;
                                             // } else {
@@ -471,7 +469,6 @@ export class OuterTiledMapActionController extends ViewController {
         let purchaseMovingPioneerId = null;
         let purchaseMovingBuildingId = null;
         // check is building first
-        // const stayBuilding = BuildingMgr.getShowBuildingByMapPos(v2(tiledPos.x, tiledPos.y));
         const stayBuilding = DataMgr.s.mapBuilding.getShowBuildingByMapPos(v2(tiledPos.x, tiledPos.y));
         if (stayBuilding != null) {
             if (currentActionPioneer.actionType == MapPioneerActionType.defend && stayBuilding.type == MapBuildingType.stronghold) {
@@ -650,7 +647,6 @@ export class OuterTiledMapActionController extends ViewController {
                     }
                 } else if (purchaseMovingBuildingId != null) {
                     taregtPos = v2(tiledPos.x, tiledPos.y);
-                    // const toStayBuilding = BuildingMgr.getBuildingById(purchaseMovingBuildingId);
                     const toStayBuilding = DataMgr.s.mapBuilding.getBuildingById(purchaseMovingBuildingId);
                     if (toStayBuilding != null) {
                         targetStayPositions = toStayBuilding.stayMapPositions;
@@ -762,7 +758,8 @@ export class OuterTiledMapActionController extends ViewController {
                                 // other action
                                 if (useActionType === 6) {
                                     // cancel camp
-                                    PioneerMgr.pioneerToIdle(currentActionPioneer.id);
+                                    // TODO
+                                    
                                 } else if (useActionType === 9) {
                                     // cancel wormhole
                                     for (const temple of DataMgr.s.mapBuilding.getWormholeBuildings()) {

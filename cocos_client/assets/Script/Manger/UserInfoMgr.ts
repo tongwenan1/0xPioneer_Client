@@ -39,9 +39,6 @@ export default class UserInfoMgr {
     //--------------------------------------------------
     public getExplorationReward(boxId: string) {
         DataMgr.s.userInfo.getExplorationReward(boxId);
-        DataMgr.s.count.addObj_openBox({
-            id: boxId,
-        });
     }
     
     public set afterCivilizationClosedShowItemDatas(itemDatas: ItemData[]) {
@@ -55,14 +52,6 @@ export default class UserInfoMgr {
     }
     //-------------------------------------------------- notification
     private _onUserInfoDidChangeLevel(data: { hpMaxChangeValue: number; showBuildingIds: string[]; items: ItemData[]; artifacts: ArtifactData[] }) {
-        if (data.hpMaxChangeValue > 0) {
-            DataMgr.s.pioneer.changeAllPlayerHpMax(data.hpMaxChangeValue);
-        }
-        if (data.showBuildingIds.length > 0) {
-            // for (const buildingId of data.showBuildingIds) {
-            //     DataMgr.s.mapBuilding.showBuilding(buildingId);
-            // }
-        }
         if (data.items.length > 0) {
             setTimeout(async () => {
                 if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI) || UIPanelManger.inst.panelIsShow(UIName.SecretGuardGettedUI)) {

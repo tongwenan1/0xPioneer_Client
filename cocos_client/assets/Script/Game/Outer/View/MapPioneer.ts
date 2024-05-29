@@ -253,6 +253,26 @@ export class MapPioneer extends Component {
                                 this._fightView.node.active = false;
                                 this._fightResultView.node.active = true;
                                 this._fightResultView.showResult(this._model.fightResultWin, () => {
+                                    NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
+                                        attacker: {
+                                            name: attacker.name,
+                                            avatarIcon: "icon_player_avatar", // todo
+                                            hp: attacker.hp,
+                                            hpMax: attacker.hpMax,
+                                        },
+                                        defender: {
+                                            name: defender.name,
+                                            avatarIcon: "icon_player_avatar",
+                                            hp: defender.hp,
+                                            hpMax: defender.hpMax,
+                                        },
+                                        attackerIsSelf: true,
+                                        buildingId: null,
+                                        position: this._model.stayPos,
+                                        fightResult: attacker.hp != 0 ? "win" : "lose",
+                                        rewards: [],
+                                    });
+
                                     this._fightResultView.node.active = false;
                                     NetworkMgr.websocketMsg.get_pioneer_info({
                                         pioneerIds: [attacker.id, defender.id],

@@ -84,23 +84,7 @@ export class WebsocketMsg {
         this.send_packet("enter_game", d);
     }
 
-    // public create_pioneer(d: c2s_user.Icreate_pioneer): void {
-    //     //this.send_packet("create_pioneer", d);
-
-    //     // pioneernft func
-    //     this._websocket.emit("mark_data_dirty", { type: "pioneer" });
-    // }
-
-    // public get_pioneers(d: c2s_user.Iget_pioneers): void {
-    //     // this.send_packet("get_pioneers", d);
-
-    //     // pioneernft func
-    //     this._websocket.emit("get_pioneers_res", {});
-    // }
-
-    // public change_pioneer(d: c2s_user.Ichange_pioneer) {
-    //     this._websocket.emit("change_pioneer_res", d);
-    // }
+    
     public player_pioneer_change_show(d: c2s_user.Iplayer_pioneer_change_show) {
         this.send_packet("player_pioneer_change_show", d);
     }
@@ -132,16 +116,9 @@ export class WebsocketMsg {
         this.send_packet("player_event_select", d);
     }
 
-    public player_explore(d: c2s_user.Iplayer_explore) {
-        this.send_packet("player_explore", d);
-    }
     public player_fight_start(d: c2s_user.Iplayer_fight_start) {
         this.send_packet("player_fight_start", d);
     }
-    public player_fight(d: c2s_user.Iplayer_fight) {
-        this.send_packet("player_fight", d);
-    }
-
     public player_item_use(d: c2s_user.Iplayer_item_use) {
         this.send_packet("player_item_use", d);
     }
@@ -325,18 +302,7 @@ export namespace c2s_user {
         buildingId: string;
         selectIdx?: number;
     }
-    export interface Iplayer_explore {
-        pioneerId: string;
-        isExporeBuilding: boolean;
-        exploreId: string;
-    }
     export interface Iplayer_fight_start {
-        attackerId: string;
-        defenderId: string;
-    }
-    export interface Iplayer_fight {
-        isTakeTheInitiative: boolean;
-        isBuildingDefender: boolean;
         attackerId: string;
         defenderId: string;
     }
@@ -508,28 +474,6 @@ export namespace s2c_user {
         res: number;
         pioneerId: string;
         npcId: string;
-    }
-    export interface Iplayer_explore_res {
-        pioneerId: string;
-        isExporeBuilding: boolean;
-        exploreId: string;
-        actionType: MapPioneerActionType;
-    }
-
-    export interface Ilocal_player_fight_res {
-        isAttackBuilding: boolean;
-        isSelfAttack: boolean;
-        attacker: MapPioneerObject;
-        pioneerDefender: MapPioneerObject;
-        buildingDefender: MapBuildingObject;
-        isEventFight?: boolean;
-        eventCenterPositions?: Vec2[];
-        temporaryAttributes?: Map<string, MapPioneerAttributesChangeModel>;
-        fightOverCallback?: (isSelfWin: boolean) => void;
-    }
-    export interface Iplayer_fight_res {
-        res: number;
-        winnerId: string;
     }
     export interface Iplayer_item_use_res {
         res: number;

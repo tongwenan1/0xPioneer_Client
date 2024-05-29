@@ -58,7 +58,6 @@ export default class NFTPioneerDataMgr {
         }
         return effectNum;
     }
-    //-------------------------------- data action
 
     //-------------------------------- data action {
     public replaceData(netData: share.Infts_info_data) {
@@ -75,24 +74,19 @@ export default class NFTPioneerDataMgr {
         }
     }
 
-    public NFTGetNew(netData: share.Infts_info_data): NFTPioneerObject {
-        const obj = this._convertNetDataToObject(netData);
-        this._data.push(obj);
-        return obj;
-    }
     public NFTLevelUp(netData: share.Infts_info_data) {
         const obj = this.replaceData(netData);
         if (obj == null) {
             return;
         }
-        NotificationMgr.triggerEvent(NotificationName.NFTDIDLEVELUP, { nft: obj });
+        NotificationMgr.triggerEvent(NotificationName.NFT_LEVEL_UP, { nft: obj });
     }
     public NFTRankUp(netData: share.Infts_info_data) {
         const obj = this.replaceData(netData);
         if (obj == null) {
             return;
         }
-        NotificationMgr.triggerEvent(NotificationName.NFTDIDRANKUP, { nft: obj });
+        NotificationMgr.triggerEvent(NotificationName.NFT_RANK_UP, { nft: obj });
     }
 
     public NFTLearnSkill(NFTId: string, skillId: string) {
@@ -104,7 +98,7 @@ export default class NFTPioneerDataMgr {
             id: skillId,
             isOriginal: false,
         });
-        NotificationMgr.triggerEvent(NotificationName.NFTDIDLEARNSKILL);
+        NotificationMgr.triggerEvent(NotificationName.NFT_LEARN_SKILL);
     }
     public NFTForgetSkill(NFTId: string, skillIndex: number) {
         const object = this.getNFTById(NFTId);
@@ -115,7 +109,7 @@ export default class NFTPioneerDataMgr {
             return;
         }
         object.skills.splice(skillIndex, 1);
-        NotificationMgr.triggerEvent(NotificationName.NFTDIDFORGETSKILL);
+        NotificationMgr.triggerEvent(NotificationName.NFT_FORGET_SKILL);
     }
 
     public NFTChangeWork(NFTId: string, workingBuildingId: InnerBuildingType) {
@@ -128,7 +122,7 @@ export default class NFTPioneerDataMgr {
             return;
         }
         object.workingBuildingId = workingBuildingId;
-        NotificationMgr.triggerEvent(NotificationName.NFTDIDCHANGEWORKBUILDING);
+        NotificationMgr.triggerEvent(NotificationName.NFT_DELEGATE_BUILDING);
     }
 
     public NFTSort(sortType: BackpackArrangeType) {
@@ -146,10 +140,10 @@ export default class NFTPioneerDataMgr {
     }
     //--------------------------------
     private _initData() {
+        this._data = [];
         if (NetGlobalData.nfts == null) {
             return;
         }
-        this._data = [];
         const netNfts = NetGlobalData.nfts.nfts;
         for (const key in netNfts) {
             this._data.push(this._convertNetDataToObject(netNfts[key]));

@@ -1,12 +1,10 @@
 import Config from "../Const/Config";
 import CLog from "../Utils/CLog";
-import { BuildingMgr, PioneerMgr } from "../Utils/Global";
+import { PioneerMgr } from "../Utils/Global";
 
 export default class LocalDataLoader {
     public async loadLocalDatas() {
         this._importSaveOnStartIfExists();
-
-        await BuildingMgr.initData();
         PioneerMgr.initData();
     }
 

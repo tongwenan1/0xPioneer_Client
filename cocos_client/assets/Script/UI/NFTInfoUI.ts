@@ -46,18 +46,18 @@ export class NFTInfoUI extends ViewController {
         this._skillAddItem = this._skillContent.getChildByPath("AddItem");
         this._skillAddItem.removeFromParent();
 
-        NotificationMgr.addListener(NotificationName.NFTDIDLEVELUP, this._refreshUI, this);
-        NotificationMgr.addListener(NotificationName.NFTDIDRANKUP, this._refreshUI, this);
-        NotificationMgr.addListener(NotificationName.NFTDIDLEARNSKILL, this._refreshUI, this);
-        NotificationMgr.addListener(NotificationName.NFTDIDFORGETSKILL, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.NFT_LEVEL_UP, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.NFT_RANK_UP, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.NFT_LEARN_SKILL, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.NFT_FORGET_SKILL, this._refreshUI, this);
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(NotificationName.NFTDIDLEVELUP, this._refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.NFTDIDRANKUP, this._refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.NFTDIDLEARNSKILL, this._refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.NFTDIDFORGETSKILL, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.NFT_LEVEL_UP, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.NFT_RANK_UP, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.NFT_LEARN_SKILL, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.NFT_FORGET_SKILL, this._refreshUI, this);
     }
     protected viewPopAnimation(): boolean {
         return true;

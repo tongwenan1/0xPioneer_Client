@@ -4,22 +4,15 @@ import {
     MapBuildingBaseObject,
     MapBuildingMainCityObject,
     MapBuildingObject,
-    MapBuildingTavernObject,
     MapBuildingWormholeObject,
-    MapDecorateObject,
-    StayMapPosition,
 } from "../../Const/MapBuilding";
-import { MapMemberFactionType } from "../../Const/ConstDefine";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import CLog from "../../Utils/CLog";
-import { NFTPioneerObject } from "../../Const/NFTPioneerDefine";
 import NetGlobalData from "./Data/NetGlobalData";
-import CommonTools from "../../Tool/CommonTools";
 import { share } from "../../Net/msg/WebsocketMsg";
 import GameMainHelper from "../../Game/Helper/GameMainHelper";
 import { TileHexDirection } from "../../Game/TiledMap/TileTool";
-import { DataMgr } from "../DataMgr";
 import PioneerDefine from "../../Const/PioneerDefine";
 
 export class MapBuildingDataMgr {
@@ -58,60 +51,11 @@ export class MapBuildingDataMgr {
         }
         return null;
     }
-    public insertDefendPioneer(buildingId: string, pioneerId: string) {
-        const findBuilding = this.getBuildingById(buildingId);
-        if (findBuilding == null) return;
-        findBuilding.defendPioneerIds.push(pioneerId);
-
-        if (findBuilding.type == MapBuildingType.wormhole && findBuilding.defendPioneerIds.length == 3) {
-            // go wormhole fight countdown
-            (findBuilding as MapBuildingWormholeObject).wormholdCountdownTime = 30;
-        }
-
-        NotificationMgr.triggerEvent(NotificationName.BUILDING_INSERT_DEFEND_PIONEER);
-    }
-    public removeDefendPioneer(buildingId: string, pioneerId: string) {
-        const findBuilding = this.getBuildingById(buildingId);
-        if (findBuilding == null) return;
-
-        const index = findBuilding.defendPioneerIds.indexOf(pioneerId);
-        if (index === -1) {
-            CLog.error(`MapBuildingDataMgr: removeDefendPioneer, buildingId[${buildingId}] don't have pioneerid[${pioneerId}]`);
-            return;
-        }
-        findBuilding.defendPioneerIds.splice(index, 1);
-        NotificationMgr.triggerEvent(NotificationName.BUILDING_REMOVE_DEFEND_PIONEER);
-    }
-    public buildingGetTask(buildingId: string, task) {
-        const findBuilding = this.getBuildingById(buildingId);
-        if (findBuilding == null) return;
-        if (findBuilding.type != MapBuildingType.city) return;
-
-        (findBuilding as MapBuildingMainCityObject).taskObj = task;
-    }
-    public buildingClearTask(buildingId: string) {
-        const findBuilding = this.getBuildingById(buildingId);
-        if (findBuilding == null) return;
-        if (findBuilding.type != MapBuildingType.city) return;
-
-        (findBuilding as MapBuildingMainCityObject).taskObj = null;
-    }
-    public changeBuildingEventId(buidingId: string, eventId: string) {
-        const findBuilding = this.getBuildingById(buidingId);
-        if (findBuilding == null) return;
-
-        findBuilding.eventId = eventId;
-    }
     public fillBuildingStayPos(buildingId: string, newPosions: Vec2[]) {
         const findBuilding = this.getBuildingById(buildingId);
         if (findBuilding == null) return;
 
         findBuilding.stayMapPositions = newPosions;
-    }
-    public getResourceBuildings() {
-        return this._building_data.filter((buiding) => {
-            return buiding.type === MapBuildingType.resource;
-        });
     }
     public getStrongholdBuildings() {
         return this._building_data.filter((buiding) => {
@@ -122,22 +66,6 @@ export class MapBuildingDataMgr {
         return this._building_data.filter((buiding) => {
             return buiding.type === MapBuildingType.wormhole;
         });
-    }
-    public beginRecruitNewNft(buildingId: string, recruitTime: number) {
-        const findBuilding = this.getBuildingById(buildingId);
-        if (findBuilding == null) return;
-        if (findBuilding.type != MapBuildingType.tavern) return;
-        const tavern = findBuilding as MapBuildingTavernObject;
-        tavern.tavernCountdownTime = recruitTime;
-    }
-    public changeBuildingNewNft(buildingId: string, nft: NFTPioneerObject) {
-        const findBuilding = this.getBuildingById(buildingId);
-        if (findBuilding == null) return;
-        if (findBuilding.type != MapBuildingType.tavern) return;
-        const tavern = findBuilding as MapBuildingTavernObject;
-        tavern.nft = nft;
-
-        NotificationMgr.triggerEvent(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, { id: buildingId });
     }
     public getShowBuildingsNearMapPos(mapPos: Vec2, range: number) {
         return this._building_data.filter((buiding) => {
@@ -257,21 +185,5 @@ export class MapBuildingDataMgr {
         }
     }
     private _initInterval() {
-        setInterval(() => {
-            for (const obj of this._building_data) {
-                if (obj.type == MapBuildingType.tavern) {
-                    const tavern = obj as MapBuildingTavernObject;
-                    if (tavern.tavernCountdownTime > 0) {
-                        tavern.tavernCountdownTime -= 1;
-
-                        NotificationMgr.triggerEvent(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, { id: tavern.id });
-
-                        if (tavern.tavernCountdownTime == 0) {
-                            NotificationMgr.triggerEvent(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_FINISH, { id: tavern.id });
-                        }
-                    }
-                }
-            }
-        }, 1000);
     }
 }

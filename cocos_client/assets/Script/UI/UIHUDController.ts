@@ -44,7 +44,7 @@ export class UIHUDController extends ViewController {
         NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._resourceGetted, this);
         NotificationMgr.addListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
         NotificationMgr.addListener(NotificationName.TASK_NEW_GETTED, this._onGetNewTask, this);
-        NotificationMgr.addListener(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, this._onUseResourceGettedViewShowTip, this);
+        NotificationMgr.addListener(NotificationName.GAME_SHOW_RESOURCE_TYPE_TIP, this._onUseResourceGettedViewShowTip, this);
 
         this._showResouceGettedView();
     }
@@ -57,7 +57,7 @@ export class UIHUDController extends ViewController {
         NotificationMgr.removeListener(NotificationName.RESOURCE_GETTED, this._resourceGetted, this);
         NotificationMgr.removeListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
         NotificationMgr.removeListener(NotificationName.TASK_NEW_GETTED, this._onGetNewTask, this);
-        NotificationMgr.removeListener(NotificationName.USERESOURCEGETTEDVIEWSHOWTIP, this._onUseResourceGettedViewShowTip, this);
+        NotificationMgr.removeListener(NotificationName.GAME_SHOW_RESOURCE_TYPE_TIP, this._onUseResourceGettedViewShowTip, this);
     }
 
     private _showResouceGettedView() {

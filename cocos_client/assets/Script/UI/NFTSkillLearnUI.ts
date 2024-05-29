@@ -44,14 +44,14 @@ export class NFTSkillLearnUI extends ViewController {
         // this._bookItem.getChildByPath("LearnBtn/Label").getComponent(Label).string = LanMgr.getLanById("107549")
         this._bookItem.removeFromParent();
 
-        NotificationMgr.addListener(NotificationName.NFTDIDLEARNSKILL, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.NFT_LEARN_SKILL, this._refreshUI, this);
     }
     protected viewDidStart(): void {
         super.viewDidStart();
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
-        NotificationMgr.removeListener(NotificationName.NFTDIDLEARNSKILL, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.NFT_LEARN_SKILL, this._refreshUI, this);
     }
     protected viewPopAnimation(): boolean {
         return true;

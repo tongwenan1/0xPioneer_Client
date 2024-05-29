@@ -94,15 +94,10 @@ export class PioneersDataMgr {
     public changeCurrentAction(pioneerId: string) {
         this._currentActionPioneerId = pioneerId;
     }
-    public changeActionType(pioneerId: string, type: MapPioneerActionType, beginTimeStamp: number = 0, useTime: number = 0, eventId: string = null) {
+    public changeActionType(pioneerId: string, type: MapPioneerActionType) {
         const findPioneer = this.getById(pioneerId);
         if (findPioneer == undefined) return;
-
         findPioneer.actionType = type;
-        findPioneer.actionBeginTimeStamp = beginTimeStamp;
-        findPioneer.actionEndTimeStamp = beginTimeStamp + useTime;
-        findPioneer.actionEventId = eventId;
-
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: pioneerId });
     }
     public changeTalk(pioneerId: string, talkId: string) {
@@ -119,62 +114,8 @@ export class PioneersDataMgr {
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_TALK_CHANGED, { id: pioneerId, talkId: npcObj.talkId });
         }
     }
-    public changeHpMax(pioneerId: string, num: number): void {
-        if (num == 0) {
-            return;
-        }
-        const pioneer = this.getById(pioneerId);
-        if (pioneer != undefined) {
-            pioneer.hpMax += num;
-
-            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HPMAX_CHANGED, { id: pioneerId });
-        }
-    }
-    public changeAllPlayerHpMax(num: number): void {
-        if (num == 0) {
-            return;
-        }
-        for (const player of this.getAllPlayers()) {
-            player.hpMax += num;
-
-            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HPMAX_CHANGED, { id: player.id });
-        }
-    }
-    public changeAttack(pioneerId: string, num: number): void {
-        if (num == 0) {
-            return;
-        }
-        const pioneer = this.getById(pioneerId);
-        if (pioneer != undefined) {
-            pioneer.attack += num;
-
-            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ATTACK_CHANGED, { id: pioneerId });
-        }
-    }
-
-    public changeDefend(pioneerId: string, num: number): void {
-        if (num == 0) {
-            return;
-        }
-        const pioneer = this.getById(pioneerId);
-        if (pioneer != undefined) {
-            pioneer.defend += num;
-
-            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_DEFEND_CHANGED, { id: pioneerId });
-        }
-    }
-    public changeSpeed(pioneerId: string, num: number): void {
-        if (num == 0) {
-            return;
-        }
-        const pioneer = this.getById(pioneerId);
-        if (pioneer != undefined) {
-            pioneer.speed += num;
-
-            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SPEED_CHANGED, { id: pioneerId });
-        }
-    }
-
+    
+    // move
     public beginMove(pioneerId: string, movePaths: TilePos[], forceShowMovePath: boolean = false) {
         const findPioneer = this.getById(pioneerId);
         if (findPioneer != undefined) {
@@ -203,10 +144,11 @@ export class PioneersDataMgr {
             if (findPioneer.movePaths.length > 0) {
                 findPioneer.movePaths.shift();
 
-                // enemy step trigger
-                if (findPioneer.type != MapPioneerType.player && findPioneer.faction == MapMemberFactionType.enemy) {
-                    NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneerId: findPioneer.id, isStay: false });
-                }
+                // old logic: enemy step trigger
+                // now donn't trigger step meet 5-29
+                // if (findPioneer.type != MapPioneerType.player && findPioneer.faction == MapMemberFactionType.enemy) {
+                //     NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneerId: findPioneer.id, isStay: false });
+                // }
             }
             if (findPioneer.movePaths.length == 0) {
                 // move over trigger
@@ -218,20 +160,6 @@ export class PioneersDataMgr {
             }
         }
     }
-
-    public bindPlayerNFT(pioneerId: string, NFT: NFTPioneerObject) {
-        const findPioneer = this.getById(pioneerId) as MapPlayerPioneerObject;
-        if (findPioneer == undefined) {
-            return;
-        }
-        findPioneer.NFTId = NFT.uniqueId;
-
-        this.changeHpMax(pioneerId, NFT.hp);
-        this.changeAttack(pioneerId, NFT.attack);
-        this.changeDefend(pioneerId, NFT.defense);
-        this.changeSpeed(pioneerId, NFT.speed);
-    }
-    public unbindPlayerNFT(pioneerId: string, NFT: NFTPioneerObject) {}
 
     private _initData() {
         if (NetGlobalData.usermap == null) {
@@ -252,92 +180,64 @@ export class PioneersDataMgr {
     }
 
     private _initInterval() {
-        setInterval(() => {
-            for (const pioneer of this._pioneers) {
-                if (pioneer.show) {
-                    if (pioneer.actionType == MapPioneerActionType.idle) {
-                        // xx wait player cannot do logic
-                        if (pioneer.type != MapPioneerType.player && pioneer.logics.length > 0) {
-                            const logic = pioneer.logics[0];
-                            let logicMove: boolean = false;
-                            if (logic.type == MapPioneerLogicType.stepmove) {
-                                if (logic.repeat > 0 || logic.repeat == -1) {
-                                    if (logic.currentCd > 0) {
-                                        //move cd count
-                                        logic.currentCd -= 1;
-                                    }
-                                    if (logic.currentCd == 0) {
-                                        logicMove = true;
-                                        logic.currentCd = logic.stepMove.cd;
-                                        if (logic.repeat > 0) {
-                                            logic.repeat -= 1;
-                                        }
-                                    }
-                                    if (logic.repeat == 0) {
-                                        pioneer.logics.splice(0, 1);
-                                    }
-                                }
-                            } else if (logic.type == MapPioneerLogicType.targetmove) {
-                                logicMove = true;
-                                pioneer.logics.splice(0, 1);
-                            } else if (logic.type == MapPioneerLogicType.patrol) {
-                                if (logic.repeat > 0 || logic.repeat == -1) {
-                                    if (logic.currentCd > 0) {
-                                        logic.currentCd -= 1;
-                                    }
-                                    if (logic.currentCd == 0) {
-                                        logic.currentCd = CommonTools.getRandomInt(logic.patrol.intervalRange[0], logic.patrol.intervalRange[1]);
-
-                                        logicMove = true;
-
-                                        if (logic.repeat > 0) {
-                                            logic.repeat -= 1;
-                                        }
-                                        if (logic.repeat == 0) {
-                                            pioneer.logics.splice(0, 1);
-                                        }
-                                    }
-                                }
-                            } else if (logic.type == MapPioneerLogicType.hide) {
-                                // this.changeShow(pioneer.id, false);
-                                pioneer.logics.splice(0, 1);
-                            }
-
-                            if (logicMove) {
-                                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_LOGIC_MOVE, { id: pioneer.id, logic: logic });
-                            }
-                        }
-                    }
-                }
-            }
-        }, 1000);
+        // wait TODO
+        // now donnot have auto move logic 5-29
+        // setInterval(() => {
+        //     for (const pioneer of this._pioneers) {
+        //         if (pioneer.show) {
+        //             if (pioneer.actionType == MapPioneerActionType.idle) {
+        //                 // xx wait player cannot do logic
+        //                 if (pioneer.type != MapPioneerType.player && pioneer.logics.length > 0) {
+        //                     const logic = pioneer.logics[0];
+        //                     let logicMove: boolean = false;
+        //                     if (logic.type == MapPioneerLogicType.stepmove) {
+        //                         if (logic.repeat > 0 || logic.repeat == -1) {
+        //                             if (logic.currentCd > 0) {
+        //                                 //move cd count
+        //                                 logic.currentCd -= 1;
+        //                             }
+        //                             if (logic.currentCd == 0) {
+        //                                 logicMove = true;
+        //                                 logic.currentCd = logic.stepMove.cd;
+        //                                 if (logic.repeat > 0) {
+        //                                     logic.repeat -= 1;
+        //                                 }
+        //                             }
+        //                             if (logic.repeat == 0) {
+        //                                 pioneer.logics.splice(0, 1);
+        //                             }
+        //                         }
+        //                     } else if (logic.type == MapPioneerLogicType.targetmove) {
+        //                         logicMove = true;
+        //                         pioneer.logics.splice(0, 1);
+        //                     } else if (logic.type == MapPioneerLogicType.patrol) {
+        //                         if (logic.repeat > 0 || logic.repeat == -1) {
+        //                             if (logic.currentCd > 0) {
+        //                                 logic.currentCd -= 1;
+        //                             }
+        //                             if (logic.currentCd == 0) {
+        //                                 logic.currentCd = CommonTools.getRandomInt(logic.patrol.intervalRange[0], logic.patrol.intervalRange[1]);
+        //                                 logicMove = true;
+        //                                 if (logic.repeat > 0) {
+        //                                     logic.repeat -= 1;
+        //                                 }
+        //                                 if (logic.repeat == 0) {
+        //                                     pioneer.logics.splice(0, 1);
+        //                                 }
+        //                             }
+        //                         }
+        //                     } else if (logic.type == MapPioneerLogicType.hide) {
+        //                         // this.changeShow(pioneer.id, false);
+        //                         pioneer.logics.splice(0, 1);
+        //                     }
+        //                     if (logicMove) {
+        //                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_LOGIC_MOVE, { id: pioneer.id, logic: logic });
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }, 1000);
     }
-
-    private _addListeners() {
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_GET_NEW_TALK, this._onPioneerGetTalk, this);
-        NotificationMgr.addListener(NotificationName.NFTDIDLEVELUP, this._onNFTPioneerDidLevelUp, this);
-    }
-
-    //--------------------------- notification
-    private _onPioneerGetTalk(data: { npcId: string; talkId: string }) {
-        this.changeTalk(data.npcId, data.talkId);
-    }
-
-    private _onNFTPioneerDidLevelUp(NFT: NFTPioneerObject) {
-        let currentPlayer: MapPlayerPioneerObject = null;
-        const allPlayers = this.getAllPlayers();
-        for (const player of allPlayers) {
-            if (player.NFTId == NFT.uniqueId) {
-                currentPlayer = player;
-                break;
-            }
-        }
-        if (currentPlayer == null) {
-            return;
-        }
-        this.changeHpMax(currentPlayer.id, NFT.hpGrowValue);
-        this.changeAttack(currentPlayer.id, NFT.attackGrowValue);
-        this.changeDefend(currentPlayer.id, NFT.defenseGrowValue);
-        this.changeSpeed(currentPlayer.id, NFT.speedGrowValue);
-    }
+    private _addListeners() {}
 }

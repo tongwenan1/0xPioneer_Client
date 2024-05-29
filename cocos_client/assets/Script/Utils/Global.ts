@@ -1,6 +1,5 @@
 import af from "../Manger/ArtifactMgr";
 import br from "../Manger/BattleReportsMgr";
-import bd from "../Manger/BuildingMgr";
 import ev from "../Manger/EvaluationMgr";
 import im from "../Manger/ItemMgr";
 import l from "../Manger/LanMgr";
@@ -13,7 +12,6 @@ import audio from "../Basic/AudioMgr";
 import res from "../Basic/ResourcesMgr";
 
 const ArtifactMgr = new af();
-const BuildingMgr = new bd();
 const EvaluationMgr = new ev();
 const ItemMgr = new im();
 const LanMgr = new l();
@@ -31,7 +29,6 @@ export {
     LocalDataLoader,
     ArtifactMgr,
     BattleReportsMgr,
-    BuildingMgr,
     EvaluationMgr,
     ItemMgr,
     LanMgr,

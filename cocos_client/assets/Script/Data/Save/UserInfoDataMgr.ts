@@ -1,14 +1,7 @@
 import NotificationMgr from "../../Basic/NotificationMgr";
-import InnerBuildingConfig from "../../Config/InnerBuildingConfig";
-import InnerBuildingLvlUpConfig from "../../Config/InnerBuildingLvlUpConfig";
-import LvlupConfig from "../../Config/LvlupConfig";
-import { InnerBuildingType, UserInnerBuildInfo } from "../../Const/BuildingDefine";
-import { GetPropData } from "../../Const/ConstDefine";
-import { LvlupConfigData } from "../../Const/Lvlup";
 import { NotificationName } from "../../Const/Notification";
 import { UserInfoObject } from "../../Const/UserInfoDefine";
-import { NetworkMgr } from "../../Net/NetworkMgr";
-import { WebsocketMsg, share } from "../../Net/msg/WebsocketMsg";
+import { share } from "../../Net/msg/WebsocketMsg";
 import NetGlobalData from "./Data/NetGlobalData";
 
 export default class UserInfoDataMgr {

@@ -11,8 +11,6 @@ export type DataMgrResData =
     | s2c_user.Iplayer_artifact_remove_res
     | s2c_user.Iplayer_treasure_open_res
     | s2c_user.Iplayer_point_treasure_open_res
-    | s2c_user.Ilocal_player_fight_res
-    | s2c_user.Iplayer_explore_res
     | s2c_user.Iplayer_talk_select_res
     | s2c_user.Iplayer_nft_lvlup_res
     | s2c_user.Iplayer_nft_rankup_res

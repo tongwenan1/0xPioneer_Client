@@ -1,4 +1,3 @@
-import { CountDataMgr } from "./Save/CountDataMgr";
 import { ArtifactDataMgr } from "./Save/ArtifactDataMgr";
 import { EraseShadowDataMgr } from "./Save/EraseShadowDataMgr";
 import { MapBuildingDataMgr } from "./Save/MapBuildingDataMgr";
@@ -16,7 +15,6 @@ export class SaveData {
     private _nftPioneerDataMgr: NFTPioneerDataMgr;
     private _eraseShadowDataMgr: EraseShadowDataMgr;
     private _mapBuildingDataMgr: MapBuildingDataMgr;
-    private _countDataMgr: CountDataMgr;
     private _artifactDataMgr: ArtifactDataMgr;
     private _battleReportDataMgr: BattleReportDataMgr;
     private _itemDataMgr: ItemDataMgr;
@@ -40,11 +38,6 @@ export class SaveData {
     public get mapBuilding() {
         return this._mapBuildingDataMgr;
     }
-
-    public get count() {
-        return this._countDataMgr;
-    }
-
     public get artifact() {
         return this._artifactDataMgr;
     }
@@ -78,7 +71,6 @@ export class SaveData {
         this._nftPioneerDataMgr = new NFTPioneerDataMgr();
         this._eraseShadowDataMgr = new EraseShadowDataMgr();
         this._mapBuildingDataMgr = new MapBuildingDataMgr();
-        this._countDataMgr = new CountDataMgr();
         this._artifactDataMgr = new ArtifactDataMgr();
         this._battleReportDataMgr = new BattleReportDataMgr();
         this._itemDataMgr = new ItemDataMgr();
@@ -99,12 +91,9 @@ export class SaveData {
         this._nftPioneerDataMgr.loadObj();
         this._eraseShadowDataMgr.loadObj();
 
-        // await this._eraseShadowDataMgr.loadObj(walletAddr);
-        await this._countDataMgr.loadObj(walletAddr);
         await this._battleReportDataMgr.loadObj(walletAddr);
     }
     public async save() {
-        await this._countDataMgr.saveObj();
         await this._battleReportDataMgr.saveObj();
     }
 }

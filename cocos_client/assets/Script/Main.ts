@@ -163,7 +163,6 @@ export class Main extends ViewController {
         // --- websocket common
         NetworkMgr.websocket.on("login_res", this.login_res);
         NetworkMgr.websocket.on("create_player_res", this.create_player_res);
-        // NetworkMgr.websocket.on("mark_data_dirty", this.mark_data_dirty);
 
         // DataMgr listener
         // websocket
@@ -203,11 +202,6 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_world_treasure_pool_change_res", DataMgr.player_world_treasure_pool_change_res);
 
         // pioneernft func
-        NetworkMgr.websocket.on("get_pioneers_res", DataMgr.get_pioneers_res);
-
-        NetworkMgr.websocket.on("player_talk_select_res", DataMgr.player_talk_select_res);
-        NetworkMgr.websocket.on("player_explore_res", DataMgr.player_explore_res);
-        NetworkMgr.websocket.on("player_fight_res", DataMgr.player_fight_res);
         NetworkMgr.websocket.on("player_treasure_open_res", DataMgr.player_treasure_open_res);
         NetworkMgr.websocket.on("player_point_treasure_open_res", DataMgr.player_point_treasure_open_res);
         NetworkMgr.websocket.on("player_artifact_equip_res", DataMgr.player_artifact_equip_res);
@@ -298,13 +292,4 @@ export class Main extends ViewController {
             NetworkMgr.websocketMsg.enter_game({});
         }
     };
-    // private mark_data_dirty = (e: any) => {
-    //     let p: s2c_user.Imark_data_dirty = e.data;
-    //     switch (p.type) {
-    //         case "pioneer":
-    //             // TODO: refetch pioneer data
-    //             NetworkMgr.websocketMsg.get_pioneers({});
-    //             break;
-    //     }
-    // };
 }

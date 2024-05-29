@@ -34,10 +34,8 @@ export class MainUI extends ViewController {
         this._gangsterComingTipView.active = false;
 
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.changeLang, this);
-        NotificationMgr.addListener(NotificationName.CHOOSE_GANGSTER_ROUTE, this._refreshInnerOuterChange, this);
         NotificationMgr.addListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
         NotificationMgr.addListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onInnerOuterChanged, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, this._onPioneerShowHideCountChanged, this);
 
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onPlayerLvlupChanged, this);
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._onPlayerExplorationValueChanged, this);
@@ -86,10 +84,8 @@ export class MainUI extends ViewController {
         super.viewDidDestroy();
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.changeLang, this);
-        NotificationMgr.removeListener(NotificationName.CHOOSE_GANGSTER_ROUTE, this._refreshInnerOuterChange, this);
         NotificationMgr.removeListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
         NotificationMgr.removeListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onInnerOuterChanged, this);
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_SHOW_HIDE_COUNT_CHANGED, this._onPioneerShowHideCountChanged, this);
 
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onPlayerLvlupChanged, this);
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._onPlayerExplorationValueChanged, this);
@@ -109,7 +105,6 @@ export class MainUI extends ViewController {
     }
     private _refreshInnerOuterChange() {
         let isEnemy: boolean = false;
-        // const building = BuildingMgr.getBuildingById("building_1");
         const building = DataMgr.s.mapBuilding.getBuildingById("building_1");
 
         if (building != null && building.faction == MapMemberFactionType.enemy) {
@@ -187,21 +182,6 @@ export class MainUI extends ViewController {
     //----------------------------------------------------- notification
     private _onPioneerShowChanged(data: { id: string; show: boolean }) {
         this.checkCanShowGansterComingTip(data.id);
-    }
-    private _onPioneerShowHideCountChanged(data: { id: string }) {
-        const pioneer = DataMgr.s.pioneer.getById(data.id);
-        if (pioneer == undefined) {
-            return;
-        }
-        // if (pioneer.id == "gangster_3" && pioneer.showHideStruct != null && pioneer.showHideStruct.countTime > 0 && pioneer.showHideStruct.isShow) {
-        //     this._gangsterComingTipView.active = true;
-        //     this._gangsterComingTipView.getChildByPath("Bg/BigTeamComing").active = false;
-        //     this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing").active = true;
-        //     this._gangsterComingTipView.getChildByPath("Bg/BigTeamWillComing/Tip").getComponent(Label).string = LanMgr.replaceLanById("200003", [
-        //         CommonTools.formatSeconds(pioneer.showHideStruct.countTime),
-        //     ]);
-        // }
-        this._gangsterComingTipView.active = false;
     }
 
     private _onInnerBuildingLatticeEditChanged() {

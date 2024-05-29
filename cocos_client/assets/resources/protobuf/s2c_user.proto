@@ -14,36 +14,29 @@ message login_res {
     optional bool isNew = 2; // =ture need create_player, else enter_game
     optional share.user_data data = 3; // user data
 }
-
 // create player
 message create_player_res {
     required int32 res = 1; // error code see {ServerErrorCode}
     optional player_sinfo sinfo = 2; // simple info of player
 }
-
 // enter game
 message enter_game_res {
     required int32 res = 1; // error code see {ServerErrorCode}
     optional share.player_data data = 2;
 }
+message player_rookie_finish_res {
+    required int32 res = 1;
+}
 
-// ----------------------------------------------------------------------------
 
-// get transactions info res
+// ------ chain ------
 message get_pending_res {
     required int32 res = 1;
     repeated share.tran_data pending = 2; // pending transactions
 }
-
-message pending_change {
-    required string changetype = 1; // new mod remove
-    required share.tran_data trandata = 2; // pending change tran data
-}
-
 message upload_pending_res {
     required int32 res = 1;
 }
-
 message get_pending_history_res {
     required int32 res = 1;
     optional uint32 page = 2;
@@ -51,78 +44,85 @@ message get_pending_history_res {
     optional uint32 total = 4;
     repeated share.tran_data history = 5;
 }
-
 message get_block_height_res {
     required int32 res = 1;
     optional uint32 height = 2;
     optional uint32 l1height = 3;
 }
+message check_unused_tx_status_res {
+    required int32 res = 1; // error code see {ServerErrorCode}, if res==ServerErrorCode.ResPlayerUnspendTxAlreadyUsed, than stop try and remove unused tx
+    optional player_unused_tx txStatus = 2; // txStatus
+    optional bool isUsed = 3; // is used
+}
+// chain: notify
+message pending_change {
+    required string changetype = 1; // new mod remove
+    required share.tran_data trandata = 2; // pending change tran data
+}
 
-message mint_package_res {
+
+// ------ get data ------
+message get_battle_report_res {
     required int32 res = 1;
-    required uint32 logid = 2;
+    repeated share.battle_report_data data = 2;
+}
+message get_user_settlement_info_res {
+    required int32 res = 1;
+    map<string, share.settlement_data> data = 2;
 }
 
-// ----------------------------------------------------------------------------
 
-message sinfo_change {
-    required share.player_sinfo info = 1;
+// ------ player ------
+// player: talk
+message player_talk_select_res {
+    required int32 res = 1;
+}
+// player: notify
+message player_heat_value_change_res {
+    required int32 res = 1;
+    required uint32 currentHeatValue = 2;
+}
+message player_exp_change {
+    required int32 addExp = 1; // exp change value
+    required uint32 newExp = 2; // player new exp after change
+    optional uint32 newLevel = 3; // player new level after change if exist
+    optional uint32 newPsycLimit = 4; // player new level after change if exist
+}
+message player_lvlup_change {
+    required uint32 hpMaxChangeValue = 1;
+    repeated string showBuildingIds = 2;
+    required uint32 newPsycLimit = 3;
+    required uint32 newLv = 4;
+    repeated share.item_data items = 5;
+    repeated share.artifact_info_data artifacts = 6;
 }
 
-message storhouse_change {
-    repeated share.item_data iteminfo = 1;
-}
 
-message artifact_change {
-    repeated share.artifact_info_data iteminfo = 1;
-}
-
-message pioneer_change {
-    repeated share.pioneer_data pioneers = 1;
-}
-
-message mapbuilding_change {
-    repeated share.mapbuilding_info_data mapbuildings = 1;
-}
-
-message building_change {
-    repeated share.building_data buildings = 1;
-}
-
-message nft_change {
-    repeated share.nfts_info_data nfts = 1;
-}
-
-// ----------------------------------------------------------------------------
-
+// ------ pioneer ------
+// pioneer: getinfo
 message get_pioneer_info_res {
     required int32 res = 1;
     repeated share.pioneer_data info = 2;
 }
-
-message get_mapbuilding_info_res {
+// pioneer: show/hide
+message player_pioneer_change_show_res {
     required int32 res = 1;
-    repeated share.mapbuilding_info_data info = 2;
+    required string pioneerId = 2;
+    required bool show = 3;
 }
-
-// ----------------------------------------------------------------------------
-
+// pioneer: move
 message player_move_res {
     required int32 res = 1;
     optional string pioneerId = 2;
     repeated share.pos2d movePath = 3;
 }
-
-message player_talk_select_res {
-    required int32 res = 1;
-}
-
+// pioneer: gather
 message player_gather_start_res {
     required int32 res = 1;
     required string buildingId = 2;
     required string pioneerId = 3;
 }
-
+// pioneer: explore
 message player_explore_start_res {
     required int32 res = 1;
     required string buildingId = 2;
@@ -138,16 +138,11 @@ message player_explore_gangster_start_res {
     required string pioneerId = 2;
     required string gangsterId = 3;
 }
-
+// pioneer: fight(map)
 message player_fight_start_res {
     required int32 res = 1;
 }
-
-message player_fight_res {
-    required int32 res = 1;
-    optional string winnerId = 2;
-}
-
+// pioneer: event
 message player_event_start_res {
     required int32 res = 1;
 }
@@ -155,119 +150,212 @@ message player_event_select_res {
     required int32 res = 1;
     optional string eventId = 2;
 }
+// pioneer: notify
+message sinfo_change {
+    required share.player_sinfo info = 1;
+}
+message pioneer_change {
+    repeated share.pioneer_data pioneers = 1;
+}
+message player_actiontype_change {
+    required int32 res = 1;
+    optional share.actiontype_change_data data = 2;
+}
+message player_heat_change {
+    required uint32 change = 1;
+    required uint32 newval = 2;
+    required uint32 newlotteryTimesLimit = 3;
+    required uint32 newlotteryProcessLimit = 4;
+}
+message player_map_pioneer_show_change {
+    required string pioneerId = 1;
+    required uint32 isShow = 2;
+}
+message player_map_pioneer_faction_change {
+    required string pioneerId = 1;
+    required uint32 faction = 2;
+}
+message mappioneer_reborn_change {
+    required int32 res = 1;
+}
+message pioneer_reborn_res {
+    required int32 res = 1;
+    required string pioneerId = 2;
+    required uint32 rebirthStartTime = 3;
+    required uint32 rebirthEndTime = 4;
+}
 
-message player_event_res {
+
+// ------ mapbuilding ------
+// mapbuilding: getinfo
+message get_mapbuilding_info_res {
+    required int32 res = 1;
+    repeated share.mapbuilding_info_data info = 2;
+}
+// mapbuilding: notify
+message mapbuilding_change {
+    repeated share.mapbuilding_info_data mapbuildings = 1;
+}
+message player_map_building_show_change {
+    required string buildingId = 1;
+    required uint32 isShow = 2;
+}
+message player_map_building_faction_change {
+    required string buildingId = 1;
+    required uint32 faction = 2;
+}
+message mapbuilding_reborn_change {
     required int32 res = 1;
 }
 
+
+// ------ task ------
+message get_user_task_info_res {
+    required int32 res = 1;
+    repeated share.task_data tasks = 2;
+}
+// task: notify
+message user_task_did_change {
+    required share.task_data task = 1;
+}
+message user_task_action_talk {
+    required string taskId= 1;
+}
+message user_task_action_getnewtalk {
+    required string npcId= 1;
+    required string talkId= 2;
+}
+
+
+// ------ item ------
 message player_item_use_res {
     required int32 res = 1;
 }
-
-message player_treasure_open_res {
-    required int32 res = 1;
+// item: notify
+message storhouse_change {
+    repeated share.item_data iteminfo = 1;
 }
 
-message player_point_treasure_open_res {
-    required int32 res = 1;
-}
 
+// ------ artifact ------
 message player_artifact_equip_res {
     required int32 res = 1;
     required share.artifact_info_data data = 2;
 }
-
 message player_artifact_remove_res {
     required int32 res = 1;
     required share.artifact_info_data data = 2;
 }
-
-message player_building_levelup_res {
-    required int32 res = 1;
-    optional share.building_data data = 2;
+// artifact: notify
+message artifact_change {
+    repeated share.artifact_info_data iteminfo = 1;
 }
 
-message player_get_auto_energy_res {
+
+// ------ treasure ------
+message get_treasure_info_res {
+    required int32 res = 1;
+    map<string, share.treasure_day_data> data = 2;
+}
+message player_treasure_open_res {
     required int32 res = 1;
 }
-
-message player_generate_energy_res {
+message player_point_treasure_open_res {
     required int32 res = 1;
 }
-
-message player_generate_troop_start_res {
-    required int32 res = 1;
-}
-
-message player_building_delegate_nft_res {
-    required int32 res = 1;
-}
-
-message player_nft_lvlup_res {
-    required int32 res = 1;
-    required share.nfts_info_data nftData = 2;
-}
-
-message player_nft_rankup_res {
-    required int32 res = 1;
-    required share.nfts_info_data nftData = 2;
-}
-
-message player_nft_skill_learn_res {
-    required int32 res = 1;
-}
-
-message player_nft_skill_forget_res {
-    required int32 res = 1;
-}
-
 message player_world_treasure_lottery_res {
     required int32 res = 1;
     required string itemId = 2;
     required uint32 num = 3;
 }
-
-message player_heat_value_change_res {
-    required int32 res = 1;
-    required uint32 currentHeatValue = 2;
-}
-
+// treasure: notify
 message player_world_treasure_pool_change_res {
     required int32 res = 1;
     required string itemId = 2;
     required uint32 num = 3;
 }
-
-message player_add_heat_value_res {
-    required int32 res = 1;
+message player_treasure_progress_change {
+    required int32 addProgress = 1;
+    required uint32 newProgress = 2;
+    required uint32 newLotteryProcessLimit = 3;
 }
 
-message player_rookie_finish_res {
+
+// ------ inner-building ------
+message player_building_levelup_res {
+    required int32 res = 1;
+    optional share.building_data data = 2;
+}
+message player_get_auto_energy_res {
     required int32 res = 1;
 }
+message player_generate_energy_res {
+    required int32 res = 1;
+}
+message player_generate_troop_start_res {
+    required int32 res = 1;
+}
+message player_building_delegate_nft_res {
+    required int32 res = 1;
+}
+message fetch_user_psyc_res {
+    required int32 res = 1;
+    optional float psycfetched = 2; // mint gold transaction hash, see in contract
+    optional string txhash = 3; // mint gold transaction hash, see in contract
+    optional string logid = 4; // mint gold transaction log id 
+}
+// inner-building: notify
+message building_change {
+    repeated share.building_data buildings = 1;
+}
 
+
+// ------ pioneerNFT ------
+message player_nft_lvlup_res {
+    required int32 res = 1;
+    required share.nfts_info_data nftData = 2;
+}
+message player_nft_rankup_res {
+    required int32 res = 1;
+    required share.nfts_info_data nftData = 2;
+}
+message player_nft_skill_learn_res {
+    required int32 res = 1;
+}
+message player_nft_skill_forget_res {
+    required int32 res = 1;
+}
+message player_bind_nft_res {
+    required int32 res = 1;
+    required share.pioneer_data pioneerData = 2;
+    required share.nfts_info_data nftData = 3;
+}
+// pioneerNFT: notify
+message nft_change {
+    repeated share.nfts_info_data nfts = 1;
+}
+
+
+// ------ wormhole ------
 message player_wormhole_set_defender_res {
     required int32 res = 1;
     map<string,string> defender = 2;
 }
-
 message player_wormhole_set_attacker_res {
     required int32 res = 1;
     map<string,string> attacker = 2;
     required string buildingId = 3;
 }
-
 message player_wormhole_fight_start_res {
     required int32 res = 1;
     required string buildingId = 2;
 }
-
+// wormhole: notify
 message player_wormhole_fight_attacked_res {
     required int32 res = 1;
     required string attackerName = 2;
     required string defenderUid = 3;
 }
-
 message player_wormhole_fight_res {
     required int32 res = 1;
     required string buildingId = 2;
@@ -278,137 +366,18 @@ message player_wormhole_fight_res {
     required bool fightResult = 7;
 }
 
-message player_bind_nft_res {
+
+// ------ test ------
+message player_add_heat_value_res {
     required int32 res = 1;
-    required share.pioneer_data pioneerData = 2;
-    required share.nfts_info_data nftData = 3;
 }
-
-message get_battle_report_res {
-    required int32 res = 1;
-    repeated share.battle_report_data data = 2;
-}
-
-message player_pioneer_change_show_res {
-    required int32 res = 1;
-    required string pioneerId = 2;
-    required bool show = 3;
-}
-
-message get_treasure_info_res {
-    required int32 res = 1;
-    map<string, share.treasure_day_data> data = 2;
-}
-
-// ----------------------------------------------------------------------------
-
-message fetch_user_psyc_res {
-    required int32 res = 1;
-    optional float psycfetched = 2; // mint gold transaction hash, see in contract
-    optional string txhash = 3; // mint gold transaction hash, see in contract
-    optional string logid = 4; // mint gold transaction log id 
-}
-
-// ----------------------------------------------------------------------------
-
-message player_exp_change {
-    required int32 addExp = 1; // exp change value
-    required uint32 newExp = 2; // player new exp after change
-    optional uint32 newLevel = 3; // player new level after change if exist
-    optional uint32 newPsycLimit = 4; // player new level after change if exist
-}
-
-message player_lvlup_change {
-    required uint32 hpMaxChangeValue = 1;
-    repeated string showBuildingIds = 2;
-    required uint32 newPsycLimit = 3;
-    required uint32 newLv = 4;
-    repeated share.item_data items = 5;
-    repeated share.artifact_info_data artifacts = 6;
-}
-
-message player_treasure_progress_change {
-    required int32 addProgress = 1;
-    required uint32 newProgress = 2;
-    required uint32 newLotteryProcessLimit = 3;
-}
-
-message player_actiontype_change {
-    required int32 res = 1;
-    optional share.actiontype_change_data data = 2;
-}
-
 message save_archives_res {
     required int32 res = 1;
 }
-
-message player_heat_change {
-    required uint32 change = 1;
-    required uint32 newval = 2;
-    required uint32 newlotteryTimesLimit = 3;
-    required uint32 newlotteryProcessLimit = 4;
-}
-
-message player_map_building_show_change {
-    required string buildingId = 1;
-    required uint32 isShow = 2;
-}
-
-message player_map_pioneer_show_change {
-    required string pioneerId = 1;
-    required uint32 isShow = 2;
-}
-
-message player_map_building_faction_change {
-    required string buildingId = 1;
-    required uint32 faction = 2;
-}
-
-message player_map_pioneer_faction_change {
-    required string pioneerId = 1;
-    required uint32 faction = 2;
-}
-
-// ----------------------------------------------------------------------------
-
-message get_user_task_info_res {
-    required int32 res = 1;
-    repeated share.task_data tasks = 2;
-}
-
-message user_task_did_change {
-    required share.task_data task = 1;
-}
-
-message user_task_action_talk {
-    required string taskId= 1;
-}
-
-message user_task_action_getnewtalk {
-    required string npcId= 1;
-    required string talkId= 2;
-}
-
-message mappioneer_reborn_change {
-    required int32 res = 1;
-}
-
-message mapbuilding_reborn_change {
-    required int32 res = 1;
-}
-
 message reborn_all_res {
     required int32 res = 1;
 }
 
-message pioneer_reborn_res {
-    required int32 res = 1;
-    required string pioneerId = 2;
-    required uint32 rebirthStartTime = 3;
-    required uint32 rebirthEndTime = 4;
-}
 
-message get_user_settlement_info_res {
-    required int32 res = 1;
-    map<string, share.settlement_data> data = 2;
-}
+
+

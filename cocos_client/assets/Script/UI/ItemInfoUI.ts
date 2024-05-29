@@ -96,11 +96,6 @@ export class ItemInfoUI extends ViewController {
         } else {
             if (this._canGetItem != null) {
                 NetworkMgr.websocketMsg.player_item_use({ itemId: this._canGetItem.itemConfigId, num: 1 });
-
-                DataMgr.s.count.addObj_useItem({
-                    itemId: this._canGetItem.itemConfigId,
-                    num: 1
-                });
             }
         }
         this.onTapClose();

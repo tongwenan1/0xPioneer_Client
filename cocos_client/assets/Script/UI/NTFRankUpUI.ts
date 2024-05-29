@@ -42,12 +42,12 @@ export class NTFRankUpUI extends ViewController {
         this._itemView = this.node.getChildByPath("__ViewContent/material/Item");
         this._itemView.removeFromParent();
 
-        NotificationMgr.addListener(NotificationName.NFTDIDRANKUP, this._onNFTDidRankUp, this);
+        NotificationMgr.addListener(NotificationName.NFT_RANK_UP, this._onNFTDidRankUp, this);
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
-        NotificationMgr.removeListener(NotificationName.NFTDIDRANKUP, this._onNFTDidRankUp, this);
+        NotificationMgr.removeListener(NotificationName.NFT_RANK_UP, this._onNFTDidRankUp, this);
     }
     protected viewPopAnimation(): boolean {
         return true;

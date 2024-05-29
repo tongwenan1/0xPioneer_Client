@@ -223,7 +223,7 @@ export interface MINING_FINISHED_DATA {
     buildingId: string;
     pioneerId: string;
     duration: number;
-    rewards: [];
+    rewards: any[];
 }
 
 export default class PioneerDefine {

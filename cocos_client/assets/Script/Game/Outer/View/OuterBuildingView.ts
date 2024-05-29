@@ -239,8 +239,6 @@ export class OuterBuildingView extends ViewController {
 
         NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
         NotificationMgr.addListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
-        NotificationMgr.addListener(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, this._onTavernCountDownTimeDidChange, this);
-        NotificationMgr.addListener(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, this._onTavernNewPioneerDidChange, this);
         NotificationMgr.addListener(NotificationName.ARTIFACT_EQUIP_DID_CHANGE, this._onArtifactEquipDidChange, this);
 
         this.schedule(() => {
@@ -269,8 +267,6 @@ export class OuterBuildingView extends ViewController {
 
         NotificationMgr.removeListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
         NotificationMgr.removeListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
-        NotificationMgr.removeListener(NotificationName.BUILDING_TAVERN_COUNT_DOWN_TIME_DID_CHANGE, this._onTavernCountDownTimeDidChange, this);
-        NotificationMgr.removeListener(NotificationName.BUILDING_NEW_PIONEER_DID_CHANGE, this._onTavernNewPioneerDidChange, this);
         NotificationMgr.removeListener(NotificationName.ARTIFACT_EQUIP_DID_CHANGE, this._onArtifactEquipDidChange, this);
     }
 
@@ -326,18 +322,6 @@ export class OuterBuildingView extends ViewController {
     private _onResourceChanged() {
         this._refreshBuildTipShow();
         this._refreshEnergyTipShow();
-    }
-    private _onTavernCountDownTimeDidChange(data: { id: string }) {
-        if (this._building == null || this._building.id != data.id) {
-            return;
-        }
-        this.refreshUI(this._building);
-    }
-    private _onTavernNewPioneerDidChange(data: { id: string }) {
-        if (this._building == null || this._building.id != data.id) {
-            return;
-        }
-        this.refreshUI(this._building);
     }
     private _onArtifactEquipDidChange(data: {}) {
         if (this._building == null || this._building.type != MapBuildingType.city) {

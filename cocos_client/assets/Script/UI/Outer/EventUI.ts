@@ -168,7 +168,6 @@ export class EventUI extends ViewController {
             //                 } else if (changeMethod == AttrChangeType.MUL) {
             //                     useValue = DataMgr.s.pioneer.getById(pioneerId)?.hpMax * changedValue;
             //                 }
-            //                 DataMgr.s.pioneer.changeHpMax(pioneerId, useValue);
             //             } else {
             //                 this._temporaryAttributes.set(pioneerId, { method: changeMethod, type: changedType, value: changedValue });
             //             }

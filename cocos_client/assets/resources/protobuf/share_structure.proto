@@ -1,6 +1,13 @@
 package share;
 syntax = "proto3";
 
+
+message player_unused_tx {
+    required string txHash = 1; // transaction hash
+    required string usage = 2; // usage: 
+}
+
+
 // user data
 message user_data {
     required string name = 1; // user name, ommited

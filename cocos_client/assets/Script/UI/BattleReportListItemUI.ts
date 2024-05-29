@@ -1,7 +1,7 @@
 import { _decorator, Button, Component, Label, Node, ProgressBar, RichText, Sprite, SpriteFrame } from "cc";
 import CommonTools from "db://assets/Script/Tool/CommonTools";
 import { BattleReportData, BattleReportExploringData, BattleReportType, LocationInfo } from "../Const/BattleReport";
-import { LanMgr, PioneerMgr } from "../Utils/Global";
+import { LanMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { LootsPopup } from "./LootsPopup";
 import { UIHUDController } from "./UIHUDController";
@@ -10,7 +10,6 @@ import GameMainHelper from "../Game/Helper/GameMainHelper";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import { FIGHT_FINISHED_DATA, MINING_FINISHED_DATA } from "../Const/PioneerDefine";
-import { NetworkMgr } from "../Net/NetworkMgr";
 import { EventUI } from "./Outer/EventUI";
 
 const { ccclass, property } = _decorator;
@@ -152,7 +151,6 @@ export class BattleReportListItemUI extends Component {
     }
 
     private _initWithMiningReport(report: BattleReportData): void {
-        // let buildingInfo = BuildingMgr.getBuildingById(report.data.buildingId);
         let buildingInfo = DataMgr.s.mapBuilding.getBuildingById(report.data.buildingId);
 
         report.data = report.data as MINING_FINISHED_DATA;
@@ -178,7 +176,6 @@ export class BattleReportListItemUI extends Component {
     }
 
     private _initWithExploreReport(report: BattleReportData): void {
-        // let buildingInfo = BuildingMgr.getBuildingById(report.data.buildingId);
         let buildingInfo = DataMgr.s.mapBuilding.getBuildingById(report.data.buildingId);
 
         report.data = report.data as BattleReportExploringData;
@@ -219,7 +216,6 @@ export class BattleReportListItemUI extends Component {
                 pos = this._locationInfo.pos;
                 break;
             case "building":
-                // let building = BuildingMgr.getBuildingById(this._locationInfo.buildingId);
                 let building = DataMgr.s.mapBuilding.getBuildingById(this._locationInfo.buildingId);
                 pos = building.stayMapPositions[0];
                 break;
@@ -269,7 +265,6 @@ export class BattleReportListItemUI extends Component {
 
     private _locationString(locationInfo: LocationInfo): string {
         if (locationInfo.type === "building") {
-            // const building = BuildingMgr.getBuildingById(locationInfo.buildingId);
             const building = DataMgr.s.mapBuilding.getBuildingById(locationInfo.buildingId);
             return `${LanMgr.getLanById(building.name)} <color=#a1cb7f>${CommonTools.formatMapPosition(building.stayMapPositions[0])}</color>`;
         } else {

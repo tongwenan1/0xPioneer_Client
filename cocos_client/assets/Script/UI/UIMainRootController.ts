@@ -38,16 +38,12 @@ export class UIMainRootController extends ViewController {
         super.viewDidStart();
 
         NotificationMgr.addListener(NotificationName.CHANGE_CURSOR, this._onCursorChanged, this);
-        NotificationMgr.addListener(NotificationName.DIALOG_SHOW, this._onDialogShow, this);
-        NotificationMgr.addListener(NotificationName.GAME_SHOW_CENTER_TIP, this._onShowCenterTip, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
         NotificationMgr.removeListener(NotificationName.CHANGE_CURSOR, this._onCursorChanged, this);
-        NotificationMgr.removeListener(NotificationName.DIALOG_SHOW, this._onDialogShow, this);
-        NotificationMgr.removeListener(NotificationName.GAME_SHOW_CENTER_TIP, this._onShowCenterTip, this);
     }
 
     //------------------------------------------ notification
@@ -56,18 +52,5 @@ export class UIMainRootController extends ViewController {
             type = 0;
         }
         MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[type].nativeUrl);
-    }
-    private async _onDialogShow(talkId: string) {
-        const talkData = TalkConfig.getById(talkId);
-        if (talkData == null) {
-            return;
-        }
-        const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
-        if (result.success) {
-            result.node.getComponent(DialogueUI).dialogShow(talkData, null);
-        }
-    }
-    private _onShowCenterTip(data: { tip: string }) {
-        UIHUDController.showCenterTip(data.tip);
     }
 }

@@ -30,4 +30,8 @@ export default class MapBuildingConfig {
     public static getAll(): MapBuildingConfigData[] {
         return this._confs;
     }
+
+    public static getById(id: string): MapBuildingConfigData | undefined {
+        return this._confs.find((conf) => conf.id === id);
+    }
 }

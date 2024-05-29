@@ -202,9 +202,6 @@ export class DialogueUI extends ViewController {
                 this._refreshUI();
             }
         } else {
-            DataMgr.s.count.addObj_selectDialog({
-                selectText: selectIndex.toString(),
-            });
             //send socket
             this._dialogStep += 1;
             if (this._dialogStep > this._talk.messsages.length - 1) {

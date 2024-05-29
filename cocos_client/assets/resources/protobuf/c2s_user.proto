@@ -3,76 +3,76 @@ syntax = "proto3";
 
 import "./share_structure.proto";
 
+
 // login
 message login {
     required string name = 1;  // name, ommited
     required string uid = 2; // uid from verify result
     required string token = 3; // token from verify result
 }
-
-// create player, only 1 plyaer per user
+// create player, only 1 player per user
 message create_player {
     required string pname = 1;  // player name
 }
-
 // enter game
-message enter_game {
+message enter_game { }
+// rookie finish
+message player_rookie_finish { }
 
-}
 
-// ----------------------------------------------------------------------------
-
-// get transactions info
-message get_pending {
-    
-}
-
-// upload pending txhash
+// ------ chain ------
+message get_pending { }
 message upload_pending {
     required string txhash = 1; // pending transaction hash
     required string txtype = 2; // pending transaction type
 }
-
-// get pending history
 message get_pending_history {
     required uint32 page = 1; // page
     required uint32 size = 2; // size
 }
-
-// get block height
-message get_block_height {
-    
+message get_block_height { }
+message check_unused_tx_status {
+    required player_unused_tx txStatus = 1; // txStatus
 }
 
-// ----------------------------------------------------------------------------
 
-message get_pioneer_info {
-    repeated string pioneerIds = 1;
-}
+// ------ get data ------
+message get_battle_report { }
+message get_user_settlement_info { }
 
-message get_mapbuilding_info {
-    repeated string mapbuildingIds = 1;
-}
 
-// ----------------------------------------------------------------------------
-message player_move {
-    required string pioneerId = 1;
-    repeated share.pos2d movePath = 2; 
-    required string feeTxhash = 3;
-}
-
+// ------ player ------
+// player: talk
 message player_talk_select {
     required string talkId = 1;
     required uint32 selectIndex = 2;
     required uint32 currStep = 3;
 }
 
+
+// ------ pioneer ------
+// pioneer: getinfo
+message get_pioneer_info {
+    repeated string pioneerIds = 1;
+}
+// pioneer: show/hide
+message player_pioneer_change_show {
+    required string pioneerId = 1;
+    required bool show = 2;
+}
+// pioneer: move
+message player_move {
+    required string pioneerId = 1;
+    repeated share.pos2d movePath = 2; 
+    required string feeTxhash = 3;
+}
+// pioneer: gather
 message player_gather_start {
     required string pioneerId = 1;
     required string resourceBuildingId = 2;
     required string feeTxhash = 3;
 }
-
+// pioneer: explore
 message player_explore_start {
     required string pioneerId = 1;
     required string buildingId = 2;
@@ -86,19 +86,12 @@ message player_explore_gangster_start {
     required string pioneerId = 1;
     required string gangsterId = 2;
 }
-
+// pioneer: fight(map)
 message player_fight_start {
     required string attackerId = 1;
     required string defenderId = 2;
 }
-
-message player_fight {
-    required bool isTakeTheInitiative = 1;
-    required bool isBuildingDefender = 2; 
-    required string attackerId = 3; 
-    required string defenderId = 4; 
-}
-
+// pioneer: event
 message player_event_start {
     required string pioneerId = 1;
     required string buildingId = 2;
@@ -109,139 +102,107 @@ message player_event_select {
     optional uint32 selectIdx = 3;
 }
 
-message player_event {
-    required string pioneerId = 1;
-    required string buildingId = 2;
+
+// ------ mapbuilding ------
+// mapbuilding: getinfo
+message get_mapbuilding_info {
+    repeated string mapbuildingIds = 1;
 }
 
+
+// ------ task ------
+message get_user_task_info { }
+
+
+// ------ item ------
 message player_item_use {
     required string itemId = 1;
     required uint32 num = 2;
 }
 
-message player_treasure_open {
-    required string boxId = 1;
-}
 
-message player_point_treasure_open {
-    required string boxId = 1;
-}
-
+// ------ artifact ------
 message player_artifact_equip {
     required string artifactId = 1;
     required int32 artifactEffectIndex = 2;
 }
-
 message player_artifact_remove {
     required string artifactId = 1;
 }
 
+
+// ------ treasure ------
+message get_treasure_info { }
+message player_treasure_open {
+    required string boxId = 1;
+}
+message player_point_treasure_open {
+    required string boxId = 1;
+}
+message player_world_treasure_lottery { }
+
+
+// ------ inner-building ------
 message player_building_levelup {
     required string innerBuildingId = 1;
 }
-
 message player_get_auto_energy {
-
 }
-
 message player_generate_energy {
     required string num = 1; 
 }
-
 message player_generate_troop_start {
     required uint32 num = 1;
 }
-
 message player_building_delegate_nft {
     required string innerBuildingId = 1;
     required string nftId = 2; 
 }
+message fetch_user_psyc { }
 
+
+// ------ pioneerNFT ------
 message player_nft_lvlup {
     required string nftId = 1;
     required uint32 levelUpNum = 2;
 }
-
 message player_nft_rankup {
     required string nftId = 1;
     required uint32 rankUpNum = 2;
 }
-
 message player_nft_skill_learn {
     required string nftId = 1;
     required string skillId = 2;
 }
-
 message player_nft_skill_forget {
     required string nftId = 1;
     required uint32 skillIndex = 2;
 }
-
-message player_world_treasure_lottery {
-    
+message player_bind_nft {
+    required string pioneerId = 1;
 }
 
-message player_add_heat_value {
-    required uint32 num = 1;
-}
 
-message player_rookie_finish {
-
-}
-
+// ------ wormhole ------
 message player_wormhole_set_defender {
     required string pioneerId = 1;
     required uint32 index = 2;
 }
-
 message player_wormhole_set_attacker {
     required string pioneerId = 1;
     required uint32 index = 2;
     required string buildingId = 3;
 }
-
 message player_wormhole_fight_start {
     required string buildingId = 1;
 }
 
-message player_bind_nft {
-    required string pioneerId = 1;
+
+// ------ test ------
+message player_add_heat_value {
+    required uint32 num = 1;
 }
-
-message player_pioneer_change_show {
-    required string pioneerId = 1;
-    required bool show = 2;
-}
-
-message get_treasure_info {
-
-}
-
-message get_battle_report {
-
-}
-
-// ----------------------------------------------------------------------------
-
-message fetch_user_psyc {
-}
-
-// ----------------------------------------------------------------------------
-
 message save_archives {
     required string archives = 1;
 }
-
-message reborn_all {
-
-}
-
-// ----------------------------- task
-message get_user_task_info {
-
-}
-
-// ----------------------------- settlement
-message get_user_settlement_info {
-
-}
+message reborn_all { }

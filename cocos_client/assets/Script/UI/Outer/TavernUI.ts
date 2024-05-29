@@ -116,7 +116,7 @@ export class TavernUI extends ViewController {
         if (this._buildingId == null) {
             return;
         }
-        DataMgr.s.mapBuilding.beginRecruitNewNft(this._buildingId, this._recruitTime);
+        // begin recruit nft
         await this.playExitAnimation();
         UIPanelManger.inst.popPanel();
     }

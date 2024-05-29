@@ -6,7 +6,7 @@ import { MapItemMonster } from "./View/MapItemMonster";
 import { MapPioneer } from "./View/MapPioneer";
 import { OuterMapCursorView } from "./View/OuterMapCursorView";
 import { GameExtraEffectType, MapMemberFactionType, MapMemberTargetType, PioneerGameTest, ResourceCorrespondingItem } from "../../Const/ConstDefine";
-import { BuildingMgr, GameMgr, ItemMgr, PioneerMgr, UserInfoMgr } from "../../Utils/Global";
+import { GameMgr, ItemMgr, PioneerMgr, UserInfoMgr } from "../../Utils/Global";
 import { OuterBuildingController } from "./OuterBuildingController";
 import { UIName } from "../../Const/ConstUIDefine";
 import { DialogueUI } from "../../UI/Outer/DialogueUI";
@@ -165,17 +165,11 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_SHOW_CHANGED, this._onPioneerShowChanged, this);
         // faction
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_FACTION_CHANGED, this._refreshUI, this);
-        // dealwith
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, this._onExploredBuilding, this);
         // move
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_BEGIN_MOVE, this._onPioneerBeginMove, this);
         NotificationMgr.addListener(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, this._onPlayerPioneerDidMoveOneStep, this);
         // fight
-        NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_BEGIN, this._onBeginFight, this);
-        NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_DID_ATTACK, this._onFightDidAttack, this);
-        NotificationMgr.addListener(NotificationName.MAP_MEMEBER_FIGHT_END, this._onEndFight, this);
         NotificationMgr.addListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
-
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_FIGHT_CHANGE, this._refreshUI, this);
     }
 
@@ -258,14 +252,10 @@ export class OuterPioneerController extends ViewController {
         // faction
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_FACTION_CHANGED, this._refreshUI, this);
         // dealwith
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EXPLORED_BUILDING, this._onExploredBuilding, this);
         // move
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_BEGIN_MOVE, this._onPioneerBeginMove, this);
         NotificationMgr.removeListener(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, this._onPlayerPioneerDidMoveOneStep, this);
         // fight
-        NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_BEGIN, this._onBeginFight, this);
-        NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_DID_ATTACK, this._onFightDidAttack, this);
-        NotificationMgr.removeListener(NotificationName.MAP_MEMEBER_FIGHT_END, this._onEndFight, this);
         NotificationMgr.removeListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_FIGHT_CHANGE, this._refreshUI, this);
     }
@@ -303,7 +293,6 @@ export class OuterPioneerController extends ViewController {
                         temple.getComponent(MapPioneer).refreshUI(pioneer);
                         temple.getComponent(MapPioneer).setEventWaitedCallback(async () => {
                             GameMainHelper.instance.isTapEventWaited = true;
-                            // const allBuildings = BuildingMgr.getAllBuilding();
                             const allBuildings = DataMgr.s.mapBuilding.getObj_building();
                             for (const building of allBuildings) {
                                 if (building.eventId == pioneer.actionEventId) {
@@ -414,71 +403,6 @@ export class OuterPioneerController extends ViewController {
         }
     }
 
-    private _refreshFightView(data: {
-        fightId: string;
-        isSelfAttack: boolean;
-        isAttackBuilding: boolean;
-        attackerInfo: { id: string; name: string; hp: number; hpMax: number };
-        defenderInfo: { id: string; name: string; hp: number; hpMax: number };
-        centerPos: Vec2[];
-    }) {
-        const { fightId, isSelfAttack, isAttackBuilding, attackerInfo, defenderInfo, centerPos } = data;
-        const attacker = attackerInfo;
-        const defender = defenderInfo;
-        const attackerIsSelf = isSelfAttack;
-        const fightPositons = centerPos;
-        if (this._fightViewMap.has(fightId)) {
-            this._fightViewMap.get(fightId).refreshUI(attacker, defender, attackerIsSelf);
-        } else {
-            const fightView = instantiate(this.fightPrefab).getComponent(OuterFightView);
-            fightView.node.active = true;
-            fightView.refreshUI(attacker, defender, attackerIsSelf);
-            fightView.node.setParent(this.node);
-            if (fightPositons.length == 7) {
-                fightView.node.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(fightPositons[3].x, fightPositons[3].y));
-            } else if (fightPositons.length == 3) {
-                const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(fightPositons[0].x, fightPositons[0].y);
-                const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(fightPositons[1].x, fightPositons[1].y);
-                fightView.node.setWorldPosition(v3(beginWorldPos.x, endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2, 0));
-            } else if (fightPositons.length > 0) {
-                fightView.node.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(fightPositons[0].x, fightPositons[0].y));
-            }
-            this._fightViewMap.set(fightId, fightView);
-        }
-        let isEndFight: boolean = attacker.hp <= 0 || defender.hp <= 0;
-        if (this._pioneerMap.has(attacker.id)) {
-            const attackView = this._pioneerMap.get(attacker.id);
-            if (isEndFight) {
-                const pioneer = DataMgr.s.pioneer.getById(attacker.id);
-                if (pioneer != null && pioneer.show) {
-                    this.scheduleOnce(() => {
-                        attackView.active = true;
-                    }, 0.8);
-                }
-            } else {
-                attackView.active = false;
-            }
-        }
-        if (isAttackBuilding) {
-            const buildingView = this.node.getComponent(OuterBuildingController).getBuildingView(defender.id);
-            if (buildingView != null) {
-                buildingView.showName(isEndFight);
-            }
-        } else if (this._pioneerMap.has(defender.id)) {
-            const defendView = this._pioneerMap.get(defender.id);
-            if (isEndFight) {
-                const pioneer = DataMgr.s.pioneer.getById(defender.id);
-                if (pioneer != null && pioneer.show) {
-                    this.scheduleOnce(() => {
-                        defendView.active = true;
-                    }, 0.8);
-                }
-            } else {
-                defendView.active = false;
-            }
-        }
-    }
-
     private _addFootSteps(path: TilePos[], isTargetPosShowFlag: boolean = false): Node[] {
         const mapBottomView = this.node.getComponent(OuterTiledMapActionController).mapBottomView();
         if (mapBottomView == null) {
@@ -540,24 +464,6 @@ export class OuterPioneerController extends ViewController {
             }
         }
         return footViews;
-    }
-
-    private _checkInMainCityRangeAndHealHpToMax(pioneerId: string) {
-        const mainCityId = "building_1";
-        const pioneer = DataMgr.s.pioneer.getById(pioneerId);
-
-        // const mainCity = BuildingMgr.getBuildingById(mainCityId);
-        const mainCity = DataMgr.s.mapBuilding.getBuildingById(mainCityId);
-
-        if (mainCity != null && mainCity.faction != MapMemberFactionType.enemy && pioneer != null && pioneer.show) {
-            let radialRange = DataMgr.s.userInfo.data.cityRadialRange;
-            radialRange = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.CITY_RADIAL_RANGE, radialRange);
-
-            const isInCityRange: boolean = BuildingMgr.checkMapPosIsInBuilingRange(pioneer.stayPos, mainCityId, radialRange);
-            if (isInCityRange && pioneer.hp < pioneer.hpMax) {
-                // PioneerMgr.pioneerHealHpToMax(pioneerId);
-            }
-        }
     }
 
     //--------------------------------------------- notification
@@ -645,12 +551,6 @@ export class OuterPioneerController extends ViewController {
         }
         this._refreshUI();
     }
-    private _onExploredBuilding(data: { id: string }): void {
-        // const building = BuildingMgr.getBuildingById(buildingId);
-        const building = DataMgr.s.mapBuilding.getBuildingById(data.id);
-        if (building != null) {
-        }
-    }
     private _onPioneerBeginMove(data: { id: string; showMovePath: boolean }): void {
         const pioneer = DataMgr.s.pioneer.getById(data.id);
         if (this._actionShowPioneerId == data.id) {
@@ -679,48 +579,7 @@ export class OuterPioneerController extends ViewController {
             }
         }
         this.node.getComponent(OuterTiledMapActionController).sortMapItemSiblingIndex();
-        this._checkInMainCityRangeAndHealHpToMax(data.id);
     }
-
-    private _onBeginFight(data: {
-        fightId: string;
-        isSelfAttack: boolean;
-        isAttackBuilding: boolean;
-        attackerInfo: { id: string; name: string; hp: number; hpMax: number };
-        defenderInfo: { id: string; name: string; hp: number; hpMax: number };
-        centerPos: Vec2[];
-    }): void {
-        this._refreshFightView(data);
-    }
-    private _onFightDidAttack(data: {
-        fightId: string;
-        isSelfAttack: boolean;
-        isAttackBuilding: boolean;
-        attackerInfo: { id: string; name: string; hp: number; hpMax: number };
-        defenderInfo: { id: string; name: string; hp: number; hpMax: number };
-        centerPos: Vec2[];
-    }): void {
-        this._refreshFightView(data);
-    }
-    private _onEndFight(data: { fightId: string; isSelfWin: boolean; playerPioneerId: string }): void {
-        //fightview destroy
-        if (this._fightViewMap.has(data.fightId)) {
-            const fightView = this._fightViewMap.get(data.fightId);
-            const resultView = instantiate(this.fightResultPrefab);
-            resultView.setParent(fightView.node.parent);
-            resultView.position = fightView.node.position;
-            resultView.getComponent(OuterFightResultView).showResult(data.isSelfWin, () => {
-                resultView.destroy();
-            });
-            fightView.node.destroy();
-            this._fightViewMap.delete(data.fightId);
-        }
-
-        if (data.playerPioneerId != null) {
-            this._checkInMainCityRangeAndHealHpToMax(data.playerPioneerId);
-        }
-    }
-
     private _onMapFakeFightShow(data: { stayPositions: Vec2[] }) {
         const fightView = instantiate(this.onlyFightPrefab);
         fightView.setParent(this.node);
