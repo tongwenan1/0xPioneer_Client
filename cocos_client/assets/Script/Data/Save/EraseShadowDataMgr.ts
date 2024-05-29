@@ -1,5 +1,6 @@
 import { Vec2 } from "cc";
 import CLog from "../../Utils/CLog";
+import NetGlobalData from "./Data/NetGlobalData";
 
 export class EraseShadowDataMgr {
     private _data: Vec2[];
@@ -8,19 +9,8 @@ export class EraseShadowDataMgr {
 
     public constructor() {}
 
-    public async loadObj(walletAddr: string) {
-        this._key = walletAddr + "|" + this._baseKey;
-        if (this._data == null) {
-            this._data = [];
-            const data = localStorage.getItem(this._key);
-            if (data) {
-                for (const vec of JSON.parse(data)) {
-                    this._data.push(new Vec2(vec.x, vec.y));
-                }
-            }
-
-            CLog.debug("EraseShadowDataMgr: loadObj, ", this._data);
-        }
+    public async loadObj() {
+        this._initData();
     }
 
     public getObj() {
@@ -33,5 +23,17 @@ export class EraseShadowDataMgr {
 
     public async saveObj() {
         localStorage.setItem(this._key, JSON.stringify(this._data));
+    }
+
+
+    private _initData() {
+        if (NetGlobalData.shadows == null) {
+            return;
+        }
+        this._data = [];
+        const shadows = NetGlobalData.shadows;
+        for (let i = 0; i < shadows.length; i++) {
+            this._data.push(new Vec2(shadows[i].x, shadows[i].y));
+        }
     }
 }

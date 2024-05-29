@@ -746,6 +746,7 @@ export namespace share {
         nfts?: Infts_data;
         mapbuilding?: Imapbuilding_data;
         tasks?: Itask_data[];
+        shadows?: pos2d[];
     }
 
     export interface Istorehouse_data {

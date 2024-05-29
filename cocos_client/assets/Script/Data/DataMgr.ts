@@ -66,6 +66,7 @@ export class DataMgr {
                 NetGlobalData.nfts = p.data.info.nfts;
                 NetGlobalData.mapBuildings = p.data.info.mapbuilding;
                 NetGlobalData.tasks = p.data.info.tasks;
+                NetGlobalData.shadows = p.data.info.shadows;
                 // load save data
                 await DataMgr.s.load(this.r.wallet.addr);
 

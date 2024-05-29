@@ -51,6 +51,7 @@ message player_info {
     optional nfts_data nfts = 6;
     optional mapbuilding_data mapbuilding = 7;
     repeated task_data tasks = 8;
+    repeated pos2d shadows = 9;
 }
 
 message storehouse_data {

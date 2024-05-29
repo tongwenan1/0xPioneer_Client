@@ -97,8 +97,9 @@ export class SaveData {
         this._pioneersDataMgr.loadObj();
         this._mapBuildingDataMgr.loadObj();
         this._nftPioneerDataMgr.loadObj();
+        this._eraseShadowDataMgr.loadObj();
 
-        await this._eraseShadowDataMgr.loadObj(walletAddr);
+        // await this._eraseShadowDataMgr.loadObj(walletAddr);
         await this._countDataMgr.loadObj(walletAddr);
         await this._battleReportDataMgr.loadObj(walletAddr);
     }
