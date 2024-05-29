@@ -36,7 +36,6 @@ export class NFTInfoUI extends ViewController {
         super.viewDidLoad();
 
         this._currentIndex = 0;
-        this._NFTDatas = DataMgr.s.nftPioneer.getAll();
 
         this._skillContent = this.node.getChildByPath("__ViewContent/Skill/Content");
         this._skillItem = this._skillContent.getChildByPath("SkillItem");
@@ -67,8 +66,10 @@ export class NFTInfoUI extends ViewController {
     }
 
     private _refreshUI() {
+        this._NFTDatas = DataMgr.s.nftPioneer.getAll();
         this._currentIndex = Math.max(0, Math.min(this._NFTDatas.length - 1, this._currentIndex));
         const data = this._NFTDatas[this._currentIndex];
+        
         const currentSkillLimit: number = (ConfigConfig.getConfig(ConfigType.NFTRaritySkillLimitNum) as NFTRaritySkillLimitNumParam).limitNumMap.get(
             data.rarity
         );

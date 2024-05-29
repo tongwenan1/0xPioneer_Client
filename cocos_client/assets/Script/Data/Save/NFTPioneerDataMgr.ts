@@ -65,13 +65,15 @@ export default class NFTPioneerDataMgr {
         let isExit: boolean = false;
         for (let i = 0; i < this._data.length; i++) {
             if (this._data[i].uniqueId == netData.uniqueId) {
-                isExit = true;
                 this._data[i] = newObj;
+                isExit = true;
+                break;
             }
         }
         if (!isExit) {
             this._data.push(newObj);
         }
+        return newObj;
     }
 
     public NFTLevelUp(netData: share.Infts_info_data) {
@@ -89,26 +91,18 @@ export default class NFTPioneerDataMgr {
         NotificationMgr.triggerEvent(NotificationName.NFT_RANK_UP, { nft: obj });
     }
 
-    public NFTLearnSkill(NFTId: string, skillId: string) {
-        const object = this.getNFTById(NFTId);
+    public NFTLearnSkill(netData: share.Infts_info_data) {
+        const object = this.replaceData(netData);
         if (object == undefined) {
             return;
         }
-        object.skills.push({
-            id: skillId,
-            isOriginal: false,
-        });
         NotificationMgr.triggerEvent(NotificationName.NFT_LEARN_SKILL);
     }
-    public NFTForgetSkill(NFTId: string, skillIndex: number) {
-        const object = this.getNFTById(NFTId);
+    public NFTForgetSkill(netData: share.Infts_info_data) {
+        const object = this.replaceData(netData);
         if (object == undefined) {
             return;
         }
-        if (skillIndex < 0 || skillIndex >= object.skills.length) {
-            return;
-        }
-        object.skills.splice(skillIndex, 1);
         NotificationMgr.triggerEvent(NotificationName.NFT_FORGET_SKILL);
     }
 

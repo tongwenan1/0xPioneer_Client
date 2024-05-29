@@ -28,6 +28,5 @@ export class EraseShadowDataMgr {
         for (let i = 0; i < shadows.length; i++) {
             this._data.push(new Vec2(shadows[i].x, shadows[i].y));
         }
-        console.log("exce shadow: ", this._data);
     }
 }

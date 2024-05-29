@@ -789,11 +789,6 @@ export class OuterTiledMapActionController extends ViewController {
                                 //     if (uploadPath.length > 0) {
                                 //         targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
                                 //     }
-                                //     DataMgr.setTempSendData("player_move_res", {
-                                //         pioneerId: currentActionPioneer.id,
-                                //         movePath: movePaths,
-                                //         costEnergyNum: costEnergy,
-                                //     });
                                 //     NetworkMgr.websocketMsg.player_move({
                                 //         pioneerId: currentActionPioneer.id,
                                 //         movePath: JSON.stringify(uploadPath),

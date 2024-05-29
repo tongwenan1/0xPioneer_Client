@@ -1,15 +1,8 @@
-import { Vec2 } from "cc";
 import ProtobufConfig from "../../Config/ProtobufConfig";
-import { MapPioneerActionType, MapPioneerAttributesChangeModel, MapPioneerObject } from "../../Const/PioneerDefine";
+import { MapPioneerActionType } from "../../Const/PioneerDefine";
 import { natrium_ws } from "../../natrium/client/natrium_ws";
 import { registermsg } from "../../natrium/share/msgs/registermsg";
 import CLog from "../../Utils/CLog";
-import { TilePos } from "../../Game/TiledMap/TileTool";
-import ItemData from "../../Const/Item";
-import { InnerBuildingType } from "../../Const/BuildingDefine";
-import ArtifactData from "../../Model/ArtifactData";
-import { EventConfigData } from "../../Const/Event";
-import { MapBuildingObject } from "../../Const/MapBuilding";
 
 export class WebsocketMsg {
     private _websocket_host: string;
@@ -346,7 +339,7 @@ export namespace c2s_user {
     }
     export interface Iplayer_nft_skill_learn {
         nftId: string;
-        skillId: string;
+        skillItemId: string;
     }
     export interface Iplayer_nft_skill_forget {
         nftId: string;
@@ -467,6 +460,7 @@ export namespace s2c_user {
         eventId: string;
     }
     export interface Iplayer_talk_select_res {
+        res: number;
         talkId: string;
         selectIndex: number;
     }
@@ -478,18 +472,6 @@ export namespace s2c_user {
     export interface Iplayer_item_use_res {
         res: number;
     }
-    export interface Iplayer_treasure_open_res {
-        boxId: string;
-        items: ItemData[];
-        artifacts: ArtifactData[];
-        subItems?: ItemData[];
-    }
-    export interface Iplayer_point_treasure_open_res {
-        boxId: string;
-        items: ItemData[];
-        artifacts: ArtifactData[];
-        subItems?: ItemData[];
-    }
     export interface Iplayer_artifact_equip_res {
         res: number;
         data: share.Iartifact_info_data;
@@ -500,10 +482,6 @@ export namespace s2c_user {
     }
     export interface Ibuilding_change {
         buildings: share.Ibuilding_data[];
-    }
-    export interface Iplayer_generate_energy_res {
-        num: number;
-        subItems: ItemData[];
     }
     export interface Iplayer_building_delegate_nft_res {
         innerBuildingId: string;
@@ -518,13 +496,12 @@ export namespace s2c_user {
         nftData: share.Infts_info_data;
     }
     export interface Iplayer_nft_skill_learn_res {
-        nftId: string;
-        skillId: string;
-        subItems: ItemData[];
+        res: number;
+        nftData: share.Infts_info_data;
     }
     export interface Iplayer_nft_skill_forget_res {
-        nftId: string;
-        skillIndex: number;
+        res: number;
+        nftData: share.Infts_info_data;
     }
 
     export interface Iplayer_heat_value_change_res {

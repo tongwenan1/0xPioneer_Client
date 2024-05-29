@@ -34,6 +34,62 @@ export default class CommonTools {
         return null;
     }
 
+    // Convert offset coordinates (x, y) to cube coordinates (q, r, s)
+    public static offsetToCube(x: number, y: number) {
+        let q = x - Math.floor(y / 2);
+        let r = y;
+        let s = -q - r;
+        return { q, r, s };
+    }
+
+    // Convert cube coordinates (q, r, s) to offset coordinates (x, y)
+    public static cubeToOffset(q: number, r: number) {
+        let x = q + Math.floor(r / 2);
+        let y = r;
+        return { x, y };
+    }
+
+    // Get all hexes in a range z from (x, y)
+    public static hexesInRange(x: number, y: number, z: number) {
+        let center = this.offsetToCube(x, y);
+        let results = [];
+
+        for (let dq = -z; dq <= z; dq++) {
+            for (let dr = Math.max(-z, -dq - z); dr <= Math.min(z, -dq + z); dr++) {
+                let ds = -dq - dr;
+                let q = center.q + dq;
+                let r = center.r + dr;
+                let s = center.s + ds;
+                let offset = this.cubeToOffset(q, r);
+                results.push(offset);
+            }
+        }
+
+        return results;
+    }
+
+    // Get the coordinate at distance z in the right-down direction from (x, y)
+    public static hexRightDown(x: number, y: number, z: number) {
+        // Convert the offset coordinates to cube coordinates
+        let { q, r, s } = this.offsetToCube(x, y);
+        // - +  left down
+        // - 0  left
+        // + -  right top
+        // + 0  right
+        // 0 - left top
+        // 0 + right down
+        // Calculate the new cube coordinates in the right-down direction
+        let qPrime = q + z;
+        let rPrime = r;
+        let sPrime = s;
+
+        // Convert the new cube coordinates back to offset coordinates
+        let { x: xPrime, y: yPrime } = this.cubeToOffset(qPrime, rPrime);
+
+        return { x: xPrime, y: yPrime };
+    }
+   
+
     //------------------------------------------- time
     public static getNextDayAMTimestamp(hour: number): number {
         // current date
@@ -148,18 +204,18 @@ export default class CommonTools {
         if (map1.size !== map2.size) {
             return false;
         }
-    
+
         // 遍历第一个 Map 的每个键值对
         for (let [key, value] of map1) {
             if (!map2.has(key)) {
                 return false;
             }
-    
+
             if (map2.get(key) !== value) {
                 return false;
             }
         }
-    
+
         return true;
     }
 

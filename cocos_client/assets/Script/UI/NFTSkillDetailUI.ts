@@ -78,10 +78,6 @@ export class NFTSkillDetailUI extends ViewController {
             return;
         }
         result.node.getComponent(AlterView).showTip(LanMgr.replaceLanById("106006", [this._data.name, LanMgr.getLanById(this._skillConfig.name)]), async () => {
-            DataMgr.setTempSendData("player_nft_skill_forget_res", {
-                nftId: this._data.uniqueId,
-                skillIndex: this._skillIndex
-            });
             NetworkMgr.websocketMsg.player_nft_skill_forget({
                 nftId: this._data.uniqueId,
                 skillIndex: this._skillIndex

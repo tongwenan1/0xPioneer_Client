@@ -1,7 +1,5 @@
-import { Vec2 } from "cc";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { InnerBuildingType, MapBuildingType } from "../Const/BuildingDefine";
-import { AttrChangeType, DataMgrResData, GameExtraEffectType, GetPropData, MapMemberFactionType, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import ItemData, { ItemConfigType, ItemType } from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import { MINING_FINISHED_DATA, MapNpcPioneerObject, MapPioneerActionType, MapPioneerEventAttributesChangeType } from "../Const/PioneerDefine";
@@ -32,12 +30,10 @@ import MapBuildingConfig from "../Config/MapBuildingConfig";
 export class DataMgr {
     public static r: RunData;
     public static s: SaveData;
-    public static socketSendData: Map<string, DataMgrResData>;
 
     public static async init(): Promise<boolean> {
         DataMgr.r = new RunData();
         DataMgr.s = new SaveData();
-        DataMgr.socketSendData = new Map();
         return true;
     }
 
@@ -133,7 +129,7 @@ export class DataMgr {
         DataMgr.s.artifact.changeObj_artifact_effectIndex(p.data.artifactConfigId, p.data.effectIndex);
     };
     public static player_artifact_remove_res = (e: any) => {
-        const p: s2c_user.Iplayer_artifact_equip_res = e.data;
+        const p: s2c_user.Iplayer_artifact_remove_res = e.data;
         if (p.res !== 1) {
             return;
         }
@@ -181,7 +177,6 @@ export class DataMgr {
                         if (oldData.actionType == MapPioneerActionType.mining && oldData.actionBuildingId != null) {
                             // mining over
                             const config = MapBuildingConfig.getById(oldData.actionBuildingId);
-                            console.log("exce config:", config);
                             if (config != undefined && config.resources != null) {
                                 const reward: [string, number] = config.resources;
                                 NotificationMgr.triggerEvent(NotificationName.MINING_FINISHED, {
@@ -455,47 +450,40 @@ export class DataMgr {
         NetworkMgr.websocketMsg.get_treasure_info({});
     };
     public static player_treasure_open_res = (e: any) => {
-        const key: string = "player_treasure_open_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_treasure_open_res;
-            DataMgr.s.userInfo.getExplorationReward(data.boxId);
-        }
+        // const key: string = "player_treasure_open_res";
+        // if (DataMgr.socketSendData.has(key)) {
+        //     const data: s2c_user.Iplayer_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_treasure_open_res;
+        //     DataMgr.s.userInfo.getExplorationReward(data.boxId);
+        // }
     };
     public static player_point_treasure_open_res = (e: any) => {
-        const key: string = "player_point_treasure_open_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_point_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_point_treasure_open_res;
-            DataMgr.s.userInfo.getPointExplorationReward(data.boxId);
-        }
-    };
-    public static player_generate_energy_res = (e: any) => {
-        const key: string = "player_generate_energy_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_generate_energy_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_generate_energy_res;
-            // upload resource changed inner_building-generate_energy
-        }
+        // const key: string = "player_point_treasure_open_res";
+        // if (DataMgr.socketSendData.has(key)) {
+        //     const data: s2c_user.Iplayer_point_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_point_treasure_open_res;
+        //     DataMgr.s.userInfo.getPointExplorationReward(data.boxId);
+        // }
     };
     public static player_building_delegate_nft_res = (e: any) => {
-        const key: string = "player_building_delegate_nft_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_building_delegate_nft_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_building_delegate_nft_res;
-            DataMgr.s.nftPioneer.NFTChangeWork(data.nftId, data.innerBuildingId as InnerBuildingType);
-        }
+        // const key: string = "player_building_delegate_nft_res";
+        // if (DataMgr.socketSendData.has(key)) {
+        //     const data: s2c_user.Iplayer_building_delegate_nft_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_building_delegate_nft_res;
+        //     DataMgr.s.nftPioneer.NFTChangeWork(data.nftId, data.innerBuildingId as InnerBuildingType);
+        // }
     };
 
     public static player_nft_skill_learn_res = (e: any) => {
-        const key: string = "player_nft_skill_learn_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_nft_skill_learn_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_skill_learn_res;
-            DataMgr.s.nftPioneer.NFTLearnSkill(data.nftId, data.skillId);
+        const p: s2c_user.Iplayer_nft_skill_learn_res = e.data;
+        if (p.res !== 1) {
+            return;
         }
+        DataMgr.s.nftPioneer.NFTLearnSkill(p.nftData);
     };
     public static player_nft_skill_forget_res = (e: any) => {
-        const key: string = "player_nft_skill_forget_res";
-        if (DataMgr.socketSendData.has(key)) {
-            const data: s2c_user.Iplayer_nft_skill_forget_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_nft_skill_forget_res;
-            DataMgr.s.nftPioneer.NFTForgetSkill(data.nftId, data.skillIndex);
+        const p: s2c_user.Iplayer_nft_skill_forget_res = e.data;
+        if (p.res !== 1) {
+            return;
         }
+        DataMgr.s.nftPioneer.NFTForgetSkill(p.nftData);
     };
 
     public static player_rookie_finish_res = (e: any) => {
@@ -516,11 +504,6 @@ export class DataMgr {
         }
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_LEVEL, p);
     };
-
-    ///////////////// websocketTempData
-    public static setTempSendData(key: string, data: DataMgrResData) {
-        DataMgr.socketSendData.set(key, data);
-    }
 
     /////////////// task
     public static user_task_action_getnewtalk = (e: any) => {

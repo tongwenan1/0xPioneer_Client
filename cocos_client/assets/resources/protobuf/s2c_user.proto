@@ -76,6 +76,8 @@ message get_user_settlement_info_res {
 // player: talk
 message player_talk_select_res {
     required int32 res = 1;
+    required string talkId = 2;
+    required int32 selectIndex = 3;
 }
 // player: notify
 message player_heat_value_change_res {
@@ -321,9 +323,11 @@ message player_nft_rankup_res {
 }
 message player_nft_skill_learn_res {
     required int32 res = 1;
+    required share.nfts_info_data nftData = 2;
 }
 message player_nft_skill_forget_res {
     required int32 res = 1;
+    required share.nfts_info_data nftData = 2;
 }
 message player_bind_nft_res {
     required int32 res = 1;

@@ -113,15 +113,12 @@ export class NFTSkillLearnUI extends ViewController {
             return;
         }
         result.node.getComponent(AlterView).showTip(LanMgr.replaceLanById("106005", [this._data.name, LanMgr.getLanById(config.itemName)]), async () => {
-            DataMgr.setTempSendData("player_nft_skill_learn_res", {
-                nftId: this._data.uniqueId,
-                skillId: config.skill_learn,
-                subItems: [new ItemData(itemConfigId, 1)],
-            });
             NetworkMgr.websocketMsg.player_nft_skill_learn({
                 nftId: this._data.uniqueId,
-                skillId: config.skill_learn,
+                skillItemId: itemConfigId,
             });
+            await this.playExitAnimation();
+            UIPanelManger.inst.popPanel();
         });
     }
 }

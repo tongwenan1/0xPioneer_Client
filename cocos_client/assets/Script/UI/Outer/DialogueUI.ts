@@ -34,7 +34,6 @@ export class DialogueUI extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
 
         this._roleViewNameMap.set(NPCNameLangType.Artisan, "artisan");
         this._roleViewNameMap.set(NPCNameLangType.DoomsdayGangBigTeam, "doomsdayGangBigTeam");
@@ -43,12 +42,15 @@ export class DialogueUI extends ViewController {
         this._roleViewNameMap.set(NPCNameLangType.Prophetess, "prophetess");
         this._roleViewNameMap.set(NPCNameLangType.SecretGuard, "secretGuard");
 
-        //listener socket
-        NetworkMgr.websocket.on("player_talk_select_res", this._on_player_talk_select_res.bind(this));
+        NetworkMgr.websocket.on("player_talk_select_res", this._on_player_talk_select_res);
+
+        NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
+
+        NetworkMgr.websocket.off("player_talk_select_res", this._on_player_talk_select_res);
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
     }
@@ -149,10 +151,6 @@ export class DialogueUI extends ViewController {
         if (this._dialogStep > this._talk.messsages.length - 2) {
             return;
         }
-        DataMgr.setTempSendData("player_talk_select_res", {
-            talkId: this._talk.id,
-            selectIndex: -1,
-        });
         NetworkMgr.websocketMsg.player_talk_select({
             talkId: this._talk.id,
             selectIndex: -1,
@@ -165,10 +163,6 @@ export class DialogueUI extends ViewController {
             return;
         }
         const selectIndex = parseInt(customEventData);
-        DataMgr.setTempSendData("player_talk_select_res", {
-            talkId: this._talk.id,
-            selectIndex: selectIndex,
-        });
         NetworkMgr.websocketMsg.player_talk_select({
             talkId: this._talk.id,
             selectIndex: selectIndex,
@@ -177,18 +171,17 @@ export class DialogueUI extends ViewController {
     }
 
     //------------------------------------------------ socket notification
-    private _on_player_talk_select_res(e: any) {
+    private _on_player_talk_select_res = (e: any) => {
+        const p: s2c_user.Iplayer_talk_select_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
         if (this._talk == null) {
             return;
         }
-        const data: s2c_user.Iplayer_talk_select_res = DataMgr.socketSendData.has("player_talk_select_res")
-            ? (DataMgr.socketSendData.get("player_talk_select_res") as s2c_user.Iplayer_talk_select_res)
-            : null;
-        if (data == null) {
-            return;
-        }
-
-        const { talkId, selectIndex } = data;
+        const talkId = p.talkId;
+        const selectIndex = p.selectIndex;
+        
         if (this._talk.id != talkId) {
             return;
         }

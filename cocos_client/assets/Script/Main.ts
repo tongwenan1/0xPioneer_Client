@@ -15,6 +15,7 @@ import ChainConfig from "./Config/ChainConfig";
 import CLog from "./Utils/CLog";
 import { EthereumEventData_accountChanged, EthereumEventData_chainChanged, EthereumEventData_init, EthereumEventType } from "./Net/ethers/Ethereum";
 import { s2c_user } from "./Net/msg/WebsocketMsg";
+import CommonTools from "./Tool/CommonTools";
 const { ccclass, property } = _decorator;
 
 @ccclass("Main")
@@ -206,10 +207,9 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_point_treasure_open_res", DataMgr.player_point_treasure_open_res);
         NetworkMgr.websocket.on("player_artifact_equip_res", DataMgr.player_artifact_equip_res);
         NetworkMgr.websocket.on("player_artifact_remove_res", DataMgr.player_artifact_remove_res);
-        NetworkMgr.websocket.on("player_generate_energy_res", DataMgr.player_generate_energy_res);
         NetworkMgr.websocket.on("player_building_delegate_nft_res", DataMgr.player_building_delegate_nft_res);
-        NetworkMgr.websocket.on("player_nft_skill_learn", DataMgr.player_nft_skill_learn_res);
-        NetworkMgr.websocket.on("player_nft_skill_forget", DataMgr.player_nft_skill_forget_res);
+        NetworkMgr.websocket.on("player_nft_skill_learn_res", DataMgr.player_nft_skill_learn_res);
+        NetworkMgr.websocket.on("player_nft_skill_forget_res", DataMgr.player_nft_skill_forget_res);
 
         NetworkMgr.websocket.on("player_rookie_finish_res", DataMgr.player_rookie_finish_res);
         NetworkMgr.websocket.on("player_lvlup_change", DataMgr.player_lvlup_change);

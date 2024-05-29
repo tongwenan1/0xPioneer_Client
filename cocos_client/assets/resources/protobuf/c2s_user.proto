@@ -45,7 +45,7 @@ message get_user_settlement_info { }
 // player: talk
 message player_talk_select {
     required string talkId = 1;
-    required uint32 selectIndex = 2;
+    required int32 selectIndex = 2;
     required uint32 currStep = 3;
 }
 
@@ -172,7 +172,7 @@ message player_nft_rankup {
 }
 message player_nft_skill_learn {
     required string nftId = 1;
-    required string skillId = 2;
+    required string skillItemId = 2;
 }
 message player_nft_skill_forget {
     required string nftId = 1;
