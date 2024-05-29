@@ -4,8 +4,6 @@ import NetGlobalData from "./Data/NetGlobalData";
 
 export class EraseShadowDataMgr {
     private _data: Vec2[];
-    private _baseKey: string = "erase_shadow";
-    private _key: string = "";
 
     public constructor() {}
 
@@ -21,19 +19,15 @@ export class EraseShadowDataMgr {
         this._data.push(data);
     }
 
-    public async saveObj() {
-        localStorage.setItem(this._key, JSON.stringify(this._data));
-    }
-
-
     private _initData() {
+        this._data = [];
         if (NetGlobalData.shadows == null) {
             return;
         }
-        this._data = [];
         const shadows = NetGlobalData.shadows;
         for (let i = 0; i < shadows.length; i++) {
             this._data.push(new Vec2(shadows[i].x, shadows[i].y));
         }
+        console.log("exce shadow: ", this._data);
     }
 }

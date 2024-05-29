@@ -104,7 +104,6 @@ export class SaveData {
         await this._battleReportDataMgr.loadObj(walletAddr);
     }
     public async save() {
-        await this._eraseShadowDataMgr.saveObj();
         await this._countDataMgr.saveObj();
         await this._battleReportDataMgr.saveObj();
     }

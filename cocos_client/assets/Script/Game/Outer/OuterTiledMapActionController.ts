@@ -138,23 +138,9 @@ export class OuterTiledMapActionController extends ViewController {
 
         this._initTileMap();
 
-        // // local shadow erase
-        // this._localEraseShadowWorldPos = [];
-        // const eraseShadowData: string = localStorage.getItem(this._localEraseDataKey);
-        // if (eraseShadowData != null) {
-        //     for (const temple of JSON.parse(eraseShadowData)) {
-        //         this._localEraseShadowWorldPos.push(v2(temple.x, temple.y));
-        //     }
-        // }
-        // for (const data of DataMgr.s.eraseShadow.get()) {
-        //     this._localEraseShadowWorldPos.push(v2(data.x, data.y));
-        // }
-        // for (const pos of this._localEraseShadowWorldPos) {
-        //     GameMainHelper.instance.tiledMapShadowErase(pos);
-        // }
-
-        for (const pos of DataMgr.s.eraseShadow.getObj()) {
-            GameMainHelper.instance.tiledMapShadowErase(pos);
+        const allShadows = DataMgr.s.eraseShadow.getObj();
+        for (const shadow of allShadows) {
+            GameMainHelper.instance.tiledMapShadowErase(shadow);
         }
     }
     protected viewDidStart(): void {
@@ -397,7 +383,6 @@ export class OuterTiledMapActionController extends ViewController {
     }
 
     private _lastPioneerStayPos: Map<string, Vec2> = new Map();
-    private _lastTime: number = 0;
     private async _updateTiledmap(delta: number) {
         if (!GameMainHelper.instance.isTiledMapHelperInited) {
             return;
@@ -405,7 +390,6 @@ export class OuterTiledMapActionController extends ViewController {
         GameMainHelper.instance.tiledMapShadowUpdate(delta);
         //clean pioneer view
         const selfPioneers = await DataMgr.s.pioneer.getAllPlayers(true);
-        let eraseShadowWorldPosChange = false;
         let eraseShadowWorldPos = DataMgr.s.eraseShadow.getObj();
         for (const pioneer of selfPioneers) {
             let isExsit: boolean = false;
@@ -421,8 +405,7 @@ export class OuterTiledMapActionController extends ViewController {
                 // if (Config.canSaveLocalData) {
                 //     localStorage.setItem(this._localEraseDataKey, JSON.stringify(this._localEraseShadowWorldPos));
                 // }
-                eraseShadowWorldPos.push(pioneer.stayPos);
-                eraseShadowWorldPosChange = true;
+                DataMgr.s.eraseShadow.addObj(v2(pioneer.stayPos.x, pioneer.stayPos.y));
             }
             // has new, deal with fog
             if (!this._lastPioneerStayPos.has(pioneer.id)) {
@@ -443,9 +426,6 @@ export class OuterTiledMapActionController extends ViewController {
                 this._lastPioneerStayPos.set(pioneer.id, pioneer.stayPos);
                 this._refreshFog(GameMainHelper.instance.tiledMapGetShadowClearedTiledPositions(), newCleardPositons, pioneer.stayPos);
             }
-        }
-        if (eraseShadowWorldPosChange) {
-            DataMgr.s.eraseShadow.saveObj();
         }
     }
 
