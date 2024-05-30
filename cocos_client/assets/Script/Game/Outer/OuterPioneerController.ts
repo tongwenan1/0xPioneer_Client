@@ -158,7 +158,7 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._onPioneerActionChanged, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_STAY_POSITION_CHANGE, this._onPioneerStayPositionChanged, this);
         // event
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENTID_CHANGE, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENTID_CHANGE, this._onPioneerEventIdChange, this);
         // hp
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_HP_CHANGED, this._onPioneerHpChanged, this);
         // show
@@ -244,7 +244,7 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._onPioneerActionChanged, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_STAY_POSITION_CHANGE, this._onPioneerStayPositionChanged, this);
         // event
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENTID_CHANGE, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENTID_CHANGE, this._onPioneerEventIdChange, this);
         // hp
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_HP_CHANGED, this._onPioneerHpChanged, this);
         // show
@@ -551,6 +551,18 @@ export class OuterPioneerController extends ViewController {
             }
         }
         this._refreshUI();
+    }
+    private async _onPioneerEventIdChange(data: { triggerPioneerId: string; eventBuildingId: string; eventId: string }) {
+        const eventConfig = EventConfig.getById(data.eventId);
+        if (eventConfig == undefined) {
+            return;
+        }
+        this._refreshUI();
+        const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(EventUI).eventUIShow(data.triggerPioneerId, data.eventBuildingId, eventConfig);
     }
     private _onPioneerBeginMove(data: { id: string; showMovePath: boolean }): void {
         const pioneer = DataMgr.s.pioneer.getById(data.id);

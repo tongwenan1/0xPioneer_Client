@@ -20,10 +20,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass("EventUI")
 export class EventUI extends ViewController {
-    public eventUIShow(
-        triggerPioneerId: string,
-        eventBuildingId: string,
-        event: EventConfigData) {
+    public eventUIShow(triggerPioneerId: string, eventBuildingId: string, event: EventConfigData) {
         this._triggerPioneerId = triggerPioneerId;
         this._eventBuildingId = eventBuildingId;
         this._refreshUI(event);
@@ -85,6 +82,7 @@ export class EventUI extends ViewController {
         // useLanMgr
         // this._dialogView.getChildByPath("nextButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
         // this._dialogView.getChildByPath("fightButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this._dialogView.getChildByPath("holdButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
 
         // useLanMgr
         this._dialogView.getChildByPath("content/bg/label").getComponent(Label).string = LanMgr.getLanById(event.text);
@@ -271,7 +269,7 @@ export class EventUI extends ViewController {
     private onTapNext(actionEvent: Event, customEventData: string) {
         NetworkMgr.websocketMsg.player_event_select({
             buildingId: this._eventBuildingId,
-            pioneerId: this._triggerPioneerId
+            pioneerId: this._triggerPioneerId,
         });
         UIPanelManger.inst.popPanel(this.node);
     }
@@ -295,8 +293,11 @@ export class EventUI extends ViewController {
         NetworkMgr.websocketMsg.player_event_select({
             buildingId: this._eventBuildingId,
             pioneerId: this._triggerPioneerId,
-            selectIdx: index
+            selectIdx: index,
         });
+        UIPanelManger.inst.popPanel(this.node);
+    }
+    private onTapHoldOn() {
         UIPanelManger.inst.popPanel(this.node);
     }
 }

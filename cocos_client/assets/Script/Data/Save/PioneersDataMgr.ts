@@ -136,7 +136,6 @@ export class PioneersDataMgr {
                 }
                 NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_BEGIN_MOVE, { id: pioneerId, showMovePath: showMovePath });
             } else {
-                this.changeActionType(pioneerId, MapPioneerActionType.idle);
                 NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneerId: findPioneer.id, isStay: true });
             }
         }

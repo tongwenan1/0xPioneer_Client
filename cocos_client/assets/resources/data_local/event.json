@@ -41,7 +41,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": [
       [
@@ -71,7 +71,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": [
       [
@@ -119,7 +119,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": [
       [
@@ -143,7 +143,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": [
       [
@@ -297,7 +297,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -385,7 +385,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -410,7 +410,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -500,7 +500,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -519,7 +519,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -551,7 +551,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -576,7 +576,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -624,7 +624,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -687,7 +687,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -802,7 +802,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -871,7 +871,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -903,7 +903,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1070,7 +1070,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1089,7 +1089,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1121,7 +1121,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1190,7 +1190,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1294,7 +1294,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1313,7 +1313,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1379,7 +1379,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1401,7 +1401,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1469,7 +1469,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1499,7 +1499,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1588,7 +1588,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1613,7 +1613,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1747,7 +1747,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1772,7 +1772,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1797,7 +1797,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1816,7 +1816,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1841,7 +1841,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1866,7 +1866,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1885,7 +1885,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1907,7 +1907,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1975,7 +1975,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -1994,7 +1994,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   },
@@ -2016,7 +2016,7 @@
     "change": null,
     "judge": null,
     "judge_result": null,
-    "wait_time": 5,
+    "wait_time": 0,
     "map_pioneer_unlock": null,
     "map_building_refresh": null
   }

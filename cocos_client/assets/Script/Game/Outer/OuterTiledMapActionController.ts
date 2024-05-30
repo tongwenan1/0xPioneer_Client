@@ -485,14 +485,18 @@ export class OuterTiledMapActionController extends ViewController {
                     // UIHUDController.showCenterTip(LanMgr.getLanById("203005"));
                     return;
                 }
+            } else if (stayBuilding.type == MapBuildingType.event) {
+                if (currentActionPioneer.actionEventId != null && currentActionPioneer.actionEventId != stayBuilding.id) {
+                    return;
+                }
             } else {
-                if (currentActionPioneer.actionType == MapPioneerActionType.wormhole) {
+                if (currentActionPioneer.actionType == MapPioneerActionType.wormhole || currentActionPioneer.actionType == MapPioneerActionType.eventing) {
                     return;
                 }
             }
             stayPositons = stayBuilding.stayMapPositions;
         } else {
-            if (currentActionPioneer.actionType == MapPioneerActionType.wormhole) {
+            if (currentActionPioneer.actionType == MapPioneerActionType.wormhole || currentActionPioneer.actionType == MapPioneerActionType.eventing) {
                 return;
             }
             isBlock = GameMainHelper.instance.tiledMapIsBlock(v2(tiledPos.x, tiledPos.y));

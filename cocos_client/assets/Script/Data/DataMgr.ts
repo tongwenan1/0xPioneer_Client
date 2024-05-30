@@ -182,7 +182,7 @@ export class DataMgr {
                     }
                     // event
                     if (oldData.actionEventId != newData.actionEventId) {
-                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENTID_CHANGE);
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENTID_CHANGE, { triggerPioneerId: newData.id, eventBuildingId: newData.actionBuildingId, eventId: newData.actionEventId });
                         const stepEndData: EVENT_STEPEND_DATA = {
                             pioneerId: newData.id,
                             buildingId: newData.actionBuildingId,

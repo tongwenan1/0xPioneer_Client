@@ -270,7 +270,11 @@ export default class PioneerMgr {
                 }
             } else if (stayBuilding.type == MapBuildingType.event) {
                 if (pioneer.type == MapPioneerType.player) {
-                    NetworkMgr.websocketMsg.player_event_start({ pioneerId: pioneer.id, buildingId: stayBuilding.id });
+                    if (pioneer.actionType == MapPioneerActionType.eventing && pioneer.actionBuildingId != null) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENTID_CHANGE, { triggerPioneerId: pioneer.id, eventBuildingId: pioneer.actionBuildingId, eventId: pioneer.actionEventId });
+                    } else {
+                        NetworkMgr.websocketMsg.player_event_start({ pioneerId: pioneer.id, buildingId: stayBuilding.id });
+                    }
                 } else {
                     if (isStay) {
                         pioneerDataMgr.changeActionType(pioneerId, MapPioneerActionType.idle);

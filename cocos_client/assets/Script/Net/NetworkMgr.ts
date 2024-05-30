@@ -9,6 +9,7 @@ import { Ethereum, WalletType } from "./ethers/Ethereum";
 
 import CLog from "../Utils/CLog";
 import ChainConfig from "../Config/ChainConfig";
+import { UIHUDController } from "../UI/UIHUDController";
 
 export class NetworkMgr {
     private static _httpmsg: HttpMsg;
@@ -68,6 +69,10 @@ export class NetworkMgr {
             let d: c2s_user.Ilogin = { name: "", uid: r.data.uid, token: r.data.token };
             this.websocketMsg.login(d);
             return d;
+        } else {
+            if (r.code === -7) {
+                UIHUDController.showCenterTip("Not Qualified");
+            }
         }
         return null;
     }
