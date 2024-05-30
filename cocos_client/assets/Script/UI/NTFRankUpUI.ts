@@ -113,7 +113,7 @@ export class NTFRankUpUI extends ViewController {
     //------------------------ action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
 
     private onTapConfirmRankUp() {

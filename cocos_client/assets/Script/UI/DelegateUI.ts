@@ -121,7 +121,7 @@ export class DelegateUI extends ViewController {
     //---------------------------------------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private onTapItem(event: Event, customEventData: string) {
         const index: number = parseInt(customEventData);

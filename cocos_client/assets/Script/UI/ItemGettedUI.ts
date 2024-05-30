@@ -37,7 +37,7 @@ export class ItemGettedUI extends ViewController {
                 itemNode.getChildByPath("Count").getComponent(Label).string = item.count.toString();
             }
         } else {
-            UIPanelManger.inst.popPanel();
+            UIPanelManger.inst.popPanel(this.node);
             if (closeCallback != null) {
                 closeCallback();
             }
@@ -67,7 +67,7 @@ export class ItemGettedUI extends ViewController {
     //---------------------------------------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
         if (this._closeCallback != null) {
             this._closeCallback();
         }

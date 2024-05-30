@@ -16,6 +16,7 @@ import CLog from "./Utils/CLog";
 import { EthereumEventData_accountChanged, EthereumEventData_chainChanged, EthereumEventData_init, EthereumEventType } from "./Net/ethers/Ethereum";
 import { s2c_user } from "./Net/msg/WebsocketMsg";
 import CommonTools from "./Tool/CommonTools";
+import { LoginUI } from "./UI/Login/LoginUI";
 const { ccclass, property } = _decorator;
 
 @ccclass("Main")
@@ -49,9 +50,9 @@ export class Main extends ViewController {
                 return;
             }
         }
-
-        // debug mode
+        
         await UIPanelManger.inst.pushPanel(UIName.LoginUI);
+
         if (chainConfig.api.init) {
             this._addListener();
             NetworkMgr.websocketConnect();
@@ -83,7 +84,7 @@ export class Main extends ViewController {
         BattleReportsMgr.init();
 
         if (GAME_ENV_IS_DEBUG) {
-            UIPanelManger.inst.popPanel();
+            UIPanelManger.inst.popPanelByName(UIName.LoginUI);
             let loadingView: LoadingUI = null;
             const result = await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.HUD);
             if (result.success) {
@@ -102,7 +103,7 @@ export class Main extends ViewController {
                 return;
             }
             // show loading
-            UIPanelManger.inst.popPanel();
+            UIPanelManger.inst.popPanelByName(UIName.LoginUI);
             let loadingView: LoadingUI = null;
             const result = await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.HUD);
             if (result.success) {
@@ -205,8 +206,7 @@ export class Main extends ViewController {
         // pioneernft func
         NetworkMgr.websocket.on("player_treasure_open_res", DataMgr.player_treasure_open_res);
         NetworkMgr.websocket.on("player_point_treasure_open_res", DataMgr.player_point_treasure_open_res);
-        NetworkMgr.websocket.on("player_artifact_equip_res", DataMgr.player_artifact_equip_res);
-        NetworkMgr.websocket.on("player_artifact_remove_res", DataMgr.player_artifact_remove_res);
+        NetworkMgr.websocket.on("player_artifact_change_res", DataMgr.player_artifact_change_res);
         NetworkMgr.websocket.on("player_building_delegate_nft_res", DataMgr.player_building_delegate_nft_res);
         NetworkMgr.websocket.on("player_nft_skill_learn_res", DataMgr.player_nft_skill_learn_res);
         NetworkMgr.websocket.on("player_nft_skill_forget_res", DataMgr.player_nft_skill_forget_res);

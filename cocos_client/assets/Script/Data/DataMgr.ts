@@ -3,12 +3,12 @@ import { InnerBuildingType, MapBuildingType } from "../Const/BuildingDefine";
 import ItemData, { ItemConfigType, ItemType } from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import { MINING_FINISHED_DATA, MapNpcPioneerObject, MapPioneerActionType, MapPioneerEventAttributesChangeType } from "../Const/PioneerDefine";
-import { s2c_user } from "../Net/msg/WebsocketMsg";
+import { c2s_user, s2c_user } from "../Net/msg/WebsocketMsg";
 import CLog from "../Utils/CLog";
 import { RunData } from "./RunData";
 import { SaveData } from "./SaveData";
 import { MapBuildingWormholeObject } from "../Const/MapBuilding";
-import { LanMgr, PioneerMgr } from "../Utils/Global";
+import { GameMgr, LanMgr, PioneerMgr } from "../Utils/Global";
 import NetGlobalData from "./Save/Data/NetGlobalData";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import ArtifactData from "../Model/ArtifactData";
@@ -121,20 +121,13 @@ export class DataMgr {
             DataMgr.s.artifact.countChanged(change);
         }
     };
-    public static player_artifact_equip_res = (e: any) => {
-        const p: s2c_user.Iplayer_artifact_equip_res = e.data;
+    public static player_artifact_change_res = (e: any) => {
+        const p: s2c_user.Iplayer_artifact_change_res = e.data;
         if (p.res !== 1) {
             return;
         }
         DataMgr.s.artifact.changeObj_artifact_effectIndex(p.data.artifactConfigId, p.data.effectIndex);
-    };
-    public static player_artifact_remove_res = (e: any) => {
-        const p: s2c_user.Iplayer_artifact_remove_res = e.data;
-        if (p.res !== 1) {
-            return;
-        }
-        DataMgr.s.artifact.changeObj_artifact_effectIndex(p.data.artifactConfigId, p.data.effectIndex);
-    };
+    }
     //------------------------------------- inner building
     public static building_change = (e: any) => {
         const p: s2c_user.Ibuilding_change = e.data;
@@ -176,14 +169,13 @@ export class DataMgr {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: newData.id });
                         if (oldData.actionType == MapPioneerActionType.mining && oldData.actionBuildingId != null) {
                             // mining over
-                            const config = MapBuildingConfig.getById(oldData.actionBuildingId);
-                            if (config != undefined && config.resources != null) {
-                                const reward: [string, number] = config.resources;
+                            const resourceData = GameMgr.getResourceBuildingRewardAndQuotaMax(DataMgr.s.mapBuilding.getBuildingById(oldData.actionBuildingId));
+                            if (resourceData != null) {
                                 NotificationMgr.triggerEvent(NotificationName.MINING_FINISHED, {
                                     buildingId: oldData.actionBuildingId,
                                     pioneerId: oldData.id,
                                     duration: 5000,
-                                    rewards: [{ id: reward[0], num: reward[1] }],
+                                    rewards: [{ id: resourceData.reward.itemConfigId, num: resourceData.reward.count }],
                                 } as MINING_FINISHED_DATA);
                             }
                         }
@@ -248,6 +240,13 @@ export class DataMgr {
                         if (oldWorm.wormholdCountdownTime != newWorm.wormholdCountdownTime) {
                             NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_WORMHOLE_ATTACK_COUNT_DONW_TIME_CHANGE);
                         }
+                    }
+                    if (
+                        oldData.gatherPioneerIds.length != newData.gatherPioneerIds.length ||
+                        oldData.eventPioneerIds.length != newData.eventPioneerIds.length ||
+                        oldData.explorePioneerIds.length != newData.explorePioneerIds.length
+                    ) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_ACTION_PIONEER_CHANGE);
                     }
                     break;
                 }

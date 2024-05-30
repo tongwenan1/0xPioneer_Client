@@ -23,6 +23,7 @@ import {
     ECursorType,
     GAME_ENV_IS_DEBUG,
     GameExtraEffectType,
+    MapInteractType,
     MapMemberFactionType,
     MapMemberTargetType,
     PioneerGameTest,
@@ -53,6 +54,7 @@ import NetGlobalData from "../../Data/Save/Data/NetGlobalData";
 import { MapActionConfrimTipUI } from "../../UI/MapActionConfrimTipUI";
 import { EventUI } from "../../UI/Outer/EventUI";
 import { share } from "../../Net/msg/WebsocketMsg";
+import CLog from "../../Utils/CLog";
 
 const { ccclass, property } = _decorator;
 
@@ -218,23 +220,23 @@ export class OuterTiledMapActionController extends ViewController {
                                 const stayBuilding = DataMgr.s.mapBuilding.getShowBuildingByMapPos(v2(tp.x, tp.y));
 
                                 if (stayBuilding != null && stayBuilding.show) {
-                                    if (stayBuilding.type == MapBuildingType.city && stayBuilding.faction != MapMemberFactionType.enemy) {
-                                        const centerPos = stayBuilding.stayMapPositions[3];
-                                        const visionPositions = [];
-                                        let radialRange = DataMgr.s.userInfo.data.cityRadialRange;
-                                        GameMgr.getAfterExtraEffectPropertyByBuilding(
-                                            InnerBuildingType.MainCity,
-                                            GameExtraEffectType.CITY_RADIAL_RANGE,
-                                            radialRange
-                                        );
-                                        const extAround = GameMainHelper.instance.tiledMapGetExtAround(centerPos, radialRange - 1);
-                                        for (const temple of extAround) {
-                                            visionPositions.push(v2(temple.x, temple.y));
-                                        }
-                                        this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE, visionPositions, Color.BLUE);
-                                    } else {
-                                        this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE);
-                                    }
+                                    // if (stayBuilding.type == MapBuildingType.city && stayBuilding.faction != MapMemberFactionType.enemy) {
+                                    //     const centerPos = stayBuilding.stayMapPositions[3];
+                                    //     const visionPositions = [];
+                                    //     let radialRange = DataMgr.s.userInfo.data.cityRadialRange;
+                                    //     GameMgr.getAfterExtraEffectPropertyByBuilding(
+                                    //         InnerBuildingType.MainCity,
+                                    //         GameExtraEffectType.CITY_RADIAL_RANGE,
+                                    //         radialRange
+                                    //     );
+                                    //     const extAround = GameMainHelper.instance.tiledMapGetExtAround(centerPos, radialRange - 1);
+                                    //     for (const temple of extAround) {
+                                    //         visionPositions.push(v2(temple.x, temple.y));
+                                    //     }
+                                    //     this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE, visionPositions, Color.BLUE);
+                                    // } else {
+                                    this._mapCursorView.show(stayBuilding.stayMapPositions, Color.WHITE);
+                                    // }
                                     GameMainHelper.instance.changeCursor(ECursorType.Action);
                                 } else {
                                     const isBlock = GameMainHelper.instance.tiledMapIsBlock(v2(tp.x, tp.y));
@@ -433,15 +435,15 @@ export class OuterTiledMapActionController extends ViewController {
             return;
         }
         const outPioneerController = this.node.getComponent(OuterPioneerController);
+        if (this["_actionViewActioned"] == true) {
+            this["_actionViewActioned"] = false;
+            return;
+        }
         if (this._actionView.isShow) {
             this._actionView.hide();
             this._mapActionCursorView.hide();
             outPioneerController.hideMovingPioneerAction();
             outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
-            return;
-        }
-        if (this["_actionViewActioned"] == true) {
-            this["_actionViewActioned"] = false;
             return;
         }
         if (GameMainHelper.instance.isTapEventWaited) {
@@ -459,256 +461,138 @@ export class OuterTiledMapActionController extends ViewController {
             // UIHUDController.showCenterTip("pioneer is dead");
             return;
         }
+        // check is busy
+        if (DataMgr.s.pioneer.getCurrentActionIsBusy()) {
+            // UIHUDController.showCenterTip(LanMgr.getLanById("203002"));
+            return;
+        }
 
-        // -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel 7-tavern
-        // -2 no action
-        let actionType: number = -1;
-        let actionMovingPioneerId: string = null;
-        let targetFightBuildingModel: MapBuildingObject = null;
-        let stayPositons: Vec2[] = [];
-        let purchaseMovingPioneerId = null;
-        let purchaseMovingBuildingId = null;
+        let stayPositons: Vec2[] = [v2(tiledPos.x, tiledPos.y)];
         // check is building first
         const stayBuilding = DataMgr.s.mapBuilding.getShowBuildingByMapPos(v2(tiledPos.x, tiledPos.y));
+        let isBlock = false;
+        let stayPioneer = null;
         if (stayBuilding != null) {
-            if (currentActionPioneer.actionType == MapPioneerActionType.defend && stayBuilding.type == MapBuildingType.stronghold) {
-                actionType = 6;
-                stayPositons = stayBuilding.stayMapPositions;
-            } else if (currentActionPioneer.actionType == MapPioneerActionType.wormhole && stayBuilding.type == MapBuildingType.wormhole) {
-                actionType = 9;
-                stayPositons = stayBuilding.stayMapPositions;
-                purchaseMovingBuildingId = stayBuilding.id;
-                const tempWormhole = stayBuilding as MapBuildingWormholeObject;
-                if (tempWormhole.wormholdCountdownTime > new Date().getTime()) {
-                    return;
-                }
-            } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing) {
-                if (stayBuilding.eventId == currentActionPioneer.actionEventId && currentActionPioneer.actionEndTimeStamp <= new Date().getTime()) {
-                    const currentEvent = EventConfig.getById(stayBuilding.eventId);
-                    if (currentEvent != null) {
-                        const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
-                        if (result.success) {
-                            result.node.getComponent(EventUI).eventUIShow(currentActionPioneer.id, stayBuilding.id, currentEvent);
-                        }
-                    }
-                } else {
-                    UIHUDController.showCenterTip(LanMgr.getLanById("203005"));
-                    // UIHUDController.showCenterTip("pioneer is processing event");
-                }
-                actionType = -2;
-            } else {
-                if (stayBuilding.type == MapBuildingType.city) {
-                    if (stayBuilding.faction != MapMemberFactionType.enemy) {
-                        GameMainHelper.instance.changeInnerAndOuterShow();
-                        actionType = -2;
-                    } else {
-                        actionType = 3;
-                        targetFightBuildingModel = stayBuilding;
-                    }
-                } else if (stayBuilding.type == MapBuildingType.explore) {
-                    actionType = 1;
-                } else if (stayBuilding.type == MapBuildingType.resource) {
-                    actionType = 2;
-                } else if (stayBuilding.type == MapBuildingType.stronghold) {
-                    actionType = 4;
-                } else if (stayBuilding.type == MapBuildingType.wormhole) {
-                    actionType = 8;
-                    const tempWormhole = stayBuilding as MapBuildingWormholeObject;
-                    if (tempWormhole.wormholdCountdownTime > new Date().getTime()) {
-                        return;
-                    }
-                } else if (stayBuilding.type == MapBuildingType.event) {
-                    actionType = 5;
-                } else if (stayBuilding.type == MapBuildingType.tavern) {
-                    const tempTavern = stayBuilding as MapBuildingTavernObject;
-                    if (tempTavern.nft != null) {
-                        const result = await UIPanelManger.inst.pushPanel(UIName.NFTViewInfoUI);
-                        if (result.success) {
-                            result.node.getComponent(NFTViewInfoUI).showItem(tempTavern.nft);
-                        }
-                        return;
-                    }
-                    actionType = 0;
-                }
-                if (actionType != -2 && actionType != 3) {
-                    purchaseMovingBuildingId = stayBuilding.id;
-                }
-                stayPositons = stayBuilding.stayMapPositions;
-            }
-        } else {
-            const isBlock = GameMainHelper.instance.tiledMapIsBlock(v2(tiledPos.x, tiledPos.y));
-            if (isBlock) {
-                // useLanMgr
-                UIHUDController.showCenterTip(LanMgr.getLanById("203001"));
-                // UIHUDController.showCenterTip("cann't move to block");
+            if (stayBuilding.type == MapBuildingType.city) {
+                GameMainHelper.instance.changeInnerAndOuterShow();
                 return;
-            }
-            if (currentActionPioneer.actionType == MapPioneerActionType.defend) {
-                actionType = -2;
-                // useLanMgr
-                UIHUDController.showCenterTip(LanMgr.getLanById("203004"));
-                // UIHUDController.showCenterTip("pioneer is defending");
-            } else if (currentActionPioneer.actionType == MapPioneerActionType.eventing) {
-                actionType = -2;
-                // useLanMgr
-                UIHUDController.showCenterTip(LanMgr.getLanById("203005"));
-                // UIHUDController.showCenterTip("pioneer is processing event");
-            } else {
-                const stayPioneers = DataMgr.s.pioneer.getByStayPos(v2(tiledPos.x, tiledPos.y), true);
-                let currentPioneer: MapPioneerObject = null;
-                for (const tempPioneer of stayPioneers) {
-                    if (tempPioneer.id != currentActionPioneer.id) {
-                        currentPioneer = tempPioneer;
-                        break;
-                    }
-                }
-                if (currentPioneer != null) {
-                    if (currentPioneer.faction == MapMemberFactionType.friend) {
-                        if (currentPioneer.type == MapPioneerType.npc) {
-                            actionType = 0;
-                        } else if (currentPioneer.type == MapPioneerType.gangster) {
-                            actionType = 1;
-                        }
-                    } else {
-                        actionType = 3;
-                        let isMoving: boolean = false;
-                        for (const logic of currentPioneer.logics) {
-                            if (
-                                logic.type == MapPioneerLogicType.targetmove ||
-                                logic.type == MapPioneerLogicType.stepmove ||
-                                logic.type == MapPioneerLogicType.patrol
-                            ) {
-                                isMoving = true;
-                                break;
-                            }
-                        }
-                        if (isMoving) {
-                            actionMovingPioneerId = currentPioneer.id;
-                        }
-                    }
-                    if (actionType != 3) {
-                        purchaseMovingPioneerId = currentPioneer.id;
-                    }
-                    stayPositons = [currentPioneer.stayPos];
-                }
-            }
-        }
-        if (actionType == 5 || actionType == 6 || actionType == 9) {
-        } else {
-            // check is busy
-            if (DataMgr.s.pioneer.getCurrentActionIsBusy()) {
-                // useLanMgr
-                // UIHUDController.showCenterTip(LanMgr.getLanById("203002"));
-                // UIHUDController.showCenterTip("pioneer is busy");
-                return;
-            }
-        }
-        if (actionType == -1) {
-            stayPositons = [v2(tiledPos.x, tiledPos.y)];
-        }
-        if (actionType >= -1) {
-            this._mapActionCursorView.show(stayPositons, Color.WHITE);
-            let setWorldPosition = null;
-            if (stayPositons.length == 1) {
-                setWorldPosition = GameMainHelper.instance.tiledMapGetPosWorld(stayPositons[0].x, stayPositons[0].y);
-            } else if (stayPositons.length == 3) {
-                const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(stayPositons[0].x, stayPositons[0].y);
-                const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(stayPositons[1].x, stayPositons[1].y);
-                setWorldPosition = v3(beginWorldPos.x, endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2, 0);
-            } else if (stayPositons.length == 7) {
-                setWorldPosition = GameMainHelper.instance.tiledMapGetPosWorld(stayPositons[3].x, stayPositons[3].y);
-            }
-            // cacluate will movePath
-            // -1-move 0-talk 1-explore 2-collect 3-fight 4-camp 5-event 6-campcancel
-            let taregtPos: Vec2 = null;
-            let sparePositions: Vec2[] = [];
-            let targetStayPositions: Vec2[] = [];
-            if (actionType == -1) {
-                taregtPos = v2(tiledPos.x, tiledPos.y);
-            } else if (actionType == 3) {
-                if (actionMovingPioneerId != null) {
-                    // to moving enemy
-                    taregtPos = DataMgr.s.pioneer.getById(actionMovingPioneerId).stayPos;
-                } else if (targetFightBuildingModel != null) {
-                    taregtPos = v2(tiledPos.x, tiledPos.y);
-                    sparePositions = targetFightBuildingModel.stayMapPositions;
-                } else {
-                    taregtPos = v2(tiledPos.x, tiledPos.y);
-                }
-            } else if (actionType == 6 || actionType == 9) {
-                // nothing
-            } else {
-                // to pioneer or building
-                if (purchaseMovingPioneerId != null) {
-                    taregtPos = v2(tiledPos.x, tiledPos.y);
-                    const toStayPioneer = DataMgr.s.pioneer.getById(purchaseMovingPioneerId);
-                    if (toStayPioneer != null) {
-                        targetStayPositions = [toStayPioneer.stayPos];
-                    }
-                } else if (purchaseMovingBuildingId != null) {
-                    taregtPos = v2(tiledPos.x, tiledPos.y);
-                    const toStayBuilding = DataMgr.s.mapBuilding.getBuildingById(purchaseMovingBuildingId);
-                    if (toStayBuilding != null) {
-                        targetStayPositions = toStayBuilding.stayMapPositions;
-                        sparePositions = toStayBuilding.stayMapPositions;
-                    }
-                }
             }
 
-            let movePaths: TilePos[] = [];
-            if (taregtPos != null) {
-                const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, taregtPos, targetStayPositions);
-                if (toPosMoveData.canMove) {
-                    movePaths = toPosMoveData.path;
-                } else if (sparePositions.length > 0) {
-                    let minMovePath = null;
-                    for (const templePos of sparePositions) {
-                        const templePath = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(
-                            currentActionPioneer.stayPos,
-                            templePos,
-                            targetStayPositions
-                        );
-                        if (templePath.canMove) {
-                            if (minMovePath == null) {
-                                minMovePath = templePath.path;
-                            } else {
-                                if (minMovePath.length > templePath.path.length) {
-                                    minMovePath = templePath.path;
-                                }
-                            }
+            if (stayBuilding.type == MapBuildingType.wormhole) {
+                const tempWormhole = stayBuilding as MapBuildingWormholeObject;
+                if (tempWormhole.wormholdCountdownTime > new Date().getTime()) {
+                    UIHUDController.showCenterTip("Wormhole is Busy");
+                    // UIHUDController.showCenterTip(LanMgr.getLanById("203005"));
+                    return;
+                }
+            } else {
+                if (currentActionPioneer.actionType == MapPioneerActionType.wormhole) {
+                    return;
+                }
+            }
+            stayPositons = stayBuilding.stayMapPositions;
+        } else {
+            if (currentActionPioneer.actionType == MapPioneerActionType.wormhole) {
+                return;
+            }
+            isBlock = GameMainHelper.instance.tiledMapIsBlock(v2(tiledPos.x, tiledPos.y));
+            if (isBlock) {
+                UIHUDController.showCenterTip(LanMgr.getLanById("203001"));
+                return;
+            }
+            const pioneers = DataMgr.s.pioneer.getByStayPos(v2(tiledPos.x, tiledPos.y), true);
+            for (const tempPioneer of pioneers) {
+                if (tempPioneer.id != currentActionPioneer.id) {
+                    stayPioneer = tempPioneer;
+                    break;
+                }
+            }
+            if (stayPioneer != null) {
+                stayPositons = [stayPioneer.stayPos];
+            }
+        }
+
+        this._mapActionCursorView.show(stayPositons, Color.WHITE);
+        // view show worldPos
+        let targetWorldPos = null;
+        if (stayPositons.length == 1) {
+            targetWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(stayPositons[0].x, stayPositons[0].y);
+        } else if (stayPositons.length == 3) {
+            const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(stayPositons[0].x, stayPositons[0].y);
+            const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(stayPositons[1].x, stayPositons[1].y);
+            targetWorldPos = v3(beginWorldPos.x, endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2, 0);
+        } else if (stayPositons.length == 7) {
+            targetWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(stayPositons[3].x, stayPositons[3].y);
+        }
+        if (targetWorldPos == null) {
+            CLog.error("action cann't show");
+            return;
+        }
+
+        // move targetPos
+        let taregtPos: Vec2 = v2(tiledPos.x, tiledPos.y);
+        let sparePositions: Vec2[] = [];
+        let targetStayPositions: Vec2[] = [];
+        if (stayBuilding != null) {
+            sparePositions = stayBuilding.stayMapPositions;
+            targetStayPositions = stayBuilding.stayMapPositions;
+        } else if (stayPioneer != null) {
+            if (stayPioneer.type == MapPioneerType.player || stayPioneer.type == MapPioneerType.npc) {
+                targetStayPositions = [stayPioneer.stayPos];
+            }
+        }
+
+        let movePaths: TilePos[] = [];
+        const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, taregtPos, targetStayPositions);
+        if (toPosMoveData.canMove) {
+            movePaths = toPosMoveData.path;
+        } else if (sparePositions.length > 0) {
+            let minMovePath = null;
+            for (const templePos of sparePositions) {
+                const templePath = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, templePos, targetStayPositions);
+                if (templePath.canMove) {
+                    if (minMovePath == null) {
+                        minMovePath = templePath.path;
+                    } else {
+                        if (minMovePath.length > templePath.path.length) {
+                            minMovePath = templePath.path;
                         }
-                    }
-                    if (minMovePath != null) {
-                        movePaths = minMovePath;
                     }
                 }
             }
-            // show move path
-            outPioneerController.showPioneerFootStep(currentActionPioneer.id, movePaths);
-            // show action panel
-            this._actionView.show(setWorldPosition, actionType, async (useActionType: number) => {
-                this["_actionViewActioned"] = true;
-                if (useActionType === -999) {
-                    this._mapActionCursorView.hide();
-                    outPioneerController.hideMovingPioneerAction();
-                    outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
-                    return;
+            if (minMovePath != null) {
+                movePaths = minMovePath;
+            }
+        }
+        // show move path
+        outPioneerController.showPioneerFootStep(currentActionPioneer.id, movePaths);
+        // show action panel
+        this._actionView.show(
+            currentActionPioneer.id,
+            stayBuilding,
+            stayPioneer,
+            taregtPos,
+            targetWorldPos,
+            movePaths.length,
+            async (actionType: MapInteractType, targetName: string, costEnergy: number) => {
+                if (costEnergy > 0) {
+                    const ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
+                    if (ownEnergy < costEnergy) {
+                        UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
+                        return;
+                    }
                 }
+                this["_actionViewActioned"] = true;
                 const result = await UIPanelManger.inst.pushPanel(UIName.MapActionConfrimTipUI);
                 if (result.success) {
                     result.node
                         .getComponent(MapActionConfrimTipUI)
-                        .configuration(taregtPos, movePaths.length, currentActionPioneer.speed, async (confirmed: boolean, cost: number) => {
+                        .configuration(taregtPos, targetName, movePaths.length, costEnergy, currentActionPioneer.speed, async (confirmed: boolean) => {
                             if (confirmed) {
-                                if (cost > 0) {
-                                    const ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
-                                    if (ownEnergy < cost) {
-                                        UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
+                                if (actionType == MapInteractType.Wormhole) {
+                                    if (stayBuilding == null) {
                                         return;
                                     }
-                                }
-                                if (useActionType == 10) {
-                                    // wormhole
                                     const result = await UIPanelManger.inst.pushPanel(HUDName.Alter, UIPanelLayerType.HUD);
                                     if (!result.success) {
                                         return;
@@ -720,9 +604,7 @@ export class OuterTiledMapActionController extends ViewController {
                                         alterString,
                                         () => {
                                             if (currentActionPioneer.actionType != MapPioneerActionType.wormhole) {
-                                                PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, purchaseMovingPioneerId);
-                                                PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, purchaseMovingBuildingId);
-
+                                                PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, stayBuilding.id);
                                                 if (movePaths.length <= 0) {
                                                     DataMgr.s.pioneer.beginMove(currentActionPioneer.id, []);
                                                 } else {
@@ -736,16 +618,12 @@ export class OuterTiledMapActionController extends ViewController {
                                                         feeTxhash: "",
                                                     });
                                                 }
-                                                if (purchaseMovingBuildingId != null) {
-                                                    NetGlobalData.wormholeAttackBuildingId = purchaseMovingBuildingId;
-                                                }
+                                                NetGlobalData.wormholeAttackBuildingId = stayBuilding.id;
                                             } else {
                                                 // attack wormhole countdonw
-                                                if (purchaseMovingBuildingId != null) {
-                                                    NetworkMgr.websocketMsg.player_wormhole_fight_start({
-                                                        buildingId: purchaseMovingBuildingId,
-                                                    });
-                                                }
+                                                NetworkMgr.websocketMsg.player_wormhole_fight_start({
+                                                    buildingId: stayBuilding.id,
+                                                });
                                             }
                                         },
                                         () => {
@@ -755,13 +633,7 @@ export class OuterTiledMapActionController extends ViewController {
                                     return;
                                 }
 
-                                // other action
-                                if (useActionType === 6) {
-                                    // cancel camp
-                                    // TODO
-                                    
-                                } else if (useActionType === 9) {
-                                    // cancel wormhole
+                                if (actionType == MapInteractType.CampOut) {
                                     for (const temple of DataMgr.s.mapBuilding.getWormholeBuildings()) {
                                         const wormObj = temple as MapBuildingWormholeObject;
                                         wormObj.attacker.forEach((value: string, key: number) => {
@@ -774,28 +646,18 @@ export class OuterTiledMapActionController extends ViewController {
                                             }
                                         });
                                     }
-                                } else {
-                                    // move to near pioneer or building
-                                    PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, purchaseMovingPioneerId);
-                                    PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, purchaseMovingBuildingId);
+                                    return;
                                 }
-                                // const r = await NetworkMgr.ethereumMsg.transferETH(0.0001, ChainConfig.getCurrentChainConfig().api.fee_psyc);
-                                // if (r.status == 1) {
-                                //     const uploadPath: { x: number; y: number }[] = [];
-                                //     for (const path of movePaths) {
-                                //         uploadPath.push({ x: path.x, y: path.y });
-                                //     }
-                                //     let targetPosString: string = "";
-                                //     if (uploadPath.length > 0) {
-                                //         targetPosString = JSON.stringify(uploadPath[uploadPath.length - 1]);
-                                //     }
-                                //     NetworkMgr.websocketMsg.player_move({
-                                //         pioneerId: currentActionPioneer.id,
-                                //         movePath: JSON.stringify(uploadPath),
-                                //         targetPos: targetPosString,
-                                //         feeTxhash: r.hash,
-                                //     });
-                                // }
+
+                                if (actionType != MapInteractType.Move) {
+                                    // move can't trigger interact
+                                    if (stayBuilding != null) {
+                                        PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, stayBuilding.id);
+                                    }
+                                    if (stayPioneer != null) {
+                                        PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, stayPioneer.id);
+                                    }
+                                }
                                 if (movePaths.length <= 0) {
                                     DataMgr.s.pioneer.beginMove(currentActionPioneer.id, []);
                                 } else {
@@ -816,11 +678,8 @@ export class OuterTiledMapActionController extends ViewController {
                             outPioneerController.hideMovingPioneerAction();
                         });
                 }
-            });
-            if (actionMovingPioneerId != null) {
-                outPioneerController.showMovingPioneerAction(tiledPos, actionMovingPioneerId, this._mapActionCursorView);
             }
-        }
+        );
     }
 
     private _fixCameraPos(pos: Vec3) {

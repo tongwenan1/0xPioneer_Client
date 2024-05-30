@@ -117,7 +117,7 @@ export class WorldTreasureUIRe extends ViewController {
     }
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private onTapDetail() {
         UIPanelManger.inst.pushPanel(UIName.WorldTreasureDetailUI);

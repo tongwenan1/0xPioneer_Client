@@ -148,7 +148,7 @@ export class ArtifactInfoUI extends ViewController {
     private async onTapClose() {
         if (this._artifacts.length <= 0) {
             await this.playExitAnimation();
-            UIPanelManger.inst.popPanel();
+            UIPanelManger.inst.popPanel(this.node);
             if (this._closeCallback != null) {
                 this._closeCallback();
             }

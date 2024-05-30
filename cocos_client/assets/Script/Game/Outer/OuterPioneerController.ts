@@ -82,7 +82,7 @@ export class OuterPioneerController extends ViewController {
                     }
                 }
                 if (path.length > 0) {
-                    this._actionPioneerFootStepViews = this._addFootSteps(path, stepLogic == null);
+                    this._actionPioneerFootStepViews = this._addFootSteps(path, false);
                 }
             }
         }
@@ -103,7 +103,7 @@ export class OuterPioneerController extends ViewController {
     }
 
     public showPioneerFootStep(pioneerId: string, movePaths: TilePos[]) {
-        const footViews = this._addFootSteps(movePaths);
+        const footViews = this._addFootSteps(movePaths, true);
         this._footPathMap.set(pioneerId, footViews);
     }
     public clearPioneerFootStep(pioneerId: string) {
@@ -157,7 +157,7 @@ export class OuterPioneerController extends ViewController {
         // action
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._onPioneerActionChanged, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_STAY_POSITION_CHANGE, this._onPioneerStayPositionChanged, this);
-        // event 
+        // event
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_EVENTID_CHANGE, this._refreshUI, this);
         // hp
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_HP_CHANGED, this._onPioneerHpChanged, this);
@@ -243,7 +243,7 @@ export class OuterPioneerController extends ViewController {
         // action
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._onPioneerActionChanged, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_STAY_POSITION_CHANGE, this._onPioneerStayPositionChanged, this);
-        // event 
+        // event
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_EVENTID_CHANGE, this._refreshUI, this);
         // hp
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_HP_CHANGED, this._onPioneerHpChanged, this);
@@ -403,7 +403,7 @@ export class OuterPioneerController extends ViewController {
         }
     }
 
-    private _addFootSteps(path: TilePos[], isTargetPosShowFlag: boolean = false): Node[] {
+    private _addFootSteps(path: TilePos[], isShowPioneerFlag: boolean): Node[] {
         const mapBottomView = this.node.getComponent(OuterTiledMapActionController).mapBottomView();
         if (mapBottomView == null) {
             return;
@@ -411,14 +411,15 @@ export class OuterPioneerController extends ViewController {
         const footViews = [];
         for (let i = 0; i < path.length; i++) {
             if (i == path.length - 1) {
-                if (isTargetPosShowFlag) {
-                    const footView = instantiate(this.footPathTargetPrefab);
-                    footView.name = "footViewTarget";
-                    mapBottomView.insertChild(footView, 0);
-                    let worldPos = GameMainHelper.instance.tiledMapGetPosWorld(path[i].x, path[i].y);
-                    footView.setWorldPosition(worldPos);
-                    footViews.push(footView);
-                }
+                const footView = instantiate(this.footPathTargetPrefab);
+                footView.name = "footViewTarget";
+                footView.getChildByPath("Monster").active = !isShowPioneerFlag;
+                footView.getChildByPath("Pioneer").active = isShowPioneerFlag;
+                // mapBottomView.insertChild(footView, 0);
+                this.node.addChild(footView);
+                let worldPos = GameMainHelper.instance.tiledMapGetPosWorld(path[i].x, path[i].y);
+                footView.setWorldPosition(worldPos);
+                footViews.push(footView);
             } else {
                 const currentPath = path[i];
                 const nextPath = path[i + 1];
@@ -479,7 +480,7 @@ export class OuterPioneerController extends ViewController {
             this.scheduleOnce(async () => {
                 actionPioneer.actionType = MapPioneerActionType.idle;
                 view.refreshUI(actionPioneer);
-                UIPanelManger.inst.popPanel();
+                UIPanelManger.inst.popPanelByName(UIName.RookieGuide);
                 const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
                 if (result.success) {
                     result.node.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), () => {

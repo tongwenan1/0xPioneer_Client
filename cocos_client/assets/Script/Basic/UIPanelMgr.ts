@@ -1,11 +1,12 @@
 import { _decorator, Prefab, instantiate, Node, Component } from "cc";
 import ResourcesManager from "./ResourcesMgr";
 import { ResourcesMgr } from "../Utils/Global";
+import { UIName } from "../Const/ConstUIDefine";
 
 export enum UIPanelLayerType {
     Game,
     UI,
-    HUD
+    HUD,
 }
 
 export interface UIPanelQueueItem {
@@ -20,9 +21,8 @@ export interface UIPanelPushResult {
 
 const { ccclass, property } = _decorator;
 
-@ccclass('UIPanelManger')
+@ccclass("UIPanelManger")
 export default class UIPanelManger extends Component {
-
     public static get inst() {
         return this._inst;
     }
@@ -46,7 +46,7 @@ export default class UIPanelManger extends Component {
             }
         });
     }
-    public popPanel(node: Node = null, layer: UIPanelLayerType = UIPanelLayerType.UI) {
+    public popPanel(node: Node, layer: UIPanelLayerType = UIPanelLayerType.UI) {
         let currentQueue: UIPanelQueueItem[] = null;
         if (layer == UIPanelLayerType.Game) {
             currentQueue = this._gameQueue;
@@ -55,21 +55,40 @@ export default class UIPanelManger extends Component {
         } else if (layer == UIPanelLayerType.HUD) {
             currentQueue = this._hudQueue;
         }
-        if (node == null) {
-            if (currentQueue != null && currentQueue.length > 0) {
-                const lastNode: Node = currentQueue.pop().node;
-                lastNode.destroy();
-            }
-        } else {
-            node.destroy();
-            if (currentQueue != null) {
-                for (let i = 0; i < currentQueue.length; i++) {
-                    if (currentQueue[i].node == node) {
-                        currentQueue.splice(i, 1);
-                        break;
-                    }
+        node.destroy();
+        if (currentQueue != null) {
+            for (let i = 0; i < currentQueue.length; i++) {
+                if (currentQueue[i].node == node) {
+                    currentQueue.splice(i, 1);
+                    break;
                 }
             }
+        }
+    }
+    public popPanelByName(name: string) {
+        let itemIndex: number = this._gameQueue.findIndex((value: UIPanelQueueItem)=> {
+            return value.name == name;
+        });
+        if (itemIndex >= 0) {
+            const item = this._gameQueue.splice(itemIndex, 1)[0];
+            item.node.destroy();
+            return;
+        }
+        itemIndex = this._uiQueue.findIndex((value: UIPanelQueueItem)=> {
+            return value.name == name;
+        });
+        if (itemIndex >= 0) {
+            const item = this._uiQueue.splice(itemIndex, 1)[0];
+            item.node.destroy();
+            return;
+        }
+        itemIndex = this._hudQueue.findIndex((value: UIPanelQueueItem)=> {
+            return value.name == name;
+        });
+        if (itemIndex >= 0) {
+            const item = this._hudQueue.splice(itemIndex, 1)[0];
+            item.node.destroy();
+            return;
         }
     }
     public panelIsShow(name: string, layer: UIPanelLayerType = UIPanelLayerType.UI): boolean {

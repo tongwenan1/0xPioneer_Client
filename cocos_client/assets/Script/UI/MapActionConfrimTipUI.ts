@@ -10,20 +10,19 @@ const { ccclass, property } = _decorator;
 @ccclass("MapActionConfrimTipUI")
 export class MapActionConfrimTipUI extends ViewController {
     private _targetPos: Vec2 = null;
-    private _stepCount: number = null;
-    private _moveSpeed: number = null;
-    private _actionCallback: (confirmed: boolean, cost: number) => void = null;
+    private _targetName: string = "";
+    private _step: number = 0;
+    private _costEnergy: number = null;
+    private _moveSpeed: number = 0;
+    private _actionCallback: (confirmed: boolean) => void = null;
 
-    private _cost: number = null;
-
-    public configuration(targetPos: Vec2, stepCount: number, moveSpeed: number, actionCallback: (confirmed: boolean, cost: number) => void) {
+    public configuration(targetPos: Vec2, targetName: string, step: number, costEnergy, moveSpeed: number, actionCallback: (confirmed: boolean) => void) {
         this._targetPos = targetPos;
-        this._stepCount = stepCount;
+        this._targetName = targetName;
+        this._step = step;
+        this._costEnergy = costEnergy;
         this._moveSpeed = moveSpeed;
         this._actionCallback = actionCallback;
-        if (this._stepCount == null || this._moveSpeed == null || actionCallback == null) {
-            return;
-        }
         this._refreshUI();
     }
 
@@ -47,33 +46,32 @@ export class MapActionConfrimTipUI extends ViewController {
     }
 
     private _refreshUI() {
-        this._cost = (ConfigConfig.getConfig(ConfigType.OneStepCostEnergy) as OneStepCostEnergyParam).cost * this._stepCount;
-
         if (this._targetPos != null) {
             this.node.getChildByPath("Content/LocationView/Content/Label").getComponent(Label).string = "(" + this._targetPos.x + "," + this._targetPos.y + ")";
         }
+        this.node.getChildByPath("Content/LocationView/Content/Title").getComponent(Label).string = this._targetName;
 
-        this.node.getChildByPath("Content/CostView/Content/Value").getComponent(Label).string = this._cost.toString();
-        this.node.getChildByPath("Content/MoveCountView/Content/Value").getComponent(Label).string = this._stepCount.toString();
+        this.node.getChildByPath("Content/CostView/Content/Value").getComponent(Label).string = this._costEnergy.toString();
+        this.node.getChildByPath("Content/MoveCountView/Content/Value").getComponent(Label).string = this._step.toString();
 
         const perStepTime: number = ((GameMainHelper.instance.tiledMapTilewidth * 0.5) / this._moveSpeed) * (1 / 60) * 1000;
-        this.node.getChildByPath("Content/CostTimeView/Value").getComponent(Label).string = CommonTools.formatSeconds(perStepTime * this._stepCount);
+        this.node.getChildByPath("Content/CostTimeView/Value").getComponent(Label).string = CommonTools.formatSeconds(perStepTime * this._step);
         this.node.getChildByPath("Content/ArriveTimeView/Value").getComponent(Label).string = CommonTools.formatDateTime(
-            perStepTime * this._stepCount + new Date().getTime()
+            perStepTime * this._step + new Date().getTime()
         );
     }
     private async onTapClose() {
-        if (this._actionCallback != null && this._cost != null) {
-            this._actionCallback(false, this._cost);
+        if (this._actionCallback != null) {
+            this._actionCallback(false);
         }
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private async onTapAction() {
-        if (this._actionCallback != null && this._cost != null) {
-            this._actionCallback(true, this._cost);
+        if (this._actionCallback != null) {
+            this._actionCallback(true);
         }
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
 }

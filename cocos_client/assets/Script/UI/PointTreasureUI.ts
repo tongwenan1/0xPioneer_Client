@@ -214,7 +214,7 @@ export class PointTreasureUI extends ViewController {
     }
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     //-------------------------- socket notification
     private _on_player_point_treasure_open_res(e: any) {

@@ -45,7 +45,7 @@ export class SecretGuardGettedUI extends ViewController {
         tween(this.node)
             .delay(2)
             .call(async () => {
-                UIPanelManger.inst.popPanel();
+                UIPanelManger.inst.popPanel(this.node);
                 if (UserInfoMgr.afterCivilizationClosedShowItemDatas.length > 0) {
                     const result = await UIPanelManger.inst.pushPanel(UIName.ItemGettedUI);
                     if (result.success) {

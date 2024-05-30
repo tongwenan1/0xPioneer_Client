@@ -35,10 +35,12 @@ export class OuterBuildingView extends ViewController {
         const strongholdView = this.node.getChildByPath("StrongholdContent");
         const wormholdView = this.node.getChildByPath("WormholdView");
         const tavernView = this.node.getChildByPath("TavernView");
+        const exploreView = this.node.getChildByPath("ExploreView");
 
         strongholdView.active = false;
         wormholdView.active = false;
         tavernView.active = false;
+        exploreView.active = false;
 
         const collectIcon = this.node.getChildByPath("Level/Collect");
         const exploreIcon = this.node.getChildByPath("Level/Explore");
@@ -84,6 +86,17 @@ export class OuterBuildingView extends ViewController {
             }
         } else if (building.type == MapBuildingType.explore) {
             exploreIcon.active = true;
+            if (building.explorePioneerIds != null && building.explorePioneerIds.length > 0) {
+                exploreView.active = true;
+                exploreView.getChildByPath("Icon/pioneer_default").active = building.explorePioneerIds[0] == "pioneer_0";
+                exploreView.getChildByPath("Icon/secretGuard").active = building.explorePioneerIds[0] == "pioneer_1";
+                exploreView.getChildByPath("Icon/doomsdayGangSpy").active = building.explorePioneerIds[0] == "pioneer_2";
+                exploreView.getChildByPath("Icon/rebels").active = building.explorePioneerIds[0] == "pioneer_3";
+                
+                const currentTimeStamp: number = new Date().getTime();
+                const tempPioneer = DataMgr.s.pioneer.getById(building.explorePioneerIds[0]);
+                exploreView.getChildByPath("Label").getComponent(Label).string = CommonTools.formatSeconds((tempPioneer.actionEndTimeStamp - currentTimeStamp) / 1000)
+            }
         } else if (building.type == MapBuildingType.stronghold) {
             strongholdIcon.active = true;
             strongholdView.active = true;
@@ -156,8 +169,27 @@ export class OuterBuildingView extends ViewController {
             }
         } else if (building.type == MapBuildingType.resource) {
             collectIcon.active = true;
+            if (building.gatherPioneerIds != null && building.gatherPioneerIds.length > 0) {
+                exploreView.active = true;
+                exploreView.getChildByPath("Icon/pioneer_default").active = building.gatherPioneerIds[0] == "pioneer_0";
+                exploreView.getChildByPath("Icon/secretGuard").active = building.gatherPioneerIds[0] == "pioneer_1";
+                exploreView.getChildByPath("Icon/doomsdayGangSpy").active = building.gatherPioneerIds[0] == "pioneer_2";
+                exploreView.getChildByPath("Icon/rebels").active = building.gatherPioneerIds[0] == "pioneer_3";
+                
+                const currentTimeStamp: number = new Date().getTime();
+                const tempPioneer = DataMgr.s.pioneer.getById(building.gatherPioneerIds[0]);
+                exploreView.getChildByPath("Label").getComponent(Label).string = CommonTools.formatSeconds((tempPioneer.actionEndTimeStamp - currentTimeStamp) / 1000)
+            }
         } else if (building.type == MapBuildingType.event) {
             exploreIcon.active = true;
+            if (building.eventPioneerIds != null && building.eventPioneerIds.length > 0) {
+                exploreView.active = true;
+                exploreView.getChildByPath("Icon/pioneer_default").active = building.eventPioneerIds[0] == "pioneer_0";
+                exploreView.getChildByPath("Icon/secretGuard").active = building.eventPioneerIds[0] == "pioneer_1";
+                exploreView.getChildByPath("Icon/doomsdayGangSpy").active = building.eventPioneerIds[0] == "pioneer_2";
+                exploreView.getChildByPath("Icon/rebels").active = building.eventPioneerIds[0] == "pioneer_3";
+                exploreView.getChildByPath("Label").getComponent(Label).string = "Exploring";
+            }
         } else if (building.type == MapBuildingType.tavern) {
             exploreIcon.active = true;
 
@@ -243,11 +275,24 @@ export class OuterBuildingView extends ViewController {
 
         this.schedule(() => {
             if (this._building != null) {
+                const currentTimestamp: number = new Date().getTime();
                 if (this._building.type == MapBuildingType.wormhole) {
                     const wormObj = this._building as MapBuildingWormholeObject;
-                    const currentTimestamp: number = new Date().getTime();
                     if (wormObj.wormholdCountdownTime >= currentTimestamp) {
                         this.refreshUI(this._building);
+                    }
+                } else if (this._building.type == MapBuildingType.explore || this._building.type == MapBuildingType.resource) {
+                    let actionPioneerId = null;
+                    if (this._building.explorePioneerIds != null && this._building.explorePioneerIds.length > 0) {
+                        actionPioneerId = this._building.explorePioneerIds[0];
+                    } else if (this._building.gatherPioneerIds != null && this._building.gatherPioneerIds.length > 0) {
+                        actionPioneerId = this._building.gatherPioneerIds[0];
+                    }
+                    if (actionPioneerId != null) {
+                        const pioneer = DataMgr.s.pioneer.getById(actionPioneerId);
+                        if (pioneer != undefined && pioneer.actionEndTimeStamp >= currentTimestamp) {
+                            this.refreshUI(this._building);
+                        }
                     }
                 }
             }

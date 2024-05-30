@@ -123,7 +123,7 @@ export class BackpackUI extends ViewController {
         this._selectSortMenuShow = false;
         this._refreshMenu();
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private async onTapItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);

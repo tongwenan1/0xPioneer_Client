@@ -42,6 +42,6 @@ export class NewSettlementUI extends ViewController {
     //----------------------------------------------------------------------
     // action
     private onTapClose() {
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
 }

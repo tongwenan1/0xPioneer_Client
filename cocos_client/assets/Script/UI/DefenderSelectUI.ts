@@ -124,7 +124,7 @@ export class DefenderSelectUI extends ViewController {
     //---------------------------------------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private onTapItem(event: Event, customEventData: string) {
         const index: number = parseInt(customEventData);
@@ -142,6 +142,6 @@ export class DefenderSelectUI extends ViewController {
             this._selectCallback(this._pioneerIds[this._selectIndex]);
         }
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
 }

@@ -11,6 +11,7 @@ export interface PioneerConfigData {
     type: string;
     friendly: number;
     show: number;
+    des: string;
     level: number;
     nft_pioneer: string;
     hp: number;
@@ -138,6 +139,7 @@ export interface MapPioneerFightStuct {
 export interface MapPioneerData {
     id: string;
     show: boolean;
+    level: number;
     faction: MapMemberFactionType;
     type: MapPioneerType;
     animType: string;
@@ -236,6 +238,7 @@ export default class PioneerDefine {
         let obj = {
             id: temple.id,
             show: temple.show,
+            level: temple.level,
             faction: temple.faction,
             type: temple.type as MapPioneerType,
             animType: config.animType,

@@ -17,7 +17,7 @@ const { ccclass, property } = _decorator;
 export class DialogueUI extends ViewController {
     public dialogShow(talk: TalkConfigData, talkOverCallback: () => void = null) {
         if (talk.messsages == null || talk.messsages.length <= 0) {
-            UIPanelManger.inst.popPanel();
+            UIPanelManger.inst.popPanel(this.node);
             return;
         }
         this._talk = talk;
@@ -181,7 +181,7 @@ export class DialogueUI extends ViewController {
         }
         const talkId = p.talkId;
         const selectIndex = p.selectIndex;
-        
+
         if (this._talk.id != talkId) {
             return;
         }
@@ -189,7 +189,7 @@ export class DialogueUI extends ViewController {
         if (selectIndex == -1) {
             this._dialogStep += 1;
             if (this._dialogStep > this._talk.messsages.length - 1) {
-                UIPanelManger.inst.popPanel();
+                UIPanelManger.inst.popPanel(this.node);
                 this._talkOver();
             } else {
                 this._refreshUI();
@@ -198,7 +198,7 @@ export class DialogueUI extends ViewController {
             //send socket
             this._dialogStep += 1;
             if (this._dialogStep > this._talk.messsages.length - 1) {
-                UIPanelManger.inst.popPanel();
+                UIPanelManger.inst.popPanel(this.node);
                 this._talkOver();
             } else {
                 this._refreshUI();

@@ -16,7 +16,7 @@ export interface MapBuildingConfigData {
     node: string;
     level: number;
     progress: null;
-    resources: null;
+    resources: [string, number];
     quota: null;
     origialQuota: null;
     exp: null;
@@ -26,6 +26,8 @@ export interface MapBuildingConfigData {
     winprogress: number;
     faction: number;
     defendPioneerIds: string[];
+    des: string;
+    cost: number;
 }
 
 export interface StayMapPosition {
@@ -56,6 +58,9 @@ export interface MapBuildingBaseData {
     animType: string;
 
     gatherPioneerIds: string[];
+    quota: number;
+
+    explorePioneerIds: string[];
 }
 export interface MapBuildingMainCityData extends MapBuildingBaseData {
     hpMax: number;

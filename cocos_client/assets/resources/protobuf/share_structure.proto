@@ -92,47 +92,48 @@ message artifact_info_data {
 message pioneer_data {
     required string id = 1;
     required bool show = 2;
-    required uint32 faction = 3;
-    required string type = 4;
-    required pos2d stayPos = 5;
+    required uint32 level = 3;
+    required uint32 faction = 4;
+    required string type = 5;
+    required pos2d stayPos = 6;
 
-    required int32 hp = 6;
+    required int32 hp = 7;
 
-    required uint32 hpMax = 7;
-    // required uint32 hpMaxbase = 8;
-    // repeated int32 hpMaxadd = 9;
-    // repeated int32 hpMaxmul = 10;
+    required uint32 hpMax = 8;
+    // required uint32 hpMaxbase = 9;
+    // repeated int32 hpMaxadd = 10;
+    // repeated int32 hpMaxmul = 11;
     
-    required int32 attack = 11;
-    // required uint32 attackbase = 12;
-    // repeated int32 attackadd = 13;
-    // repeated int32 attackmul = 14;
+    required int32 attack = 12;
+    // required uint32 attackbase = 13;
+    // repeated int32 attackadd = 14;
+    // repeated int32 attackmul = 15;
 
-    required int32 defend = 15;
-    // required uint32 defendbase = 16;
-    // repeated int32 defendadd = 17;
-    // repeated int32 defendmul = 18;
+    required int32 defend = 16;
+    // required uint32 defendbase = 17;
+    // repeated int32 defendadd = 18;
+    // repeated int32 defendmul = 19;
 
-    required int32 speed = 19;
-    // required uint32 speedbase = 20;
-    // repeated int32 speedadd = 21;
-    // repeated int32 speedmul = 22;
+    required int32 speed = 20;
+    // required uint32 speedbase = 21;
+    // repeated int32 speedadd = 22;
+    // repeated int32 speedmul = 23;
 
-    required string actionType = 23;
-    required uint32 actionBeginTimeStamp = 24;
-    required uint32 actionEndTimeStamp = 25;
-    optional string actionEventId = 26;
-    optional string actionBuildingId = 27;
+    required string actionType = 24;
+    required uint32 actionBeginTimeStamp = 25;
+    required uint32 actionEndTimeStamp = 26;
+    optional string actionEventId = 27;
+    optional string actionBuildingId = 28;
 
-    repeated fight_res actionFightRes = 28;
-    optional string actionFightId = 29;
-    optional uint32 actionFightWinner = 30;
-    optional uint32 actionFightHp = 31;
+    repeated fight_res actionFightRes = 29;
+    optional string actionFightId = 30;
+    optional uint32 actionFightWinner = 31;
+    optional uint32 actionFightHp = 32;
 
-    required uint32 eventStatus = 32;
+    required uint32 eventStatus = 33;
     
-    required uint32 winProgress = 33;
-    required uint32 winExp = 34;
+    required uint32 winProgress = 34;
+    required uint32 winExp = 35;
     
     optional string NFTInitLinkId = 36;
     optional int32 rebirthStartTime = 37;

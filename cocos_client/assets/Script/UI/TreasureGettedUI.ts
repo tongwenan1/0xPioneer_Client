@@ -103,7 +103,7 @@ export class TreasureGettedUI extends ViewController {
             .to(0.2, { scale: v3(0.7, 0.7, 0.7) })
             .delay(0.5)
             .call(() => {
-                UIPanelManger.inst.popPanel();
+                UIPanelManger.inst.popPanel(this.node);
             })
             .start();
 

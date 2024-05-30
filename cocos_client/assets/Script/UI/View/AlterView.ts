@@ -37,7 +37,7 @@ export class AlterView extends ViewController {
     //-------------------------------- action
     private async onTapConfrim() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel(null, UIPanelLayerType.HUD);
+        UIPanelManger.inst.popPanel(this.node, UIPanelLayerType.HUD);
         if (this._confirmCallback != null) {
             this._confirmCallback();
         }
@@ -45,7 +45,7 @@ export class AlterView extends ViewController {
 
     private async onTapCancel() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel(null, UIPanelLayerType.HUD);
+        UIPanelManger.inst.popPanel(this.node, UIPanelLayerType.HUD);
         if (this._cancelCallback != null) {
             this._cancelCallback();
         }

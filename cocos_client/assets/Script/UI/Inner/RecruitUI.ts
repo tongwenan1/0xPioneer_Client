@@ -179,7 +179,7 @@ export class RecruitUI extends ViewController {
 
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
 
     private onTapGenerateMax() {
@@ -231,7 +231,7 @@ export class RecruitUI extends ViewController {
             num: this._selectGenerateNum,
         });
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private async onTapDelegate() {
         const result = await UIPanelManger.inst.pushPanel(UIName.DelegateUI);

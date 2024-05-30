@@ -158,7 +158,7 @@ export class ArtifactStore extends ViewController {
     //------------------------------------------------------------ action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
 
     private _onTouchStart(event: EventTouch) {
@@ -269,13 +269,13 @@ export class ArtifactStore extends ViewController {
                         intersectItem.itemData = this._itemDatas[this._moveArtifactIndex];
                         this._itemDatas[this._moveArtifactIndex].effectIndex = index;
                         
-                        NetworkMgr.websocketMsg.player_artifact_equip({ artifactId: this._itemDatas[this._moveArtifactIndex].artifactConfigId, artifactEffectIndex: index });
+                        NetworkMgr.websocketMsg.player_artifact_change({ artifactId: this._itemDatas[this._moveArtifactIndex].artifactConfigId, artifactEffectIndex: index });
                     } else {
                         if (this._moveEffectViewData != null) {
                             this._moveEffectViewData.effectIndex = index;
                             this._allEffectItemViews[index].itemData = this._moveEffectViewData;
 
-                            NetworkMgr.websocketMsg.player_artifact_equip({ artifactId: this._moveEffectViewData.artifactConfigId, artifactEffectIndex: index });
+                            NetworkMgr.websocketMsg.player_artifact_change({ artifactId: this._moveEffectViewData.artifactConfigId, artifactEffectIndex: index });
                         }
                     }
                     this._moveArtifactView.parent = intersectItem.node;
@@ -283,7 +283,7 @@ export class ArtifactStore extends ViewController {
                     this._refreshArtifactEffect();
                 } else {
                     if (!isItemScrollAction && this._moveEffectViewData != null) {
-                        NetworkMgr.websocketMsg.player_artifact_remove({ artifactId: this._moveEffectViewData.artifactConfigId });
+                        NetworkMgr.websocketMsg.player_artifact_change({ artifactId: this._moveEffectViewData.artifactConfigId, artifactEffectIndex: -1 });
                     }
                 }
             } else {

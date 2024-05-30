@@ -9,6 +9,7 @@ export class MapItemMonster extends Component {
 
     public refreshUI(model: MapPioneerObject) {
         this._nameLabel.string = LanMgr.getLanById(model.name);
+        this.node.getChildByPath("Icon/Level").getComponent(Label).string = "Lv." + model.level;
 
         let moveCounting: boolean = false;
         if (model.logics.length > 0) {

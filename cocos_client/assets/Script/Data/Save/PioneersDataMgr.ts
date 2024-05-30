@@ -78,7 +78,10 @@ export class PioneersDataMgr {
         let busy: boolean = false;
         const findPioneer = this._pioneers.find((pioneer) => pioneer.id === this._currentActionPioneerId);
         if (findPioneer != undefined) {
-            busy = findPioneer.actionType != MapPioneerActionType.idle;
+            busy =
+                findPioneer.actionType != MapPioneerActionType.idle &&
+                findPioneer.actionType != MapPioneerActionType.eventing &&
+                findPioneer.actionType != MapPioneerActionType.wormhole;
         }
         return busy;
     }
@@ -114,7 +117,7 @@ export class PioneersDataMgr {
             NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_TALK_CHANGED, { id: pioneerId, talkId: npcObj.talkId });
         }
     }
-    
+
     // move
     public beginMove(pioneerId: string, movePaths: TilePos[], forceShowMovePath: boolean = false) {
         const findPioneer = this.getById(pioneerId);

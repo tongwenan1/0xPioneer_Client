@@ -77,7 +77,6 @@ export class WebsocketMsg {
         this.send_packet("enter_game", d);
     }
 
-    
     public player_pioneer_change_show(d: c2s_user.Iplayer_pioneer_change_show) {
         this.send_packet("player_pioneer_change_show", d);
     }
@@ -121,11 +120,8 @@ export class WebsocketMsg {
     public player_point_treasure_open(d: c2s_user.Iplayer_point_treasure_open) {
         this.send_packet("player_point_treasure_open", d);
     }
-    public player_artifact_equip(d: c2s_user.Iplayer_artifact_equip) {
-        this.send_packet("player_artifact_equip", d);
-    }
-    public player_artifact_remove(d: c2s_user.Iplayer_artifact_remove) {
-        this.send_packet("player_artifact_remove", d);
+    public player_artifact_change(d: c2s_user.Iplayer_artifact_change) {
+        this.send_packet("player_artifact_change", d);
     }
     public player_building_levelup(d: c2s_user.Iplayer_building_levelup) {
         this.send_packet("player_building_levelup", d);
@@ -309,12 +305,9 @@ export namespace c2s_user {
     export interface Iplayer_point_treasure_open {
         boxId: string;
     }
-    export interface Iplayer_artifact_equip {
+    export interface Iplayer_artifact_change {
         artifactId: string;
         artifactEffectIndex: number;
-    }
-    export interface Iplayer_artifact_remove {
-        artifactId: string;
     }
     export interface Iplayer_building_levelup {
         innerBuildingId: string;
@@ -419,6 +412,10 @@ export namespace s2c_user {
     export interface Iartifact_change {
         iteminfo: share.Iartifact_info_data[];
     }
+    export interface Iplayer_artifact_change_res {
+        res: number;
+        data: share.Iartifact_info_data;
+    }
     export interface Iget_pioneers_res {
         res: number;
         data?: share.Ipioneer_info | null;
@@ -471,14 +468,6 @@ export namespace s2c_user {
     }
     export interface Iplayer_item_use_res {
         res: number;
-    }
-    export interface Iplayer_artifact_equip_res {
-        res: number;
-        data: share.Iartifact_info_data;
-    }
-    export interface Iplayer_artifact_remove_res {
-        res: number;
-        data: share.Iartifact_info_data;
     }
     export interface Ibuilding_change {
         buildings: share.Ibuilding_data[];
@@ -696,6 +685,7 @@ export namespace share {
     export interface Ipioneer_data {
         id: string;
         show: boolean;
+        level: number;
         faction: number;
         type: string;
         stayPos: pos2d;
@@ -706,13 +696,13 @@ export namespace share {
         attack: number;
 
         defend: number;
-        
+
         speed: number;
-        
+
         actionType: string;
         actionBeginTimeStamp: number;
         actionEndTimeStamp: number;
-        
+
         winProgress?: number;
         winExp: number;
         actionEventId?: string;
@@ -782,17 +772,18 @@ export namespace share {
         animType: string;
 
         defendPioneerIds: string[];
-        
-        gatherPioneerIds: string[];
 
-        
+        gatherPioneerIds: string[];
+        quota: number;
+
+        explorePioneerIds: string[];
+
         eventId: string;
         eventPioneerIds: string[];
         eventPioneerDatas: { [key: string]: share.Ipioneer_data };
 
         exp: number;
         progress: number;
-
 
         hpMax: number;
         hp: number;

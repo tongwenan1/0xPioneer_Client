@@ -22,6 +22,6 @@ export class WorldTreasureTipUI extends ViewController {
 
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
 }

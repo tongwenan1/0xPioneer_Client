@@ -515,6 +515,6 @@ export class PlayerInfoUI extends ViewController {
     }
 
     private onTapClose() {
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
 }

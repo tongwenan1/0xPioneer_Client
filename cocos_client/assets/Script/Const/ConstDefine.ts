@@ -121,3 +121,15 @@ export const GameRankColor = [
     new Color().fromHEX(GetPropRankColor.RANK4),
     new Color().fromHEX(GetPropRankColor.RANK5),
 ];
+
+export enum MapInteractType {
+    Wormhole,
+    Move,
+    Attack,
+    Explore,
+    Collect,
+    Event,
+    Camp,
+    CampOut,
+    Talk
+}

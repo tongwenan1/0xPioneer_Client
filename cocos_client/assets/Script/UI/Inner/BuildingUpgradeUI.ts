@@ -251,13 +251,13 @@ export class BuildingUpgradeUI extends ViewController {
 
             this._closeBuildingUpgradeUI();
             await this.playExitAnimation();
-            UIPanelManger.inst.popPanel();
+            UIPanelManger.inst.popPanel(this.node);
         }
     }
 
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private async onTapDelegate() {
         const result = await UIPanelManger.inst.pushPanel(UIName.DelegateUI);

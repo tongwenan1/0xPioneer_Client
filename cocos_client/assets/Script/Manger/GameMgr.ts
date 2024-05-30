@@ -1,13 +1,32 @@
 import NotificationMgr from "../Basic/NotificationMgr";
 import InnerBuildingConfig from "../Config/InnerBuildingConfig";
+import MapBuildingConfig from "../Config/MapBuildingConfig";
 import { InnerBuildingType } from "../Const/BuildingDefine";
 import { GameExtraEffectType } from "../Const/ConstDefine";
+import ItemData from "../Const/Item";
+import { MapBuildingObject } from "../Const/MapBuilding";
 import { NotificationName } from "../Const/Notification";
 import { MapPlayerPioneerObject } from "../Const/PioneerDefine";
 import { DataMgr } from "../Data/DataMgr";
 
 export default class GameMgr {
     public enterGameSence: boolean = false;
+
+
+    public getResourceBuildingRewardAndQuotaMax(building: MapBuildingObject): { reward: ItemData, quotaMax: number } {
+        const config = MapBuildingConfig.getById(building.id);
+        if (config == null) {
+            return null;
+        } 
+        const reward = new ItemData(config.resources[0], config.resources[1]);
+        reward.count = Math.floor(reward.count * (1 + (building.level - 1) * 0.2));
+
+        let quotaMax: number = config.quota;
+        quotaMax = quotaMax + Math.floor(0.5 * (building.level - 1));
+
+        return { reward: reward, quotaMax: quotaMax };
+    }
+
     //--------------------------- effect
     public getAfterExtraEffectPropertyByPioneer(pioneerId: string, type: GameExtraEffectType, originalValue: number): number {
         // artifact effect

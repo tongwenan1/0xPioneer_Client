@@ -191,7 +191,7 @@ export class CivilizationLevelUpUI extends ViewController {
     }
 
     private async onTapClose() {
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
         if (UserInfoMgr.afterCivilizationClosedShowPioneerDatas.length > 0) {
             const result = await UIPanelManger.inst.pushPanel(UIName.SecretGuardGettedUI);
             if (result.success) {

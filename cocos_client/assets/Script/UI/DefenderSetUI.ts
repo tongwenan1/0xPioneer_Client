@@ -111,7 +111,7 @@ export class DefenderSetUI extends ViewController {
     }
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
 
     private _onTouchStart(event: EventTouch) {

@@ -262,7 +262,7 @@ export class TaskListUI extends ViewController {
     //---------------------------------------------------
     // action
     private onTapClose() {
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private onTapShowDetail() {
         if (this._isDetailShow) {

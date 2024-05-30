@@ -115,7 +115,7 @@ export class NFTViewInfoUI extends ViewController {
     //---------------------------------------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private async onTapSkill(event: Event, customEventData: string) {
         if (this._NFTData == null) {

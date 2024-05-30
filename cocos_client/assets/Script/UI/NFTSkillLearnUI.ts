@@ -92,7 +92,7 @@ export class NFTSkillLearnUI extends ViewController {
     //---------------------------------------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private async onTapBookItem(event: Event, customEventData: string) {
         const index: number = parseInt(customEventData);
@@ -118,7 +118,7 @@ export class NFTSkillLearnUI extends ViewController {
                 skillItemId: itemConfigId,
             });
             await this.playExitAnimation();
-            UIPanelManger.inst.popPanel();
+            UIPanelManger.inst.popPanel(this.node);
         });
     }
 }

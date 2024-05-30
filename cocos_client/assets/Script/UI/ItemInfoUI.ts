@@ -59,7 +59,7 @@ export class ItemInfoUI extends ViewController {
                 }
             }
         } else {
-            UIPanelManger.inst.popPanel();
+            UIPanelManger.inst.popPanel(this.node);
             if (closeCallback != null) {
                 closeCallback();
             }
@@ -82,7 +82,7 @@ export class ItemInfoUI extends ViewController {
     private async onTapClose() {
         if (this._items.length <= 0) {
             await this.playExitAnimation();
-            UIPanelManger.inst.popPanel();
+            UIPanelManger.inst.popPanel(this.node);
             if (this._closeCallback != null) {
                 this._closeCallback();
             }

@@ -271,7 +271,7 @@ export class BattleReportsUI extends ViewController {
     //---------------------------------------------------
     // action
     onTapClose() {
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
 
     public onBattleReportListChanged() {

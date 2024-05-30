@@ -137,13 +137,16 @@ export class MapBuildingDataMgr {
             stayMapPositions: stayPos,
             animType: element.animType,
 
-            defendPioneerIds: element.defendPioneerIds,
+            defendPioneerIds: element.defendPioneerIds == null ? [] : element.defendPioneerIds,
 
-            gatherPioneerIds: element.gatherPioneerIds,
+            gatherPioneerIds: element.gatherPioneerIds == null ? [] : element.gatherPioneerIds,
+            quota: element.quota,
 
             eventId: element.eventId,
-            eventPioneerIds: element.eventPioneerIds,
+            eventPioneerIds: element.eventPioneerIds == null ? [] : element.eventPioneerIds,
             eventPioneerDatas: new Map(),
+
+            explorePioneerIds: element.explorePioneerIds == null ? [] : element.explorePioneerIds,
 
             progress: element.progress,
             exp: element.exp,

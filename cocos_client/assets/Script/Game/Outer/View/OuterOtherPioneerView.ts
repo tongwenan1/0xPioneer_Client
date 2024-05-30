@@ -89,7 +89,7 @@ export class OuterOtherPioneerView extends Component {
             statusView.getChildByPath("Text").getComponent(Label).string = "Battle";
             statusView.getChildByPath("Icon/Battle").active = true;
             statusView.getChildByPath("Icon/Search").active = false;
-            statusView.getChildByName("Level").getComponent(Label).string = "Lv.1";
+            statusView.getChildByName("Level").getComponent(Label).string = "Lv." + pioneer.level;
         } else if (pioneer.type == MapPioneerType.gangster && pioneer.faction == MapMemberFactionType.friend) {
             statusView.active = true;
             // useLanMgr
@@ -97,7 +97,7 @@ export class OuterOtherPioneerView extends Component {
             statusView.getChildByPath("Text").getComponent(Label).string = "Search";
             statusView.getChildByPath("Icon/Battle").active = false;
             statusView.getChildByPath("Icon/Search").active = true;
-            statusView.getChildByName("Level").getComponent(Label).string = "Lv.1";
+            statusView.getChildByName("Level").getComponent(Label).string = "Lv." + pioneer.level;
         }
 
         // taskhide

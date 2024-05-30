@@ -223,9 +223,7 @@ export class BattleReportListItemUI extends Component {
                 console.error(`Unknown _locationInfo.type: ${this._locationInfo.type}`);
                 return;
         }
-
-        // UIPanelMgr.popPanel(UIName.BattleReportUI);
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanelByName(UIName.BattleReportUI);
         GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(pos.x, pos.y), true);
     }
 
@@ -256,7 +254,7 @@ export class BattleReportListItemUI extends Component {
             UIHUDController.showCenterTip("Error");
             return;
         }
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanelByName(UIName.BattleReportUI);
         const result = await UIPanelManger.inst.pushPanel(UIName.BrachEventUI);
         if (result.success) {
             result.node.getComponent(EventUI).eventUIShow(reportData.pioneerId, reportData.buildingId, currentEvent);

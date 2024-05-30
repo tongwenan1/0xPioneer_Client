@@ -60,9 +60,9 @@ export enum protobuf_c2s {
 
 
     // ------ artifact ------
+    player_artifact_change,
     player_artifact_equip,
     player_artifact_remove,
-
 
     // ------ treasure ------
     get_treasure_info,
@@ -160,6 +160,7 @@ export enum protobuf_s2c {
     player_map_pioneer_faction_change,
     mappioneer_reborn_change,
     pioneer_reborn_res,
+    player_fight_end,
 
 
     // ------ mapbuilding ------
@@ -187,6 +188,7 @@ export enum protobuf_s2c {
 
 
     // ------ artifact ------
+    player_artifact_change_res,
     player_artifact_equip_res,
     player_artifact_remove_res,
     // artifact: notify

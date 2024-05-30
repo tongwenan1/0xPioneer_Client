@@ -186,6 +186,9 @@ message pioneer_reborn_res {
     required uint32 rebirthStartTime = 3;
     required uint32 rebirthEndTime = 4;
 }
+message player_fight_end {
+    required string pioneerId = 1;
+}
 
 
 // ------ mapbuilding ------
@@ -240,6 +243,10 @@ message storhouse_change {
 
 
 // ------ artifact ------
+message player_artifact_change_res {
+    required int32 res = 1;
+    required share.artifact_info_data data = 2;
+}
 message player_artifact_equip_res {
     required int32 res = 1;
     required share.artifact_info_data data = 2;

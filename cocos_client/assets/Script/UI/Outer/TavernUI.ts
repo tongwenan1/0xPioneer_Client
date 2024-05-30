@@ -110,7 +110,7 @@ export class TavernUI extends ViewController {
     //------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private async onTapRecruit() {
         if (this._buildingId == null) {
@@ -118,6 +118,6 @@ export class TavernUI extends ViewController {
         }
         // begin recruit nft
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
 }

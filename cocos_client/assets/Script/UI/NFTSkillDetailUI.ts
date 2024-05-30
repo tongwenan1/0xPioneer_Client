@@ -70,7 +70,7 @@ export class NFTSkillDetailUI extends ViewController {
     //---------------------------------------------------- action
     private async onTapClose() {
         await this.playExitAnimation();
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private async onTapForget() {
         const result = await UIPanelManger.inst.pushPanel(HUDName.Alter, UIPanelLayerType.HUD);
@@ -83,7 +83,7 @@ export class NFTSkillDetailUI extends ViewController {
                 skillIndex: this._skillIndex
             });
             await this.playExitAnimation();
-            UIPanelManger.inst.popPanel();
+            UIPanelManger.inst.popPanel(this.node);
         });
     }
 }

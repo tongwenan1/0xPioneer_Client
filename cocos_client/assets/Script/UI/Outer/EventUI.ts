@@ -273,14 +273,14 @@ export class EventUI extends ViewController {
             buildingId: this._eventBuildingId,
             pioneerId: this._triggerPioneerId
         });
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private onTapFight(event: Event, customEventData: string) {
         NetworkMgr.websocketMsg.player_event_select({
             buildingId: this._eventBuildingId,
             pioneerId: this._triggerPioneerId,
         });
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
     private onTapSelect(actionEvent: Event, customEventData: string) {
         const datas = customEventData.split("|");
@@ -297,6 +297,6 @@ export class EventUI extends ViewController {
             pioneerId: this._triggerPioneerId,
             selectIdx: index
         });
-        UIPanelManger.inst.popPanel();
+        UIPanelManger.inst.popPanel(this.node);
     }
 }
