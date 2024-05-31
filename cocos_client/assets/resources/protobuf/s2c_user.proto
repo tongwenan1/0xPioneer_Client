@@ -64,7 +64,7 @@ message pending_change {
 // ------ get data ------
 message get_battle_report_res {
     required int32 res = 1;
-    repeated share.battle_report_data data = 2;
+    optional share.battle_report_data data = 2;
 }
 message get_user_settlement_info_res {
     required int32 res = 1;
@@ -76,14 +76,10 @@ message get_user_settlement_info_res {
 // player: talk
 message player_talk_select_res {
     required int32 res = 1;
-    required string talkId = 2;
-    required int32 selectIndex = 3;
+    optional string talkId = 2;
+    optional int32 selectIndex = 3;
 }
 // player: notify
-message player_heat_value_change_res {
-    required int32 res = 1;
-    required uint32 currentHeatValue = 2;
-}
 message player_exp_change {
     required int32 addExp = 1; // exp change value
     required uint32 newExp = 2; // player new exp after change
@@ -109,8 +105,8 @@ message get_pioneer_info_res {
 // pioneer: show/hide
 message player_pioneer_change_show_res {
     required int32 res = 1;
-    required string pioneerId = 2;
-    required bool show = 3;
+    optional string pioneerId = 2;
+    optional bool show = 3;
 }
 // pioneer: move
 message player_move_res {
@@ -121,24 +117,24 @@ message player_move_res {
 // pioneer: gather
 message player_gather_start_res {
     required int32 res = 1;
-    required string buildingId = 2;
-    required string pioneerId = 3;
+    optional string buildingId = 2;
+    optional string pioneerId = 3;
 }
 // pioneer: explore
 message player_explore_start_res {
     required int32 res = 1;
-    required string buildingId = 2;
-    required string pioneerId = 3;
+    optional string buildingId = 2;
+    optional string pioneerId = 3;
 }
 message player_explore_npc_start_res {
     required int32 res = 1;
-    required string pioneerId = 2;
-    required string npcId = 3;
+    optional string pioneerId = 2;
+    optional string npcId = 3;
 }
 message player_explore_gangster_start_res {
     required int32 res = 1;
-    required string pioneerId = 2;
-    required string gangsterId = 3;
+    optional string pioneerId = 2;
+    optional string gangsterId = 3;
 }
 // pioneer: fight(map)
 message player_fight_start_res {
@@ -182,9 +178,9 @@ message mappioneer_reborn_change {
 }
 message pioneer_reborn_res {
     required int32 res = 1;
-    required string pioneerId = 2;
-    required uint32 rebirthStartTime = 3;
-    required uint32 rebirthEndTime = 4;
+    optional string pioneerId = 2;
+    optional uint32 rebirthStartTime = 3;
+    optional uint32 rebirthEndTime = 4;
 }
 message player_fight_end {
     required string pioneerId = 1;
@@ -245,7 +241,7 @@ message storhouse_change {
 // ------ artifact ------
 message player_artifact_change_res {
     required int32 res = 1;
-    required share.artifact_info_data data = 2;
+    optional share.artifact_info_data data = 2;
 }
 // artifact: notify
 message artifact_change {
@@ -272,8 +268,8 @@ message player_world_treasure_lottery_res {
 // treasure: notify
 message player_world_treasure_pool_change_res {
     required int32 res = 1;
-    required string itemId = 2;
-    required uint32 num = 3;
+    optional string itemId = 2;
+    optional uint32 num = 3;
 }
 message player_treasure_progress_change {
     required int32 addProgress = 1;
@@ -314,24 +310,24 @@ message building_change {
 // ------ pioneerNFT ------
 message player_nft_lvlup_res {
     required int32 res = 1;
-    required share.nfts_info_data nftData = 2;
+    optional share.nfts_info_data nftData = 2;
 }
 message player_nft_rankup_res {
     required int32 res = 1;
-    required share.nfts_info_data nftData = 2;
+    optional share.nfts_info_data nftData = 2;
 }
 message player_nft_skill_learn_res {
     required int32 res = 1;
-    required share.nfts_info_data nftData = 2;
+    optional share.nfts_info_data nftData = 2;
 }
 message player_nft_skill_forget_res {
     required int32 res = 1;
-    required share.nfts_info_data nftData = 2;
+    optional share.nfts_info_data nftData = 2;
 }
 message player_bind_nft_res {
     required int32 res = 1;
-    required share.pioneer_data pioneerData = 2;
-    required share.nfts_info_data nftData = 3;
+    optional share.pioneer_data pioneerData = 2;
+    optional share.nfts_info_data nftData = 3;
 }
 // pioneerNFT: notify
 message nft_change {
@@ -347,36 +343,30 @@ message player_wormhole_set_defender_res {
 message player_wormhole_set_attacker_res {
     required int32 res = 1;
     map<string,string> attacker = 2;
-    required string buildingId = 3;
+    optional string buildingId = 3;
 }
 message player_wormhole_fight_start_res {
     required int32 res = 1;
-    required string buildingId = 2;
+    optional string buildingId = 2;
 }
 // wormhole: notify
 message player_wormhole_fight_attacked_res {
     required int32 res = 1;
-    required string attackerName = 2;
-    required string defenderUid = 3;
+    optional string attackerName = 2;
+    optional string defenderUid = 3;
 }
 message player_wormhole_fight_res {
     required int32 res = 1;
-    required string buildingId = 2;
-    required string defenderUid = 3;
-    required string attackerName = 4;
-    required string defenderName = 5;
+    optional string buildingId = 2;
+    optional string defenderUid = 3;
+    optional string attackerName = 4;
+    optional string defenderName = 5;
     map<string,string> defenderData = 6;
-    required bool fightResult = 7;
+    optional bool fightResult = 7;
 }
 
 
 // ------ test ------
-message player_add_heat_value_res {
-    required int32 res = 1;
-}
-message save_archives_res {
-    required int32 res = 1;
-}
 message reborn_all_res {
     required int32 res = 1;
 }

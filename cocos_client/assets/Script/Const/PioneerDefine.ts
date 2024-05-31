@@ -263,7 +263,7 @@ export default class PioneerDefine {
             fightResultWin: temple.actionFightWinner == 1,
             actionEventId: temple.actionEventId,
             actionBuildingId: temple.actionBuildingId,
-            rebornTime: temple.rebornTime == null ? currentTime : currentTime + (temple.rebornTime - temple.dieTime) * 1000,
+            rebornTime: temple.rebornTime == null ? 0 : temple.rebornTime * 1000,
         };
         if (obj.type == MapPioneerType.player) {
             let playerObj: MapPlayerPioneerObject;

@@ -204,6 +204,10 @@ export class DataMgr {
                     if (oldData.hp != newData.hp || oldData.hpMax != newData.hpMax) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED);
                     }
+
+                    if (oldData.rebornTime != newData.rebornTime) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_REBON_CHANGE);
+                    }
                     break;
                 }
             }
@@ -252,6 +256,10 @@ export class DataMgr {
                         oldData.explorePioneerIds.length != newData.explorePioneerIds.length
                     ) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_ACTION_PIONEER_CHANGE);
+                    }
+
+                    if (oldData.rebornTime != newData.rebornTime) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_REBON_CHANGE);
                     }
                     break;
                 }

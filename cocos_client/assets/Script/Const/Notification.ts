@@ -64,6 +64,7 @@ export enum NotificationName {
     MAP_BUILDING_WORMHOLE_ATTACKER_CHANGE,
     MAP_BUILDING_WORMHOLE_ATTACK_COUNT_DONW_TIME_CHANGE,
     MAP_BUILDING_ACTION_PIONEER_CHANGE,
+    MAP_BUILDING_REBON_CHANGE,
 
     //---------------------- map pioneer
     MAP_FAKE_FIGHT_SHOW,
@@ -81,6 +82,8 @@ export enum NotificationName {
     MAP_PIONEER_ACTIONTYPE_CHANGED,
     MAP_PIONEER_STAY_POSITION_CHANGE,
     MAP_PIONEER_HP_CHANGED,
+
+    MAP_PIONEER_REBON_CHANGE,
 
     //---------------------- nft
     NFT_LEVEL_UP,

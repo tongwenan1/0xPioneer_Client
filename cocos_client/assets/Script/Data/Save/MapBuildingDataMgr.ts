@@ -120,7 +120,6 @@ export class MapBuildingDataMgr {
                 }
             }
         }
-        const currentTimestamp = new Date().getTime();
         const baseObj: MapBuildingBaseObject = {
             id: element.id,
             name: element.name,
@@ -149,7 +148,7 @@ export class MapBuildingDataMgr {
 
             winprogress: element.winprogress,
 
-            rebornTime: element.rebornTime == null ? currentTimestamp : currentTimestamp + (element.rebornTime - element.dieTime) * 1000,
+            rebornTime: element.rebornTime == null ? 0 : element.rebornTime * 1000,
         };
         if (element.eventPioneerDatas != null) {
             for (const key in element.eventPioneerDatas) {

@@ -35,6 +35,7 @@ export class OuterBuildingController extends Component {
         NotificationMgr.addListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACKER_CHANGE, this._refreshUI, this);
         NotificationMgr.addListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACK_COUNT_DONW_TIME_CHANGE, this._refreshUI, this);
         NotificationMgr.addListener(NotificationName.MAP_BUILDING_ACTION_PIONEER_CHANGE, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.MAP_BUILDING_REBON_CHANGE, this._refreshUI, this);
     }
 
     start() {
@@ -96,6 +97,7 @@ export class OuterBuildingController extends Component {
         NotificationMgr.removeListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACKER_CHANGE, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACK_COUNT_DONW_TIME_CHANGE, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.MAP_BUILDING_ACTION_PIONEER_CHANGE, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.MAP_BUILDING_REBON_CHANGE, this._refreshUI, this);
     }
 
     private _refreshUI() {
@@ -164,9 +166,9 @@ export class OuterBuildingController extends Component {
                         } else {
                             worldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
                         }
-                        const rebornView = instantiate(this.rebonPrefab);
-                        rebornView.setPosition = worldPos
+                        const rebornView: Node = instantiate(this.rebonPrefab);
                         rebornView.setParent(decorationView);
+                        rebornView.setWorldPosition(worldPos);
                         rebornView.getComponent(OuterRebonView).refreshUI(building.rebornTime);
                         this._rebonViews.push(rebornView);
                     }

@@ -10,15 +10,21 @@ export class OuterRebonView extends Component {
         this._rebonTime = rebonTime;
     }
 
-    start() {}
+    protected onLoad(): void {
+        this.node.getChildByPath("Rebon").active = false;
+    }
+
+    start() {
+        
+    }
 
     update(deltaTime: number) {
-        const currentTime: number = 0;
-        if (currentTime < this._rebonTime) {
-            this.node.active = true;
+        const currentTime: number = new Date().getTime();
+        if (currentTime < this._rebonTime && ((this._rebonTime - currentTime) / 1000) <= 15) {
+            this.node.getChildByPath("Rebon").active = true;
             this.node.getChildByPath("Rebon").getComponent(Label).string = "Rebon: " + CommonTools.formatSeconds((this._rebonTime - currentTime) / 1000);
         } else {
-            this.node.active = false;
+            this.node.getChildByPath("Rebon").active = false;
         }
     }
 }

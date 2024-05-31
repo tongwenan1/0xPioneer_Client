@@ -39,6 +39,7 @@ import {
     MapPioneerType,
 } from "../../Const/PioneerDefine";
 import { NetworkMgr } from "../../Net/NetworkMgr";
+import { OuterRebonView } from "./View/OuterRebonView";
 
 const { ccclass, property } = _decorator;
 
@@ -135,9 +136,11 @@ export class OuterPioneerController extends ViewController {
     private footPathTargetPrefab: Prefab;
 
     @property(Prefab)
-    private rebonRefab: Prefab;
+    private rebonPrefab: Prefab;
 
     private _pioneerMap: Map<string, Node> = new Map();
+    private _rebonViews: Node [] = [];
+
     private _movingPioneerIds: string[] = [];
     private _fightViewMap: Map<string, OuterFightView> = new Map();
     private _footPathMap: Map<string, Node[]> = new Map();
@@ -173,6 +176,8 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, this._onPlayerPioneerDidMoveOneStep, this);
         // fight
         NotificationMgr.addListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
+        // rebon
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_REBON_CHANGE, this._refreshUI, this);
     }
 
     protected viewDidStart() {
@@ -259,6 +264,8 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.removeListener(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, this._onPlayerPioneerDidMoveOneStep, this);
         // fight
         NotificationMgr.removeListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
+        // rebon
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_REBON_CHANGE, this._refreshUI, this);
     }
 
     private _refreshUI() {
@@ -266,6 +273,12 @@ export class OuterPioneerController extends ViewController {
         if (decorationView == null) {
             return;
         }
+
+        for (const view of this._rebonViews) {
+            view.destroy();
+        }
+        this._rebonViews = [];
+
         const allPioneers = DataMgr.s.pioneer.getAll();
         let changed: boolean = false;
         for (const pioneer of allPioneers) {
@@ -324,6 +337,13 @@ export class OuterPioneerController extends ViewController {
                 if (this._pioneerMap.has(pioneer.id)) {
                     this._pioneerMap.get(pioneer.id).destroy();
                     this._pioneerMap.delete(pioneer.id);
+                }
+                if (pioneer.rebornTime > new Date().getTime()) {
+                    const rebornView: Node = instantiate(this.rebonPrefab);
+                    rebornView.setParent(decorationView);
+                    rebornView.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(pioneer.stayPos.x, pioneer.stayPos.y));
+                    rebornView.getComponent(OuterRebonView).refreshUI(pioneer.rebornTime);
+                    this._rebonViews.push(rebornView);
                 }
             }
         }

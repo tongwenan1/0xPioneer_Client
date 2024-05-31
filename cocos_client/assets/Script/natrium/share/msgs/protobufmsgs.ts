@@ -93,8 +93,6 @@ export enum protobuf_c2s {
 
 
     // ------ test ------
-    player_add_heat_value,
-    save_archives,
     reborn_all,
 }
 
@@ -126,7 +124,6 @@ export enum protobuf_s2c {
     // player: talk
     player_talk_select_res,
     // player: notify
-    player_heat_value_change_res,
     player_exp_change,
     player_lvlup_change,
 
@@ -232,7 +229,5 @@ export enum protobuf_s2c {
 
 
     // ------ test ------
-    player_add_heat_value_res,
-    save_archives_res,
     reborn_all_res,
 }

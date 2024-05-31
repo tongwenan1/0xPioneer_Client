@@ -148,10 +148,6 @@ export class WebsocketMsg {
         this.send_packet("player_nft_skill_forget", d);
     }
 
-    public player_add_heat_value(d: c2s_user.Iplayer_add_heat_value) {
-        this.send_packet("player_add_heat_value", d);
-    }
-
     public player_world_treasure_lottery(d: c2s_user.Iplayer_world_treasure_lottery) {
         this.send_packet("player_world_treasure_lottery", d);
     }
@@ -338,10 +334,6 @@ export namespace c2s_user {
         nftId: string;
         skillIndex: number;
     }
-
-    export interface Iplayer_add_heat_value {
-        num: number;
-    }
     export interface Iplayer_world_treasure_lottery {}
     export interface Iget_treasure_info {}
 
@@ -499,10 +491,6 @@ export namespace s2c_user {
         nftData: share.Infts_info_data;
     }
 
-    export interface Iplayer_heat_value_change_res {
-        res: number;
-        currentHeatValue: number;
-    }
     export interface Iplayer_world_treasure_lottery_res {
         res: number;
         itemId: string;

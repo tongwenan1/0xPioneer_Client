@@ -123,7 +123,7 @@ message player_item_use {
 
 // ------ artifact ------
 message player_artifact_change {
-    required string artifactId = 1;
+    required string artifactId = 1; // uniqueId
     required int32 artifactEffectIndex = 2;
 }
 
@@ -196,10 +196,4 @@ message player_wormhole_fight_start {
 
 
 // ------ test ------
-message player_add_heat_value {
-    required uint32 num = 1;
-}
-message save_archives {
-    required string archives = 1;
-}
 message reborn_all { }
