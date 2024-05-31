@@ -49,6 +49,9 @@ export class MapPioneer extends Component {
 
     private _fightView: OuterFightView = null;
     private _fightResultView: OuterFightResultView = null;
+    private _fightInterval: number = null;
+    private _fightAttackerOrigianlData: { id: string; name: string; hp: number; hpmax: number } = null;
+    private _fightDefenderOriginalData: { id: string; name: string; hp: number; hpmax: number } = null;
 
     private _contentView: Node = null;
     private _addingtroopsView: Node = null;
@@ -233,6 +236,8 @@ export class MapPioneer extends Component {
                         defender = DataMgr.s.pioneer.getById(fightDatas[0].attackerId);
                     }
                     if (defender != null) {
+                        this._fightAttackerOrigianlData = { id: attacker.id, name: attacker.name, hp: attacker.hp, hpmax: attacker.hpMax };
+                        this._fightDefenderOriginalData = { id: defender.id, name: defender.name, hp: defender.hp, hpmax: defender.hpMax };
                         this._fightView.node.active = true;
                         this._fightView.refreshUI(
                             {
@@ -247,42 +252,9 @@ export class MapPioneer extends Component {
                             },
                             true
                         );
-                        const fightInterval: number = setInterval(() => {
+                        this._fightInterval = setInterval(() => {
                             if (fightDatas.length <= 0) {
-                                clearInterval(fightInterval);
-                                this._fightView.node.active = false;
-                                this._fightResultView.node.active = true;
-                                this._fightResultView.showResult(this._model.fightResultWin, () => {
-                                    NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
-                                        attacker: {
-                                            name: attacker.name,
-                                            avatarIcon: "icon_player_avatar", // todo
-                                            hp: attacker.hp,
-                                            hpMax: attacker.hpMax,
-                                        },
-                                        defender: {
-                                            name: defender.name,
-                                            avatarIcon: "icon_player_avatar",
-                                            hp: defender.hp,
-                                            hpMax: defender.hpMax,
-                                        },
-                                        attackerIsSelf: true,
-                                        buildingId: null,
-                                        position: this._model.stayPos,
-                                        fightResult: attacker.hp != 0 ? "win" : "lose",
-                                        rewards: [],
-                                    });
-
-                                    this._fightResultView.node.active = false;
-                                    NetworkMgr.websocketMsg.get_pioneer_info({
-                                        pioneerIds: [attacker.id, defender.id],
-                                    });
-                                    if (attacker.actionBuildingId != null) {
-                                        NetworkMgr.websocketMsg.get_mapbuilding_info({
-                                            mapbuildingIds: [attacker.actionBuildingId],
-                                        });
-                                    }
-                                });
+                                clearInterval(this._fightInterval);
                                 return;
                             }
                             const data = fightDatas.shift();
@@ -404,6 +376,17 @@ export class MapPioneer extends Component {
         this._resourceAnimView.active = false;
     }
     start() {}
+
+    protected onEnable(): void {
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_FIGHT_BEGIN, this._onFightBegin, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_FIGHT_END, this._onFightEnd, this);
+    }
+
+    protected onDisable(): void {
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_FIGHT_BEGIN, this._onFightBegin, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_FIGHT_END, this._onFightEnd, this);
+    }
+
     update(deltaTime: number) {
         if (this._currnetIdleAnim != null) {
             this._idleCountTime += deltaTime;
@@ -441,5 +424,65 @@ export class MapPioneer extends Component {
         if (this._eventWaitedCallback != null) {
             this._eventWaitedCallback();
         }
+    }
+
+    //----------------- notificaiton
+    private _onFightBegin(data: { id: string }) {
+        if (this._model == null) {
+            return;
+        }
+        if (this._model.id != data.id) {
+            return;
+        }
+        this._model = DataMgr.s.pioneer.getById(data.id);
+        this.refreshUI(this._model);
+    }
+    private _onFightEnd(data: { id: string }) {
+        if (this._fightInterval == null) {
+            return;
+        }
+        if (this._model == null) {
+            return;
+        }
+        if (this._model.id != data.id) {
+            return;
+        }
+        if (this._fightAttackerOrigianlData == null || this._fightDefenderOriginalData == null) {
+            return;
+        }
+        if (this._model.fightData != null) {
+            for (const data of this._model.fightData) {
+                if (data.attackerId == this._fightAttackerOrigianlData.id) {
+                    this._fightDefenderOriginalData.hp -= data.hp;
+                } else {
+                    this._fightAttackerOrigianlData.hp -= data.hp;
+                }
+            }
+        }
+        clearInterval(this._fightInterval);
+        this._fightView.node.active = false;
+        this._fightResultView.node.active = true;
+        this._fightResultView.showResult(this._model.fightResultWin, () => {
+            NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
+                attacker: {
+                    name: this._fightAttackerOrigianlData.name,
+                    avatarIcon: "icon_player_avatar", // todo
+                    hp: this._fightAttackerOrigianlData.hp,
+                    hpMax: this._fightAttackerOrigianlData.hpmax,
+                },
+                defender: {
+                    name: this._fightDefenderOriginalData.name,
+                    avatarIcon: "icon_player_avatar",
+                    hp: this._fightDefenderOriginalData.hp,
+                    hpMax: this._fightDefenderOriginalData.hpmax,
+                },
+                attackerIsSelf: true,
+                buildingId: null,
+                position: this._model.stayPos,
+                fightResult: this._fightAttackerOrigianlData.hp != 0 ? "win" : "lose",
+                rewards: [],
+            });
+            this._fightResultView.node.active = false;
+        });
     }
 }

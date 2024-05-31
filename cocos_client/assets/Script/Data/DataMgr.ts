@@ -193,11 +193,16 @@ export class DataMgr {
                         NotificationMgr.triggerEvent(NotificationName.EVENT_STEPEND, stepEndData);
                     }
                     // fight
-                    if ((oldData.fightData == null && newData.fightData != null) || (oldData.fightData != null && newData.fightData == null)) {
-                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FIGHT_CHANGE);
+                    if (oldData.fightData == null && newData.fightData != null) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FIGHT_BEGIN, { id: newData.id });
                     }
+                    // staypos
                     if (oldData.stayPos.x != newData.stayPos.x || oldData.stayPos.y != newData.stayPos.y) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_STAY_POSITION_CHANGE, { id: newData.id });
+                    }
+                    // hp
+                    if (oldData.hp != newData.hp || oldData.hpMax != newData.hpMax) {
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED);
                     }
                     break;
                 }
@@ -341,6 +346,15 @@ export class DataMgr {
             }
         }
     };
+
+    public static player_fight_end = (e: any) => {
+        const p: s2c_user.Iplayer_fight_end = e.data;
+        const pioneer = DataMgr.s.pioneer.getById(p.pioneerId);
+        if (pioneer == undefined) {
+            return;
+        }
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FIGHT_END, { id: p.pioneerId }); 
+    }
 
     //------------------------------------- nft
     public static nft_change = (e: any) => {

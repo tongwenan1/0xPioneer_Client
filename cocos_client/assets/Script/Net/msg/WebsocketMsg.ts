@@ -466,6 +466,12 @@ export namespace s2c_user {
         pioneerId: string;
         npcId: string;
     }
+    export interface Iplayer_fight_end {
+        pioneerId: string;
+    }
+
+
+
     export interface Iplayer_item_use_res {
         res: number;
     }
@@ -721,6 +727,7 @@ export namespace share {
         defenderId: string;
         hp: number;
     }
+    
 
     export interface Infts_data {
         nfts: { [key: string]: Infts_info_data };

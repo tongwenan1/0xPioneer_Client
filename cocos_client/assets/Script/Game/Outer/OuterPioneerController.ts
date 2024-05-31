@@ -170,7 +170,6 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, this._onPlayerPioneerDidMoveOneStep, this);
         // fight
         NotificationMgr.addListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_FIGHT_CHANGE, this._refreshUI, this);
     }
 
     protected viewDidStart() {
@@ -257,7 +256,6 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.removeListener(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, this._onPlayerPioneerDidMoveOneStep, this);
         // fight
         NotificationMgr.removeListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_FIGHT_CHANGE, this._refreshUI, this);
     }
 
     private _refreshUI() {
