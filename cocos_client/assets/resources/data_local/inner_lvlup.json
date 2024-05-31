@@ -48,7 +48,7 @@
         10
       ]
     ],
-    "relic_max": 1,
+    "relic_max": 3,
     "prefab_tower": "Tower_Of_Babel_Group_01"
   },
   "2": {
@@ -100,7 +100,7 @@
         10
       ]
     ],
-    "relic_max": 2,
+    "relic_max": 4,
     "prefab_tower": "Tower_Of_Babel_Group_01"
   },
   "3": {
@@ -152,7 +152,7 @@
         7
       ]
     ],
-    "relic_max": 3,
+    "relic_max": 5,
     "prefab_tower": "Tower_Of_Babel_Group_01"
   },
   "4": {
@@ -204,7 +204,7 @@
         7
       ]
     ],
-    "relic_max": 4,
+    "relic_max": 6,
     "prefab_tower": "Tower_Of_Babel_Group"
   },
   "5": {
@@ -256,7 +256,7 @@
         7
       ]
     ],
-    "relic_max": 5,
+    "relic_max": 7,
     "prefab_tower": "Tower_Of_Babel_Group"
   },
   "6": {
@@ -308,7 +308,7 @@
         7
       ]
     ],
-    "relic_max": 6,
+    "relic_max": 8,
     "prefab_tower": "Tower_Of_Babel_Group"
   },
   "7": {
@@ -360,7 +360,7 @@
         7
       ]
     ],
-    "relic_max": 7,
+    "relic_max": 9,
     "prefab_tower": "Tower_Of_Babel_Group"
   },
   "8": {
@@ -412,7 +412,7 @@
         7
       ]
     ],
-    "relic_max": 8,
+    "relic_max": 10,
     "prefab_tower": "Tower_Of_Babel_Group"
   },
   "9": {
@@ -464,7 +464,7 @@
         7
       ]
     ],
-    "relic_max": 9,
+    "relic_max": 11,
     "prefab_tower": "Tower_Of_Babel_Group"
   },
   "10": {
@@ -516,7 +516,7 @@
         7
       ]
     ],
-    "relic_max": 10,
+    "relic_max": 12,
     "prefab_tower": "Tower_Of_Babel_Group"
   }
 }
