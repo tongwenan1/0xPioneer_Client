@@ -42,7 +42,10 @@ export enum UIName {
 
     TavernUI = "prefab/ui/TavernUI",
 
-    MapActionConfrimTipUI = "prefab/ui/MapActionConfrimTipUI"
+    MapActionConfrimTipUI = "prefab/ui/MapActionConfrimTipUI",
+
+    RelicTowerUI = "prefab/ui/RelicTowerUI",
+    RelicSelectUI = "prefab/ui/RelicSelectUI",
 }
 
 export enum GameName {

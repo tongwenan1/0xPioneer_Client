@@ -406,7 +406,7 @@ export namespace s2c_user {
     }
     export interface Iplayer_artifact_change_res {
         res: number;
-        data: share.Iartifact_info_data;
+        data: share.Iartifact_info_data[];
     }
     export interface Iget_pioneers_res {
         res: number;
@@ -671,6 +671,7 @@ export namespace share {
         count: number;
         addTimeStamp: number;
         effectIndex: number;
+        effect: string[];
     }
 
     export interface Iusermap_data {

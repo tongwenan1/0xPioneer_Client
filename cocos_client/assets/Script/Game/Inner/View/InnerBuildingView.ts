@@ -180,7 +180,7 @@ export class InnerBuildingView extends ViewController {
             return;
         }
         if (this._building.buildLevel > 0 && this._building.buildType == InnerBuildingType.ArtifactStore) {
-            UIPanelManger.inst.pushPanel(UIName.ArtifactStore);
+            UIPanelManger.inst.pushPanel(UIName.RelicTowerUI);
         }
         this.innerBuildingTaped();
     }

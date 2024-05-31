@@ -8,6 +8,7 @@ export class ArtifactConfigData {
     prop: AttrType[];
     prop_value: [AttrChangeType, number][];
     effect: string[];
+    eff_sp: string;
     des: string;
     ani: string;
 }

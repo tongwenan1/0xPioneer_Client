@@ -126,6 +126,9 @@ message player_artifact_change {
     required string artifactId = 1; // uniqueId
     required int32 artifactEffectIndex = 2;
 }
+message player_artifact_combine {
+    repeated string artifactIds = 1; // uniqueIds
+}
 
 
 // ------ treasure ------

@@ -118,6 +118,9 @@ export class DataMgr {
         for (const artifact of p.iteminfo) {
             const change = new ArtifactData(artifact.artifactConfigId, artifact.count);
             change.addTimeStamp = artifact.addTimeStamp;
+            change.effectIndex = artifact.effectIndex;
+            change.uniqueId = artifact.uniqueId;
+            change.effect = artifact.effect;
             DataMgr.s.artifact.countChanged(change);
         }
     };
@@ -126,8 +129,10 @@ export class DataMgr {
         if (p.res !== 1) {
             return;
         }
-        DataMgr.s.artifact.changeObj_artifact_effectIndex(p.data.artifactConfigId, p.data.effectIndex);
-    }
+        for (const temple of p.data) {
+            DataMgr.s.artifact.changeObj_artifact_effectIndex(temple.uniqueId, temple.effectIndex);
+        }
+    };
     //------------------------------------- inner building
     public static building_change = (e: any) => {
         const p: s2c_user.Ibuilding_change = e.data;
@@ -182,7 +187,11 @@ export class DataMgr {
                     }
                     // event
                     if (oldData.actionEventId != newData.actionEventId) {
-                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENTID_CHANGE, { triggerPioneerId: newData.id, eventBuildingId: newData.actionBuildingId, eventId: newData.actionEventId });
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_EVENTID_CHANGE, {
+                            triggerPioneerId: newData.id,
+                            eventBuildingId: newData.actionBuildingId,
+                            eventId: newData.actionEventId,
+                        });
                         const stepEndData: EVENT_STEPEND_DATA = {
                             pioneerId: newData.id,
                             buildingId: newData.actionBuildingId,
@@ -361,8 +370,8 @@ export class DataMgr {
         if (pioneer == undefined) {
             return;
         }
-        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FIGHT_END, { id: p.pioneerId }); 
-    }
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FIGHT_END, { id: p.pioneerId });
+    };
 
     //------------------------------------- nft
     public static nft_change = (e: any) => {
@@ -406,6 +415,12 @@ export class DataMgr {
         if (building == null) {
             return;
         }
+        if (p.defenderName == null) {
+            p.defenderName = "";
+        }
+        if (p.attackerName == null) {
+            p.attackerName = "";
+        }
         const isSelfAttack: boolean = DataMgr.s.userInfo.data.id != p.defenderUid;
         const selfName: string = isSelfAttack ? p.attackerName : p.defenderName + " " + LanMgr.getLanById("110010");
         const otherName: string = !isSelfAttack ? p.attackerName : p.defenderName + " " + LanMgr.getLanById("110010");
@@ -413,7 +428,7 @@ export class DataMgr {
         NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
             attacker: {
                 name: selfName,
-                avatarIcon: "icon_player_avatar", // todo
+                avatarIcon: "icon_player_avatar",
                 hp: isSelfWin ? 100 : 0,
                 hpMax: 100,
             },

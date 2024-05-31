@@ -241,7 +241,11 @@ message storhouse_change {
 // ------ artifact ------
 message player_artifact_change_res {
     required int32 res = 1;
-    optional share.artifact_info_data data = 2;
+    repeated share.artifact_info_data data = 2;
+}
+message player_artifact_combine_res {
+    required int32 res = 1;
+    repeated share.artifact_info_data data = 2;
 }
 // artifact: notify
 message artifact_change {

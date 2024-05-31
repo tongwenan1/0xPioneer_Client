@@ -19,12 +19,19 @@ export class ArtifactDataMgr {
     public getObj() {
         return this._data;
     }
-    public getObj_by_id(id: string) {
-        return this._data.find((artifact) => artifact.artifactConfigId == id);
+    public getByUnqueId(uniqueId: string) {
+        return this._data.find(artifact => artifact.uniqueId == uniqueId);
     }
     public getObj_artifact_equiped() {
         return this._data.filter((artifact) => artifact.effectIndex >= 0);
     }
+    public getObj_by_id(id: string) {
+        return this._data.find((artifact) => artifact.artifactConfigId == id);
+    }
+    public getObj_by_effectIndex(effectIndex: number) {
+        return this._data.find((artifact) => artifact.effectIndex == effectIndex);
+    }
+
     public getObj_artifact_maxLength() {
         return this._maxArtifactLength;
     }
@@ -91,6 +98,48 @@ export class ArtifactDataMgr {
         }
         return effectNum;
     }
+    public getObj_artifact_all_effectiveEffect(clevel: number) {}
+
+    public getEffectDataByUniqueId(uniqueId: string, clevel: number): Map<GameExtraEffectType, number> {
+        const effectData: Map<GameExtraEffectType, number> = new Map();
+        const artifact = this.getByUnqueId(uniqueId);
+        if (artifact == undefined) {
+            return effectData;
+        }
+
+        const config = ArtifactConfig.getById(artifact.artifactConfigId);
+        if (config == null) {
+            return effectData;
+        }
+
+        if (config.eff_sp != null && config.eff_sp.length > 0) {
+            this._artifact_get_effects_data(effectData, config.eff_sp, clevel, true, this._checkIsInMainSlot(artifact.effectIndex));
+        }
+        for (const temple of artifact.effect) {
+            this._artifact_get_effects_data(effectData, temple, clevel, false, false);
+        }
+        return effectData;
+    }
+    public getAllEffectiveEffect(clevel: number): Map<GameExtraEffectType, number> {
+        const effectData: Map<GameExtraEffectType, number> = new Map();
+        for (const artifact of this._data) {
+            if (artifact.effectIndex < 0) {
+                continue;
+            }
+            const config = ArtifactConfig.getById(artifact.artifactConfigId);
+            if (config == null) {
+                continue;
+            }
+            if (config.eff_sp != null && config.eff_sp.length > 0) {
+                this._artifact_get_effects_data(effectData, config.eff_sp, clevel, true, this._checkIsInMainSlot(artifact.effectIndex) );
+            }
+            for (const temple of artifact.effect) {
+                this._artifact_get_effects_data(effectData, temple, clevel, false, false);
+            }
+        }
+        return effectData;
+    }
+
     //-------------------------------------------------------
     public countChanged(change: ArtifactData): void {
         if (change.count == 0) {
@@ -120,13 +169,12 @@ export class ArtifactDataMgr {
         this.getObj_artifact_sort(BackpackArrangeType.Rarity);
         NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
     }
-    public changeObj_artifact_effectIndex(id: string, effectIndex: number) {
-        const artifact = this.getObj_by_id(id);
+    public changeObj_artifact_effectIndex(uniqueId: string, effectIndex: number) {
+        const artifact = this.getByUnqueId(uniqueId);
         if (artifact == undefined) {
             return;
         }
         artifact.effectIndex = effectIndex;
-
         NotificationMgr.triggerEvent(NotificationName.ARTIFACT_EQUIP_DID_CHANGE);
     }
 
@@ -140,8 +188,75 @@ export class ArtifactDataMgr {
             const item = new ArtifactData(netItems[key].artifactConfigId, netItems[key].count);
             item.addTimeStamp = netItems[key].addTimeStamp;
             item.effectIndex = netItems[key].effectIndex;
+            item.effect = netItems[key].effect;
+            item.uniqueId = netItems[key].uniqueId;
             this._data.push(item);
         }
+    }
+
+    private _checkIsInMainSlot(effecIndex: number) {
+        const mainIndex: number[] = [0, 5, 9];
+        if (mainIndex.indexOf(effecIndex) >= 0) {
+            return true;
+        }
+        return false;
+    }
+    private _artifact_get_effects_data(effectData: Map<GameExtraEffectType, number>, effectId: string, clevel: number, isMainEffect: boolean, isInMainSlot: boolean) {
+        const effect_conf = ArtifactEffectConfig.getById(effectId);
+        if (effect_conf == null) {
+            return effectData;
+        }
+
+        if (isMainEffect) {
+            if (!isInMainSlot) {
+                return;
+            }
+        } else {
+            if (effect_conf.unlock > clevel) {
+                return effectData;
+            }
+        }
+
+        switch (effect_conf.type) {
+            case GameExtraEffectType.BUILDING_LVUP_TIME:
+            case GameExtraEffectType.BUILDING_LVLUP_RESOURCE:
+            case GameExtraEffectType.MOVE_SPEED:
+            case GameExtraEffectType.GATHER_TIME:
+            case GameExtraEffectType.ENERGY_GENERATE:
+            case GameExtraEffectType.TROOP_GENERATE_TIME:
+            case GameExtraEffectType.CITY_RADIAL_RANGE:
+            case GameExtraEffectType.TREASURE_PROGRESS:
+                {
+                    if (!effectData.has(effect_conf.type)) {
+                        effectData.set(effect_conf.type, 0);
+                    }
+                    effectData.set(effect_conf.type, effectData.get(effect_conf.type) + effect_conf.para[0]);
+                }
+                break;
+            case GameExtraEffectType.VISION_RANGE:
+                {
+                    let currentType: GameExtraEffectType = null;
+                    switch (effect_conf.para[0]) {
+                        case 0:
+                            currentType = GameExtraEffectType.CITY_ONLY_VISION_RANGE;
+                            break;
+                        case 1:
+                            currentType = GameExtraEffectType.PIONEER_ONLY_VISION_RANGE;
+                            break;
+                        case 2:
+                            currentType = GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE;
+                            break;
+                    }
+                    if (currentType != null) {
+                        if (!effectData.has(currentType)) {
+                            effectData.set(currentType, 0);
+                        }
+                        effectData.set(currentType, effectData.get(currentType) + effect_conf.para[1]);
+                    }
+                }
+                break;
+        }
+        return effectData;
     }
     // public getPropEffValue(buildingLv: number) {
     //     const r = {

@@ -87,6 +87,7 @@ message artifact_info_data {
     optional uint32 count = 3; // count
     optional uint32 addTimeStamp = 4;
     optional int32 effectIndex = 5;
+    repeated string effect = 6; // random effect ids
 }
 
 message pioneer_data {

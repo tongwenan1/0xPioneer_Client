@@ -12,12 +12,11 @@ import { DataMgr } from "../Data/DataMgr";
 export default class GameMgr {
     public enterGameSence: boolean = false;
 
-
-    public getResourceBuildingRewardAndQuotaMax(building: MapBuildingObject): { reward: ItemData, quotaMax: number } {
+    public getResourceBuildingRewardAndQuotaMax(building: MapBuildingObject): { reward: ItemData; quotaMax: number } {
         const config = MapBuildingConfig.getById(building.id);
         if (config == null) {
             return null;
-        } 
+        }
         const reward = new ItemData(config.resources[0], config.resources[1]);
         reward.count = Math.floor(reward.count * (1 + (building.level - 1) * 0.2));
 
@@ -28,9 +27,52 @@ export default class GameMgr {
     }
 
     //--------------------------- effect
+    public getEffectShowText(type: GameExtraEffectType, value: number): string {
+        switch (type) {
+            case GameExtraEffectType.BUILDING_LVUP_TIME:
+                return "REDUCE BUILDING LVUP TIME:" + value;
+
+            case GameExtraEffectType.BUILDING_LVLUP_RESOURCE:
+                return "REDUCE BUILDING LVLUP RESOURCE:" + value;
+
+            case GameExtraEffectType.MOVE_SPEED:
+                return "ADD MOVE SPEED:" + value;
+
+            case GameExtraEffectType.GATHER_TIME:
+                return "REDUCE GATHER TIME:" + value;
+
+            case GameExtraEffectType.ENERGY_GENERATE:
+                return "ADD ENERGY GENERATE:" + value;
+
+            case GameExtraEffectType.TROOP_GENERATE_TIME:
+                return "REDUCE TROOP GENERATE TIME:" + value;
+
+            case GameExtraEffectType.CITY_RADIAL_RANGE:
+                return "ADD CITY RADIAL RANGE:" + value;
+
+            case GameExtraEffectType.TREASURE_PROGRESS:
+                return "ADD GET PROGRESS:" + value;
+
+            case GameExtraEffectType.CITY_ONLY_VISION_RANGE:
+                return "ADD CITY ONLY VISION RANGE:" + value;
+
+            case GameExtraEffectType.PIONEER_ONLY_VISION_RANGE:
+                return "ADD PIONEER ONLY VISION RANGE:" + value;
+
+            case GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE:
+                return "ADD CITY AND PIONEER VISION RANGE:" + value;
+
+            default:
+                return "";
+        }
+    }
+
     public getAfterExtraEffectPropertyByPioneer(pioneerId: string, type: GameExtraEffectType, originalValue: number): number {
         // artifact effect
-        let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(type, DataMgr.s.innerBuilding.getInnerBuildingLevel(InnerBuildingType.ArtifactStore));
+        let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(
+            type,
+            DataMgr.s.innerBuilding.getInnerBuildingLevel(InnerBuildingType.ArtifactStore)
+        );
 
         // nft
         let nftChangeRate: number = 0;
@@ -43,7 +85,10 @@ export default class GameMgr {
     }
     public getAfterExtraEffectPropertyByBuilding(buildingType: InnerBuildingType, type: GameExtraEffectType, originalValue: number): number {
         // artifact effect
-        let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(type, DataMgr.s.innerBuilding.getInnerBuildingLevel(InnerBuildingType.ArtifactStore));
+        let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(
+            type,
+            DataMgr.s.innerBuilding.getInnerBuildingLevel(InnerBuildingType.ArtifactStore)
+        );
 
         let resultValue = this._getEffectResultNum(type, originalValue, artifactChangeRate);
         //nft
