@@ -61,8 +61,6 @@ export enum protobuf_c2s {
 
     // ------ artifact ------
     player_artifact_change,
-    player_artifact_equip,
-    player_artifact_remove,
 
     // ------ treasure ------
     get_treasure_info,
@@ -189,8 +187,6 @@ export enum protobuf_s2c {
 
     // ------ artifact ------
     player_artifact_change_res,
-    player_artifact_equip_res,
-    player_artifact_remove_res,
     // artifact: notify
     artifact_change,
 

@@ -136,7 +136,7 @@ export class PioneersDataMgr {
                 }
                 NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_BEGIN_MOVE, { id: pioneerId, showMovePath: showMovePath });
             } else {
-                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneerId: findPioneer.id, isStay: true });
+                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneerId: findPioneer.id, interactDirectly: true });
             }
         }
     }
@@ -155,7 +155,7 @@ export class PioneersDataMgr {
             if (findPioneer.movePaths.length == 0) {
                 // move over trigger
                 this.changeActionType(pioneerId, MapPioneerActionType.idle);
-                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneerId: findPioneer.id, isStay: true });
+                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_MOVE_MEETTED, { pioneerId: findPioneer.id, interactDirectly: false });
             }
             if (findPioneer.type == MapPioneerType.player) {
                 NotificationMgr.triggerEvent(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, { id: pioneerId });

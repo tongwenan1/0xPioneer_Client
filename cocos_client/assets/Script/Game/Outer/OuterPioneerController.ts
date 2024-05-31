@@ -134,6 +134,9 @@ export class OuterPioneerController extends ViewController {
     @property(Prefab)
     private footPathTargetPrefab: Prefab;
 
+    @property(Prefab)
+    private rebonRefab: Prefab;
+
     private _pioneerMap: Map<string, Node> = new Map();
     private _movingPioneerIds: string[] = [];
     private _fightViewMap: Map<string, OuterFightView> = new Map();

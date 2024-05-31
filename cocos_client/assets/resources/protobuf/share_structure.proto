@@ -142,6 +142,9 @@ message pioneer_data {
     optional string NFTId = 40;
     optional string talkId = 41;
     optional user_map_member_status talkCountStruct = 42;
+
+    optional uint32 dieTime = 43;
+    optional uint32 rebornTime = 44;
 }
 message fight_res {
     required string attackerId = 1;
@@ -260,11 +263,16 @@ message mapbuilding_info_data {
     map<string,string> attacker = 25;
 
     optional uint32 tavernCountdownTime = 26;
+
+    optional uint32 dieTime = 27;
+    optional uint32 rebornTime = 28;
 }
 
 message building_resource {
     optional string id = 1;
     optional uint32 num = 2;
+    // optional uint32 numbase = 3;
+    // optional uint32 nummul = 4;
 }
 
 

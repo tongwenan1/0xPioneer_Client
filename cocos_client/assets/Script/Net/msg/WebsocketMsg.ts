@@ -721,6 +721,9 @@ export namespace share {
         actionFightWinner: number;
         rebirthStartTime?: number;
         rebirthEndTime?: number;
+
+        dieTime?: number;
+        rebornTime?: number;
     }
     export interface Ifight_res {
         attackerId: string;
@@ -799,6 +802,9 @@ export namespace share {
 
         wormholdCountdownTime: number;
         attacker: { [key: string]: string };
+
+        dieTime?: number;
+        rebornTime?: number;
     }
 
     export interface Iattacker_data {

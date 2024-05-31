@@ -547,10 +547,8 @@ export class OuterTiledMapActionController extends ViewController {
         }
 
         let movePaths: TilePos[] = [];
-        const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, taregtPos, targetStayPositions);
-        if (toPosMoveData.canMove) {
-            movePaths = toPosMoveData.path;
-        } else if (sparePositions.length > 0) {
+        if (sparePositions.length > 0) {
+            // building: find least move path
             let minMovePath = null;
             for (const templePos of sparePositions) {
                 const templePath = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, templePos, targetStayPositions);
@@ -566,6 +564,12 @@ export class OuterTiledMapActionController extends ViewController {
             }
             if (minMovePath != null) {
                 movePaths = minMovePath;
+            }
+        } else {
+            // pioneer or land
+            const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, taregtPos, targetStayPositions);
+            if (toPosMoveData.canMove) {
+                movePaths = toPosMoveData.path;
             }
         }
         // show move path

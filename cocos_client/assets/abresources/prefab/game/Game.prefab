@@ -1860,6 +1860,10 @@
       "__uuid__": "a3866086-6445-4b7f-909d-fdab13812362",
       "__expectedType__": "cc.Prefab"
     },
+    "rebonPrefab": {
+      "__uuid__": "09361c30-6cf8-40ba-a452-eb04ef5446db",
+      "__expectedType__": "cc.Prefab"
+    },
     "_id": ""
   },
   {
@@ -1908,6 +1912,10 @@
     },
     "footPathTargetPrefab": {
       "__uuid__": "1e513654-0f82-4f02-aa0f-1445688cf3a5",
+      "__expectedType__": "cc.Prefab"
+    },
+    "rebonRefab": {
+      "__uuid__": "09361c30-6cf8-40ba-a452-eb04ef5446db",
       "__expectedType__": "cc.Prefab"
     },
     "_id": ""
@@ -30861,7 +30869,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1920,
+      "width": 1920.0000000000002,
       "height": 1080
     },
     "_anchorPoint": {

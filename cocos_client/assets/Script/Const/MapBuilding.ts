@@ -61,6 +61,7 @@ export interface MapBuildingBaseData {
     quota: number;
 
     explorePioneerIds: string[];
+    rebornTime: number;
 }
 export interface MapBuildingMainCityData extends MapBuildingBaseData {
     hpMax: number;

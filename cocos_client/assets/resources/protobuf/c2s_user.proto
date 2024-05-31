@@ -126,13 +126,6 @@ message player_artifact_change {
     required string artifactId = 1;
     required int32 artifactEffectIndex = 2;
 }
-message player_artifact_equip {
-    required string artifactId = 1;
-    required int32 artifactEffectIndex = 2;
-}
-message player_artifact_remove {
-    required string artifactId = 1;
-}
 
 
 // ------ treasure ------

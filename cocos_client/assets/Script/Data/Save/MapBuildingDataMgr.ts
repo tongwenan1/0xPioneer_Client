@@ -1,11 +1,6 @@
 import { Vec2, v2 } from "cc";
 import { BuildingStayPosType, MapBuildingType } from "../../Const/BuildingDefine";
-import {
-    MapBuildingBaseObject,
-    MapBuildingMainCityObject,
-    MapBuildingObject,
-    MapBuildingWormholeObject,
-} from "../../Const/MapBuilding";
+import { MapBuildingBaseObject, MapBuildingMainCityObject, MapBuildingObject, MapBuildingWormholeObject } from "../../Const/MapBuilding";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import CLog from "../../Utils/CLog";
@@ -125,6 +120,7 @@ export class MapBuildingDataMgr {
                 }
             }
         }
+        const currentTimestamp = new Date().getTime();
         const baseObj: MapBuildingBaseObject = {
             id: element.id,
             name: element.name,
@@ -152,6 +148,8 @@ export class MapBuildingDataMgr {
             exp: element.exp,
 
             winprogress: element.winprogress,
+
+            rebornTime: element.rebornTime == null ? currentTimestamp : currentTimestamp + (element.rebornTime - element.dieTime) * 1000,
         };
         if (element.eventPioneerDatas != null) {
             for (const key in element.eventPioneerDatas) {
@@ -187,6 +185,5 @@ export class MapBuildingDataMgr {
             return baseObj;
         }
     }
-    private _initInterval() {
-    }
+    private _initInterval() {}
 }

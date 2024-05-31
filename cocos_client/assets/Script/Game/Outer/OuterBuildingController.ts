@@ -7,6 +7,7 @@ import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import { DataMgr } from "../../Data/DataMgr";
 import { BuildingStayPosType } from "../../Const/BuildingDefine";
+import { OuterRebonView } from "./View/OuterRebonView";
 
 const { ccclass, property } = _decorator;
 
@@ -23,7 +24,11 @@ export class OuterBuildingController extends Component {
     @property(Prefab)
     private buildingPrefab;
 
+    @property(Prefab)
+    private rebonPrefab;
+
     private _buildingMap: Map<string, { node: Node; stayPositons: Vec2[] }> = new Map();
+    private _rebonViews: Node[] = [];
 
     protected onLoad() {
         NotificationMgr.addListener(NotificationName.MAP_BUILDING_SHOW_CHANGE, this._refreshUI, this);
@@ -98,6 +103,11 @@ export class OuterBuildingController extends Component {
         if (decorationView == null) {
             return;
         }
+        for (const view of this._rebonViews) {
+            view.destroy();
+        }
+        this._rebonViews = [];
+
         let changed: boolean = false;
         const allBuildings = DataMgr.s.mapBuilding.getObj_building();
         for (const building of allBuildings) {
@@ -141,6 +151,25 @@ export class OuterBuildingController extends Component {
                         GameMainHelper.instance.tiledMapRemoveDynamicBlock(pos);
                     }
                     this._buildingMap.delete(building.id);
+                }
+                if (building.rebornTime > new Date().getTime()) {
+                    if (building.stayMapPositions.length > 0) {
+                        let worldPos = null;
+                        if (building.stayMapPositions.length == 7) {
+                            worldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[3].x, building.stayMapPositions[3].y);
+                        } else if (building.stayMapPositions.length == 3) {
+                            const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
+                            const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[1].x, building.stayMapPositions[1].y);
+                            worldPos = v3(beginWorldPos.x, endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2, 0);
+                        } else {
+                            worldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
+                        }
+                        const rebornView = instantiate(this.rebonPrefab);
+                        rebornView.setPosition = worldPos
+                        rebornView.setParent(decorationView);
+                        rebornView.getComponent(OuterRebonView).refreshUI(building.rebornTime);
+                        this._rebonViews.push(rebornView);
+                    }
                 }
             }
         }
