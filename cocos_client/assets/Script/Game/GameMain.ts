@@ -39,7 +39,8 @@ export class GameMain extends ViewController {
     //--------------------------------------- function
     private _refreshUI() {
         const outerView = this.node.getChildByPath("OutScene");
-        const innerView = this.node.getChildByPath("InnerScene");
+        // const innerView = this.node.getChildByPath("InnerScene");
+        const innerView = this.node.getChildByPath("InnerSceneRe");
         const isOuterShow: boolean = GameMainHelper.instance.isGameShowOuter;
         // inner and outer need hide first, then show
         if (isOuterShow) {
