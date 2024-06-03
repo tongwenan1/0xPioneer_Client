@@ -36,6 +36,7 @@ import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import { GameExtraEffectType } from "../Const/ConstDefine";
 import ArtifactConfig from "../Config/ArtifactConfig";
+import LongPressButton from "../BasicView/LongPressButton";
 const { ccclass, property } = _decorator;
 
 @ccclass("RelicTowerUI")
@@ -173,10 +174,12 @@ export class RelicTowerUI extends ViewController {
                 //is locked
                 itemView.getChildByPath("Lock").active = locked;
 
-                itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
-                itemView.getComponent(Button).interactable = !locked;
-
                 itemView.getComponent(ArtifactItem).refreshUI(data);
+
+                itemView.getComponent(LongPressButton).shortClick[0].customEventData = i.toString();
+                itemView.getComponent(LongPressButton).shortClickInteractable = !locked;
+                itemView.getComponent(LongPressButton).longPress[0].customEventData = data == null ? "" : data.uniqueId;
+                itemView.getComponent(LongPressButton).longPressInteractable = data != null;
             }
         } else {
             this._onEffectView.active = false;
@@ -227,14 +230,21 @@ export class RelicTowerUI extends ViewController {
                 view.setParent(this._storageItemContent);
                 view.getChildByPath("EffectTitle").active = this._invokeStorageDatas[i].effectIndex >= 0;
                 view.getChildByPath("New").active = this._newArtifactIds.indexOf(this._invokeStorageDatas[i].uniqueId) != -1;
-                view.getComponent(Button).interactable = this._invokeStorageDatas[i].effectIndex < 0 && config.rank < 5;
-                view.getComponent(Button).clickEvents[0].customEventData = i.toString();
+
+                view.getComponent(LongPressButton).shortClick[0].customEventData = i.toString();
+                view.getComponent(LongPressButton).shortClickInteractable = this._invokeStorageDatas[i].effectIndex < 0 && config.rank < 5;
+
+                view.getComponent(LongPressButton).longPress[0].customEventData = i.toString();
             }
 
             for (let i = 0; i < this._invokeSlotItems.length; i++) {
                 const item = this._invokeSlotItems[i];
                 item.getComponent(ArtifactItem).refreshUI(this._invokeSelectDatas[i]);
-                item.getComponent(Button).clickEvents[0].customEventData = i.toString();
+                item.getComponent(LongPressButton).shortClick[0].customEventData = i.toString();
+                item.getComponent(LongPressButton).shortClickInteractable = this._invokeSelectDatas[i] != undefined;
+
+                item.getComponent(LongPressButton).longPress[0].customEventData = i.toString();
+                item.getComponent(LongPressButton).longPressInteractable = this._invokeSelectDatas[i] != undefined;
             }
 
             const invokeButton = this._storageView.getChildByPath("RightContent/InvokeButton");
@@ -253,6 +263,8 @@ export class RelicTowerUI extends ViewController {
             rButton.active = this._invokeSelectDatas.length > 0;
 
             this._compositeItem.getComponent(ArtifactItem).refreshUI(this._compositeData);
+            this._compositeItem.getComponent(LongPressButton).shortClickInteractable = false;
+            this._compositeItem.getComponent(LongPressButton).longPressInteractable = this._compositeData != null;
         }
     }
 
@@ -284,6 +296,17 @@ export class RelicTowerUI extends ViewController {
         }
         result.node.getComponent(RelicSelectUI).configuration(index);
     }
+    private async onLongTapSlotItem(event: Event, customEventData: string) {
+        const data = DataMgr.s.artifact.getByUnqueId(customEventData);
+        if (data == undefined) {
+            return;
+        }
+        const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(ArtifactInfoUI).showItem([data]);
+    }
     //------------------------------------------------------------ storage
     private onTapInvokeSelectItem(event: Event, customEventData: string) {
         if (this._compositeData != null) {
@@ -305,6 +328,18 @@ export class RelicTowerUI extends ViewController {
         }
         this._refreshUI();
     }
+    private async onLongTapInvokeSelectItem(event: Event, customEventData: string) {
+        const index = parseInt(customEventData);
+        if (index < 0 || index > this._invokeStorageDatas.length - 1) {
+            return;
+        }
+        const data = this._invokeStorageDatas[index];
+        const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(ArtifactInfoUI).showItem([data]);
+    }
     private onTapSelectedItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
         if (index < 0 || index > this._invokeSelectDatas.length - 1) {
@@ -315,6 +350,18 @@ export class RelicTowerUI extends ViewController {
             this._invokeSelectRank = 0;
         }
         this._refreshUI();
+    }
+    private async onLongTapSelectedItem(event: Event, customEventData: string) {
+        const index = parseInt(customEventData);
+        if (index < 0 || index > this._invokeSelectDatas.length - 1) {
+            return;
+        }
+        const data = this._invokeSelectDatas[index];
+        const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(ArtifactInfoUI).showItem([data]);
     }
 
     private onTapInvoke() {
@@ -342,7 +389,16 @@ export class RelicTowerUI extends ViewController {
         this._compositeData = null;
         this._refreshUI();
     }
-
+    private async onLongTapComposedItem() {
+        if (this._compositeData == null) {
+            return;
+        }
+        const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(ArtifactInfoUI).showItem([this._compositeData]);
+    }
     //-------------------------------------------------------------------------
     private _onPlayerArtifactCombine = (e: any) => {
         const p: s2c_user.Iplayer_artifact_combine_res = e.data;

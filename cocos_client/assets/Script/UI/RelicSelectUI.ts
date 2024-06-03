@@ -13,6 +13,7 @@ import ArtifactConfig from "../Config/ArtifactConfig";
 import { GameExtraEffectType } from "../Const/ConstDefine";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
+import LongPressButton from "../BasicView/LongPressButton";
 const { ccclass, property } = _decorator;
 
 @ccclass("RelicSelectUI")
@@ -103,7 +104,8 @@ export class RelicSelectUI extends ViewController {
             itemView.setParent(this._itemContent);
             itemView.getComponent(ArtifactItem).refreshUI(this._itemDatas[i]);
             itemView.getChildByPath("EffectTitle").active = this._itemDatas[i].effectIndex >= 0;
-            itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
+            itemView.getComponent(LongPressButton).shortClick[0].customEventData = i.toString();
+            itemView.getComponent(LongPressButton).longPress[0].customEventData = i.toString();
         }
     }
 
@@ -122,6 +124,16 @@ export class RelicSelectUI extends ViewController {
             artifactEffectIndex: -1
         });
     }
+    private async onLongTapCurrentSelectItem() {
+        if (this._selectedItem == null) {
+            return;
+        }
+        const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(ArtifactInfoUI).showItem([this._selectedItem]);
+    }
     private onTapItem(event: Event, customEventData: string) {
         const index = parseInt(customEventData);
         if (index < 0 || index > this._itemDatas.length - 1) {
@@ -132,5 +144,17 @@ export class RelicSelectUI extends ViewController {
             artifactId: data.uniqueId,
             artifactEffectIndex: this._index
         });
+    }
+    private async onLongTapItem(event: Event, customEventData: string) {
+        const index = parseInt(customEventData);
+        if (index < 0 || index > this._itemDatas.length - 1) {
+            return;
+        }
+        const data = this._itemDatas[index];
+        const result = await UIPanelManger.inst.pushPanel(UIName.ArtifactInfoUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(ArtifactInfoUI).showItem([data]);
     }
 }
