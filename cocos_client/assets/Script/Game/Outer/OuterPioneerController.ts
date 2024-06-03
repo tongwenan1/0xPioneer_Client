@@ -229,7 +229,7 @@ export class OuterPioneerController extends ViewController {
             }
             // artifact move speed
             if (pioneer.type == MapPioneerType.player) {
-                usedSpeed = GameMgr.getAfterExtraEffectPropertyByPioneer(pioneer.id, GameExtraEffectType.MOVE_SPEED, usedSpeed);
+                usedSpeed = GameMgr.getAfterEffectValue(GameExtraEffectType.MOVE_SPEED, usedSpeed);
                 if (PioneerGameTest) {
                     usedSpeed = 600;
                 }

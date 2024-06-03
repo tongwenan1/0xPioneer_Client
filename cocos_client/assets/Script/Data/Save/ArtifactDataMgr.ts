@@ -22,6 +22,15 @@ export class ArtifactDataMgr {
     public getByUnqueId(uniqueId: string) {
         return this._data.find(artifact => artifact.uniqueId == uniqueId);
     }
+    public getByRank(rank: number) {
+        return this._data.filter((artifact) => {
+            const config = ArtifactConfig.getById(artifact.artifactConfigId);
+            if (config == undefined) {
+                return false;
+            }
+            return config.rank == rank;
+        });
+    }
     public getObj_artifact_equiped() {
         return this._data.filter((artifact) => artifact.effectIndex >= 0);
     }
@@ -98,8 +107,26 @@ export class ArtifactDataMgr {
         }
         return effectNum;
     }
-    public getObj_artifact_all_effectiveEffect(clevel: number) {}
 
+    public getAllEffectiveEffect(clevel: number): Map<GameExtraEffectType, number> {
+        const effectData: Map<GameExtraEffectType, number> = new Map();
+        for (const artifact of this._data) {
+            if (artifact.effectIndex < 0) {
+                continue;
+            }
+            const config = ArtifactConfig.getById(artifact.artifactConfigId);
+            if (config == null) {
+                continue;
+            }
+            if (config.eff_sp != null && config.eff_sp.length > 0) {
+                this._artifact_get_effects_data(effectData, config.eff_sp, clevel, true, this._checkIsInMainSlot(artifact.effectIndex) );
+            }
+            for (const temple of artifact.effect) {
+                this._artifact_get_effects_data(effectData, temple, clevel, false, false);
+            }
+        }
+        return effectData;
+    }
     public getEffectDataByUniqueId(uniqueId: string, clevel: number): Map<GameExtraEffectType, number> {
         const effectData: Map<GameExtraEffectType, number> = new Map();
         const artifact = this.getByUnqueId(uniqueId);
@@ -120,24 +147,13 @@ export class ArtifactDataMgr {
         }
         return effectData;
     }
-    public getAllEffectiveEffect(clevel: number): Map<GameExtraEffectType, number> {
-        const effectData: Map<GameExtraEffectType, number> = new Map();
-        for (const artifact of this._data) {
-            if (artifact.effectIndex < 0) {
-                continue;
-            }
-            const config = ArtifactConfig.getById(artifact.artifactConfigId);
-            if (config == null) {
-                continue;
-            }
-            if (config.eff_sp != null && config.eff_sp.length > 0) {
-                this._artifact_get_effects_data(effectData, config.eff_sp, clevel, true, this._checkIsInMainSlot(artifact.effectIndex) );
-            }
-            for (const temple of artifact.effect) {
-                this._artifact_get_effects_data(effectData, temple, clevel, false, false);
-            }
+    public getEffectValueByEffectType(type: GameExtraEffectType, clevel: number): number {
+        let effectValue: number = 0;
+        const effectData: Map<GameExtraEffectType, number> = this.getAllEffectiveEffect(clevel);
+        if (effectData.has(type)) {
+            effectValue = effectData.get(type);
         }
-        return effectData;
+        return effectValue;
     }
 
     //-------------------------------------------------------
@@ -145,13 +161,9 @@ export class ArtifactDataMgr {
         if (change.count == 0) {
             return;
         }
-        const config = ArtifactConfig.getById(change.artifactConfigId);
-        if (config == null) {
-            return;
-        }
         let exsitIndex: number = -1;
         for (let i = 0; i < this._data.length; i++) {
-            if (this._data[i].artifactConfigId == change.artifactConfigId) {
+            if (this._data[i].uniqueId == change.uniqueId) {
                 exsitIndex = i;
                 break;
             }
@@ -166,7 +178,7 @@ export class ArtifactDataMgr {
                 this._data.push(change);
             }
         }
-        this.getObj_artifact_sort(BackpackArrangeType.Rarity);
+        this.getObj_artifact_sort(BackpackArrangeType.Recently);
         NotificationMgr.triggerEvent(NotificationName.ARTIFACT_CHANGE);
     }
     public changeObj_artifact_effectIndex(uniqueId: string, effectIndex: number) {
@@ -192,6 +204,7 @@ export class ArtifactDataMgr {
             item.uniqueId = netItems[key].uniqueId;
             this._data.push(item);
         }
+        this.getObj_artifact_sort(BackpackArrangeType.Recently);
     }
 
     private _checkIsInMainSlot(effecIndex: number) {

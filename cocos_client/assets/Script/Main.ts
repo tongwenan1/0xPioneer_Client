@@ -176,6 +176,8 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("storhouse_change", DataMgr.storhouse_change);
         // artifact
         NetworkMgr.websocket.on("artifact_change", DataMgr.artifact_change);
+        NetworkMgr.websocket.on("player_artifact_change_res", DataMgr.player_artifact_change_res);
+        NetworkMgr.websocket.on("player_artifact_combine_res", DataMgr.player_artifact_combine_res);
         // inner builing
         NetworkMgr.websocket.on("building_change", DataMgr.building_change);
         // map
@@ -208,7 +210,6 @@ export class Main extends ViewController {
         // pioneernft func
         NetworkMgr.websocket.on("player_treasure_open_res", DataMgr.player_treasure_open_res);
         NetworkMgr.websocket.on("player_point_treasure_open_res", DataMgr.player_point_treasure_open_res);
-        NetworkMgr.websocket.on("player_artifact_change_res", DataMgr.player_artifact_change_res);
         NetworkMgr.websocket.on("player_building_delegate_nft_res", DataMgr.player_building_delegate_nft_res);
         NetworkMgr.websocket.on("player_nft_skill_learn_res", DataMgr.player_nft_skill_learn_res);
         NetworkMgr.websocket.on("player_nft_skill_forget_res", DataMgr.player_nft_skill_forget_res);

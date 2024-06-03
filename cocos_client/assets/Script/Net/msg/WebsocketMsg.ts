@@ -123,6 +123,9 @@ export class WebsocketMsg {
     public player_artifact_change(d: c2s_user.Iplayer_artifact_change) {
         this.send_packet("player_artifact_change", d);
     }
+    public player_artifact_combine(d: c2s_user.Iplayer_artifact_combine) {
+        this.send_packet("player_artifact_combine", d);
+    }
     public player_building_levelup(d: c2s_user.Iplayer_building_levelup) {
         this.send_packet("player_building_levelup", d);
     }
@@ -305,6 +308,9 @@ export namespace c2s_user {
         artifactId: string;
         artifactEffectIndex: number;
     }
+    export interface Iplayer_artifact_combine {
+        artifactIds: string[];
+    }
     export interface Iplayer_building_levelup {
         innerBuildingId: string;
     }
@@ -405,6 +411,10 @@ export namespace s2c_user {
         iteminfo: share.Iartifact_info_data[];
     }
     export interface Iplayer_artifact_change_res {
+        res: number;
+        data: share.Iartifact_info_data[];
+    }
+    export interface Iplayer_artifact_combine_res {
         res: number;
         data: share.Iartifact_info_data[];
     }

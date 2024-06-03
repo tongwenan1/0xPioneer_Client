@@ -67,6 +67,12 @@ export default class GameMgr {
         }
     }
 
+    public getAfterEffectValue(type: GameExtraEffectType, originalValue: number): number {
+        const clevel: number = DataMgr.s.userInfo.data.level;
+        const artifactEffectValue: number = DataMgr.s.artifact.getEffectValueByEffectType(type, clevel);
+        return this._getEffectResultNum(type, originalValue, artifactEffectValue);
+    }
+
     public getAfterExtraEffectPropertyByPioneer(pioneerId: string, type: GameExtraEffectType, originalValue: number): number {
         // artifact effect
         let artifactChangeRate: number = DataMgr.s.artifact.getObj_artifact_effectiveEffect(

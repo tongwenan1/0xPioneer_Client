@@ -232,8 +232,8 @@ export default class GameMainHelper {
             return [];
         }
         let vision: number = 6;
-        vision = GameMgr.getAfterExtraEffectPropertyByPioneer(ownerId, GameExtraEffectType.PIONEER_ONLY_VISION_RANGE, vision);
-        vision = GameMgr.getAfterExtraEffectPropertyByPioneer(ownerId, GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE, vision);
+        vision = GameMgr.getAfterEffectValue(GameExtraEffectType.PIONEER_ONLY_VISION_RANGE, vision);
+        vision = GameMgr.getAfterEffectValue(GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE, vision);
         return this._tiledMapHelper.Shadow_Earse(this._tiledMapHelper.getPos(mapPos.x, mapPos.y), ownerId, vision, false);
     }
     public tiledMapGetShadowClearedTiledPositions(): TilePos[] {

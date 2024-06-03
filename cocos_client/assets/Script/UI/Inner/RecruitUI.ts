@@ -50,11 +50,7 @@ export class RecruitUI extends ViewController {
         this._generateMaxTroop.node.getParent().getComponent(Layout).updateLayout();
 
         this._generateTimeNum = Math.ceil(this._perTroopTime * this._selectGenerateNum);
-        this._generateTimeNum = GameMgr.getAfterExtraEffectPropertyByBuilding(
-            InnerBuildingType.Barrack,
-            GameExtraEffectType.TROOP_GENERATE_TIME,
-            this._generateTimeNum
-        );
+        this._generateTimeNum = GameMgr.getAfterEffectValue(GameExtraEffectType.TROOP_GENERATE_TIME, this._generateTimeNum);
 
         this._generateTime.string = CommonTools.formatSeconds(this._generateTimeNum);
 
@@ -124,7 +120,7 @@ export class RecruitUI extends ViewController {
             this._maxTroop = configMaxTroop;
         }
         // test begin
-        this._maxTroop = 999999; 
+        this._maxTroop = 999999;
         // test end
         // perGenerateNum
         const configPerGenerateNum = InnerBuildingLvlUpConfig.getBuildingLevelData(barrackBuildingData.buildLevel, "time_barr");

@@ -133,6 +133,20 @@ export class DataMgr {
             DataMgr.s.artifact.changeObj_artifact_effectIndex(temple.uniqueId, temple.effectIndex);
         }
     };
+    public static player_artifact_combine_res = (e: any) => {
+        const p: s2c_user.Iplayer_artifact_combine_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        for (const artifact of p.data) {
+            const change = new ArtifactData(artifact.artifactConfigId, artifact.count);
+            change.addTimeStamp = artifact.addTimeStamp;
+            change.effectIndex = artifact.effectIndex;
+            change.uniqueId = artifact.uniqueId;
+            change.effect = artifact.effect;
+            DataMgr.s.artifact.countChanged(change);
+        }
+    }
     //------------------------------------- inner building
     public static building_change = (e: any) => {
         const p: s2c_user.Ibuilding_change = e.data;

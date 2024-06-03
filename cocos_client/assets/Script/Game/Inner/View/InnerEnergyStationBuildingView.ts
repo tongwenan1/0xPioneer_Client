@@ -104,10 +104,17 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
                 this._produceInfoView.position = v3(0, infoViewY, 0);
                 this._getInfoView.position = v3(0, infoViewY, 0);
             }
+            // get energy num
+            let perEnergyGetNum: number = InnerBuildingLvlUpConfig.getBuildingLevelData(this._building.buildLevel, "psyc_output");
+            if (perEnergyGetNum == null) {
+                perEnergyGetNum = 1;
+            }
+            const orginalNum: number = perEnergyGetNum;
+            perEnergyGetNum = GameMgr.getAfterEffectValue(GameExtraEffectType.ENERGY_GENERATE, perEnergyGetNum);
+            const effectNum: number = perEnergyGetNum - orginalNum;
+            const showGetString: string = orginalNum + (effectNum > 0 ? ("(" + effectNum + ")") : "");
 
-            const perEnergyGetNum: number = InnerBuildingLvlUpConfig.getBuildingLevelData(this._building.buildLevel, "psyc_output");
-
-            this._getInfoView.getChildByPath("TopContent/CurrentNum").getComponent(Label).string = (perEnergyGetNum == null ? 1 : perEnergyGetNum).toString();
+            this._getInfoView.getChildByPath("TopContent/CurrentNum").getComponent(Label).string = showGetString;
             this._getInfoView.getChildByPath("TopContent").getComponent(Layout).updateLayout();
 
             this._limitGetTimes = DataMgr.s.userInfo.data.energyGetLimitTimes;

@@ -24,7 +24,7 @@ export class BuildingUpgradeUI extends ViewController {
         // useLanMgr
         // buildingInfoView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.getLanById("107549");
         const innerData = DataMgr.s.innerBuilding.data;
-        innerData.forEach((value: UserInnerBuildInfo, key: InnerBuildingType)=> {
+        innerData.forEach((value: UserInnerBuildInfo, key: InnerBuildingType) => {
             if (this._buildingMap.has(key)) {
                 const innerConfig = InnerBuildingConfig.getByBuildingType(key);
                 if (innerConfig != null) {
@@ -138,7 +138,7 @@ export class BuildingUpgradeUI extends ViewController {
             if (time == null) {
                 time = 5;
             }
-            time = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.BUILDING_LVUP_TIME, time);
+            time = GameMgr.getAfterEffectValue(GameExtraEffectType.BUILDING_LVUP_TIME, time);
             upgradeView.getChildByPath("Time/Label-001").getComponent(Label).string = CommonTools.formatSeconds(time);
 
             // cost
@@ -150,7 +150,7 @@ export class BuildingUpgradeUI extends ViewController {
             if (costData != null) {
                 for (const cost of costData) {
                     const type = cost[0].toString();
-                    let num = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.BUILDING_LVLUP_RESOURCE, cost[1]);
+                    let num = GameMgr.getAfterEffectValue(GameExtraEffectType.BUILDING_LVLUP_RESOURCE, cost[1]);
                     const ownNum: number = DataMgr.s.item.getObj_item_count(type);
 
                     const item = instantiate(this._levelInfoCostItem);
@@ -217,22 +217,14 @@ export class BuildingUpgradeUI extends ViewController {
             return;
         }
         const costData = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_cost);
-        let time = InnerBuildingLvlUpConfig.getBuildingLevelData(userInnerData.buildLevel + 1, innerConfig.lvlup_time);
-        if (time == null) {
-            time = 5;
-        }
-        if (costData != null && time != null) {
+        if (costData != null) {
             let canUpgrade: boolean = true;
             for (const resource of costData) {
                 if (resource.length != 2) {
                     continue;
                 }
                 const type = resource[0].toString();
-                let needNum = GameMgr.getAfterExtraEffectPropertyByBuilding(
-                    InnerBuildingType.MainCity,
-                    GameExtraEffectType.BUILDING_LVLUP_RESOURCE,
-                    resource[1]
-                );
+                let needNum = GameMgr.getAfterEffectValue(GameExtraEffectType.BUILDING_LVLUP_RESOURCE, resource[1]);
 
                 if (DataMgr.s.item.getObj_item_count(type) < needNum) {
                     canUpgrade = false;
@@ -245,8 +237,6 @@ export class BuildingUpgradeUI extends ViewController {
                 // UIHUDController.showCenterTip("Insufficient resources for building upgrades");
                 return;
             }
-            // prepare time
-            time = GameMgr.getAfterExtraEffectPropertyByBuilding(InnerBuildingType.MainCity, GameExtraEffectType.BUILDING_LVUP_TIME, time);
             NetworkMgr.websocketMsg.player_building_levelup({ innerBuildingId: buildingType });
 
             this._closeBuildingUpgradeUI();
