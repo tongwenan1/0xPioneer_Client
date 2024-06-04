@@ -169,6 +169,7 @@ message building_data {
     required uint32 troopEndTime = 8;
     required uint32 troopNum = 9;
     required bool troopIng = 10;
+    repeated uint32 pos = 11;
 }
 
 message pos2d {

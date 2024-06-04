@@ -43,6 +43,7 @@ export class InnerBuildingController extends ViewController {
     private _latticeContents: Node[] = [];
     private _allLatticeItems: InnerBuildingLatticeStruct[] = [];
     private _latticeNum: number = 2;
+    private _latticeColumIndex: number = 12;
 
     private _latticeBuildingOriginalPos: Vec3 = null;
     private _latticeBuildingOriginalStayLaticeItems: InnerBuildingLatticeStruct[] = [];
@@ -134,28 +135,7 @@ export class InnerBuildingController extends ViewController {
                     if (this._allLatticeItems.length > 0) {
                         const useItems: Node[] = [];
                         for (let i = 0; i < size; i++) {
-                            let beginIndex: number = value.buildBeginLatticeIndex;
-                            if (beginIndex == null) {
-                                let inSameRouter: boolean = true;
-                                let beginRouter: number = this._allLatticeItems[index].routerIndex;
-                                for (let j = 1; j < size; j++) {
-                                    if (beginRouter != this._allLatticeItems[index + j].routerIndex) {
-                                        inSameRouter = false;
-                                        break;
-                                    }
-                                }
-                                if (inSameRouter) {
-                                    beginIndex = index;
-                                } else {
-                                    for (const templeItem of this._allLatticeItems) {
-                                        if (templeItem.routerIndex == beginRouter + 1) {
-                                            beginIndex = this._allLatticeItems.indexOf(templeItem);
-                                            break;
-                                        }
-                                    }
-                                }
-                                DataMgr.s.innerBuilding.changeBuildingLatticeBeginIndex(key, beginIndex);
-                            }
+                            let beginIndex: number = value.pos[1] * this._latticeColumIndex + value.pos[0];
                             if (beginIndex + i < this._allLatticeItems.length) {
                                 const templeItem = this._allLatticeItems[beginIndex + i];
                                 templeItem.isEmpty = false;
@@ -344,7 +324,11 @@ export class InnerBuildingController extends ViewController {
                 }
                 this._buildingMap.forEach((value: InnerBuildingView, key: InnerBuildingType) => {
                     if (value.node == this._latticeEditBuildingView) {
-                        DataMgr.s.innerBuilding.changeBuildingLatticeBeginIndex(key, minIndex);
+                        const row: number = Math.floor(minIndex / this._latticeColumIndex);
+                        const colunm: number = minIndex - row * this._latticeColumIndex;
+                        const pos: [number, number] = [colunm, row];
+                        
+                        // DataMgr.s.innerBuilding.changeBuildingLatticeBeginIndex(key, minIndex);
                     }
                 });
                 this._setBuildingPosByLattles(this._latticeEditBuildingView, useItems);

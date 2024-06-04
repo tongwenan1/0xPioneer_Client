@@ -146,11 +146,6 @@ message player_world_treasure_lottery { }
 message player_building_levelup {
     required string innerBuildingId = 1;
 }
-message player_get_auto_energy {
-}
-message player_generate_energy {
-    required string num = 1; 
-}
 message player_generate_troop_start {
     required uint32 num = 1;
 }
@@ -159,6 +154,10 @@ message player_building_delegate_nft {
     required string nftId = 2; 
 }
 message fetch_user_psyc { }
+message player_building_pos {
+    required string buildingId = 1;
+    repeated uint32 pos = 2;
+}
 
 
 // ------ pioneerNFT ------

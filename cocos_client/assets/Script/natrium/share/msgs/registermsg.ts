@@ -1,5 +1,3 @@
-import { nat } from "../..";
-import { debug_level_enum } from "../../interface/debug/debug_logger";
 import { packetcodec } from "../../interface/protocol/packetcodec";
 import { protobuf_c2s, protobuf_s2c } from "./protobufmsgs";
 

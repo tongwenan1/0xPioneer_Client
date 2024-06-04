@@ -17,6 +17,7 @@ import {
     color,
     instantiate,
     rect,
+    tween,
     v2,
     v3,
 } from "cc";
@@ -32,6 +33,9 @@ import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import GameMainHelper from "../Helper/GameMainHelper";
 import { DataMgr } from "../../Data/DataMgr";
+import CommonTools from "../../Tool/CommonTools";
+import { NetworkMgr } from "../../Net/NetworkMgr";
+import { s2c_user } from "../../Net/msg/WebsocketMsg";
 
 const { ccclass, property } = _decorator;
 
@@ -42,22 +46,38 @@ export class InnerBuildingControllerRe extends ViewController {
     private _latticeItem: Node = null;
     private _latticeContents: Node[] = [];
     private _allLatticeItems: InnerBuildingLatticeStruct[] = [];
-    private _latticeNum: number = 3;
+    private _streetView: Node = null;
+    private _allBuildingContentViews: Node[] = [];
+    private _buildingContentItem: Node = null;
+    private _allPioneerContentViews: Node[] = [];
+    private _pioneerContentItem: Node = null;
+    private _movePioneer: Node = null;
+    private _allMovingPioneers: Node[] = [];
 
-    private _latticeBuildingOriginalPos: Vec3 = null;
+    private _latticeNum: number = 3;
+    private _latticeColumIndex: number = 13;
     private _latticeBuildingOriginalStayLaticeItems: InnerBuildingLatticeStruct[] = [];
     private _latticeEditBuildingView: Node = null;
     private _ghostBuildingView: Node = null;
+
+    private _setSucceedLatticeItems: InnerBuildingLatticeStruct[] = null;
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
         this._latticeItem = this.node.getChildByPath("BuildingLattice/Content/LatticeContent");
         this._latticeItem.active = false;
+
+        this._streetView = this.node.getChildByPath("BuildingLattice/StreetView");
+        this._buildingContentItem = this._streetView.getChildByPath("BuildingContent");
+        this._buildingContentItem.removeFromParent();
+        this._pioneerContentItem = this._streetView.getChildByPath("PioneerContent");
+        this._pioneerContentItem.removeFromParent();
     }
 
     protected async viewDidStart(): Promise<void> {
         super.viewDidStart();
 
+        this._prepareStreet();
         this._prepareLattice();
         this._refreshLattice();
         await this._initBuilding();
@@ -68,15 +88,20 @@ export class InnerBuildingControllerRe extends ViewController {
         super.viewDidAppear();
         this._refreshLattice();
 
+        this._generatePioneerMove();
+
         NotificationMgr.addListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
 
         NotificationMgr.addListener(NotificationName.GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_DOWN, this._onEditActionMouseDown, this);
         NotificationMgr.addListener(NotificationName.GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_UP, this._onEditActionMouseUp, this);
         NotificationMgr.addListener(NotificationName.GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_MOVE, this._onEditActionMouseMove, this);
+
+        NetworkMgr.websocket.on("player_building_pos_res", this._onBuildingPosChange);
     }
 
     protected viewDidDisAppear(): void {
         super.viewDidDisAppear();
+
         this._refreshBuilding();
 
         NotificationMgr.removeListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
@@ -84,6 +109,8 @@ export class InnerBuildingControllerRe extends ViewController {
         NotificationMgr.removeListener(NotificationName.GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_DOWN, this._onEditActionMouseDown, this);
         NotificationMgr.removeListener(NotificationName.GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_UP, this._onEditActionMouseUp, this);
         NotificationMgr.removeListener(NotificationName.GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_MOVE, this._onEditActionMouseMove, this);
+
+        NetworkMgr.websocket.off("player_building_pos_res", this._onBuildingPosChange);
     }
 
     protected viewDidDestroy(): void {
@@ -91,6 +118,26 @@ export class InnerBuildingControllerRe extends ViewController {
     }
 
     //-------------------------------------- function
+    private _prepareStreet() {
+        for (let i = 0; i < this._latticeNum; i++) {
+            const pioneerView = instantiate(this._pioneerContentItem);
+            pioneerView.setParent(this._streetView);
+            this._allPioneerContentViews.push(pioneerView);
+
+            const buildingView = instantiate(this._buildingContentItem);
+            buildingView.setParent(this._streetView);
+            this._allBuildingContentViews.push(buildingView);
+
+            if (i == this._latticeNum - 1) {
+                const lastPioneerView = instantiate(this._pioneerContentItem);
+                lastPioneerView.setParent(this._streetView);
+                this._allPioneerContentViews.push(lastPioneerView);
+            }
+        }
+        this._streetView.getComponent(Layout).updateLayout();
+        this._movePioneer = this.node.getChildByPath("MovePioneer");
+        this._movePioneer.removeFromParent();
+    }
     private _prepareLattice() {
         for (let i = 0; i < this._latticeNum; i++) {
             const item = instantiate(this._latticeItem);
@@ -107,9 +154,7 @@ export class InnerBuildingControllerRe extends ViewController {
                 });
             }
         }
-        console.log("exce prare");
     }
-
     private async _initBuilding() {
         const innerBuilding = DataMgr.s.innerBuilding.data;
         let index: number = 0;
@@ -124,7 +169,6 @@ export class InnerBuildingControllerRe extends ViewController {
                 if (buildingPrb != null) {
                     const view = instantiate(buildingPrb);
                     view.setScale(scale);
-                    view.setParent(buildingParent);
                     if (key == InnerBuildingType.MainCity) {
                         this._buildingMap.set(key, view.getComponent(InnerMainCityBuildingView));
                     } else if (key == InnerBuildingType.Barrack) {
@@ -136,39 +180,19 @@ export class InnerBuildingControllerRe extends ViewController {
                     }
                     const size: number = config.size;
                     if (this._allLatticeItems.length > 0) {
-                        const useItems: Node[] = [];
+                        const useItems: InnerBuildingLatticeStruct[] = [];
                         for (let i = 0; i < size; i++) {
-                            let beginIndex: number = value.buildBeginLatticeIndex;
-                            if (beginIndex == null) {
-                                let inSameRouter: boolean = true;
-                                let beginRouter: number = this._allLatticeItems[index].routerIndex;
-                                for (let j = 1; j < size; j++) {
-                                    if (beginRouter != this._allLatticeItems[index + j].routerIndex) {
-                                        inSameRouter = false;
-                                        break;
-                                    }
-                                }
-                                if (inSameRouter) {
-                                    beginIndex = index;
-                                } else {
-                                    for (const templeItem of this._allLatticeItems) {
-                                        if (templeItem.routerIndex == beginRouter + 1) {
-                                            beginIndex = this._allLatticeItems.indexOf(templeItem);
-                                            break;
-                                        }
-                                    }
-                                }
-                                DataMgr.s.innerBuilding.changeBuildingLatticeBeginIndex(key, beginIndex);
-                            }
+                            let beginIndex: number = value.pos[1] * this._latticeColumIndex + value.pos[0];
                             if (beginIndex + i < this._allLatticeItems.length) {
                                 const templeItem = this._allLatticeItems[beginIndex + i];
                                 templeItem.isEmpty = false;
                                 templeItem.stayBuilding = view;
-                                useItems.push(templeItem.node);
+                                useItems.push(templeItem);
 
                                 const copyLattice = instantiate(templeItem.node);
+                                copyLattice.scale = v3(1 / scale.x, 1 / scale.y, 1 / scale.z);
                                 copyLattice.name = "buildingLattice_" + i;
-                                const copyWidth = copyLattice.getComponent(UITransform).width;
+                                const copyWidth = copyLattice.getComponent(UITransform).width * copyLattice.scale.x;
                                 copyLattice.position = v3(-(((size - 1) / 2) * copyWidth) + i * copyWidth, copyLattice.position.y, 0);
                                 view.addChild(copyLattice);
                             }
@@ -180,29 +204,32 @@ export class InnerBuildingControllerRe extends ViewController {
             }
         }
     }
-    private _setBuildingPosByLattles(building: Node, lattices: Node[]) {
+    private _setBuildingPosByLattles(building: Node, lattices: InnerBuildingLatticeStruct[]) {
         if (lattices.length > 0) {
-            const currentParentView: Node = lattices[0].parent;
+            const currentParentView: Node = this._allBuildingContentViews[lattices[0].routerIndex];
+            if (currentParentView == undefined) {
+                return;
+            }
+            building.setParent(currentParentView);
             let centerX: number = 0;
             let centerY: number = 0;
             if (lattices.length == 1) {
-                centerX = lattices[0].position.x;
-                centerY = lattices[0].position.y;
+                centerX = lattices[0].node.position.x;
+                centerY = lattices[0].node.position.y;
             } else if (lattices.length > 1) {
                 for (const item of lattices) {
-                    centerX += item.position.x;
-                    centerY += item.position.y;
+                    centerX += item.node.position.x;
+                    centerY += item.node.position.y;
                 }
                 centerX = centerX / lattices.length;
                 centerY = centerY / lattices.length;
             }
             const pos = building.parent
                 .getComponent(UITransform)
-                .convertToNodeSpaceAR(currentParentView.getComponent(UITransform).convertToWorldSpaceAR(v3(centerX, centerY, 0)));
+                .convertToNodeSpaceAR(lattices[0].node.parent.getComponent(UITransform).convertToWorldSpaceAR(v3(centerX, centerY, 0)));
             building.position = pos;
         }
     }
-
     private _refreshBuilding() {
         const innerBuilds = DataMgr.s.innerBuilding.data;
         this._buildingMap.forEach(async (value: InnerBuildingView, key: InnerBuildingType) => {
@@ -233,7 +260,6 @@ export class InnerBuildingControllerRe extends ViewController {
             item.node.getChildByPath("Mask/SpriteSplash").getComponent(Sprite).color = useColor;
         }
     }
-
     private _checkEditBuildingCanSetLattice(): { canSet: boolean; useLattices: InnerBuildingLatticeStruct[] } {
         for (const item of this._allLatticeItems) {
             item.showType = InnerBuildingLatticeShowType.None;
@@ -293,12 +319,56 @@ export class InnerBuildingControllerRe extends ViewController {
         }
         return { canSet: canSet, useLattices: currentUseItems };
     }
+
+    private _generatePioneerMove() {
+        if (this._allPioneerContentViews.length <= 0) {
+            return;
+        }
+        const nodeScale: Vec3 = this.node.scale;
+        const movePioneer = instantiate(this._movePioneer);
+        const contentWidth: number = this._allBuildingContentViews[0].getComponent(UITransform).width;
+        const contentHeight: number = this._allBuildingContentViews[0].getComponent(UITransform).height;
+        const leftOriginalX: number = -contentWidth / 2 - movePioneer.getComponent(UITransform).width - 20;
+        const rightOriginalX: number = contentWidth / 2 + movePioneer.getComponent(UITransform).width + 20;
+
+        const contentIndex: number = CommonTools.getRandomInt(0, this._allPioneerContentViews.length - 1);
+        const isMoveToRight: boolean = CommonTools.getRandomItem([true, false]);
+        const originalX: number = isMoveToRight ? leftOriginalX : rightOriginalX;
+        const originalY: number = CommonTools.getRandomInt(-contentHeight / 2, contentHeight / 2);
+
+        movePioneer.setParent(this._allPioneerContentViews[contentIndex]);
+        movePioneer.setPosition(v3(originalX, originalY, 0));
+        movePioneer.setScale(v3((originalX > 0 ? -1 : 1) * nodeScale.x, 1 * nodeScale.y, 1 * nodeScale.z));
+        this._allMovingPioneers.push(movePioneer);
+        tween()
+            .target(movePioneer)
+            .to(12, { position: v3(isMoveToRight ? rightOriginalX : leftOriginalX, originalY, 0) })
+            .call(() => {
+                for (let i = 0; i < this._allMovingPioneers.length; i++) {
+                    if (this._allMovingPioneers[i] == movePioneer) {
+                        this._allMovingPioneers.splice(i, 1);
+                        break;
+                    }
+                }
+                movePioneer.destroy();
+            })
+            .start();
+
+        const randomDelayNum: number = CommonTools.getRandomInt(1, 20);
+        this.scheduleOnce(() => {
+            this._generatePioneerMove();
+        }, randomDelayNum);
+    }
+
     //----------------------------------------- notificaiton
     private _onInnerBuildingLatticeEditChanged() {
         const edit: boolean = GameMainHelper.instance.isEditInnerBuildingLattice;
         if (edit) {
             GameMainHelper.instance.changeGameCameraPosition(Vec3.ZERO, true);
             GameMainHelper.instance.changeGameCameraZoom(1, true);
+        }
+        for (const view of this._allMovingPioneers) {
+            view.active = !edit;
         }
         this._refreshBuilding();
         this._refreshLattice();
@@ -315,9 +385,15 @@ export class InnerBuildingControllerRe extends ViewController {
                     this._ghostBuildingView.addComponent(UIOpacity).opacity = 150;
                 }
                 // moveBuilding
-                this._latticeBuildingOriginalPos = value.node.position.clone();
+                const moveParentView = this.node.getChildByPath("BuildingLattice");
+                const latticeBuildingOriginalPos = moveParentView
+                    .getComponent(UITransform)
+                    .convertToNodeSpaceAR(value.node.parent.getComponent(UITransform).convertToWorldSpaceAR(value.node.position.clone()));
                 this._latticeEditBuildingView = value.node;
-                this._latticeEditBuildingView.setSiblingIndex(999);
+                this._latticeEditBuildingView.removeFromParent();
+                this._latticeEditBuildingView.setParent(moveParentView);
+                this._latticeEditBuildingView.position = latticeBuildingOriginalPos;
+                this._latticeEditBuildingView.setSiblingIndex(99999);
                 this._latticeBuildingOriginalStayLaticeItems = [];
                 for (const item of this._allLatticeItems) {
                     if (!item.isEmpty && item.stayBuilding == this._latticeEditBuildingView) {
@@ -335,12 +411,10 @@ export class InnerBuildingControllerRe extends ViewController {
         if (this._latticeEditBuildingView != null) {
             const canSetData = this._checkEditBuildingCanSetLattice();
             if (canSetData.canSet) {
-                const useItems = [];
+                this._setSucceedLatticeItems = [];
                 let minIndex: number = 9999999;
                 for (const item of canSetData.useLattices) {
-                    item.isEmpty = false;
-                    item.stayBuilding = this._latticeEditBuildingView;
-                    useItems.push(item.node);
+                    this._setSucceedLatticeItems.push(item);
                     const templeIndex: number = this._allLatticeItems.indexOf(item);
                     if (templeIndex >= 0 && templeIndex < this._allLatticeItems.length) {
                         minIndex = Math.min(minIndex, templeIndex);
@@ -348,53 +422,76 @@ export class InnerBuildingControllerRe extends ViewController {
                 }
                 this._buildingMap.forEach((value: InnerBuildingView, key: InnerBuildingType) => {
                     if (value.node == this._latticeEditBuildingView) {
-                        DataMgr.s.innerBuilding.changeBuildingLatticeBeginIndex(key, minIndex);
+                        const row: number = Math.floor(minIndex / this._latticeColumIndex);
+                        const colunm: number = minIndex - row * this._latticeColumIndex;
+                        const pos: [number, number] = [colunm, row];
+                        NetworkMgr.websocketMsg.player_building_pos({
+                            buildingId: key,
+                            pos: pos,
+                        });
                     }
                 });
-                this._setBuildingPosByLattles(this._latticeEditBuildingView, useItems);
+                return;
             } else {
-                this._latticeEditBuildingView.position = this._latticeBuildingOriginalPos;
                 for (const item of this._latticeBuildingOriginalStayLaticeItems) {
                     item.isEmpty = false;
                     item.stayBuilding = this._latticeEditBuildingView;
                 }
+                this._setBuildingPosByLattles(this._latticeEditBuildingView, this._latticeBuildingOriginalStayLaticeItems);
             }
             for (const item of this._allLatticeItems) {
                 item.showType = InnerBuildingLatticeShowType.None;
             }
-            // change index
-            this._buildingMap.forEach((value: InnerBuildingView, key: InnerBuildingType) => {
-                for (let i = 0; i < this._allLatticeItems.length; i++) {
-                    if (value.node == this._allLatticeItems[i].stayBuilding) {
-                        value.node.setSiblingIndex((i + 1) * 1000 + this._allLatticeItems[i].routerIndex);
-                        break;
-                    }
-                }
-            });
             this._refreshLattice();
         }
         if (this._ghostBuildingView != null) {
             this._ghostBuildingView.destroy();
         }
-        this._latticeBuildingOriginalPos = null;
         this._latticeEditBuildingView = null;
+        this._latticeBuildingOriginalStayLaticeItems = [];
         this._ghostBuildingView = null;
     }
     private _onEditActionMouseMove(data: { movement: Vec2 }) {
         if (this._latticeEditBuildingView != null) {
-            // const currentPos = v3(
-            //     this._latticeEditBuildingView.position.x + data.movement.x / this.node.scale.x,
-            //     this._latticeEditBuildingView.position.y + data.movement.y / this.node.scale.y
-            // );
-
-            const currentPos = v3(
-                this._latticeEditBuildingView.position.x + data.movement.x ,
-                this._latticeEditBuildingView.position.y + data.movement.y
-            );
+            const currentPos = v3(this._latticeEditBuildingView.position.x + data.movement.x, this._latticeEditBuildingView.position.y + data.movement.y);
 
             this._latticeEditBuildingView.position = currentPos;
             this._checkEditBuildingCanSetLattice();
             this._refreshLattice();
         }
     }
+
+    //---------------------------------- socket
+    private _onBuildingPosChange = (e: any) => {
+        const p: s2c_user.Iplayer_building_pos_res = e.data;
+        if (p.res !== 1) {
+            if (this._latticeEditBuildingView != null) {
+                for (const item of this._latticeBuildingOriginalStayLaticeItems) {
+                    item.isEmpty = false;
+                    item.stayBuilding = this._latticeEditBuildingView;
+                }
+                this._setBuildingPosByLattles(this._latticeEditBuildingView, this._latticeBuildingOriginalStayLaticeItems);
+            }
+        } else {
+            if (this._latticeEditBuildingView != null && this._setSucceedLatticeItems != null) {
+                for (const item of this._setSucceedLatticeItems) {
+                    item.isEmpty = false;
+                    item.stayBuilding = this._latticeEditBuildingView;
+                }
+                this._setBuildingPosByLattles(this._latticeEditBuildingView, this._setSucceedLatticeItems);
+            }
+            this._setSucceedLatticeItems = null;
+        }
+
+        for (const item of this._allLatticeItems) {
+            item.showType = InnerBuildingLatticeShowType.None;
+        }
+        this._refreshLattice();
+        if (this._ghostBuildingView != null) {
+            this._ghostBuildingView.destroy();
+        }
+        this._latticeEditBuildingView = null;
+        this._latticeBuildingOriginalStayLaticeItems = [];
+        this._ghostBuildingView = null;
+    };
 }

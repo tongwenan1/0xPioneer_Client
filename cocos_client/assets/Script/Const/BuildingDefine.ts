@@ -27,7 +27,6 @@ export enum InnerBuildingType {
 }
 
 export interface UserInnerBuildInfo {
-    buildBeginLatticeIndex: number;
     buildType: InnerBuildingType;
     buildLevel: number;
     upgradeBeginTimestamp: number;
@@ -38,6 +37,7 @@ export interface UserInnerBuildInfo {
     troopEndTime: number;
     troopNum: number;
     troopIng: boolean;
+    pos: [number, number];
 }
 
 export type InnerBuildingStaffLevelUpType = string;

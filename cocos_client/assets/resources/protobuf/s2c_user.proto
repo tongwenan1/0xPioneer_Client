@@ -287,12 +287,6 @@ message player_building_levelup_res {
     required int32 res = 1;
     optional share.building_data data = 2;
 }
-message player_get_auto_energy_res {
-    required int32 res = 1;
-}
-message player_generate_energy_res {
-    required int32 res = 1;
-}
 message player_generate_troop_start_res {
     required int32 res = 1;
 }
@@ -304,6 +298,11 @@ message fetch_user_psyc_res {
     optional float psycfetched = 2; // mint gold transaction hash, see in contract
     optional string txhash = 3; // mint gold transaction hash, see in contract
     optional string logid = 4; // mint gold transaction log id 
+}
+message player_building_pos_res {
+    required int32 res = 1;
+    optional string buildingId = 2;
+    repeated uint32 pos = 3;
 }
 // inner-building: notify
 message building_change {

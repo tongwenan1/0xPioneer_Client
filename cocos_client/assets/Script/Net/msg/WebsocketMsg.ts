@@ -126,11 +126,12 @@ export class WebsocketMsg {
     public player_artifact_combine(d: c2s_user.Iplayer_artifact_combine) {
         this.send_packet("player_artifact_combine", d);
     }
+
     public player_building_levelup(d: c2s_user.Iplayer_building_levelup) {
         this.send_packet("player_building_levelup", d);
     }
-    public player_generate_energy(d: c2s_user.Iplayer_generate_energy) {
-        this.send_packet("player_generate_energy", d);
+    public player_building_pos(d: c2s_user.Iplayer_building_pos) {
+        this.send_packet("player_building_pos", d);
     }
     public player_generate_troop_start(d: c2s_user.Iplayer_generate_troop_start) {
         this.send_packet("player_generate_troop_start", d);
@@ -314,8 +315,9 @@ export namespace c2s_user {
     export interface Iplayer_building_levelup {
         innerBuildingId: string;
     }
-    export interface Iplayer_generate_energy {
-        num: number;
+    export interface Iplayer_building_pos {
+        buildingId: string;
+        pos: [number, number];
     }
     export interface Iplayer_generate_troop_start {
         num: number;
@@ -472,13 +474,16 @@ export namespace s2c_user {
         pioneerId: string;
     }
 
-
-
     export interface Iplayer_item_use_res {
         res: number;
     }
     export interface Ibuilding_change {
         buildings: share.Ibuilding_data[];
+    }
+    export interface Iplayer_building_pos_res {
+        res: number;
+        buildingId: string;
+        pos: [number, number];
     }
     export interface Iplayer_building_delegate_nft_res {
         innerBuildingId: string;
@@ -643,6 +648,7 @@ export namespace share {
         troopEndTime: number;
         troopNum: number;
         troopIng: boolean;
+        pos: [number, number];
     }
 
     export interface Iplayer_data {
@@ -729,7 +735,6 @@ export namespace share {
         defenderId: string;
         hp: number;
     }
-    
 
     export interface Infts_data {
         nfts: { [key: string]: Infts_info_data };

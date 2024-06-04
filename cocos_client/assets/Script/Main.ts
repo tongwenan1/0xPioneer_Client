@@ -180,6 +180,7 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_artifact_combine_res", DataMgr.player_artifact_combine_res);
         // inner builing
         NetworkMgr.websocket.on("building_change", DataMgr.building_change);
+        NetworkMgr.websocket.on("player_building_pos_res", DataMgr.player_building_pos_res);
         // map
         NetworkMgr.websocket.on("pioneer_change", DataMgr.pioneer_change);
         NetworkMgr.websocket.on("mapbuilding_change", DataMgr.mapbuilding_change);

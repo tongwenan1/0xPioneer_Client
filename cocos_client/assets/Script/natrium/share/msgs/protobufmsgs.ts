@@ -72,11 +72,10 @@ export enum protobuf_c2s {
 
     // ------ inner-building ------
     player_building_levelup,
-    player_get_auto_energy,
-    player_generate_energy,
     player_generate_troop_start,
     player_building_delegate_nft,
     fetch_user_psyc,
+    player_building_pos,
 
 
     // ------ pioneerNFT ------
@@ -202,11 +201,10 @@ export enum protobuf_s2c {
 
     // ------ inner-building ------
     player_building_levelup_res,
-    player_get_auto_energy_res,
-    player_generate_energy_res,
     player_generate_troop_start_res,
     player_building_delegate_nft_res,
     fetch_user_psyc_res,
+    player_building_pos_res,
     // inner-building: notify
     building_change,
 

@@ -1,3 +1,4 @@
+import NotificationMgr from "../../Basic/NotificationMgr";
 import { InnerBuildingType, UserInnerBuildInfo } from "../../Const/BuildingDefine";
 import { share } from "../../Net/msg/WebsocketMsg";
 import NetGlobalData from "./Data/NetGlobalData";
@@ -15,15 +16,15 @@ export default class InnerBuildingDataMgr {
 
     public replaceData(netBuilding: share.Ibuilding_data) {
         const newObj = this._convertNetDataToObject(netBuilding);
-        newObj.buildBeginLatticeIndex = this._data.has(newObj.buildType) ? this._data.get(newObj.buildType).buildBeginLatticeIndex : null;
         this._data.set(newObj.buildType, newObj);
     }
-    public changeBuildingLatticeBeginIndex(buildingType: InnerBuildingType, beginIndex: number) {
-        if (!this._data.has(buildingType)) {
+    public changePos(type: InnerBuildingType, pos: [number, number]) {
+        if (!this._data.has(type)) {
             return;
         }
-        this._data.get(buildingType).buildBeginLatticeIndex = beginIndex;
+        this._data.get(type).pos = pos;
     }
+
     public getInnerBuildingLevel(buildingType: InnerBuildingType) {
         let level: number = 0;
         if (this._data.has(buildingType)) {
@@ -54,7 +55,7 @@ export default class InnerBuildingDataMgr {
             troopStartTime: currentTime,
             troopEndTime: currentTime + (netData.troopEndTime - netData.troopStartTime) * 1000,
             troopNum: netData.troopNum,
-            buildBeginLatticeIndex: null
+            pos: netData.pos,
         };
     }
 }

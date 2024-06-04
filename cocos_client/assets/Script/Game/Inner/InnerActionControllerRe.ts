@@ -1,4 +1,4 @@
-import { EventMouse, Node, UITransform, Vec2, Vec3, _decorator, game, v2, v3 } from "cc";
+import { EventMouse, Node, UITransform, Vec2, Vec3, _decorator, game, v2, v3, view } from "cc";
 import ViewController from "../../BasicView/ViewController";
 import GameMainHelper from "../Helper/GameMainHelper";
 import NotificationMgr from "../../Basic/NotificationMgr";
@@ -57,29 +57,17 @@ export default class InnerActionControllerRe extends ViewController {
                     zoom += 0.05;
                 }
                 GameMainHelper.instance.changeGameCameraZoom(zoom);
+                this._fixCameraPos(GameMainHelper.instance.gameCameraPosition.clone());
             }
         }, this);
 
         this.node.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {
             if (this._mouseDown) {
                 let pos = GameMainHelper.instance.gameCameraPosition.clone().add(new Vec3(-event.movementX, event.movementY, 0));
-                if (pos.x < -moveDistX) {
-                    pos.x = -moveDistX;
-
-                } else if (pos.x > moveDistX) {
-                    pos.x = moveDistX;
-                }
-
-                if (pos.y < -moveDistY) {
-                    pos.y = -moveDistY;
-
-                } else if (pos.y > moveDistY) {
-                    pos.y = moveDistY;
-                }
                 if (this._isBuildingPosEdit) {
                     NotificationMgr.triggerEvent(NotificationName.GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_MOVE, { movement: event.getUIDelta() });
                 } else {
-                    GameMainHelper.instance.changeGameCameraPosition(pos);
+                    this._fixCameraPos(pos);
                 }
             }
         }, this);
@@ -103,7 +91,20 @@ export default class InnerActionControllerRe extends ViewController {
         NotificationMgr.removeListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
     }
 
+    private _fixCameraPos(pos: Vec3) {
+        const contentSize = this.node.getComponent(UITransform).contentSize;
+        const scale = this.node.scale;
+        const sc = 1 - GameMainHelper.instance.gameCameraZoom;
+        const minx = -contentSize.width * scale.x / 2 * sc;
+        const maxx = contentSize.width * scale.x / 2 * sc;
+        const miny = -contentSize.height * scale.y / 2 * sc;
+        const maxy = contentSize.height * scale.y / 2 * sc;
 
+        pos.x = Math.min(Math.max(minx, pos.x), maxx);
+        pos.y = Math.min(Math.max(miny, pos.y), maxy);
+
+        GameMainHelper.instance.changeGameCameraPosition(pos);
+    }
     //------------------------------------- notifcation
     private _onInnerBuildingLatticeEditChanged() {
         this._isBuildingPosEdit = GameMainHelper.instance.isEditInnerBuildingLattice;

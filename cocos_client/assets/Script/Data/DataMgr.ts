@@ -146,7 +146,7 @@ export class DataMgr {
             change.effect = artifact.effect;
             DataMgr.s.artifact.countChanged(change);
         }
-    }
+    };
     //------------------------------------- inner building
     public static building_change = (e: any) => {
         const p: s2c_user.Ibuilding_change = e.data;
@@ -165,6 +165,14 @@ export class DataMgr {
             }
         }
     };
+    public static player_building_pos_res = (e: any) => {
+        const p: s2c_user.Iplayer_building_pos_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        DataMgr.s.innerBuilding.changePos(p.buildingId as InnerBuildingType, p.pos);
+    };
+    //------------------------------------- storehouse
 
     //------------------------------------- map
     public static pioneer_change = (e: any) => {
