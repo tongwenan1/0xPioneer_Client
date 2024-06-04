@@ -59,17 +59,12 @@ export class GameMain extends ViewController {
             if (!result.success) {
                 return;
             }
-            let progress: number = 0;
-            this.schedule(() => {
-                progress += 0.14;
-                result.node.getComponent(LoadingUI).showLoadingProgress(progress);
-                if (progress >= 1) {
-                    this.scheduleOnce(() => {
-                        this.unscheduleAllCallbacks();
-                        UIPanelManger.inst.popPanel(result.node, UIPanelLayerType.HUD);
-                    }, 0.2);
-                }
-            }, 0.2);
+            this.scheduleOnce(() => {
+                result.node.getComponent(LoadingUI).showLoadingProgress(1);
+                this.scheduleOnce(() => {
+                    UIPanelManger.inst.popPanel(result.node, UIPanelLayerType.HUD);
+                }, 0.2);
+            }, 0.3);
         }
     }
 
