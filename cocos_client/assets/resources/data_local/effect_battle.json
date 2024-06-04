@@ -1,16 +1,37 @@
 {
   "650001": {
     "id": "650001",
-    "type": 1,
-    "para": [
-      0.2
+    "trig_type": 0,
+    "trig_para": null,
+    "eff_type": 3,
+    "eff_target": 0,
+    "eff_para": [
+      [
+        3,
+        2,
+        1
+      ],
+      [
+        0,
+        3,
+        0,
+        0
+      ]
     ]
   },
   "650002": {
     "id": "650002",
-    "type": 1,
-    "para": [
-      0.2
+    "trig_type": 1,
+    "trig_para": [
+      3
+    ],
+    "eff_type": 2,
+    "eff_target": 0,
+    "eff_para": [
+      0,
+      20,
+      0,
+      0
     ]
   }
 }

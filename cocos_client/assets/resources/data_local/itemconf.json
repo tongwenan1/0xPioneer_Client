@@ -312,25 +312,5 @@
     "grade": 1,
     "gain_item": null,
     "skill_learn": ""
-  },
-  "9001": {
-    "id": "9001",
-    "itemType": null,
-    "icon": "",
-    "itemName": "",
-    "itemDesc": "",
-    "grade": null,
-    "gain_item": null,
-    "skill_learn": ""
-  },
-  "9002": {
-    "id": "9002",
-    "itemType": null,
-    "icon": "",
-    "itemName": "",
-    "itemDesc": "",
-    "grade": null,
-    "gain_item": null,
-    "skill_learn": ""
   }
 }
