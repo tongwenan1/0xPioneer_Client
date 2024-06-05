@@ -50,6 +50,13 @@
       30
     ]
   },
+  "40001": {
+    "id": "40001",
+    "**NOTES**": "[temporary] relic > level constant",
+    "para": [
+      0.35
+    ]
+  },
   "110000": {
     "id": "110000",
     "**NOTES**": "battle report max keep days",
@@ -277,6 +284,13 @@
     "**NOTES**": "accumulated para of psyc consumption",
     "para": [
       0.05
+    ]
+  },
+  "430002": {
+    "id": "430002",
+    "**NOTES**": "accumulated para of psyc consumption",
+    "para": [
+      0.1
     ]
   }
 }
