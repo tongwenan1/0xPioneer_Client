@@ -585,14 +585,20 @@ export class OuterTiledMapActionController extends ViewController {
             targetWorldPos,
             movePaths.length,
             async (actionType: MapInteractType, targetName: string, costEnergy: number) => {
+                this["_actionViewActioned"] = true;
+                this._mouseDown = false;
+                if (actionType == null && targetName == null && costEnergy == null) {
+                    outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
+                    return;
+                }
                 if (costEnergy > 0) {
-                    const ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
+                    let ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
                     if (ownEnergy < costEnergy) {
+                        outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
                         UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
                         return;
                     }
                 }
-                this["_actionViewActioned"] = true;
                 const result = await UIPanelManger.inst.pushPanel(UIName.MapActionConfrimTipUI);
                 if (result.success) {
                     result.node

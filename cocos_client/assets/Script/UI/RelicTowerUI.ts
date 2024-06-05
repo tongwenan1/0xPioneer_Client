@@ -42,8 +42,13 @@ const { ccclass, property } = _decorator;
 
 @ccclass("RelicTowerUI")
 export class RelicTowerUI extends ViewController {
+    public configuration(showIndex: number) {
+        this._showIndex = showIndex;
+        this._refreshUI();
+    }
+
     private _effectLimit: number = 1;
-    private _isShowOnEffect: boolean = true;
+    private _showIndex: number = 0;
 
     private _invokeSelectRank: number = 0;
     private _invokeStorageDatas: ArtifactData[] = [];
@@ -123,8 +128,6 @@ export class RelicTowerUI extends ViewController {
     }
     protected viewDidStart(): void {
         super.viewDidStart();
-
-        this._refreshUI();
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
@@ -141,7 +144,7 @@ export class RelicTowerUI extends ViewController {
     }
 
     private _refreshUI() {
-        if (this._isShowOnEffect) {
+        if (this._showIndex == 0) {
             this._onEffectView.active = true;
             this._storageView.active = false;
 
@@ -277,18 +280,18 @@ export class RelicTowerUI extends ViewController {
     }
     private onTapOnEffectTab() {
         GameMusicPlayMgr.playTapButtonEffect();
-        if (this._isShowOnEffect) {
+        if (this._showIndex == 0) {
             return;
         }
-        this._isShowOnEffect = true;
+        this._showIndex = 0;
         this._refreshUI();
     }
     private onTapStorageTab() {
         GameMusicPlayMgr.playTapButtonEffect();
-        if (!this._isShowOnEffect) {
+        if (this._showIndex == 1) {
             return;
         }
-        this._isShowOnEffect = false;
+        this._showIndex = 1;
         this._refreshUI();
     }
     //------------------------------------------------------------ on effect

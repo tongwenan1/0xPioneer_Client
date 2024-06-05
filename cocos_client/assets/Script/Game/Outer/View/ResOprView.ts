@@ -8,8 +8,11 @@ import { GameMgr, ItemMgr, LanMgr } from "../../../Utils/Global";
 import MapBuildingConfig from "../../../Config/MapBuildingConfig";
 import ItemConfig from "../../../Config/ItemConfig";
 import PioneerConfig from "../../../Config/PioneerConfig";
-import { MapInteractType } from "../../../Const/ConstDefine";
+import { GAME_JUMP_SWITCH_IS_OPEN, MapInteractType } from "../../../Const/ConstDefine";
 import GameMusicPlayMgr from "../../../Manger/GameMusicPlayMgr";
+import { DataMgr } from "../../../Data/DataMgr";
+import NotificationMgr from "../../../Basic/NotificationMgr";
+import { NotificationName } from "../../../Const/Notification";
 const { ccclass, property } = _decorator;
 
 @ccclass("ResOprView")
@@ -33,6 +36,7 @@ export class ResOprView extends Component {
 
         const infoView = this.node.getChildByPath("InfoView");
         const actionView = this.node.getChildByPath("ActionView");
+        const difficultView = this.node.getChildByPath("DifficultView");
 
         const buildingCofig = interactBuilding != null ? MapBuildingConfig.getById(interactBuilding.id) : null;
         //----------------------------------- info
@@ -90,6 +94,10 @@ export class ResOprView extends Component {
                     otherBuildingInfo.getChildByPath("Title").getComponent(Label).string = LanMgr.getLanById(buildingCofig.des);
                 }
             }
+
+            if (interactBuilding.type == MapBuildingType.event) {
+                difficultView.active = interactBuilding.level > DataMgr.s.artifact.getArtifactLevel();
+            }
         } else if (interactPioneer != null) {
             pioneerInfo.active = true;
 
@@ -107,6 +115,10 @@ export class ResOprView extends Component {
                 monsterView.getChildByPath("Defense/Value").getComponent(Label).string = interactPioneer.defend + "";
                 monsterView.getChildByPath("Speed/Value").getComponent(Label).string = interactPioneer.speed + "";
             }
+
+            if (interactPioneer.type == MapPioneerType.hred) {
+                difficultView.active = interactPioneer.level > DataMgr.s.artifact.getArtifactLevel();
+            }
         } else {
             pioneerInfo.active = true;
 
@@ -114,6 +126,8 @@ export class ResOprView extends Component {
 
             const monsterView = pioneerInfo.getChildByPath("MonterProperty");
             monsterView.active = false;
+
+            difficultView.active = false;
         }
 
         //----------------------------------- action
@@ -218,7 +232,6 @@ export class ResOprView extends Component {
             actionItem.getComponent(Button).clickEvents[0].customEventData = type + "|" + costEnergy;
             this._actionItemContent.addChild(actionItem);
         }
-        // action cost
         this._confirmCallback = confirmCallback;
     }
     public hide() {
@@ -246,5 +259,17 @@ export class ResOprView extends Component {
             this._confirmCallback(actionType, this._targetName, costEnergy);
         }
         this.hide();
+    }
+    private onTapDifficult() {
+        GameMusicPlayMgr.playTapButtonEffect();
+        if (this._confirmCallback != null) {
+            this._confirmCallback(null, null, null);
+        }
+        this.hide();
+
+        if (!GAME_JUMP_SWITCH_IS_OPEN) {
+            return;
+        }
+        NotificationMgr.triggerEvent(NotificationName.GAME_JUMP_INNER_AND_SHOW_RELIC_TOWER);
     }
 }

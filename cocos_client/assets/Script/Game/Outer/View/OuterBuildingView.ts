@@ -27,6 +27,7 @@ export class OuterBuildingView extends ViewController {
         }
         this.node.getChildByPath("Title/Text").getComponent(Label).string = name;
         this.node.getChildByPath("Level/Text").getComponent(Label).string = "Lv." + building.level;
+        this.node.getChildByPath("Level/Difficult").active = building.level > DataMgr.s.artifact.getArtifactLevel();
 
         for (const buildingName of this._buildViewNames) {
             this.node.getChildByPath("BuildingContent/" + buildingName).active = buildingName == building.animType;
@@ -368,8 +369,8 @@ export class OuterBuildingView extends ViewController {
         this._refreshBuildTipShow();
         this._refreshEnergyTipShow();
     }
-    private _onArtifactEquipDidChange(data: {}) {
-        if (this._building == null || this._building.type != MapBuildingType.city) {
+    private _onArtifactEquipDidChange() {
+        if (this._building == null) {
             return;
         }
         this.refreshUI(this._building);

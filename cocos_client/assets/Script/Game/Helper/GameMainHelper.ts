@@ -286,4 +286,12 @@ export default class GameMainHelper {
 
 
     private _isEditInnerBuildingLattice: boolean = false;
+
+    constructor() {
+        NotificationMgr.addListener(NotificationName.GAME_JUMP_INNER_AND_SHOW_RELIC_TOWER, this._onGameJumpInnerAndShowRelicTower, this);
+    }
+
+    private _onGameJumpInnerAndShowRelicTower() {
+        this.changeInnerAndOuterShow();
+    }
 }

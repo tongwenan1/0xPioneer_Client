@@ -25,7 +25,7 @@ import ViewController from "../../BasicView/ViewController";
 import { InnerBuildingLatticeShowType, InnerBuildingLatticeStruct, InnerBuildingType, UserInnerBuildInfo } from "../../Const/BuildingDefine";
 import { InnerBuildingView } from "./View/InnerBuildingView";
 import InnerBuildingConfig from "../../Config/InnerBuildingConfig";
-import { ResourcesMgr } from "../../Utils/Global";
+import { LanMgr, ResourcesMgr } from "../../Utils/Global";
 import { InnerMainCityBuildingView } from "./View/InnerMainCityBuildingView";
 import { InnerBarracksBuildingView } from "./View/InnerBarracksBuildingView";
 import { InnerEnergyStationBuildingView } from "./View/InnerEnergyStationBuildingView";
@@ -37,6 +37,10 @@ import CommonTools from "../../Tool/CommonTools";
 import { NetworkMgr } from "../../Net/NetworkMgr";
 import { s2c_user } from "../../Net/msg/WebsocketMsg";
 import GameMusicPlayMgr from "../../Manger/GameMusicPlayMgr";
+import UIPanelManger from "../../Basic/UIPanelMgr";
+import { UIName } from "../../Const/ConstUIDefine";
+import { RelicTowerUI } from "../../UI/RelicTowerUI";
+import { UIHUDController } from "../../UI/UIHUDController";
 
 const { ccclass, property } = _decorator;
 
@@ -73,6 +77,9 @@ export class InnerBuildingControllerRe extends ViewController {
         this._buildingContentItem.removeFromParent();
         this._pioneerContentItem = this._streetView.getChildByPath("PioneerContent");
         this._pioneerContentItem.removeFromParent();
+
+        NotificationMgr.addListener(NotificationName.GAME_JUMP_INNER_AND_SHOW_RELIC_TOWER, this._onGameJumpInnerAndShowRelicTower, this);
+
     }
 
     protected async viewDidStart(): Promise<void> {
@@ -83,12 +90,13 @@ export class InnerBuildingControllerRe extends ViewController {
         this._refreshLattice();
         await this._initBuilding();
         await this._refreshBuilding();
+
     }
 
     protected async viewDidAppear(): Promise<void> {
         super.viewDidAppear();
         this._refreshLattice();
-
+        this._refreshBuilding();
         this._generatePioneerMove();
 
         NotificationMgr.addListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
@@ -116,6 +124,8 @@ export class InnerBuildingControllerRe extends ViewController {
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
+
+        NotificationMgr.removeListener(NotificationName.GAME_JUMP_INNER_AND_SHOW_RELIC_TOWER, this._onGameJumpInnerAndShowRelicTower, this);
     }
 
     //-------------------------------------- function
@@ -454,12 +464,33 @@ export class InnerBuildingControllerRe extends ViewController {
         this._ghostBuildingView = null;
     }
     private _onEditActionMouseMove(data: { movement: Vec2 }) {
+        console.log("exce inner move:", data);
         if (this._latticeEditBuildingView != null) {
             const currentPos = v3(this._latticeEditBuildingView.position.x + data.movement.x, this._latticeEditBuildingView.position.y + data.movement.y);
 
             this._latticeEditBuildingView.position = currentPos;
             this._checkEditBuildingCanSetLattice();
             this._refreshLattice();
+        }
+    }
+    private async _onGameJumpInnerAndShowRelicTower() {
+        const relicTower = DataMgr.s.innerBuilding.data.get(InnerBuildingType.ArtifactStore);
+        console.log("exce d1: ", relicTower);
+        if (relicTower == null) {
+            return;
+        }
+        console.log("exce d2: ", relicTower);
+        const currentTimestamp: number = new Date().getTime();
+        if (currentTimestamp < relicTower.upgradeEndTimestamp) {
+            UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
+            return;
+        }
+        console.log("exce d: ", relicTower);
+        if (relicTower.buildLevel > 0) {
+            const result = await UIPanelManger.inst.pushPanel(UIName.RelicTowerUI);
+            if (result.success) {
+                result.node.getComponent(RelicTowerUI).configuration(1);
+            }
         }
     }
 
