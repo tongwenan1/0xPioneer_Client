@@ -98,24 +98,24 @@ message pioneer_data {
     required string type = 5;
     required pos2d stayPos = 6;
 
-    required int32 hp = 7;
+    required float hp = 7;
 
-    required uint32 hpMax = 8;
+    required float hpMax = 8;
     // required uint32 hpMaxbase = 9;
     // repeated int32 hpMaxadd = 10;
     // repeated int32 hpMaxmul = 11;
     
-    required int32 attack = 12;
+    required float attack = 12;
     // required uint32 attackbase = 13;
     // repeated int32 attackadd = 14;
     // repeated int32 attackmul = 15;
 
-    required int32 defend = 16;
+    required float defend = 16;
     // required uint32 defendbase = 17;
     // repeated int32 defendadd = 18;
     // repeated int32 defendmul = 19;
 
-    required int32 speed = 20;
+    required float speed = 20;
     // required uint32 speedbase = 21;
     // repeated int32 speedadd = 22;
     // repeated int32 speedmul = 23;
@@ -205,21 +205,21 @@ message nfts_info_data {
     required string uniqueId = 1;
     required uint32 rarity = 2;
     required string name = 3;
-    optional uint32 attack = 4;
-    optional uint32 defense = 5;
-    optional int32 hp = 6;
-    optional uint32 speed = 7;
-    optional uint32 iq = 8;
+    optional float attack = 4;
+    optional float defense = 5;
+    optional float hp = 6;
+    optional float speed = 7;
+    optional float iq = 8;
     optional uint32 level = 9;
     optional uint32 levelLimit = 10;
     optional uint32 rank = 11;
     optional uint32 rankLimit = 12;
 
-    optional uint32 attackGrowValue = 13;
-    optional uint32 defenseGrowValue = 14;
-    optional uint32 hpGrowValue = 15;
-    optional uint32 speedGrowValue = 16;
-    optional uint32 iqGrowValue = 17;
+    optional float attackGrowValue = 13;
+    optional float defenseGrowValue = 14;
+    optional float hpGrowValue = 15;
+    optional float speedGrowValue = 16;
+    optional float iqGrowValue = 17;
     repeated nft_pioneer_skil skills = 18;
 
     optional string workingBuildingId = 19;
@@ -255,9 +255,9 @@ message mapbuilding_info_data {
     required uint32 exp = 19;
     
 
-    optional uint32 hpMax = 20;
-    optional int32 hp = 21;
-    optional uint32 attack = 22;
+    optional float hpMax = 20;
+    optional float hp = 21;
+    optional float attack = 22;
     optional uint32 winprogress = 23;
 
     
