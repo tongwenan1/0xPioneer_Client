@@ -6,6 +6,8 @@ import { NotificationName } from "../../Const/Notification";
 import { BackpackArrangeType, GameExtraEffectType } from "../../Const/ConstDefine";
 import CommonTools from "../../Tool/CommonTools";
 import NetGlobalData from "./Data/NetGlobalData";
+import ConfigConfig from "../../Config/ConfigConfig";
+import { ConfigType, MapDifficultCoefficientParam } from "../../Const/Config";
 
 export class ArtifactDataMgr {
     private _maxArtifactLength: number = 100;
@@ -20,7 +22,7 @@ export class ArtifactDataMgr {
         return this._data;
     }
     public getByUnqueId(uniqueId: string) {
-        return this._data.find(artifact => artifact.uniqueId == uniqueId);
+        return this._data.find((artifact) => artifact.uniqueId == uniqueId);
     }
     public getByRank(rank: number) {
         return this._data.filter((artifact) => {
@@ -30,6 +32,21 @@ export class ArtifactDataMgr {
             }
             return config.rank == rank;
         });
+    }
+    public getArtifactLevel() {
+        let level: number = 0;
+        for (const temple of this.getObj_artifact_equiped()) {
+            const config = ArtifactConfig.getById(temple.artifactConfigId);
+            if (config == null) {
+                return;
+            }
+            level += config.rank;
+        }
+        let coefficient: number = 1;
+        if (ConfigConfig.getConfig(ConfigType.MapDifficultCoefficient) != null) {
+            coefficient = (ConfigConfig.getConfig(ConfigType.MapDifficultCoefficient) as MapDifficultCoefficientParam).coefficient;
+        }
+        return level * coefficient;
     }
     public getObj_artifact_equiped() {
         return this._data.filter((artifact) => artifact.effectIndex >= 0);
@@ -119,7 +136,7 @@ export class ArtifactDataMgr {
                 continue;
             }
             if (config.eff_sp != null && config.eff_sp.length > 0) {
-                this._artifact_get_effects_data(effectData, config.eff_sp, clevel, true, this._checkIsInMainSlot(artifact.effectIndex) );
+                this._artifact_get_effects_data(effectData, config.eff_sp, clevel, true, this._checkIsInMainSlot(artifact.effectIndex));
             }
             for (const temple of artifact.effect) {
                 this._artifact_get_effects_data(effectData, temple, clevel, false, false);
@@ -214,7 +231,13 @@ export class ArtifactDataMgr {
         }
         return false;
     }
-    private _artifact_get_effects_data(effectData: Map<GameExtraEffectType, number>, effectId: string, clevel: number, isMainEffect: boolean, isInMainSlot: boolean) {
+    private _artifact_get_effects_data(
+        effectData: Map<GameExtraEffectType, number>,
+        effectId: string,
+        clevel: number,
+        isMainEffect: boolean,
+        isInMainSlot: boolean
+    ) {
         const effect_conf = ArtifactEffectConfig.getById(effectId);
         if (effect_conf == null) {
             return effectData;

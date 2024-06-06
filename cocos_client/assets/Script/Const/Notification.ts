@@ -20,6 +20,8 @@ export enum NotificationName {
     GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_UP,
     GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_MOVE,
     
+    GAME_JUMP_INNER_AND_SHOW_RELIC_TOWER,
+    
     //---------------------- userInfo
     USERINFO_DID_CHANGE_NAME,
     USERINFO_DID_CHANGE_EXP,

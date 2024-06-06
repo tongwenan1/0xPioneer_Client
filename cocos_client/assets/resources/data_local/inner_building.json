@@ -121,7 +121,7 @@
     "lvlup_exp": "exp",
     "lvlup_cost": "cost_barr",
     "lvlup_time": "lvlup_time",
-    "prefab": "",
+    "prefab": "prefab_tower",
     "desc": "",
     "size": 2,
     "staff_effect": [

@@ -11,6 +11,8 @@ import UIPanelManger from "../../../Basic/UIPanelMgr";
 import { UIName } from "../../../Const/ConstUIDefine";
 import { UIHUDController } from "../../../UI/UIHUDController";
 import { DataMgr } from "../../../Data/DataMgr";
+import GameMusicPlayMgr from "../../../Manger/GameMusicPlayMgr";
+import { RelicTowerUI } from "../../../UI/RelicTowerUI";
 const { ccclass, property } = _decorator;
 
 @ccclass("InnerBuildingView")
@@ -94,7 +96,7 @@ export class InnerBuildingView extends ViewController {
 
         // info
         this._infoView.refreshUI(this._building);
-        
+
         // can action
         this.node.getChildByPath("clickNode").getComponent(Button).interactable = canAction;
     }
@@ -169,7 +171,8 @@ export class InnerBuildingView extends ViewController {
         this.refreshUI(DataMgr.s.innerBuilding.data.get(this._building.buildType));
     }
     //---------------------------- action
-    private onTapBuilding() {
+    private async onTapBuilding() {
+        GameMusicPlayMgr.playTapButtonEffect();
         if (this._building == null) {
             return;
         }
@@ -180,7 +183,10 @@ export class InnerBuildingView extends ViewController {
             return;
         }
         if (this._building.buildLevel > 0 && this._building.buildType == InnerBuildingType.ArtifactStore) {
-            UIPanelManger.inst.pushPanel(UIName.RelicTowerUI);
+            const result = await UIPanelManger.inst.pushPanel(UIName.RelicTowerUI);
+            if (result.success) {
+                result.node.getComponent(RelicTowerUI).configuration(0);
+            }
         }
         this.innerBuildingTaped();
     }

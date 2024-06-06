@@ -4,6 +4,7 @@ import { AttrChangeType, GetPropData, MapMemberFactionType } from "./ConstDefine
 import { ItemConfigType } from "./Item";
 import { share } from "../Net/msg/WebsocketMsg";
 import PioneerConfig from "../Config/PioneerConfig";
+import CommonTools from "../Tool/CommonTools";
 
 export interface PioneerConfigData {
     id: string;
@@ -246,10 +247,10 @@ export default class PioneerDefine {
             animType: config.animType,
             name: config.name,
             hp: temple.hp,
-            hpMax: temple.hpMax,
-            attack: temple.attack,
-            defend: temple.defend,
-            speed: temple.speed,
+            hpMax: CommonTools.getOneDecimalNum(temple.hpMax),
+            attack: CommonTools.getOneDecimalNum(temple.attack),
+            defend: CommonTools.getOneDecimalNum(temple.defend),
+            speed: CommonTools.getOneDecimalNum(temple.speed),
             stayPos: v2(temple.stayPos.x, temple.stayPos.y),
             movePaths: [],
             actionType: temple.actionType as MapPioneerActionType,

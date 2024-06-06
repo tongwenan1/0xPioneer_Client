@@ -55,6 +55,7 @@ import { MapActionConfrimTipUI } from "../../UI/MapActionConfrimTipUI";
 import { EventUI } from "../../UI/Outer/EventUI";
 import { share } from "../../Net/msg/WebsocketMsg";
 import CLog from "../../Utils/CLog";
+import GameMusicPlayMgr from "../../Manger/GameMusicPlayMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -169,6 +170,7 @@ export class OuterTiledMapActionController extends ViewController {
                 if (Math.abs(downx - pos.x) <= 3 && Math.abs(downy - pos.y) <= 3) {
                     //if pick a empty area.
                     //let pioneer move to
+                    GameMusicPlayMgr.playTapButtonEffect();
                     const wpos = GameMainHelper.instance.getGameCameraScreenToWorld(v3(pos.x, pos.y, 0));
                     this._clickOnMap(wpos);
                 }
@@ -583,14 +585,20 @@ export class OuterTiledMapActionController extends ViewController {
             targetWorldPos,
             movePaths.length,
             async (actionType: MapInteractType, targetName: string, costEnergy: number) => {
+                this["_actionViewActioned"] = true;
+                this._mouseDown = false;
+                if (actionType == null && targetName == null && costEnergy == null) {
+                    outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
+                    return;
+                }
                 if (costEnergy > 0) {
-                    const ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
+                    let ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
                     if (ownEnergy < costEnergy) {
+                        outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
                         UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
                         return;
                     }
                 }
-                this["_actionViewActioned"] = true;
                 const result = await UIPanelManger.inst.pushPanel(UIName.MapActionConfrimTipUI);
                 if (result.success) {
                     result.node
