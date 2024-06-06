@@ -1,5 +1,5 @@
 export interface ChainConfigData {
-    currentChainId: string;
+    currentConfigId: string;
     configs: {
         [index: string]: ChainConfigsConfigData;
     };

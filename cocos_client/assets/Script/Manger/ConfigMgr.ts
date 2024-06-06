@@ -51,9 +51,9 @@ export default class ConfigMgr {
         if (!(await WorldBoxConfig.init())) return false;
 
         // abi
-        const chainId = ChainConfig.getCurrentChainId();
-        if (Number(chainId) > 0) {
-            const chainConf = ChainConfig.getByChainId(chainId);
+        const chainIdConfig = ChainConfig.getCurrentConfigId();
+        if (Number(chainIdConfig) > 0) {
+            const chainConf = ChainConfig.getByChainId(chainIdConfig);
             if (!(await AbiConfig.init(chainConf.abi))) return false;
         }
 

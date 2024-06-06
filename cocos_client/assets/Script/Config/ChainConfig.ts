@@ -25,11 +25,15 @@ export default class ChainConfig {
         return true;
     }
 
+    public static getCurrentConfigId(): string {
+        return this._confs.currentConfigId;
+    }
+
     public static getCurrentChainId(): string {
-        return this._confs.currentChainId;
+        return this.getCurrentChainConfig().chainId;
     }
     public static getCurrentChainConfig(): ChainConfigsConfigData | null {
-        return this.getByChainId(this.getCurrentChainId());
+        return this.getByChainId(this._confs.currentConfigId);
     }
 
     public static getByChainId(chainId: string): ChainConfigsConfigData | null {
