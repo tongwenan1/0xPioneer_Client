@@ -8,6 +8,8 @@ import { GameMgr } from "../Utils/Global";
 import UIPanelManger, { UIPanelLayerType } from "../Basic/UIPanelMgr";
 import { HUDName } from "../Const/ConstUIDefine";
 import { LoadingUI } from "../UI/Loading/LoadingUI";
+import { DataMgr } from "../Data/DataMgr";
+import { RookieStep } from "../Const/RookieDefine";
 
 const { ccclass, property } = _decorator;
 

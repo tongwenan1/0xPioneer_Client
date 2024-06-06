@@ -56,6 +56,9 @@ import { EventUI } from "../../UI/Outer/EventUI";
 import { share } from "../../Net/msg/WebsocketMsg";
 import CLog from "../../Utils/CLog";
 import GameMusicPlayMgr from "../../Manger/GameMusicPlayMgr";
+import NotificationMgr from "../../Basic/NotificationMgr";
+import { NotificationName } from "../../Const/Notification";
+import { RookieStep } from "../../Const/RookieDefine";
 
 const { ccclass, property } = _decorator;
 
@@ -431,7 +434,10 @@ export class OuterTiledMapActionController extends ViewController {
         }
     }
 
-    private async _clickOnMap(worldpos: Vec3) {
+    public async _clickOnMap(worldpos: Vec3) {
+        if (DataMgr.s.userInfo.data.rookieStep != RookieStep.FINISH) {
+            this["_actionViewActioned"] = false;
+        }
         const currentActionPioneer = DataMgr.s.pioneer.getCurrentPlayer();
         if (currentActionPioneer == null) {
             return;
@@ -577,7 +583,7 @@ export class OuterTiledMapActionController extends ViewController {
         // show move path
         outPioneerController.showPioneerFootStep(currentActionPioneer.id, movePaths);
         // show action panel
-        this._actionView.show(
+        await this._actionView.show(
             currentActionPioneer.id,
             stayBuilding,
             stayPioneer,

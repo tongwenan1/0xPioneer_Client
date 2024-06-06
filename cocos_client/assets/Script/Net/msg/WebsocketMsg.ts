@@ -642,6 +642,7 @@ export namespace share {
         pointTreasureDidGetRewards: string[];
         cityRadialRange: number;
         didFinishRookie: boolean;
+        rookieStep: number;
         generateTroopInfo?: troop_info_data;
         generateEnergyInfo?: energy_info_data;
 

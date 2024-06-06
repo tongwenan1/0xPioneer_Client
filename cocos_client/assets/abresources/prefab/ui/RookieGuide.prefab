@@ -710,7 +710,7 @@
       "__id__": 18
     },
     "_children": [],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 26
@@ -846,7 +846,7 @@
       "__id__": 18
     },
     "_children": [],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 32
@@ -986,7 +986,7 @@
         "__id__": 38
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 44
@@ -1613,6 +1613,8 @@
       "__id__": 0
     },
     "fileId": "7dqkxUlS1DrpvXZUk9ZnqM",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {

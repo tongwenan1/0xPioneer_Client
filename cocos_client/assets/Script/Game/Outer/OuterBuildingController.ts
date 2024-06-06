@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Node, Prefab, v3, Vec2, Vec3 } from "cc";
+import { _decorator, Component, instantiate, macro, Node, Prefab, UITransform, v3, Vec2, Vec3 } from "cc";
 import { TileHexDirection, TilePos } from "../TiledMap/TileTool";
 import { OuterBuildingView } from "./View/OuterBuildingView";
 import GameMainHelper from "../Helper/GameMainHelper";
@@ -8,6 +8,10 @@ import { NotificationName } from "../../Const/Notification";
 import { DataMgr } from "../../Data/DataMgr";
 import { BuildingStayPosType } from "../../Const/BuildingDefine";
 import { OuterRebonView } from "./View/OuterRebonView";
+import { RookieStep } from "../../Const/RookieDefine";
+import UIPanelManger from "../../Basic/UIPanelMgr";
+import { UIName } from "../../Const/ConstUIDefine";
+import { RookieStepMaskUI } from "../../UI/RookieGuide/RookieStepMaskUI";
 
 const { ccclass, property } = _decorator;
 
@@ -36,6 +40,7 @@ export class OuterBuildingController extends Component {
         NotificationMgr.addListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACK_COUNT_DONW_TIME_CHANGE, this._refreshUI, this);
         NotificationMgr.addListener(NotificationName.MAP_BUILDING_ACTION_PIONEER_CHANGE, this._refreshUI, this);
         NotificationMgr.addListener(NotificationName.MAP_BUILDING_REBON_CHANGE, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
     }
 
     start() {
@@ -98,6 +103,7 @@ export class OuterBuildingController extends Component {
         NotificationMgr.removeListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACK_COUNT_DONW_TIME_CHANGE, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.MAP_BUILDING_ACTION_PIONEER_CHANGE, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.MAP_BUILDING_REBON_CHANGE, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
     }
 
     private _refreshUI() {
@@ -198,6 +204,34 @@ export class OuterBuildingController extends Component {
         }
     }
 
+    //------------------------------------------------- notification
+    private async _onRookieStepChange() {
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep == RookieStep.MAP_CHANGE_EXPLAIN) {
+            const mainCityId: string = "building_1";
+            const mainCity = DataMgr.s.mapBuilding.getBuildingById(mainCityId);
+            if (mainCity == undefined) {
+                return;
+            }
+            if (!this._buildingMap.has(mainCityId)) {
+                return;
+            }
+            const mainCityView = this._buildingMap.get(mainCityId).node;
+            GameMainHelper.instance.changeGameCameraWorldPosition(mainCityView.worldPosition);
+            GameMainHelper.instance.tiledMapShadowErase(mainCity.stayMapPositions[3]);
+
+            const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI);
+            if (!result.success) {
+                return;
+            }
+            result.node
+                .getComponent(RookieStepMaskUI)
+                .configuration(true, mainCityView.worldPosition, mainCityView.getComponent(UITransform).contentSize, () => {
+                    GameMainHelper.instance.changeInnerAndOuterShow();
+                    DataMgr.s.userInfo.finishRookieStep();
+                });
+        }
+    }
     // private async _refreshDecorationUI() {
     //     const decorationView = this.node.getComponent(OuterTiledMapActionController).mapDecorationView();
     //     if (decorationView == null) {

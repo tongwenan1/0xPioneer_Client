@@ -1,4 +1,5 @@
 import { InnerBuildingType, UserInnerBuildInfo } from "./BuildingDefine";
+import { RookieStep } from "./RookieDefine";
 
 export interface ResourceModel {
     id: string;
@@ -37,6 +38,7 @@ export interface UserInfoObject {
     cityRadialRange: number;
 
     didFinishRookie: boolean;
+    rookieStep: RookieStep;
 
     energyDidGetTimes: number;
     energyGetLimitTimes: number;

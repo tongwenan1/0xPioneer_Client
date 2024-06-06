@@ -1,4 +1,4 @@
-import { Camera, Size, TiledMap, Vec2, Vec3, size, tween, v2 } from "cc";
+import { Camera, Node, Size, TiledMap, Vec2, Vec3, size, tween, v2 } from "cc";
 import ConfigConfig from "../../Config/ConfigConfig";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
@@ -6,6 +6,8 @@ import { ECursorType, GameExtraEffectType } from "../../Const/ConstDefine";
 import { TileHexDirection, TileMapHelper, TilePos } from "../TiledMap/TileTool";
 import { GameMgr } from "../../Utils/Global";
 import { ConfigType, MapScaleParam } from "../../Const/Config";
+import { DataMgr } from "../../Data/DataMgr";
+import { RookieStep } from "../../Const/RookieDefine";
 
 export default class GameMainHelper {
     public static get instance() {
@@ -40,19 +42,19 @@ export default class GameMainHelper {
             NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_ZOOM_CHANGED, this._gameCameraZoom);
         }
     }
-    public changeGameCameraWorldPosition(position: Vec3, animation: boolean = false) {
+    public changeGameCameraWorldPosition(position: Vec3, animation: boolean = false, targetPioneerId: string = null) {
         if (animation) {
             const distance = Vec3.distance(this._gameCamera.node.worldPosition.clone(), position.clone());
             tween()
                 .target(this._gameCamera.node)
                 .to(Math.min(0.8, distance / 1800), { worldPosition: position })
                 .call(() => {
-                    NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_POSITION_CHANGED);
+                    NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_POSITION_CHANGED, { pioneerId: targetPioneerId });
                 })
                 .start();
         } else {
             this._gameCamera.node.setWorldPosition(position);
-            NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_POSITION_CHANGED);
+            NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_POSITION_CHANGED, { pioneerId: targetPioneerId });
         }
     }
     public changeGameCameraPosition(position: Vec3, animation: boolean = false) {
@@ -72,6 +74,9 @@ export default class GameMainHelper {
     }
     public getGameCameraScreenToWorld(postion: Vec3) {
         return this._gameCamera.screenToWorld(postion);
+    }
+    public getGameCameraWposToUI(wpos: Vec3, node: Node) {
+        return this._gameCamera.convertToUINode(wpos, node);
     }
     public get gameCameraSize(): Size {
         return size(this._gameCamera.camera.width, this._gameCamera.camera.height);
@@ -126,7 +131,7 @@ export default class GameMainHelper {
         this._tiledMapHelper.Path_AddDynamicBlock({
             TileX: mapPos.x,
             TileY: mapPos.y,
-            canMoveTo: canMoveTo
+            canMoveTo: canMoveTo,
         });
     }
     public tiledMapRemoveDynamicBlock(mapPos: Vec2): void {
@@ -136,7 +141,7 @@ export default class GameMainHelper {
         this._tiledMapHelper.Path_RemoveDynamicBlock({
             TileX: mapPos.x,
             TileY: mapPos.y,
-            canMoveTo: false
+            canMoveTo: false,
         });
     }
     public tiledMapGetAround(mapPos: Vec2): TilePos[] {
@@ -177,7 +182,7 @@ export default class GameMainHelper {
         }
         return this._tiledMapHelper.getPos(x, y);
     }
-    public tiledMapGetTiledMovePathByTiledPos(fromTilePos: Vec2, toTilePos: Vec2, toStayPos: Vec2[] = []): { canMove: boolean, path: TilePos[] } {
+    public tiledMapGetTiledMovePathByTiledPos(fromTilePos: Vec2, toTilePos: Vec2, toStayPos: Vec2[] = []): { canMove: boolean; path: TilePos[] } {
         if (!this.isTiledMapHelperInited) {
             return { canMove: false, path: [] };
         }
@@ -271,7 +276,16 @@ export default class GameMainHelper {
         this._isEditInnerBuildingLattice = !this._isEditInnerBuildingLattice;
         NotificationMgr.triggerEvent(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED);
     }
+    //-------------------------------------------- map init succeed
+    public mapInitOver() {
+        this._isMapInitOver = true;
 
+        // map init over
+        // check rookie step
+        if (DataMgr.s.userInfo.data.rookieStep != RookieStep.FINISH) {
+            NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+        }
+    }
 
     private static _instance: GameMainHelper;
     private _gameCamera: Camera;
@@ -284,9 +298,9 @@ export default class GameMainHelper {
 
     private _tiledMapHelper: TileMapHelper = null;
 
-
     private _isEditInnerBuildingLattice: boolean = false;
 
+    private _isMapInitOver: boolean = false;
     constructor() {
         NotificationMgr.addListener(NotificationName.GAME_JUMP_INNER_AND_SHOW_RELIC_TOWER, this._onGameJumpInnerAndShowRelicTower, this);
     }

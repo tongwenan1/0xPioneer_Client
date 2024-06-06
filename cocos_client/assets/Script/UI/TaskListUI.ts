@@ -1,5 +1,5 @@
-import { _decorator, Button, Color, instantiate, Label, Layout, Node, Vec2 } from "cc";
-import { LanMgr } from "../Utils/Global";
+import { _decorator, Button, Color, instantiate, Label, Layout, Node, UITransform, Vec2 } from "cc";
+import { GameMgr, LanMgr } from "../Utils/Global";
 import ViewController from "../BasicView/ViewController";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
@@ -13,12 +13,15 @@ import { share } from "../Net/msg/WebsocketMsg";
 import TaskConfig from "../Config/TaskConfig";
 import TaskStepConfig from "../Config/TaskStepConfig";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
+import { RookieStep } from "../Const/RookieDefine";
+import { UIName } from "../Const/ConstUIDefine";
+import { RookieStepMaskUI } from "./RookieGuide/RookieStepMaskUI";
 
 const { ccclass, property } = _decorator;
 
 @ccclass("TaskListUI")
 export class TaskListUI extends ViewController {
-    public refreshUI() {
+    public async refreshUI() {
         // useLanMgr
         // this._actionTaskView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.getLanById("107549");
         // this._detailTaskView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.getLanById("107549");
@@ -56,6 +59,7 @@ export class TaskListUI extends ViewController {
         this._toDoTaskList = toDoTasks;
 
         let actionTaskShowCount: number = 0;
+        let rookieTaskIndex: number = -1;
         for (let i = toDoTasks.length - 1; i >= 0; i--) {
             if (actionTaskShowCount >= 3) {
                 break;
@@ -76,6 +80,10 @@ export class TaskListUI extends ViewController {
             action.getComponent(Button).clickEvents[0].customEventData = i.toString();
             action.setParent(this._actionItem.getParent());
             this._actionTaskList.push(action);
+
+            if (currentTask.taskId == "task01") {
+                rookieTaskIndex = i;
+            }
         }
 
         this._actionTaskView.getChildByPath("DetailButton/TaskNum").getComponent(Label).string =
@@ -192,6 +200,32 @@ export class TaskListUI extends ViewController {
                 ? new Color(66, 53, 36, 255)
                 : new Color(123, 115, 112, 255);
         }
+
+        //rookie guide
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep == RookieStep.TASK_EXPLAIN || rookieStep == RookieStep.TASK_EXPLAIN_NEXT) {
+            if (rookieTaskIndex < 0) {
+                return;
+            }
+            if (GameMgr.rookieTaskExplainIsShow) {
+                return;
+            }
+            if (this._actionTaskList.length <= 0) {
+                return;
+            }
+            const actionView = this._actionTaskList[rookieTaskIndex];
+            
+            const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI);
+            if (!result.success) {
+                return;
+            }
+            const eventData = actionView.getComponent(Button).clickEvents[0].customEventData;
+            result.node.getComponent(RookieStepMaskUI).configuration(false, actionView.worldPosition.clone(), actionView.getComponent(UITransform).contentSize.clone(), () => {
+                this.onTapActionItem(null, eventData);
+                GameMgr.rookieTaskExplainIsShow = false;
+            });
+            GameMgr.rookieTaskExplainIsShow = true;
+        }
     }
 
     private _isDetailShow: boolean = false;
@@ -241,6 +275,8 @@ export class TaskListUI extends ViewController {
 
         this._toDoButton = this.node.getChildByPath("TaskDetailView/ToDoButton");
         this._completedButton = this.node.getChildByPath("TaskDetailView/CompletedButton");
+
+        NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this.refreshUI, this);
     }
 
     protected viewDidStart(): void {
@@ -249,8 +285,6 @@ export class TaskListUI extends ViewController {
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
         NotificationMgr.addListener(NotificationName.TASK_DID_CHANGE, this.refreshUI, this);
         NotificationMgr.addListener(NotificationName.TASK_LIST, this.refreshUI, this);
-
-        this.refreshUI();
     }
 
     protected viewDidDestroy(): void {
@@ -259,6 +293,8 @@ export class TaskListUI extends ViewController {
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
         NotificationMgr.removeListener(NotificationName.TASK_DID_CHANGE, this.refreshUI, this);
         NotificationMgr.removeListener(NotificationName.TASK_LIST, this.refreshUI, this);
+
+        NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this.refreshUI, this);
     }
     //---------------------------------------------------
     // action
@@ -294,6 +330,7 @@ export class TaskListUI extends ViewController {
             return;
         }
         let currentMapPos: Vec2 = null;
+        let targetPioneerId: string = null;
         if (condition.type == TaskConditionType.Talk) {
             let targetPioneer: MapNpcPioneerObject = null;
             const allNpcs = DataMgr.s.pioneer.getAllNpcs();
@@ -305,6 +342,7 @@ export class TaskListUI extends ViewController {
             }
             if (targetPioneer != null) {
                 currentMapPos = targetPioneer.stayPos;
+                targetPioneerId = targetPioneer.id;
             }
         } else if (condition.type == TaskConditionType.Kill) {
             let targetPioneer: MapPioneerObject = null;
@@ -313,13 +351,18 @@ export class TaskListUI extends ViewController {
             }
             if (targetPioneer != null) {
                 currentMapPos = targetPioneer.stayPos;
+                targetPioneerId = targetPioneer.id;
             }
         }
         if (currentMapPos != null) {
             if (!GameMainHelper.instance.isGameShowOuter) {
                 GameMainHelper.instance.changeInnerAndOuterShow();
             }
-            GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y), true);
+            GameMainHelper.instance.changeGameCameraWorldPosition(
+                GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y),
+                true,
+                targetPioneerId
+            );
         }
     }
     private onTapCloseDetail() {

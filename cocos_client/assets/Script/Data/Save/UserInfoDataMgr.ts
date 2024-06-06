@@ -1,5 +1,6 @@
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
+import { RookieStep } from "../../Const/RookieDefine";
 import { UserInfoObject } from "../../Const/UserInfoDefine";
 import { share } from "../../Net/msg/WebsocketMsg";
 import NetGlobalData from "./Data/NetGlobalData";
@@ -28,6 +29,13 @@ export default class UserInfoDataMgr {
     public finishRookie() {
         this._data.didFinishRookie = true;
     }
+    public finishRookieStep() {
+        if (this._data.rookieStep == RookieStep.FINISH) {
+            return;
+        }
+        this._data.rookieStep += 1;
+        NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+    }
     public changePlayerName(name: string) {
         this._data.name = name;
         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_NAME);
@@ -39,10 +47,16 @@ export default class UserInfoDataMgr {
         }
         const globalData: share.Iplayer_sinfo = NetGlobalData.userInfo;
         this._data = this._convertNetDataToObject(globalData);
+        this._data.rookieStep = RookieStep.WAKE_UP;
+        console.log("exce initover");
         this._initInterval();
     }
     private _initInterval() {}
     private _convertNetDataToObject(netData: share.Iplayer_sinfo): UserInfoObject {
+        let step = null;
+        if (this._data != null) {
+            step = this._data.rookieStep;
+        } 
         const newObj: UserInfoObject = {
             id: netData.playerid.toString(),
             name: netData.pname,
@@ -62,9 +76,10 @@ export default class UserInfoDataMgr {
             energyGetLimitTimes: netData.limitFetchTimes,
             cityRadialRange: netData.cityRadialRange,
             didFinishRookie: netData.didFinishRookie,
+            rookieStep: step,
             // lost
             tavernGetPioneerTimestamp: 0,
-            wormholeDefenderIds: new Map()
+            wormholeDefenderIds: new Map(),
         };
         if (netData.defender != null) {
             for (const key in netData.defender) {

@@ -32,6 +32,7 @@ import { NetworkMgr } from "../../../Net/NetworkMgr";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { NotificationName } from "../../../Const/Notification";
 import GameMusicPlayMgr from "../../../Manger/GameMusicPlayMgr";
+import { RookieStep } from "../../../Const/RookieDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("MapPioneer")
@@ -441,18 +442,23 @@ export class MapPioneer extends Component {
         this.refreshUI(this._model);
     }
     private _onFightEnd(data: { id: string }) {
+        console.log("exce step1");
         if (this._fightInterval == null) {
             return;
         }
+        console.log("exce step2");
         if (this._model == null) {
             return;
         }
+        console.log("exce step3");
         if (this._model.id != data.id) {
             return;
         }
+        console.log("exce step4");
         if (this._fightAttackerOrigianlData == null || this._fightDefenderOriginalData == null) {
             return;
         }
+        console.log("exce step5: ", this._model);
         if (this._model.fightData != null) {
             for (const data of this._model.fightData) {
                 if (data.attackerId == this._fightAttackerOrigianlData.id) {
@@ -467,10 +473,17 @@ export class MapPioneer extends Component {
         this._fightResultView.node.active = true;
         if (this._model.fightResultWin) {
             GameMusicPlayMgr.playFightWinEffect();
+            console.log('exce step6: ' + DataMgr.s.userInfo.data.rookieStep + ", defnd: " + this._fightDefenderOriginalData.id);
+            if (DataMgr.s.userInfo.data.rookieStep == RookieStep.TASK_EXPLAIN && this._fightDefenderOriginalData.id == "gangster_1") {
+                console.log("exce step7");
+                DataMgr.s.userInfo.finishRookieStep();
+            }
         } else {
             GameMusicPlayMgr.playFightFailEffect();
         }
+        console.log("exce step8");
         this._fightResultView.showResult(this._model.fightResultWin, () => {
+            console.log("exce step9");
             NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
                 attacker: {
                     name: this._fightAttackerOrigianlData.name,

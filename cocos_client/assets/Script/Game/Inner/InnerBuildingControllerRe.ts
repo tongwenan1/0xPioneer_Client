@@ -464,7 +464,6 @@ export class InnerBuildingControllerRe extends ViewController {
         this._ghostBuildingView = null;
     }
     private _onEditActionMouseMove(data: { movement: Vec2 }) {
-        console.log("exce inner move:", data);
         if (this._latticeEditBuildingView != null) {
             const currentPos = v3(this._latticeEditBuildingView.position.x + data.movement.x, this._latticeEditBuildingView.position.y + data.movement.y);
 
@@ -475,17 +474,14 @@ export class InnerBuildingControllerRe extends ViewController {
     }
     private async _onGameJumpInnerAndShowRelicTower() {
         const relicTower = DataMgr.s.innerBuilding.data.get(InnerBuildingType.ArtifactStore);
-        console.log("exce d1: ", relicTower);
         if (relicTower == null) {
             return;
         }
-        console.log("exce d2: ", relicTower);
         const currentTimestamp: number = new Date().getTime();
         if (currentTimestamp < relicTower.upgradeEndTimestamp) {
             UIHUDController.showCenterTip(LanMgr.getLanById("201003"));
             return;
         }
-        console.log("exce d: ", relicTower);
         if (relicTower.buildLevel > 0) {
             const result = await UIPanelManger.inst.pushPanel(UIName.RelicTowerUI);
             if (result.success) {

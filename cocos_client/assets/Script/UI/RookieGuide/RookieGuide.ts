@@ -12,6 +12,7 @@ export class RookieGuide extends ViewController {
     private _guideView: Node = null;
 
     private _wakeUpTimes: number = 0;
+    private _beginWakeUp: boolean = false;
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
@@ -24,23 +25,10 @@ export class RookieGuide extends ViewController {
         // this._videoView.getChildByPath("SkipButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
     }
 
-    //---------------------------------------
-    // action
-    private onTapSkipVideo() {
-        GameMusicPlayMgr.playTapButtonEffect();
-        this._videoView.active = false;
-        this._guideView.active = true;
-    }
-
-    private _animing: boolean = false;
-    private onTapWakeUpRole() {
+    private _showAnim() {
         if (this._wakeUpTimes >= 3) {
             return;
         }
-        if (this._animing) {
-            return;
-        }
-
         let rate = 1 + 2 * this._wakeUpTimes;
         tween()
             .target(this.node)
@@ -53,29 +41,19 @@ export class RookieGuide extends ViewController {
             .start();
 
         this._wakeUpTimes += 1;
-        const wakeUpTipView = this._guideView.getChildByPath("WakeupButton/WakeUpTip");
-        wakeUpTipView.getChildByName("Exclamation_" + this._wakeUpTimes).active = true;
         if (this._wakeUpTimes == 1) {
-            GameMusicPlayMgr.playTapButtonEffect();
-
             this._guideView.getChildByName("Wake_Up_01_Group").active = true;
-            this._animing = true;
             this.scheduleOnce(() => {
-                this._animing = false;
                 this._guideView.getChildByName("Wake_Up_01_Group").active = false;
+                this._showAnim();
             }, 1);
         } else if (this._wakeUpTimes == 2) {
-            GameMusicPlayMgr.playTapButtonEffect();
-
             this._guideView.getChildByName("Wake_Up_02_Group").active = true;
-            this._animing = true;
             this.scheduleOnce(() => {
-                this._animing = false;
                 this._guideView.getChildByName("Wake_Up_02_Group").active = false;
+                this._showAnim();
             }, 1);
         } else if (this._wakeUpTimes == 3) {
-            GameMusicPlayMgr.playWakeUpEffect();
-
             this._guideView.getChildByName("Wake_Up_Text_Group").active = true;
             this.scheduleOnce(() => {
                 this._guideView.getChildByName("Wake_Up_Text_Group").active = false;
@@ -91,5 +69,22 @@ export class RookieGuide extends ViewController {
                 this._guideView.getChildByName("WakeupButton").active = false;
             }, 3);
         }
+    }
+
+    //---------------------------------------
+    // action
+    private onTapSkipVideo() {
+        GameMusicPlayMgr.playTapButtonEffect();
+        this._videoView.active = false;
+        this._guideView.active = true;
+    }
+
+    private onTapWakeUpRole() {
+        GameMusicPlayMgr.playWakeUpEffect();
+        if (this._beginWakeUp) {
+            return;
+        }
+        this._beginWakeUp = true;
+        this._showAnim();
     }
 }

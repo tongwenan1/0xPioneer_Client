@@ -1,4 +1,4 @@
-import { _decorator, Label, Node, Vec2 } from "cc";
+import { _decorator, Label, Node, UITransform, Vec2 } from "cc";
 import ViewController from "../BasicView/ViewController";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import ConfigConfig from "../Config/ConfigConfig";
@@ -6,6 +6,11 @@ import { ConfigType, OneStepCostEnergyParam } from "../Const/Config";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import CommonTools from "../Tool/CommonTools";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
+import { DataMgr } from "../Data/DataMgr";
+import { RookieGuide } from "./RookieGuide/RookieGuide";
+import { RookieStep } from "../Const/RookieDefine";
+import { UIName } from "../Const/ConstUIDefine";
+import { RookieStepMaskUI } from "./RookieGuide/RookieStepMaskUI";
 const { ccclass, property } = _decorator;
 
 @ccclass("MapActionConfrimTipUI")
@@ -38,7 +43,21 @@ export class MapActionConfrimTipUI extends ViewController {
         // this.node.getChildByPath("Content/ArriveTimeView/Title").getComponent(Label).string = LanMgr.getLanById("106008");
         // this.node.getChildByPath("Content/Button/name").getComponent(Label).string = LanMgr.getLanById("106008");
     }
+    protected async viewDidAppear(): Promise<void> {
+        super.viewDidAppear();
 
+        const buttonView = this.node.getChildByPath("Content/Button");
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep == RookieStep.TALK_WITH_BEGIN_NPC || rookieStep == RookieStep.TASK_EXPLAIN || rookieStep == RookieStep.TASK_EXPLAIN_NEXT) {
+            const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI);
+            if (!result.success) {
+                return;
+            }
+            result.node.getComponent(RookieStepMaskUI).configuration(false, buttonView.worldPosition, buttonView.getComponent(UITransform).contentSize, () => {
+                this.onTapAction();
+            });
+        }
+    }
     protected viewPopAnimation(): boolean {
         return true;
     }
@@ -46,7 +65,7 @@ export class MapActionConfrimTipUI extends ViewController {
         return this.node.getChildByPath("Content");
     }
 
-    private _refreshUI() {
+    private async _refreshUI() {
         if (this._targetPos != null) {
             this.node.getChildByPath("Content/LocationView/Content/Label").getComponent(Label).string = "(" + this._targetPos.x + "," + this._targetPos.y + ")";
         }

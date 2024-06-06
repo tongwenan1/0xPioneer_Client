@@ -1,4 +1,4 @@
-import { _decorator, Node, Button, Label } from "cc";
+import { _decorator, Node, Button, Label, Vec3, UITransform, instantiate, tween, dynamicAtlasManager } from "cc";
 import { ClaimRewardUI } from "./ClaimRewardUI";
 import { LanMgr, PioneerMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
@@ -8,7 +8,7 @@ import ViewController from "../BasicView/ViewController";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import Config from "../Const/Config";
-import { GAME_ENV_IS_DEBUG, MapMemberFactionType } from "../Const/ConstDefine";
+import { GAME_ENV_IS_DEBUG, MapMemberFactionType, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import { DataMgr } from "../Data/DataMgr";
@@ -17,6 +17,9 @@ import CommonTools from "../Tool/CommonTools";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import ArtifactData from "../Model/ArtifactData";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
+import { RookieStep } from "../Const/RookieDefine";
+import { NTFRankUpUI } from "./NTFRankUpUI";
+import { RookieStepMaskUI } from "./RookieGuide/RookieStepMaskUI";
 
 const { ccclass, property } = _decorator;
 
@@ -25,11 +28,16 @@ export class MainUI extends ViewController {
     @property(Button)
     backpackBtn: Button = null;
 
+    private _animView: Node = null;
+
     private _claimRewardUI: ClaimRewardUI;
     private _gangsterComingTipView: Node = null;
 
     protected viewDidLoad(): void {
         super.viewDidLoad();
+
+        this._animView = this.node.getChildByPath("AnimView");
+        this._animView.active = false;
 
         this._gangsterComingTipView = this.node.getChildByPath("CommonContent/GangsterTipView");
         this._gangsterComingTipView.active = false;
@@ -41,6 +49,9 @@ export class MainUI extends ViewController {
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onPlayerLvlupChanged, this);
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._onPlayerExplorationValueChanged, this);
 
+        // rookie
+        NotificationMgr.addListener(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, this._onGameMainResourcePlayAnim, this);
+        NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
     }
 
     protected async viewDidStart(): Promise<void> {
@@ -48,8 +59,8 @@ export class MainUI extends ViewController {
 
         this._claimRewardUI = this.node.getChildByPath("CommonContent/reward_ui").getComponent(ClaimRewardUI);
 
+        this._refreshElementShow();
         this._refreshSettlememntTip();
-        this._refreshInnerOuterChange();
         this._onInnerOuterChanged();
         this.changeLang();
 
@@ -69,17 +80,6 @@ export class MainUI extends ViewController {
         let testButtonActive: boolean = GAME_ENV_IS_DEBUG;
         this.node.getChildByPath("CommonContent/AddHeatButton-001").active = testButtonActive;
         this.node.getChildByPath("CommonContent/AddHeatButton-002").active = testButtonActive;
-        // test
-        //DataMgr.n.websocketMsg.create_pioneer({
-        //    type: "0"
-        //});
-        // DataMgr.s.item.addObj_item([new ItemData("8001", 1000)]);
-        // DataMgr.s.item.addObj_item([new ItemData("8002", 1000)]);
-        // DataMgr.s.item.addObj_item([new ItemData("8003", 1000)]);
-        // DataMgr.s.item.addObj_item([new ItemData("8004", 1000)]);
-        // DataMgr.s.item.addObj_item([new ItemData("10", 1)]);
-        // DataMgr.s.item.addObj_item([new ItemData("11", 1)]);
-        // DataMgr.s.nftPioneer.generateNewNFT();
     }
 
     protected viewDidDestroy(): void {
@@ -91,6 +91,9 @@ export class MainUI extends ViewController {
 
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onPlayerLvlupChanged, this);
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._onPlayerExplorationValueChanged, this);
+
+        NotificationMgr.removeListener(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, this._onGameMainResourcePlayAnim, this);
+        NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
     }
 
     changeLang(): void {
@@ -98,6 +101,60 @@ export class MainUI extends ViewController {
         // this.node.getChildByPath("CommonContent/LeftNode/title").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("CommonContent/icon_treasure_box/Label").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("CommonContent/icon_artifact/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+    }
+
+    private _refreshElementShow() {
+        const taskButton = this.node.getChildByPath("CommonContent/TaskButton");
+        const backpackButton = this.node.getChildByPath("CommonContent/icon_treasure_box");
+        const nftButton = this.node.getChildByPath("CommonContent/NFTButton");
+        const defendButton = this.node.getChildByPath("CommonContent/SetDenderButton");
+        const test1Button = this.node.getChildByPath("CommonContent/AddHeatButton-001");
+        const test2Button = this.node.getChildByPath("CommonContent/AddHeatButton-002");
+
+        const battleReportButton = this.node.getChildByPath("CommonContent/reportsButton");
+        const pioneerListView = this.node.getChildByPath("CommonContent/LeftNode");
+        const innerOuterChangeButton = this.node.getChildByPath("CommonContent/InnerOutChangeBtnBg");
+
+        const innerBuildButton = this.node.getChildByPath("btnBuild");
+
+        const rewardView = this.node.getChildByPath("CommonContent/WorldTreasureUIRe");
+
+        taskButton.active = false;
+        backpackButton.active = false;
+        nftButton.active = false;
+        defendButton.active = false;
+        test1Button.active = false;
+        test2Button.active = false;
+
+        battleReportButton.active = false;
+        pioneerListView.active = false;
+        innerOuterChangeButton.active = false;
+
+        innerBuildButton.active = false;
+
+        rewardView.active = false;
+
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep >= RookieStep.FINISH) {
+            taskButton.active = true;
+            backpackButton.active = true;
+            nftButton.active = true;
+            defendButton.active = true;
+            test1Button.active = true;
+            test2Button.active = true;
+
+            battleReportButton.active = true;
+            pioneerListView.active = true;
+            innerOuterChangeButton.active = true;
+
+            innerBuildButton.active = true;
+
+            rewardView.active = true;
+        } else if (rookieStep >= RookieStep.TASK_EXPLAIN) {
+            taskButton.active = true;
+        } else if (rookieStep >= RookieStep.TASK_EXPLAIN_NEXT) {
+            battleReportButton.active = true;
+        }
     }
 
     private _refreshSettlememntTip() {
@@ -149,7 +206,7 @@ export class MainUI extends ViewController {
         if (!result.success) {
             return;
         }
-        result.node.getComponent(TaskListUI).refreshUI();
+        await result.node.getComponent(TaskListUI).refreshUI();
     }
     private async onTapNFT() {
         GameMusicPlayMgr.playTapButtonEffect();
@@ -218,5 +275,57 @@ export class MainUI extends ViewController {
     }
     private _onPlayerExplorationValueChanged(): void {
         this._claimRewardUI.refreshUI();
+    }
+
+    private _onGameMainResourcePlayAnim(data: { isFromGameView: boolean; fromWorldPos: Vec3; targetItemId: ResourceCorrespondingItem }) {
+        const { isFromGameView, fromWorldPos, targetItemId } = data;
+        this._animView.active = true;
+        const localPos = isFromGameView
+            ? GameMainHelper.instance.getGameCameraWposToUI(fromWorldPos, this.node)
+            : this.node.getComponent(UITransform).convertToNodeSpaceAR(fromWorldPos);
+
+        if (targetItemId == ResourceCorrespondingItem.Gold) {
+            const targetView = this.node.getChildByPath("CommonContent/TopUI/txtGoldNum/tag");
+            const targetViewPos = this.node.getComponent(UITransform).convertToNodeSpaceAR(targetView.worldPosition);
+            for (let i = 0; i < 5; i++) {
+                const icon = instantiate(targetView);
+                icon.setParent(this._animView);
+                icon.position = localPos;
+                tween()
+                    .target(icon)
+                    .delay(i * 0.2)
+                    .to(1, { position: targetViewPos })
+                    .call(() => {
+                        icon.destroy();
+                        if (i == 4) {
+                            this._animView.active = false;
+                            if (DataMgr.s.userInfo.data.rookieStep == RookieStep.TALK_WITH_BEGIN_NPC) {
+                                DataMgr.s.userInfo.finishRookieStep();
+                            }
+                        }
+                    })
+                    .start();
+            }
+        }
+    }
+    private async _onRookieStepChange() {
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        this._refreshElementShow();
+
+        if (rookieStep == RookieStep.TASK_EXPLAIN) {
+            const taskButton: Node = this.node.getChildByPath("CommonContent/TaskButton");
+            if (!taskButton.active) {
+                return;
+            }
+            const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI);
+            if (!result.success) {
+                return;
+            }
+            result.node.getComponent(RookieStepMaskUI).configuration(false, taskButton.worldPosition, taskButton.getComponent(UITransform).contentSize, () => {
+                this.onTapTaskList();
+            });
+        } else if (rookieStep == RookieStep.TASK_EXPLAIN_NEXT) {
+            
+        }
     }
 }

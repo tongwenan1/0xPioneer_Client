@@ -6,7 +6,7 @@ import { BackpackArrangeType, GetPropData, ResourceCorrespondingItem } from "../
 import NetGlobalData from "./Data/NetGlobalData";
 
 export class ItemDataMgr {
-    private _data: ItemData[];
+    private _data: ItemData[] = [];
     private _maxItemLength: number = 100;
 
     public loadObj() {
@@ -123,7 +123,7 @@ export class ItemDataMgr {
     }
     private _initData() {
         this._data = [];
-        
+
         if (NetGlobalData.storehouse == null) {
             return;
         }

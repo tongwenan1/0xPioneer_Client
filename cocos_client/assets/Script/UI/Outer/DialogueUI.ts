@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node } from "cc";
+import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, UITransform } from "cc";
 import { NPCNameLangType } from "../../Const/ConstDefine";
 import { LanMgr, UserInfoMgr } from "../../Utils/Global";
 import ViewController from "../../BasicView/ViewController";
@@ -12,6 +12,8 @@ import { DataMgr } from "../../Data/DataMgr";
 import { NetworkMgr } from "../../Net/NetworkMgr";
 import { s2c_user } from "../../Net/msg/WebsocketMsg";
 import GameMusicPlayMgr from "../../Manger/GameMusicPlayMgr";
+import { RookieStep } from "../../Const/RookieDefine";
+import { RookieStepMaskUI } from "../RookieGuide/RookieStepMaskUI";
 const { ccclass, property } = _decorator;
 
 @ccclass("DialogueUI")
@@ -35,7 +37,6 @@ export class DialogueUI extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-
         this._roleViewNameMap.set(NPCNameLangType.Artisan, "artisan");
         this._roleViewNameMap.set(NPCNameLangType.DoomsdayGangBigTeam, "doomsdayGangBigTeam");
         this._roleViewNameMap.set(NPCNameLangType.DoomsdayGangSpy, "doomsdayGangSpy");
@@ -48,6 +49,8 @@ export class DialogueUI extends ViewController {
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
     }
 
+    protected viewDidStart(): void {}
+
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
@@ -56,7 +59,7 @@ export class DialogueUI extends ViewController {
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
     }
 
-    private _refreshUI() {
+    private async _refreshUI() {
         if (this._talk == null || this._dialogStep > this._talk.messsages.length - 1) {
             return;
         }
@@ -120,6 +123,34 @@ export class DialogueUI extends ViewController {
                 }
             }
         }
+
+        let view: Node = null;
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (
+            rookieStep == RookieStep.TALK_WITH_BEGIN_NPC ||
+            rookieStep == RookieStep.HEAT_EXPLAIN ||
+            rookieStep == RookieStep.TASK_EXPLAIN ||
+            rookieStep == RookieStep.TASK_EXPLAIN_NEXT
+        ) {
+            if (currentMesssage.select != null && currentMesssage.select.length > 0) {
+                view = selectView.getChildByName("Button_0");
+            } else {
+                view = dialogView.getChildByName("dialog_bg");
+            }
+        }
+        if (view != null) {
+            const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI);
+            if (!result.success) {
+                return;
+            }
+            result.node.getComponent(RookieStepMaskUI).configuration(false, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
+                if (currentMesssage.select != null && currentMesssage.select.length > 0) {
+                    this.onTapAction(null, view.getComponent(Button).clickEvents[0].customEventData);
+                } else {
+                    this.onTapNext();
+                }
+            });
+        }
     }
 
     private _talkOver() {
@@ -142,6 +173,8 @@ export class DialogueUI extends ViewController {
         if (this._talkOverCallback != null) {
             this._talkOverCallback();
         }
+
+        NotificationMgr.triggerEvent(NotificationName.TALK_FINISH, { talkId: talkId });
     }
 
     //------------------------------------------------ action
@@ -149,14 +182,14 @@ export class DialogueUI extends ViewController {
         GameMusicPlayMgr.playTapButtonEffect();
         if (this._talk == null) {
             return;
-        } 
+        }
         if (this._dialogStep > this._talk.messsages.length - 2) {
             return;
         }
         NetworkMgr.websocketMsg.player_talk_select({
             talkId: this._talk.id,
             selectIndex: -1,
-            currStep: this._dialogStep + 1
+            currStep: this._dialogStep + 1,
         });
     }
 
@@ -169,7 +202,7 @@ export class DialogueUI extends ViewController {
         NetworkMgr.websocketMsg.player_talk_select({
             talkId: this._talk.id,
             selectIndex: selectIndex,
-            currStep: this._dialogStep + 1
+            currStep: this._dialogStep + 1,
         });
     }
 
@@ -207,5 +240,5 @@ export class DialogueUI extends ViewController {
                 this._refreshUI();
             }
         }
-    }
+    };
 }

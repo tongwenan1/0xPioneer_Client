@@ -10,6 +10,8 @@ import { MapPlayerPioneerObject } from "../Const/PioneerDefine";
 import { DataMgr } from "../Data/DataMgr";
 
 export default class GameMgr {
+    public rookieTaskExplainIsShow: boolean = false;
+
     public enterGameSence: boolean = false;
 
     public getResourceBuildingRewardAndQuotaMax(building: MapBuildingObject): { reward: ItemData; quotaMax: number } {

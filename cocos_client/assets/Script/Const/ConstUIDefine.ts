@@ -1,7 +1,10 @@
 export enum UIName {
     LoginUI = "prefab/ui/LoginUI",
     MainUI = "prefab/ui/MainUI",
+
     RookieGuide = "prefab/ui/RookieGuide",
+    RookieStepMaskUI = "prefab/ui/RookieStepMaskUI",
+
     DialogueUI = "prefab/ui/DialogueUI",
     SecretGuardGettedUI = "prefab/ui/SecretGuardGettedUI",
     TreasureGettedUI = "prefab/ui/TreasureGettedUI",

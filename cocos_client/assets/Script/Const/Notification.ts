@@ -19,15 +19,17 @@ export enum NotificationName {
     GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_DOWN,
     GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_UP,
     GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_MOVE,
-    
+
     GAME_JUMP_INNER_AND_SHOW_RELIC_TOWER,
-    
+
+    GAME_MAIN_RESOURCE_PLAY_ANIM,
     //---------------------- userInfo
     USERINFO_DID_CHANGE_NAME,
     USERINFO_DID_CHANGE_EXP,
     USERINFO_DID_CHANGE_LEVEL,
     USERINFO_DID_CHANGE_TREASURE_PROGRESS,
     USERINFO_DID_CHANGE_HEAT,
+    USERINFO_ROOKE_STEP_CHANGE,
 
     //---------------------- settlement
     SETTLEMENT_DATA_CHANGE,
@@ -59,7 +61,6 @@ export enum NotificationName {
     TASK_DID_CHANGE,
     TASK_NEW_GETTED,
     TASK_LIST,
-
     //------------------------------------ map building
     MAP_BUILDING_SHOW_CHANGE,
     MAP_BUILDING_FACTION_CHANGE,
@@ -74,7 +75,7 @@ export enum NotificationName {
 
     MAP_PIONEER_FIGHT_BEGIN,
     MAP_PIONEER_FIGHT_END,
-    
+
     MAP_PIONEER_BEGIN_MOVE,
     MAP_PLAYER_PIONEER_DID_MOVE_STEP,
     MAP_PIONEER_MOVE_MEETTED,
@@ -93,4 +94,7 @@ export enum NotificationName {
     NFT_LEARN_SKILL,
     NFT_FORGET_SKILL,
     NFT_DELEGATE_BUILDING,
+
+    //------------------------ dialogue
+    TALK_FINISH,
 }

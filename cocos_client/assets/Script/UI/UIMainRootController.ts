@@ -8,6 +8,7 @@ import { NotificationName } from "../Const/Notification";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
+import { RookieStep } from "../Const/RookieDefine";
 
 const { ccclass, property } = _decorator;
 
@@ -15,7 +16,7 @@ const { ccclass, property } = _decorator;
 export class UIMainRootController extends ViewController {
     public async checkShowRookieGuide() {
         GameMusicPlayMgr.stopMusic();
-        if (this.canShowRookieGuide && !DataMgr.s.userInfo.data.didFinishRookie) {
+        if (DataMgr.s.userInfo.data.rookieStep == RookieStep.WAKE_UP) {
             await UIPanelManger.inst.pushPanel(UIName.RookieGuide);
         } else {
             GameMusicPlayMgr.playGameMusic();

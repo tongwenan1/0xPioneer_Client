@@ -13,6 +13,10 @@ import GameMusicPlayMgr from "../../../Manger/GameMusicPlayMgr";
 import { DataMgr } from "../../../Data/DataMgr";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { NotificationName } from "../../../Const/Notification";
+import { RookieStep } from "../../../Const/RookieDefine";
+import UIPanelManger from "../../../Basic/UIPanelMgr";
+import { UIName } from "../../../Const/ConstUIDefine";
+import { RookieStepMaskUI } from "../../../UI/RookieGuide/RookieStepMaskUI";
 const { ccclass, property } = _decorator;
 
 @ccclass("ResOprView")
@@ -233,6 +237,30 @@ export class ResOprView extends Component {
             this._actionItemContent.addChild(actionItem);
         }
         this._confirmCallback = confirmCallback;
+
+        let view: Node = null;
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep == RookieStep.TALK_WITH_BEGIN_NPC || rookieStep == RookieStep.TASK_EXPLAIN_NEXT) {
+            const viewIndex = actionTypes.indexOf(MapInteractType.Talk);
+            if (viewIndex >= 0 && viewIndex < this._actionItemContent.children.length) {
+                view = this._actionItemContent.children[viewIndex];
+            }
+        } else if (rookieStep == RookieStep.TASK_EXPLAIN) {
+            const viewIndex = actionTypes.indexOf(MapInteractType.Attack);
+            if (viewIndex >= 0 && viewIndex < this._actionItemContent.children.length) {
+                view = this._actionItemContent.children[viewIndex];
+            }
+        }
+        if (view != null) {
+            const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI);
+            if (!result.success) {
+                return;
+            }
+            const eventData = view.getComponent(Button).clickEvents[0].customEventData;
+            result.node.getComponent(RookieStepMaskUI).configuration(true, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
+                this.onTapAction(null, eventData);
+            });
+        }
     }
     public hide() {
         this.node.active = false;
