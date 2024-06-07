@@ -17,6 +17,8 @@ import CommonTools from "../Tool/CommonTools";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
+import { RookieGuide } from "./RookieGuide/RookieGuide";
+import { RookieStep } from "../Const/RookieDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("HeatTreasureUI")
@@ -33,6 +35,8 @@ export class HeatTreasureUI extends Component {
 
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
+
+        NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
     }
     protected start(): void {
         this._refreshUI();
@@ -41,6 +45,8 @@ export class HeatTreasureUI extends Component {
     protected onDestroy(): void {
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
+
+        NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
     }
 
     update(deltaTime: number) {}
@@ -165,5 +171,24 @@ export class HeatTreasureUI extends Component {
     private onTapQuestion() {
         GameMusicPlayMgr.playTapButtonEffect();
         UIPanelManger.inst.pushPanel(UIName.WorldTreasureTipUI);
+    }
+
+    //----------------------------------- notification
+    private _onRookieStepChange() {
+
+        const treasureProgressView = this.node.getChildByPath("__ViewContent/Content/ProgressBar");
+        const detailButton = this.node.getChildByPath("__ViewContent/Content/DetailButton");
+        const questionButton = this.node.getChildByPath("__ViewContent/Content/QuestionButton");
+
+        treasureProgressView.active = false;
+        detailButton.active = false;
+        questionButton.active = false;
+
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep >= RookieStep.HEAT_BOX_SHOW) {
+            treasureProgressView.active = true;
+            detailButton.active = true;
+            questionButton.active = true;
+        }
     }
 }

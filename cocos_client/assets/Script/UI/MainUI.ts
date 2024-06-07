@@ -117,7 +117,7 @@ export class MainUI extends ViewController {
 
         const innerBuildButton = this.node.getChildByPath("btnBuild");
 
-        const rewardView = this.node.getChildByPath("CommonContent/WorldTreasureUIRe");
+        const rewardView = this.node.getChildByPath("CommonContent/HeatTreasureUI");
 
         taskButton.active = false;
         backpackButton.active = false;
@@ -132,7 +132,7 @@ export class MainUI extends ViewController {
 
         innerBuildButton.active = false;
 
-        rewardView.active = false;
+        rewardView.active = true;
 
         const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
         if (rookieStep >= RookieStep.FINISH) {
@@ -149,7 +149,6 @@ export class MainUI extends ViewController {
 
             innerBuildButton.active = true;
 
-            rewardView.active = true;
         } else if (rookieStep >= RookieStep.TASK_EXPLAIN) {
             taskButton.active = true;
         } else if (rookieStep >= RookieStep.TASK_EXPLAIN_NEXT) {

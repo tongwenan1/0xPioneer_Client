@@ -4,6 +4,7 @@ export enum RookieStep {
     TALK_WITH_BEGIN_NPC,
     
     HEAT_EXPLAIN,
+    HEAT_BOX_SHOW,
     
     TASK_EXPLAIN,
     TASK_EXPLAIN_NEXT,
@@ -12,7 +13,7 @@ export enum RookieStep {
 
     MAP_INNER_BUILDING_LEVEL_UP,
 
-    
+
 
     FINISH,
 }
