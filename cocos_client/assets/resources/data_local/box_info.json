@@ -4,21 +4,36 @@
     "threshold": null,
     "drop": "",
     "icon": null,
-    "drop_group": null
+    "drop_group": [
+      [
+        "10001",
+        1
+      ]
+    ]
   },
   "9002": {
     "id": "9002",
     "threshold": null,
     "drop": "",
     "icon": null,
-    "drop_group": null
+    "drop_group": [
+      [
+        "10002",
+        1
+      ]
+    ]
   },
   "9003": {
     "id": "9003",
     "threshold": null,
     "drop": "",
     "icon": null,
-    "drop_group": null
+    "drop_group": [
+      [
+        "10003",
+        1
+      ]
+    ]
   },
   "80001": {
     "id": "80001",
@@ -67,34 +82,59 @@
     "threshold": null,
     "drop": "",
     "icon": null,
-    "drop_group": null
+    "drop_group": [
+      [
+        "10001",
+        1
+      ]
+    ]
   },
   "90002": {
     "id": "90002",
     "threshold": null,
     "drop": "",
     "icon": null,
-    "drop_group": null
+    "drop_group": [
+      [
+        "10002",
+        1
+      ]
+    ]
   },
   "90003": {
     "id": "90003",
     "threshold": null,
     "drop": "",
     "icon": null,
-    "drop_group": null
+    "drop_group": [
+      [
+        "10003",
+        1
+      ]
+    ]
   },
   "90004": {
     "id": "90004",
     "threshold": null,
     "drop": "",
     "icon": null,
-    "drop_group": null
+    "drop_group": [
+      [
+        "10001",
+        2
+      ]
+    ]
   },
   "90005": {
     "id": "90005",
     "threshold": null,
     "drop": "",
     "icon": null,
-    "drop_group": null
+    "drop_group": [
+      [
+        "10002",
+        2
+      ]
+    ]
   }
 }
