@@ -1,4 +1,20 @@
 {
+  "104001": {
+    "id": "104001",
+    "eng": "No qualification"
+  },
+  "104002": {
+    "id": "104002",
+    "eng": "Server not responding…Please try again later"
+  },
+  "104003": {
+    "id": "104003",
+    "eng": "Please launch the wallet first"
+  },
+  "104004": {
+    "id": "104004",
+    "eng": "Please follow the instruction"
+  },
   "105001": {
     "id": "105001",
     "eng": "Common"
@@ -1359,6 +1375,46 @@
     "id": "501033",
     "eng": "344232424"
   },
+  "501034": {
+    "id": "501034",
+    "eng": "After the Disaster"
+  },
+  "501035": {
+    "id": "501035",
+    "eng": "Explore for Resoureces"
+  },
+  "501036": {
+    "id": "501036",
+    "eng": "talktalk"
+  },
+  "501037": {
+    "id": "501037",
+    "eng": "talktalk"
+  },
+  "501038": {
+    "id": "501038",
+    "eng": "talktalk"
+  },
+  "501039": {
+    "id": "501039",
+    "eng": "talktalk"
+  },
+  "501040": {
+    "id": "501040",
+    "eng": "talktalk"
+  },
+  "501041": {
+    "id": "501041",
+    "eng": "talktalk"
+  },
+  "501042": {
+    "id": "501042",
+    "eng": "talktalk"
+  },
+  "501043": {
+    "id": "501043",
+    "eng": "talktalk"
+  },
   "502001": {
     "id": "502001",
     "eng": "Tinuvel the Prophetess"
@@ -1674,6 +1730,18 @@
   "503072": {
     "id": "503072",
     "eng": "You saved the city!"
+  },
+  "503073": {
+    "id": "503073",
+    "eng": "talk"
+  },
+  "503074": {
+    "id": "503074",
+    "eng": "talk"
+  },
+  "503075": {
+    "id": "503075",
+    "eng": "talk"
   },
   "504001": {
     "id": "504001",

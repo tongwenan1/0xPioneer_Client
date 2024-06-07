@@ -1,4 +1,198 @@
 {
+  "770101": {
+    "id": "770101",
+    "name": "501036",
+    "start_action": [
+      [
+        1,
+        0,
+        "gangster_1",
+        1,
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk01",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        3,
+        "talk02"
+      ]
+    ],
+    "quit_con": null,
+    "progress": 0,
+    "exp": 5
+  },
+  "770102": {
+    "id": "770102",
+    "name": "501037",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk02",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        4,
+        1,
+        "8006",
+        10
+      ],
+      [
+        5,
+        "talk03",
+        "npc_0"
+      ]
+    ],
+    "quit_con": null,
+    "progress": 0,
+    "exp": 5
+  },
+  "770103": {
+    "id": "770103",
+    "name": "501038",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk03",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        5,
+        "talk04",
+        "npc_0"
+      ]
+    ],
+    "quit_con": null,
+    "progress": 20,
+    "exp": 5
+  },
+  "770104": {
+    "id": "770104",
+    "name": "501039",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk04",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        5,
+        "talk05",
+        "npc_0"
+      ]
+    ],
+    "quit_con": null,
+    "progress": 0,
+    "exp": 5
+  },
+  "770105": {
+    "id": "770105",
+    "name": "501040",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "gangster_1"
+        ],
+        1
+      ]
+    ],
+    "complete_action": [
+      [
+        5,
+        "talk06",
+        "npc_0"
+      ]
+    ],
+    "quit_con": null,
+    "progress": 0,
+    "exp": 20
+  },
+  "770106": {
+    "id": "770106",
+    "name": "501041",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk06",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        5,
+        "talk07",
+        "npc_0"
+      ]
+    ],
+    "quit_con": null,
+    "progress": 20,
+    "exp": 5
+  },
+  "770107": {
+    "id": "770107",
+    "name": "501042",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk07",
+        -1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 0,
+    "exp": 20
+  },
+  "770201": {
+    "id": "770201",
+    "name": "501043",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        4,
+        1,
+        "building_10",
+        0
+      ]
+    ],
+    "complete_action": [
+      [
+        3,
+        "talk08"
+      ]
+    ],
+    "quit_con": null,
+    "progress": 20,
+    "exp": 10
+  },
   "task0101": {
     "id": "task0101",
     "name": "501023",

@@ -1,38 +1,100 @@
 {
+  "9001": {
+    "id": "9001",
+    "threshold": null,
+    "drop": "",
+    "icon": null,
+    "drop_group": null
+  },
+  "9002": {
+    "id": "9002",
+    "threshold": null,
+    "drop": "",
+    "icon": null,
+    "drop_group": null
+  },
+  "9003": {
+    "id": "9003",
+    "threshold": null,
+    "drop": "",
+    "icon": null,
+    "drop_group": null
+  },
   "80001": {
     "id": "80001",
     "threshold": 15,
     "drop": "20001",
-    "icon": 0
+    "icon": 0,
+    "drop_group": null
   },
   "80002": {
     "id": "80002",
     "threshold": 30,
     "drop": "20002",
-    "icon": 1
+    "icon": 1,
+    "drop_group": null
   },
   "80003": {
     "id": "80003",
     "threshold": 45,
     "drop": "20003",
-    "icon": 0
+    "icon": 0,
+    "drop_group": null
   },
   "80004": {
     "id": "80004",
     "threshold": 60,
     "drop": "20004",
-    "icon": 1
+    "icon": 1,
+    "drop_group": null
   },
   "80005": {
     "id": "80005",
     "threshold": 75,
     "drop": "20004",
-    "icon": 0
+    "icon": 0,
+    "drop_group": null
   },
   "80006": {
     "id": "80006",
     "threshold": 100,
     "drop": "20005",
-    "icon": 2
+    "icon": 2,
+    "drop_group": null
+  },
+  "90001": {
+    "id": "90001",
+    "threshold": null,
+    "drop": "",
+    "icon": null,
+    "drop_group": null
+  },
+  "90002": {
+    "id": "90002",
+    "threshold": null,
+    "drop": "",
+    "icon": null,
+    "drop_group": null
+  },
+  "90003": {
+    "id": "90003",
+    "threshold": null,
+    "drop": "",
+    "icon": null,
+    "drop_group": null
+  },
+  "90004": {
+    "id": "90004",
+    "threshold": null,
+    "drop": "",
+    "icon": null,
+    "drop_group": null
+  },
+  "90005": {
+    "id": "90005",
+    "threshold": null,
+    "drop": "",
+    "icon": null,
+    "drop_group": null
   }
 }

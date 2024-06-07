@@ -1,7 +1,7 @@
 {
-  "task01": {
-    "id": "task01",
-    "name": "501005",
+  "task12": {
+    "id": "task12",
+    "name": "501034",
     "type": 1,
     "pre_con": [
       2,
@@ -28,13 +28,18 @@
     ],
     "fail_con": null,
     "steps": [
-      "task0101",
-      "task0102"
+      "770101",
+      "770102",
+      "770103",
+      "770104",
+      "770105",
+      "770106",
+      "770107"
     ]
   },
-  "task02": {
-    "id": "task02",
-    "name": "501006",
+  "task13": {
+    "id": "task13",
+    "name": "501035",
     "type": 1,
     "pre_con": null,
     "pre_action": null,
@@ -42,121 +47,7 @@
     "take_con": null,
     "fail_con": null,
     "steps": [
-      "task0201",
-      "task0202"
-    ]
-  },
-  "task03": {
-    "id": "task03",
-    "name": "501001",
-    "type": 1,
-    "pre_con": null,
-    "pre_action": null,
-    "close_con": null,
-    "take_con": null,
-    "fail_con": null,
-    "steps": null
-  },
-  "task04": {
-    "id": "task04",
-    "name": "501007",
-    "type": 1,
-    "pre_con": null,
-    "pre_action": null,
-    "close_con": null,
-    "take_con": null,
-    "fail_con": null,
-    "steps": null
-  },
-  "task05": {
-    "id": "task05",
-    "name": "501002",
-    "type": 1,
-    "pre_con": null,
-    "pre_action": null,
-    "close_con": null,
-    "take_con": null,
-    "fail_con": null,
-    "steps": null
-  },
-  "task06": {
-    "id": "task06",
-    "name": "501008",
-    "type": 1,
-    "pre_con": null,
-    "pre_action": null,
-    "close_con": null,
-    "take_con": null,
-    "fail_con": null,
-    "steps": null
-  },
-  "task07": {
-    "id": "task07",
-    "name": "501004",
-    "type": 1,
-    "pre_con": null,
-    "pre_action": null,
-    "close_con": null,
-    "take_con": null,
-    "fail_con": null,
-    "steps": null
-  },
-  "task08": {
-    "id": "task08",
-    "name": "501009",
-    "type": 1,
-    "pre_con": [],
-    "pre_action": null,
-    "close_con": null,
-    "take_con": [
-      2,
-      [
-        4,
-        0,
-        [
-          "gangster_3"
-        ],
-        1
-      ]
-    ],
-    "fail_con": null,
-    "steps": [
-      "task0801"
-    ]
-  },
-  "task09": {
-    "id": "task09",
-    "name": "501010",
-    "type": 1,
-    "pre_con": null,
-    "pre_action": null,
-    "close_con": null,
-    "take_con": null,
-    "fail_con": null,
-    "steps": null
-  },
-  "task10": {
-    "id": "task10",
-    "name": "501003",
-    "type": 1,
-    "pre_con": null,
-    "pre_action": null,
-    "close_con": null,
-    "take_con": null,
-    "fail_con": null,
-    "steps": null
-  },
-  "task11": {
-    "id": "task11",
-    "name": "501029",
-    "type": 1,
-    "pre_con": [],
-    "pre_action": [],
-    "close_con": [],
-    "take_con": [],
-    "fail_con": null,
-    "steps": [
-      "task1101"
+      "770201"
     ]
   }
 }
