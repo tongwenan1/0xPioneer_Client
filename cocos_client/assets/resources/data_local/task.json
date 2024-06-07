@@ -44,7 +44,14 @@
     "pre_con": null,
     "pre_action": null,
     "close_con": null,
-    "take_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk07",
+        -1
+      ]
+    ],
     "fail_con": null,
     "steps": [
       "770201"

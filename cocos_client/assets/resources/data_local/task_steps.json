@@ -78,7 +78,7 @@
       ]
     ],
     "quit_con": null,
-    "progress": 20,
+    "progress": 100,
     "exp": 5
   },
   "770104": {
@@ -144,13 +144,19 @@
     ],
     "complete_action": [
       [
+        4,
+        1,
+        "8006",
+        10
+      ],
+      [
         5,
         "talk07",
         "npc_0"
       ]
     ],
     "quit_con": null,
-    "progress": 20,
+    "progress": 100,
     "exp": 5
   },
   "770107": {
@@ -190,7 +196,7 @@
       ]
     ],
     "quit_con": null,
-    "progress": 20,
+    "progress": 100,
     "exp": 10
   },
   "task0101": {
