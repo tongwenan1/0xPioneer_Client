@@ -42,19 +42,19 @@ export default class GameMainHelper {
             NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_ZOOM_CHANGED, this._gameCameraZoom);
         }
     }
-    public changeGameCameraWorldPosition(position: Vec3, animation: boolean = false, targetPioneerId: string = null) {
+    public changeGameCameraWorldPosition(position: Vec3, animation: boolean = false) {
         if (animation) {
             const distance = Vec3.distance(this._gameCamera.node.worldPosition.clone(), position.clone());
             tween()
                 .target(this._gameCamera.node)
                 .to(Math.min(0.8, distance / 1800), { worldPosition: position })
                 .call(() => {
-                    NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_POSITION_CHANGED, { pioneerId: targetPioneerId });
+                    NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_POSITION_CHANGED);
                 })
                 .start();
         } else {
             this._gameCamera.node.setWorldPosition(position);
-            NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_POSITION_CHANGED, { pioneerId: targetPioneerId });
+            NotificationMgr.triggerEvent(NotificationName.GAME_CAMERA_POSITION_CHANGED);
         }
     }
     public changeGameCameraPosition(position: Vec3, animation: boolean = false) {

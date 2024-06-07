@@ -52,6 +52,7 @@ export class MainUI extends ViewController {
         // rookie
         NotificationMgr.addListener(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, this._onGameMainResourcePlayAnim, this);
         NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_MAIN_TASK, this._onRookieTapTask, this);
     }
 
     protected async viewDidStart(): Promise<void> {
@@ -148,11 +149,18 @@ export class MainUI extends ViewController {
             innerOuterChangeButton.active = true;
 
             innerBuildButton.active = true;
-
-        } else if (rookieStep >= RookieStep.TASK_EXPLAIN) {
+        } else if (rookieStep >= RookieStep.MAIN_BUILDING_TAP_1) {
             taskButton.active = true;
-        } else if (rookieStep >= RookieStep.TASK_EXPLAIN_NEXT) {
+
             battleReportButton.active = true;
+
+            innerOuterChangeButton.active = true;
+        } else if (rookieStep >= RookieStep.TASK_SHOW_TAP_2) {
+            taskButton.active = true;
+
+            battleReportButton.active = true;
+        } else if (rookieStep >= RookieStep.TASK_SHOW_TAP_1) {
+            taskButton.active = true;
         }
     }
 
@@ -298,9 +306,6 @@ export class MainUI extends ViewController {
                         icon.destroy();
                         if (i == 4) {
                             this._animView.active = false;
-                            if (DataMgr.s.userInfo.data.rookieStep == RookieStep.TALK_WITH_BEGIN_NPC) {
-                                DataMgr.s.userInfo.finishRookieStep();
-                            }
                         }
                     })
                     .start();
@@ -308,23 +313,9 @@ export class MainUI extends ViewController {
         }
     }
     private async _onRookieStepChange() {
-        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
         this._refreshElementShow();
-
-        if (rookieStep == RookieStep.TASK_EXPLAIN) {
-            const taskButton: Node = this.node.getChildByPath("CommonContent/TaskButton");
-            if (!taskButton.active) {
-                return;
-            }
-            const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI);
-            if (!result.success) {
-                return;
-            }
-            result.node.getComponent(RookieStepMaskUI).configuration(false, taskButton.worldPosition, taskButton.getComponent(UITransform).contentSize, () => {
-                this.onTapTaskList();
-            });
-        } else if (rookieStep == RookieStep.TASK_EXPLAIN_NEXT) {
-            
-        }
+    }
+    private _onRookieTapTask() {
+        this.onTapTaskList();
     }
 }

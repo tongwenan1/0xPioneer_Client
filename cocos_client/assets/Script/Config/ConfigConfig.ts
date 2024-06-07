@@ -136,12 +136,22 @@ export default class ConfigConfig {
                 temple = {
                     type: key,
                     coefficient: param[0],
-                }
+                };
+            } else if (key == ConfigType.ExploreForOneBox) {
+                temple = {
+                    type: key,
+                    value: param[0],
+                };
             } else if (key == ConfigType.MapDifficultCoefficient) {
                 temple = {
                     type: key,
                     coefficient: param[0],
-                }
+                };
+            } else if (key == ConfigType.PiotToHeatCoefficient) {
+                temple = {
+                    type: key,
+                    coefficient: param[0],
+                };
             }
             this._config.set(key as ConfigType, temple);
         }

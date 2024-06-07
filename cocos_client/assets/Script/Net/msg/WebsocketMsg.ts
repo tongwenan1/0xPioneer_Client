@@ -126,6 +126,12 @@ export class WebsocketMsg {
     public player_artifact_combine(d: c2s_user.Iplayer_artifact_combine) {
         this.send_packet("player_artifact_combine", d);
     }
+    public player_piot_to_heat(d: c2s_user.Iplayer_piot_to_heat) {
+        this.send_packet("player_piot_to_heat", d);
+    }
+    public player_worldbox_beginner_open(d: c2s_user.Iplayer_worldbox_beginner_open) {
+        this.send_packet("player_worldbox_beginner_open", d);
+    }
 
     public player_building_levelup(d: c2s_user.Iplayer_building_levelup) {
         this.send_packet("player_building_levelup", d);
@@ -159,8 +165,8 @@ export class WebsocketMsg {
         this.send_packet("get_treasure_info", d);
     }
 
-    public player_rookie_finish(d: c2s_user.Iplayer_rookie_finish) {
-        this.send_packet("player_rookie_finish", d);
+    public player_rookie_update(d: c2s_user.Iplayer_rookie_update) {
+        this.send_packet("player_rookie_update", d);
     }
 
     public player_wormhole_set_defender(d: c2s_user.Iplayer_wormhole_set_defender) {
@@ -312,6 +318,14 @@ export namespace c2s_user {
     export interface Iplayer_artifact_combine {
         artifactIds: string[];
     }
+
+    export interface Iplayer_piot_to_heat {
+        piotNum: number;
+    }
+    export interface Iplayer_worldbox_beginner_open {
+        boxIndex: number;
+    }
+
     export interface Iplayer_building_levelup {
         innerBuildingId: string;
     }
@@ -345,8 +359,9 @@ export namespace c2s_user {
     export interface Iplayer_world_treasure_lottery {}
     export interface Iget_treasure_info {}
 
-    export interface Iplayer_rookie_finish {}
-
+    export interface Iplayer_rookie_update {
+        rookieStep: number;
+    }
     export interface Iplayer_wormhole_set_defender {
         pioneerId: string;
         index: number;
@@ -405,6 +420,10 @@ export namespace s2c_user {
     }
     export interface Isinfo_change {
         info: share.Iplayer_sinfo;
+    }
+    export interface Iplayer_rookie_update_res {
+        res: number;
+        rookieStep: number;
     }
     export interface Istorhouse_change {
         iteminfo: share.Iitem_data[];
@@ -484,6 +503,11 @@ export namespace s2c_user {
         pioneerId: string;
     }
 
+    export interface Iplayer_worldbox_beginner_open_res {
+        res: number;
+        boxId: string;
+        finish: boolean;
+    }
     export interface Iplayer_item_use_res {
         res: number;
     }
@@ -570,6 +594,9 @@ export namespace s2c_user {
         res: number;
         tasks: share.Itask_data[];
     }
+    export interface Iuser_task_action_talk {
+        talkId: string;
+    }
 
     export interface Iplayer_lvlup_change {
         hpMaxChangeValue: number;
@@ -641,7 +668,6 @@ export namespace share {
         treasureDidGetRewards: string[];
         pointTreasureDidGetRewards: string[];
         cityRadialRange: number;
-        didFinishRookie: boolean;
         rookieStep: number;
         generateTroopInfo?: troop_info_data;
         generateEnergyInfo?: energy_info_data;

@@ -25,9 +25,11 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
     private _getInfoView: Node = null;
 
     public async refreshUI(building: UserInnerBuildInfo, canAction: boolean = true) {
-        await super.refreshUI(building, canAction);
-
-        this._viewRefresh();
+        const succeed: boolean = await super.refreshUI(building, canAction);
+        if (succeed) {
+            this._viewRefresh();
+        }
+        return true;
     }
     //-------------------------------------------------lifecycle
     protected innerBuildingLoad(): void {

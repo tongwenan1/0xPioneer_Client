@@ -60,15 +60,15 @@ export class PointActionView extends Component {
         this._boxView.active = this._isOpenBox;
 
         let hasTreasureGet: boolean = false;
-        for (let i = 0; i < this._boxDatas.length; i++) {
-            if (
-                DataMgr.s.userInfo.data.pointTreasureDidGetRewards.indexOf(this._boxDatas[i].id) == -1 &&
-                this._userInfoTreasureValue >= this._boxDatas[i].threshold
-            ) {
-                hasTreasureGet = true;
-                break;
-            }
-        }
+        // for (let i = 0; i < this._boxDatas.length; i++) {
+        //     if (
+        //         DataMgr.s.userInfo.data.pointTreasureDidGetRewards.indexOf(this._boxDatas[i].id) == -1 &&
+        //         this._userInfoTreasureValue >= this._boxDatas[i].threshold
+        //     ) {
+        //         hasTreasureGet = true;
+        //         break;
+        //     }
+        // }
         this._treasureCanGetIcon.active = hasTreasureGet;
 
         if (this._isOpenBox) {
@@ -92,50 +92,50 @@ export class PointActionView extends Component {
                 this._boxView.getChildByPath("BoxView/Progress").active = false;
                 this._boxView.getChildByPath("BoxView/ProgressBar").active = false;
             } else {
-                const canGet: boolean = this._userInfoTreasureValue >= this._currentTreasureData.threshold;
+                // const canGet: boolean = this._userInfoTreasureValue >= this._currentTreasureData.threshold;
                 treasureView.active = true;
                 for (let j = 1; j <= 5; j++) {
                     const showBoxView = treasureView.getChildByPath("Treasure_box_" + j);
-                    showBoxView.active = j == this._currentTreasureData.icon + 1;
-                    if (showBoxView.active) {
-                        showBoxView.getChildByName("Common").active = !canGet;
-                        showBoxView.getChildByName("Light").active = canGet;
-                        if (canGet) {
-                            if (showBoxView["actiontween"] == null) {
-                                showBoxView["actiontween"] = tween()
-                                    .target(showBoxView)
-                                    .repeatForever(
-                                        tween().sequence(
-                                            tween().by(0.05, { position: v3(0, 10, 0) }),
-                                            tween().by(0.1, { position: v3(0, -20, 0) }),
-                                            tween().by(0.1, { position: v3(0, 20, 0) }),
-                                            tween().by(0.05, { position: v3(0, -10, 0) }),
-                                            tween().delay(1)
-                                        )
-                                    )
-                                    .start();
-                            }
-                        } else {
-                            if (showBoxView["actiontween"] != null) {
-                                showBoxView["actiontween"].stop();
-                            }
-                        }
-                    }
+                    // showBoxView.active = j == this._currentTreasureData.icon + 1;
+                    // if (showBoxView.active) {
+                    //     showBoxView.getChildByName("Common").active = !canGet;
+                    //     showBoxView.getChildByName("Light").active = canGet;
+                    //     if (canGet) {
+                    //         if (showBoxView["actiontween"] == null) {
+                    //             showBoxView["actiontween"] = tween()
+                    //                 .target(showBoxView)
+                    //                 .repeatForever(
+                    //                     tween().sequence(
+                    //                         tween().by(0.05, { position: v3(0, 10, 0) }),
+                    //                         tween().by(0.1, { position: v3(0, -20, 0) }),
+                    //                         tween().by(0.1, { position: v3(0, 20, 0) }),
+                    //                         tween().by(0.05, { position: v3(0, -10, 0) }),
+                    //                         tween().delay(1)
+                    //                     )
+                    //                 )
+                    //                 .start();
+                    //         }
+                    //     } else {
+                    //         if (showBoxView["actiontween"] != null) {
+                    //             showBoxView["actiontween"].stop();
+                    //         }
+                    //     }
+                    // }
                 }
 
                 // useLanMgr
                 // this._boxView.getChildByPath("BoxView/Title").getComponent(Label).string = LanMgr.getLanById("107549");
                 this._boxView.getChildByPath("BoxView/Title").getComponent(Label).string = "Next:";
 
-                const lastThreshold: number = lastTreasureIndex < 0 ? 0 : this._boxDatas[lastTreasureIndex].threshold;
-                const totalProgress: number = this._currentTreasureData.threshold - lastThreshold;
-                const progress: number = this._userInfoTreasureValue - lastThreshold;
+                // const lastThreshold: number = lastTreasureIndex < 0 ? 0 : this._boxDatas[lastTreasureIndex].threshold;
+                // const totalProgress: number = this._currentTreasureData.threshold - lastThreshold;
+                // const progress: number = this._userInfoTreasureValue - lastThreshold;
 
-                this._boxView.getChildByPath("BoxView/Progress").active = true;
-                this._boxView.getChildByPath("BoxView/Progress/Value").getComponent(Label).string = progress.toString();
-                this._boxView.getChildByPath("BoxView/Progress/Total").getComponent(Label).string = totalProgress.toString();
-                this._boxView.getChildByPath("BoxView/ProgressBar").active = true;
-                this._boxView.getChildByPath("BoxView/ProgressBar").getComponent(ProgressBar).progress = Math.min(1, progress / totalProgress);
+                // this._boxView.getChildByPath("BoxView/Progress").active = true;
+                // this._boxView.getChildByPath("BoxView/Progress/Value").getComponent(Label).string = progress.toString();
+                // this._boxView.getChildByPath("BoxView/Progress/Total").getComponent(Label).string = totalProgress.toString();
+                // this._boxView.getChildByPath("BoxView/ProgressBar").active = true;
+                // this._boxView.getChildByPath("BoxView/ProgressBar").getComponent(ProgressBar).progress = Math.min(1, progress / totalProgress);
             }
         }
     }
@@ -166,8 +166,8 @@ export class PointActionView extends Component {
         if (this._currentTreasureData == null) {
             return;
         }
-        const canGet: boolean = this._userInfoTreasureValue >= this._currentTreasureData.threshold;
-        if (canGet) {
+        // const canGet: boolean = this._userInfoTreasureValue >= this._currentTreasureData.threshold;
+        // if (canGet) {
             // const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);
             // if (result.success) {
             //     result.node
@@ -185,7 +185,7 @@ export class PointActionView extends Component {
             //             }
             //         );
             // }
-        }
+        // }
     }
 
     //---------------------------- socket notification

@@ -240,25 +240,29 @@ export class ResOprView extends Component {
 
         let view: Node = null;
         const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (rookieStep == RookieStep.TALK_WITH_BEGIN_NPC || rookieStep == RookieStep.TASK_EXPLAIN_NEXT) {
+        if (
+            rookieStep == RookieStep.NPC_TALK_1 ||
+            rookieStep == RookieStep.NPC_TALK_3 ||
+            rookieStep == RookieStep.NPC_TALK_4 ||
+            rookieStep == RookieStep.NPC_TALK_5 ||
+            rookieStep == RookieStep.NPC_TALK_6 ||
+            rookieStep == RookieStep.NPC_TALK_7
+        ) {
             const viewIndex = actionTypes.indexOf(MapInteractType.Talk);
             if (viewIndex >= 0 && viewIndex < this._actionItemContent.children.length) {
                 view = this._actionItemContent.children[viewIndex];
             }
-        } else if (rookieStep == RookieStep.TASK_EXPLAIN) {
+        } else if (rookieStep == RookieStep.ENEMY_FIGHT) {
             const viewIndex = actionTypes.indexOf(MapInteractType.Attack);
             if (viewIndex >= 0 && viewIndex < this._actionItemContent.children.length) {
                 view = this._actionItemContent.children[viewIndex];
             }
         }
         if (view != null) {
-            const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI);
-            if (!result.success) {
-                return;
-            }
-            const eventData = view.getComponent(Button).clickEvents[0].customEventData;
-            result.node.getComponent(RookieStepMaskUI).configuration(true, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
-                this.onTapAction(null, eventData);
+            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
+                tag: "mapAction",
+                view: view,
+                tapIndex: view.getComponent(Button).clickEvents[0].customEventData,
             });
         }
     }
@@ -273,10 +277,16 @@ export class ResOprView extends Component {
         this._actionItemContent = this.node.getChildByPath("ActionView/Action");
         this._actionItem = this._actionItemContent.getChildByPath("Item");
         this._actionItem.removeFromParent();
+
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_MAP_ACTION, this._oRookieTapMapAction, this);
     }
     start() {}
 
     update(deltaTime: number) {}
+
+    protected onDestroy(): void {
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_MAP_ACTION, this._oRookieTapMapAction, this);
+    }
 
     private onTapAction(event: Event, customEventData: string) {
         GameMusicPlayMgr.playTapButtonEffect();
@@ -299,5 +309,13 @@ export class ResOprView extends Component {
             return;
         }
         NotificationMgr.triggerEvent(NotificationName.GAME_JUMP_INNER_AND_SHOW_RELIC_TOWER);
+    }
+
+    //----------------------------- notification
+    private _oRookieTapMapAction(data: { tapIndex: string }) {
+        if (data == null || data.tapIndex == null) {
+            return;
+        }
+        this.onTapAction(null, data.tapIndex);
     }
 }

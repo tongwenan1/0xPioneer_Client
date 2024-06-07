@@ -47,6 +47,8 @@ export class DialogueUI extends ViewController {
         NetworkMgr.websocket.on("player_talk_select_res", this._on_player_talk_select_res);
 
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
+
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_DIALOGUE, this._onRookieTapThis, this);
     }
 
     protected viewDidStart(): void {}
@@ -57,6 +59,8 @@ export class DialogueUI extends ViewController {
         NetworkMgr.websocket.off("player_talk_select_res", this._on_player_talk_select_res);
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._refreshUI, this);
+
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_DIALOGUE, this._onRookieTapThis, this);
     }
 
     private async _refreshUI() {
@@ -126,12 +130,7 @@ export class DialogueUI extends ViewController {
 
         let view: Node = null;
         const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (
-            rookieStep == RookieStep.TALK_WITH_BEGIN_NPC ||
-            rookieStep == RookieStep.HEAT_EXPLAIN ||
-            rookieStep == RookieStep.TASK_EXPLAIN ||
-            rookieStep == RookieStep.TASK_EXPLAIN_NEXT
-        ) {
+        if (rookieStep != RookieStep.FINISH) {
             if (currentMesssage.select != null && currentMesssage.select.length > 0) {
                 view = selectView.getChildByName("Button_0");
             } else {
@@ -139,17 +138,12 @@ export class DialogueUI extends ViewController {
             }
         }
         if (view != null) {
-            const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI);
-            if (!result.success) {
-                return;
+            // -1: next  >=0: action
+            let tapIndex: string = "-1";
+            if (currentMesssage.select != null && currentMesssage.select.length > 0) {
+                tapIndex = view.getComponent(Button).clickEvents[0].customEventData;
             }
-            result.node.getComponent(RookieStepMaskUI).configuration(false, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
-                if (currentMesssage.select != null && currentMesssage.select.length > 0) {
-                    this.onTapAction(null, view.getComponent(Button).clickEvents[0].customEventData);
-                } else {
-                    this.onTapNext();
-                }
-            });
+            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, { tag: "dialogue", view: view, tapIndex: tapIndex });
         }
     }
 
@@ -183,9 +177,6 @@ export class DialogueUI extends ViewController {
         if (this._talk == null) {
             return;
         }
-        if (this._dialogStep > this._talk.messsages.length - 2) {
-            return;
-        }
         NetworkMgr.websocketMsg.player_talk_select({
             talkId: this._talk.id,
             selectIndex: -1,
@@ -206,6 +197,14 @@ export class DialogueUI extends ViewController {
         });
     }
 
+    //------------------------------------------------ notificaiton
+    private _onRookieTapThis(data: { tapIndex: string }) {
+        if (data.tapIndex == "-1") {
+            this.onTapNext();
+        } else {
+            this.onTapAction(null, data.tapIndex);
+        }
+    }
     //------------------------------------------------ socket notification
     private _on_player_talk_select_res = (e: any) => {
         const p: s2c_user.Iplayer_talk_select_res = e.data;

@@ -24,8 +24,15 @@ message enter_game_res {
     required int32 res = 1; // error code see {ServerErrorCode}
     optional share.player_data data = 2;
 }
+
+
+// rookie
 message player_rookie_finish_res {
     required int32 res = 1;
+}
+message player_rookie_update_res {
+    required int32 res = 1;
+    optional uint32 rookieStep = 2;
 }
 
 
@@ -78,6 +85,9 @@ message player_talk_select_res {
     required int32 res = 1;
     optional string talkId = 2;
     optional int32 selectIndex = 3;
+}
+message player_piot_to_heat_res {
+    required int32 res = 1;
 }
 // player: notify
 message player_exp_change {
@@ -220,7 +230,7 @@ message user_task_did_change {
     required share.task_data task = 1;
 }
 message user_task_action_talk {
-    required string taskId= 1;
+    required string talkId= 1;
 }
 message user_task_action_getnewtalk {
     required string npcId= 1;
@@ -280,7 +290,11 @@ message player_treasure_progress_change {
     required uint32 newProgress = 2;
     required uint32 newLotteryProcessLimit = 3;
 }
-
+message player_worldbox_beginner_open_res {
+    required int32 res = 1;
+    optional string boxId = 2;
+    optional bool finish = 3;
+}
 
 // ------ inner-building ------
 message player_building_levelup_res {
@@ -292,6 +306,13 @@ message player_generate_troop_start_res {
 }
 message player_building_delegate_nft_res {
     required int32 res = 1;
+    repeated share.building_data buildings = 2;
+    repeated share.nfts_info_data nfts = 3;
+}
+message player_building_remove_nft_res {
+    required int32 res = 1;
+    repeated share.building_data buildings = 2;
+    repeated share.nfts_info_data nfts = 3;
 }
 message fetch_user_psyc_res {
     required int32 res = 1;

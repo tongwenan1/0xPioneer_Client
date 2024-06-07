@@ -16,8 +16,12 @@ message create_player {
 }
 // enter game
 message enter_game { }
-// rookie finish
+
+// rookie
 message player_rookie_finish { }
+message player_rookie_update {
+    required uint32 rookieStep = 1;
+}
 
 
 // ------ chain ------
@@ -47,6 +51,9 @@ message player_talk_select {
     required string talkId = 1;
     required int32 selectIndex = 2;
     required uint32 currStep = 3;
+}
+message player_piot_to_heat {
+    required uint32 piotNum = 1;
 }
 
 
@@ -140,6 +147,9 @@ message player_point_treasure_open {
     required string boxId = 1;
 }
 message player_world_treasure_lottery { }
+message player_worldbox_beginner_open {
+    required uint32 boxIndex = 1;
+}
 
 
 // ------ inner-building ------
@@ -152,6 +162,10 @@ message player_generate_troop_start {
 message player_building_delegate_nft {
     required string innerBuildingId = 1;
     required string nftId = 2; 
+}
+message player_building_remove_nft {
+    required string innerBuildingId = 1;
+    required string nftId = 2;
 }
 message fetch_user_psyc { }
 message player_building_pos {

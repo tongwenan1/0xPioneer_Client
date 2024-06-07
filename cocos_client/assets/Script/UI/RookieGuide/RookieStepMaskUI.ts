@@ -8,12 +8,15 @@ const { ccclass, property } = _decorator;
 export class RookieStepMaskUI extends ViewController {
     private _nextActionCallback: () => void = null;
 
+    private _contentView: Node = null;
     private _maskView: Node = null;
     private _bgView: Node = null;
     private _instructView: Node = null;
     private _actionButton: Node = null;
 
     public configuration(isFromGameView: boolean, worldPos: Vec3, size: Size, nextActionCallback: () => void) {
+        this._contentView.active = true;
+
         const localPos = isFromGameView
             ? GameMainHelper.instance.getGameCameraWposToUI(worldPos, this.node)
             : this.node.getComponent(UITransform).convertToNodeSpaceAR(worldPos);
@@ -33,10 +36,13 @@ export class RookieStepMaskUI extends ViewController {
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        this._maskView = this.node.getChildByPath("Mask");
+        this._contentView = this.node.getChildByPath("Content");
+        this._maskView = this._contentView.getChildByPath("Mask");
         this._bgView = this._maskView.getChildByPath("Bg");
-        this._instructView = this.node.getChildByPath("Click_A");
-        this._actionButton = this.node.getChildByPath("ActionButton");
+        this._instructView = this._contentView.getChildByPath("Click_A");
+        this._actionButton = this._contentView.getChildByPath("ActionButton");
+
+        this._contentView.active = false;
     }
 
     protected viewDidStart(): void {
@@ -45,7 +51,7 @@ export class RookieStepMaskUI extends ViewController {
 
     //---------------------------------------- action
     private onTapAction() {
-        UIPanelManger.inst.popPanel(this.node);
+        this._contentView.active = false;
         if (this._nextActionCallback != null) {
             this._nextActionCallback();
         }

@@ -15,6 +15,9 @@ import { UIName } from "../../Const/ConstUIDefine";
 import { DelegateUI } from "../DelegateUI";
 import { NetworkMgr } from "../../Net/NetworkMgr";
 import GameMusicPlayMgr from "../../Manger/GameMusicPlayMgr";
+import { RookieStep } from "../../Const/RookieDefine";
+import TalkConfig from "../../Config/TalkConfig";
+import { DialogueUI } from "../Outer/DialogueUI";
 const { ccclass } = _decorator;
 
 @ccclass("BuildingUpgradeUI")
@@ -52,6 +55,18 @@ export class BuildingUpgradeUI extends ViewController {
                 }
             }
         });
+
+        if (!this._buildingMap.has(InnerBuildingType.MainCity)) {
+            return;
+        }
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1) {
+            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
+                tag: "buildingUpgrade",
+                view: this._buildingMap.get(InnerBuildingType.MainCity),
+                tapIndex: "-1",
+            });
+        }
     }
 
     private _buildingMap: Map<InnerBuildingType, Node> = null;
@@ -79,6 +94,7 @@ export class BuildingUpgradeUI extends ViewController {
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this._onLangChang, this);
         NotificationMgr.addListener(NotificationName.ITEM_CHANGE, this.onItemChanged, this);
 
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_BUILDING_UPGRADE, this._onRookieTapThis, this);
     }
 
     protected viewDidDestroy(): void {
@@ -87,6 +103,7 @@ export class BuildingUpgradeUI extends ViewController {
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this._onLangChang, this);
         NotificationMgr.removeListener(NotificationName.ITEM_CHANGE, this.onItemChanged, this);
 
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_BUILDING_UPGRADE, this._onRookieTapThis, this);
     }
     protected viewPopAnimation(): boolean {
         return true;
@@ -259,5 +276,45 @@ export class BuildingUpgradeUI extends ViewController {
     //------------------- ItemMgrEvent
     onItemChanged(): void {
         this._refreshUpgradeUI(this._curBuildingType);
+    }
+
+    private async _onRookieTapThis(data: { tapIndex: string }) {
+        if (data == null || data.tapIndex == null) {
+            return;
+        }
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (data.tapIndex == "-1") {
+            if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1) {
+                this.onTapBuildingUpgradeShow(null, InnerBuildingType.MainCity);
+                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
+                    tag: "buildingUpgrade",
+                    view: this.node.getChildByPath("__ViewContent/LevelInfoView/UpgradeContent/ActionButton"),
+                    tapIndex: "-2",
+                });
+            }
+        } else if (data.tapIndex == "-2") {
+            if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1) {
+                const talkConfig = TalkConfig.getById("talk18");
+                if (talkConfig == null) {
+                    return;
+                }
+                const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
+                if (!result.success) {
+                    return;
+                }
+                result.node.getComponent(DialogueUI).dialogShow(talkConfig);
+            }
+        } else if (data.tapIndex == "-3") {
+            if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1) {
+                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
+                    tag: "buildingUpgrade",
+                    view: this.node.getChildByPath("__ViewContent/BuildingInfoView/CloseButton"),
+                    tapIndex: "-4",
+                });
+            }
+        } else if (data.tapIndex == "-4") {
+            this.onTapClose();
+            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_BUILDING_UPGRADE_CLOSE);
+        }
     }
 }

@@ -66,7 +66,7 @@ export class InnerBuildingControllerRe extends ViewController {
     private _ghostBuildingView: Node = null;
 
     private _setSucceedLatticeItems: InnerBuildingLatticeStruct[] = null;
-    protected viewDidLoad(): void {
+    protected async viewDidLoad() {
         super.viewDidLoad();
 
         this._latticeItem = this.node.getChildByPath("BuildingLattice/Content/LatticeContent");
@@ -80,17 +80,15 @@ export class InnerBuildingControllerRe extends ViewController {
 
         NotificationMgr.addListener(NotificationName.GAME_JUMP_INNER_AND_SHOW_RELIC_TOWER, this._onGameJumpInnerAndShowRelicTower, this);
 
-    }
-
-    protected async viewDidStart(): Promise<void> {
-        super.viewDidStart();
-
         this._prepareStreet();
         this._prepareLattice();
         this._refreshLattice();
         await this._initBuilding();
         await this._refreshBuilding();
+    }
 
+    protected async viewDidStart(): Promise<void> {
+        super.viewDidStart();
     }
 
     protected async viewDidAppear(): Promise<void> {
@@ -132,10 +130,12 @@ export class InnerBuildingControllerRe extends ViewController {
     private _prepareStreet() {
         for (let i = 0; i < this._latticeNum; i++) {
             const pioneerView = instantiate(this._pioneerContentItem);
+            pioneerView.name = "pioneerView_" + i;
             pioneerView.setParent(this._streetView);
             this._allPioneerContentViews.push(pioneerView);
 
             const buildingView = instantiate(this._buildingContentItem);
+            buildingView.name = "buildingView_" + i;
             buildingView.setParent(this._streetView);
             this._allBuildingContentViews.push(buildingView);
 

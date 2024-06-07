@@ -1,6 +1,4 @@
 export interface BoxInfoConfigData {
     id: string;
-    threshold: number;
-    drop: string;
-    icon: number;
+    drop_group: [string, number][];
 }

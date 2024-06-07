@@ -37,7 +37,6 @@ export interface UserInfoObject {
 
     cityRadialRange: number;
 
-    didFinishRookie: boolean;
     rookieStep: RookieStep;
 
     energyDidGetTimes: number;

@@ -11,6 +11,8 @@ import { RookieGuide } from "./RookieGuide/RookieGuide";
 import { RookieStep } from "../Const/RookieDefine";
 import { UIName } from "../Const/ConstUIDefine";
 import { RookieStepMaskUI } from "./RookieGuide/RookieStepMaskUI";
+import NotificationMgr from "../Basic/NotificationMgr";
+import { NotificationName } from "../Const/Notification";
 const { ccclass, property } = _decorator;
 
 @ccclass("MapActionConfrimTipUI")
@@ -42,20 +44,16 @@ export class MapActionConfrimTipUI extends ViewController {
         // this.node.getChildByPath("Content/CostTimeView/Title").getComponent(Label).string = LanMgr.getLanById("106008");
         // this.node.getChildByPath("Content/ArriveTimeView/Title").getComponent(Label).string = LanMgr.getLanById("106008");
         // this.node.getChildByPath("Content/Button/name").getComponent(Label).string = LanMgr.getLanById("106008");
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_MAP_ACTION_CONFRIM, this._onRookieTapThis, this);
     }
     protected async viewDidAppear(): Promise<void> {
         super.viewDidAppear();
 
         const buttonView = this.node.getChildByPath("Content/Button");
+
         const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (rookieStep == RookieStep.TALK_WITH_BEGIN_NPC || rookieStep == RookieStep.TASK_EXPLAIN || rookieStep == RookieStep.TASK_EXPLAIN_NEXT) {
-            const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI);
-            if (!result.success) {
-                return;
-            }
-            result.node.getComponent(RookieStepMaskUI).configuration(false, buttonView.worldPosition, buttonView.getComponent(UITransform).contentSize, () => {
-                this.onTapAction();
-            });
+        if (rookieStep != RookieStep.FINISH) {
+            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, { tag: "mapActionConfrim", view: buttonView, tapIndex: "-1" });
         }
     }
     protected viewPopAnimation(): boolean {
@@ -63,6 +61,12 @@ export class MapActionConfrimTipUI extends ViewController {
     }
     protected contentView(): Node {
         return this.node.getChildByPath("Content");
+    }
+
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
+
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_MAP_ACTION_CONFRIM, this._onRookieTapThis, this);
     }
 
     private async _refreshUI() {
@@ -95,5 +99,10 @@ export class MapActionConfrimTipUI extends ViewController {
         }
         await this.playExitAnimation();
         UIPanelManger.inst.popPanel(this.node);
+    }
+
+    //-------------------------------------- notification
+    private _onRookieTapThis(data: { tapIndex: string }) {
+        this.onTapAction();
     }
 }

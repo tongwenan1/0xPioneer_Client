@@ -17,6 +17,7 @@ const { ccclass, property } = _decorator;
 export class InnerBarracksBuildingView extends InnerBuildingView {
     public async refreshUI(building: UserInnerBuildInfo, canAction: boolean = true) {
         await super.refreshUI(building, canAction);
+        return true;
     }
 
     private _generateTime: Label = null;

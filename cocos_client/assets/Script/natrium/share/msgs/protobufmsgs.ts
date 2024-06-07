@@ -6,7 +6,12 @@ export enum protobuf_c2s {
     login = 1,
     create_player,
     enter_game,
+
+
+    // ------ rookie ------
     player_rookie_finish,
+    player_rookie_update,
+
 
     // ------ chain ------
     get_pending,
@@ -24,6 +29,7 @@ export enum protobuf_c2s {
     // ------ player ------
     // player: talk
     player_talk_select,
+    player_piot_to_heat,
 
 
     // ------ pioneer ------
@@ -68,12 +74,14 @@ export enum protobuf_c2s {
     player_treasure_open,
     player_point_treasure_open,
     player_world_treasure_lottery,
+    player_worldbox_beginner_open,
 
 
     // ------ inner-building ------
     player_building_levelup,
     player_generate_troop_start,
     player_building_delegate_nft,
+    player_building_remove_nft,
     fetch_user_psyc,
     player_building_pos,
 
@@ -102,7 +110,11 @@ export enum protobuf_s2c {
     login_res,
     create_player_res,
     enter_game_res,
+
+
+    // ------ rookie ------
     player_rookie_finish_res,
+    player_rookie_update_res,
 
 
     // ------ chain ------
@@ -123,6 +135,7 @@ export enum protobuf_s2c {
     // ------ player ------
     // player: talk
     player_talk_select_res,
+    player_piot_to_heat_res,
     // player: notify
     player_exp_change,
     player_lvlup_change,
@@ -194,6 +207,7 @@ export enum protobuf_s2c {
     player_treasure_open_res,
     player_point_treasure_open_res,
     player_world_treasure_lottery_res,
+    player_worldbox_beginner_open_res,
     // treasure: notify
     player_world_treasure_pool_change_res,
     player_treasure_progress_change,
@@ -203,6 +217,7 @@ export enum protobuf_s2c {
     player_building_levelup_res,
     player_generate_troop_start_res,
     player_building_delegate_nft_res,
+    player_building_remove_nft_res,
     fetch_user_psyc_res,
     player_building_pos_res,
     // inner-building: notify

@@ -1,15 +1,21 @@
-import { _decorator, Component, Label, Node, ProgressBar, tween, v3 } from 'cc';
-import { LanMgr } from '../../../Utils/Global';
+import { _decorator, Component, Label, Node, ProgressBar, tween, v3 } from "cc";
+import { LanMgr } from "../../../Utils/Global";
 const { ccclass, property } = _decorator;
 
-@ccclass('OuterFightResultView')
+@ccclass("OuterFightResultView")
 export class OuterFightResultView extends Component {
-
-    public showResult(isWin: boolean, callback: ()=> void = null) {
+    public showResult(isWin: boolean, callback: () => void = null) {
         const winView = this.node.getChildByName("FightWin");
         const failView = this.node.getChildByName("FightFail");
 
-        const animView = isWin ? winView : failView;
+        let animView = null;
+        if (isWin) {
+            animView = winView;
+            failView.active = false;
+        } else {
+            winView.active = false;
+            animView = failView;
+        }
         animView.active = true;
         animView.setPosition(v3(0, 100, 0));
         tween()
@@ -25,13 +31,7 @@ export class OuterFightResultView extends Component {
             .start();
     }
 
-    start() {
+    start() {}
 
-    }
-
-    update(deltaTime: number) {
-        
-    }
+    update(deltaTime: number) {}
 }
-
-

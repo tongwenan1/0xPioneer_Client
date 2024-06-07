@@ -132,7 +132,6 @@ export class MapPioneer extends Component {
             this._eventingView.active = false;
             this._eventWaitedView.active = false;
             this._fightView.node.active = false;
-            this._fightResultView.node.active = false;
 
             switch (this._model.actionType) {
                 case MapPioneerActionType.dead:
@@ -473,17 +472,13 @@ export class MapPioneer extends Component {
         this._fightResultView.node.active = true;
         if (this._model.fightResultWin) {
             GameMusicPlayMgr.playFightWinEffect();
-            console.log('exce step6: ' + DataMgr.s.userInfo.data.rookieStep + ", defnd: " + this._fightDefenderOriginalData.id);
-            if (DataMgr.s.userInfo.data.rookieStep == RookieStep.TASK_EXPLAIN && this._fightDefenderOriginalData.id == "gangster_1") {
-                console.log("exce step7");
-                DataMgr.s.userInfo.finishRookieStep();
+            if (DataMgr.s.userInfo.data.rookieStep == RookieStep.ENEMY_FIGHT && this._fightDefenderOriginalData.id == "gangster_1") {
+                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_FIGHT_ENEMY_WIN);
             }
         } else {
             GameMusicPlayMgr.playFightFailEffect();
         }
-        console.log("exce step8");
         this._fightResultView.showResult(this._model.fightResultWin, () => {
-            console.log("exce step9");
             NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
                 attacker: {
                     name: this._fightAttackerOrigianlData.name,

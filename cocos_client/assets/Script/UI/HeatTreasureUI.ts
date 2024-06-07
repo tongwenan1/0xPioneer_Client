@@ -1,29 +1,28 @@
 import { _decorator, Component, Node, instantiate, director, BoxCharacterController, Label, Layout, UITransform, ProgressBar, Button, tween, v3 } from "cc";
 import { LanMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
-import { TreasureGettedUI } from "./TreasureGettedUI";
 import { UIHUDController } from "./UIHUDController";
 import BoxInfoConfig from "../Config/BoxInfoConfig";
 import { BoxInfoConfigData } from "../Const/BoxInfo";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
-import ArtifactData from "../Model/ArtifactData";
-import { NetworkMgr } from "../Net/NetworkMgr";
-import ItemData from "../Const/Item";
-import ViewController from "../BasicView/ViewController";
 import ConfigConfig from "../Config/ConfigConfig";
-import { ConfigType, WorldBoxThresholdParam } from "../Const/Config";
-import CommonTools from "../Tool/CommonTools";
+import { ConfigType, ExploreForOneBoxParam, PiotToHeatCoefficientParam, WorldBoxThresholdParam } from "../Const/Config";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
-import { RookieGuide } from "./RookieGuide/RookieGuide";
 import { RookieStep } from "../Const/RookieDefine";
+import { RookieStepMaskUI } from "./RookieGuide/RookieStepMaskUI";
+import { NetworkMgr } from "../Net/NetworkMgr";
+import { ResourceCorrespondingItem } from "../Const/ConstDefine";
+import ItemData from "../Const/Item";
+import TalkConfig from "../Config/TalkConfig";
+import { DialogueUI } from "./Outer/DialogueUI";
 const { ccclass, property } = _decorator;
 
 @ccclass("HeatTreasureUI")
 export class HeatTreasureUI extends Component {
-    private _maxthreshold: number = 0;
+    private _boxDatas: BoxInfoConfigData[] = [];
 
     private _boxContent: Node = null;
     private _boxItem: Node = null;
@@ -35,8 +34,10 @@ export class HeatTreasureUI extends Component {
 
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._refreshUI, this);
 
-        NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_HEAT_CONVERT, this._onRookieConvertHeat, this);
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_HEAT_BOX, this._onRookieTapBox, this);
     }
     protected start(): void {
         this._refreshUI();
@@ -45,13 +46,30 @@ export class HeatTreasureUI extends Component {
     protected onDestroy(): void {
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._refreshUI, this);
 
-        NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_HEAT_CONVERT, this._onRookieConvertHeat, this);
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_HEAT_BOX, this._onRookieTapBox, this);
     }
 
     update(deltaTime: number) {}
 
     private _refreshUI() {
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+
+        const treasureProgressView = this.node.getChildByPath("__ViewContent/Content/ProgressBar");
+        const detailButton = this.node.getChildByPath("__ViewContent/Content/DetailButton");
+        const questionButton = this.node.getChildByPath("__ViewContent/Content/QuestionButton");
+
+        treasureProgressView.active = false;
+        detailButton.active = false;
+        questionButton.active = false;
+
+        if (rookieStep >= RookieStep.NPC_TALK_4) {
+            treasureProgressView.active = true;
+            detailButton.active = true;
+            questionButton.active = true;
+        }
         //------------------------------------------ heat
         const heatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
         const worldBoxThreshold: number[] = (ConfigConfig.getConfig(ConfigType.WorldBoxThreshold) as WorldBoxThresholdParam).thresholds;
@@ -75,16 +93,23 @@ export class HeatTreasureUI extends Component {
 
         //------------------------------------------ box
         let exploreValue: number = DataMgr.s.userInfo.data.exploreProgress;
-        exploreValue = 223
-        const perBoxNeedExploreValue: number = 100;
-        const boxNum: number = 4;
-        const boxRanks: number[] = [0, 0, 0, 0];
-        const exploreTotalValue: number = perBoxNeedExploreValue * boxNum;
-        for (let i = 0; i < boxRanks.length; i++) {
-            if (exploreValue >= perBoxNeedExploreValue * (i + 1)) {
-                boxRanks[i] = CommonTools.getRandomInt(1, 5);
+        const perBoxNeedExploreValue: number = (ConfigConfig.getConfig(ConfigType.ExploreForOneBox) as ExploreForOneBoxParam).value;
+
+        let isFinishRookie: boolean = rookieStep == RookieStep.FINISH;
+        this._boxDatas = [];
+        if (isFinishRookie) {
+        } else {
+            for (let i = 1; i <= 3; i++) {
+                this._boxDatas.push(BoxInfoConfig.getById("900" + i));
             }
+            if (rookieStep >= RookieStep.OPNE_BOX_2) {
+                exploreValue = perBoxNeedExploreValue * 2;
+            } else if (rookieStep >= RookieStep.NPC_TALK_4) {
+                exploreValue = perBoxNeedExploreValue;
+            } 
         }
+        const boxNum: number = this._boxDatas.length;
+        const exploreTotalValue: number = perBoxNeedExploreValue * boxNum;
 
         const boxContentWidth: number = this._boxContent.getComponent(UITransform).width;
 
@@ -92,8 +117,9 @@ export class HeatTreasureUI extends Component {
 
         this._boxContent.removeAllChildren();
         for (let i = 0; i < boxNum; i++) {
-            const rank = boxRanks[i];
+            const rank = isFinishRookie ? 3 : 0;
             let item = instantiate(this._boxItem);
+            item.name = "HEAT_TREASURE_" + i;
             item.setParent(this._boxContent);
 
             let treasureView = null;
@@ -104,8 +130,8 @@ export class HeatTreasureUI extends Component {
                 }
             }
             if (treasureView != null) {
-                treasureView.getChildByName("Common").active = rank <= 0;
-                treasureView.getChildByName("Light").active = rank > 0;
+                treasureView.getChildByName("Common").active = exploreValue < ((i + 1) * perBoxNeedExploreValue);
+                treasureView.getChildByName("Light").active = exploreValue >= ((i + 1) * perBoxNeedExploreValue);
                 if (rank > 0) {
                     if (treasureView["actiontween"] == null) {
                         treasureView["actiontween"] = tween()
@@ -137,32 +163,29 @@ export class HeatTreasureUI extends Component {
     private async onTapBoxItem(event: Event, customEventData: string) {
         GameMusicPlayMgr.playTapButtonEffect();
         const index = parseInt(customEventData);
-        // 0-no 1-can 2-getted
-        let getStatus: number = 0;
-        // if (DataMgr.s.userInfo.data.treasureDidGetRewards.indexOf(data.id) != -1) {
-        //     getStatus = 2;
-        // } else if (DataMgr.s.userInfo.data.exploreProgress >= data.threshold) {
-        //     getStatus = 1;
-        // }
-        if (getStatus == 2) {
-        } else if (getStatus == 1) {
-            // const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);
-            // if (result.success) {
-            //     result.node.getComponent(TreasureGettedUI).dialogShow(data, (gettedData: { boxId: string; items: ItemData[]; artifacts: ArtifactData[]; subItems: ItemData[] }) => {
-            //         DataMgr.setTempSendData("player_treasure_open_res", {
-            //             boxId: gettedData.boxId,
-            //             items: gettedData.items,
-            //             artifacts: gettedData.artifacts,
-            //             subItems: gettedData.subItems
-            //         });
-            //         NetworkMgr.websocketMsg.player_treasure_open({ boxId: gettedData.boxId });
-            //     });
-            // }
-        } else if (getStatus == 0) {
-            // useLanMgr
-            UIHUDController.showCenterTip(LanMgr.getLanById("200002"));
-            // UIHUDController.showCenterTip("Please explore more to get it");
+        if (index < 0 || index > this._boxDatas.length - 1) {
+            return;
         }
+        const data = this._boxDatas[index];
+        if (DataMgr.s.userInfo.data.rookieStep != RookieStep.FINISH) {
+            // rookie get box
+            NetworkMgr.websocketMsg.player_worldbox_beginner_open({
+                boxIndex: index,
+            });
+        }
+    }
+    private onTapConvertPiotToHeat() {
+        const piotNum: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Gold);
+        const coefficient: number = (ConfigConfig.getConfig(ConfigType.PiotToHeatCoefficient) as PiotToHeatCoefficientParam).coefficient;
+        if (piotNum * coefficient < 1) {
+            //useLanMgr
+            UIHUDController.showCenterTip("Please get more PIOT");
+            return;
+        }
+        const converNum: number = Math.floor(piotNum * coefficient);
+        NetworkMgr.websocketMsg.player_piot_to_heat({
+            piotNum: converNum * (1 / coefficient),
+        });
     }
     private onTapDetail() {
         GameMusicPlayMgr.playTapButtonEffect();
@@ -174,21 +197,13 @@ export class HeatTreasureUI extends Component {
     }
 
     //----------------------------------- notification
-    private _onRookieStepChange() {
-
-        const treasureProgressView = this.node.getChildByPath("__ViewContent/Content/ProgressBar");
-        const detailButton = this.node.getChildByPath("__ViewContent/Content/DetailButton");
-        const questionButton = this.node.getChildByPath("__ViewContent/Content/QuestionButton");
-
-        treasureProgressView.active = false;
-        detailButton.active = false;
-        questionButton.active = false;
-
-        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (rookieStep >= RookieStep.HEAT_BOX_SHOW) {
-            treasureProgressView.active = true;
-            detailButton.active = true;
-            questionButton.active = true;
+    private _onRookieConvertHeat() {
+        this.onTapConvertPiotToHeat();
+    }
+    private _onRookieTapBox(data: { tapIndex: string }) {
+        if (data == null || data.tapIndex == null) {
+            return;
         }
+        this.onTapBoxItem(null, data.tapIndex);
     }
 }

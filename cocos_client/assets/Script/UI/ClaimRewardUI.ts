@@ -25,16 +25,16 @@ export class ClaimRewardUI extends Component {
                 const data = this._boxDatas[i];
                 // 0-no 1-can 2-getted
                 let getStatus: number = 0;
-                if (DataMgr.s.userInfo.data.treasureDidGetRewards.indexOf(data.id) != -1) {
-                    getStatus = 2;
-                } else if (value >= data.threshold) {
-                    getStatus = 1;
-                }
+                // if (DataMgr.s.userInfo.data.treasureDidGetRewards.indexOf(data.id) != -1) {
+                //     getStatus = 2;
+                // } else if (value >= data.threshold) {
+                //     getStatus = 1;
+                // }
                 this._boxViews[i].getChildByPath("Treasure").active = getStatus != 2;
                 if (getStatus != 2) {
                     for (let j = 0; j < 3; j++) {
                         const treasureView = this._boxViews[i].getChildByPath("Treasure/Treasure_box_" + j);
-                        treasureView.active = j == this._boxDatas[i].icon;
+                        // treasureView.active = j == this._boxDatas[i].icon;
                         if (treasureView.active) {
                             treasureView.getChildByName("Common").active = getStatus == 0;
                             treasureView.getChildByName("Light").active = getStatus == 1;
@@ -89,13 +89,13 @@ export class ClaimRewardUI extends Component {
             item.active = true;
             item.setParent(this.RewardBoxArr);
             for (let j = 0; j < 3; j++) {
-                item.getChildByPath("Treasure/Treasure_box_" + j).active = j == this._boxDatas[i].icon;
+                // item.getChildByPath("Treasure/Treasure_box_" + j).active = j == this._boxDatas[i].icon;
             }
-            item.getChildByName("Progress").getComponent(Label).string = this._boxDatas[i].threshold.toString();
-            item.getChildByName("Treasure").getComponent(Button).clickEvents[0].customEventData = i.toString();
-            this._boxViews.push(item);
-            item["__fromthreshold"] = beginThresholdValue + this._boxDatas[i].threshold;
-            this._maxthreshold = Math.max(this._maxthreshold, this._boxDatas[i].threshold);
+            // item.getChildByName("Progress").getComponent(Label).string = this._boxDatas[i].threshold.toString();
+            // item.getChildByName("Treasure").getComponent(Button).clickEvents[0].customEventData = i.toString();
+            // this._boxViews.push(item);
+            // item["__fromthreshold"] = beginThresholdValue + this._boxDatas[i].threshold;
+            // this._maxthreshold = Math.max(this._maxthreshold, this._boxDatas[i].threshold);
         }
         const parentWidth = this.RewardBoxArr.getComponent(UITransform).width;
         for (const boxItem of this._boxViews) {
@@ -117,11 +117,11 @@ export class ClaimRewardUI extends Component {
         const data = this._boxDatas[index];
         // 0-no 1-can 2-getted
         let getStatus: number = 0;
-        if (DataMgr.s.userInfo.data.treasureDidGetRewards.indexOf(data.id) != -1) {
-            getStatus = 2;
-        } else if (DataMgr.s.userInfo.data.exploreProgress >= data.threshold) {
-            getStatus = 1;
-        }
+        // if (DataMgr.s.userInfo.data.treasureDidGetRewards.indexOf(data.id) != -1) {
+        //     getStatus = 2;
+        // } else if (DataMgr.s.userInfo.data.exploreProgress >= data.threshold) {
+        //     getStatus = 1;
+        // }
         if (getStatus == 2) {
         } else if (getStatus == 1) {
             // const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);

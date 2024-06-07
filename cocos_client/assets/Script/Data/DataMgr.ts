@@ -2,7 +2,14 @@ import NotificationMgr from "../Basic/NotificationMgr";
 import { InnerBuildingType, MapBuildingType } from "../Const/BuildingDefine";
 import ItemData, { ItemConfigType, ItemType } from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
-import { MINING_FINISHED_DATA, MapNpcPioneerObject, MapPioneerActionType, MapPioneerEventAttributesChangeType, MapPioneerType, MapPlayerPioneerObject } from "../Const/PioneerDefine";
+import {
+    MINING_FINISHED_DATA,
+    MapNpcPioneerObject,
+    MapPioneerActionType,
+    MapPioneerEventAttributesChangeType,
+    MapPioneerType,
+    MapPlayerPioneerObject,
+} from "../Const/PioneerDefine";
 import { c2s_user, s2c_user } from "../Net/msg/WebsocketMsg";
 import CLog from "../Utils/CLog";
 import { RunData } from "./RunData";
@@ -89,6 +96,14 @@ export class DataMgr {
         if (localData.heatValue.currentHeatValue != p.info.heatValue.currentHeatValue) {
             NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_HEAT);
         }
+    };
+    public static player_rookie_update_res = (e: any) => {
+        const p: s2c_user.Iplayer_rookie_update_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        DataMgr.s.userInfo.data.rookieStep = p.rookieStep;
+        NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
     };
     //------------------------------------- item
     public static storhouse_change = async (e: any) => {
@@ -615,10 +630,6 @@ export class DataMgr {
         DataMgr.s.nftPioneer.NFTForgetSkill(p.nftData);
     };
 
-    public static player_rookie_finish_res = (e: any) => {
-        DataMgr.s.userInfo.finishRookie();
-    };
-
     public static player_lvlup_change = (e: any) => {
         const p: s2c_user.Iplayer_lvlup_change = e.data;
         DataMgr.s.userInfo.data.level = p.newLv;
@@ -660,6 +671,18 @@ export class DataMgr {
             DataMgr.s.task.loadObj();
             NotificationMgr.triggerEvent(NotificationName.TASK_LIST);
         }
+    };
+    public static user_task_action_talk = async (e: any) => {
+        let p: s2c_user.Iuser_task_action_talk = e.data;
+        const talkConfig = TalkConfig.getById(p.talkId);
+        if (talkConfig == null) {
+            return;
+        }
+        const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(DialogueUI).dialogShow(talkConfig);
     };
 
     //------------------------------------- settlement

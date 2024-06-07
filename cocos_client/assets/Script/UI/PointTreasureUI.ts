@@ -112,72 +112,72 @@ export class PointTreasureUI extends ViewController {
     }
 
     private _initTreasure() {
-        let beginThresholdValue: number = 0;
-        for (let i = 0; i < this._boxDatas.length; i++) {
-            let item = instantiate(this._treasureItem);
-            item.setParent(this._treasureContent);
-            for (let j = 1; j <= 5; j++) {
-                item.getChildByPath("Treasure/Treasure_box_" + j).active = j == this._boxDatas[i].icon + 1;
-            }
-            item.getChildByName("Progress").getComponent(Label).string = this._boxDatas[i].threshold.toString();
-            item.getChildByName("Treasure").getComponent(Button).clickEvents[0].customEventData = i.toString();
-            this._boxViews.push(item);
-            item["__fromthreshold"] = beginThresholdValue + this._boxDatas[i].threshold;
-            this._maxthreshold = Math.max(this._maxthreshold, this._boxDatas[i].threshold);
-        }
-        const parentWidth = this._treasureContent.getComponent(UITransform).width;
-        for (const boxItem of this._boxViews) {
-            boxItem.setPosition(v3(parentWidth * (boxItem["__fromthreshold"] / this._maxthreshold), boxItem.position.y, boxItem.position.z));
-        }
+        // let beginThresholdValue: number = 0;
+        // for (let i = 0; i < this._boxDatas.length; i++) {
+        //     let item = instantiate(this._treasureItem);
+        //     item.setParent(this._treasureContent);
+        //     for (let j = 1; j <= 5; j++) {
+        //         item.getChildByPath("Treasure/Treasure_box_" + j).active = j == this._boxDatas[i].icon + 1;
+        //     }
+        //     item.getChildByName("Progress").getComponent(Label).string = this._boxDatas[i].threshold.toString();
+        //     item.getChildByName("Treasure").getComponent(Button).clickEvents[0].customEventData = i.toString();
+        //     this._boxViews.push(item);
+        //     item["__fromthreshold"] = beginThresholdValue + this._boxDatas[i].threshold;
+        //     this._maxthreshold = Math.max(this._maxthreshold, this._boxDatas[i].threshold);
+        // }
+        // const parentWidth = this._treasureContent.getComponent(UITransform).width;
+        // for (const boxItem of this._boxViews) {
+        //     boxItem.setPosition(v3(parentWidth * (boxItem["__fromthreshold"] / this._maxthreshold), boxItem.position.y, boxItem.position.z));
+        // }
     }
     private _refreshUI() {
         let value = DataMgr.s.userInfo.data.exploreProgress;
 
         this._currentPointLabel.string = value.toString();
 
-        for (let i = 0; i < this._boxViews.length; i++) {
-            if (i < this._boxDatas.length) {
-                const data = this._boxDatas[i];
-                // 0-no 1-can 2-getted
-                let getStatus: number = 0;
-                if (DataMgr.s.userInfo.data.pointTreasureDidGetRewards.indexOf(data.id) != -1) {
-                    getStatus = 2;
-                } else if (value >= data.threshold) {
-                    getStatus = 1;
-                }
-                this._boxViews[i].getChildByPath("Treasure").active = getStatus != 2;
-                if (getStatus != 2) {
-                    for (let j = 1; j <= 5; j++) {
-                        const treasureView = this._boxViews[i].getChildByPath("Treasure/Treasure_box_" + j);
-                        treasureView.active = j == this._boxDatas[i].icon + 1;
-                        if (treasureView.active) {
-                            treasureView.getChildByName("Common").active = getStatus == 0;
-                            treasureView.getChildByName("Light").active = getStatus == 1;
-                            if (getStatus == 1) {
-                                if (treasureView["actiontween"] == null) {
-                                    treasureView["actiontween"] = tween()
-                                        .target(treasureView)
-                                        .repeatForever(
-                                            tween().sequence(
-                                                tween().by(0.05, { position: v3(0, 10, 0) }),
-                                                tween().by(0.1, { position: v3(0, -20, 0) }),
-                                                tween().by(0.1, { position: v3(0, 20, 0) }),
-                                                tween().by(0.05, { position: v3(0, -10, 0) }),
-                                                tween().delay(1)
-                                            )
-                                        )
-                                        .start();
-                                }
-                            } else {
-                                if (treasureView["actiontween"] != null) {
-                                    treasureView["actiontween"].stop();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // for (let i = 0; i < this._boxViews.length; i++) {
+        //     if (i < this._boxDatas.length) {
+        //         const data = this._boxDatas[i];
+        //         // 0-no 1-can 2-getted
+        //         let getStatus: number = 0;
+        //         if (DataMgr.s.userInfo.data.pointTreasureDidGetRewards.indexOf(data.id) != -1) {
+        //             getStatus = 2;
+        //         } else if (value >= data.threshold) {
+        //             getStatus = 1;
+        //         }
+        //         this._boxViews[i].getChildByPath("Treasure").active = getStatus != 2;
+        //         if (getStatus != 2) {
+        //             for (let j = 1; j <= 5; j++) {
+        //                 const treasureView = this._boxViews[i].getChildByPath("Treasure/Treasure_box_" + j);
+        //                 treasureView.active = j == this._boxDatas[i].icon + 1;
+        //                 if (treasureView.active) {
+        //                     treasureView.getChildByName("Common").active = getStatus == 0;
+        //                     treasureView.getChildByName("Light").active = getStatus == 1;
+        //                     if (getStatus == 1) {
+        //                         if (treasureView["actiontween"] == null) {
+        //                             treasureView["actiontween"] = tween()
+        //                                 .target(treasureView)
+        //                                 .repeatForever(
+        //                                     tween().sequence(
+        //                                         tween().by(0.05, { position: v3(0, 10, 0) }),
+        //                                         tween().by(0.1, { position: v3(0, -20, 0) }),
+        //                                         tween().by(0.1, { position: v3(0, 20, 0) }),
+        //                                         tween().by(0.05, { position: v3(0, -10, 0) }),
+        //                                         tween().delay(1)
+        //                                     )
+        //                                 )
+        //                                 .start();
+        //                         }
+        //                     } else {
+        //                         if (treasureView["actiontween"] != null) {
+        //                             treasureView["actiontween"].stop();
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         this._treasureProgress.progress = Math.min(1, value / this._maxthreshold);
     }
     //------------------------------------------ action
@@ -187,11 +187,11 @@ export class PointTreasureUI extends ViewController {
         const data = this._boxDatas[index];
         // 0-no 1-can 2-getted
         let getStatus: number = 0;
-        if (DataMgr.s.userInfo.data.pointTreasureDidGetRewards.indexOf(data.id) != -1) {
-            getStatus = 2;
-        } else if (DataMgr.s.userInfo.data.exploreProgress >= data.threshold) {
-            getStatus = 1;
-        }
+        // if (DataMgr.s.userInfo.data.pointTreasureDidGetRewards.indexOf(data.id) != -1) {
+        //     getStatus = 2;
+        // } else if (DataMgr.s.userInfo.data.exploreProgress >= data.threshold) {
+        //     getStatus = 1;
+        // }
         if (getStatus == 2) {
         } else if (getStatus == 1) {
             // const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);

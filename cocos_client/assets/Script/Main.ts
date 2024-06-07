@@ -169,6 +169,7 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("enter_game_res", DataMgr.enter_game_res);
 
         NetworkMgr.websocket.on("sinfo_change", DataMgr.sinfo_change);
+        NetworkMgr.websocket.on("player_rookie_update_res", DataMgr.player_rookie_update_res);
         // item changed
         NetworkMgr.websocket.on("storhouse_change", DataMgr.storhouse_change);
         // artifact
@@ -218,13 +219,13 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_nft_skill_learn_res", DataMgr.player_nft_skill_learn_res);
         NetworkMgr.websocket.on("player_nft_skill_forget_res", DataMgr.player_nft_skill_forget_res);
 
-        NetworkMgr.websocket.on("player_rookie_finish_res", DataMgr.player_rookie_finish_res);
         NetworkMgr.websocket.on("player_lvlup_change", DataMgr.player_lvlup_change);
 
         // task
         NetworkMgr.websocket.on("user_task_action_getnewtalk", DataMgr.user_task_action_getnewtalk);
         NetworkMgr.websocket.on("user_task_did_change", DataMgr.user_task_did_change);
         NetworkMgr.websocket.on("get_user_task_info_res", DataMgr.get_user_task_info_res);
+        NetworkMgr.websocket.on("user_task_action_talk", DataMgr.user_task_action_talk);
 
         //settlement
         NetworkMgr.websocket.on("get_user_settlement_info_res", DataMgr.get_user_settlement_info_res);

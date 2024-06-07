@@ -26,8 +26,11 @@ export enum ConfigType {
     WorldTreasureBoxRarity = "410007",
 
     PSYCToHeatCoefficient = "410005",
+    ExploreForOneBox = "410009",
 
-    MapDifficultCoefficient = "40001"
+    MapDifficultCoefficient = "40001",
+
+    PiotToHeatCoefficient = "430002",
 }
 
 export interface ConfigData {
@@ -101,7 +104,14 @@ export interface WorldTreasureBoxRarityParam extends ConfigData {
 export interface PSYCToHeatCoefficientParam extends ConfigData {
     coefficient: number;
 }
+export interface ExploreForOneBoxParam extends ConfigData {
+    value: number;
+}
 
 export interface MapDifficultCoefficientParam extends ConfigData {
+    coefficient: number;
+}
+
+export interface PiotToHeatCoefficientParam extends ConfigData {
     coefficient: number;
 }

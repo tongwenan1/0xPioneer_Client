@@ -43,6 +43,7 @@ import { OuterRebonView } from "./View/OuterRebonView";
 import GameMusicPlayMgr from "../../Manger/GameMusicPlayMgr";
 import { RookieStep } from "../../Const/RookieDefine";
 import { RookieStepMaskUI } from "../../UI/RookieGuide/RookieStepMaskUI";
+import RookieStepMgr from "../../Manger/RookieStepMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -158,12 +159,13 @@ export class OuterPioneerController extends ViewController {
 
         this._pioneerMap = new Map();
 
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_MAP_PIONEER, this._onRookieTapPioneer, this);
+
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_BEGIN_EYES, this._onRookieGuideBeginEyes, this);
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_THIRD_EYES, this._onRookieGuideThirdEyes, this);
 
         // talk
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_TALK_CHANGED, this._refreshUI, this);
-        NotificationMgr.addListener(NotificationName.TALK_FINISH, this._onTalkFinish, this);
         // action
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._onPioneerActionChanged, this);
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_STAY_POSITION_CHANGE, this._onPioneerStayPositionChanged, this);
@@ -182,18 +184,13 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
         // rebon
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_REBON_CHANGE, this._refreshUI, this);
-        // task
-        NotificationMgr.addListener(NotificationName.GAME_CAMERA_POSITION_CHANGED, this._changeCameraWorldPos, this);
-        // rookie
-        NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
     }
 
-    protected viewDidStart() {
+    protected async viewDidStart() {
         super.viewDidStart();
         this._refreshUI();
-        GameMainHelper.instance.mapInitOver();
         // checkRookie
-        this.scheduleOnce(() => {
+        this.scheduleOnce(async () => {
             const actionPioneer = DataMgr.s.pioneer.getCurrentPlayer();
             if (actionPioneer != null) {
                 // game camera pos
@@ -218,6 +215,8 @@ export class OuterPioneerController extends ViewController {
                     }
                 }
             }
+            await RookieStepMgr.instance().init();
+            GameMainHelper.instance.mapInitOver();
         });
     }
 
@@ -251,12 +250,13 @@ export class OuterPioneerController extends ViewController {
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_MAP_PIONEER, this._onRookieTapPioneer, this);
+
         NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_BEGIN_EYES, this._onRookieGuideBeginEyes, this);
         NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_THIRD_EYES, this._onRookieGuideThirdEyes, this);
 
         // talk
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_TALK_CHANGED, this._refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.TALK_FINISH, this._onTalkFinish, this);
         // action
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, this._onPioneerActionChanged, this);
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_STAY_POSITION_CHANGE, this._onPioneerStayPositionChanged, this);
@@ -276,9 +276,6 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.removeListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
         // rebon
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_REBON_CHANGE, this._refreshUI, this);
-        // rookie
-        NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
-        NotificationMgr.removeListener(NotificationName.GAME_CAMERA_POSITION_CHANGED, this._changeCameraWorldPos, this);
     }
 
     private _refreshUI() {
@@ -309,6 +306,7 @@ export class OuterPioneerController extends ViewController {
                     } else if (pioneer.type == MapPioneerType.hred) {
                         temple = instantiate(this.battleSmall);
                     }
+                    temple.name = "MAP_" + pioneer.id;
                     temple.setParent(decorationView);
                     firstInit = true;
                     this._pioneerMap.set(pioneer.id, temple);
@@ -502,6 +500,13 @@ export class OuterPioneerController extends ViewController {
     }
 
     //--------------------------------------------- notification
+    private _onRookieTapPioneer(data: { pioneerId: string }) {
+        const view = this._pioneerMap.get(data.pioneerId);
+        if (view == null) {
+            return;
+        }
+        this.getComponent(OuterTiledMapActionController)._clickOnMap(view.worldPosition);
+    }
     private _onRookieGuideBeginEyes() {
         const actionPioneer = DataMgr.s.pioneer.getCurrentPlayer();
         if (actionPioneer != null) {
@@ -516,7 +521,9 @@ export class OuterPioneerController extends ViewController {
                 view.refreshUI(actionPioneer);
                 UIPanelManger.inst.popPanelByName(UIName.RookieGuide);
 
-                DataMgr.s.userInfo.finishRookieStep();
+                NetworkMgr.websocketMsg.player_rookie_update({
+                    rookieStep: RookieStep.NPC_TALK_1,
+                });
                 // const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
                 // if (result.success) {
                 //     result.node.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), () => {
@@ -645,103 +652,5 @@ export class OuterPioneerController extends ViewController {
         this.scheduleOnce(() => {
             fightView.destroy();
         }, 5);
-    }
-
-    private async _changeCameraWorldPos(data: { pioneerId: string }) {
-        if (data == null || data.pioneerId == null) {
-            return;
-        }
-        if (!this._pioneerMap.has(data.pioneerId)) {
-            return;
-        }
-        const pioneer = DataMgr.s.pioneer.getById(data.pioneerId);
-        if (pioneer == undefined) {
-            return;
-        }
-        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (rookieStep == RookieStep.TASK_EXPLAIN || rookieStep == RookieStep.TASK_EXPLAIN_NEXT) {
-            const view = this._pioneerMap.get(data.pioneerId);
-            const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI);
-            if (!result.success) {
-                return;
-            }
-            result.node.getComponent(RookieStepMaskUI).configuration(true, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
-                console.log("exce step:" + rookieStep);
-                this.getComponent(OuterTiledMapActionController)._clickOnMap(view.worldPosition);
-            });
-            GameMainHelper.instance.tiledMapShadowErase(pioneer.stayPos);
-        }
-    }
-
-    private async _onRookieStepChange() {
-        const step: RookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (step == RookieStep.TALK_WITH_BEGIN_NPC) {
-            if (!this._pioneerMap.has("npc_0")) {
-                return;
-            }
-            const view = this._pioneerMap.get("npc_0");
-            const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI);
-            if (!result.success) {
-                return;
-            }
-            result.node.getComponent(RookieStepMaskUI).configuration(true, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
-                this.getComponent(OuterTiledMapActionController)._clickOnMap(view.worldPosition);
-            });
-        } else if (step == RookieStep.HEAT_EXPLAIN) {
-            const talkConfig = TalkConfig.getById("talk03");
-            if (talkConfig == null) {
-                return;
-            }
-            const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
-            if (!result.success) {
-                return;
-            }
-            result.node.getComponent(DialogueUI).dialogShow(talkConfig);
-        }
-    }
-    private async _onTalkFinish(data: { talkId: string }) {
-        const rookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (rookieStep == RookieStep.TALK_WITH_BEGIN_NPC) {
-            const acionPioneer = DataMgr.s.pioneer.getCurrentPlayer();
-            if (acionPioneer == undefined) {
-                return;
-            }
-            if (!this._pioneerMap.has(acionPioneer.id)) {
-                return;
-            }
-            NotificationMgr.triggerEvent(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, {
-                isFromGameView: true,
-                fromWorldPos: this._pioneerMap.get(acionPioneer.id).worldPosition,
-                targetItemId: ResourceCorrespondingItem.Gold,
-            });
-        } else if (rookieStep == RookieStep.HEAT_EXPLAIN) {
-            if (data.talkId == "talk03") {
-                const talkConfig = TalkConfig.getById("talk04");
-                if (talkConfig == null) {
-                    return;
-                }
-                const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
-                if (!result.success) {
-                    return;
-                }
-                result.node.getComponent(DialogueUI).dialogShow(talkConfig);
-            } else if (data.talkId == "talk04") {
-                DataMgr.s.userInfo.finishRookieStep();
-            }
-        } else if (rookieStep == RookieStep.TASK_EXPLAIN_NEXT) {
-            if (data.talkId == "talk17") {
-                const talkConfig = TalkConfig.getById("talk04");
-                if (talkConfig == null) {
-                    return;
-                }
-                const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
-                if (!result.success) {
-                    return;
-                }
-                result.node.getComponent(DialogueUI).dialogShow(talkConfig);
-            } else if (data.talkId == "talk04") {
-                DataMgr.s.userInfo.finishRookieStep();
-            }
-        }
     }
 }
