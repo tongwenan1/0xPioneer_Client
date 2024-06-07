@@ -317,5 +317,10 @@ export class MainUI extends ViewController {
     }
     private _onRookieTapTask() {
         this.onTapTaskList();
+        const item = UIPanelManger.inst.getPanelByName(UIName.TaskListUI);
+        if (item == null) {
+            return;
+        }
+        item.getComponent(TaskListUI).refreshUI();
     }
 }

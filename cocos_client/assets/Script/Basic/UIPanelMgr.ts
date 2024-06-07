@@ -110,6 +110,26 @@ export default class UIPanelManger extends Component {
         }
         return isShow;
     }
+    public getPanelByName(name: string) {
+        let itemIndex: number = this._gameQueue.findIndex((value: UIPanelQueueItem)=> {
+            return value.name == name;
+        });
+        if (itemIndex >= 0) {
+            return this._gameQueue[itemIndex].node;
+        }
+        itemIndex = this._uiQueue.findIndex((value: UIPanelQueueItem)=> {
+            return value.name == name;
+        });
+        if (itemIndex >= 0) {
+            return this._uiQueue[itemIndex].node;
+        }
+        itemIndex = this._hudQueue.findIndex((value: UIPanelQueueItem)=> {
+            return value.name == name;
+        });
+        if (itemIndex >= 0) {
+            return this._hudQueue[itemIndex].node;
+        }
+    }
 
     private static _inst: UIPanelManger = null;
     private _gameLayer: Node = null;
