@@ -1,14 +1,14 @@
 [
   {
     "__type__": "cc.AnimationClip",
-    "_name": "Transfer_Matrix_Group_B",
+    "_name": "Transfer_Matrix_Group_B_Fast",
     "_objFlags": 0,
     "__editorExtras__": {
       "embeddedPlayerGroups": []
     },
     "_native": "",
     "sample": 60,
-    "speed": 0.1,
+    "speed": 0.7,
     "wrapMode": 2,
     "enableTrsBlending": false,
     "_duration": 1,
