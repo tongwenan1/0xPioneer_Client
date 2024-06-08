@@ -1,17 +1,17 @@
 [
   {
     "__type__": "cc.AnimationClip",
-    "_name": "Cutscene_Camera_Ani",
+    "_name": "DoomGang_3P_Side_Walk_Loading_Sequence",
     "_objFlags": 0,
     "__editorExtras__": {
       "embeddedPlayerGroups": []
     },
     "_native": "",
     "sample": 60,
-    "speed": 1.5,
-    "wrapMode": 1,
+    "speed": 0.1,
+    "wrapMode": 2,
     "enableTrsBlending": false,
-    "_duration": 0.5,
+    "_duration": 0.06666666666666667,
     "_hash": 500763545,
     "_tracks": [
       {
@@ -27,7 +27,7 @@
     "_auxiliaryCurveEntries": []
   },
   {
-    "__type__": "cc.animation.RealTrack",
+    "__type__": "cc.animation.ObjectTrack",
     "_binding": {
       "__type__": "cc.animation.TrackBinding",
       "path": {
@@ -45,12 +45,12 @@
       {
         "__id__": 3
       },
-      "orthoHeight"
+      "spriteFrame"
     ]
   },
   {
     "__type__": "cc.animation.ComponentPath",
-    "component": "cc.Camera"
+    "component": "cc.Sprite"
   },
   {
     "__type__": "cc.animation.Channel",
@@ -59,43 +59,31 @@
     }
   },
   {
-    "__type__": "cc.RealCurve",
+    "__type__": "cc.ObjectCurve",
     "_times": [
       0,
-      0.5
+      0.016666666666666666,
+      0.03333333333333333,
+      0.05
     ],
     "_values": [
       {
-        "__type__": "cc.RealKeyframeValue",
-        "interpolationMode": 0,
-        "tangentWeightMode": 0,
-        "value": 540,
-        "rightTangent": 0,
-        "rightTangentWeight": 1,
-        "leftTangent": 0,
-        "leftTangentWeight": 1,
-        "easingMethod": 0,
-        "__editorExtras__": {
-          "tangentMode": 0
-        }
+        "__uuid__": "de6792c1-2181-4438-9db9-3fa2e1a4ba9e@f9941",
+        "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__type__": "cc.RealKeyframeValue",
-        "interpolationMode": 2,
-        "tangentWeightMode": 0,
-        "value": 360,
-        "rightTangent": 0,
-        "rightTangentWeight": 1,
-        "leftTangent": 0,
-        "leftTangentWeight": 1,
-        "easingMethod": 0,
-        "__editorExtras__": {
-          "tangentMode": 0
-        }
+        "__uuid__": "2b7ba8dd-cd91-4628-8719-06d5fdac443b@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "fece2bc8-4249-4d7a-bdfe-42a525bb2edd@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "2b7ba8dd-cd91-4628-8719-06d5fdac443b@f9941",
+        "__expectedType__": "cc.SpriteFrame"
       }
-    ],
-    "preExtrapolation": 1,
-    "postExtrapolation": 1
+    ]
   },
   {
     "__type__": "cc.AnimationClipAdditiveSettings",

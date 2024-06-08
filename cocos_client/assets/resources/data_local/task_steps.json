@@ -27,7 +27,7 @@
     ],
     "quit_con": null,
     "progress": 0,
-    "exp": 5
+    "exp": 0
   },
   "770102": {
     "id": "770102",
@@ -56,7 +56,7 @@
     ],
     "quit_con": null,
     "progress": 0,
-    "exp": 5
+    "exp": 0
   },
   "770103": {
     "id": "770103",
@@ -79,7 +79,7 @@
     ],
     "quit_con": null,
     "progress": 100,
-    "exp": 5
+    "exp": 0
   },
   "770104": {
     "id": "770104",
@@ -102,7 +102,7 @@
     ],
     "quit_con": null,
     "progress": 0,
-    "exp": 5
+    "exp": 0
   },
   "770105": {
     "id": "770105",
@@ -128,7 +128,7 @@
     ],
     "quit_con": null,
     "progress": 0,
-    "exp": 20
+    "exp": 0
   },
   "770106": {
     "id": "770106",
@@ -157,7 +157,7 @@
     ],
     "quit_con": null,
     "progress": 100,
-    "exp": 5
+    "exp": 0
   },
   "770107": {
     "id": "770107",
@@ -174,7 +174,7 @@
     "complete_action": null,
     "quit_con": null,
     "progress": 0,
-    "exp": 20
+    "exp": 0
   },
   "770201": {
     "id": "770201",
@@ -197,7 +197,7 @@
     ],
     "quit_con": null,
     "progress": 100,
-    "exp": 10
+    "exp": 0
   },
   "task0101": {
     "id": "task0101",
