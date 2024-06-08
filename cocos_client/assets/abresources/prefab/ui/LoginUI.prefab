@@ -173,7 +173,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "ada71e65-09c4-4043-a407-62e22fe8588e@f9941",
+      "__uuid__": "66954f16-6bcf-40c5-81bd-678e8f498aca@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -519,7 +519,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 117.31640625,
+      "width": 123.99609375,
       "height": 50.4
     },
     "_anchorPoint": {
