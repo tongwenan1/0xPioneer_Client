@@ -1443,177 +1443,181 @@
     "id": "502007",
     "eng": "Artisan Tom"
   },
+  "502008": {
+    "id": "502008",
+    "eng": "Scavenger Unknow"
+  },
   "503001": {
     "id": "503001",
-    "eng": "Finally you are here."
+    "eng": "Finally you are awake!"
   },
   "503002": {
     "id": "503002",
-    "eng": "Who the hell are you?"
+    "eng": "You saved me? Who are you?"
   },
   "503003": {
     "id": "503003",
-    "eng": "Tinuvel, a prophetess. I've seen the vision of you leading this city to a prosperous future."
+    "eng": "Tinuvel, a prophetess. I've seen the vision of you leading this city to a prosperous future, and your salvation by me is the guidance of fate."
   },
   "503004": {
     "id": "503004",
-    "eng": "What the hell? I'm just a passerby. I'm not even sure if I can get a place to stay in this town tonight!"
+    "eng": "What the hell? I’m just a normal one who just woke up. Your words are a bit too much information for me!"
   },
   "503005": {
     "id": "503005",
-    "eng": "The lord here was just killed by gangsters, and now the town is in complete chaos."
+    "eng": "Don’t panic, I will guide you forward."
   },
   "503006": {
     "id": "503006",
-    "eng": "I will provide for your basic needs, but in exchange, you are required to take up the mantle of responsibility. I will guide you as you need."
+    "eng": "What do you want me to do?"
   },
   "503007": {
     "id": "503007",
-    "eng": "Well, sounds not bad. So what should I do now?"
+    "eng": "The town’s lord was just killed by villains. It’s chaos here."
   },
   "503008": {
     "id": "503008",
-    "eng": "See the gangsters over there? GET RID OF THE GANGSTERS!"
+    "eng": "You’re not expecting me to fight in this state, are you?"
   },
   "503009": {
     "id": "503009",
-    "eng": "You need to GET RID OF THE GANGSTERS!"
+    "eng": "That’d be unfair. Take this."
   },
   "503010": {
     "id": "503010",
-    "eng": "Wow! A new face!"
+    "eng": "PIOT? "
   },
   "503011": {
     "id": "503011",
-    "eng": "And who the hell are you?"
+    "eng": "Whoever owns PIOT can rule the world."
   },
   "503012": {
     "id": "503012",
-    "eng": "Just a survivor in this disaster. And you?"
+    "eng": "Any practical use?!"
   },
   "503013": {
     "id": "503013",
-    "eng": "I made a deal with a prophetess and am going to repel the gangsters over there. You wanna help me? You'll get your share of rewards."
+    "eng": "Sure, PIOT can increase HEAT value, speed up actions, or get extra resources."
   },
   "503014": {
     "id": "503014",
-    "eng": "Hahaha, the prophetess? Called Tinuvel?"
+    "eng": "What is HEAT value?"
   },
   "503015": {
     "id": "503015",
-    "eng": "...You know her?"
+    "eng": "Let me show you how to use PIOT first, then I’ll explain HEAT value."
   },
   "503016": {
     "id": "503016",
-    "eng": "A prophetess alone without even one follower? Come on! She's just a selfish priestess."
+    "eng": "HEAT value is tied to treasure chests. The higher it is, the more chests you can open daily, and the better rewards you get."
   },
   "503017": {
     "id": "503017",
-    "eng": "So...I was tricked by her?"
+    "eng": "What’s a treasure chest?"
   },
   "503018": {
     "id": "503018",
-    "eng": "Of Course, dude. But you are not the only one. we are also pawns in her plan."
+    "eng": "It’s how you earn in this world. All users share the rewards in the chest, so you need to get the good stuff before others."
   },
   "503019": {
     "id": "503019",
-    "eng": "It's not too late to wake up now. As long as you can KILL THAT PROPHETESS... I think our cooperation will be much more trustworthy."
+    "eng": "How to open it?"
   },
   "503020": {
     "id": "503020",
-    "eng": "KILL THE PROPHETES and cooperate with doomsdayGang?"
+    "eng": "I’ve given you a key. Try opening a chest"
   },
   "503021": {
     "id": "503021",
-    "eng": "Nice scenery, isn't it?"
+    "eng": "What’s this?"
   },
   "503022": {
     "id": "503022",
-    "eng": "Maybe. But it will be even better when the herd runs by."
+    "eng": "It’s PSYC, the world’s spiritual energy. You need it for your actions."
   },
   "503023": {
     "id": "503023",
-    "eng": "Sounds like you are experienced. Do you need help?"
+    "eng": "All actions? If it runs out, am I done for? Can I ask you for more?"
   },
   "503024": {
     "id": "503024",
-    "eng": "If you want...Come on then!"
+    "eng": "There’s no surplus. You saw that PSYC can be obtained from chests. You should do your task now. After that, you’ll get my reward."
   },
   "503025": {
     "id": "503025",
-    "eng": "HUNT THE HERD before they run away. Confident?"
+    "eng": "Sounds good. What should I do now?"
   },
   "503026": {
     "id": "503026",
-    "eng": "Are you confident to HUNT THE HERD before they run away?"
+    "eng": "See those villains? Take them out!"
   },
   "503027": {
     "id": "503027",
-    "eng": "Tinuvel, honestly, I don't know whether I can trust you."
+    "eng": "Good job! From now on, you’re in charge of guarding the town."
   },
   "503028": {
     "id": "503028",
-    "eng": "I expect that. You don't need my guidance. You can rely on yourself."
+    "eng": "Just like that?"
   },
   "503029": {
     "id": "503029",
-    "eng": "But how?"
+    "eng": "I believe in you!"
   },
   "503030": {
     "id": "503030",
-    "eng": "See that ruin? It was left by last lord."
+    "eng": "What’s my reward?"
   },
   "503031": {
     "id": "503031",
-    "eng": "EXPLORE THE RUIN and show us that you are the chosen one."
+    "eng": "Your action gained EXPLORATION value. When it’s full, I’ll give you a key to open a chest for rewards."
   },
   "503032": {
     "id": "503032",
-    "eng": "EXPLORE THE RUIN and show something to the prophetess"
+    "eng": "So, consuming PSYC gets EXPLORATION value, consuming PIOT gets HEAT value, and both lead to opening more chests and getting better stuff?"
   },
   "503033": {
     "id": "503033",
-    "eng": "Who are you...(Saw the token of the lord)"
+    "eng": "Yes, getting rewards from chests is key to survival. How to increase the rewards depends on your actions."
   },
   "503034": {
     "id": "503034",
-    "eng": "Well...You must be the new lord. Please command me if you need!"
+    "eng": "You have a new key now. Open a new chest and see what you get!"
   },
   "503035": {
     "id": "503035",
-    "eng": "REPEL THE GANGSTERS outside the town!"
+    "eng": "You’re indeed the chosen one, getting both psyc and PIOT."
   },
   "503036": {
     "id": "503036",
-    "eng": "Yes, sir!"
+    "eng": "Can I get better stuff?"
   },
   "503037": {
     "id": "503037",
-    "eng": "The secretGuard is going to REPEL THE GANGSTERS outside the town!"
+    "eng": "If you want better stuff, check out the town. Building it improves its CIVILIZATION level."
   },
   "503038": {
     "id": "503038",
-    "eng": "Tinuvel, the big one is coming. Any idea?"
+    "eng": "What’s the function of CIVILIZATION level?"
   },
   "503039": {
     "id": "503039",
-    "eng": "I've already prepared for it."
+    "eng": "It improves the quality of rewards in the chest."
   },
   "503040": {
     "id": "503040",
-    "eng": "There is a stronghold there, where you can AMBUSH THEM."
+    "eng": "So everything’s about the chest. Where does it come from?"
   },
   "503041": {
     "id": "503041",
-    "eng": "You are going to AMBUSH THE BIG TEAM."
+    "eng": "Exploring this world with questions is fun. You’ll find out the truth someday."
   },
   "503042": {
     "id": "503042",
-    "eng": "Lucky guy, we're not going to kill you."
+    "eng": "It seems that collecting resources can really gain EXPLORATION value."
   },
   "503043": {
     "id": "503043",
-    "eng": "But you will act as our agent and TAKE OVER THE TOWN."
+    "eng": "Now go back and level up the building."
   },
   "503044": {
     "id": "503044",
@@ -1733,47 +1737,83 @@
   },
   "503073": {
     "id": "503073",
-    "eng": "talk"
+    "eng": "Upgrading buildings requires resources, and there are not enough resources to level up."
   },
   "503074": {
     "id": "503074",
-    "eng": "talk"
+    "eng": "The improvement of the building level will effectively increase our income speed, and it can also improve the CIVILIZATION level. Now let’s go and collect some resources for upgrading."
   },
   "503075": {
     "id": "503075",
-    "eng": "talk"
+    "eng": "Excuse me, did you come from the north?"
+  },
+  "503076": {
+    "id": "503076",
+    "eng": "Yes, is there anything?"
+  },
+  "503077": {
+    "id": "503077",
+    "eng": "Did you see any resources that can be mined over there?"
+  },
+  "503078": {
+    "id": "503078",
+    "eng": "There seems to be some at the foot of the mountain over there, you can go and see."
+  },
+  "503079": {
+    "id": "503079",
+    "eng": "Wow! Thank you!"
+  },
+  "503080": {
+    "id": "503080",
+    "eng": "Upgrading buildings seems to not only improve civilization level, but also increase exploration value. This is great, you can open a new treasure chest."
+  },
+  "503081": {
+    "id": "503081",
+    "eng": "I am indeed the chosen one, and someone will stuff a pillow when I am sleepy."
+  },
+  "503082": {
+    "id": "503082",
+    "eng": "Now that the resources for building the town are available, let’s try to level up this barracks building again."
+  },
+  "503083": {
+    "id": "503083",
+    "eng": "With the barracks, you can recruit soldiers. In this way, if you are injured in battle, there will be soldiers to supplement you."
+  },
+  "503084": {
+    "id": "503084",
+    "eng": "But it seems that if you want to develop the town and improve civilization, you still need to explore and collect as much as possible. Just now I saw a relic far outside the town, let’s go and explore it, maybe there will be some unexpected gains."
   },
   "504001": {
     "id": "504001",
-    "eng": "Easy job"
+    "eng": "Well…I'll try"
   },
   "504002": {
     "id": "504002",
-    "eng": "Deal!"
+    "eng": "Let me see…"
   },
   "504003": {
     "id": "504003",
-    "eng": "Refuse"
+    "eng": "OK"
   },
   "504004": {
     "id": "504004",
-    "eng": "Of course!"
+    "eng": "OK"
   },
   "504005": {
     "id": "504005",
-    "eng": "Nope"
+    "eng": "All right"
   },
   "504006": {
     "id": "504006",
-    "eng": "I'm on it"
+    "eng": "What the hell?"
   },
   "504007": {
     "id": "504007",
-    "eng": "Seriously?"
+    "eng": "OK"
   },
   "504008": {
     "id": "504008",
-    "eng": "Nice!"
+    "eng": "All right"
   },
   "504009": {
     "id": "504009",
