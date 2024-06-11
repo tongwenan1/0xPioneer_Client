@@ -1,3 +1,4 @@
+import { share } from "../Net/msg/WebsocketMsg";
 import { InnerBuildingType, UserInnerBuildInfo } from "./BuildingDefine";
 import { RookieStep } from "./RookieDefine";
 
@@ -43,4 +44,6 @@ export interface UserInfoObject {
     energyGetLimitTimes: number;
 
     wormholeDefenderIds: Map<number, string>;
+
+    boxes: share.box_data[];
 }

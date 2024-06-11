@@ -2905,7 +2905,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Light",
+    "_name": "Open",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -2927,7 +2927,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 0,
+      "y": 2,
       "z": 0
     },
     "_lrot": {
@@ -3004,7 +3004,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "786d9c43-73b3-4b21-a371-54eaa30cd507@f9941",
+      "__uuid__": "baf37aba-5ba3-433b-8ab1-8f5f04e9771b@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -3076,6 +3076,8 @@
       "__id__": 0
     },
     "fileId": "0cYoLog61OG4HuNR3wj1ZQ",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {

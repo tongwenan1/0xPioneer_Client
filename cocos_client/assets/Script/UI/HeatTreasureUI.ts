@@ -1,23 +1,18 @@
 import { _decorator, Component, Node, instantiate, director, BoxCharacterController, Label, Layout, UITransform, ProgressBar, Button, tween, v3 } from "cc";
-import { LanMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { UIHUDController } from "./UIHUDController";
-import BoxInfoConfig from "../Config/BoxInfoConfig";
 import { BoxInfoConfigData } from "../Const/BoxInfo";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import ConfigConfig from "../Config/ConfigConfig";
-import { ConfigType, ExploreForOneBoxParam, PiotToHeatCoefficientParam, WorldBoxThresholdParam } from "../Const/Config";
+import { BoxNumByHeatParam, ConfigType, ExploreForOneBoxParam, PiotToHeatCoefficientParam, WorldBoxThresholdParam } from "../Const/Config";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
 import { RookieStep } from "../Const/RookieDefine";
-import { RookieStepMaskUI } from "./RookieGuide/RookieStepMaskUI";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
-import ItemData from "../Const/Item";
-import TalkConfig from "../Config/TalkConfig";
-import { DialogueUI } from "./Outer/DialogueUI";
+import { share } from "../Net/msg/WebsocketMsg";
 const { ccclass, property } = _decorator;
 
 @ccclass("HeatTreasureUI")
@@ -94,14 +89,47 @@ export class HeatTreasureUI extends Component {
         //------------------------------------------ box
         let exploreValue: number = DataMgr.s.userInfo.data.exploreProgress;
         const perBoxNeedExploreValue: number = (ConfigConfig.getConfig(ConfigType.ExploreForOneBox) as ExploreForOneBoxParam).value;
+        const boxThreshold: number[] = (ConfigConfig.getConfig(ConfigType.BoxNumByHeat) as BoxNumByHeatParam).thresholds;
+        let heatLevel: number = 0;
+        for (let i = worldBoxThreshold.length - 1; i >= 0; i--) {
+            if (heatValue >= worldBoxThreshold[i]) {
+                heatLevel = i;
+                break;
+            }
+        }
+        const maxBoxNum: number = boxThreshold[heatLevel];
 
         let isFinishRookie: boolean = rookieStep == RookieStep.FINISH;
-        this._boxDatas = [];
+        let worldBoxes: { rank: number; isOpen: boolean }[] = [];
         if (isFinishRookie) {
-        } else {
-            for (let i = 1; i <= 3; i++) {
-                this._boxDatas.push(BoxInfoConfig.getById("900" + i));
+            const boxInfo: share.box_data[] = DataMgr.s.userInfo.data.boxes;
+            console.log("exce boxInfo: ", boxInfo);
+            for (let i = 0; i < maxBoxNum; i++) {
+                if (boxInfo[i] == undefined) {
+                    worldBoxes.push({
+                        rank: 0,
+                        isOpen: false,
+                    });
+                } else {
+                    let tempRank: number = 0;
+                    if (boxInfo[i].id == "90001") {
+                        tempRank = 1;
+                    } else if (boxInfo[i].id == "90002") {
+                        tempRank = 2;
+                    } else if (boxInfo[i].id == "90003") {
+                        tempRank = 3;
+                    } else if (boxInfo[i].id == "90004") {
+                        tempRank = 4;
+                    } else if (boxInfo[i].id == "90005") {
+                        tempRank = 5;
+                    }
+                    worldBoxes.push({
+                        rank: tempRank,
+                        isOpen: boxInfo[i].opened,
+                    });
+                }
             }
+        } else {
             if (rookieStep >= RookieStep.OPEN_BOX_3) {
                 exploreValue = perBoxNeedExploreValue * 3;
             } else if (rookieStep >= RookieStep.OPEN_BOX_2) {
@@ -109,18 +137,43 @@ export class HeatTreasureUI extends Component {
             } else if (rookieStep >= RookieStep.NPC_TALK_4) {
                 exploreValue = perBoxNeedExploreValue;
             }
+
+            if (rookieStep > RookieStep.OPEN_BOX_3) {
+                worldBoxes = [
+                    { rank: 0, isOpen: true },
+                    { rank: 0, isOpen: true },
+                    { rank: 0, isOpen: true },
+                ];
+            } else if (rookieStep > RookieStep.OPEN_BOX_2) {
+                worldBoxes = [
+                    { rank: 0, isOpen: true },
+                    { rank: 0, isOpen: true },
+                    { rank: 0, isOpen: false },
+                ];
+            } else if (rookieStep > RookieStep.OPEN_BOX_1) {
+                worldBoxes = [
+                    { rank: 0, isOpen: true },
+                    { rank: 0, isOpen: false },
+                    { rank: 0, isOpen: false },
+                ];
+            } else {
+                worldBoxes = [
+                    { rank: 0, isOpen: false },
+                    { rank: 0, isOpen: false },
+                    { rank: 0, isOpen: false },
+                ];
+            }
         }
-        const boxNum: number = this._boxDatas.length;
-        const exploreTotalValue: number = perBoxNeedExploreValue * boxNum;
+        const exploreTotalValue: number = perBoxNeedExploreValue * worldBoxes.length;
 
         const boxContentWidth: number = this._boxContent.getComponent(UITransform).width;
-
         this.node.getChildByPath("__ViewContent/Content/ProgressBar").getComponent(ProgressBar).progress = Math.min(1, exploreValue / exploreTotalValue);
 
         this._boxContent.removeAllChildren();
-        for (let i = 0; i < boxNum; i++) {
-            const rank = isFinishRookie ? 3 : 0;
-            const getted = false;
+        for (let i = 0; i < worldBoxes.length; i++) {
+            const rank = worldBoxes[i].rank;
+            const getted = worldBoxes[i].isOpen;
+            let canGet = false;
 
             let item = instantiate(this._boxItem);
             item.name = "HEAT_TREASURE_" + i;
@@ -128,6 +181,9 @@ export class HeatTreasureUI extends Component {
 
             if (getted) {
                 item.getChildByPath("Treasure_box_Empty").active = true;
+                for (let j = 0; j <= 5; j++) {
+                    item.getChildByPath("Treasure_box_" + j).active = false;
+                }
             } else {
                 let treasureView = null;
                 for (let j = 0; j <= 5; j++) {
@@ -141,6 +197,7 @@ export class HeatTreasureUI extends Component {
                 if (treasureView != null) {
                     treasureView.getChildByName("Common").active = exploreValue < (i + 1) * perBoxNeedExploreValue;
                     treasureView.getChildByName("Light").active = exploreValue >= (i + 1) * perBoxNeedExploreValue;
+                    canGet = exploreValue >= (i + 1) * perBoxNeedExploreValue;
                     if (rank > 0) {
                         if (treasureView["actiontween"] == null) {
                             treasureView["actiontween"] = tween()
@@ -164,7 +221,8 @@ export class HeatTreasureUI extends Component {
                 }
             }
             item.getComponent(Button).clickEvents[0].customEventData = i.toString();
-            item.setPosition(v3(-boxContentWidth / 2 + (boxContentWidth / boxNum) * (i + 1), 0, 0));
+            item.getComponent(Button).interactable = canGet;
+            item.setPosition(v3(-boxContentWidth / 2 + (boxContentWidth / worldBoxes.length) * (i + 1), 0, 0));
         }
     }
 
@@ -172,11 +230,11 @@ export class HeatTreasureUI extends Component {
     private async onTapBoxItem(event: Event, customEventData: string) {
         GameMusicPlayMgr.playTapButtonEffect();
         const index = parseInt(customEventData);
-        if (index < 0 || index > this._boxDatas.length - 1) {
-            return;
-        }
-        const data = this._boxDatas[index];
-        if (DataMgr.s.userInfo.data.rookieStep != RookieStep.FINISH) {
+        if (DataMgr.s.userInfo.data.rookieStep == RookieStep.FINISH) {
+            NetworkMgr.websocketMsg.player_treasure_open({
+                boxIndex: index,
+            });
+        } else {
             // rookie get box
             NetworkMgr.websocketMsg.player_worldbox_beginner_open({
                 boxIndex: index,

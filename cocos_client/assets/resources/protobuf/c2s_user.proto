@@ -141,7 +141,7 @@ message player_artifact_combine {
 // ------ treasure ------
 message get_treasure_info { }
 message player_treasure_open {
-    required string boxId = 1;
+    required uint32 boxIndex = 1;
 }
 message player_point_treasure_open {
     required string boxId = 1;

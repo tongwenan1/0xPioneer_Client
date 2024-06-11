@@ -51,6 +51,18 @@ export enum RookieStep {
 
     SYSTEM_TALK_22 = 240,
 
+    ENTER_OUTER = 250,
+
+    WORMHOLE_ATTACK = 260,
+
+    SYSTEM_TALK_23 = 270,
+    
+    DEFEND_TAP = 280,
+
+    SYSTEM_TALK_24 = 290,
+
+    LOCAL_DEFEND_TAP_CLOSE = 300,
+
     FINISH = 999999,
 }
 

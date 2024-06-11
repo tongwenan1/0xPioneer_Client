@@ -9,6 +9,9 @@ import { NTFBackpackItem } from "./View/NTFBackpackItem";
 import { MapPlayerPioneerObject } from "../Const/PioneerDefine";
 import { DefenderSelectUI } from "./DefenderSelectUI";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
+import NotificationMgr from "../Basic/NotificationMgr";
+import { NotificationName } from "../Const/Notification";
+import { RookieStep } from "../Const/RookieDefine";
 const { ccclass, property } = _decorator;
 
 @ccclass("DefenderSetUI")
@@ -41,6 +44,9 @@ export class DefenderSetUI extends ViewController {
         contentView.on(NodeEventType.TOUCH_MOVE, this._onTouchMove, this);
         contentView.on(NodeEventType.TOUCH_END, this._onTouchEnd, this);
         contentView.on(NodeEventType.TOUCH_CANCEL, this._onTouchEnd, this);
+
+        NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_SET_DENFENDER, this._onRookieTapThis, this);
     }
     protected viewDidStart(): void {
         super.viewDidStart();
@@ -52,6 +58,9 @@ export class DefenderSetUI extends ViewController {
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
+
+        NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_SET_DENFENDER, this._onRookieTapThis, this);
     }
     protected viewPopAnimation(): boolean {
         return true;
@@ -255,5 +264,22 @@ export class DefenderSetUI extends ViewController {
         movingItem.worldPosition = this._tbdItems[this._movingItemIndex].worldPosition;
         this._movingItemIndex = -1;
         this._isDragging = false;
+    }
+
+    //-----------------------------------
+    private _onRookieStepChange() {
+        const rookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep == RookieStep.LOCAL_DEFEND_TAP_CLOSE) {
+            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
+                tag: "defend",
+                view: this.node.getChildByPath("__ViewContent/CloseButton"),
+                tapIndex: "-1",
+            });
+        }
+    }
+    private _onRookieTapThis() {
+        DataMgr.s.userInfo.data.rookieStep = RookieStep.FINISH;
+        NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+        this.onTapClose();
     }
 }

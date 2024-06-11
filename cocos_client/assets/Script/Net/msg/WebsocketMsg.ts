@@ -306,7 +306,7 @@ export namespace c2s_user {
         num: number;
     }
     export interface Iplayer_treasure_open {
-        boxId: string;
+        boxIndex: number;
     }
     export interface Iplayer_point_treasure_open {
         boxId: string;
@@ -647,6 +647,10 @@ export namespace share {
         lotteryTimesLimit: number;
         lotteryProcessLimit: number;
     }
+    export interface box_data {
+        id: string;
+        opened: boolean;
+    }
     export interface Iplayer_sinfo {
         /** player_sinfo playerid */
         playerid: number;
@@ -656,6 +660,8 @@ export namespace share {
 
         /** player_sinfo gender */
         gender: number;
+
+        boxes: box_data[];
 
         mapid: number;
         speed: number;

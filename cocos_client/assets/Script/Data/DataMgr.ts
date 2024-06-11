@@ -126,6 +126,8 @@ export class DataMgr {
         ) {
             // play anim to change step
             return;
+        } else if (p.rookieStep == RookieStep.FINISH) {
+            p.rookieStep = RookieStep.LOCAL_DEFEND_TAP_CLOSE;
         }
         DataMgr.s.userInfo.data.rookieStep = p.rookieStep;
         NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);

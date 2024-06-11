@@ -27,24 +27,25 @@ message player_sinfo {
 
     required bool beginfin = 5;
     repeated string beginBoxes = 6;
+    repeated box_data boxes = 7;
 
-    required uint32 level = 7;
-    required uint32 exp = 8;
-    required pos2d pos = 9;
-    required uint32 treasureProgress = 10;
-    required heat_value_data heatValue = 11;
-    repeated string treasureDidGetRewards = 12;
-    repeated string pointTreasureDidGetRewards = 13;
-    required uint32 cityRadialRange = 14;
-    required bool didFinishRookie = 15;
-    required uint32 rookieStep = 16;
-    optional troop_info_data generateTroopInfo = 17;
-    optional energy_info_data generateEnergyInfo = 18;
+    required uint32 level = 8;
+    required uint32 exp = 9;
+    required pos2d pos = 10;
+    required uint32 treasureProgress = 11;
+    required heat_value_data heatValue = 12;
+    repeated string treasureDidGetRewards = 13;
+    repeated string pointTreasureDidGetRewards = 14;
+    required uint32 cityRadialRange = 15;
+    required bool didFinishRookie = 16;
+    required uint32 rookieStep = 17;
+    optional troop_info_data generateTroopInfo = 18;
+    optional energy_info_data generateEnergyInfo = 19;
 
-    optional uint32 currFetchTimes = 19;
-    optional uint32 limitFetchTimes = 20;
+    optional uint32 currFetchTimes = 20;
+    optional uint32 limitFetchTimes = 21;
 
-    map<string,string> defender = 21;
+    map<string,string> defender = 22;
 }
 
 // self player data
@@ -314,6 +315,11 @@ message treasure_level_arr {
 message treasure_level {
     required uint32 level = 1;
     repeated reward_data reward = 2;
+}
+
+message box_data {
+    required string id = 1;
+    required bool opened = 2;
 }
 
 message reward_data {

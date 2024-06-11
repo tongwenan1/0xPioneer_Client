@@ -38,7 +38,6 @@ export default class UserInfoDataMgr {
         }
         const globalData: share.Iplayer_sinfo = NetGlobalData.userInfo;
         this._data = this._convertNetDataToObject(globalData);
-        // this._data.rookieStep = RookieStep.RESOURCE_COLLECT;
         this._initInterval();
     }
     private _initInterval() {}
@@ -69,6 +68,7 @@ export default class UserInfoDataMgr {
             // lost
             tavernGetPioneerTimestamp: 0,
             wormholeDefenderIds: new Map(),
+            boxes: netData.boxes,
         };
         if (GAME_SKIP_ROOKIE) {
             newObj.rookieStep = RookieStep.FINISH;

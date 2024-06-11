@@ -137,6 +137,11 @@ export default class ConfigConfig {
                     type: key,
                     coefficient: param[0],
                 };
+            } else if (key == ConfigType.BoxNumByHeat) {
+                temple = {
+                    type: key,
+                    thresholds: param,
+                };
             } else if (key == ConfigType.ExploreForOneBox) {
                 temple = {
                     type: key,

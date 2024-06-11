@@ -238,7 +238,7 @@ export class InnerBuildingControllerRe extends ViewController {
             const pos = building.parent
                 .getComponent(UITransform)
                 .convertToNodeSpaceAR(lattices[0].node.parent.getComponent(UITransform).convertToWorldSpaceAR(v3(centerX, centerY, 0)));
-            building.position = pos;
+            building.position = v3(pos.x, 0, pos.z);
         }
     }
     private _refreshBuilding() {

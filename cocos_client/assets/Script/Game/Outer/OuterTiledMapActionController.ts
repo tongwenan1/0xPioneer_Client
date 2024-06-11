@@ -605,6 +605,7 @@ export class OuterTiledMapActionController extends ViewController {
                         return;
                     }
                 }
+                console.log("exce actiontype: " + actionType);
                 const result = await UIPanelManger.inst.pushPanel(UIName.MapActionConfrimTipUI);
                 if (result.success) {
                     result.node
@@ -676,6 +677,7 @@ export class OuterTiledMapActionController extends ViewController {
                                     if (stayBuilding != null) {
                                         PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.building, stayBuilding.id);
                                     }
+                                    console.log("exce stab: " , stayBuilding);
                                     if (stayPioneer != null) {
                                         PioneerMgr.setMovingTarget(currentActionPioneer.id, MapMemberTargetType.pioneer, stayPioneer.id);
                                     }

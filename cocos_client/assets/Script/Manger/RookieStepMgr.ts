@@ -31,6 +31,7 @@ export default class RookieStepMgr {
         NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_FIGHT_ENEMY_WIN, this._onRookieFightWin, this);
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_COLLECT_RESOURCE, this._onRookieCollectResource, this);
+        NotificationMgr.addListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACKER_CHANGE, this._onRookieSetWormholeAttack, this);
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_BUILDING_UPGRADE_CLOSE, this._onRookieBuildingUpgradeClose, this);
 
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, this._onRooieNeedMaskShow, this);
@@ -118,6 +119,16 @@ export default class RookieStepMgr {
         } else if (rookieStep == RookieStep.SYSTEM_TALK_22 && data.talkId == "talk22") {
             // next step
             NetworkMgr.websocketMsg.player_rookie_update({
+                rookieStep: RookieStep.ENTER_OUTER,
+            });
+        } else if (rookieStep == RookieStep.SYSTEM_TALK_23 && data.talkId == "talk23") {
+            // next step
+            NetworkMgr.websocketMsg.player_rookie_update({
+                rookieStep: RookieStep.DEFEND_TAP,
+            });
+        } else if (rookieStep == RookieStep.SYSTEM_TALK_24 && data.talkId == "talk24") {
+            // next step
+            NetworkMgr.websocketMsg.player_rookie_update({
                 rookieStep: RookieStep.FINISH,
             });
         }
@@ -167,6 +178,14 @@ export default class RookieStepMgr {
             }
             this._maskView.configuration(true, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
                 NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAP_BUILDING, { buildingId: "building_10" });
+            });
+        } else if (rookieStep == RookieStep.WORMHOLE_ATTACK) {
+            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_21");
+            if (view == null) {
+                return;
+            }
+            this._maskView.configuration(true, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
+                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAP_BUILDING, { buildingId: "building_21" });
             });
         }
     }
@@ -241,7 +260,6 @@ export default class RookieStepMgr {
                 GameMainHelper.instance.changeInnerAndOuterShow();
             }
             NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAIN_TASK);
-            console.log("exce show tap 3");
         } else if (rookieStep == RookieStep.ENEMY_FIGHT) {
             const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_gangster_1");
             if (view == null) {
@@ -295,7 +313,18 @@ export default class RookieStepMgr {
             }
             GameMainHelper.instance.changeGameCameraWorldPosition(view.worldPosition, true, true);
             GameMainHelper.instance.tiledMapShadowErase(building.stayMapPositions[0]);
-        } else if (rookieStep == RookieStep.SYSTEM_TALK_20 || rookieStep == RookieStep.SYSTEM_TALK_21 || rookieStep == RookieStep.SYSTEM_TALK_22) {
+        } else if (rookieStep == RookieStep.WORMHOLE_ATTACK) {
+            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_21");
+            if (view == null) {
+                return;
+            }
+            const building = DataMgr.s.mapBuilding.getBuildingById("building_21");
+            if (building == undefined) {
+                return;
+            }
+            GameMainHelper.instance.changeGameCameraWorldPosition(view.worldPosition, true, true);
+            GameMainHelper.instance.tiledMapShadowErase(building.stayMapPositions[0]);
+        } else if (rookieStep == RookieStep.SYSTEM_TALK_20 || rookieStep == RookieStep.SYSTEM_TALK_21 || rookieStep == RookieStep.SYSTEM_TALK_22 || rookieStep == RookieStep.SYSTEM_TALK_23 || rookieStep == RookieStep.SYSTEM_TALK_24) {
             let talkId: string = "";
             if (rookieStep == RookieStep.SYSTEM_TALK_20) {
                 talkId = "talk20";
@@ -303,6 +332,10 @@ export default class RookieStepMgr {
                 talkId = "talk21";
             } else if (rookieStep == RookieStep.SYSTEM_TALK_22) {
                 talkId = "talk22";
+            } else if (rookieStep == RookieStep.SYSTEM_TALK_23) {
+                talkId = "talk23";
+            } else if (rookieStep == RookieStep.SYSTEM_TALK_24) {
+                talkId = "talk24";
             }
             const talkConfig = TalkConfig.getById(talkId);
             if (talkConfig == null) {
@@ -313,6 +346,34 @@ export default class RookieStepMgr {
                 return;
             }
             result.node.getComponent(DialogueUI).dialogShow(talkConfig);
+        } else if (rookieStep == RookieStep.ENTER_OUTER) {
+            if (GameMainHelper.instance.isGameShowOuter) {
+                NetworkMgr.websocketMsg.player_rookie_update({
+                    rookieStep: RookieStep.WORMHOLE_ATTACK,
+                });
+            } else {
+                const view = find("Main/UI_Canvas/UI_ROOT/MainUI/CommonContent/InnerOutChangeBtnBg");
+                if (view == null) {
+                    return;
+                }
+                this._maskView.configuration(false, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
+                    GameMainHelper.instance.changeInnerAndOuterShow();
+                    NetworkMgr.websocketMsg.player_rookie_update({
+                        rookieStep: RookieStep.WORMHOLE_ATTACK,
+                    });
+                });
+            }
+        } else if (rookieStep == RookieStep.DEFEND_TAP) {
+            const view = find("Main/UI_Canvas/UI_ROOT/MainUI/CommonContent/SetDenderButton");
+            if (view == null) {
+                return;
+            }
+            this._maskView.configuration(false, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
+                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAIN_DEFEND);
+                NetworkMgr.websocketMsg.player_rookie_update({
+                    rookieStep: RookieStep.SYSTEM_TALK_24,
+                });
+            });
         }
     }
     private _onRookieFightWin() {
@@ -330,6 +391,14 @@ export default class RookieStepMgr {
         //         rookieStep: RookieStep.SYSTEM_TALK_8,
         //     });
         // }
+    }
+    private _onRookieSetWormholeAttack() {
+        const rookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep == RookieStep.WORMHOLE_ATTACK) {
+            NetworkMgr.websocketMsg.player_rookie_update({
+                rookieStep: RookieStep.SYSTEM_TALK_23,
+            });
+        }
     }
     private _onRookieBuildingUpgradeClose() {
         const rookieStep = DataMgr.s.userInfo.data.rookieStep;
@@ -366,6 +435,8 @@ export default class RookieStepMgr {
                 NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_TASK_ITEM, { tapIndex: tapIndex });
             } else if (tag == "buildingUpgrade") {
                 NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_BUILDING_UPGRADE, { tapIndex: tapIndex });
+            } else if (tag == "defend") {
+                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_SET_DENFENDER, { tapIndex: tapIndex });
             }
         });
     }

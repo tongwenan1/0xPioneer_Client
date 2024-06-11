@@ -14,9 +14,6 @@ import { DataMgr } from "../../../Data/DataMgr";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { NotificationName } from "../../../Const/Notification";
 import { RookieStep } from "../../../Const/RookieDefine";
-import UIPanelManger from "../../../Basic/UIPanelMgr";
-import { UIName } from "../../../Const/ConstUIDefine";
-import { RookieStepMaskUI } from "../../../UI/RookieGuide/RookieStepMaskUI";
 const { ccclass, property } = _decorator;
 
 @ccclass("ResOprView")
@@ -184,6 +181,7 @@ export class ResOprView extends Component {
         this._actionItemContent.destroyAllChildren();
         for (const type of actionTypes) {
             const actionItem = instantiate(this._actionItem);
+            actionItem.name = "ACTION_" + type;
             actionItem.getChildByPath("Icon/Wormhole").active = type == MapInteractType.Wormhole;
             actionItem.getChildByPath("Icon/Search").active = type == MapInteractType.Explore || type == MapInteractType.Event || type == MapInteractType.Talk;
             actionItem.getChildByPath("Icon/Collect").active = type == MapInteractType.Collect;
@@ -238,34 +236,38 @@ export class ResOprView extends Component {
         }
         this._confirmCallback = confirmCallback;
 
-        let view: Node = null;
-        let viewIndex: number = -1;
-        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (
-            rookieStep == RookieStep.NPC_TALK_1 ||
-            rookieStep == RookieStep.NPC_TALK_3 ||
-            rookieStep == RookieStep.NPC_TALK_4 ||
-            rookieStep == RookieStep.NPC_TALK_5 ||
-            rookieStep == RookieStep.NPC_TALK_6 ||
-            rookieStep == RookieStep.NPC_TALK_7 ||
-            rookieStep == RookieStep.NPC_TALK_19
-        ) {
-            viewIndex = actionTypes.indexOf(MapInteractType.Talk);
-        } else if (rookieStep == RookieStep.ENEMY_FIGHT) {
-            viewIndex = actionTypes.indexOf(MapInteractType.Attack);
-        } else if (rookieStep == RookieStep.RESOURCE_COLLECT) {
-            viewIndex = actionTypes.indexOf(MapInteractType.Collect);
-        }
-        if (viewIndex >= 0 && viewIndex < this._actionItemContent.children.length) {
-            view = this._actionItemContent.children[viewIndex];
-        }
-        if (view != null) {
-            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
-                tag: "mapAction",
-                view: view,
-                tapIndex: view.getComponent(Button).clickEvents[0].customEventData,
-            });
-        }
+        this.scheduleOnce(() => {
+            let view: Node = null;
+            let viewIndex: number = -1;
+            const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+            if (
+                rookieStep == RookieStep.NPC_TALK_1 ||
+                rookieStep == RookieStep.NPC_TALK_3 ||
+                rookieStep == RookieStep.NPC_TALK_4 ||
+                rookieStep == RookieStep.NPC_TALK_5 ||
+                rookieStep == RookieStep.NPC_TALK_6 ||
+                rookieStep == RookieStep.NPC_TALK_7 ||
+                rookieStep == RookieStep.NPC_TALK_19
+            ) {
+                viewIndex = actionTypes.indexOf(MapInteractType.Talk);
+            } else if (rookieStep == RookieStep.ENEMY_FIGHT) {
+                viewIndex = actionTypes.indexOf(MapInteractType.Attack);
+            } else if (rookieStep == RookieStep.RESOURCE_COLLECT) {
+                viewIndex = actionTypes.indexOf(MapInteractType.Collect);
+            } else if (rookieStep == RookieStep.WORMHOLE_ATTACK) {
+                viewIndex = actionTypes.indexOf(MapInteractType.Camp);
+            }
+            if (viewIndex != -1) {
+                view = this._actionItemContent.getChildByPath("ACTION_" + actionTypes[viewIndex]);
+            }
+            if (view != null) {
+                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
+                    tag: "mapAction",
+                    view: view,
+                    tapIndex: view.getComponent(Button).clickEvents[0].customEventData,
+                });
+            }
+        });
     }
     public hide() {
         this.node.active = false;

@@ -53,6 +53,7 @@ export class MainUI extends ViewController {
         NotificationMgr.addListener(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, this._onGameMainResourcePlayAnim, this);
         NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_MAIN_TASK, this._onRookieTapTask, this);
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_MAIN_DEFEND, this._onRookieTapDefend, this);
     }
 
     protected async viewDidStart(): Promise<void> {
@@ -95,6 +96,8 @@ export class MainUI extends ViewController {
 
         NotificationMgr.removeListener(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, this._onGameMainResourcePlayAnim, this);
         NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_MAIN_TASK, this._onRookieTapTask, this);
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_MAIN_DEFEND, this._onRookieTapDefend, this);
     }
 
     changeLang(): void {
@@ -148,6 +151,19 @@ export class MainUI extends ViewController {
             innerOuterChangeButton.active = true;
 
             innerBuildButton.active = true;
+        } else if (rookieStep >= RookieStep.DEFEND_TAP) {
+            defendButton.active = true;
+            taskButton.active = true;
+
+            battleReportButton.active = true;
+
+            innerOuterChangeButton.active = true;
+
+            if (rookieStep == RookieStep.DEFEND_TAP) {
+                if (UIPanelManger.inst.panelIsShow(UIName.TaskListUI)) {
+                    UIPanelManger.inst.popPanelByName(UIName.TaskListUI);
+                }
+            }
         } else if (rookieStep >= RookieStep.MAIN_BUILDING_TAP_1) {
             taskButton.active = true;
 
@@ -364,5 +380,8 @@ export class MainUI extends ViewController {
             return;
         }
         item.getComponent(TaskListUI).refreshUI();
+    }
+    private _onRookieTapDefend() {
+        this.onTapSetDefender();
     }
 }
