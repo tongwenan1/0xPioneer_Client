@@ -634,6 +634,30 @@
       }
     ]
   },
+  "talk23": {
+    "id": "talk23",
+    "cache": 1,
+    "messsages": [
+      {
+        "type": "0",
+        "name": "502002",
+        "text": "503085",
+        "select": null
+      }
+    ]
+  },
+  "talk24": {
+    "id": "talk24",
+    "cache": 1,
+    "messsages": [
+      {
+        "type": "0",
+        "name": "502002",
+        "text": "503086",
+        "select": null
+      }
+    ]
+  },
   "null": {
     "id": null,
     "cache": null
