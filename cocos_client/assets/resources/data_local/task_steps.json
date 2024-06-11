@@ -179,6 +179,38 @@
   "770201": {
     "id": "770201",
     "name": "501043",
+    "start_action": [
+      [
+        5,
+        "talk19",
+        "npc_9",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk19",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_9",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": 0,
+    "exp": 0
+  },
+  "770202": {
+    "id": "770202",
+    "name": "501044",
     "start_action": null,
     "complete_con": [
       1,

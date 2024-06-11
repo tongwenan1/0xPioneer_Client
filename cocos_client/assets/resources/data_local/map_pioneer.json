@@ -494,6 +494,30 @@
       }
     ]
   },
+  "npc_9": {
+    "id": "npc_9",
+    "name": "109035",
+    "type": "2",
+    "friendly": 1,
+    "show": 1,
+    "level": 1,
+    "des": "320005",
+    "nft_pioneer": "",
+    "hp": 1,
+    "attack": 1,
+    "def": 1,
+    "spd": 5,
+    "winprogress": null,
+    "exp": null,
+    "animType": "marauder",
+    "drop": null,
+    "pos": [
+      {
+        "x": 21,
+        "y": 16
+      }
+    ]
+  },
   "gangster_1": {
     "id": "gangster_1",
     "name": "109010",

@@ -283,6 +283,10 @@
     "id": "109034",
     "eng": "Monster King"
   },
+  "109035": {
+    "id": "109035",
+    "eng": "Scavenger Unknow"
+  },
   "110001": {
     "id": "110001",
     "eng": "Desert Grotto"
@@ -1817,7 +1821,7 @@
   },
   "504009": {
     "id": "504009",
-    "eng": "Take care"
+    "eng": "Thank you!"
   },
   "504010": {
     "id": "504010",
