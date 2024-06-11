@@ -239,6 +239,7 @@ export class ResOprView extends Component {
         this._confirmCallback = confirmCallback;
 
         let view: Node = null;
+        let viewIndex: number = -1;
         const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
         if (
             rookieStep == RookieStep.NPC_TALK_1 ||
@@ -246,17 +247,17 @@ export class ResOprView extends Component {
             rookieStep == RookieStep.NPC_TALK_4 ||
             rookieStep == RookieStep.NPC_TALK_5 ||
             rookieStep == RookieStep.NPC_TALK_6 ||
-            rookieStep == RookieStep.NPC_TALK_7
+            rookieStep == RookieStep.NPC_TALK_7 ||
+            rookieStep == RookieStep.NPC_TALK_19
         ) {
-            const viewIndex = actionTypes.indexOf(MapInteractType.Talk);
-            if (viewIndex >= 0 && viewIndex < this._actionItemContent.children.length) {
-                view = this._actionItemContent.children[viewIndex];
-            }
+            viewIndex = actionTypes.indexOf(MapInteractType.Talk);
         } else if (rookieStep == RookieStep.ENEMY_FIGHT) {
-            const viewIndex = actionTypes.indexOf(MapInteractType.Attack);
-            if (viewIndex >= 0 && viewIndex < this._actionItemContent.children.length) {
-                view = this._actionItemContent.children[viewIndex];
-            }
+            viewIndex = actionTypes.indexOf(MapInteractType.Attack);
+        } else if (rookieStep == RookieStep.RESOURCE_COLLECT) {
+            viewIndex = actionTypes.indexOf(MapInteractType.Collect);
+        }
+        if (viewIndex >= 0 && viewIndex < this._actionItemContent.children.length) {
+            view = this._actionItemContent.children[viewIndex];
         }
         if (view != null) {
             NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {

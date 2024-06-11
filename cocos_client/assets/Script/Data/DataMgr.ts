@@ -35,6 +35,7 @@ import { DialogueUI } from "../UI/Outer/DialogueUI";
 import MapBuildingConfig from "../Config/MapBuildingConfig";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { RookieResourceAnim, RookieResourceAnimStruct, RookieStep } from "../Const/RookieDefine";
 
 export class DataMgr {
     public static r: RunData;
@@ -94,6 +95,20 @@ export class DataMgr {
         }
         // heat
         if (localData.heatValue.currentHeatValue != p.info.heatValue.currentHeatValue) {
+            if (DataMgr.s.userInfo.data.rookieStep == RookieStep.PIOT_TO_HEAT) {
+                NetworkMgr.websocketMsg.player_rookie_update({
+                    rookieStep: RookieStep.NPC_TALK_4,
+                });
+                NotificationMgr.triggerEvent(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, {
+                    animType: RookieResourceAnim.GOLD_TO_HEAT,
+                    callback: () => {
+                        NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_HEAT);
+                        DataMgr.s.userInfo.data.rookieStep = RookieStep.NPC_TALK_4;
+                        NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+                    },
+                } as RookieResourceAnimStruct);
+                return;
+            }
             NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_HEAT);
         }
     };
@@ -102,14 +117,92 @@ export class DataMgr {
         if (p.res !== 1) {
             return;
         }
+        if (
+            p.rookieStep == RookieStep.NPC_TALK_3 ||
+            p.rookieStep == RookieStep.NPC_TALK_4 ||
+            p.rookieStep == RookieStep.NPC_TALK_5 ||
+            p.rookieStep == RookieStep.NPC_TALK_7 ||
+            p.rookieStep == RookieStep.SYSTEM_TALK_21
+        ) {
+            // play anim to change step
+            return;
+        }
         DataMgr.s.userInfo.data.rookieStep = p.rookieStep;
         NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
     };
     //------------------------------------- item
     public static storhouse_change = async (e: any) => {
         const p: s2c_user.Istorhouse_change = e.data;
+
+        let rookieBreak: boolean = false;
+        const rookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep == RookieStep.NPC_TALK_1) {
+            // fly piot
+            let goldNum: number = 0;
+            for (const item of p.iteminfo) {
+                if (item.itemConfigId == ResourceCorrespondingItem.Gold) {
+                    goldNum = item.count;
+                    break;
+                }
+            }
+            if (goldNum > 0) {
+                rookieBreak = true;
+                NotificationMgr.triggerEvent(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, {
+                    animType: RookieResourceAnim.PIONEER_0_TO_GOLD,
+                    callback: () => {
+                        DataMgr.s.userInfo.data.rookieStep = RookieStep.NPC_TALK_3;
+                        NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+                        this._resourceRefresh(p.iteminfo);
+                    },
+                } as RookieResourceAnimStruct);
+            }
+        } else if (rookieStep == RookieStep.RESOURCE_COLLECT) {
+            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_COLLECT_RESOURCE);
+        } else if (rookieStep == RookieStep.OPEN_BOX_1 || rookieStep == RookieStep.OPEN_BOX_2 || rookieStep == RookieStep.OPEN_BOX_3) {
+            // fly piot
+            let psycNum: number = 0;
+            for (const item of p.iteminfo) {
+                if (item.itemConfigId == ResourceCorrespondingItem.Energy) {
+                    psycNum = item.count;
+                    break;
+                }
+            }
+            if (psycNum > 0) {
+                rookieBreak = true;
+
+                let animType = null;
+                let nextStep = null;
+                if (rookieStep == RookieStep.OPEN_BOX_1) {
+                    animType = RookieResourceAnim.BOX_1_TO_PSYC;
+                    nextStep = RookieStep.NPC_TALK_5;
+                } else if (rookieStep == RookieStep.OPEN_BOX_2) {
+                    animType = RookieResourceAnim.BOX_2_TO_PSYC;
+                    nextStep = RookieStep.NPC_TALK_7;
+                } else if (rookieStep == RookieStep.OPEN_BOX_3) {
+                    animType = RookieResourceAnim.BOX_3_TO_PSYC;
+                    nextStep = RookieStep.SYSTEM_TALK_21;
+                }
+                NotificationMgr.triggerEvent(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, {
+                    animType: animType,
+                    callback: () => {
+                        DataMgr.s.userInfo.data.rookieStep = nextStep;
+                        NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+                        this._resourceRefresh(p.iteminfo);
+                    },
+                } as RookieResourceAnimStruct);
+            }
+        }
+
+        if (rookieBreak) {
+            return;
+        }
+
+        this._resourceRefresh(p.iteminfo);
+    };
+
+    private static async _resourceRefresh(iteminfo: ItemData[]) {
         const nonResourceGettedItems = [];
-        for (const item of p.iteminfo) {
+        for (const item of iteminfo) {
             const change = new ItemData(item.itemConfigId, item.count);
             change.addTimeStamp = item.addTimeStamp;
             DataMgr.s.item.countChanged(change);
@@ -137,7 +230,7 @@ export class DataMgr {
             }
             result.node.getComponent(ItemGettedUI).showItem(nonResourceGettedItems);
         }
-    };
+    }
     //------------------------------------ artifact
     public static artifact_change = (e: any) => {
         const p: s2c_user.Iartifact_change = e.data;
@@ -190,6 +283,15 @@ export class DataMgr {
             }
             if (currentData.upgrading && !netBuilding.upgradeIng) {
                 // upgrade finish
+                if (DataMgr.s.userInfo.data.rookieStep == RookieStep.MAIN_BUILDING_TAP_2) {
+                    NetworkMgr.websocketMsg.player_rookie_update({
+                        rookieStep: RookieStep.SYSTEM_TALK_20,
+                    });
+                } else if (DataMgr.s.userInfo.data.rookieStep == RookieStep.MAIN_BUILDING_TAP_3) {
+                    NetworkMgr.websocketMsg.player_rookie_update({
+                        rookieStep: RookieStep.SYSTEM_TALK_22,
+                    });
+                }
                 NotificationMgr.triggerEvent(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, currentData.buildType);
             }
         }

@@ -102,11 +102,13 @@ export class HeatTreasureUI extends Component {
             for (let i = 1; i <= 3; i++) {
                 this._boxDatas.push(BoxInfoConfig.getById("900" + i));
             }
-            if (rookieStep >= RookieStep.OPNE_BOX_2) {
+            if (rookieStep >= RookieStep.OPEN_BOX_3) {
+                exploreValue = perBoxNeedExploreValue * 3;
+            } else if (rookieStep >= RookieStep.OPEN_BOX_2) {
                 exploreValue = perBoxNeedExploreValue * 2;
             } else if (rookieStep >= RookieStep.NPC_TALK_4) {
                 exploreValue = perBoxNeedExploreValue;
-            } 
+            }
         }
         const boxNum: number = this._boxDatas.length;
         const exploreTotalValue: number = perBoxNeedExploreValue * boxNum;
@@ -118,42 +120,49 @@ export class HeatTreasureUI extends Component {
         this._boxContent.removeAllChildren();
         for (let i = 0; i < boxNum; i++) {
             const rank = isFinishRookie ? 3 : 0;
+            const getted = false;
+
             let item = instantiate(this._boxItem);
             item.name = "HEAT_TREASURE_" + i;
             item.setParent(this._boxContent);
 
-            let treasureView = null;
-            for (let j = 0; j <= 5; j++) {
-                item.getChildByPath("Treasure_box_" + j).active = j == rank;
-                if (j == rank) {
-                    treasureView = item.getChildByPath("Treasure_box_" + j);
-                }
-            }
-            if (treasureView != null) {
-                treasureView.getChildByName("Common").active = exploreValue < ((i + 1) * perBoxNeedExploreValue);
-                treasureView.getChildByName("Light").active = exploreValue >= ((i + 1) * perBoxNeedExploreValue);
-                if (rank > 0) {
-                    if (treasureView["actiontween"] == null) {
-                        treasureView["actiontween"] = tween()
-                            .target(treasureView)
-                            .repeatForever(
-                                tween().sequence(
-                                    tween().by(0.05, { position: v3(0, 10, 0) }),
-                                    tween().by(0.1, { position: v3(0, -20, 0) }),
-                                    tween().by(0.1, { position: v3(0, 20, 0) }),
-                                    tween().by(0.05, { position: v3(0, -10, 0) }),
-                                    tween().delay(1)
-                                )
-                            )
-                            .start();
-                    }
-                } else {
-                    if (treasureView["actiontween"] != null) {
-                        treasureView["actiontween"].stop();
+            if (getted) {
+                item.getChildByPath("Treasure_box_Empty").active = true;
+            } else {
+                let treasureView = null;
+                for (let j = 0; j <= 5; j++) {
+                    item.getChildByPath("Treasure_box_" + j).active = j == rank;
+                    if (j == rank) {
+                        treasureView = item.getChildByPath("Treasure_box_" + j);
                     }
                 }
-            }
+                item.getChildByPath("Treasure_box_Empty").active = false;
 
+                if (treasureView != null) {
+                    treasureView.getChildByName("Common").active = exploreValue < (i + 1) * perBoxNeedExploreValue;
+                    treasureView.getChildByName("Light").active = exploreValue >= (i + 1) * perBoxNeedExploreValue;
+                    if (rank > 0) {
+                        if (treasureView["actiontween"] == null) {
+                            treasureView["actiontween"] = tween()
+                                .target(treasureView)
+                                .repeatForever(
+                                    tween().sequence(
+                                        tween().by(0.05, { position: v3(0, 10, 0) }),
+                                        tween().by(0.1, { position: v3(0, -20, 0) }),
+                                        tween().by(0.1, { position: v3(0, 20, 0) }),
+                                        tween().by(0.05, { position: v3(0, -10, 0) }),
+                                        tween().delay(1)
+                                    )
+                                )
+                                .start();
+                        }
+                    } else {
+                        if (treasureView["actiontween"] != null) {
+                            treasureView["actiontween"].stop();
+                        }
+                    }
+                }
+            }
             item.getComponent(Button).clickEvents[0].customEventData = i.toString();
             item.setPosition(v3(-boxContentWidth / 2 + (boxContentWidth / boxNum) * (i + 1), 0, 0));
         }

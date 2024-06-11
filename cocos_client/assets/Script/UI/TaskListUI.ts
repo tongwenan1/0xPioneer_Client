@@ -60,7 +60,13 @@ export class TaskListUI extends ViewController {
 
         let actionTaskShowCount: number = 0;
 
-        const rookieTaskId: string = "task12";
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        let rookieTaskId: string = "";
+        if (rookieStep == RookieStep.TASK_SHOW_TAP_1 || rookieStep == RookieStep.TASK_SHOW_TAP_2) {
+            rookieTaskId = "task12";
+        } else if (rookieStep == RookieStep.TASK_SHOW_TAP_3) {
+            rookieTaskId = "task13";
+        }
         let rookieTaskIndex: number = -1;
         for (let i = toDoTasks.length - 1; i >= 0; i--) {
             if (actionTaskShowCount >= 3) {
@@ -204,11 +210,7 @@ export class TaskListUI extends ViewController {
         }
 
         //rookie guide
-        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (rookieStep == RookieStep.TASK_SHOW_TAP_1 || rookieStep == RookieStep.TASK_SHOW_TAP_2) {
-            if (rookieTaskIndex < 0) {
-                return;
-            }
+        if (rookieTaskIndex >= 0) {
             const actionView = this._actionTaskList[rookieTaskIndex];
             NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
                 tag: "task",
@@ -345,7 +347,12 @@ export class TaskListUI extends ViewController {
             if (!GameMainHelper.instance.isGameShowOuter) {
                 GameMainHelper.instance.changeInnerAndOuterShow();
             }
-            GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y), true);
+            let triggerTask: boolean = false;
+            const rookieStep = DataMgr.s.userInfo.data.rookieStep;
+            if (rookieStep == RookieStep.TASK_SHOW_TAP_1 || rookieStep == RookieStep.TASK_SHOW_TAP_2 || rookieStep == RookieStep.TASK_SHOW_TAP_3) {
+                triggerTask = true;
+            }
+            GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y), true, triggerTask);
         }
     }
     private onTapCloseDetail() {

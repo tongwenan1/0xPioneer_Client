@@ -7,6 +7,8 @@ export enum RookieStep {
 
     PIOT_TO_HEAT = 30,
 
+    LOCAL_ANIM_PIOT_FROM_TOP_TO_HEAT = 31,
+
     NPC_TALK_4 = 40,
 
     OPEN_BOX_1 = 50,
@@ -21,7 +23,7 @@ export enum RookieStep {
 
     NPC_TALK_6 = 100,
 
-    OPNE_BOX_2 = 110,
+    OPEN_BOX_2 = 110,
 
     NPC_TALK_7 = 120,
 
@@ -31,5 +33,36 @@ export enum RookieStep {
 
     TASK_SHOW_TAP_3 = 150,
 
+    NPC_TALK_19 = 160,
+
+    RESOURCE_COLLECT = 170,
+
+    ENTER_INNER_2 = 180,
+
+    MAIN_BUILDING_TAP_2 = 190,
+
+    SYSTEM_TALK_20 = 200,
+
+    OPEN_BOX_3 = 210,
+
+    SYSTEM_TALK_21 = 220,
+
+    MAIN_BUILDING_TAP_3 = 230,
+
+    SYSTEM_TALK_22 = 240,
+
     FINISH = 999999,
+}
+
+export enum RookieResourceAnim {
+    PIONEER_0_TO_GOLD,
+    GOLD_TO_HEAT,
+    BOX_1_TO_PSYC,
+    BOX_2_TO_PSYC,
+    BOX_3_TO_PSYC,
+}
+
+export interface RookieResourceAnimStruct {
+    animType: RookieResourceAnim;
+    callback: () => void;
 }

@@ -530,7 +530,7 @@ export class OuterPioneerController extends ViewController {
                 //         NetworkMgr.websocketMsg.player_rookie_finish({});
                 //     });
                 // }
-            }, 10);
+            }, 6.8);
         }
     }
     private _onRookieGuideThirdEyes() {

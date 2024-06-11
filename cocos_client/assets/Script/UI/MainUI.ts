@@ -1,4 +1,4 @@
-import { _decorator, Node, Button, Label, Vec3, UITransform, instantiate, tween, dynamicAtlasManager } from "cc";
+import { _decorator, Node, Button, Label, Vec3, UITransform, instantiate, tween, dynamicAtlasManager, find } from "cc";
 import { ClaimRewardUI } from "./ClaimRewardUI";
 import { LanMgr, PioneerMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
@@ -17,7 +17,7 @@ import CommonTools from "../Tool/CommonTools";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import ArtifactData from "../Model/ArtifactData";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
-import { RookieStep } from "../Const/RookieDefine";
+import { RookieResourceAnim, RookieResourceAnimStruct, RookieStep } from "../Const/RookieDefine";
 import { NTFRankUpUI } from "./NTFRankUpUI";
 import { RookieStepMaskUI } from "./RookieGuide/RookieStepMaskUI";
 
@@ -145,7 +145,6 @@ export class MainUI extends ViewController {
             test2Button.active = true;
 
             battleReportButton.active = true;
-            pioneerListView.active = true;
             innerOuterChangeButton.active = true;
 
             innerBuildButton.active = true;
@@ -162,6 +161,8 @@ export class MainUI extends ViewController {
         } else if (rookieStep >= RookieStep.TASK_SHOW_TAP_1) {
             taskButton.active = true;
         }
+
+        pioneerListView.active = DataMgr.s.pioneer.getAllPlayers(true).length > 1;
     }
 
     private _refreshSettlememntTip() {
@@ -284,32 +285,73 @@ export class MainUI extends ViewController {
         this._claimRewardUI.refreshUI();
     }
 
-    private _onGameMainResourcePlayAnim(data: { isFromGameView: boolean; fromWorldPos: Vec3; targetItemId: ResourceCorrespondingItem }) {
-        const { isFromGameView, fromWorldPos, targetItemId } = data;
+    private _onGameMainResourcePlayAnim(data: RookieResourceAnimStruct) {
+        const { animType, callback } = data;
         this._animView.active = true;
-        const localPos = isFromGameView
-            ? GameMainHelper.instance.getGameCameraWposToUI(fromWorldPos, this.node)
-            : this.node.getComponent(UITransform).convertToNodeSpaceAR(fromWorldPos);
 
-        if (targetItemId == ResourceCorrespondingItem.Gold) {
-            const targetView = this.node.getChildByPath("CommonContent/TopUI/txtGoldNum/tag");
-            const targetViewPos = this.node.getComponent(UITransform).convertToNodeSpaceAR(targetView.worldPosition);
-            for (let i = 0; i < 5; i++) {
-                const icon = instantiate(targetView);
-                icon.setParent(this._animView);
-                icon.position = localPos;
-                tween()
-                    .target(icon)
-                    .delay(i * 0.2)
-                    .to(1, { position: targetViewPos })
-                    .call(() => {
-                        icon.destroy();
-                        if (i == 4) {
-                            this._animView.active = false;
-                        }
-                    })
-                    .start();
+        let fromPos: Vec3 = null;
+        let toPos: Vec3 = null;
+        let moveView: Node = null;
+        if (animType == RookieResourceAnim.PIONEER_0_TO_GOLD) {
+            const fromView = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_pioneer_0");
+            if (fromView != null) {
+                fromPos = GameMainHelper.instance.getGameCameraWposToUI(fromView.worldPosition, this.node);
             }
+            const toView = this.node.getChildByPath("CommonContent/TopUI/txtGoldNum/tag");
+            toPos = this.node.getComponent(UITransform).convertToNodeSpaceAR(toView.worldPosition);
+
+            moveView = toView;
+        } else if (animType == RookieResourceAnim.GOLD_TO_HEAT) {
+            const fromView = this.node.getChildByPath("CommonContent/TopUI/txtGoldNum/tag");
+            const toView = this.node.getChildByPath("CommonContent/HeatTreasureUI/__ViewContent/Content/HeatProgress/HeatValue");
+
+            fromPos = this.node.getComponent(UITransform).convertToNodeSpaceAR(fromView.worldPosition);
+            toPos = this.node.getComponent(UITransform).convertToNodeSpaceAR(toView.worldPosition);
+
+            moveView = fromView;
+        } else if (
+            animType == RookieResourceAnim.BOX_1_TO_PSYC ||
+            animType == RookieResourceAnim.BOX_2_TO_PSYC ||
+            animType == RookieResourceAnim.BOX_3_TO_PSYC
+        ) {
+            let boxIndex: number = -1;
+            if (animType == RookieResourceAnim.BOX_1_TO_PSYC) {
+                boxIndex = 0;
+            } else if (animType == RookieResourceAnim.BOX_2_TO_PSYC) {
+                boxIndex = 1;
+            } else if (animType == RookieResourceAnim.BOX_3_TO_PSYC) {
+                boxIndex = 2;
+            }
+            const fromView = this.node.getChildByPath("CommonContent/HeatTreasureUI/__ViewContent/Content/ProgressBar/BoxContent/HEAT_TREASURE_" + boxIndex);
+            const toView = this.node.getChildByPath("CommonContent/TopUI/txtEnergyNum/energy_icon");
+
+            fromPos = this.node.getComponent(UITransform).convertToNodeSpaceAR(fromView.worldPosition);
+            toPos = this.node.getComponent(UITransform).convertToNodeSpaceAR(toView.worldPosition);
+
+            moveView = toView;
+        }
+
+        if (fromPos == null || toPos == null) {
+            return;
+        }
+        for (let i = 0; i < 5; i++) {
+            const icon = instantiate(moveView);
+            icon.setParent(this._animView);
+            icon.position = fromPos;
+            tween()
+                .target(icon)
+                .delay(i * 0.2)
+                .to(1, { position: toPos })
+                .call(() => {
+                    icon.destroy();
+                    if (i == 4) {
+                        this._animView.active = false;
+                        if (callback != null) {
+                            callback();
+                        }
+                    }
+                })
+                .start();
         }
     }
     private async _onRookieStepChange() {

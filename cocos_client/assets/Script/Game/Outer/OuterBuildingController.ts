@@ -40,6 +40,8 @@ export class OuterBuildingController extends Component {
         NotificationMgr.addListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACK_COUNT_DONW_TIME_CHANGE, this._refreshUI, this);
         NotificationMgr.addListener(NotificationName.MAP_BUILDING_ACTION_PIONEER_CHANGE, this._refreshUI, this);
         NotificationMgr.addListener(NotificationName.MAP_BUILDING_REBON_CHANGE, this._refreshUI, this);
+
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_MAP_BUILDING, this._onRookieTapBuilding, this);
     }
 
     start() {
@@ -102,6 +104,8 @@ export class OuterBuildingController extends Component {
         NotificationMgr.removeListener(NotificationName.MAP_BUILDING_WORMHOLE_ATTACK_COUNT_DONW_TIME_CHANGE, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.MAP_BUILDING_ACTION_PIONEER_CHANGE, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.MAP_BUILDING_REBON_CHANGE, this._refreshUI, this);
+
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_MAP_BUILDING, this._onRookieTapBuilding, this);
     }
 
     private _refreshUI() {
@@ -204,6 +208,13 @@ export class OuterBuildingController extends Component {
     }
 
     //------------------------------------------------- notification
+    private _onRookieTapBuilding(data: { buildingId: string }) {
+        const struct = this._buildingMap.get(data.buildingId);
+        if (struct == null) {
+            return;
+        }
+        this.getComponent(OuterTiledMapActionController)._clickOnMap(struct.node.worldPosition);
+    }
     // private async _onRookieStepChange() {
     //     const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
     //     if (rookieStep == RookieStep.MAP_CHANGE_EXPLAIN) {

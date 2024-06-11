@@ -60,10 +60,16 @@ export class BuildingUpgradeUI extends ViewController {
             return;
         }
         const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1) {
+        if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1 || rookieStep == RookieStep.MAIN_BUILDING_TAP_2) {
             NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
                 tag: "buildingUpgrade",
                 view: this._buildingMap.get(InnerBuildingType.MainCity),
+                tapIndex: "-1",
+            });
+        } else if (rookieStep == RookieStep.MAIN_BUILDING_TAP_3) {
+            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
+                tag: "buildingUpgrade",
+                view: this._buildingMap.get(InnerBuildingType.Barrack),
                 tapIndex: "-1",
             });
         }
@@ -284,8 +290,12 @@ export class BuildingUpgradeUI extends ViewController {
         }
         const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
         if (data.tapIndex == "-1") {
-            if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1) {
-                this.onTapBuildingUpgradeShow(null, InnerBuildingType.MainCity);
+            if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1 || rookieStep == RookieStep.MAIN_BUILDING_TAP_2 || rookieStep == RookieStep.MAIN_BUILDING_TAP_3) {
+                if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1 || rookieStep == RookieStep.MAIN_BUILDING_TAP_2) {
+                    this.onTapBuildingUpgradeShow(null, InnerBuildingType.MainCity);
+                } else if (rookieStep == RookieStep.MAIN_BUILDING_TAP_3) {
+                    this.onTapBuildingUpgradeShow(null, InnerBuildingType.Barrack);
+                }
                 NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
                     tag: "buildingUpgrade",
                     view: this.node.getChildByPath("__ViewContent/LevelInfoView/UpgradeContent/ActionButton"),
@@ -303,6 +313,10 @@ export class BuildingUpgradeUI extends ViewController {
                     return;
                 }
                 result.node.getComponent(DialogueUI).dialogShow(talkConfig);
+            } else if (rookieStep == RookieStep.MAIN_BUILDING_TAP_2) {
+                this.onTapBuildingUpgrade(null, InnerBuildingType.MainCity);
+            } else if (rookieStep == RookieStep.MAIN_BUILDING_TAP_3) {
+                this.onTapBuildingUpgrade(null, InnerBuildingType.Barrack);
             }
         } else if (data.tapIndex == "-3") {
             if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1) {
