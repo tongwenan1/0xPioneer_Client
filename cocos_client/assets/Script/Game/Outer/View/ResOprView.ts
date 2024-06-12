@@ -39,6 +39,8 @@ export class ResOprView extends Component {
         const actionView = this.node.getChildByPath("ActionView");
         const difficultView = this.node.getChildByPath("DifficultView");
 
+        difficultView.active = false;
+
         const buildingCofig = interactBuilding != null ? MapBuildingConfig.getById(interactBuilding.id) : null;
         //----------------------------------- info
         let name: string = "";
