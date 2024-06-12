@@ -27,7 +27,7 @@ export class OuterBuildingView extends ViewController {
         }
         this.node.getChildByPath("Title/Text").getComponent(Label).string = name;
         this.node.getChildByPath("Level/Text").getComponent(Label).string = "Lv." + building.level;
-        this.node.getChildByPath("Level/Difficult").active = building.level > DataMgr.s.artifact.getArtifactLevel();
+        this.node.getChildByPath("Level/Difficult").active = building.type == MapBuildingType.event && building.level > DataMgr.s.artifact.getArtifactLevel();
 
         if (this._building.type == MapBuildingType.wormhole) {
             for (const child of this.node.getChildByPath("BuildingContent").children) {

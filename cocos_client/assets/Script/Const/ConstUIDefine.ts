@@ -48,6 +48,7 @@ export enum UIName {
     MapActionConfrimTipUI = "prefab/ui/MapActionConfrimTipUI",
 
     RelicTowerUI = "prefab/ui/RelicTowerUI",
+    RelicTowerSelectUI = "prefab/ui/RelicTowerSelectUI",
     RelicSelectUI = "prefab/ui/RelicSelectUI",
 }
 

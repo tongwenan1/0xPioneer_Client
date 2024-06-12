@@ -70,14 +70,13 @@ export default class GameMgr {
                 interactPioneerId = targetPioneer.id;
                 currentMapPos = targetPioneer.stayPos;
             }
-        } else if(condition.type == TaskConditionType.interact && condition.interact.interactId != null) {
+        } else if (condition.type == TaskConditionType.interact && condition.interact.interactId != null) {
             if (condition.interact.target == MapMemberTargetType.pioneer) {
                 const targetPioneer = DataMgr.s.pioneer.getById(condition.interact.interactId);
                 if (targetPioneer != null) {
                     currentMapPos = targetPioneer.stayPos;
                     interactPioneerId = targetPioneer.id;
                 }
-                
             } else if (condition.interact.target == MapMemberTargetType.building) {
                 const targetBuilding = DataMgr.s.mapBuilding.getBuildingById(condition.interact.interactId);
                 if (targetBuilding != null) {
@@ -85,7 +84,7 @@ export default class GameMgr {
                     interactBuildingId = targetBuilding.id;
                 }
             }
-        } 
+        }
         if (currentMapPos != null) {
             if (!GameMainHelper.instance.isGameShowOuter) {
                 GameMainHelper.instance.changeInnerAndOuterShow();
@@ -107,6 +106,7 @@ export default class GameMgr {
 
     //--------------------------- effect
     public getEffectShowText(type: GameExtraEffectType, value: number): string {
+        value = CommonTools.getOneDecimalNum(value);
         switch (type) {
             case GameExtraEffectType.BUILDING_LVUP_TIME:
                 return "REDUCE BUILDING LVUP TIME:" + value;

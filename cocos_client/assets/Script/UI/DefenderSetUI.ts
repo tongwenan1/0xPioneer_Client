@@ -278,7 +278,7 @@ export class DefenderSetUI extends ViewController {
         }
     }
     private _onRookieTapThis() {
-        DataMgr.s.userInfo.data.rookieStep = RookieStep.FINISH;
+        DataMgr.s.userInfo.data.rookieStep = RookieStep.OUTER_WORMHOLE;
         NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
         this.onTapClose();
     }

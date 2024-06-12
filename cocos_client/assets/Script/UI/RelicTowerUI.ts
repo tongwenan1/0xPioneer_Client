@@ -40,6 +40,7 @@ import { GameExtraEffectType } from "../Const/ConstDefine";
 import ArtifactConfig from "../Config/ArtifactConfig";
 import LongPressButton from "../BasicView/LongPressButton";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
+import { RelicTowerSelectUI } from "./RelicTowerSelectUI";
 const { ccclass, property } = _decorator;
 
 @ccclass("RelicTowerUI")
@@ -194,6 +195,8 @@ export class RelicTowerUI extends ViewController {
 
                 itemView.getComponent(ArtifactItem1).refreshUI(data);
 
+                itemView.getChildByPath("Prop").setSiblingIndex(99);
+
                 itemView.getComponent(LongPressButton).shortClick[0].customEventData = i.toString();
                 itemView.getComponent(LongPressButton).shortClickInteractable = !locked;
                 itemView.getComponent(LongPressButton).longPress[0].customEventData = data == null ? "" : data.uniqueId;
@@ -313,11 +316,11 @@ export class RelicTowerUI extends ViewController {
     private async onTapSlotItem(event: Event, customEventData: string) {
         GameMusicPlayMgr.playTapButtonEffect();
         const index = parseInt(customEventData);
-        const result = await UIPanelManger.inst.pushPanel(UIName.RelicSelectUI);
+        const result = await UIPanelManger.inst.pushPanel(UIName.RelicTowerSelectUI);
         if (!result.success) {
             return;
         }
-        result.node.getComponent(RelicSelectUI).configuration(index);
+        result.node.getComponent(RelicTowerSelectUI).configuration(index);
     }
     private async onLongTapSlotItem(event: Event, customEventData: string) {
         GameMusicPlayMgr.playTapButtonEffect();

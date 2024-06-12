@@ -128,7 +128,7 @@ export default class RookieStepMgr {
         } else if (rookieStep == RookieStep.SYSTEM_TALK_24 && data.talkId == "talk24") {
             // next step
             NetworkMgr.websocketMsg.player_rookie_update({
-                rookieStep: RookieStep.FINISH,
+                rookieStep: RookieStep.OUTER_WORMHOLE,
             });
         }
     }
@@ -178,7 +178,7 @@ export default class RookieStepMgr {
             this._maskView.configuration(true, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
                 NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAP_BUILDING, { buildingId: "building_10" });
             });
-        } else if (rookieStep == RookieStep.WORMHOLE_ATTACK) {
+        } else if (rookieStep == RookieStep.WORMHOLE_ATTACK || rookieStep == RookieStep.OUTER_WORMHOLE) {
             const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_21");
             if (view == null) {
                 return;
@@ -311,7 +311,7 @@ export default class RookieStepMgr {
             }
             GameMainHelper.instance.changeGameCameraWorldPosition(view.worldPosition, true, true);
             GameMainHelper.instance.tiledMapShadowErase(building.stayMapPositions[0]);
-        } else if (rookieStep == RookieStep.WORMHOLE_ATTACK) {
+        } else if (rookieStep == RookieStep.WORMHOLE_ATTACK || rookieStep == RookieStep.OUTER_WORMHOLE) {
             const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_21");
             if (view == null) {
                 return;
@@ -401,6 +401,10 @@ export default class RookieStepMgr {
         if (rookieStep == RookieStep.WORMHOLE_ATTACK) {
             NetworkMgr.websocketMsg.player_rookie_update({
                 rookieStep: RookieStep.SYSTEM_TALK_23,
+            });
+        } else if (rookieStep == RookieStep.OUTER_WORMHOLE) {
+            NetworkMgr.websocketMsg.player_rookie_update({
+                rookieStep: RookieStep.FINISH,
             });
         }
     }

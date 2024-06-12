@@ -146,7 +146,7 @@ export class DataMgr {
         ) {
             // play anim to change step
             return;
-        } else if (p.rookieStep == RookieStep.FINISH) {
+        } else if (p.rookieStep == RookieStep.OUTER_WORMHOLE) {
             p.rookieStep = RookieStep.LOCAL_DEFEND_TAP_CLOSE;
         }
         DataMgr.s.userInfo.data.rookieStep = p.rookieStep;

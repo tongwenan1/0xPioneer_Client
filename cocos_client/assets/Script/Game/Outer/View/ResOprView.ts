@@ -256,6 +256,8 @@ export class ResOprView extends Component {
                 viewIndex = actionTypes.indexOf(MapInteractType.Collect);
             } else if (rookieStep == RookieStep.WORMHOLE_ATTACK) {
                 viewIndex = actionTypes.indexOf(MapInteractType.Camp);
+            } else if (rookieStep == RookieStep.OUTER_WORMHOLE) {
+                viewIndex = actionTypes.indexOf(MapInteractType.CampOut);
             }
             if (viewIndex != -1) {
                 view = this._actionItemContent.getChildByPath("ACTION_" + actionTypes[viewIndex]);

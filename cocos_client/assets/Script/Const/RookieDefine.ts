@@ -63,6 +63,8 @@ export enum RookieStep {
 
     LOCAL_DEFEND_TAP_CLOSE = 300,
 
+    OUTER_WORMHOLE = 310,
+
     FINISH = 999999,
 }
 
