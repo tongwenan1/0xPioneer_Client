@@ -270,6 +270,16 @@ message get_treasure_info_res {
 }
 message player_treasure_open_res {
     required int32 res = 1;
+    optional uint32 boxIndex = 2;
+    optional string boxId = 3;
+    repeated share.item_data items = 4;
+    repeated share.artifact_info_data artifacts = 5;
+    map<string, artifact_three_confs> threes = 6;
+}
+message player_treasure_open_select_artifact_res {
+    required int32 res = 1;
+    optional uint32 boxIndex = 2;
+    optional int32 artifactIndex = 3;
 }
 message player_point_treasure_open_res {
     required int32 res = 1;
@@ -292,8 +302,12 @@ message player_treasure_progress_change {
 }
 message player_worldbox_beginner_open_res {
     required int32 res = 1;
-    optional string boxId = 2;
-    optional bool finish = 3;
+    optional uint32 boxIndex = 2;
+    optional string boxId = 3;
+    optional bool finish = 4;
+    repeated share.item_data items = 5;
+    repeated share.artifact_info_data artifacts = 6;
+    map<string, artifact_three_confs> threes = 7;
 }
 
 // ------ inner-building ------

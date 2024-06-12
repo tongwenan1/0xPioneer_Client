@@ -143,6 +143,10 @@ message get_treasure_info { }
 message player_treasure_open {
     required uint32 boxIndex = 1;
 }
+message player_treasure_open_select_artifact {
+    required uint32 boxIndex = 1;
+    required int32 artifactIndex = 2;
+}
 message player_point_treasure_open {
     required string boxId = 1;
 }

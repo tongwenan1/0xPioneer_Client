@@ -607,14 +607,14 @@ export class OuterTiledMapActionController extends ViewController {
                     outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
                     return;
                 }
-                // if (costEnergy > 0) {
-                //     let ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
-                //     if (ownEnergy < costEnergy) {
-                //         outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
-                //         UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
-                //         return;
-                //     }
-                // }
+                if (costEnergy > 0) {
+                    let ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
+                    if (ownEnergy < costEnergy) {
+                        outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
+                        UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
+                        return;
+                    }
+                }
                 const result = await UIPanelManger.inst.pushPanel(UIName.MapActionConfrimTipUI);
                 if (result.success) {
                     result.node

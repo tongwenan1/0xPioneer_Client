@@ -117,6 +117,9 @@ export class WebsocketMsg {
     public player_treasure_open(d: c2s_user.Iplayer_treasure_open) {
         this.send_packet("player_treasure_open", d);
     }
+    public player_treasure_open_select_artifact(d: c2s_user.Iplayer_treasure_open_select_artifact) {
+        this.send_packet("player_treasure_open_select_artifact", d);
+    }
     public player_point_treasure_open(d: c2s_user.Iplayer_point_treasure_open) {
         this.send_packet("player_point_treasure_open", d);
     }
@@ -307,6 +310,10 @@ export namespace c2s_user {
     }
     export interface Iplayer_treasure_open {
         boxIndex: number;
+    }
+    export interface Iplayer_treasure_open_select_artifact {
+        boxIndex: number;
+        artifactIndex: number;
     }
     export interface Iplayer_point_treasure_open {
         boxId: string;
@@ -505,9 +512,22 @@ export namespace s2c_user {
 
     export interface Iplayer_worldbox_beginner_open_res {
         res: number;
+        boxIndex: number;
         boxId: string;
         finish: boolean;
+        items: share.Iitem_data[];
+        artifacts: share.Iartifact_data[];
+        threes: { [key: string]: share.Iartifact_three_confs };
     }
+    export interface Iplayer_treasure_open_res {
+        res: number;
+        boxId: string;
+        boxIndex: number;
+        items: share.Iitem_data[];
+        artifacts: share.Iartifact_info_data[];
+        threes: { [key: string]: share.Iartifact_three_confs };
+    }
+
     export interface Iplayer_item_use_res {
         res: number;
     }
@@ -856,6 +876,15 @@ export namespace share {
 
         dieTime?: number;
         rebornTime?: number;
+    }
+
+    export interface Iartifact_three_confs {
+        confs: Iartifact_three_conf[];
+    }
+    export interface Iartifact_three_conf {
+        type: number;
+        propId: string;
+        num: number;
     }
 
     export interface Iattacker_data {

@@ -49,6 +49,7 @@ export enum NotificationName {
     USERINFO_DID_CHANGE_LEVEL,
     USERINFO_DID_CHANGE_TREASURE_PROGRESS,
     USERINFO_DID_CHANGE_HEAT,
+    USERINFO_BOX_INFO_CHANGE,
     USERINFO_ROOKE_STEP_CHANGE,
 
     //---------------------- settlement

@@ -122,6 +122,7 @@ export class MainUI extends ViewController {
         const innerBuildButton = this.node.getChildByPath("btnBuild");
 
         const rewardView = this.node.getChildByPath("CommonContent/HeatTreasureUI");
+        const taskTrackView = this.node.getChildByPath("CommonContent/TaskTrackingUI");
 
         taskButton.active = false;
         backpackButton.active = false;
@@ -137,6 +138,7 @@ export class MainUI extends ViewController {
         innerBuildButton.active = false;
 
         rewardView.active = true;
+        taskTrackView.active = false;
 
         const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
         if (rookieStep >= RookieStep.FINISH) {
@@ -150,7 +152,9 @@ export class MainUI extends ViewController {
             battleReportButton.active = true;
             innerOuterChangeButton.active = true;
 
-            innerBuildButton.active = true;
+            innerBuildButton.active = !GameMainHelper.instance.isGameShowOuter;
+
+            taskTrackView.active = false;
         } else if (rookieStep >= RookieStep.DEFEND_TAP) {
             defendButton.active = true;
             taskButton.active = true;
@@ -279,8 +283,7 @@ export class MainUI extends ViewController {
         this.node.getChildByPath("CommonContent").active = !edit;
     }
     private _onInnerOuterChanged() {
-        const isOuter: boolean = GameMainHelper.instance.isGameShowOuter;
-        this.node.getChildByPath("btnBuild").active = !isOuter;
+        this._refreshElementShow();
     }
 
     private _onPlayerLvlupChanged(): void {

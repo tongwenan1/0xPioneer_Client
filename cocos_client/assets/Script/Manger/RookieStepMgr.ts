@@ -5,12 +5,13 @@ import { UIName } from "../Const/ConstUIDefine";
 import { NotificationName } from "../Const/Notification";
 import { RookieStepMaskUI } from "../UI/RookieGuide/RookieStepMaskUI";
 import { DataMgr } from "../Data/DataMgr";
-import { RookieStep } from "../Const/RookieDefine";
+import { RookieResourceAnim, RookieResourceAnimStruct, RookieStep } from "../Const/RookieDefine";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import { s2c_user } from "../Net/msg/WebsocketMsg";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import TalkConfig from "../Config/TalkConfig";
 import { DialogueUI } from "../UI/Outer/DialogueUI";
+import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 
 export default class RookieStepMgr {
     private static _instance: RookieStepMgr;
@@ -35,8 +36,6 @@ export default class RookieStepMgr {
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_BUILDING_UPGRADE_CLOSE, this._onRookieBuildingUpgradeClose, this);
 
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, this._onRooieNeedMaskShow, this);
-
-        NetworkMgr.websocket.on("player_worldbox_beginner_open_res", this.player_worldbox_beginner_open_res);
     }
 
     public static instance(): RookieStepMgr {
@@ -323,7 +322,13 @@ export default class RookieStepMgr {
             }
             GameMainHelper.instance.changeGameCameraWorldPosition(view.worldPosition, true, true);
             GameMainHelper.instance.tiledMapShadowErase(building.stayMapPositions[0]);
-        } else if (rookieStep == RookieStep.SYSTEM_TALK_20 || rookieStep == RookieStep.SYSTEM_TALK_21 || rookieStep == RookieStep.SYSTEM_TALK_22 || rookieStep == RookieStep.SYSTEM_TALK_23 || rookieStep == RookieStep.SYSTEM_TALK_24) {
+        } else if (
+            rookieStep == RookieStep.SYSTEM_TALK_20 ||
+            rookieStep == RookieStep.SYSTEM_TALK_21 ||
+            rookieStep == RookieStep.SYSTEM_TALK_22 ||
+            rookieStep == RookieStep.SYSTEM_TALK_23 ||
+            rookieStep == RookieStep.SYSTEM_TALK_24
+        ) {
             let talkId: string = "";
             if (rookieStep == RookieStep.SYSTEM_TALK_20) {
                 talkId = "talk20";
@@ -439,26 +444,4 @@ export default class RookieStepMgr {
             }
         });
     }
-
-    //-------------------------------------- socket notify
-    private player_worldbox_beginner_open_res = (e: any) => {
-        const p: s2c_user.Iplayer_worldbox_beginner_open_res = e.data;
-        if (p.res !== 1) {
-            return;
-        }
-        const rookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (rookieStep == RookieStep.OPEN_BOX_1 && p.boxId == "9001") {
-            NetworkMgr.websocketMsg.player_rookie_update({
-                rookieStep: RookieStep.NPC_TALK_5,
-            });
-        } else if (rookieStep == RookieStep.OPEN_BOX_2 && p.boxId == "9002") {
-            NetworkMgr.websocketMsg.player_rookie_update({
-                rookieStep: RookieStep.NPC_TALK_7,
-            });
-        } else if (rookieStep == RookieStep.OPEN_BOX_3 && p.boxId == "9003") {
-            NetworkMgr.websocketMsg.player_rookie_update({
-                rookieStep: RookieStep.SYSTEM_TALK_21,
-            });
-        }
-    };
 }

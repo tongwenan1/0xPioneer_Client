@@ -29,8 +29,9 @@ export class HeatTreasureUI extends Component {
 
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
-        NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.USERINFO_BOX_INFO_CHANGE, this._refreshUI, this);
 
+        NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._refreshUI, this);
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_HEAT_CONVERT, this._onRookieConvertHeat, this);
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_HEAT_BOX, this._onRookieTapBox, this);
     }
@@ -41,8 +42,9 @@ export class HeatTreasureUI extends Component {
     protected onDestroy(): void {
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.USERINFO_BOX_INFO_CHANGE, this._refreshUI, this);
 
+        NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._refreshUI, this);
         NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_HEAT_CONVERT, this._onRookieConvertHeat, this);
         NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_HEAT_BOX, this._onRookieTapBox, this);
     }
