@@ -52,6 +52,8 @@ export enum TaskConditionType {
     Kill = 3,
     ShowHide = 4,
     GameStart = 5,
+    interact = 6,
+    innerBuildingLevelUp = 7,
 }
 
 export interface TaskTalkCondition {
@@ -74,6 +76,15 @@ export interface TaskShowHideCondition {
     id: string;
     status: TaskShowHideStatus;
 }
+export interface TaskInteractCondition {
+    target: MapMemberTargetType;
+    interactId: string;
+    interactTime: number;
+}
+export interface TaskInnerBuildingLevelUpCondition {
+    innerBuildingId: string;
+    level: number;
+}
 export interface TaskCondition {
     type: TaskConditionType;
     isSatisfied?: boolean;
@@ -81,6 +92,8 @@ export interface TaskCondition {
     finish?: TaskFinishCondition;
     kill?: TaskKillCondition;
     showHide?: TaskShowHideCondition;
+    interact?: TaskInteractCondition;
+    innerBuildingLevelUp?: TaskInnerBuildingLevelUpCondition;
 }
 export interface TaskSatisfyCondition {
     satisfyType: TaskConditionSatisfyType;

@@ -311,49 +311,7 @@ export class TaskListUI extends ViewController {
         }
         const templeTask: share.Itask_data = this._toDoTaskList[index];
         const currentStepTask: TaskStepObject = DataMgr.s.task.getTaskStep(templeTask.steps[templeTask.stepIndex].id);
-        if (currentStepTask == null) {
-            return;
-        }
-        let condition: TaskCondition = null;
-        if (currentStepTask.completeCon != null && currentStepTask.completeCon.conditions.length > 0) {
-            condition = currentStepTask.completeCon.conditions[0];
-        }
-        if (condition == null) {
-            return;
-        }
-        let currentMapPos: Vec2 = null;
-        if (condition.type == TaskConditionType.Talk) {
-            let targetPioneer: MapNpcPioneerObject = null;
-            const allNpcs = DataMgr.s.pioneer.getAllNpcs();
-            for (const npc of allNpcs) {
-                if (npc.talkId == condition.talk.talkId) {
-                    targetPioneer = npc;
-                    break;
-                }
-            }
-            if (targetPioneer != null) {
-                currentMapPos = targetPioneer.stayPos;
-            }
-        } else if (condition.type == TaskConditionType.Kill) {
-            let targetPioneer: MapPioneerObject = null;
-            if (condition.kill.enemyIds.length > 0) {
-                targetPioneer = DataMgr.s.pioneer.getById(condition.kill.enemyIds[CommonTools.getRandomInt(0, condition.kill.enemyIds.length - 1)]);
-            }
-            if (targetPioneer != null) {
-                currentMapPos = targetPioneer.stayPos;
-            }
-        }
-        if (currentMapPos != null) {
-            if (!GameMainHelper.instance.isGameShowOuter) {
-                GameMainHelper.instance.changeInnerAndOuterShow();
-            }
-            let triggerTask: boolean = false;
-            const rookieStep = DataMgr.s.userInfo.data.rookieStep;
-            if (rookieStep == RookieStep.TASK_SHOW_TAP_1 || rookieStep == RookieStep.TASK_SHOW_TAP_2 || rookieStep == RookieStep.TASK_SHOW_TAP_3) {
-                triggerTask = true;
-            }
-            GameMainHelper.instance.changeGameCameraWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y), true, triggerTask);
-        }
+        GameMgr.taskTracking(currentStepTask);
     }
     private onTapCloseDetail() {
         GameMusicPlayMgr.playTapButtonEffect();

@@ -1,6 +1,24 @@
 import TaskStepConfig from "../../Config/TaskStepConfig";
 import { GetPropData } from "../../Const/ConstDefine";
-import { TaskStepConfigData, TaskAction, TaskCondition, TaskConditionType, TaskFinishCondition, TaskKillCondition, TaskSatisfyCondition, TaskShowHideCondition, TaskTalkCondition, TaskActionType, TaskFactionAction, TaskNpcGetNewTalkAction, TaskShowHideAction, TaskTalkAction, TaskStepObject } from "../../Const/TaskDefine";
+import {
+    TaskStepConfigData,
+    TaskAction,
+    TaskCondition,
+    TaskConditionType,
+    TaskFinishCondition,
+    TaskKillCondition,
+    TaskSatisfyCondition,
+    TaskShowHideCondition,
+    TaskTalkCondition,
+    TaskActionType,
+    TaskFactionAction,
+    TaskNpcGetNewTalkAction,
+    TaskShowHideAction,
+    TaskTalkAction,
+    TaskStepObject,
+    TaskInteractCondition,
+    TaskInnerBuildingLevelUpCondition,
+} from "../../Const/TaskDefine";
 import { share } from "../../Net/msg/WebsocketMsg";
 import NetGlobalData from "./Data/NetGlobalData";
 
@@ -18,6 +36,9 @@ export default class TaskDataMgr {
     }
     public getAllGettedTasks(): share.Itask_data[] {
         return this._data.filter((task) => task.isGetted);
+    }
+    public getAllDoingTasks(): share.Itask_data[] {
+        return this._data.filter((task) => task.isGetted && !task.isFinished && !task.isFailed);
     }
     public getTask(taskId: string): share.Itask_data | null {
         const models = this._data.filter((temple) => temple.taskId == taskId);
@@ -124,6 +145,8 @@ export default class TaskDataMgr {
                 let finish: TaskFinishCondition = null;
                 let kill: TaskKillCondition = null;
                 let showHide: TaskShowHideCondition = null;
+                let interact: TaskInteractCondition = null;
+                let innerBuildingLevelUp: TaskInnerBuildingLevelUpCondition = null;
                 if (conditionType == TaskConditionType.Talk) {
                     talk = {
                         talkId: temple[1],
@@ -148,6 +171,17 @@ export default class TaskDataMgr {
                         id: temple[2],
                         status: temple[3],
                     };
+                } else if (conditionType == TaskConditionType.interact) {
+                    interact = {
+                        target: temple[1],
+                        interactId: temple[2],
+                        interactTime: temple[3],
+                    };
+                } else if (conditionType == TaskConditionType.innerBuildingLevelUp) {
+                    innerBuildingLevelUp = {
+                        innerBuildingId: temple[1],
+                        level: temple[2],
+                    };
                 }
                 conditions.push({
                     type: conditionType,
@@ -156,6 +190,8 @@ export default class TaskDataMgr {
                     finish: finish,
                     kill: kill,
                     showHide: showHide,
+                    interact: interact,
+                    innerBuildingLevelUp: innerBuildingLevelUp,
                 });
             }
         }

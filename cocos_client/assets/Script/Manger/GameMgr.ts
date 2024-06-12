@@ -1,13 +1,19 @@
+import { Vec2 } from "cc";
 import NotificationMgr from "../Basic/NotificationMgr";
 import InnerBuildingConfig from "../Config/InnerBuildingConfig";
 import MapBuildingConfig from "../Config/MapBuildingConfig";
 import { InnerBuildingType } from "../Const/BuildingDefine";
-import { GameExtraEffectType } from "../Const/ConstDefine";
+import { GameExtraEffectType, MapMemberTargetType } from "../Const/ConstDefine";
 import ItemData from "../Const/Item";
 import { MapBuildingObject } from "../Const/MapBuilding";
 import { NotificationName } from "../Const/Notification";
-import { MapPlayerPioneerObject } from "../Const/PioneerDefine";
+import { MapNpcPioneerData, MapNpcPioneerObject, MapPioneerObject, MapPlayerPioneerObject } from "../Const/PioneerDefine";
+import { TaskCondition, TaskConditionType, TaskStepObject } from "../Const/TaskDefine";
 import { DataMgr } from "../Data/DataMgr";
+import CommonTools from "../Tool/CommonTools";
+import GameMainHelper from "../Game/Helper/GameMainHelper";
+import { RookieGuide } from "../UI/RookieGuide/RookieGuide";
+import { RookieStep } from "../Const/RookieDefine";
 
 export default class GameMgr {
     public rookieTaskExplainIsShow: boolean = false;
@@ -26,6 +32,77 @@ export default class GameMgr {
         quotaMax = quotaMax + Math.floor(0.5 * (building.level - 1));
 
         return { reward: reward, quotaMax: quotaMax };
+    }
+
+    public taskTracking(currentStepTask: TaskStepObject) {
+        if (currentStepTask == null) {
+            return;
+        }
+        let condition: TaskCondition = null;
+        if (currentStepTask.completeCon != null && currentStepTask.completeCon.conditions.length > 0) {
+            condition = currentStepTask.completeCon.conditions[0];
+        }
+        if (condition == null) {
+            return;
+        }
+        let currentMapPos: Vec2 = null;
+        let interactBuildingId: string = null;
+        let interactPioneerId: string = null;
+        if (condition.type == TaskConditionType.Talk) {
+            let targetPioneer: MapNpcPioneerObject = null;
+            const allNpcs = DataMgr.s.pioneer.getAllNpcs();
+            for (const npc of allNpcs) {
+                if (npc.talkId == condition.talk.talkId) {
+                    targetPioneer = npc;
+                    break;
+                }
+            }
+            if (targetPioneer != null) {
+                interactPioneerId = targetPioneer.id;
+                currentMapPos = targetPioneer.stayPos;
+            }
+        } else if (condition.type == TaskConditionType.Kill) {
+            let targetPioneer: MapPioneerObject = null;
+            if (condition.kill.enemyIds.length > 0) {
+                targetPioneer = DataMgr.s.pioneer.getById(condition.kill.enemyIds[CommonTools.getRandomInt(0, condition.kill.enemyIds.length - 1)]);
+            }
+            if (targetPioneer != null) {
+                interactPioneerId = targetPioneer.id;
+                currentMapPos = targetPioneer.stayPos;
+            }
+        } else if(condition.type == TaskConditionType.interact && condition.interact.interactId != null) {
+            if (condition.interact.target == MapMemberTargetType.pioneer) {
+                const targetPioneer = DataMgr.s.pioneer.getById(condition.interact.interactId);
+                if (targetPioneer != null) {
+                    currentMapPos = targetPioneer.stayPos;
+                    interactPioneerId = targetPioneer.id;
+                }
+                
+            } else if (condition.interact.target == MapMemberTargetType.building) {
+                const targetBuilding = DataMgr.s.mapBuilding.getBuildingById(condition.interact.interactId);
+                if (targetBuilding != null) {
+                    currentMapPos = targetBuilding.stayMapPositions[0];
+                    interactBuildingId = targetBuilding.id;
+                }
+            }
+        } 
+        if (currentMapPos != null) {
+            if (!GameMainHelper.instance.isGameShowOuter) {
+                GameMainHelper.instance.changeInnerAndOuterShow();
+            }
+            let triggerTask: boolean = false;
+            const rookieStep = DataMgr.s.userInfo.data.rookieStep;
+            if (rookieStep == RookieStep.TASK_SHOW_TAP_1 || rookieStep == RookieStep.TASK_SHOW_TAP_2 || rookieStep == RookieStep.TASK_SHOW_TAP_3) {
+                triggerTask = true;
+            }
+            const worldPos = GameMainHelper.instance.tiledMapGetPosWorld(currentMapPos.x, currentMapPos.y);
+            GameMainHelper.instance.changeGameCameraWorldPosition(worldPos, true, triggerTask);
+            GameMainHelper.instance.showTrackingView(worldPos, {
+                stepId: currentStepTask.id,
+                interactBuildingId: interactBuildingId,
+                interactPioneerId: interactPioneerId,
+            });
+        }
     }
 
     //--------------------------- effect

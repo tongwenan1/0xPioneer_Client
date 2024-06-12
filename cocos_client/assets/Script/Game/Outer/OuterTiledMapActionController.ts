@@ -89,7 +89,10 @@ export class OuterTiledMapActionController extends ViewController {
     }
 
     @property(Prefab)
-    tiledmap: Prefab;
+    private tiledmap: Prefab;
+
+    @property(Prefab)
+    private trackingPrefab: Prefab;
 
     @property(Prefab)
     private resOprPrefab = null;
@@ -354,7 +357,10 @@ export class OuterTiledMapActionController extends ViewController {
         _tilemap.getLayer("shadow").color = c;
 
         //init tiledmap by a helper class
-        GameMainHelper.instance.initTiledMapHelper(_tilemap);
+        const trackingView = instantiate(this.trackingPrefab);
+        trackingView.active = false;
+        trackingView.setParent(mapView);
+        GameMainHelper.instance.initTiledMapHelper(_tilemap, trackingView);
 
         this._fogItem = instantiate(this.gridFogPrefab);
         this._fogItem.layer = this.node.layer;
@@ -494,7 +500,11 @@ export class OuterTiledMapActionController extends ViewController {
                     return;
                 }
             } else if (stayBuilding.type == MapBuildingType.event) {
-                if (currentActionPioneer.actionBuildingId != null && currentActionPioneer.actionBuildingId != "" && currentActionPioneer.actionBuildingId != stayBuilding.id) {
+                if (
+                    currentActionPioneer.actionBuildingId != null &&
+                    currentActionPioneer.actionBuildingId != "" &&
+                    currentActionPioneer.actionBuildingId != stayBuilding.id
+                ) {
                     return;
                 }
             } else {
@@ -597,14 +607,14 @@ export class OuterTiledMapActionController extends ViewController {
                     outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
                     return;
                 }
-                if (costEnergy > 0) {
-                    let ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
-                    if (ownEnergy < costEnergy) {
-                        outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
-                        UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
-                        return;
-                    }
-                }
+                // if (costEnergy > 0) {
+                //     let ownEnergy: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
+                //     if (ownEnergy < costEnergy) {
+                //         outPioneerController.clearPioneerFootStep(currentActionPioneer.id);
+                //         UIHUDController.showCenterTip(LanMgr.getLanById("106002"));
+                //         return;
+                //     }
+                // }
                 const result = await UIPanelManger.inst.pushPanel(UIName.MapActionConfrimTipUI);
                 if (result.success) {
                     result.node

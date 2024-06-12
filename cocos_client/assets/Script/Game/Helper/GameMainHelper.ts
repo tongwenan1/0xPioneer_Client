@@ -1,4 +1,4 @@
-import { Camera, Node, Size, TiledMap, Vec2, Vec3, size, tween, v2 } from "cc";
+import { Camera, Node, Prefab, Size, TiledMap, Vec2, Vec3, size, tween, v2 } from "cc";
 import ConfigConfig from "../../Config/ConfigConfig";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
@@ -103,7 +103,7 @@ export default class GameMainHelper {
         return this._isGameShowOuter;
     }
     //------------------------------------------ tiled map
-    public initTiledMapHelper(map: TiledMap) {
+    public initTiledMapHelper(map: TiledMap, tracking: Node) {
         //init tiledmap by a helper class
         this._tiledMapHelper = new TileMapHelper(map);
         this._tiledMapHelper.Shadow_Init(0, 75);
@@ -111,6 +111,8 @@ export default class GameMainHelper {
         this._tiledMapHelper._shadowhalf2tag = 74;
         //set a callback here. 35 is block
         this._tiledMapHelper.Path_InitBlock(35);
+
+        this._trackingView = tracking;
     }
     public get tiledMapGetAllPos() {
         return this._tiledMapHelper.getAllPos();
@@ -257,6 +259,19 @@ export default class GameMainHelper {
         }
         this._tiledMapHelper.Shadow_Update(dt);
     }
+    public showTrackingView(worldPosition: Vec3, interactData: { stepId: string; interactBuildingId: string; interactPioneerId: string }) {
+        this._trackingView.active = true;
+        this._trackingView.setSiblingIndex(99999);
+        this._trackingView.worldPosition = worldPosition;
+
+        this._currentTrackingInteractData = interactData;
+    }
+    public currentTrackingInteractData() {
+        return this._currentTrackingInteractData;
+    }
+    public hideTrackingView() {
+        this._trackingView.active = false;
+    }
     //------------------------------------------ cursor
     public changeCursor(type: ECursorType) {
         NotificationMgr.triggerEvent(NotificationName.CHANGE_CURSOR, type);
@@ -298,10 +313,19 @@ export default class GameMainHelper {
 
     private _tiledMapHelper: TileMapHelper = null;
 
+    private _currentTrackingInteractData: { stepId: string; interactBuildingId: string; interactPioneerId: string } = null;
+    private _trackingView: Node = null;
+
     private _isEditInnerBuildingLattice: boolean = false;
 
     private _isMapInitOver: boolean = false;
     constructor() {
+        this._currentTrackingInteractData = {
+            stepId: "",
+            interactBuildingId: "",
+            interactPioneerId: "",
+        };
+
         NotificationMgr.addListener(NotificationName.GAME_JUMP_INNER_AND_SHOW_RELIC_TOWER, this._onGameJumpInnerAndShowRelicTower, this);
     }
 

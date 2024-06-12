@@ -137,6 +137,9 @@ export default class PioneerMgr {
                 }
             }
             if (interactPioneer != null) {
+                if (GameMainHelper.instance.currentTrackingInteractData().interactPioneerId == interactPioneer.id) {
+                    GameMainHelper.instance.hideTrackingView();
+                }
                 // meet pioneer
                 if (pioneer.faction == MapMemberFactionType.friend && interactPioneer.faction == MapMemberFactionType.friend) {
                     if (interactPioneer.type == MapPioneerType.npc) {
@@ -165,6 +168,9 @@ export default class PioneerMgr {
         } else {
             // building
             // need changed. use manger to deal with pioneer and building
+            if (GameMainHelper.instance.currentTrackingInteractData().interactBuildingId == stayBuilding.id) {
+                GameMainHelper.instance.hideTrackingView();
+            }
             if (stayBuilding.type == MapBuildingType.city) {
                 // now only deal with fake fight
                 if (pioneer.id == "wormhole_token") {

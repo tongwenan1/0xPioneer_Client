@@ -1805,6 +1805,10 @@
       "__uuid__": "ce5ec31a-eabf-45e7-a1c3-0547c5a03615",
       "__expectedType__": "cc.Prefab"
     },
+    "trackingPrefab": {
+      "__uuid__": "eaf4d63c-0b48-4872-896f-ecd36cae6781",
+      "__expectedType__": "cc.Prefab"
+    },
     "resOprPrefab": {
       "__uuid__": "653635dc-31d3-4485-8fb8-9e819e71f382",
       "__expectedType__": "cc.Prefab"
@@ -39519,7 +39523,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1920,
+      "width": 1920.0000000000002,
       "height": 1080
     },
     "_anchorPoint": {
