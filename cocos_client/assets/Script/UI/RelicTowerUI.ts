@@ -17,6 +17,7 @@ import {
     rect,
     Rect,
     Sprite,
+    Color,
 } from "cc";
 import ArtifactData from "../Model/ArtifactData";
 import { GameMgr, LanMgr } from "../Utils/Global";
@@ -24,6 +25,7 @@ import ViewController from "../BasicView/ViewController";
 import { UIName } from "../Const/ConstUIDefine";
 import { ArtifactInfoUI } from "./ArtifactInfoUI";
 import UIPanelManger from "../Basic/UIPanelMgr";
+import { ArtifactItem1 } from "./ArtifactItem1";
 import { ArtifactItem } from "./ArtifactItem";
 import ManualNestedScrollView from "../BasicView/ManualNestedScrollView";
 import { InnerBuildingType } from "../Const/BuildingDefine";
@@ -67,6 +69,8 @@ export class RelicTowerUI extends ViewController {
     private _invokeSlotItems: Node[] = [];
     private _compositeItem: Node = null;
 
+    private _tabButtons: Node[] = [];
+
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
@@ -83,6 +87,10 @@ export class RelicTowerUI extends ViewController {
         this._effectContent = this._onEffectView.getChildByPath("LeftContent/ScrollView/View/Content");
         this._effectView = this._effectContent.getChildByPath("Item");
         this._effectView.removeFromParent();
+
+        const onEffectBtn = this.node.getChildByPath("__ViewContent/Bg/tabButtons/OnEffectButton");
+        const storageBtn = this.node.getChildByPath("__ViewContent/Bg/tabButtons/StorageButton");
+        this._tabButtons = [onEffectBtn, storageBtn];
 
         const relicMax: number = InnerBuildingLvlUpConfig.getBuildingLevelData(buildingLevel, "relic_max");
         if (relicMax != null) {
@@ -144,6 +152,12 @@ export class RelicTowerUI extends ViewController {
     }
 
     private _refreshUI() {
+        for (let i = 0; i < this._tabButtons.length; i++) {
+            this._tabButtons[i].getChildByName("BtnPageLight").active = i == this._showIndex;
+            this._tabButtons[i].getChildByName("BtnPageDark").active = i != this._showIndex;
+            this._tabButtons[i].getChildByName("Label").getComponent(Label).color = i == this._showIndex ? new Color(66, 53, 35) : new Color(122, 114, 111);
+        }
+
         if (this._showIndex == 0) {
             this._onEffectView.active = true;
             this._storageView.active = false;
@@ -178,7 +192,7 @@ export class RelicTowerUI extends ViewController {
                 //is locked
                 itemView.getChildByPath("Lock").active = locked;
 
-                itemView.getComponent(ArtifactItem).refreshUI(data);
+                itemView.getComponent(ArtifactItem1).refreshUI(data);
 
                 itemView.getComponent(LongPressButton).shortClick[0].customEventData = i.toString();
                 itemView.getComponent(LongPressButton).shortClickInteractable = !locked;
@@ -232,6 +246,7 @@ export class RelicTowerUI extends ViewController {
                 const view = instantiate(this._storageItem);
                 view.getComponent(ArtifactItem).refreshUI(this._invokeStorageDatas[i]);
                 view.setParent(this._storageItemContent);
+                view.getChildByPath("OnEffectBg").active = this._invokeStorageDatas[i].effectIndex >= 0;
                 view.getChildByPath("EffectTitle").active = this._invokeStorageDatas[i].effectIndex >= 0;
                 view.getChildByPath("New").active = this._newArtifactIds.indexOf(this._invokeStorageDatas[i].uniqueId) != -1;
 
