@@ -32,7 +32,7 @@ export class OuterBuildingController extends Component {
     private rebonPrefab;
 
     private _buildingMap: Map<string, { node: Node; stayPositons: Vec2[] }> = new Map();
-    private _rebonViews: Node[] = [];
+    private _rebornMap: Map<string, Node> = new Map();
 
     protected onLoad() {
         NotificationMgr.addListener(NotificationName.MAP_BUILDING_SHOW_CHANGE, this._refreshUI, this);
@@ -113,11 +113,6 @@ export class OuterBuildingController extends Component {
         if (decorationView == null) {
             return;
         }
-        for (const view of this._rebonViews) {
-            view.destroy();
-        }
-        this._rebonViews = [];
-
         let changed: boolean = false;
         const allBuildings = DataMgr.s.mapBuilding.getObj_building();
         for (const building of allBuildings) {
@@ -154,6 +149,10 @@ export class OuterBuildingController extends Component {
                         }
                     }
                 }
+                if (this._rebornMap.has(building.id)) {
+                    this._rebornMap.get(building.id).destroy();
+                    this._rebornMap.delete(building.id);
+                }
             } else {
                 if (this._buildingMap.has(building.id)) {
                     const data = this._buildingMap.get(building.id);
@@ -163,23 +162,29 @@ export class OuterBuildingController extends Component {
                     }
                     this._buildingMap.delete(building.id);
                 }
-                if (building.rebornTime > new Date().getTime()) {
-                    if (building.stayMapPositions.length > 0) {
-                        let worldPos = null;
-                        if (building.stayMapPositions.length == 7) {
-                            worldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[3].x, building.stayMapPositions[3].y);
-                        } else if (building.stayMapPositions.length == 3) {
-                            const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
-                            const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[1].x, building.stayMapPositions[1].y);
-                            worldPos = v3(beginWorldPos.x, endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2, 0);
-                        } else {
-                            worldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
+                const currentTimestamp = new Date().getTime();
+                if (building.rebornTime > currentTimestamp) {
+                    if (!this._rebornMap.has(building.id)) {
+                        if (building.stayMapPositions.length > 0) {
+                            let worldPos = null;
+                            if (building.stayMapPositions.length == 7) {
+                                worldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[3].x, building.stayMapPositions[3].y);
+                            } else if (building.stayMapPositions.length == 3) {
+                                const beginWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(
+                                    building.stayMapPositions[0].x,
+                                    building.stayMapPositions[0].y
+                                );
+                                const endWorldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[1].x, building.stayMapPositions[1].y);
+                                worldPos = v3(beginWorldPos.x, endWorldPos.y + (beginWorldPos.y - endWorldPos.y) / 2, 0);
+                            } else {
+                                worldPos = GameMainHelper.instance.tiledMapGetPosWorld(building.stayMapPositions[0].x, building.stayMapPositions[0].y);
+                            }
+                            const rebornView: Node = instantiate(this.rebonPrefab);
+                            rebornView.setParent(decorationView);
+                            rebornView.setWorldPosition(worldPos);
+                            rebornView.getComponent(OuterRebonView).refreshUI(true, building.rebornTime);
+                            this._rebornMap.set(building.id, rebornView);
                         }
-                        const rebornView: Node = instantiate(this.rebonPrefab);
-                        rebornView.setParent(decorationView);
-                        rebornView.setWorldPosition(worldPos);
-                        rebornView.getComponent(OuterRebonView).refreshUI(building.rebornTime);
-                        this._rebonViews.push(rebornView);
                     }
                 }
             }

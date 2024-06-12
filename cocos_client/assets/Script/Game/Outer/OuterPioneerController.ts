@@ -143,7 +143,7 @@ export class OuterPioneerController extends ViewController {
     private rebonPrefab: Prefab;
 
     private _pioneerMap: Map<string, Node> = new Map();
-    private _rebonViews: Node[] = [];
+    private _rebornMap: Map<string, Node> = new Map();
 
     private _movingPioneerIds: string[] = [];
     private _fightViewMap: Map<string, OuterFightView> = new Map();
@@ -283,12 +283,6 @@ export class OuterPioneerController extends ViewController {
         if (decorationView == null) {
             return;
         }
-
-        for (const view of this._rebonViews) {
-            view.destroy();
-        }
-        this._rebonViews = [];
-
         const allPioneers = DataMgr.s.pioneer.getAll();
         let changed: boolean = false;
         for (const pioneer of allPioneers) {
@@ -344,17 +338,24 @@ export class OuterPioneerController extends ViewController {
                         temple.setWorldPosition(worldPos);
                     }
                 }
+                if (this._rebornMap.has(pioneer.id)) {
+                    this._rebornMap.get(pioneer.id).destroy();
+                    this._rebornMap.delete(pioneer.id);
+                }
             } else {
                 if (this._pioneerMap.has(pioneer.id)) {
                     this._pioneerMap.get(pioneer.id).destroy();
                     this._pioneerMap.delete(pioneer.id);
                 }
-                if (pioneer.rebornTime > new Date().getTime()) {
-                    const rebornView: Node = instantiate(this.rebonPrefab);
-                    rebornView.setParent(decorationView);
-                    rebornView.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(pioneer.stayPos.x, pioneer.stayPos.y));
-                    rebornView.getComponent(OuterRebonView).refreshUI(pioneer.rebornTime);
-                    this._rebonViews.push(rebornView);
+                const currentTimestamp = new Date().getTime();
+                if (pioneer.rebornTime > currentTimestamp) {
+                    if (!this._rebornMap.has(pioneer.id)) {
+                        const rebornView: Node = instantiate(this.rebonPrefab);
+                        rebornView.setParent(decorationView);
+                        rebornView.setWorldPosition(GameMainHelper.instance.tiledMapGetPosWorld(pioneer.stayPos.x, pioneer.stayPos.y));
+                        rebornView.getComponent(OuterRebonView).refreshUI(false, pioneer.rebornTime);
+                        this._rebornMap.set(pioneer.id, rebornView);
+                    }
                 }
             }
         }

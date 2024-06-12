@@ -1,4 +1,4 @@
-import { _decorator, instantiate, Label, Layout, Node, Prefab } from "cc";
+import { _decorator, Animation, instantiate, Label, Layout, Node, ParticleSystem2D, Prefab } from "cc";
 import { LanMgr, ResourcesMgr } from "../../../Utils/Global";
 import { MapBuildingType, InnerBuildingType, UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import ViewController from "../../../BasicView/ViewController";
@@ -29,8 +29,14 @@ export class OuterBuildingView extends ViewController {
         this.node.getChildByPath("Level/Text").getComponent(Label).string = "Lv." + building.level;
         this.node.getChildByPath("Level/Difficult").active = building.level > DataMgr.s.artifact.getArtifactLevel();
 
-        for (const buildingName of this._buildViewNames) {
-            this.node.getChildByPath("BuildingContent/" + buildingName).active = buildingName == building.animType;
+        if (this._building.type == MapBuildingType.wormhole) {
+            for (const child of this.node.getChildByPath("BuildingContent").children) {
+                child.active = false;
+            }
+        } else {
+            for (const child of this.node.getChildByPath("BuildingContent").children) {
+                child.active = child.name == building.animType;
+            }
         }
 
         const strongholdView = this.node.getChildByPath("StrongholdContent");
@@ -93,10 +99,12 @@ export class OuterBuildingView extends ViewController {
                 exploreView.getChildByPath("Icon/secretGuard").active = building.explorePioneerIds[0] == "pioneer_1";
                 exploreView.getChildByPath("Icon/doomsdayGangSpy").active = building.explorePioneerIds[0] == "pioneer_2";
                 exploreView.getChildByPath("Icon/rebels").active = building.explorePioneerIds[0] == "pioneer_3";
-                
+
                 const currentTimeStamp: number = new Date().getTime();
                 const tempPioneer = DataMgr.s.pioneer.getById(building.explorePioneerIds[0]);
-                exploreView.getChildByPath("Label").getComponent(Label).string = CommonTools.formatSeconds((tempPioneer.actionEndTimeStamp - currentTimeStamp) / 1000)
+                exploreView.getChildByPath("Label").getComponent(Label).string = CommonTools.formatSeconds(
+                    (tempPioneer.actionEndTimeStamp - currentTimeStamp) / 1000
+                );
             }
         } else if (building.type == MapBuildingType.stronghold) {
             strongholdIcon.active = true;
@@ -135,37 +143,76 @@ export class OuterBuildingView extends ViewController {
         } else if (building.type == MapBuildingType.wormhole) {
             strongholdIcon.active = true;
             const wormholeObj = building as MapBuildingWormholeObject;
-            wormholdView.active = wormholeObj.attacker.size > 0;
-            if (wormholdView.active) {
-                const currentTimeStamp: number = new Date().getTime();
-                const prepareDidFinish: boolean = wormholeObj.wormholdCountdownTime > currentTimeStamp;
-                const maxWormholdLength: number = 3;
-                for (let i = 0; i < maxWormholdLength; i++) {
-                    const tempView = wormholdView.getChildByPath("WormholdContent/Item_" + i);
-                    const emptyView = tempView.getChildByPath("Empty");
-                    const prepareView = tempView.getChildByPath("Prepare");
-                    if (wormholeObj.attacker.has(i)) {
-                        const pioneerId = wormholeObj.attacker.get(i);
-                        emptyView.active = false;
-                        prepareView.active = true;
-                        prepareView.getChildByPath("Icon/pioneer_default").active = pioneerId == "pioneer_0";
-                        prepareView.getChildByPath("Icon/secretGuard").active = pioneerId == "pioneer_1";
-                        prepareView.getChildByPath("Icon/doomsdayGangSpy").active = pioneerId == "pioneer_2";
-                        prepareView.getChildByPath("Icon/rebels").active = pioneerId == "pioneer_3";
-                        prepareView.getChildByPath("IconGarrison").active = !prepareDidFinish;
-                    } else {
-                        emptyView.active = true;
-                        prepareView.active = false;
+            if (this._fakeAttack) {
+                const attackComeView = this.node.getChildByPath("BuildingContent/WormholeAttackerCome");
+                if (!attackComeView.active) {
+                    attackComeView.active = true;
+                    const animViewNames: string[] = [
+                        "Lighting_Effect_A_Group_Group",
+                        "Lighting_Effect_A_Group_Group/Lighting_Effect_A_Group",
+                        "Lighting_Effect_A_Group_Group/Lighting_Effect_A_Group/Lighting_Effect_A",
+                        "Transfer_Matrix_Effect_Tex_02",
+                        "Transfer_Matrix_Effect_Tex_03",
+                    ];
+                    for (const name of animViewNames) {
+                        attackComeView.getChildByPath(name).getComponent(Animation).play();
                     }
+                    this.scheduleOnce(() => {
+                        this._fakeAttack = false;
+                        this.refreshUI(this._building);
+                    }, 2.5);
                 }
-                if (prepareDidFinish) {
-                    wormholdView.getChildByPath("Countdown").active = true;
-                    // useLanMgr
-                    // wormholdView.getChildByPath("Countdown").getComponent(Label).string = LanMgr.getLanById("107549") + ":" + CommonTools.formatSeconds(wormholeObj.wormholdCountdownTime);
-                    wormholdView.getChildByPath("Countdown").getComponent(Label).string =
-                        "wormhold traveling: " + CommonTools.formatSeconds((wormholeObj.wormholdCountdownTime - currentTimeStamp) / 1000);
+                this["PREPARED_VIEW_ACTIVED"] = false;
+            } else {
+                wormholdView.active = wormholeObj.attacker.size > 0;
+                if (wormholdView.active) {
+                    const currentTimeStamp: number = new Date().getTime();
+                    const prepareDidFinish: boolean = wormholeObj.wormholdCountdownTime > currentTimeStamp;
+                    const maxWormholdLength: number = 3;
+                    for (let i = 0; i < maxWormholdLength; i++) {
+                        const tempView = wormholdView.getChildByPath("WormholdContent/Item_" + i);
+                        const emptyView = tempView.getChildByPath("Empty");
+                        const prepareView = tempView.getChildByPath("Prepare");
+                        if (wormholeObj.attacker.has(i)) {
+                            const pioneerId = wormholeObj.attacker.get(i);
+                            emptyView.active = false;
+                            prepareView.active = true;
+                            prepareView.getChildByPath("Icon/pioneer_default").active = pioneerId == "pioneer_0";
+                            prepareView.getChildByPath("Icon/secretGuard").active = pioneerId == "pioneer_1";
+                            prepareView.getChildByPath("Icon/doomsdayGangSpy").active = pioneerId == "pioneer_2";
+                            prepareView.getChildByPath("Icon/rebels").active = pioneerId == "pioneer_3";
+                            prepareView.getChildByPath("IconGarrison").active = !prepareDidFinish;
+                        } else {
+                            emptyView.active = true;
+                            prepareView.active = false;
+                        }
+                    }
+                    if (prepareDidFinish) {
+                        // begin attack
+                        const preparedView = this.node.getChildByPath("BuildingContent/WormholeBeginAttack");
+                        preparedView.active = true;
+                        if (this["PREPARED_VIEW_ACTIVED"] == false) {
+                            // play anim
+                            preparedView.getChildByPath("Lighting_Point_Effect_A").getComponent(ParticleSystem2D).resetSystem();
+                            this["PREPARED_VIEW_ACTIVED"] = true;
+                        }
+
+                        wormholdView.getChildByPath("Countdown").active = true;
+                        // useLanMgr
+                        // wormholdView.getChildByPath("Countdown").getComponent(Label).string = LanMgr.getLanById("107549") + ":" + CommonTools.formatSeconds(wormholeObj.wormholdCountdownTime);
+                        wormholdView.getChildByPath("Countdown").getComponent(Label).string =
+                            "wormhold traveling: " + CommonTools.formatSeconds((wormholeObj.wormholdCountdownTime - currentTimeStamp) / 1000);
+                    } else {
+                        // one more attacker
+                        this.node.getChildByPath("BuildingContent/WormholeStayOneMore").active = true;
+
+                        wormholdView.getChildByPath("Countdown").active = false;
+                        this["PREPARED_VIEW_ACTIVED"] = false;
+                    }
                 } else {
-                    wormholdView.getChildByPath("Countdown").active = false;
+                    // common
+                    this.node.getChildByPath("BuildingContent/" + this._building.animType).active = true;
+                    this["PREPARED_VIEW_ACTIVED"] = false;
                 }
             }
         } else if (building.type == MapBuildingType.resource) {
@@ -176,10 +223,12 @@ export class OuterBuildingView extends ViewController {
                 exploreView.getChildByPath("Icon/secretGuard").active = building.gatherPioneerIds[0] == "pioneer_1";
                 exploreView.getChildByPath("Icon/doomsdayGangSpy").active = building.gatherPioneerIds[0] == "pioneer_2";
                 exploreView.getChildByPath("Icon/rebels").active = building.gatherPioneerIds[0] == "pioneer_3";
-                
+
                 const currentTimeStamp: number = new Date().getTime();
                 const tempPioneer = DataMgr.s.pioneer.getById(building.gatherPioneerIds[0]);
-                exploreView.getChildByPath("Label").getComponent(Label).string = CommonTools.formatSeconds((tempPioneer.actionEndTimeStamp - currentTimeStamp) / 1000)
+                exploreView.getChildByPath("Label").getComponent(Label).string = CommonTools.formatSeconds(
+                    (tempPioneer.actionEndTimeStamp - currentTimeStamp) / 1000
+                );
             }
         } else if (building.type == MapBuildingType.event) {
             exploreIcon.active = true;
@@ -228,25 +277,11 @@ export class OuterBuildingView extends ViewController {
         }
     }
 
+    private _fakeAttack: boolean = false;
+
     private _toGetEnergyTip: Node = null;
     private _toBuildBuildingTip: Node = null;
 
-    private _buildViewNames: string[] = [
-        "city",
-        "treasure",
-        "swamp_jungle",
-        "sand_mineral",
-        "oasis",
-        "ambush",
-        "ruin",
-        "spider_cave",
-        "laboratory",
-        "ancient_ruins",
-        "Aquatic_Relics_Group",
-        "Tree_Group",
-        "Pyramid_Group",
-        "Transfer_Matrix_Group",
-    ];
     private _levelShowing: boolean = false;
     private _building: MapBuildingObject = null;
     private _showArtifactAni: string = null;
@@ -270,9 +305,13 @@ export class OuterBuildingView extends ViewController {
     protected viewDidStart(): void {
         super.viewDidStart();
 
+        // worm attack begin anim check key
+        this["PREPARED_VIEW_ACTIVED"] = false;
+
         NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
         NotificationMgr.addListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
         NotificationMgr.addListener(NotificationName.ARTIFACT_EQUIP_DID_CHANGE, this._onArtifactEquipDidChange, this);
+        NotificationMgr.addListener(NotificationName.MAP_BUILDING_WORMHOLE_FAKE_ATTACK, this._onWormholeFakeAttack, this);
 
         this.schedule(() => {
             if (this._building != null) {
@@ -314,6 +353,7 @@ export class OuterBuildingView extends ViewController {
         NotificationMgr.removeListener(NotificationName.RESOURCE_GETTED, this._onResourceChanged, this);
         NotificationMgr.removeListener(NotificationName.RESOURCE_CONSUMED, this._onResourceChanged, this);
         NotificationMgr.removeListener(NotificationName.ARTIFACT_EQUIP_DID_CHANGE, this._onArtifactEquipDidChange, this);
+        NotificationMgr.removeListener(NotificationName.MAP_BUILDING_WORMHOLE_FAKE_ATTACK, this._onWormholeFakeAttack, this);
     }
 
     protected viewUpdate(dt: number): void {
@@ -373,6 +413,16 @@ export class OuterBuildingView extends ViewController {
         if (this._building == null) {
             return;
         }
+        this.refreshUI(this._building);
+    }
+    private _onWormholeFakeAttack() {
+        if (this._building == null) {
+            return;
+        }
+        if (this._building.type != MapBuildingType.wormhole) {
+            return;
+        }
+        this._fakeAttack = true;
         this.refreshUI(this._building);
     }
 }

@@ -175,8 +175,6 @@ export class PioneersDataMgr {
         // default player id is "0"
         this._currentActionPioneerId = "pioneer_0";
 
-        console.log("exce pioneer: ", this._pioneers);
-
         this._initInterval();
         this._addListeners();
     }

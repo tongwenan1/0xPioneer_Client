@@ -441,23 +441,18 @@ export class MapPioneer extends Component {
         this.refreshUI(this._model);
     }
     private _onFightEnd(data: { id: string }) {
-        console.log("exce step1");
         if (this._fightInterval == null) {
             return;
         }
-        console.log("exce step2");
         if (this._model == null) {
             return;
         }
-        console.log("exce step3");
         if (this._model.id != data.id) {
             return;
         }
-        console.log("exce step4");
         if (this._fightAttackerOrigianlData == null || this._fightDefenderOriginalData == null) {
             return;
         }
-        console.log("exce step5: ", this._model);
         if (this._model.fightData != null) {
             for (const data of this._model.fightData) {
                 if (data.attackerId == this._fightAttackerOrigianlData.id) {

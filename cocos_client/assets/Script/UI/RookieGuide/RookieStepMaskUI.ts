@@ -21,8 +21,6 @@ export class RookieStepMaskUI extends ViewController {
             ? GameMainHelper.instance.getGameCameraWposToUI(worldPos, this.node)
             : this.node.getComponent(UITransform).convertToNodeSpaceAR(worldPos);
 
-        console.log("exce wp2: " + JSON.stringify(worldPos));
-
         this._maskView.position = localPos;
         this._maskView.getComponent(UITransform).setContentSize(size);
 

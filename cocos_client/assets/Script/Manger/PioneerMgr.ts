@@ -116,7 +116,6 @@ export default class PioneerMgr {
             interactDelayTime = 250;
         }
 
-        console.log("exce stab: ", stayBuilding);
         if (stayBuilding == null) {
             if (pioneer.id == "wormhole_token") {
                 // fake wormhole enemy cannot meet pioneer
@@ -237,11 +236,8 @@ export default class PioneerMgr {
                 }
             } else if (stayBuilding.type == MapBuildingType.wormhole) {
                 const wormholeObj = stayBuilding as MapBuildingWormholeObject;
-                console.log("exce step1");
                 if (pioneer.type == MapPioneerType.player) {
-                    console.log("exce step2");
                     if (stayBuilding.faction != MapMemberFactionType.enemy) {
-                        console.log("exce step3");
                         let emptyIndex: number = -1;
                         for (let i = 0; i < 3; i++) {
                             if (!wormholeObj.attacker.has(i)) {
@@ -250,9 +246,7 @@ export default class PioneerMgr {
                             }
                         }
                         if (emptyIndex >= 0) {
-                            console.log("exce step4");
                             setTimeout(() => {
-                                console.log("exce step5");
                                 NetworkMgr.websocketMsg.player_wormhole_set_attacker({
                                     buildingId: stayBuilding.id,
                                     pioneerId: pioneerId,

@@ -103,7 +103,6 @@ export class HeatTreasureUI extends Component {
         let worldBoxes: { rank: number; isOpen: boolean }[] = [];
         if (isFinishRookie) {
             const boxInfo: share.box_data[] = DataMgr.s.userInfo.data.boxes;
-            console.log("exce boxInfo: ", boxInfo);
             for (let i = 0; i < maxBoxNum; i++) {
                 if (boxInfo[i] == undefined) {
                     worldBoxes.push({

@@ -612,7 +612,10 @@ export class DataMgr {
             return;
         }
         GameMusicPlayMgr.playWormholeAttackEffect();
-        PioneerMgr.showFakeWormholeFight(p.attackerName);
+        NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_WORMHOLE_FAKE_ATTACK);
+        setTimeout(() => {
+            PioneerMgr.showFakeWormholeFight(p.attackerName);
+        }, 2500);
     };
     public static player_wormhole_fight_res = (e: any) => {
         const p: s2c_user.Iplayer_wormhole_fight_res = e.data;
