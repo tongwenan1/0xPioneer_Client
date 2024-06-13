@@ -139,6 +139,110 @@
     "id": "107011",
     "eng": "Divine Compass"
   },
+  "107012": {
+    "id": "107012",
+    "eng": "Tables of Decalogue"
+  },
+  "107013": {
+    "id": "107013",
+    "eng": "Jade Hook"
+  },
+  "107014": {
+    "id": "107014",
+    "eng": "Celestial Globe"
+  },
+  "107015": {
+    "id": "107015",
+    "eng": "Time's Hourglass"
+  },
+  "107016": {
+    "id": "107016",
+    "eng": "Ouroboros Emblem"
+  },
+  "107017": {
+    "id": "107017",
+    "eng": "Nirvana Lotus"
+  },
+  "107018": {
+    "id": "107018",
+    "eng": "Glazed Bead"
+  },
+  "107019": {
+    "id": "107019",
+    "eng": "Golden Scarab"
+  },
+  "107020": {
+    "id": "107020",
+    "eng": "Thorn Crown"
+  },
+  "107021": {
+    "id": "107021",
+    "eng": "Brass Sextant"
+  },
+  "107022": {
+    "id": "107022",
+    "eng": "Flintlock Pistol"
+  },
+  "107023": {
+    "id": "107023",
+    "eng": "Jiuzhou Cauldron"
+  },
+  "107024": {
+    "id": "107024",
+    "eng": "Ancient Trumpet"
+  },
+  "107025": {
+    "id": "107025",
+    "eng": "Mechanical Core"
+  },
+  "107026": {
+    "id": "107026",
+    "eng": "Psychic Meteor"
+  },
+  "107027": {
+    "id": "107027",
+    "eng": "Tengu Fan"
+  },
+  "107028": {
+    "id": "107028",
+    "eng": "Binoculars"
+  },
+  "107029": {
+    "id": "107029",
+    "eng": "Twin Fish Jade"
+  },
+  "107030": {
+    "id": "107030",
+    "eng": "Crystal Lens"
+  },
+  "107031": {
+    "id": "107031",
+    "eng": "Dharma Mace"
+  },
+  "107032": {
+    "id": "107032",
+    "eng": "Ra's Crown"
+  },
+  "107033": {
+    "id": "107033",
+    "eng": "Ancient Jar"
+  },
+  "107034": {
+    "id": "107034",
+    "eng": "Torch"
+  },
+  "107035": {
+    "id": "107035",
+    "eng": "Horseshoe"
+  },
+  "107036": {
+    "id": "107036",
+    "eng": "Wooden Wheel"
+  },
+  "107037": {
+    "id": "107037",
+    "eng": "Damaged Gear"
+  },
   "107549": {
     "id": "107549",
     "eng": "text for English version"
@@ -386,6 +490,114 @@
   "117010": {
     "id": "117010",
     "eng": "An old axe, used to belong to someone."
+  },
+  "117011": {
+    "id": "117011",
+    "eng": "Not just for navigation but a diviner of one's deepest truths and desires."
+  },
+  "117012": {
+    "id": "117012",
+    "eng": "Ancient stone tablets inscribed with the Ten Commandments, symbolizing divine law and moral guidance."
+  },
+  "117013": {
+    "id": "117013",
+    "eng": "A delicately carved jade artifact, often used as a ceremonial tool in ancient Chinese rituals."
+  },
+  "117014": {
+    "id": "117014",
+    "eng": "A model of the celestial sphere, representing the heavens and used for astronomical navigation and study."
+  },
+  "117015": {
+    "id": "117015",
+    "eng": "A timekeeping device with flowing sand, a metaphor for the relentless passage of time."
+  },
+  "117016": {
+    "id": "117016",
+    "eng": "A symbol of infinity and self-renewal, depicting a serpent eating its own tail."
+  },
+  "117017": {
+    "id": "117017",
+    "eng": "A lotus flower representing purity and enlightenment, often associated with Buddhist concepts of spiritual awakening."
+  },
+  "117018": {
+    "id": "117018",
+    "eng": "A small, colorful bead with a glossy finish, used in jewelry and as a status symbol in ancient cultures."
+  },
+  "117019": {
+    "id": "117019",
+    "eng": "A golden representation of the scarab beetle, revered in ancient Egypt as a symbol of rebirth and transformation."
+  },
+  "117020": {
+    "id": "117020",
+    "eng": "A crown adorned with thorns, symbolizing sacrifice and suffering, often associated with religious martyrdom."
+  },
+  "117021": {
+    "id": "117021",
+    "eng": "A navigational instrument used to measure the angular distance between celestial bodies and the horizon."
+  },
+  "117022": {
+    "id": "117022",
+    "eng": "An early firearm with a flint ignition mechanism, a symbol of the technological advancements of the early modern period."
+  },
+  "117023": {
+    "id": "117023",
+    "eng": "A mythical cauldron from Chinese legend, said to have the power to unify the nine provinces and bring peace."
+  },
+  "117024": {
+    "id": "117024",
+    "eng": "A wind instrument from antiquity, used in both warfare for signaling and in ceremonies for its resonant sound."
+  },
+  "117025": {
+    "id": "117025",
+    "eng": "The central component of a mechanical device, often intricate and complex, symbolizing the ingenuity of engineering."
+  },
+  "117026": {
+    "id": "117026",
+    "eng": "A meteorite believed to possess mystical powers, associated with psychic phenomena and cosmic energy."
+  },
+  "117027": {
+    "id": "117027",
+    "eng": "A fan associated with the Tengu, a mythical creature from Japanese folklore, known for its sharp wit and martial prowess."
+  },
+  "117028": {
+    "id": "117028",
+    "eng": "Optical instruments for observing distant objects, enhancing the viewer's perspective and understanding of the world."
+  },
+  "117029": {
+    "id": "117029",
+    "eng": "A jade carving depicting two fish, often symbolizing harmony, abundance, and the unity of yin and yang."
+  },
+  "117030": {
+    "id": "117030",
+    "eng": "A lens made of crystal, prized for its clarity and used in early optical devices for magnification and illumination."
+  },
+  "117031": {
+    "id": "117031",
+    "eng": "A ceremonial mace used in religious rituals to ward off evil spirits and protect the faithful."
+  },
+  "117032": {
+    "id": "117032",
+    "eng": "The crown of a sovereign, often adorned with sun motifs, representing the ruler's divine right and power."
+  },
+  "117033": {
+    "id": "117033",
+    "eng": "A vessel from a bygone era, crafted with simple yet enduring techniques, reflecting the daily life of ancient civilizations."
+  },
+  "117034": {
+    "id": "117034",
+    "eng": "A handheld source of light, often used in ancient times for navigation and signaling in the darkness."
+  },
+  "117035": {
+    "id": "117035",
+    "eng": "A U-shaped piece of metal attached to a horse's hoof, believed to bring good luck and protect against evil."
+  },
+  "117036": {
+    "id": "117036",
+    "eng": "A simple wheel made of wood, a fundamental component of early transportation and machinery."
+  },
+  "117037": {
+    "id": "117037",
+    "eng": "A gear with visible wear or breakage, a reminder of the passage of time and the inevitability of decay."
   },
   "120001": {
     "id": "120001",
@@ -1389,35 +1601,39 @@
   },
   "501036": {
     "id": "501036",
-    "eng": "talktalk"
+    "eng": "Talk to the Prophetess 1"
   },
   "501037": {
     "id": "501037",
-    "eng": "talktalk"
+    "eng": "Talk to the Prophetess 1"
   },
   "501038": {
     "id": "501038",
-    "eng": "talktalk"
+    "eng": "Talk to the Prophetess 2"
   },
   "501039": {
     "id": "501039",
-    "eng": "talktalk"
+    "eng": "Talk to the Prophetess 3"
   },
   "501040": {
     "id": "501040",
-    "eng": "talktalk"
+    "eng": "Defeat the Gangster"
   },
   "501041": {
     "id": "501041",
-    "eng": "talktalk"
+    "eng": "Talk to the Prophetess 4"
   },
   "501042": {
     "id": "501042",
-    "eng": "talktalk"
+    "eng": "Talk to the Prophetess 5"
   },
   "501043": {
     "id": "501043",
-    "eng": "talktalk"
+    "eng": "Talk to someone for information"
+  },
+  "501044": {
+    "id": "501044",
+    "eng": "Collect resources"
   },
   "502001": {
     "id": "502001",
