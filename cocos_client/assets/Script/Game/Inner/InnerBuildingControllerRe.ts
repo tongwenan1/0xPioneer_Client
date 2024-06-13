@@ -53,6 +53,7 @@ export class InnerBuildingControllerRe extends ViewController {
     private _latticeItem: Node = null;
     private _latticeContents: Node[] = [];
     private _allLatticeItems: InnerBuildingLatticeStruct[] = [];
+    private _allGapSprites: Sprite[] = [];
     private _streetView: Node = null;
     private _allBuildingContentViews: Node[] = [];
     private _buildingContentItem: Node = null;
@@ -166,6 +167,13 @@ export class InnerBuildingControllerRe extends ViewController {
                     showType: InnerBuildingLatticeShowType.None,
                     stayBuilding: null,
                 });
+                const gap1 = lattice.getChildByPath("img_Grid_Ordinary");
+                this._allGapSprites.push(gap1.getComponent(Sprite));
+
+                const gap2 = lattice.getChildByPath("img_Grid_Ordinary_2");
+                if (gap2 != null) {
+                    this._allGapSprites.push(gap2.getComponent(Sprite));
+                }
             }
         }
     }
@@ -256,23 +264,65 @@ export class InnerBuildingControllerRe extends ViewController {
         });
     }
     private _refreshLattice() {
-        for (const item of this._allLatticeItems) {
+        const whiteIndexes: number[] = [];
+        const yellowIndexes: number[] = [];
+        const redIndexes: number[] = [];
+        const greenIndexes: number[] = [];
+        for (let i = 0; i < this._allLatticeItems.length; i++) {
+            const item = this._allLatticeItems[i];
             item.node.active = GameMainHelper.instance.isEditInnerBuildingLattice;
-
-            let useColor = null;
             if (item.showType == InnerBuildingLatticeShowType.None) {
                 if (item.isEmpty) {
-                    useColor = Color.WHITE;
+                    whiteIndexes.push(i);
                 } else {
-                    useColor = Color.YELLOW;
+                    yellowIndexes.push(i);
                 }
             } else if (item.showType == InnerBuildingLatticeShowType.Clean) {
-                useColor = Color.GREEN;
+                greenIndexes.push(i);
             } else if (item.showType == InnerBuildingLatticeShowType.Error) {
-                useColor = Color.RED;
+                redIndexes.push(i);
             }
-            item.node.getChildByPath("Mask/SpriteSplash").getComponent(Sprite).color = useColor;
         }
+        for (const index of whiteIndexes) {
+            const gapData = this._getStickIndicesByGlobalIndex(index);
+            this._allGapSprites[gapData.leftStickIndex].color = Color.WHITE;
+            this._allGapSprites[gapData.rightStickIndex].color = Color.WHITE;
+        }
+        for (const index of yellowIndexes) {
+            const gapData = this._getStickIndicesByGlobalIndex(index);
+            this._allGapSprites[gapData.leftStickIndex].color = new Color().fromHEX("#FFDD53");
+            this._allGapSprites[gapData.rightStickIndex].color = new Color().fromHEX("#FFDD53");
+        }
+        for (const index of redIndexes) {
+            const gapData = this._getStickIndicesByGlobalIndex(index);
+            this._allGapSprites[gapData.leftStickIndex].color = new Color().fromHEX("#FF5353");
+            this._allGapSprites[gapData.rightStickIndex].color = new Color().fromHEX("#FF5353");
+        }
+        for (const index of greenIndexes) {
+            const gapData = this._getStickIndicesByGlobalIndex(index);
+            this._allGapSprites[gapData.leftStickIndex].color = new Color().fromHEX("#53FF53");
+            this._allGapSprites[gapData.rightStickIndex].color = new Color().fromHEX("#53FF53");
+        }
+    }
+    private _getStickIndicesByGlobalIndex(index: number, colsPerRow: number = 13): { leftStickIndex: number; rightStickIndex: number } {
+        // 确定当前格子所在的行号和列号
+        const row = Math.floor(index / colsPerRow);
+        const col = index % colsPerRow;
+
+        // 每行有 colsPerRow + 1 根棍子
+        const sticksPerRow = colsPerRow + 1;
+
+        // 计算该行的起始棍子索引
+        const rowStartStickIndex = row * sticksPerRow;
+
+        // 计算左边和右边棍子的索引
+        const leftStickIndex = rowStartStickIndex + col;
+        const rightStickIndex = leftStickIndex + 1;
+
+        return {
+            leftStickIndex,
+            rightStickIndex,
+        };
     }
     private _checkEditBuildingCanSetLattice(): { canSet: boolean; useLattices: InnerBuildingLatticeStruct[] } {
         for (const item of this._allLatticeItems) {

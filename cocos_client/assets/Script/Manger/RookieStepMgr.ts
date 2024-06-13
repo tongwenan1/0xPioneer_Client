@@ -192,10 +192,8 @@ export default class RookieStepMgr {
 
     private _onGameInnerDidShow() {
         const rookieStep = DataMgr.s.userInfo.data.rookieStep;
-        console.log("exce ro: " + rookieStep);
         if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1 || rookieStep == RookieStep.MAIN_BUILDING_TAP_2 || rookieStep == RookieStep.MAIN_BUILDING_TAP_3) {
             const view = find("Main/Canvas/GameContent/Game/InnerSceneRe/BuildingLattice/StreetView/buildingView_1/MainCity");
-            console.log("exce view: ", view);
             if (view == null) {
                 return;
             }

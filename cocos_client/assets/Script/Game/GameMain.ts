@@ -50,7 +50,6 @@ export class GameMain extends ViewController {
         if (this._innerView == null) {
             return;
         }
-        console.log("exce step0.1");
         // inner and outer need hide first, then show
         if (isOuterShow) {
             this._innerView.active = false;
@@ -58,7 +57,6 @@ export class GameMain extends ViewController {
         } else {
             outerView.active = false;
             this._innerView.active = true;
-            console.log("exce step1");
             GameMainHelper.instance.changeCursor(ECursorType.Common);
         }
         if (loadingAnim) {
@@ -106,7 +104,6 @@ export class GameMain extends ViewController {
             }
             loadingAnim = false;
         } else {
-            console.log("exce step0");
             this._refreshUI(loadingAnim);
         }
     }

@@ -138,7 +138,7 @@ export class ArtifactDataMgr {
             if (config.eff_sp != null && config.eff_sp.length > 0) {
                 this._artifact_get_effects_data(effectData, config.eff_sp, clevel, true, this._checkIsInMainSlot(artifact.effectIndex));
             }
-            for (const temple of config.effect) {
+            for (const temple of artifact.effect) {
                 this._artifact_get_effects_data(effectData, temple, clevel, false, false);
             }
         }
@@ -159,7 +159,7 @@ export class ArtifactDataMgr {
         if (config.eff_sp != null && config.eff_sp.length > 0) {
             this._artifact_get_effects_data(effectData, config.eff_sp, clevel, true, this._checkIsInMainSlot(artifact.effectIndex));
         }
-        for (const temple of config.effect) {
+        for (const temple of artifact.effect) {
             this._artifact_get_effects_data(effectData, temple, clevel, false, false);
         }
         return effectData;
