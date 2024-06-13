@@ -23,7 +23,8 @@ export class TaskTrackingUI extends Component {
     private _contentView: Node = null;
     private _titleLabel: Label = null;
     private _progress: ProgressBar = null;
-    private _progressValue: Label = null;
+    private _progressValueUse: Label = null;
+    private _progressValueLimit: Label = null;
     private _showNextButton: Node = null;
 
     private _finishTip: Node = null;
@@ -32,7 +33,8 @@ export class TaskTrackingUI extends Component {
         this._contentView = this.node.getChildByPath("Content");
         this._titleLabel = this._contentView.getChildByPath("Title").getComponent(Label);
         this._progress = this._contentView.getChildByPath("ProgressBar").getComponent(ProgressBar);
-        this._progressValue = this._progress.node.getChildByPath("Value").getComponent(Label);
+        this._progressValueUse = this._progress.node.getChildByPath("Value/use").getComponent(Label);
+        this._progressValueLimit = this._progress.node.getChildByPath("Value/limit").getComponent(Label);
         this._showNextButton = this._contentView.getChildByPath("NextButton");
 
         this._finishTip = this._contentView.getChildByPath("FinishTip");
@@ -48,7 +50,7 @@ export class TaskTrackingUI extends Component {
         this._refreshUI();
     }
 
-    update(deltaTime: number) {}
+    update(deltaTime: number) { }
 
     protected onDestroy(): void {
         NotificationMgr.removeListener(NotificationName.TASK_DID_CHANGE, this._onTaskChange, this);
@@ -75,7 +77,8 @@ export class TaskTrackingUI extends Component {
             if (taskConfig != null) {
                 this._titleLabel.string = LanMgr.getLanById(taskConfig.name);
                 this._progress.progress = task.stepIndex / task.steps.length;
-                this._progressValue.string = task.stepIndex + "/" + task.steps.length;
+                this._progressValueUse.string = task.stepIndex.toString();
+                this._progressValueLimit.string = task.steps.length.toString();
             }
             this._showNextButton.active = this._doingTask.length > 1;
         }
