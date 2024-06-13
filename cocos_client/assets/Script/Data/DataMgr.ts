@@ -105,8 +105,6 @@ export class DataMgr {
                     animType: RookieResourceAnim.GOLD_TO_HEAT,
                     callback: () => {
                         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_HEAT);
-                        DataMgr.s.userInfo.data.rookieStep = RookieStep.NPC_TALK_4;
-                        NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
                     },
                 } as RookieResourceAnimStruct);
                 return;

@@ -1,14 +1,18 @@
-import { _decorator, Component, Label, log, Node, Sprite, SpriteFrame, Button, ProgressBar } from 'cc';
-import { LanMgr, PioneerMgr } from '../Utils/Global';
-import { MapPioneerActionType, MapPlayerPioneerObject } from '../Const/PioneerDefine';
-import { DataMgr } from '../Data/DataMgr';
-import CommonTools from '../Tool/CommonTools';
+import { _decorator, Component, Label, log, Node, Sprite, SpriteFrame, Button, ProgressBar } from "cc";
+import { LanMgr, PioneerMgr } from "../Utils/Global";
+import { MapPioneerActionType, MapPlayerPioneerObject } from "../Const/PioneerDefine";
+import { DataMgr } from "../Data/DataMgr";
+import CommonTools from "../Tool/CommonTools";
 const { ccclass, property } = _decorator;
 
-@ccclass('PlayerItemUI')
+@ccclass("PlayerItemUI")
 export class PlayerItemUI extends Component {
-
     refreshUI(model: MapPlayerPioneerObject) {
+        this._nameLabel = this.node.getChildByName("name").getComponent(Label);
+        this._statusView = this.node.getChildByName("status");
+        this._rebirthCountView = this.node.getChildByName("RebirthCount");
+        this._selectedView = this.node.getChildByName("Selected");
+        this._hpView = this.node.getChildByName("Hp");
         //name
         this._nameLabel.string = LanMgr.getLanById(model.name);
         //role
@@ -30,10 +34,8 @@ export class PlayerItemUI extends Component {
         defend.active = false;
         if (model.actionType == MapPioneerActionType.idle) {
             idle.active = true;
-
         } else if (model.actionType == MapPioneerActionType.defend) {
             defend.active = true;
-
         } else {
             busy.active = true;
         }
@@ -46,11 +48,7 @@ export class PlayerItemUI extends Component {
         this._model = model;
     }
 
-    private _roleNames: string[] = [
-        "secretGuard",
-        "doomsdayGangSpy",
-        "rebels",
-    ];
+    private _roleNames: string[] = ["secretGuard", "doomsdayGangSpy", "rebels"];
 
     private _model: MapPlayerPioneerObject = null;
 
@@ -59,16 +57,8 @@ export class PlayerItemUI extends Component {
     private _rebirthCountView: Node = null;
     private _selectedView: Node = null;
     private _hpView: Node = null;
-    protected onLoad(): void {
-        this._nameLabel = this.node.getChildByName("name").getComponent(Label);
-        this._statusView = this.node.getChildByName("status");
-        this._rebirthCountView = this.node.getChildByName("RebirthCount");
-        this._selectedView = this.node.getChildByName("Selected");
-        this._hpView = this.node.getChildByName("Hp");
-    }
-    start() {
-
-    }
+    protected onLoad(): void {}
+    start() {}
 
     protected update(dt: number): void {
         this._rebirthCountView.active = false;
@@ -80,12 +70,11 @@ export class PlayerItemUI extends Component {
         if (this._model.actionType == MapPioneerActionType.dead) {
             if (currentTimestamp < this._model.rebirthEndTime) {
                 this._rebirthCountView.active = true;
-                this._rebirthCountView.getChildByName("Label").getComponent(Label).string = Math.floor((this._model.rebirthEndTime - currentTimestamp) / 1000) + "s";
+                this._rebirthCountView.getChildByName("Label").getComponent(Label).string =
+                    Math.floor((this._model.rebirthEndTime - currentTimestamp) / 1000) + "s";
             }
         } else if (this._model.actionType == MapPioneerActionType.eventing) {
             this.node.getChildByName("EventRemind").active = currentTimestamp >= this._model.actionEndTimeStamp;
         }
     }
 }
-
-

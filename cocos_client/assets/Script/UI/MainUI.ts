@@ -354,23 +354,6 @@ export class MainUI extends ViewController {
             return;
         }
         for (let i = 0; i < 5; i++) {
-            const icon = instantiate(moveView);
-            icon.setParent(this._animView);
-            icon.position = fromPos;
-            tween()
-                .target(icon)
-                .delay(i * 0.2)
-                .to(1, { position: toPos })
-                .call(() => {
-                    icon.destroy();
-                    if (i == 4) {
-                        if (callback != null) {
-                            callback();
-                        }
-                    }
-                })
-                .start();
-
             const resourceFly = instantiate(this.resourceFlyAnim);
             resourceFly.setParent(this._animView);
             resourceFly.position = fromPos;
@@ -380,6 +363,23 @@ export class MainUI extends ViewController {
                 .to(1, { position: toPos })
                 .call(() => {
                     resourceFly.destroy();
+                    if (i == 4) {
+                        if (callback != null) {
+                            callback();
+                        }
+                    }
+                })
+                .start();
+
+            const icon = instantiate(moveView);
+            icon.setParent(this._animView);
+            icon.position = fromPos;
+            tween()
+                .target(icon)
+                .delay(i * 0.2)
+                .to(1, { position: toPos })
+                .call(() => {
+                    icon.destroy();
                     if (i == 4) {
                         if (callback != null) {
                             callback();

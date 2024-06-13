@@ -28,7 +28,7 @@ export class HeatTreasureUI extends Component {
         this._boxItem.removeFromParent();
 
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
-        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
+        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._onHeatChange, this);
         NotificationMgr.addListener(NotificationName.USERINFO_BOX_INFO_CHANGE, this._refreshUI, this);
 
         NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._refreshUI, this);
@@ -41,7 +41,7 @@ export class HeatTreasureUI extends Component {
 
     protected onDestroy(): void {
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._refreshUI, this);
-        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._refreshUI, this);
+        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this._onHeatChange, this);
         NotificationMgr.removeListener(NotificationName.USERINFO_BOX_INFO_CHANGE, this._refreshUI, this);
 
         NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._refreshUI, this);
@@ -75,17 +75,16 @@ export class HeatTreasureUI extends Component {
         const maxHeatThreshold: number = worldBoxThreshold[worldBoxThreshold.length - 1];
 
         const pointerView = this.node.getChildByPath("__ViewContent/Content/HeatProgress/Pointer");
-        const fullLabel = this.node.getChildByPath("__ViewContent/Content/HeatProgress/Full");
         const heatValueView = this.node.getChildByPath("__ViewContent/Content/HeatProgress/HeatValue");
+        const heatAnimView = this.node.getChildByPath("__ViewContent/Content/HeatProgress/HeatAnim");
 
         pointerView.angle = beginPointerValue + (endPointerValue - beginPointerValue) * Math.min(1, heatValue / maxHeatThreshold);
-        if (heatValue >= worldBoxThreshold[worldBoxThreshold.length - 1]) {
-            fullLabel.active = true;
-            heatValueView.active = false;
+        if (heatValue >= maxHeatThreshold) {
+            heatValueView.getChildByPath("Value").getComponent(Label).string = "Full";
+            heatAnimView.active = true;
         } else {
-            fullLabel.active = false;
-            heatValueView.active = true;
             heatValueView.getChildByPath("Value").getComponent(Label).string = heatValue.toString();
+            heatAnimView.active = false;
         }
 
         //------------------------------------------ box
@@ -250,7 +249,8 @@ export class HeatTreasureUI extends Component {
             UIHUDController.showCenterTip("Please get more PIOT");
             return;
         }
-        const converNum: number = Math.floor(piotNum * coefficient);
+        let converNum: number = Math.floor(piotNum * coefficient);
+        converNum = 1000;
         NetworkMgr.websocketMsg.player_piot_to_heat({
             piotNum: converNum * (1 / coefficient),
         });
@@ -265,6 +265,23 @@ export class HeatTreasureUI extends Component {
     }
 
     //----------------------------------- notification
+    private _onHeatChange() {
+        const heatAnimView = this.node.getChildByPath("__ViewContent/Content/HeatProgress/HeatAnim");
+
+        let delayTime: number = 1.5;
+        if (heatAnimView.active) {
+            delayTime = 0;
+        }
+        heatAnimView.active = true;
+        this.scheduleOnce(() => {
+            this._refreshUI();
+            if (DataMgr.s.userInfo.data.rookieStep == RookieStep.PIOT_TO_HEAT) {
+                DataMgr.s.userInfo.data.rookieStep = RookieStep.NPC_TALK_4;
+                NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+            }
+        }, delayTime);
+    }
+
     private _onRookieConvertHeat() {
         this.onTapConvertPiotToHeat();
     }

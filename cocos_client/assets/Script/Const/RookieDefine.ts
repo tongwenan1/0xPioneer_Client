@@ -7,8 +7,6 @@ export enum RookieStep {
 
     PIOT_TO_HEAT = 30,
 
-    LOCAL_ANIM_PIOT_FROM_TOP_TO_HEAT = 31,
-
     NPC_TALK_4 = 40,
 
     OPEN_BOX_1 = 50,
