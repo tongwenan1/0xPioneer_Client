@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Node, ProgressBar, Tween, tween, TweenAction, v3, Vec2 } from "cc";
+import { _decorator, Button, Component, Label, Node, ProgressBar, Sprite, Tween, tween, TweenAction, v3, Vec2 } from "cc";
 import { share } from "../../Net/msg/WebsocketMsg";
 import { DataMgr } from "../../Data/DataMgr";
 import { GameMgr, LanMgr } from "../../Utils/Global";
@@ -50,7 +50,7 @@ export class TaskTrackingUI extends Component {
         this._refreshUI();
     }
 
-    update(deltaTime: number) { }
+    update(deltaTime: number) {}
 
     protected onDestroy(): void {
         NotificationMgr.removeListener(NotificationName.TASK_DID_CHANGE, this._onTaskChange, this);
@@ -62,11 +62,12 @@ export class TaskTrackingUI extends Component {
             return;
         }
         const needShow: boolean = this._doingTask.length > 0;
+
+        this._showNextButton.active = true;
+
         if (this._doingTask.length > 0) {
             this._titleLabel.node.active = true;
             this._progress.node.active = true;
-            this._showNextButton.active = true;
-
             this._finishTip.active = false;
 
             if (this._showIndex > this._doingTask.length - 1) {
@@ -80,7 +81,8 @@ export class TaskTrackingUI extends Component {
                 this._progressValueUse.string = task.stepIndex.toString();
                 this._progressValueLimit.string = task.steps.length.toString();
             }
-            this._showNextButton.active = this._doingTask.length > 1;
+            this._showNextButton.getComponent(Sprite).grayscale = !(this._doingTask.length > 1);
+            this._showNextButton.getComponent(Button).interactable = this._doingTask.length > 1;
         }
         this._changeContentShow(needShow);
     }

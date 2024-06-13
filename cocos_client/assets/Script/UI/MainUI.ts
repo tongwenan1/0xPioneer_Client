@@ -153,7 +153,7 @@ export class MainUI extends ViewController {
 
             innerBuildButton.active = !GameMainHelper.instance.isGameShowOuter;
 
-            taskTrackView.active = false;
+            taskTrackView.active = true;
         } else if (rookieStep >= RookieStep.DEFEND_TAP) {
             defendButton.active = true;
             taskButton.active = true;
