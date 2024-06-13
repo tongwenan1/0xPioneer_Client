@@ -13,25 +13,15 @@ import { DialogueUI } from "../../UI/Outer/DialogueUI";
 import { SecretGuardGettedUI } from "../../UI/Outer/SecretGuardGettedUI";
 import { EventUI } from "../../UI/Outer/EventUI";
 import NotificationMgr from "../../Basic/NotificationMgr";
-import TalkConfig from "../../Config/TalkConfig";
-import LvlupConfig from "../../Config/LvlupConfig";
 import EventConfig from "../../Config/EventConfig";
-import { OuterFightResultView } from "./View/OuterFightResultView";
-import ItemData from "../../Const/Item";
 import { NotificationName } from "../../Const/Notification";
 import { OuterTiledMapActionController } from "./OuterTiledMapActionController";
 import GameMainHelper from "../Helper/GameMainHelper";
 import ViewController from "../../BasicView/ViewController";
-import { TaskShowHideStatus } from "../../Const/TaskDefine";
-import { EventConfigData } from "../../Const/Event";
 import UIPanelManger from "../../Basic/UIPanelMgr";
-import { MapBuildingObject } from "../../Const/MapBuilding";
-import { InnerBuildingType, MapBuildingType } from "../../Const/BuildingDefine";
 import { DataMgr } from "../../Data/DataMgr";
 import {
-    MapNpcPioneerObject,
     MapPioneerActionType,
-    MapPioneerAttributesChangeModel,
     MapPioneerLogicObject,
     MapPioneerLogicType,
     MapPioneerMoveDirection,
@@ -42,7 +32,6 @@ import { NetworkMgr } from "../../Net/NetworkMgr";
 import { OuterRebonView } from "./View/OuterRebonView";
 import GameMusicPlayMgr from "../../Manger/GameMusicPlayMgr";
 import { RookieStep } from "../../Const/RookieDefine";
-import { RookieStepMaskUI } from "../../UI/RookieGuide/RookieStepMaskUI";
 import RookieStepMgr from "../../Manger/RookieStepMgr";
 
 const { ccclass, property } = _decorator;

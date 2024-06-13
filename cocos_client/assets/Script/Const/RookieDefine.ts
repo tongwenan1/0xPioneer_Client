@@ -78,3 +78,9 @@ export interface RookieResourceAnimStruct {
     animType: RookieResourceAnim;
     callback: () => void;
 }
+
+export enum RookieTapPositionType {
+    DIALOG,
+    BUTTON,
+    NORMAL,
+}

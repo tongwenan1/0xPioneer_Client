@@ -13,7 +13,6 @@ import { NetworkMgr } from "../../Net/NetworkMgr";
 import { s2c_user } from "../../Net/msg/WebsocketMsg";
 import GameMusicPlayMgr from "../../Manger/GameMusicPlayMgr";
 import { RookieStep } from "../../Const/RookieDefine";
-import { RookieStepMaskUI } from "../RookieGuide/RookieStepMaskUI";
 const { ccclass, property } = _decorator;
 
 @ccclass("DialogueUI")

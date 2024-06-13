@@ -49,6 +49,7 @@ const { ccclass, property } = _decorator;
 @ccclass("InnerBuildingControllerRe")
 export class InnerBuildingControllerRe extends ViewController {
     private _buildingMap: Map<InnerBuildingType, InnerBuildingView> = new Map();
+    private _isInitOver: boolean = false;
 
     private _latticeItem: Node = null;
     private _latticeContents: Node[] = [];
@@ -82,13 +83,13 @@ export class InnerBuildingControllerRe extends ViewController {
         this._pioneerContentItem.removeFromParent();
 
         NotificationMgr.addListener(NotificationName.GAME_JUMP_INNER_AND_SHOW_RELIC_TOWER, this._onGameJumpInnerAndShowRelicTower, this);
-
         this._prepareStreet();
         this._prepareLattice();
         this._refreshLattice();
         await this._initBuilding();
         await this._refreshBuilding();
         NotificationMgr.triggerEvent(NotificationName.GAME_INNER_DID_SHOW);
+        this._isInitOver = true;
     }
 
     protected async viewDidStart(): Promise<void> {
@@ -98,7 +99,7 @@ export class InnerBuildingControllerRe extends ViewController {
     protected async viewDidAppear(): Promise<void> {
         super.viewDidAppear();
         this._refreshLattice();
-        this._refreshBuilding();
+        await this._refreshBuilding();
         this._generatePioneerMove();
 
         NotificationMgr.addListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
@@ -108,6 +109,9 @@ export class InnerBuildingControllerRe extends ViewController {
         NotificationMgr.addListener(NotificationName.GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_MOVE, this._onEditActionMouseMove, this);
 
         NetworkMgr.websocket.on("player_building_pos_res", this._onBuildingPosChange);
+        if (this._isInitOver) {
+            NotificationMgr.triggerEvent(NotificationName.GAME_INNER_DID_SHOW);
+        }
     }
 
     protected viewDidDisAppear(): void {

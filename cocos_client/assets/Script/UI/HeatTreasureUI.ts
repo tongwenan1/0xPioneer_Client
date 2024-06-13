@@ -111,7 +111,7 @@ export class HeatTreasureUI extends Component {
                         isOpen: false,
                     });
                 } else {
-                    let tempRank: number = 0;
+                    let tempRank: number = 1;
                     if (boxInfo[i].id == "90001") {
                         tempRank = 1;
                     } else if (boxInfo[i].id == "90002") {
@@ -140,21 +140,21 @@ export class HeatTreasureUI extends Component {
 
             if (rookieStep > RookieStep.OPEN_BOX_3) {
                 worldBoxes = [
-                    { rank: 0, isOpen: true },
-                    { rank: 0, isOpen: true },
-                    { rank: 0, isOpen: true },
+                    { rank: 1, isOpen: true },
+                    { rank: 1, isOpen: true },
+                    { rank: 1, isOpen: true },
                 ];
             } else if (rookieStep > RookieStep.OPEN_BOX_2) {
                 worldBoxes = [
-                    { rank: 0, isOpen: true },
-                    { rank: 0, isOpen: true },
-                    { rank: 0, isOpen: false },
+                    { rank: 1, isOpen: true },
+                    { rank: 1, isOpen: true },
+                    { rank: 1, isOpen: false },
                 ];
             } else if (rookieStep > RookieStep.OPEN_BOX_1) {
                 worldBoxes = [
-                    { rank: 0, isOpen: true },
-                    { rank: 0, isOpen: false },
-                    { rank: 0, isOpen: false },
+                    { rank: 1, isOpen: true },
+                    { rank: 1, isOpen: false },
+                    { rank: 1, isOpen: false },
                 ];
             } else {
                 worldBoxes = [
@@ -171,9 +171,12 @@ export class HeatTreasureUI extends Component {
 
         this._boxContent.removeAllChildren();
         for (let i = 0; i < worldBoxes.length; i++) {
-            const rank = worldBoxes[i].rank;
+            let rank = worldBoxes[i].rank;
             const getted = worldBoxes[i].isOpen;
-            let canGet = false;
+            const canGet = exploreValue >= (i + 1) * perBoxNeedExploreValue;
+            if (rookieStep != RookieStep.FINISH) {
+                rank = canGet ? 1 : 0;
+            }
 
             let item = instantiate(this._boxItem);
             item.name = "HEAT_TREASURE_" + i;
@@ -197,8 +200,7 @@ export class HeatTreasureUI extends Component {
                 if (treasureView != null) {
                     treasureView.getChildByName("Common").active = exploreValue < (i + 1) * perBoxNeedExploreValue;
                     treasureView.getChildByName("Light").active = exploreValue >= (i + 1) * perBoxNeedExploreValue;
-                    canGet = exploreValue >= (i + 1) * perBoxNeedExploreValue;
-                    if (rank > 0) {
+                    if (canGet) {
                         if (treasureView["actiontween"] == null) {
                             treasureView["actiontween"] = tween()
                                 .target(treasureView)
@@ -250,7 +252,6 @@ export class HeatTreasureUI extends Component {
             return;
         }
         let converNum: number = Math.floor(piotNum * coefficient);
-        converNum = 1000;
         NetworkMgr.websocketMsg.player_piot_to_heat({
             piotNum: converNum * (1 / coefficient),
         });

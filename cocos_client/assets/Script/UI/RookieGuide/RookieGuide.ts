@@ -66,7 +66,6 @@ export class RookieGuide extends ViewController {
                 }, 3);
                 openEyesView.getComponent(Animation).on(Animation.EventType.FINISHED, () => {});
                 this._guideView.getChildByName("Bg").active = false;
-                this._guideView.getChildByName("WakeupButton").active = false;
             }, 3);
         }
     }
@@ -86,5 +85,6 @@ export class RookieGuide extends ViewController {
         }
         this._beginWakeUp = true;
         this._showAnim();
+        this._guideView.getChildByName("WakeupButton").active = false;
     }
 }

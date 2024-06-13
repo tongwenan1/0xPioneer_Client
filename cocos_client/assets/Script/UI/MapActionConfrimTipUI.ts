@@ -1,16 +1,11 @@
 import { _decorator, Label, Node, UITransform, Vec2 } from "cc";
 import ViewController from "../BasicView/ViewController";
 import UIPanelManger from "../Basic/UIPanelMgr";
-import ConfigConfig from "../Config/ConfigConfig";
-import { ConfigType, OneStepCostEnergyParam } from "../Const/Config";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import CommonTools from "../Tool/CommonTools";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
 import { DataMgr } from "../Data/DataMgr";
-import { RookieGuide } from "./RookieGuide/RookieGuide";
 import { RookieStep } from "../Const/RookieDefine";
-import { UIName } from "../Const/ConstUIDefine";
-import { RookieStepMaskUI } from "./RookieGuide/RookieStepMaskUI";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 const { ccclass, property } = _decorator;

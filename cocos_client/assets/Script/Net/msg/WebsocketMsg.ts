@@ -519,7 +519,7 @@ export namespace s2c_user {
         boxId: string;
         finish: boolean;
         items: share.Iitem_data[];
-        artifacts: share.Iartifact_data[];
+        artifacts: share.Iartifact_info_data[];
         threes: { [key: string]: share.Iartifact_three_confs };
     }
     export interface Iplayer_treasure_open_res {

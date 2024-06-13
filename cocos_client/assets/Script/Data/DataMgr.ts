@@ -741,7 +741,7 @@ export class DataMgr {
     };
 
     //------------------- box
-    public static player_worldbox_beginner_open_res = (e: any) => {
+    public static player_worldbox_beginner_open_res = async (e: any) => {
         const p: s2c_user.Iplayer_worldbox_beginner_open_res = e.data;
         if (p.res !== 1) {
             return;
@@ -760,46 +760,11 @@ export class DataMgr {
                 rookieStep: RookieStep.SYSTEM_TALK_21,
             });
         }
-
-        if (p.items.length > 0) {
-            let psycNum: number = 0;
-            for (const item of p.items) {
-                if (item.itemConfigId == ResourceCorrespondingItem.Energy) {
-                    psycNum = item.count;
-                    break;
-                }
-            }
-            if (psycNum > 0) {
-                let animType = null;
-                let nextStep = null;
-                if (rookieStep == RookieStep.OPEN_BOX_1) {
-                    animType = RookieResourceAnim.BOX_1_TO_PSYC;
-                    nextStep = RookieStep.NPC_TALK_5;
-                } else if (rookieStep == RookieStep.OPEN_BOX_2) {
-                    animType = RookieResourceAnim.BOX_2_TO_PSYC;
-                    nextStep = RookieStep.NPC_TALK_7;
-                } else if (rookieStep == RookieStep.OPEN_BOX_3) {
-                    animType = RookieResourceAnim.BOX_3_TO_PSYC;
-                    nextStep = RookieStep.SYSTEM_TALK_21;
-                }
-                NotificationMgr.triggerEvent(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, {
-                    animType: animType,
-                    callback: () => {
-                        DataMgr.s.userInfo.data.rookieStep = nextStep;
-                        NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
-                        this._resourceRefresh(p.items);
-                    },
-                } as RookieResourceAnimStruct);
-            }
-        }
+        this._playOpenBoxAnim(p.boxIndex, p.boxId, p.items, p.artifacts, p.threes);
     };
     public static player_treasure_open_res = async (e: any) => {
         const p: s2c_user.Iplayer_treasure_open_res = e.data;
         if (p.res !== 1) {
-            return;
-        }
-        const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);
-        if (!result.success) {
             return;
         }
         let boxRank: number = 0;
@@ -814,32 +779,59 @@ export class DataMgr {
         } else if (p.boxId == "90005") {
             boxRank = 5;
         }
+        this._playOpenBoxAnim(p.boxIndex, p.boxId, p.items, p.artifacts, p.threes);
+    };
+    private static async _playOpenBoxAnim(
+        boxIndex: number,
+        boxId: string,
+        itemData: share.Iitem_data[],
+        artifactData: share.Iartifact_info_data[],
+        threeData: {
+            [key: string]: share.Iartifact_three_confs;
+        }
+    ) {
+        let boxRank: number = 1;
+        if (boxId == "90001") {
+            boxRank = 1;
+        } else if (boxId == "90002") {
+            boxRank = 2;
+        } else if (boxId == "90003") {
+            boxRank = 3;
+        } else if (boxId == "90004") {
+            boxRank = 4;
+        } else if (boxId == "90005") {
+            boxRank = 5;
+        }
         const items: ItemData[] = [];
         const artifacts: ArtifactData[] = [];
         let threes: share.Iartifact_three_conf[] = [];
-        if (p.items.length > 0) {
-            for (const item of p.items) {
+        if (itemData != null && itemData.length > 0) {
+            for (const item of itemData) {
                 const data = new ItemData(item.itemConfigId, item.count, item.addTimeStamp);
                 data.addTimeStamp = item.addTimeStamp;
                 items.push(data);
             }
         }
-        if (p.artifacts.length > 0) {
-            for (const artifact of p.artifacts) {
+        if (artifactData != null && artifactData.length > 0) {
+            for (const artifact of artifactData) {
                 const data = new ArtifactData(artifact.artifactConfigId, artifact.count);
                 data.uniqueId = artifact.uniqueId;
                 data.addTimeStamp = artifact.addTimeStamp;
                 artifacts.push(data);
             }
         }
-        if (p.threes != null) {
-            const keys = Object.keys(p.threes);
+        if (threeData != null) {
+            const keys = Object.keys(threeData);
             if (keys.length > 0) {
-                threes = p.threes[keys[0]].confs;
+                threes = threeData[keys[0]].confs;
             }
         }
-        result.node.getComponent(TreasureGettedUI).dialogShow(p.boxIndex, boxRank, items, artifacts, threes);
-    };
+        const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(TreasureGettedUI).dialogShow(boxIndex, boxRank, items, artifacts, threes);
+    }
 
     /////////////// task
     public static user_task_action_getnewtalk = (e: any) => {

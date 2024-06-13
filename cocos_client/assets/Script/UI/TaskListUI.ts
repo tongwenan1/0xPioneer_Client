@@ -3,20 +3,14 @@ import { GameMgr, LanMgr } from "../Utils/Global";
 import ViewController from "../BasicView/ViewController";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
-import { TaskCondition, TaskConditionType, TaskStepObject } from "../Const/TaskDefine";
-import GameMainHelper from "../Game/Helper/GameMainHelper";
-import CommonTools from "../Tool/CommonTools";
+import { TaskStepObject } from "../Const/TaskDefine";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
-import { MapNpcPioneerObject, MapPioneerObject } from "../Const/PioneerDefine";
 import { share } from "../Net/msg/WebsocketMsg";
 import TaskConfig from "../Config/TaskConfig";
 import TaskStepConfig from "../Config/TaskStepConfig";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
 import { RookieStep } from "../Const/RookieDefine";
-import { UIName } from "../Const/ConstUIDefine";
-import { RookieStepMaskUI } from "./RookieGuide/RookieStepMaskUI";
-
 const { ccclass, property } = _decorator;
 
 @ccclass("TaskListUI")

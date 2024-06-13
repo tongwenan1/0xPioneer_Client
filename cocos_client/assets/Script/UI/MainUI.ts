@@ -1,6 +1,5 @@
 import { _decorator, Node, Button, Label, Vec3, UITransform, instantiate, tween, dynamicAtlasManager, find, Prefab } from "cc";
 import { ClaimRewardUI } from "./ClaimRewardUI";
-import { LanMgr, PioneerMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
 import { TaskListUI } from "./TaskListUI";
 import { NewSettlementUI } from "./NewSettlementUI";
@@ -8,18 +7,15 @@ import ViewController from "../BasicView/ViewController";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import Config from "../Const/Config";
-import { GAME_ENV_IS_DEBUG, MapMemberFactionType, ResourceCorrespondingItem } from "../Const/ConstDefine";
+import { GAME_ENV_IS_DEBUG, MapMemberFactionType } from "../Const/ConstDefine";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
 import { DataMgr } from "../Data/DataMgr";
 import { NFTBackpackUI } from "./NFTBackpackUI";
 import CommonTools from "../Tool/CommonTools";
 import { NetworkMgr } from "../Net/NetworkMgr";
-import ArtifactData from "../Model/ArtifactData";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
 import { RookieResourceAnim, RookieResourceAnimStruct, RookieStep } from "../Const/RookieDefine";
-import { NTFRankUpUI } from "./NTFRankUpUI";
-import { RookieStepMaskUI } from "./RookieGuide/RookieStepMaskUI";
 
 const { ccclass, property } = _decorator;
 

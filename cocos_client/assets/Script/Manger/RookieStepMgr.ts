@@ -5,7 +5,7 @@ import { UIName } from "../Const/ConstUIDefine";
 import { NotificationName } from "../Const/Notification";
 import { RookieStepMaskUI } from "../UI/RookieGuide/RookieStepMaskUI";
 import { DataMgr } from "../Data/DataMgr";
-import { RookieResourceAnim, RookieResourceAnimStruct, RookieStep } from "../Const/RookieDefine";
+import { RookieResourceAnim, RookieResourceAnimStruct, RookieStep, RookieTapPositionType } from "../Const/RookieDefine";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import { s2c_user } from "../Net/msg/WebsocketMsg";
 import GameMainHelper from "../Game/Helper/GameMainHelper";
@@ -436,23 +436,46 @@ export default class RookieStepMgr {
         }
         const { tag, view, tapIndex } = data;
         let isFromGameView: boolean = false;
+        let isDialogUse: boolean = false;
+        let tapPostionType: RookieTapPositionType = RookieTapPositionType.NORMAL;
         if (tag == "mapAction") {
             isFromGameView = true;
-        }
-        this._maskView.configuration(isFromGameView, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
-            if (tag == "dialogue") {
-                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_DIALOGUE, { tapIndex: tapIndex });
-            } else if (tag == "mapAction") {
-                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAP_ACTION, { tapIndex: tapIndex });
-            } else if (tag == "mapActionConfrim") {
-                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAP_ACTION_CONFRIM, { tapIndex: tapIndex });
-            } else if (tag == "task") {
-                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_TASK_ITEM, { tapIndex: tapIndex });
-            } else if (tag == "buildingUpgrade") {
-                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_BUILDING_UPGRADE, { tapIndex: tapIndex });
-            } else if (tag == "defend") {
-                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_SET_DENFENDER, { tapIndex: tapIndex });
+            tapPostionType = RookieTapPositionType.BUTTON;
+        } else if (tag == "dialogue") {
+            isDialogUse = true;
+            if (tapIndex == "-1") {
+                tapPostionType = RookieTapPositionType.DIALOG;
+            } else {
+                tapPostionType = RookieTapPositionType.BUTTON;
             }
-        });
+        } else if (tag == "mapActionConfrim") {
+            tapPostionType = RookieTapPositionType.BUTTON;
+        } else if (tag == "task") {
+            tapPostionType = RookieTapPositionType.BUTTON;
+        } else if (tag == "buildingUpgrade") {
+            tapPostionType = RookieTapPositionType.BUTTON;
+        }
+        this._maskView.configuration(
+            isFromGameView,
+            view.worldPosition,
+            view.getComponent(UITransform).contentSize,
+            () => {
+                if (tag == "dialogue") {
+                    NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_DIALOGUE, { tapIndex: tapIndex });
+                } else if (tag == "mapAction") {
+                    NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAP_ACTION, { tapIndex: tapIndex });
+                } else if (tag == "mapActionConfrim") {
+                    NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAP_ACTION_CONFRIM, { tapIndex: tapIndex });
+                } else if (tag == "task") {
+                    NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_TASK_ITEM, { tapIndex: tapIndex });
+                } else if (tag == "buildingUpgrade") {
+                    NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_BUILDING_UPGRADE, { tapIndex: tapIndex });
+                } else if (tag == "defend") {
+                    NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_SET_DENFENDER, { tapIndex: tapIndex });
+                }
+            },
+            isDialogUse,
+            tapPostionType
+        );
     }
 }
