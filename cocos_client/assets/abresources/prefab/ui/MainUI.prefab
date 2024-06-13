@@ -31,17 +31,17 @@
     "_active": true,
     "_components": [
       {
+        "__id__": 899
+      },
+      {
         "__id__": 901
       },
       {
         "__id__": 903
-      },
-      {
-        "__id__": 905
       }
     ],
     "_prefab": {
-      "__id__": 907
+      "__id__": 905
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -19642,13 +19642,10 @@
       },
       {
         "__id__": 896
-      },
-      {
-        "__id__": 898
       }
     ],
     "_prefab": {
-      "__id__": 900
+      "__id__": 898
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -19744,62 +19741,6 @@
     "fileId": "92BJR6YoVB9K/lYE+d4tyj"
   },
   {
-    "__type__": "cc.Button",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 893
-    },
-    "_enabled": true,
-    "__prefab": {
-      "__id__": 899
-    },
-    "clickEvents": [],
-    "_interactable": true,
-    "_transition": 0,
-    "_normalColor": {
-      "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
-      "a": 255
-    },
-    "_hoverColor": {
-      "__type__": "cc.Color",
-      "r": 211,
-      "g": 211,
-      "b": 211,
-      "a": 255
-    },
-    "_pressedColor": {
-      "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
-      "a": 255
-    },
-    "_disabledColor": {
-      "__type__": "cc.Color",
-      "r": 124,
-      "g": 124,
-      "b": 124,
-      "a": 255
-    },
-    "_normalSprite": null,
-    "_hoverSprite": null,
-    "_pressedSprite": null,
-    "_disabledSprite": null,
-    "_duration": 0.1,
-    "_zoomScale": 1.2,
-    "_target": null,
-    "_id": ""
-  },
-  {
-    "__type__": "cc.CompPrefabInfo",
-    "fileId": "64JP6Hwz1Al6MFJAf8wVrY"
-  },
-  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
@@ -19822,7 +19763,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 902
+      "__id__": 900
     },
     "_contentSize": {
       "__type__": "cc.Size",
@@ -19850,10 +19791,14 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 904
+      "__id__": 902
     },
     "backpackBtn": {
       "__id__": 267
+    },
+    "resourceFlyAnim": {
+      "__uuid__": "e4714445-8eac-4d73-b857-fed13cff51dc",
+      "__expectedType__": "cc.Prefab"
     },
     "_id": ""
   },
@@ -19871,7 +19816,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 906
+      "__id__": 904
     },
     "_alignFlags": 45,
     "_target": null,

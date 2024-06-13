@@ -1,4 +1,4 @@
-import { _decorator, Node, Button, Label, Vec3, UITransform, instantiate, tween, dynamicAtlasManager, find } from "cc";
+import { _decorator, Node, Button, Label, Vec3, UITransform, instantiate, tween, dynamicAtlasManager, find, Prefab } from "cc";
 import { ClaimRewardUI } from "./ClaimRewardUI";
 import { LanMgr, PioneerMgr, UserInfoMgr } from "../Utils/Global";
 import { UIName } from "../Const/ConstUIDefine";
@@ -28,6 +28,9 @@ export class MainUI extends ViewController {
     @property(Button)
     backpackBtn: Button = null;
 
+    @property(Prefab)
+    private resourceFlyAnim: Prefab = null;
+
     private _animView: Node = null;
 
     private _claimRewardUI: ClaimRewardUI;
@@ -37,7 +40,7 @@ export class MainUI extends ViewController {
         super.viewDidLoad();
 
         this._animView = this.node.getChildByPath("AnimView");
-        this._animView.active = false;
+        this._animView.active = true;
 
         this._gangsterComingTipView = this.node.getChildByPath("CommonContent/GangsterTipView");
         this._gangsterComingTipView.active = false;
@@ -306,8 +309,6 @@ export class MainUI extends ViewController {
 
     private _onGameMainResourcePlayAnim(data: RookieResourceAnimStruct) {
         const { animType, callback } = data;
-        this._animView.active = true;
-
         let fromPos: Vec3 = null;
         let toPos: Vec3 = null;
         let moveView: Node = null;
@@ -349,7 +350,6 @@ export class MainUI extends ViewController {
 
             moveView = toView;
         }
-
         if (fromPos == null || toPos == null) {
             return;
         }
@@ -364,7 +364,23 @@ export class MainUI extends ViewController {
                 .call(() => {
                     icon.destroy();
                     if (i == 4) {
-                        this._animView.active = false;
+                        if (callback != null) {
+                            callback();
+                        }
+                    }
+                })
+                .start();
+
+            const resourceFly = instantiate(this.resourceFlyAnim);
+            resourceFly.setParent(this._animView);
+            resourceFly.position = fromPos;
+            tween()
+                .target(resourceFly)
+                .delay(i * 0.2)
+                .to(1, { position: toPos })
+                .call(() => {
+                    resourceFly.destroy();
+                    if (i == 4) {
                         if (callback != null) {
                             callback();
                         }
