@@ -134,6 +134,7 @@ export class PlayerInfoUI extends ViewController {
 
     //-------------------------------- function
     private clearReset(): void {
+        NetworkMgr.websocketMsg.reset_data();
         GameMusicPlayMgr.playTapButtonEffect();
         localStorage.clear();
         Config.canSaveLocalData = false;

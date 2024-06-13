@@ -193,6 +193,9 @@ export class WebsocketMsg {
     public reborn_all() {
         this.send_packet("reborn_all", {});
     }
+    public reset_data() {
+        this.send_packet("reset_data", {});
+    }
 
     public save_archives(d: c2s_user.Isave_archives) {
         this.send_packet("save_archives", d);

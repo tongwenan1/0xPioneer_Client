@@ -103,6 +103,7 @@ export enum protobuf_c2s {
 
     // ------ test ------
     reborn_all,
+    reset_data,
 }
 
 export enum protobuf_s2c {
@@ -247,4 +248,5 @@ export enum protobuf_s2c {
 
     // ------ test ------
     reborn_all_res,
+    reset_data_res,
 }

@@ -408,6 +408,9 @@ message player_wormhole_fight_res {
 message reborn_all_res {
     required int32 res = 1;
 }
+message reset_data_res {
+    required int32 res = 1;
+}
 
 
 
