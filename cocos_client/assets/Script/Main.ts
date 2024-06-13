@@ -15,6 +15,7 @@ import ChainConfig from "./Config/ChainConfig";
 import CLog from "./Utils/CLog";
 import { EthereumEventData_accountChanged, EthereumEventData_chainChanged, EthereumEventData_init, EthereumEventType } from "./Net/ethers/Ethereum";
 import { s2c_user } from "./Net/msg/WebsocketMsg";
+import { BundleName } from "./Basic/ResourcesMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("Main")
@@ -57,6 +58,11 @@ export class Main extends ViewController {
         } else {
             NotificationMgr.triggerEvent(NotificationName.GAME_INITED);
         }
+
+        const result = await ResourcesMgr.initBundle(BundleName.MainBundle);
+        if (result.succeed) {
+            result.bundle.preloadDir("");
+        }
     }
 
     protected async viewDidStart(): Promise<void> {
@@ -96,18 +102,16 @@ export class Main extends ViewController {
         // need show loading
         let loadRate: number = 0;
         const preloadRate: number = 0.4;
-        ResourcesMgr.Init(async (err: Error, bundle: AssetManager.Bundle) => {
-            if (err != null) {
-                return;
-            }
+        const result = await ResourcesMgr.initBundle(BundleName.MainBundle);
+        if (result.succeed) {
             // show loading
             UIPanelManger.inst.popPanelByName(UIName.LoginUI);
             let loadingView: LoadingUI = null;
-            const result = await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.HUD);
-            if (result.success) {
-                loadingView = result.node.getComponent(LoadingUI);
+            const loadingResult = await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.HUD);
+            if (loadingResult.success) {
+                loadingView = loadingResult.node.getComponent(LoadingUI);
             }
-            bundle.preloadDir(
+            result.bundle.preloadDir(
                 "",
                 (finished: number, total: number, item: AssetManager.RequestItem) => {
                     const currentRate = finished / total;
@@ -120,7 +124,7 @@ export class Main extends ViewController {
                     if (err != null) {
                         return;
                     }
-                    bundle.loadDir(
+                    result.bundle.loadDir(
                         "",
                         (finished: number, total: number, item: AssetManager.RequestItem) => {
                             const currentRate = preloadRate + (finished / total) * (1 - preloadRate);
@@ -140,7 +144,7 @@ export class Main extends ViewController {
                     );
                 }
             );
-        });
+        }
     }
 
     private async _showGameMain() {

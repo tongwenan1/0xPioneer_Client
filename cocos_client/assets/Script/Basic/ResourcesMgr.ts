@@ -1,63 +1,61 @@
-import { Asset, resources, assetManager, isValid, AssetManager, sys } from "cc";
-import CLog from "../Utils/CLog";
+import { Asset, assetManager, AssetManager } from "cc";
 
 export const ABResBundleName = "abresources";
+export enum BundleName {
+    MainBundle = "abresources",
+    InnerBundle = "abresources_2",
+}
+
+export interface ResourceInitResult {
+    succeed: boolean;
+    err: Error;
+    bundle: AssetManager.Bundle;
+}
 
 export default class ResourcesManager {
-    public async Init(progressCB: (err: Error | null, bundle: AssetManager.Bundle) => void) {
-        this.initABBundle(progressCB);
-    }
-
-    initABBundle(progressCB: (err: Error | null, bundle: AssetManager.Bundle) => void) {
-        assetManager.loadBundle(
-            ABResBundleName,
-            {
-                onFileProgress: (loaded: number, total: number) => {
-                    CLog.debug("ResourcesManager loadBundle " + ABResBundleName + ":" + loaded + "/" + total);
+    public initBundle(bundleName: BundleName): Promise<ResourceInitResult> {
+        return new Promise<ResourceInitResult>((resolve, reject) => {
+            assetManager.loadBundle(
+                bundleName,
+                {
+                    onFileProgress: (loaded: number, total: number) => {},
                 },
-            },
-            (err: Error | null, bundle: AssetManager.Bundle) => {
-                if (err) {
-                    progressCB(err, null);
-                    return;
-                }
-                progressCB(null, bundle);
-            }
-        );
-    }
-
-    public LoadResource<T extends Asset>(path: string, type: new (...args: any[]) => T): Promise<T> {
-        return new Promise((resolve, reject) => {
-            var res = resources.get(path, type);
-            if (!res) {
-                resources.load(path, type, (error, sf: T) => {
-                    if (error) {
-                        CLog.error("ResourcesManager LoadResource error: ", error)
-                        resolve(null);
+                (err: Error | null, bundle: AssetManager.Bundle) => {
+                    if (err != null) {
+                        resolve({
+                            succeed: false,
+                            err: err,
+                            bundle: null,
+                        });
+                        return;
                     }
-                    resolve(sf);
-                });
-            } else {
-                resolve(res);
-            }
+                    resolve({
+                        succeed: true,
+                        err: null,
+                        bundle: bundle,
+                    });
+                }
+            );
         });
     }
 
-    public LoadABResource<T extends Asset>(path: string, type: new (...args: any[]) => T): Promise<T> {
-        // console.log("ResourcesManager LoadABResource path:" + path);
-        if (!path) {
-            console.error("ResourcesManager LoadABResource path is null");
-            return null;
-        }
+    public loadResource<T extends Asset>(bundleName: BundleName, path: string, type: new (...args: any[]) => T): Promise<T> {
         return new Promise(async (resolve, reject) => {
-            let bundle = await this.loadBundle(ABResBundleName);
-            if (!bundle) return resolve(null);
-            var res = bundle.get(path, type) as T;
-            if (!res) {
-                bundle.load(path, type, (err, asset: T) => {
+            if (path == "" || path == null) {
+                resolve(null);
+                return;
+            }
+            const result = await this.initBundle(bundleName);
+            if (!result.succeed) {
+                resolve(null);
+                return;
+            }
+            const res = result.bundle.get(path, type) as T;
+            if (res == null) {
+                result.bundle.load(path, type, (err, asset: T) => {
                     if (err) {
-                        console.warn("ResourcesManager LoadABResource error: ", err);
                         resolve(null);
+                        return;
                     }
                     resolve(asset);
                 });
@@ -67,33 +65,12 @@ export default class ResourcesManager {
         });
     }
 
-    public ReleaseABResource(path: string) {
-        this.loadBundle(ABResBundleName).then((bundle: AssetManager.Bundle) => {
-            bundle.release(path);
-        });
+    public async releaseResource(bundleName: BundleName, path: string) {
+        const result = await this.initBundle(bundleName);
+        if (result.succeed) {
+            result.bundle.release(path);
+        }
     }
 
-    private loadBundle(name: string): Promise<AssetManager.Bundle> {
-        return new Promise((resolve, reject) => {
-            let bundle: AssetManager.Bundle | null = assetManager.getBundle(name);
-            if (isValid(bundle)) {
-                resolve(bundle!);
-            } else {
-                assetManager.loadBundle(
-                    name,
-                    {
-                        onFileProgress: (loaded: number, total: number) => {
-                            console.log("ResourcesManager loadBundle " + name + ":" + loaded + "/" + total);
-                        },
-                    },
-                    (err: Error | null, bundle: AssetManager.Bundle) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        resolve(bundle);
-                    }
-                );
-            }
-        });
-    }
+    public constructor() {}
 }

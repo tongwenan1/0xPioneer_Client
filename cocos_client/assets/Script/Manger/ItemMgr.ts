@@ -1,5 +1,6 @@
 import { SpriteFrame, resources, sys } from "cc";
 import { ResourcesMgr } from "../Utils/Global";
+import { BundleName } from "../Basic/ResourcesMgr";
 
 export default class ItemMgr {
     private _itemIconSpriteFrames = {};
@@ -8,7 +9,7 @@ export default class ItemMgr {
         if (iconName in this._itemIconSpriteFrames) {
             return this._itemIconSpriteFrames[iconName];
         }
-        const frame = await ResourcesMgr.LoadABResource("icon/item/" + iconName + "/spriteFrame", SpriteFrame);
+        const frame = await ResourcesMgr.loadResource(BundleName.MainBundle, "icon/item/" + iconName + "/spriteFrame", SpriteFrame);
         if (frame != null) {
             this._itemIconSpriteFrames[iconName] = frame;
         }

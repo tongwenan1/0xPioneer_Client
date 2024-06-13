@@ -28,6 +28,7 @@ export default class RookieStepMgr {
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_HEAT, this.onHeatChange, this);
         NotificationMgr.addListener(NotificationName.TALK_FINISH, this._onTalkFinish, this);
         NotificationMgr.addListener(NotificationName.GAME_CAMERA_POSITION_CHANGED, this._onGameCameraPosChange, this);
+        NotificationMgr.addListener(NotificationName.GAME_INNER_DID_SHOW, this._onGameInnerDidShow, this);
 
         NotificationMgr.addListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_FIGHT_ENEMY_WIN, this._onRookieFightWin, this);
@@ -189,6 +190,21 @@ export default class RookieStepMgr {
         }
     }
 
+    private _onGameInnerDidShow() {
+        const rookieStep = DataMgr.s.userInfo.data.rookieStep;
+        console.log("exce ro: " + rookieStep);
+        if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1 || rookieStep == RookieStep.MAIN_BUILDING_TAP_2 || rookieStep == RookieStep.MAIN_BUILDING_TAP_3) {
+            const view = find("Main/Canvas/GameContent/Game/InnerSceneRe/BuildingLattice/StreetView/buildingView_1/MainCity");
+            console.log("exce view: ", view);
+            if (view == null) {
+                return;
+            }
+            this._maskView.configuration(false, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
+                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAIN_BUILDING);
+            });
+        }
+    }
+
     private async _onRookieStepChange() {
         this._refreshMaskShow();
         const rookieStep = DataMgr.s.userInfo.data.rookieStep;
@@ -293,13 +309,6 @@ export default class RookieStepMgr {
             if (GameMainHelper.instance.isGameShowOuter) {
                 GameMainHelper.instance.changeInnerAndOuterShow();
             }
-            const view = find("Main/Canvas/GameContent/Game/InnerSceneRe/BuildingLattice/StreetView/buildingView_1/MainCity");
-            if (view == null) {
-                return;
-            }
-            this._maskView.configuration(false, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
-                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAIN_BUILDING);
-            });
         } else if (rookieStep == RookieStep.RESOURCE_COLLECT) {
             const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_10");
             if (view == null) {

@@ -1,20 +1,23 @@
-import { _decorator, Component, Node, Camera, EventHandler, Vec3, tween, inverseLerp, find } from "cc";
+import { _decorator, Component, Node, Camera, EventHandler, Vec3, tween, inverseLerp, find, AssetManager, loader, Asset, Prefab, instantiate } from "cc";
 import NotificationMgr from "../Basic/NotificationMgr";
 import ViewController from "../BasicView/ViewController";
 import { NotificationName } from "../Const/Notification";
 import GameMainHelper from "./Helper/GameMainHelper";
 import { ECursorType } from "../Const/ConstDefine";
-import { GameMgr } from "../Utils/Global";
+import { GameMgr, ResourcesMgr } from "../Utils/Global";
 import UIPanelManger, { UIPanelLayerType } from "../Basic/UIPanelMgr";
 import { HUDName } from "../Const/ConstUIDefine";
 import { LoadingUI } from "../UI/Loading/LoadingUI";
 import { DataMgr } from "../Data/DataMgr";
 import { RookieStep } from "../Const/RookieDefine";
+import { BundleName } from "../Basic/ResourcesMgr";
 
 const { ccclass, property } = _decorator;
 
 @ccclass("GameMain")
 export class GameMain extends ViewController {
+    private _innerView: Node = null;
+
     protected viewDidLoad(): void {
         super.viewDidLoad();
         GameMainHelper.instance.setGameCamera(find("Main/Canvas/GameCamera").getComponent(Camera));
@@ -43,17 +46,19 @@ export class GameMain extends ViewController {
     //--------------------------------------- function
     private async _refreshUI(loadingAnim: boolean = true) {
         const outerView = this.node.getChildByPath("OutScene");
-        // const innerView = this.node.getChildByPath("InnerScene");
-        const innerView = this.node.getChildByPath("InnerSceneRe");
         const isOuterShow: boolean = GameMainHelper.instance.isGameShowOuter;
+        if (this._innerView == null) {
+            return;
+        }
+        console.log("exce step0.1");
         // inner and outer need hide first, then show
         if (isOuterShow) {
-            innerView.active = false;
+            this._innerView.active = false;
             outerView.active = true;
         } else {
             outerView.active = false;
-            innerView.active = true;
-
+            this._innerView.active = true;
+            console.log("exce step1");
             GameMainHelper.instance.changeCursor(ECursorType.Common);
         }
         if (loadingAnim) {
@@ -71,7 +76,38 @@ export class GameMain extends ViewController {
     }
 
     //--------------------------------------- notitfication
-    private _onGameInnerOuterChange() {
-        this._refreshUI();
+    private async _onGameInnerOuterChange() {
+        let loadingAnim: boolean = true;
+        const isOuterShow: boolean = GameMainHelper.instance.isGameShowOuter;
+        if (!isOuterShow && this._innerView == null) {
+            const result = await ResourcesMgr.initBundle(BundleName.InnerBundle);
+            if (result.succeed) {
+                const loadingResult = await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.HUD);
+                result.bundle.loadDir(
+                    "",
+                    async (finished: number, total: number, item: AssetManager.RequestItem) => {
+                        let rate: number = 0;
+                        if (loadingResult.success) {
+                            const currentRate: number = finished / total;
+                            rate = Math.max(rate, currentRate);
+                            loadingResult.node.getComponent(LoadingUI).showLoadingProgress(rate);
+                        }
+                    },
+                    async (err: Error, data: Asset[]) => {
+                        UIPanelManger.inst.popPanel(loadingResult.node, UIPanelLayerType.HUD);
+                        const innerViewResult = await ResourcesMgr.loadResource(BundleName.InnerBundle, "prefab/game/InnerSceneRe", Prefab);
+                        if (innerViewResult != null) {
+                            this._innerView = instantiate(innerViewResult);
+                            this._innerView.setParent(this.node);
+                            this._refreshUI(loadingAnim);
+                        }
+                    }
+                );
+            }
+            loadingAnim = false;
+        } else {
+            console.log("exce step0");
+            this._refreshUI(loadingAnim);
+        }
     }
 }

@@ -32,6 +32,7 @@ import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import GameMainHelper from "../Helper/GameMainHelper";
 import { DataMgr } from "../../Data/DataMgr";
+import { BundleName } from "../../Basic/ResourcesMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -117,7 +118,7 @@ export class InnerBuildingController extends ViewController {
         for (const [key, value] of innerBuilding.entries()) {
             const config = InnerBuildingConfig.getByBuildingType(key);
             if (config != null) {
-                const buildingPrb = await ResourcesMgr.LoadABResource("prefab/game/inner/" + config.anim, Prefab);
+                const buildingPrb = await ResourcesMgr.loadResource(BundleName.InnerBundle, "prefab/game/inner/" + config.anim, Prefab);
                 promise.push(buildingPrb);
                 if (buildingPrb != null) {
                     const view = instantiate(buildingPrb);

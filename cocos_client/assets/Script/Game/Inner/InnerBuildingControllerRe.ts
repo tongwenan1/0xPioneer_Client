@@ -15,6 +15,7 @@ import {
     Vec3,
     _decorator,
     color,
+    find,
     instantiate,
     rect,
     tween,
@@ -41,6 +42,7 @@ import UIPanelManger from "../../Basic/UIPanelMgr";
 import { UIName } from "../../Const/ConstUIDefine";
 import { RelicTowerUI } from "../../UI/RelicTowerUI";
 import { UIHUDController } from "../../UI/UIHUDController";
+import { BundleName } from "../../Basic/ResourcesMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -85,6 +87,7 @@ export class InnerBuildingControllerRe extends ViewController {
         this._refreshLattice();
         await this._initBuilding();
         await this._refreshBuilding();
+        NotificationMgr.triggerEvent(NotificationName.GAME_INNER_DID_SHOW);
     }
 
     protected async viewDidStart(): Promise<void> {
@@ -175,7 +178,7 @@ export class InnerBuildingControllerRe extends ViewController {
             if (config != null) {
                 const buildingParent = this.node.getChildByPath("BuildingLattice");
                 const scale = v3(1 / buildingParent.scale.x, 1 / buildingParent.scale.y, 1 / buildingParent.scale.z);
-                const buildingPrb = await ResourcesMgr.LoadABResource("prefab/game/inner/" + config.anim, Prefab);
+                const buildingPrb = await ResourcesMgr.loadResource(BundleName.InnerBundle, "prefab/game/inner/" + config.anim, Prefab);
                 promise.push(buildingPrb);
                 if (buildingPrb != null) {
                     const view = instantiate(buildingPrb);

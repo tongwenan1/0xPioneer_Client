@@ -1,5 +1,5 @@
 import { _decorator, Prefab, instantiate, Node, Component } from "cc";
-import ResourcesManager from "./ResourcesMgr";
+import ResourcesManager, { BundleName } from "./ResourcesMgr";
 import { ResourcesMgr } from "../Utils/Global";
 
 export enum UIPanelLayerType {
@@ -65,7 +65,7 @@ export default class UIPanelManger extends Component {
         }
     }
     public popPanelByName(name: string) {
-        let itemIndex: number = this._gameQueue.findIndex((value: UIPanelQueueItem)=> {
+        let itemIndex: number = this._gameQueue.findIndex((value: UIPanelQueueItem) => {
             return value.name == name;
         });
         if (itemIndex >= 0) {
@@ -73,7 +73,7 @@ export default class UIPanelManger extends Component {
             item.node.destroy();
             return;
         }
-        itemIndex = this._uiQueue.findIndex((value: UIPanelQueueItem)=> {
+        itemIndex = this._uiQueue.findIndex((value: UIPanelQueueItem) => {
             return value.name == name;
         });
         if (itemIndex >= 0) {
@@ -81,7 +81,7 @@ export default class UIPanelManger extends Component {
             item.node.destroy();
             return;
         }
-        itemIndex = this._hudQueue.findIndex((value: UIPanelQueueItem)=> {
+        itemIndex = this._hudQueue.findIndex((value: UIPanelQueueItem) => {
             return value.name == name;
         });
         if (itemIndex >= 0) {
@@ -111,19 +111,19 @@ export default class UIPanelManger extends Component {
         return isShow;
     }
     public getPanelByName(name: string) {
-        let itemIndex: number = this._gameQueue.findIndex((value: UIPanelQueueItem)=> {
+        let itemIndex: number = this._gameQueue.findIndex((value: UIPanelQueueItem) => {
             return value.name == name;
         });
         if (itemIndex >= 0) {
             return this._gameQueue[itemIndex].node;
         }
-        itemIndex = this._uiQueue.findIndex((value: UIPanelQueueItem)=> {
+        itemIndex = this._uiQueue.findIndex((value: UIPanelQueueItem) => {
             return value.name == name;
         });
         if (itemIndex >= 0) {
             return this._uiQueue[itemIndex].node;
         }
-        itemIndex = this._hudQueue.findIndex((value: UIPanelQueueItem)=> {
+        itemIndex = this._hudQueue.findIndex((value: UIPanelQueueItem) => {
             return value.name == name;
         });
         if (itemIndex >= 0) {
@@ -150,11 +150,18 @@ export default class UIPanelManger extends Component {
     }
 
     private async _loadPrefab(path: string): Promise<Node | null> {
-        let useNode: Node = null;
-        let prefab: Prefab = await this._resourceMgr.LoadABResource(path, Prefab);
-        if (prefab != null) {
-            useNode = instantiate(prefab);
+        if (path == "" || path == null) {
+            return null;
         }
-        return useNode;
+        const index = path.indexOf("/");
+        if (index === -1) {
+            return null;
+        }
+        const bundleName = path.substring(0, index);
+        const resourcePath = path.substring(index + 1);
+        let prefab: Prefab = await this._resourceMgr.loadResource(bundleName as BundleName, resourcePath, Prefab);
+        if (prefab != null) {
+            return instantiate(prefab);
+        }
     }
 }

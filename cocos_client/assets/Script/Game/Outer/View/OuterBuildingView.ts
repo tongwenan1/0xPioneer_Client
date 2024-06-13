@@ -12,6 +12,7 @@ import { DataMgr } from "../../../Data/DataMgr";
 import CommonTools from "../../../Tool/CommonTools";
 import ArtifactConfig from "../../../Config/ArtifactConfig";
 import { ArtifactConfigData } from "../../../Const/Artifact";
+import { BundleName } from "../../../Basic/ResourcesMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("OuterBuildingView")
@@ -85,7 +86,7 @@ export class OuterBuildingView extends ViewController {
                     this._artifactShowView = null;
                 }
                 if (tempShowAni != null) {
-                    const prb = await ResourcesMgr.LoadABResource("prefab/artifactX5/Prefab/artifact/" + tempShowAni, Prefab);
+                    const prb = await ResourcesMgr.loadResource(BundleName.MainBundle, "prefab/artifactX5/Prefab/artifact/" + tempShowAni, Prefab);
                     this._artifactShowView = instantiate(prb);
                     this.node.getChildByPath("ArtifactShow").addChild(this._artifactShowView);
                 }

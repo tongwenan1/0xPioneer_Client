@@ -13,6 +13,7 @@ import { UIHUDController } from "../../../UI/UIHUDController";
 import { DataMgr } from "../../../Data/DataMgr";
 import GameMusicPlayMgr from "../../../Manger/GameMusicPlayMgr";
 import { RelicTowerUI } from "../../../UI/RelicTowerUI";
+import { BundleName } from "../../../Basic/ResourcesMgr";
 const { ccclass, property } = _decorator;
 
 @ccclass("InnerBuildingView")
@@ -38,7 +39,7 @@ export class InnerBuildingView extends ViewController {
                     this._showBuilding.destroy();
                     this._showBuilding = null;
                 }
-                const buildingPrb = await ResourcesMgr.LoadABResource("prefab/game/inner/building/" + prefabName, Prefab);
+                const buildingPrb = await ResourcesMgr.loadResource(BundleName.InnerBundle, "prefab/game/inner/building/" + prefabName, Prefab);
                 if (buildingPrb != null) {
                     const buildView = instantiate(buildingPrb);
                     // buildView.setPosition(Vec3.ZERO);
