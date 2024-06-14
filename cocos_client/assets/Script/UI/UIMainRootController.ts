@@ -9,6 +9,8 @@ import UIPanelManger from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
 import { RookieStep } from "../Const/RookieDefine";
+import { ResourcesMgr } from "../Utils/Global";
+import { BundleName } from "../Basic/ResourcesMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -21,6 +23,11 @@ export class UIMainRootController extends ViewController {
         } else {
             GameMusicPlayMgr.playGameMusic();
         }
+        const result = await ResourcesMgr.initBundle(BundleName.InnerBundle);
+        if (!result.succeed) {
+            return;
+        }
+        result.bundle.preloadDir("");
     }
 
     @property([ImageAsset])

@@ -88,6 +88,7 @@ export class InnerBuildingControllerRe extends ViewController {
         this._refreshLattice();
         await this._initBuilding();
         await this._refreshBuilding();
+        this._generatePioneerMove();
         NotificationMgr.triggerEvent(NotificationName.GAME_INNER_DID_SHOW);
         this._isInitOver = true;
     }
@@ -100,7 +101,6 @@ export class InnerBuildingControllerRe extends ViewController {
         super.viewDidAppear();
         this._refreshLattice();
         await this._refreshBuilding();
-        this._generatePioneerMove();
 
         NotificationMgr.addListener(NotificationName.GAME_INNER_BUILDING_LATTICE_EDIT_CHANGED, this._onInnerBuildingLatticeEditChanged, this);
 

@@ -69,12 +69,10 @@ export enum protobuf_c2s {
     player_artifact_change,
     player_artifact_combine,
 
-    // ------ treasure ------
-    get_treasure_info,
-    player_treasure_open,
-    player_treasure_open_select_artifact,
-    player_point_treasure_open,
-    player_world_treasure_lottery,
+
+    // ------ worldbox ------
+    player_worldbox_open,
+    player_worldbox_open_select_artifact,
     player_worldbox_beginner_open,
 
 
@@ -204,16 +202,12 @@ export enum protobuf_s2c {
     artifact_change,
 
 
-    // ------ treasure ------
-    get_treasure_info_res,
-    player_treasure_open_res,
-    player_treasure_open_select_artifact_res,
-    player_point_treasure_open_res,
-    player_world_treasure_lottery_res,
+    // ------ worldbox ------
+    player_worldbox_open_res,
+    player_worldbox_open_select_artifact_res,
     player_worldbox_beginner_open_res,
-    // treasure: notify
-    player_world_treasure_pool_change_res,
-    player_treasure_progress_change,
+    // worldbox: notify
+    player_worldbox_progress_change,
 
 
     // ------ inner-building ------

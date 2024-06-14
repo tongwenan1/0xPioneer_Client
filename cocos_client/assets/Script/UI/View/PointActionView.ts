@@ -44,7 +44,6 @@ export class PointActionView extends Component {
             .start();
         this._treasureCanGetIcon.active = false;
 
-        NetworkMgr.websocket.on("player_point_treasure_open_res", this._on_player_point_treasure_open_res.bind(this));
     }
 
     start() {
@@ -52,7 +51,6 @@ export class PointActionView extends Component {
     }
 
     protected onDestroy(): void {
-        NetworkMgr.websocket.off("player_point_treasure_open_res", this._on_player_point_treasure_open_res.bind(this));
     }
     update(deltaTime: number) {}
 
@@ -186,10 +184,5 @@ export class PointActionView extends Component {
             //         );
             // }
         // }
-    }
-
-    //---------------------------- socket notification
-    private _on_player_point_treasure_open_res(e: any) {
-        this._refreshUI();
     }
 }

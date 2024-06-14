@@ -61,8 +61,6 @@ export class PointTreasureUI extends ViewController {
         this._treasureContent = this.node.getChildByPath("__ViewContent/ScrollView/view/content/RewardContent");
         this._treasureItem = this._treasureContent.getChildByPath("Item");
         this._treasureItem.removeFromParent();
-
-        NetworkMgr.websocket.on("player_point_treasure_open_res", this._on_player_point_treasure_open_res.bind(this));
     }
     protected viewDidStart(): void {
         super.viewDidStart();
@@ -101,8 +99,6 @@ export class PointTreasureUI extends ViewController {
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
-
-        NetworkMgr.websocket.off("player_point_treasure_open_res", this._on_player_point_treasure_open_res.bind(this));
     }
     protected viewPopAnimation(): boolean {
         return true;
@@ -220,7 +216,4 @@ export class PointTreasureUI extends ViewController {
         UIPanelManger.inst.popPanel(this.node);
     }
     //-------------------------- socket notification
-    private _on_player_point_treasure_open_res(e: any) {
-        this._refreshUI();
-    }
 }

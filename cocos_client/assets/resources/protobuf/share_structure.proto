@@ -317,17 +317,6 @@ message actiontype_change_data {
     optional string actiontype = 2;
 }
 
-message treasure_day_data {
-    map<string, treasure_level_arr> rankData = 1;
-}
-message treasure_level_arr {
-    repeated treasure_level levels = 1;
-}
-message treasure_level {
-    required uint32 level = 1;
-    repeated reward_data reward = 2;
-}
-
 message box_data {
     required string id = 1;
     required bool opened = 2;

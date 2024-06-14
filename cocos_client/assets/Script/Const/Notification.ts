@@ -52,6 +52,7 @@ export enum NotificationName {
     USERINFO_DID_CHANGE_HEAT,
     USERINFO_BOX_INFO_CHANGE,
     USERINFO_ROOKE_STEP_CHANGE,
+    USERINFO_CITY_RADIAL_RANGE_CHANGE,
 
     //---------------------- settlement
     SETTLEMENT_DATA_CHANGE,

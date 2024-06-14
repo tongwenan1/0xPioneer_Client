@@ -263,12 +263,8 @@ message artifact_change {
 }
 
 
-// ------ treasure ------
-message get_treasure_info_res {
-    required int32 res = 1;
-    map<string, share.treasure_day_data> data = 2;
-}
-message player_treasure_open_res {
+// ------ worldbox ------
+message player_worldbox_open_res {
     required int32 res = 1;
     optional uint32 boxIndex = 2;
     optional string boxId = 3;
@@ -276,29 +272,10 @@ message player_treasure_open_res {
     repeated share.artifact_info_data artifacts = 5;
     map<string, artifact_three_confs> threes = 6;
 }
-message player_treasure_open_select_artifact_res {
+message player_worldbox_open_select_artifact_res {
     required int32 res = 1;
     optional uint32 boxIndex = 2;
     optional int32 artifactIndex = 3;
-}
-message player_point_treasure_open_res {
-    required int32 res = 1;
-}
-message player_world_treasure_lottery_res {
-    required int32 res = 1;
-    required string itemId = 2;
-    required uint32 num = 3;
-}
-// treasure: notify
-message player_world_treasure_pool_change_res {
-    required int32 res = 1;
-    optional string itemId = 2;
-    optional uint32 num = 3;
-}
-message player_treasure_progress_change {
-    required int32 addProgress = 1;
-    required uint32 newProgress = 2;
-    required uint32 newLotteryProcessLimit = 3;
 }
 message player_worldbox_beginner_open_res {
     required int32 res = 1;
@@ -309,6 +286,12 @@ message player_worldbox_beginner_open_res {
     repeated share.artifact_info_data artifacts = 6;
     map<string, artifact_three_confs> threes = 7;
 }
+// worldbox: notify
+message player_worldbox_progress_change {
+    required int32 addProgress = 1;
+    required uint32 newProgress = 2;
+}
+
 
 // ------ inner-building ------
 message player_building_levelup_res {

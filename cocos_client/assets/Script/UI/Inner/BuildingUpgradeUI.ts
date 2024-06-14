@@ -55,24 +55,6 @@ export class BuildingUpgradeUI extends ViewController {
                 }
             }
         });
-
-        if (!this._buildingMap.has(InnerBuildingType.MainCity)) {
-            return;
-        }
-        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1 || rookieStep == RookieStep.MAIN_BUILDING_TAP_2) {
-            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
-                tag: "buildingUpgrade",
-                view: this._buildingMap.get(InnerBuildingType.MainCity),
-                tapIndex: "-1",
-            });
-        } else if (rookieStep == RookieStep.MAIN_BUILDING_TAP_3) {
-            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
-                tag: "buildingUpgrade",
-                view: this._buildingMap.get(InnerBuildingType.Barrack),
-                tapIndex: "-1",
-            });
-        }
     }
 
     private _buildingMap: Map<InnerBuildingType, Node> = null;
@@ -101,6 +83,24 @@ export class BuildingUpgradeUI extends ViewController {
         NotificationMgr.addListener(NotificationName.ITEM_CHANGE, this.onItemChanged, this);
 
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_BUILDING_UPGRADE, this._onRookieTapThis, this);
+    }
+
+    protected viewDidAppear(): void {
+        super.viewDidAppear();
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1 || rookieStep == RookieStep.MAIN_BUILDING_TAP_2) {
+            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
+                tag: "buildingUpgrade",
+                view: this._buildingMap.get(InnerBuildingType.MainCity),
+                tapIndex: "-1",
+            });
+        } else if (rookieStep == RookieStep.MAIN_BUILDING_TAP_3) {
+            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
+                tag: "buildingUpgrade",
+                view: this._buildingMap.get(InnerBuildingType.Barrack),
+                tapIndex: "-1",
+            });
+        }
     }
 
     protected viewDidDestroy(): void {

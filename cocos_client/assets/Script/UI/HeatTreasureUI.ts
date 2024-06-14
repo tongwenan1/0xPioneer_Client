@@ -64,7 +64,6 @@ export class HeatTreasureUI extends Component {
 
         if (rookieStep >= RookieStep.NPC_TALK_4) {
             treasureProgressView.active = true;
-            detailButton.active = true;
             questionButton.active = true;
         }
         //------------------------------------------ heat
@@ -233,7 +232,7 @@ export class HeatTreasureUI extends Component {
         GameMusicPlayMgr.playTapButtonEffect();
         const index = parseInt(customEventData);
         if (DataMgr.s.userInfo.data.rookieStep == RookieStep.FINISH) {
-            NetworkMgr.websocketMsg.player_treasure_open({
+            NetworkMgr.websocketMsg.player_worldbox_open({
                 boxIndex: index,
             });
         } else {

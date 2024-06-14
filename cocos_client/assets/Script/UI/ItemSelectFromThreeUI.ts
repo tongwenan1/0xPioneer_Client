@@ -131,7 +131,7 @@ export class ItemSelectFromThreeUI extends ViewController {
     private async onTapGet(event: Event, customEventData: string) {
         GameMusicPlayMgr.playTapButtonEffect();
         const index: number = parseInt(customEventData);
-        NetworkMgr.websocketMsg.player_treasure_open_select_artifact({
+        NetworkMgr.websocketMsg.player_worldbox_open_select_artifact({
             boxIndex: this._boxIndex,
             artifactIndex: index,
         });
@@ -144,7 +144,7 @@ export class ItemSelectFromThreeUI extends ViewController {
         const energyNum: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
         const needNum: number = 200;
         if (energyNum >= needNum) {
-            NetworkMgr.websocketMsg.player_treasure_open_select_artifact({
+            NetworkMgr.websocketMsg.player_worldbox_open_select_artifact({
                 boxIndex: this._boxIndex,
                 artifactIndex: -1,
             });

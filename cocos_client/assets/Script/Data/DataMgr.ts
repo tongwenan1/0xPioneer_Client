@@ -107,10 +107,11 @@ export class DataMgr {
                         NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_HEAT);
                     },
                 } as RookieResourceAnimStruct);
-                return;
+            } else {
+                NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_HEAT);
             }
-            NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_CHANGE_HEAT);
         }
+        // box
         let boxUpdate: boolean = false;
         if (localData.boxes.length != p.info.boxes.length) {
             boxUpdate = true;
@@ -128,6 +129,11 @@ export class DataMgr {
         }
         if (boxUpdate) {
             NotificationMgr.triggerEvent(NotificationName.USERINFO_BOX_INFO_CHANGE);
+        }
+
+        // radial range
+        if (localData.cityRadialRange != p.info.cityRadialRange) {
+            NotificationMgr.triggerEvent(NotificationName.USERINFO_CITY_RADIAL_RANGE_CHANGE);
         }
     };
     public static player_rookie_update_res = (e: any) => {
@@ -666,42 +672,7 @@ export class DataMgr {
         DataMgr.s.userInfo.data.energyDidGetTimes += 1;
     };
 
-    //----------------------------------- world treasure
-    public static player_world_treasure_lottery_res = async (e: any) => {
-        // const p: s2c_user.Iplayer_world_treasure_lottery_res = e.data;
-        // if (p.res !== 1) {
-        //     return;
-        // }
-        // DataMgr.s.userInfo.data.heatValue.lotteryTimes += 1;
-        // const result = await UIPanelManger.inst.pushPanel(UIName.TreasureGettedUI);
-        // if (result.success) {
-        //     result.node.getComponent(TreasureGettedUI).dialogShow([new ItemData(p.itemId, p.num)], []);
-        // }
-    };
-    public static get_treasure_info_res = (e: any) => {
-        const p: s2c_user.Iget_treasure_info_res = e.data;
-        if (p.res !== 1) {
-            return;
-        }
-        for (const key in p.data) {
-            NetGlobalData.worldTreasureTodayRewards = p.data[key];
-            break;
-        }
-    };
-    public static player_world_treasure_pool_change_res = (e: any) => {
-        const p: s2c_user.Iplayer_world_treasure_pool_change_res = e.data;
-        if (p.res !== 1) {
-            return;
-        }
-        NetworkMgr.websocketMsg.get_treasure_info({});
-    };
-    public static player_point_treasure_open_res = (e: any) => {
-        // const key: string = "player_point_treasure_open_res";
-        // if (DataMgr.socketSendData.has(key)) {
-        //     const data: s2c_user.Iplayer_point_treasure_open_res = DataMgr.socketSendData.get(key) as s2c_user.Iplayer_point_treasure_open_res;
-        //     DataMgr.s.userInfo.getPointExplorationReward(data.boxId);
-        // }
-    };
+    //--------------------------------------- nft
     public static player_building_delegate_nft_res = (e: any) => {
         // const key: string = "player_building_delegate_nft_res";
         // if (DataMgr.socketSendData.has(key)) {
@@ -762,8 +733,8 @@ export class DataMgr {
         }
         this._playOpenBoxAnim(p.boxIndex, p.boxId, p.items, p.artifacts, p.threes);
     };
-    public static player_treasure_open_res = async (e: any) => {
-        const p: s2c_user.Iplayer_treasure_open_res = e.data;
+    public static player_worldbox_open_res = async (e: any) => {
+        const p: s2c_user.Iplayer_worldbox_open_res = e.data;
         if (p.res !== 1) {
             return;
         }

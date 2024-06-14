@@ -54,14 +54,12 @@ export class WorldTreasureDetailUI extends ViewController {
         this._currentBoxRewardItem.removeFromParent();
         this._currentBoxRewardItemItem = this._currentBoxRewardItem.getChildByPath("RewardContent/BackpackItem");
         this._currentBoxRewardItemItem.removeFromParent();
-
-        NetworkMgr.websocketMsg.get_treasure_info({});
     }
     protected viewDidStart(): void {
         super.viewDidStart();
 
         this._refreshUI();
-       
+
         NetworkMgr.websocket.on("get_treasure_info_res", this._onWorldTreasureDataChanged);
     }
     protected viewDidDestroy(): void {
@@ -84,11 +82,7 @@ export class WorldTreasureDetailUI extends ViewController {
         this._currentBoxTitleLabel.color = rankColor;
 
         this._currentBoxRewardContent.destroyAllChildren();
-        const todayRewards: share.Itreasure_day_data = NetGlobalData.worldTreasureTodayRewards; 
-        if (NetGlobalData.worldTreasureTodayRewards == null) {
-            return;
-        }
-        const currentRankRewards: share.Itreasure_level[] = NetGlobalData.worldTreasureTodayRewards.rankData[this._boxRank.toString()]?.levels;
+        const currentRankRewards = null;
         if (currentRankRewards == null) {
             return;
         }
@@ -97,7 +91,7 @@ export class WorldTreasureDetailUI extends ViewController {
             "Second Rewards:", //LanMgr.getLanById("105101") + ":",
             "First Rewards:", //LanMgr.getLanById("105101") + ":",
         ];
-        currentRankRewards.sort((a, b)=> {
+        currentRankRewards.sort((a, b) => {
             return a.level - b.level;
         });
         const rewardItemMap: Map<number, Node> = new Map();
@@ -131,5 +125,5 @@ export class WorldTreasureDetailUI extends ViewController {
     //----------------------------------------- notification
     private _onWorldTreasureDataChanged = (e: any) => {
         this._refreshUI();
-    }
+    };
 }

@@ -152,7 +152,6 @@ export class WorldTreasureView extends Component {
     }
     private async onTapTreasure() {
         GameMusicPlayMgr.playTapButtonEffect();
-        NetworkMgr.websocketMsg.player_world_treasure_lottery({});
     }
 
     //---------------------------- socket notification

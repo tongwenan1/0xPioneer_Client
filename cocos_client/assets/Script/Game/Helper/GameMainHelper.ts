@@ -247,6 +247,13 @@ export default class GameMainHelper {
         vision = GameMgr.getAfterEffectValue(GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE, vision);
         return this._tiledMapHelper.Shadow_Earse(this._tiledMapHelper.getPos(mapPos.x, mapPos.y), ownerId, vision, false);
     }
+    public tiledMapMainCityShadowErase(mapPos: Vec2) {
+        if (!this.isTiledMapHelperInited) {
+            return [];
+        }
+        const vision: number = DataMgr.s.userInfo.data.cityRadialRange - 1;
+        return this._tiledMapHelper.Shadow_Earse(this._tiledMapHelper.getPos(mapPos.x, mapPos.y), "0", vision, false);
+    }
     public tiledMapGetShadowClearedTiledPositions(): TilePos[] {
         if (!this.isTiledMapHelperInited) {
             return [];

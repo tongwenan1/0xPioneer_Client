@@ -98,7 +98,7 @@ export default class TopUI extends Component {
         const animNode: Node = instantiate(this._expAnimLabel.node);
         animNode.setParent(this._expAnimLabel.node.parent);
         animNode.active = true;
-        animNode.getComponent(Label).string = expValue > 0 ? ("+" + expValue) : expValue.toString();
+        animNode.getComponent(Label).string = expValue > 0 ? "+" + expValue : expValue.toString();
         animNode.position = v3(animNode.position.x, animNode.position.y - 30, animNode.position.z);
         tween(animNode)
             .to(0.4, { position: v3(animNode.position.x, animNode.position.y + 30, animNode.position.z) })
@@ -114,6 +114,9 @@ export default class TopUI extends Component {
     //------------------------------------------------ action
     private async onTapPlayerInfo() {
         GameMusicPlayMgr.playTapButtonEffect();
+        if (UIPanelManger.inst.getPanelByName(UIName.PlayerInfoUI) != null) {
+            return;
+        }
         await UIPanelManger.inst.pushPanel(UIName.PlayerInfoUI);
     }
     //----------------------------------------------- notification

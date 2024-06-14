@@ -107,6 +107,15 @@ export class OuterOtherPioneerView extends Component {
         }
 
         this.node.active = pioneer.actionType != MapPioneerActionType.fighting;
+
+        const rookieSizeView = this.node.getChildByPath("role/RookieSizeView");
+        if (pioneer.type == MapPioneerType.npc) {
+            rookieSizeView.position = v3(0, 11.7, 0);
+            rookieSizeView.getComponent(UITransform).setContentSize(90, 110);
+        } else if (pioneer.type == MapPioneerType.gangster) {
+            rookieSizeView.position = v3(-4, 31, 0);
+            rookieSizeView.getComponent(UITransform).setContentSize(120, 150);
+        }
     }
 
     private _hasTaskView: Node = null;

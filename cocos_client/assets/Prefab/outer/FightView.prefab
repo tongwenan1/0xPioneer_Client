@@ -387,11 +387,8 @@
     "_lineHeight": 40,
     "_overflow": 1,
     "_enableWrapText": false,
-    "_font": {
-      "__uuid__": "7d10ae89-23fd-48d1-b7ce-7398e76c27ff",
-      "__expectedType__": "cc.TTFFont"
-    },
-    "_isSystemFontUsed": false,
+    "_font": null,
+    "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_isItalic": false,
     "_isBold": true,
@@ -913,11 +910,8 @@
     "_lineHeight": 20,
     "_overflow": 1,
     "_enableWrapText": true,
-    "_font": {
-      "__uuid__": "7d10ae89-23fd-48d1-b7ce-7398e76c27ff",
-      "__expectedType__": "cc.TTFFont"
-    },
-    "_isSystemFontUsed": false,
+    "_font": null,
+    "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_isItalic": false,
     "_isBold": true,
@@ -1128,7 +1122,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 69.24998474121094,
+      "width": 74.69921875,
       "height": 83.6
     },
     "_anchorPoint": {
@@ -1173,11 +1167,8 @@
     "_lineHeight": 60,
     "_overflow": 0,
     "_enableWrapText": false,
-    "_font": {
-      "__uuid__": "7d10ae89-23fd-48d1-b7ce-7398e76c27ff",
-      "__expectedType__": "cc.TTFFont"
-    },
-    "_isSystemFontUsed": false,
+    "_font": null,
+    "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_isItalic": false,
     "_isBold": true,
@@ -1395,11 +1386,8 @@
     "_lineHeight": 40,
     "_overflow": 1,
     "_enableWrapText": false,
-    "_font": {
-      "__uuid__": "7d10ae89-23fd-48d1-b7ce-7398e76c27ff",
-      "__expectedType__": "cc.TTFFont"
-    },
-    "_isSystemFontUsed": false,
+    "_font": null,
+    "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_isItalic": false,
     "_isBold": true,
@@ -1921,11 +1909,8 @@
     "_lineHeight": 20,
     "_overflow": 1,
     "_enableWrapText": true,
-    "_font": {
-      "__uuid__": "7d10ae89-23fd-48d1-b7ce-7398e76c27ff",
-      "__expectedType__": "cc.TTFFont"
-    },
-    "_isSystemFontUsed": false,
+    "_font": null,
+    "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_isItalic": false,
     "_isBold": true,

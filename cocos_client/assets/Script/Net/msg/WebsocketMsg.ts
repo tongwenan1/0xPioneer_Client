@@ -114,14 +114,11 @@ export class WebsocketMsg {
     public player_item_use(d: c2s_user.Iplayer_item_use) {
         this.send_packet("player_item_use", d);
     }
-    public player_treasure_open(d: c2s_user.Iplayer_treasure_open) {
-        this.send_packet("player_treasure_open", d);
+    public player_worldbox_open(d: c2s_user.Iplayer_worldbox_open) {
+        this.send_packet("player_worldbox_open", d);
     }
-    public player_treasure_open_select_artifact(d: c2s_user.Iplayer_treasure_open_select_artifact) {
-        this.send_packet("player_treasure_open_select_artifact", d);
-    }
-    public player_point_treasure_open(d: c2s_user.Iplayer_point_treasure_open) {
-        this.send_packet("player_point_treasure_open", d);
+    public player_worldbox_open_select_artifact(d: c2s_user.Iplayer_worldbox_open_select_artifact) {
+        this.send_packet("player_worldbox_open_select_artifact", d);
     }
     public player_artifact_change(d: c2s_user.Iplayer_artifact_change) {
         this.send_packet("player_artifact_change", d);
@@ -160,14 +157,6 @@ export class WebsocketMsg {
     public player_nft_skill_forget(d: c2s_user.Iplayer_nft_skill_forget) {
         this.send_packet("player_nft_skill_forget", d);
     }
-
-    public player_world_treasure_lottery(d: c2s_user.Iplayer_world_treasure_lottery) {
-        this.send_packet("player_world_treasure_lottery", d);
-    }
-    public get_treasure_info(d: c2s_user.Iget_treasure_info) {
-        this.send_packet("get_treasure_info", d);
-    }
-
     public player_rookie_update(d: c2s_user.Iplayer_rookie_update) {
         this.send_packet("player_rookie_update", d);
     }
@@ -311,15 +300,12 @@ export namespace c2s_user {
         itemId: string;
         num: number;
     }
-    export interface Iplayer_treasure_open {
+    export interface Iplayer_worldbox_open {
         boxIndex: number;
     }
-    export interface Iplayer_treasure_open_select_artifact {
+    export interface Iplayer_worldbox_open_select_artifact {
         boxIndex: number;
         artifactIndex: number;
-    }
-    export interface Iplayer_point_treasure_open {
-        boxId: string;
     }
     export interface Iplayer_artifact_change {
         artifactId: string;
@@ -366,9 +352,6 @@ export namespace c2s_user {
         nftId: string;
         skillIndex: number;
     }
-    export interface Iplayer_world_treasure_lottery {}
-    export interface Iget_treasure_info {}
-
     export interface Iplayer_rookie_update {
         rookieStep: number;
     }
@@ -463,23 +446,6 @@ export namespace s2c_user {
         mapbuildings: share.Imapbuilding_info_data[];
     }
 
-    export interface Iplayer_exp_change {
-        addExp: number;
-        newExp: number;
-        newLevel?: number;
-        newPsycLimit?: number;
-    }
-    export interface Iplayer_treasure_progress_change {
-        addProgress: number;
-        newProgress: number;
-        newLotteryProcessLimit: number;
-    }
-    export interface Iplayer_heat_change {
-        change: number;
-        newval: number;
-        newlotteryTimesLimit: number;
-        newlotteryProcessLimit: number;
-    }
     export interface Iplayer_move_res {
         res: number;
         pioneerId: string;
@@ -522,7 +488,7 @@ export namespace s2c_user {
         artifacts: share.Iartifact_info_data[];
         threes: { [key: string]: share.Iartifact_three_confs };
     }
-    export interface Iplayer_treasure_open_res {
+    export interface Iplayer_worldbox_open_res {
         res: number;
         boxId: string;
         boxIndex: number;
@@ -565,21 +531,6 @@ export namespace s2c_user {
     export interface Iplayer_nft_skill_forget_res {
         res: number;
         nftData: share.Infts_info_data;
-    }
-
-    export interface Iplayer_world_treasure_lottery_res {
-        res: number;
-        itemId: string;
-        num: number;
-    }
-    export interface Iget_treasure_info_res {
-        res: number;
-        data: { [key: string]: share.Itreasure_day_data };
-    }
-    export interface Iplayer_world_treasure_pool_change_res {
-        res: number;
-        itemId: string;
-        num: number;
     }
     export interface Iplayer_wormhole_set_attacker_res {
         res: number;
@@ -902,22 +853,6 @@ export namespace share {
 
     export interface Ipioneer_info {
         type: string;
-    }
-
-    export interface Itreasure_day_data {
-        rankData: { [key: string]: Itreasure_level_arr };
-    }
-    export interface Itreasure_level_arr {
-        levels: Itreasure_level[];
-    }
-    export interface Itreasure_level {
-        level: number;
-        reward: Ireward_data[];
-    }
-    export interface Ireward_data {
-        itemId: number;
-        count: number;
-        num: number;
     }
 
     export interface Itask_data {

@@ -23,32 +23,34 @@ export class RookieStepMaskUI extends ViewController {
         isDialogUse: boolean = false,
         tapPostionType: RookieTapPositionType = RookieTapPositionType.NORMAL
     ) {
-        this._contentView.active = true;
+        this.scheduleOnce(() => {
+            this._contentView.active = true;
 
-        const localPos = isFromGameView
-            ? GameMainHelper.instance.getGameCameraWposToUI(worldPos, this.node)
-            : this.node.getComponent(UITransform).convertToNodeSpaceAR(worldPos);
+            const localPos = isFromGameView
+                ? GameMainHelper.instance.getGameCameraWposToUI(worldPos, this.node)
+                : this.node.getComponent(UITransform).convertToNodeSpaceAR(worldPos);
 
-        this._maskView.position = localPos;
-        this._maskView.getComponent(UITransform).setContentSize(size);
-        this._maskView.active = !isDialogUse;
+            this._maskView.position = localPos;
+            this._maskView.getComponent(UITransform).setContentSize(size);
+            this._maskView.active = !isDialogUse;
 
-        this._bgView.position = v3(-this._maskView.position.x, -this._maskView.position.y, this._bgView.position.z);
+            this._bgView.position = v3(-this._maskView.position.x, -this._maskView.position.y, this._bgView.position.z);
 
-        let instructPos = null;
-        if (tapPostionType == RookieTapPositionType.BUTTON) {
-            instructPos = v3(localPos.x + size.width / 2 - 15, localPos.y - size.height / 2);
-        } else if (tapPostionType == RookieTapPositionType.DIALOG) {
-            instructPos = v3(localPos.x, localPos.y - 55);
-        } else {
-            instructPos = v3(localPos.x, localPos.y - 10);
-        }
-        this._instructView.position = instructPos;
+            let instructPos = null;
+            if (tapPostionType == RookieTapPositionType.BUTTON) {
+                instructPos = v3(localPos.x + size.width / 2 - 15, localPos.y - size.height / 2);
+            } else if (tapPostionType == RookieTapPositionType.DIALOG) {
+                instructPos = v3(localPos.x, localPos.y - 55);
+            } else {
+                instructPos = v3(localPos.x, localPos.y - 10);
+            }
+            this._instructView.position = instructPos;
 
-        this._actionButton.position = localPos;
-        this._actionButton.getComponent(UITransform).contentSize = size;
+            this._actionButton.position = localPos;
+            this._actionButton.getComponent(UITransform).contentSize = size;
 
-        this._nextActionCallback = nextActionCallback;
+            this._nextActionCallback = nextActionCallback;
+        });
     }
 
     protected viewDidLoad(): void {

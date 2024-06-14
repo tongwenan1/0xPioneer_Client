@@ -1784,7 +1784,7 @@
     "fileId": "15wx/f5GFJ/IZ/gAFGidfd"
   },
   {
-    "__type__": "c02aadRDZVByZuxrhiY4iT8",
+    "__type__": "b850egZxhdK84IlOpggppyH",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -1794,6 +1794,86 @@
     "_enabled": true,
     "__prefab": {
       "__id__": 101
+    },
+    "buildingPrefab": {
+      "__uuid__": "a3866086-6445-4b7f-909d-fdab13812362",
+      "__expectedType__": "cc.Prefab"
+    },
+    "rebonPrefab": {
+      "__uuid__": "09361c30-6cf8-40ba-a452-eb04ef5446db",
+      "__expectedType__": "cc.Prefab"
+    },
+    "_id": ""
+  },
+  {
+    "__type__": "cc.CompPrefabInfo",
+    "fileId": "bbf+hCseNKsaBCju3KjMj3"
+  },
+  {
+    "__type__": "1b4189EG5lJqb9nTwBqRTVm",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
+      "__id__": 2
+    },
+    "_enabled": true,
+    "__prefab": {
+      "__id__": 103
+    },
+    "onlyFightPrefab": {
+      "__uuid__": "5df2a489-2836-4c1a-8225-db635d4d677c",
+      "__expectedType__": "cc.Prefab"
+    },
+    "selfPioneer": {
+      "__uuid__": "5188d708-3946-4137-9228-b409c6a12a42",
+      "__expectedType__": "cc.Prefab"
+    },
+    "otherPioneer": {
+      "__uuid__": "b1d7dea5-6496-42cc-8d64-b5ad241aafeb",
+      "__expectedType__": "cc.Prefab"
+    },
+    "battleSmall": {
+      "__uuid__": "6fa81693-d8c1-48c9-b043-8142c1f8a193",
+      "__expectedType__": "cc.Prefab"
+    },
+    "fightPrefab": {
+      "__uuid__": "fe6a4e1c-56e8-4174-b489-ffb1fca372f7",
+      "__expectedType__": "cc.Prefab"
+    },
+    "fightResultPrefab": {
+      "__uuid__": "5e4518e8-3a50-408a-a438-1d7e489fd931",
+      "__expectedType__": "cc.Prefab"
+    },
+    "footPathPrefab": {
+      "__uuid__": "212051bc-e6f1-4f53-95a7-0800945bb19b",
+      "__expectedType__": "cc.Prefab"
+    },
+    "footPathTargetPrefab": {
+      "__uuid__": "1e513654-0f82-4f02-aa0f-1445688cf3a5",
+      "__expectedType__": "cc.Prefab"
+    },
+    "rebonPrefab": {
+      "__uuid__": "09361c30-6cf8-40ba-a452-eb04ef5446db",
+      "__expectedType__": "cc.Prefab"
+    },
+    "_id": ""
+  },
+  {
+    "__type__": "cc.CompPrefabInfo",
+    "fileId": "8dNMnBXHBMOqRE6FjNi6mD"
+  },
+  {
+    "__type__": "c02aadRDZVByZuxrhiY4iT8",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
+      "__id__": 2
+    },
+    "_enabled": true,
+    "__prefab": {
+      "__id__": 105
     },
     "tiledmap": {
       "__uuid__": "ce5ec31a-eabf-45e7-a1c3-0547c5a03615",
@@ -1846,86 +1926,6 @@
     "fileId": "52OexSDFFJzpDa7lldCXAE"
   },
   {
-    "__type__": "b850egZxhdK84IlOpggppyH",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 2
-    },
-    "_enabled": true,
-    "__prefab": {
-      "__id__": 103
-    },
-    "buildingPrefab": {
-      "__uuid__": "a3866086-6445-4b7f-909d-fdab13812362",
-      "__expectedType__": "cc.Prefab"
-    },
-    "rebonPrefab": {
-      "__uuid__": "09361c30-6cf8-40ba-a452-eb04ef5446db",
-      "__expectedType__": "cc.Prefab"
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.CompPrefabInfo",
-    "fileId": "bbf+hCseNKsaBCju3KjMj3"
-  },
-  {
-    "__type__": "1b4189EG5lJqb9nTwBqRTVm",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 2
-    },
-    "_enabled": true,
-    "__prefab": {
-      "__id__": 105
-    },
-    "onlyFightPrefab": {
-      "__uuid__": "5df2a489-2836-4c1a-8225-db635d4d677c",
-      "__expectedType__": "cc.Prefab"
-    },
-    "selfPioneer": {
-      "__uuid__": "5188d708-3946-4137-9228-b409c6a12a42",
-      "__expectedType__": "cc.Prefab"
-    },
-    "otherPioneer": {
-      "__uuid__": "b1d7dea5-6496-42cc-8d64-b5ad241aafeb",
-      "__expectedType__": "cc.Prefab"
-    },
-    "battleSmall": {
-      "__uuid__": "6fa81693-d8c1-48c9-b043-8142c1f8a193",
-      "__expectedType__": "cc.Prefab"
-    },
-    "fightPrefab": {
-      "__uuid__": "fe6a4e1c-56e8-4174-b489-ffb1fca372f7",
-      "__expectedType__": "cc.Prefab"
-    },
-    "fightResultPrefab": {
-      "__uuid__": "5e4518e8-3a50-408a-a438-1d7e489fd931",
-      "__expectedType__": "cc.Prefab"
-    },
-    "footPathPrefab": {
-      "__uuid__": "212051bc-e6f1-4f53-95a7-0800945bb19b",
-      "__expectedType__": "cc.Prefab"
-    },
-    "footPathTargetPrefab": {
-      "__uuid__": "1e513654-0f82-4f02-aa0f-1445688cf3a5",
-      "__expectedType__": "cc.Prefab"
-    },
-    "rebonPrefab": {
-      "__uuid__": "09361c30-6cf8-40ba-a452-eb04ef5446db",
-      "__expectedType__": "cc.Prefab"
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.CompPrefabInfo",
-    "fileId": "8dNMnBXHBMOqRE6FjNi6mD"
-  },
-  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
@@ -1952,7 +1952,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1920.0000000000002,
+      "width": 1920,
       "height": 1080
     },
     "_anchorPoint": {

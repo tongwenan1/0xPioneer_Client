@@ -147,10 +147,7 @@ export class OuterTiledMapActionController extends ViewController {
 
         this._initTileMap();
 
-        const allShadows = DataMgr.s.eraseShadow.getObj();
-        for (const shadow of allShadows) {
-            GameMainHelper.instance.tiledMapShadowErase(shadow);
-        }
+        NotificationMgr.addListener(NotificationName.USERINFO_CITY_RADIAL_RANGE_CHANGE, this._onCityRadialRangeChange, this);
     }
     protected viewDidStart(): void {
         super.viewDidStart();
@@ -296,6 +293,13 @@ export class OuterTiledMapActionController extends ViewController {
         );
         // local fog
         this._refreshFog(GameMainHelper.instance.tiledMapGetShadowClearedTiledPositions());
+
+        const allShadows = DataMgr.s.eraseShadow.getObj();
+        for (const shadow of allShadows) {
+            GameMainHelper.instance.tiledMapShadowErase(shadow);
+        }
+
+        this._eraseMainCityShadow();
     }
 
     protected viewDidAppear(): void {
@@ -316,6 +320,12 @@ export class OuterTiledMapActionController extends ViewController {
         super.viewUpdate(dt);
 
         this._updateTiledmap(dt);
+    }
+
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
+
+        NotificationMgr.removeListener(NotificationName.USERINFO_CITY_RADIAL_RANGE_CHANGE, this._onCityRadialRangeChange, this);
     }
     //------------------------------------
     private _initTileMap(): void {
@@ -391,6 +401,14 @@ export class OuterTiledMapActionController extends ViewController {
         this._mapActionCursorView.initData(this._hexViewRadius, this.node.scale.x);
 
         mapView.getChildByPath("BorderMask").setSiblingIndex(999);
+    }
+
+    private _eraseMainCityShadow() {
+        const mainCity = DataMgr.s.mapBuilding.getBuildingById("building_1");
+        if (mainCity == null || mainCity.stayMapPositions.length != 7) {
+            return;
+        }
+        GameMainHelper.instance.tiledMapMainCityShadowErase(v2(mainCity.stayMapPositions[3].x, mainCity.stayMapPositions[3].y));
     }
 
     private _lastPioneerStayPos: Map<string, Vec2> = new Map();
@@ -957,5 +975,10 @@ export class OuterTiledMapActionController extends ViewController {
         // } else {
         //     this._playFogAnim();
         // }
+    }
+
+    //----------------------- notification
+    private _onCityRadialRangeChange() {
+        this._eraseMainCityShadow();
     }
 }

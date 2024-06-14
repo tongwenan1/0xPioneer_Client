@@ -210,13 +210,7 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_wormhole_fight_res", DataMgr.player_wormhole_fight_res);
         // psyc
         NetworkMgr.websocket.on("fetch_user_psyc_res", DataMgr.fetch_user_psyc_res);
-        // world treasure
-        NetworkMgr.websocket.on("player_world_treasure_lottery_res", DataMgr.player_world_treasure_lottery_res);
-        NetworkMgr.websocket.on("get_treasure_info_res", DataMgr.get_treasure_info_res);
-        NetworkMgr.websocket.on("player_world_treasure_pool_change_res", DataMgr.player_world_treasure_pool_change_res);
-
         // pioneernft func
-        NetworkMgr.websocket.on("player_point_treasure_open_res", DataMgr.player_point_treasure_open_res);
         NetworkMgr.websocket.on("player_building_delegate_nft_res", DataMgr.player_building_delegate_nft_res);
         NetworkMgr.websocket.on("player_nft_skill_learn_res", DataMgr.player_nft_skill_learn_res);
         NetworkMgr.websocket.on("player_nft_skill_forget_res", DataMgr.player_nft_skill_forget_res);
@@ -231,7 +225,7 @@ export class Main extends ViewController {
 
         // box
         NetworkMgr.websocket.on("player_worldbox_beginner_open_res", DataMgr.player_worldbox_beginner_open_res);
-        NetworkMgr.websocket.on("player_treasure_open_res", DataMgr.player_treasure_open_res);
+        NetworkMgr.websocket.on("player_worldbox_open_res", DataMgr.player_worldbox_open_res);
 
         //settlement
         NetworkMgr.websocket.on("get_user_settlement_info_res", DataMgr.get_user_settlement_info_res);

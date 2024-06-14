@@ -76,7 +76,6 @@ export class WorldTreasureUI extends ViewController {
         // this.node.getChildByPath("__ViewContent/LeftContent/TimeProgressView/Times/Title").getComponent(Label).string = LanMgr.getLanById("107549") + " ";
         // this.node.getChildByPath("__ViewContent/LeftContent/TimeProgressView/ClaimButton/name").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("__ViewContent/CountdonwContent/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-        NetworkMgr.websocketMsg.get_treasure_info({});
     }
     protected viewDidStart(): void {
         super.viewDidStart();
@@ -165,11 +164,7 @@ export class WorldTreasureUI extends ViewController {
         this._currentBoxTitleLabel.color = GameRankColor[currentIndex];
 
         this._currentBoxRewardContent.destroyAllChildren();
-        const todayRewards: share.Itreasure_day_data = NetGlobalData.worldTreasureTodayRewards; 
-        if (NetGlobalData.worldTreasureTodayRewards == null) {
-            return;
-        }
-        const currentRankRewards: share.Itreasure_level[] = NetGlobalData.worldTreasureTodayRewards.rankData[this._boxRank.toString()]?.levels;
+        const currentRankRewards = null;
         if (currentRankRewards == null) {
             return;
         }
@@ -178,7 +173,7 @@ export class WorldTreasureUI extends ViewController {
             "Second Rewards:", //LanMgr.getLanById("105101") + ":",
             "First Rewards:", //LanMgr.getLanById("105101") + ":",
         ];
-        currentRankRewards.sort((a, b)=> {
+        currentRankRewards.sort((a, b) => {
             return a.level - b.level;
         });
         const rewardItemMap: Map<number, Node> = new Map();
@@ -221,7 +216,6 @@ export class WorldTreasureUI extends ViewController {
     //------------------------------------------ action
     private onTapClaim() {
         GameMusicPlayMgr.playTapButtonEffect();
-        NetworkMgr.websocketMsg.player_world_treasure_lottery({});
     }
     private async onTapClose() {
         GameMusicPlayMgr.playTapButtonEffect();
@@ -232,9 +226,9 @@ export class WorldTreasureUI extends ViewController {
     //----------------------------------------- notification
     private _onWorldTreasureLotteryRes = (e: any) => {
         this._refreshUI();
-    }
-   
+    };
+
     private _onWorldTreasureDataChanged = (e: any) => {
         this._refreshUI();
-    }
+    };
 }

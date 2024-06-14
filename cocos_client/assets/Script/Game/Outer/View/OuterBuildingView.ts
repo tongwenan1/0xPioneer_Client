@@ -1,4 +1,4 @@
-import { _decorator, Animation, instantiate, Label, Layout, Node, ParticleSystem2D, Prefab } from "cc";
+import { _decorator, Animation, instantiate, Label, Layout, Node, ParticleSystem2D, Prefab, UITransform, v3 } from "cc";
 import { LanMgr, ResourcesMgr } from "../../../Utils/Global";
 import { MapBuildingType, InnerBuildingType, UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import ViewController from "../../../BasicView/ViewController";
@@ -267,6 +267,18 @@ export class OuterBuildingView extends ViewController {
 
         this._refreshEnergyTipShow();
         this._refreshBuildTipShow();
+
+        const rookieSizeView = this.node.getChildByPath("BuildingContent/RookieSizeView");
+        rookieSizeView.position = v3(0, 0, 0);
+        if (building.type == MapBuildingType.city) {
+            rookieSizeView.getComponent(UITransform).setContentSize(200, 200);
+        } else if (building.type == MapBuildingType.resource) {
+            rookieSizeView.getComponent(UITransform).setContentSize(120, 100);
+        } else if (building.type == MapBuildingType.wormhole) {
+            rookieSizeView.position = v3(0, 80, 0);
+            rookieSizeView.getComponent(UITransform).setContentSize(200, 200);
+            
+        }
     }
 
     public showName(isShow: boolean) {

@@ -1,4 +1,4 @@
-import { Canvas, Node, UITransform, find, v3 } from "cc";
+import { Canvas, Node, UITransform, find, size, v3 } from "cc";
 import NotificationMgr from "../Basic/NotificationMgr";
 import UIPanelManger, { UIPanelLayerType } from "../Basic/UIPanelMgr";
 import { UIName } from "../Const/ConstUIDefine";
@@ -147,12 +147,25 @@ export default class RookieStepMgr {
             NetworkMgr.websocketMsg.player_rookie_update({
                 rookieStep: RookieStep.ENEMY_FIGHT,
             });
+        } else if (rookieStep == RookieStep.ENEMY_FIGHT) {
+            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_gangster_1/role/RookieSizeView");
+            if (view == null) {
+                return;
+            }
+            const pioneer = DataMgr.s.pioneer.getById("gangster_1");
+            if (pioneer == undefined) {
+                return;
+            }
+            GameMainHelper.instance.tiledMapShadowErase(pioneer.stayPos);
+            this._maskView.configuration(true, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
+                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAP_PIONEER, { pioneerId: "gangster_1" });
+            });
         } else if (rookieStep == RookieStep.TASK_SHOW_TAP_2) {
             NetworkMgr.websocketMsg.player_rookie_update({
                 rookieStep: RookieStep.NPC_TALK_6,
             });
         } else if (rookieStep == RookieStep.ENTER_INNER || rookieStep == RookieStep.ENTER_INNER_2) {
-            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_1");
+            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_1/BuildingContent/RookieSizeView");
             if (view == null) {
                 return;
             }
@@ -172,7 +185,7 @@ export default class RookieStepMgr {
                 rookieStep: RookieStep.NPC_TALK_19,
             });
         } else if (rookieStep == RookieStep.RESOURCE_COLLECT) {
-            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_10");
+            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_10/BuildingContent/RookieSizeView");
             if (view == null) {
                 return;
             }
@@ -180,7 +193,7 @@ export default class RookieStepMgr {
                 NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAP_BUILDING, { buildingId: "building_10" });
             });
         } else if (rookieStep == RookieStep.WORMHOLE_ATTACK || rookieStep == RookieStep.OUTER_WORMHOLE) {
-            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_21");
+            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_21/BuildingContent/RookieSizeView");
             if (view == null) {
                 return;
             }
@@ -193,13 +206,20 @@ export default class RookieStepMgr {
     private _onGameInnerDidShow() {
         const rookieStep = DataMgr.s.userInfo.data.rookieStep;
         if (rookieStep == RookieStep.MAIN_BUILDING_TAP_1 || rookieStep == RookieStep.MAIN_BUILDING_TAP_2 || rookieStep == RookieStep.MAIN_BUILDING_TAP_3) {
-            const view = find("Main/Canvas/GameContent/Game/InnerSceneRe/BuildingLattice/StreetView/buildingView_1/MainCity");
+            const view = find("Main/Canvas/GameContent/Game/InnerSceneRe/BuildingLattice/StreetView/buildingView_1/MainCity/clickNode");
             if (view == null) {
                 return;
             }
-            this._maskView.configuration(false, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
-                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAIN_BUILDING);
-            });
+            const orginalSize = view.getComponent(UITransform).contentSize;
+            const orginalPos = view.worldPosition;
+            this._maskView.configuration(
+                false,
+                v3(orginalPos.x, orginalPos.y + orginalSize.height / 2 / 2),
+                size(orginalSize.width / 2, orginalSize.height / 2),
+                () => {
+                    NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAIN_BUILDING);
+                }
+            );
         }
     }
 
@@ -219,7 +239,7 @@ export default class RookieStepMgr {
             if (rookieStep == RookieStep.NPC_TALK_19) {
                 npcId = "npc_9";
             }
-            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_" + npcId);
+            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_" + npcId + "/role/RookieSizeView");
             if (view == null) {
                 return;
             }
@@ -273,23 +293,13 @@ export default class RookieStepMgr {
             }
             NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAIN_TASK);
         } else if (rookieStep == RookieStep.ENEMY_FIGHT) {
-            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_gangster_1");
+            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_gangster_1/role/RookieSizeView");
             if (view == null) {
                 return;
             }
-            if (GameMainHelper.instance.gameCameraWorldPosition != view.worldPosition) {
-                GameMainHelper.instance.changeGameCameraWorldPosition(view.worldPosition, false, true);
-                const pioneer = DataMgr.s.pioneer.getById("gangster_1");
-                if (pioneer == undefined) {
-                    return;
-                }
-                GameMainHelper.instance.tiledMapShadowErase(pioneer.stayPos);
-            }
-            this._maskView.configuration(true, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
-                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAP_PIONEER, { pioneerId: "gangster_1" });
-            });
+            GameMainHelper.instance.changeGameCameraWorldPosition(view.worldPosition, true, true);
         } else if (rookieStep == RookieStep.ENTER_INNER || rookieStep == RookieStep.ENTER_INNER_2) {
-            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_1");
+            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_1/BuildingContent/RookieSizeView");
             if (view == null) {
                 return;
             }
@@ -308,7 +318,7 @@ export default class RookieStepMgr {
                 GameMainHelper.instance.changeInnerAndOuterShow();
             }
         } else if (rookieStep == RookieStep.RESOURCE_COLLECT) {
-            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_10");
+            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_10/BuildingContent/RookieSizeView");
             if (view == null) {
                 return;
             }
@@ -319,7 +329,7 @@ export default class RookieStepMgr {
             GameMainHelper.instance.changeGameCameraWorldPosition(view.worldPosition, true, true);
             GameMainHelper.instance.tiledMapShadowErase(building.stayMapPositions[0]);
         } else if (rookieStep == RookieStep.WORMHOLE_ATTACK || rookieStep == RookieStep.OUTER_WORMHOLE) {
-            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_21");
+            const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_21/BuildingContent/RookieSizeView");
             if (view == null) {
                 return;
             }

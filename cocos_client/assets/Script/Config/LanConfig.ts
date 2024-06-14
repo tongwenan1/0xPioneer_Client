@@ -29,7 +29,7 @@ export default class LanConfig {
         if (lanId in this._confs) {
             return this._confs[lanId];
         }
-        console.error(`LanConfig getById error, config[${lanId}] not exist`);
+        // console.error(`LanConfig getById error, config[${lanId}] not exist`);
         return null;
     }
 }

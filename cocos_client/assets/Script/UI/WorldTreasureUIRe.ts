@@ -115,7 +115,6 @@ export class WorldTreasureUIRe extends ViewController {
     //------------------------------------------ action
     private onTapClaim() {
         GameMusicPlayMgr.playTapButtonEffect();
-        NetworkMgr.websocketMsg.player_world_treasure_lottery({});
     }
     private async onTapClose() {
         GameMusicPlayMgr.playTapButtonEffect();
