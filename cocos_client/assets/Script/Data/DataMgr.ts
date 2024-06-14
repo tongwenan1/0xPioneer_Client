@@ -156,6 +156,25 @@ export class DataMgr {
         DataMgr.s.userInfo.data.rookieStep = p.rookieStep;
         NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
     };
+    public static player_rookie_wormhole_fight_res = (e: any) => {
+        const p: s2c_user.Iplayer_rookie_wormhole_fight_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        const player = DataMgr.s.pioneer.getById(p.pioneerId) as MapPlayerPioneerObject;
+        if (player == undefined) {
+            return;
+        }
+        player.actionType = MapPioneerActionType.fighting;
+        player.fightData = p.fightRes;
+        player.fightResultWin = true;
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: player.id });
+        setTimeout(() => {
+            player.hp = p.hp;
+            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED);
+            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_FIGHT_END, { id: player.id });
+        }, (p.fightRes.length + 1) * 1000);
+    };
     //------------------------------------- item
     public static storhouse_change = async (e: any) => {
         const p: s2c_user.Istorhouse_change = e.data;
@@ -616,7 +635,7 @@ export class DataMgr {
         NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_WORMHOLE_FAKE_ATTACK);
         setTimeout(() => {
             PioneerMgr.showFakeWormholeFight(p.attackerName);
-        }, 2500);
+        }, 2000);
     };
     public static player_wormhole_fight_res = (e: any) => {
         const p: s2c_user.Iplayer_wormhole_fight_res = e.data;

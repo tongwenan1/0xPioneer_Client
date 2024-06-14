@@ -251,6 +251,9 @@ export class MainUI extends ViewController {
         UIPanelManger.inst.pushPanel(UIName.DefenderSetUI);
     }
     private onTapTest() {
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: "pioneer_1", show: true });
+        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: "pioneer_2", show: true });
+        return;
         GameMusicPlayMgr.playTapButtonEffect();
         const pioneerIds: string[] = ["pioneer_1", "pioneer_2", "pioneer_3"];
         for (let i = 0; i < pioneerIds.length; i++) {

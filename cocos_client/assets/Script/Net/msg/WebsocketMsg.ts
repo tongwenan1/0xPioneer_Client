@@ -160,6 +160,9 @@ export class WebsocketMsg {
     public player_rookie_update(d: c2s_user.Iplayer_rookie_update) {
         this.send_packet("player_rookie_update", d);
     }
+    public player_rookie_wormhole_fight(d: c2s_user.Iplayer_rookie_wormhole_fight) {
+        this.send_packet("player_rookie_wormhole_fight", d);
+    }
 
     public player_wormhole_set_defender(d: c2s_user.Iplayer_wormhole_set_defender) {
         this.send_packet("player_wormhole_set_defender", d);
@@ -355,6 +358,9 @@ export namespace c2s_user {
     export interface Iplayer_rookie_update {
         rookieStep: number;
     }
+    export interface Iplayer_rookie_wormhole_fight {
+        pioneerId: string;
+    }
     export interface Iplayer_wormhole_set_defender {
         pioneerId: string;
         index: number;
@@ -417,6 +423,12 @@ export namespace s2c_user {
     export interface Iplayer_rookie_update_res {
         res: number;
         rookieStep: number;
+    }
+    export interface Iplayer_rookie_wormhole_fight_res {
+        res: number;
+        pioneerId: string;
+        hp: number;
+        fightRes: share.Ifight_res[];
     }
     export interface Istorhouse_change {
         iteminfo: share.Iitem_data[];
@@ -764,6 +776,7 @@ export namespace share {
         uniqueId: string;
         rarity: number;
         name: string;
+        skin: string;
 
         level: number;
         levelLimit: number;

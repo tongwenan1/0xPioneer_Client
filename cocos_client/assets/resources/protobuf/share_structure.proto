@@ -221,26 +221,28 @@ message nfts_info_data {
     required string uniqueId = 1;
     required uint32 rarity = 2;
     required string name = 3;
-    optional float attack = 4;
-    optional float defense = 5;
-    optional float hp = 6;
-    optional float speed = 7;
-    optional float iq = 8;
-    optional uint32 level = 9;
-    optional uint32 levelLimit = 10;
-    optional uint32 rank = 11;
-    optional uint32 rankLimit = 12;
+    required string skin = 4;
 
-    optional float attackGrowValue = 13;
-    optional float defenseGrowValue = 14;
-    optional float hpGrowValue = 15;
-    optional float speedGrowValue = 16;
-    optional float iqGrowValue = 17;
-    repeated nft_pioneer_skil skills = 18;
+    optional float attack = 10;
+    optional float defense = 11;
+    optional float hp = 12;
+    optional float speed = 13;
+    optional float iq = 14;
+    optional uint32 level = 15;
+    optional uint32 levelLimit = 16;
+    optional uint32 rank = 17;
+    optional uint32 rankLimit = 18;
 
-    optional string workingBuildingId = 19;
+    optional float attackGrowValue = 20;
+    optional float defenseGrowValue = 21;
+    optional float hpGrowValue = 22;
+    optional float speedGrowValue = 23;
+    optional float iqGrowValue = 24;
+    repeated nft_pioneer_skil skills = 25;
 
-    optional uint32 addTimeStamp = 20;
+    optional string workingBuildingId = 26;
+
+    optional uint32 addTimeStamp = 27;
 }
 
 message mapbuilding_info_data {

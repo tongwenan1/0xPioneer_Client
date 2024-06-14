@@ -18,10 +18,12 @@ message create_player {
 message enter_game { }
 
 // rookie
-message player_rookie_finish { }
 message player_rookie_update {
     required uint32 rookieStep = 1;
 }
+message player_rookie_wormhole_fight {
+    required string pioneerId = 1;
+ }
 
 
 // ------ chain ------

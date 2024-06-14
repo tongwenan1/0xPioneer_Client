@@ -37,6 +37,8 @@ export interface NFTPioneerObject {
     uniqueId: string;
     rarity: number;
     name: string;
+    skin: string;
+
     attack: number;
     defense: number;
     hp: number;

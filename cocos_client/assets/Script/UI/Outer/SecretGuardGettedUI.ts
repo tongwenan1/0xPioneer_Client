@@ -1,24 +1,19 @@
-import { _decorator, Component, Label, Node, tween } from 'cc';
-import { LanMgr, UserInfoMgr } from '../../Utils/Global';
-import ViewController from '../../BasicView/ViewController';
-import { UIName } from '../../Const/ConstUIDefine';
-import { ItemInfoUI } from '../ItemInfoUI';
-import { ArtifactInfoUI } from '../ArtifactInfoUI';
-import { ItemGettedUI } from '../ItemGettedUI';
-import UIPanelManger from '../../Basic/UIPanelMgr';
-import GameMusicPlayMgr from '../../Manger/GameMusicPlayMgr';
+import { _decorator, Component, Label, Node, tween } from "cc";
+import { LanMgr, UserInfoMgr } from "../../Utils/Global";
+import ViewController from "../../BasicView/ViewController";
+import { UIName } from "../../Const/ConstUIDefine";
+import { ItemInfoUI } from "../ItemInfoUI";
+import { ArtifactInfoUI } from "../ArtifactInfoUI";
+import { ItemGettedUI } from "../ItemGettedUI";
+import UIPanelManger from "../../Basic/UIPanelMgr";
+import GameMusicPlayMgr from "../../Manger/GameMusicPlayMgr";
 const { ccclass, property } = _decorator;
 
-@ccclass('SecretGuardGettedUI')
+@ccclass("SecretGuardGettedUI")
 export class SecretGuardGettedUI extends ViewController {
-
     public dialogShow(pioneerAnimType: string) {
         GameMusicPlayMgr.playGetNewPioneerEffect();
-        const names = [
-            "secretGuard",
-            "doomsdayGangSpy",
-            "rebels",
-        ];
+        const names = ["secretGuard", "doomsdayGangSpy", "rebels"];
 
         // useLanMgr
         const keen = [
@@ -27,7 +22,7 @@ export class SecretGuardGettedUI extends ViewController {
             // "Dual Blades Keen",
             LanMgr.getLanById("206002"),
             // "Rebels Camus"
-            LanMgr.getLanById("206003")
+            LanMgr.getLanById("206003"),
         ];
         const wind = [
             // "Gunman as Graceful as a Gazelle"
@@ -35,8 +30,8 @@ export class SecretGuardGettedUI extends ViewController {
             // "Warrior as Wild as the Wind",
             LanMgr.getLanById("206005"),
             // "Berserker as Fearless as a Beast"
-            LanMgr.getLanById("206006")
-        ]
+            LanMgr.getLanById("206006"),
+        ];
         for (const name of names) {
             this.node.getChildByPath("bgc/" + name).active = name == pioneerAnimType;
         }
@@ -62,9 +57,14 @@ export class SecretGuardGettedUI extends ViewController {
                     }
                     UserInfoMgr.afterCivilizationClosedShowArtifactDatas = [];
                 }
+                if (UserInfoMgr.afterNewPioneerDatas.length > 0) {
+                    const newPioneer = UserInfoMgr.afterNewPioneerDatas.splice(0, 1)[0];
+                    const result = await UIPanelManger.inst.pushPanel(UIName.SecretGuardGettedUI);
+                    if (result.success) {
+                        result.node.getComponent(SecretGuardGettedUI).dialogShow(newPioneer.animType);
+                    }
+                }
             })
             .start();
     }
 }
-
-

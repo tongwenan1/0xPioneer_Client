@@ -15,6 +15,8 @@ export default class UserInfoMgr {
     private _afterCivilizationClosedShowArtifactDatas: ArtifactData[] = [];
     private _afterCivilizationClosedShowPioneerDatas: MapPioneerObject[] = [];
 
+    public afterNewPioneerDatas: MapPioneerObject[] = [];
+
     public constructor() {
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onUserInfoDidChangeLevel, this);
     }

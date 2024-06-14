@@ -517,7 +517,6 @@ export class OuterPioneerController extends ViewController {
                 // const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
                 // if (result.success) {
                 //     result.node.getComponent(DialogueUI).dialogShow(TalkConfig.getById("talk14"), () => {
-                //         NetworkMgr.websocketMsg.player_rookie_finish({});
                 //     });
                 // }
             }, 6.8);
@@ -569,8 +568,19 @@ export class OuterPioneerController extends ViewController {
         if (data.show) {
             if (data.id == "pioneer_1" || data.id == "pioneer_2" || data.id == "pioneer_3") {
                 // get secret guard
+
                 const pioneer = DataMgr.s.pioneer.getById(data.id);
                 if (pioneer != undefined) {
+                    if (this["_LAST_NEW_TIME"] == null) {
+                        this["_LAST_NEW_TIME"] = new Date().getTime();
+                    } else {
+                        const currentTimeStamp = new Date().getTime();
+                        if (currentTimeStamp - this["_LAST_NEW_TIME"] <= 2000) {
+                            UserInfoMgr.afterNewPioneerDatas.push(pioneer);
+                            return;
+                        }
+                    }
+
                     setTimeout(async () => {
                         if (UIPanelManger.inst.panelIsShow(UIName.CivilizationLevelUpUI)) {
                             UserInfoMgr.afterCivilizationClosedShowPioneerDatas.push(pioneer);

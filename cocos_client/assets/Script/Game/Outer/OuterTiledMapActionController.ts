@@ -47,8 +47,6 @@ import { MapBuildingObject, MapBuildingTavernObject, MapBuildingWormholeObject }
 import { NetworkMgr } from "../../Net/NetworkMgr";
 import UIPanelManger, { UIPanelLayerType } from "../../Basic/UIPanelMgr";
 import { HUDName, UIName } from "../../Const/ConstUIDefine";
-import { NFTViewInfoUI } from "../../UI/NFTViewInfoUI";
-import ChainConfig from "../../Config/ChainConfig";
 import { AlterView } from "../../UI/View/AlterView";
 import NetGlobalData from "../../Data/Save/Data/NetGlobalData";
 import { MapActionConfrimTipUI } from "../../UI/MapActionConfrimTipUI";

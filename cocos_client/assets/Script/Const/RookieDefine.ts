@@ -63,6 +63,12 @@ export enum RookieStep {
 
     OUTER_WORMHOLE = 310,
 
+    SHOW_WORMHOLE_TOKEN = 330,
+
+    LOCAL_SYSTEM_TALK_32 = 341,
+
+    SYSTEM_TALK_33 = 340,
+
     FINISH = 999999,
 }
 

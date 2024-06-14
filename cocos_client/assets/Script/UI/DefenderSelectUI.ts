@@ -4,6 +4,7 @@ import UIPanelManger from "../Basic/UIPanelMgr";
 import { NFTPioneerObject } from "../Const/NFTPioneerDefine";
 import { DataMgr } from "../Data/DataMgr";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
+import { ItemMgr } from "../Utils/Global";
 const { ccclass, property } = _decorator;
 
 @ccclass("DefenderSelectUI")
@@ -81,6 +82,8 @@ export class DefenderSelectUI extends ViewController {
             itemView.active = true;
             // await itemView.getComponent(NTFBackpackItem).refreshUI(data);
             itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
+
+            itemView.getChildByPath("BgAvatar/Role").getComponent(Sprite).spriteFrame = await ItemMgr.getNFTIcon(data.skin);
             itemView.getChildByPath("Working").active = data.workingBuildingId != null;
             itemView.getChildByPath("Working").active = false;
             itemView.parent = this._NFTContent;
@@ -91,9 +94,9 @@ export class DefenderSelectUI extends ViewController {
         }
         this._NFTContent.getComponent(Layout).updateLayout();
 
-        this._refreshInfoUI();
+        await this._refreshInfoUI();
     }
-    private _refreshInfoUI() {
+    private async _refreshInfoUI() {
         const noOccupiedView = this.node.getChildByPath("__ViewContent/Info/NoOccupied");
         const selectOccupiedView = this.node.getChildByPath("__ViewContent/Info/SelectOccupied");
         const confirmButton = this.node.getChildByPath("__ViewContent/ConfirmButton");
@@ -105,6 +108,7 @@ export class DefenderSelectUI extends ViewController {
 
             const data = this._datas[this._selectIndex];
             // selectOccupiedView.getChildByPath("NFTBackpackItem").getComponent(NTFBackpackItem).refreshUI(data);
+            selectOccupiedView.getChildByPath("Shadow/Role").getComponent(Sprite).spriteFrame = await ItemMgr.getNFTIcon(data.skin);
             selectOccupiedView.getChildByPath("Level/Level").getComponent(Label).string = "Lv." + data.level;
             selectOccupiedView.getChildByPath("Rank/Rank").getComponent(Label).string = "Rank." + data.level;
             selectOccupiedView.getChildByPath("Name/Name").getComponent(Label).string = data.name;

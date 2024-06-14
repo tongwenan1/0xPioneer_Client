@@ -1,7 +1,7 @@
-import { _decorator, Label, Node, Button, instantiate } from "cc";
+import { _decorator, Label, Node, Button, instantiate, Sprite } from "cc";
 import ViewController from "../BasicView/ViewController";
 import { NFTPioneerObject } from "../Const/NFTPioneerDefine";
-import { LanMgr } from "../Utils/Global";
+import { ItemMgr, LanMgr } from "../Utils/Global";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { UIName } from "../Const/ConstUIDefine";
 import { NTFLevelUpUI } from "./NTFLevelUpUI";
@@ -66,11 +66,11 @@ export class NFTInfoUI extends ViewController {
         return this.node.getChildByName("__ViewContent");
     }
 
-    private _refreshUI() {
+    private async _refreshUI() {
         this._NFTDatas = DataMgr.s.nftPioneer.getAll();
         this._currentIndex = Math.max(0, Math.min(this._NFTDatas.length - 1, this._currentIndex));
         const data = this._NFTDatas[this._currentIndex];
-        
+
         const currentSkillLimit: number = (ConfigConfig.getConfig(ConfigType.NFTRaritySkillLimitNum) as NFTRaritySkillLimitNumParam).limitNumMap.get(
             data.rarity
         );
@@ -78,6 +78,10 @@ export class NFTInfoUI extends ViewController {
         const content = this.node.getChildByPath("__ViewContent");
         // name
         content.getChildByPath("Name/Name").getComponent(Label).string = data.name;
+
+        // role
+        content.getChildByPath("Shadow/Role").getComponent(Sprite).spriteFrame = await ItemMgr.getNFTIcon(data.skin);
+
         // base property
         // userlanMgr
         // content.getChildByPath("BaseProperty/Attack/Title").getComponent(Label).string = LanMgr.getLanById("201003");
@@ -107,7 +111,6 @@ export class NFTInfoUI extends ViewController {
         content.getChildByPath("Rank/Label").getComponent(Label).string = "Rank. " + data.rank;
         content.getChildByPath("Rank/Btn").active = data.rank < data.rankLimit;
         content.getChildByPath("Rank/Max").active = data.rank >= data.rankLimit;
-
 
         // skill
         for (const item of this._skillAllItems) {

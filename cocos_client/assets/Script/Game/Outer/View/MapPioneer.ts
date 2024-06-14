@@ -486,7 +486,11 @@ export class MapPioneer extends Component {
         this._fightResultView.node.active = true;
         if (this._model.fightResultWin) {
             GameMusicPlayMgr.playFightWinEffect();
-            if (DataMgr.s.userInfo.data.rookieStep == RookieStep.ENEMY_FIGHT && this._fightDefenderOriginalData.id == "gangster_1") {
+
+            const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+            if (rookieStep == RookieStep.ENEMY_FIGHT && this._fightDefenderOriginalData.id == "gangster_1") {
+                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_FIGHT_ENEMY_WIN);
+            } else if (rookieStep == RookieStep.LOCAL_SYSTEM_TALK_32) {
                 NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_FIGHT_ENEMY_WIN);
             }
         } else {

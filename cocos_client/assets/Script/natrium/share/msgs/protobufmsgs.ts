@@ -9,8 +9,8 @@ export enum protobuf_c2s {
 
 
     // ------ rookie ------
-    player_rookie_finish,
     player_rookie_update,
+    player_rookie_wormhole_fight,
 
 
     // ------ chain ------
@@ -114,8 +114,8 @@ export enum protobuf_s2c {
 
 
     // ------ rookie ------
-    player_rookie_finish_res,
     player_rookie_update_res,
+    player_rookie_wormhole_fight_res,
 
 
     // ------ chain ------

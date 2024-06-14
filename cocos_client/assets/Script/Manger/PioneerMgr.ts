@@ -21,6 +21,7 @@ import { NetworkMgr } from "../Net/NetworkMgr";
 import UIPanelManger from "../Basic/UIPanelMgr";
 import { UIName } from "../Const/ConstUIDefine";
 import { TavernUI } from "../UI/Outer/TavernUI";
+import PioneerConfig from "../Config/PioneerConfig";
 
 export default class PioneerMgr {
     public initData() {
@@ -39,7 +40,8 @@ export default class PioneerMgr {
         if (wormholePioneer == null || mainCity == null) {
             return;
         }
-        wormholePioneer.stayPos = v2(28, 17);
+        const wormholePioneerConfig = PioneerConfig.getById("wormhole_token");
+        wormholePioneer.stayPos = wormholePioneerConfig != null ? v2(wormholePioneerConfig.pos[0].x, wormholePioneerConfig.pos[0].y) : v2(28, 17);
         wormholePioneer.name = attackerPlayerName;
         wormholePioneer.show = true;
         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: wormholePioneer.id, show: wormholePioneer.show });

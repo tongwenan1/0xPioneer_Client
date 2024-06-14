@@ -158,6 +158,8 @@ export default class NFTPioneerDataMgr {
             uniqueId: netData.uniqueId,
             rarity: netData.rarity,
             name: netData.name,
+            skin: netData.skin,
+
             attack: CommonTools.getOneDecimalNum(netData.attack),
             defense: CommonTools.getOneDecimalNum(netData.defense),
             hp: CommonTools.getOneDecimalNum(netData.hp),

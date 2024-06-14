@@ -1,4 +1,4 @@
-import { Canvas, Node, UITransform, find, size, v3 } from "cc";
+import { Canvas, Node, UITransform, find, size, v2, v3 } from "cc";
 import NotificationMgr from "../Basic/NotificationMgr";
 import UIPanelManger, { UIPanelLayerType } from "../Basic/UIPanelMgr";
 import { UIName } from "../Const/ConstUIDefine";
@@ -12,6 +12,8 @@ import GameMainHelper from "../Game/Helper/GameMainHelper";
 import TalkConfig from "../Config/TalkConfig";
 import { DialogueUI } from "../UI/Outer/DialogueUI";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
+import PioneerConfig from "../Config/PioneerConfig";
+import { MapPioneerActionType } from "../Const/PioneerDefine";
 
 export default class RookieStepMgr {
     private static _instance: RookieStepMgr;
@@ -120,6 +122,18 @@ export default class RookieStepMgr {
             NetworkMgr.websocketMsg.player_rookie_update({
                 rookieStep: RookieStep.OUTER_WORMHOLE,
             });
+        } else if (rookieStep == RookieStep.LOCAL_SYSTEM_TALK_32 && data.talkId == "talk32") {
+            NetworkMgr.websocketMsg.player_rookie_wormhole_fight({
+                pioneerId: "pioneer_0",
+            });
+            const wormholePioneer = DataMgr.s.pioneer.getById("wormhole_token");
+            wormholePioneer.show = false;
+            NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: wormholePioneer.id, show: wormholePioneer.show });
+        } else if (rookieStep == RookieStep.SYSTEM_TALK_33 && data.talkId == "talk33") {
+            // FINISH
+            NetworkMgr.websocketMsg.player_rookie_update({
+                rookieStep: RookieStep.FINISH,
+            });
         }
     }
     private _onGameCameraPosChange(data: { triggerTask: boolean }) {
@@ -189,6 +203,18 @@ export default class RookieStepMgr {
             this._maskView.configuration(true, view.worldPosition, view.getComponent(UITransform).contentSize, () => {
                 NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_MAP_BUILDING, { buildingId: "building_21" });
             });
+        } else if (rookieStep == RookieStep.SHOW_WORMHOLE_TOKEN) {
+            NotificationMgr.triggerEvent(NotificationName.MAP_BUILDING_WORMHOLE_FAKE_ATTACK);
+            setTimeout(() => {
+                const wormholePioneer = DataMgr.s.pioneer.getById("wormhole_token");
+                const wormholePioneerConfig = PioneerConfig.getById("wormhole_token");
+                wormholePioneer.stayPos = wormholePioneerConfig != null ? v2(wormholePioneerConfig.pos[0].x, wormholePioneerConfig.pos[0].y) : v2(28, 17);
+                wormholePioneer.show = true;
+                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_CHANGED, { id: wormholePioneer.id, show: wormholePioneer.show });
+
+                DataMgr.s.userInfo.data.rookieStep = RookieStep.LOCAL_SYSTEM_TALK_32;
+                NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+            }, 2000);
         }
     }
 
@@ -332,7 +358,7 @@ export default class RookieStepMgr {
             }
             GameMainHelper.instance.changeGameCameraWorldPosition(view.worldPosition, true, true);
             GameMainHelper.instance.tiledMapShadowErase(building.stayMapPositions[0]);
-        } else if (rookieStep == RookieStep.WORMHOLE_ATTACK || rookieStep == RookieStep.OUTER_WORMHOLE) {
+        } else if (rookieStep == RookieStep.WORMHOLE_ATTACK || rookieStep == RookieStep.OUTER_WORMHOLE || rookieStep == RookieStep.SHOW_WORMHOLE_TOKEN) {
             const view = find("Main/Canvas/GameContent/Game/OutScene/TiledMap/deco_layer/MAP_building_21/BuildingContent/RookieSizeView");
             if (view == null) {
                 return;
@@ -348,7 +374,9 @@ export default class RookieStepMgr {
             rookieStep == RookieStep.SYSTEM_TALK_21 ||
             rookieStep == RookieStep.SYSTEM_TALK_22 ||
             rookieStep == RookieStep.SYSTEM_TALK_23 ||
-            rookieStep == RookieStep.SYSTEM_TALK_24
+            rookieStep == RookieStep.SYSTEM_TALK_24 ||
+            rookieStep == RookieStep.LOCAL_SYSTEM_TALK_32 ||
+            rookieStep == RookieStep.SYSTEM_TALK_33
         ) {
             let talkId: string = "";
             if (rookieStep == RookieStep.SYSTEM_TALK_20) {
@@ -361,6 +389,10 @@ export default class RookieStepMgr {
                 talkId = "talk23";
             } else if (rookieStep == RookieStep.SYSTEM_TALK_24) {
                 talkId = "talk24";
+            } else if (rookieStep == RookieStep.LOCAL_SYSTEM_TALK_32) {
+                talkId = "talk32";
+            } else if (rookieStep == RookieStep.SYSTEM_TALK_33) {
+                talkId = "talk33";
             }
             const talkConfig = TalkConfig.getById(talkId);
             if (talkConfig == null) {
@@ -407,6 +439,14 @@ export default class RookieStepMgr {
             NetworkMgr.websocketMsg.player_rookie_update({
                 rookieStep: RookieStep.TASK_SHOW_TAP_2,
             });
+        } else if (rookieStep == RookieStep.LOCAL_SYSTEM_TALK_32) {
+            const pioneer = DataMgr.s.pioneer.getCurrentPlayer();
+            if (pioneer != null) {
+                pioneer.actionType = MapPioneerActionType.idle;
+                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_ACTIONTYPE_CHANGED, { id: pioneer.id });
+            }
+            DataMgr.s.userInfo.data.rookieStep = RookieStep.SYSTEM_TALK_33;
+            NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
         }
     }
     private _onRookieCollectResource() {
@@ -425,7 +465,7 @@ export default class RookieStepMgr {
             });
         } else if (rookieStep == RookieStep.OUTER_WORMHOLE) {
             NetworkMgr.websocketMsg.player_rookie_update({
-                rookieStep: RookieStep.FINISH,
+                rookieStep: RookieStep.SHOW_WORMHOLE_TOKEN,
             });
         }
     }

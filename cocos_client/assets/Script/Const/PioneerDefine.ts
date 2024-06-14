@@ -170,7 +170,7 @@ export interface MapPioneerData {
     actionBuildingId?: string;
     actionEventId?: string;
 
-    fightData?: MapPioneerFightStuct[];
+    fightData?: share.Ifight_res[];
     fightResultWin?: boolean;
 
     rebornTime: number;
