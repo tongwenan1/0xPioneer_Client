@@ -38,6 +38,13 @@
       0.05
     ]
   },
+  "10006": {
+    "id": "10006",
+    "**NOTES**": "default move speed",
+    "para": [
+      150
+    ]
+  },
   "20001": {
     "id": "20001",
     "**NOTES**": "Planar Shift condition",
@@ -342,14 +349,14 @@
     "id": "430001",
     "**NOTES**": "accumulated para of psyc consumption",
     "para": [
-      0.05
+      0
     ]
   },
   "430002": {
     "id": "430002",
     "**NOTES**": "accumulated para of psyc consumption",
     "para": [
-      0.1
+      1
     ]
   }
 }
