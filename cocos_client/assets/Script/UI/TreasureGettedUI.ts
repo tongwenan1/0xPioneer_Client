@@ -86,7 +86,7 @@ export class TreasureGettedUI extends ViewController {
                 .to(0.2, { scale: v3(0.7, 0.7, 0.7) })
                 .start();
         }
-        
+
         GameMusicPlayMgr.playOpenBoxStep1Effect();
         tween(itemShowAnim)
             .delay(3)
@@ -103,6 +103,7 @@ export class TreasureGettedUI extends ViewController {
             .call(async () => {
                 UIPanelManger.inst.popPanel(this.node);
                 const rookieStep = DataMgr.s.userInfo.data.rookieStep;
+                console.log("exce open step: " + rookieStep);
                 if (rookieStep == RookieStep.OPEN_BOX_1 || rookieStep == RookieStep.OPEN_BOX_2 || rookieStep == RookieStep.OPEN_BOX_3) {
                     let animType = null;
                     let nextStep = null;
@@ -116,9 +117,11 @@ export class TreasureGettedUI extends ViewController {
                         animType = RookieResourceAnim.BOX_3_TO_PSYC;
                         nextStep = RookieStep.SYSTEM_TALK_21;
                     }
+                    console.log("exce next: " + nextStep);
                     NotificationMgr.triggerEvent(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, {
                         animType: animType,
                         callback: () => {
+                            console.log("exce trhh: " + threes.length);
                             if (threes.length <= 0) {
                                 for (const item of items) {
                                     DataMgr.s.item.countChanged(item);

@@ -286,6 +286,11 @@ message player_worldbox_beginner_open_res {
     repeated share.artifact_info_data artifacts = 6;
     map<string, artifact_three_confs> threes = 7;
 }
+message player_worldbox_beginner_open_select_artifact_res {
+    required int32 res = 1;
+    optional uint32 boxIndex = 2;
+    optional int32 artifactIndex = 3;
+}
 // worldbox: notify
 message player_worldbox_progress_change {
     required int32 addProgress = 1;

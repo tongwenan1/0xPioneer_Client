@@ -180,10 +180,10 @@ export class MapPioneer extends Component {
 
                 case MapPioneerActionType.mining:
                     {
-                        this._contentView.active = true;
-                        if (collectView != null) {
-                            collectView.active = true;
-                        }
+                        this._contentView.active = false;
+                        // if (collectView != null) {
+                        //     collectView.active = true;
+                        // }
                     }
                     break;
 
@@ -280,7 +280,7 @@ export class MapPioneer extends Component {
                                 },
                                 true
                             );
-                        }, 250);
+                        }, 1000);
                     }
                 }
             }

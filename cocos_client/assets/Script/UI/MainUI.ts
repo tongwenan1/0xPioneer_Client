@@ -349,6 +349,7 @@ export class MainUI extends ViewController {
         if (fromPos == null || toPos == null) {
             return;
         }
+        console.log("exce beginani")
         for (let i = 0; i < 5; i++) {
             const resourceFly = instantiate(this.resourceFlyAnim);
             resourceFly.setParent(this._animView);
@@ -359,11 +360,6 @@ export class MainUI extends ViewController {
                 .to(1, { position: toPos })
                 .call(() => {
                     resourceFly.destroy();
-                    if (i == 4) {
-                        if (callback != null) {
-                            callback();
-                        }
-                    }
                 })
                 .start();
 
@@ -377,6 +373,7 @@ export class MainUI extends ViewController {
                 .call(() => {
                     icon.destroy();
                     if (i == 4) {
+                        console.log("exce callback");
                         if (callback != null) {
                             callback();
                         }

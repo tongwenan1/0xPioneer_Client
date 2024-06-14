@@ -149,7 +149,10 @@ message player_worldbox_open_select_artifact {
 message player_worldbox_beginner_open {
     required uint32 boxIndex = 1;
 }
-
+message player_worldbox_beginner_open_select_artifact {
+    required uint32 boxIndex = 1;
+    required int32 artifactIndex = 2;
+}
 
 // ------ inner-building ------
 message player_building_levelup {

@@ -44,11 +44,13 @@ export class OuterBuildingView extends ViewController {
         const wormholdView = this.node.getChildByPath("WormholdView");
         const tavernView = this.node.getChildByPath("TavernView");
         const exploreView = this.node.getChildByPath("ExploreView");
+        const collectView = this.node.getChildByPath("CollectView");
 
         strongholdView.active = false;
         wormholdView.active = false;
         tavernView.active = false;
         exploreView.active = false;
+        collectView.active = false;
 
         const collectIcon = this.node.getChildByPath("Level/Collect");
         const exploreIcon = this.node.getChildByPath("Level/Explore");
@@ -230,6 +232,11 @@ export class OuterBuildingView extends ViewController {
                 exploreView.getChildByPath("Label").getComponent(Label).string = CommonTools.formatSeconds(
                     (tempPioneer.actionEndTimeStamp - currentTimeStamp) / 1000
                 );
+
+                collectView.active = true;
+                for (const child of collectView.children) {
+                    child.active = child.name == building.gatherPioneerIds[0];
+                }
             }
         } else if (building.type == MapBuildingType.event) {
             exploreIcon.active = true;
@@ -277,7 +284,6 @@ export class OuterBuildingView extends ViewController {
         } else if (building.type == MapBuildingType.wormhole) {
             rookieSizeView.position = v3(0, 80, 0);
             rookieSizeView.getComponent(UITransform).setContentSize(200, 200);
-            
         }
     }
 

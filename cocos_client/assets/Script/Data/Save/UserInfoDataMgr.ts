@@ -42,10 +42,6 @@ export default class UserInfoDataMgr {
     }
     private _initInterval() {}
     private _convertNetDataToObject(netData: share.Iplayer_sinfo): UserInfoObject {
-        let step = null;
-        if (this._data != null) {
-            step = this._data.rookieStep;
-        }
         const newObj: UserInfoObject = {
             id: netData.playerid.toString(),
             name: netData.pname,
@@ -73,6 +69,19 @@ export default class UserInfoDataMgr {
         if (GAME_SKIP_ROOKIE) {
             newObj.rookieStep = RookieStep.FINISH;
             NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+        }
+        let step = null;
+        if (this._data != null) {
+            step = this._data.rookieStep;
+        }
+        if (
+            newObj.rookieStep == RookieStep.NPC_TALK_3 ||
+            newObj.rookieStep == RookieStep.NPC_TALK_4 ||
+            newObj.rookieStep == RookieStep.NPC_TALK_5 ||
+            newObj.rookieStep == RookieStep.NPC_TALK_7 ||
+            newObj.rookieStep == RookieStep.SYSTEM_TALK_21
+        ) {
+            newObj.rookieStep = step;
         }
         if (netData.defender != null) {
             for (const key in netData.defender) {

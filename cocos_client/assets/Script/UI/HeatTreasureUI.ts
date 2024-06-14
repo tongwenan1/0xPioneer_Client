@@ -276,8 +276,10 @@ export class HeatTreasureUI extends Component {
         this.scheduleOnce(() => {
             this._refreshUI();
             if (DataMgr.s.userInfo.data.rookieStep == RookieStep.PIOT_TO_HEAT) {
-                DataMgr.s.userInfo.data.rookieStep = RookieStep.NPC_TALK_4;
-                NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+                this.scheduleOnce(() => {
+                    DataMgr.s.userInfo.data.rookieStep = RookieStep.NPC_TALK_4;
+                    NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+                }, 0.1);
             }
         }, delayTime);
     }
