@@ -408,6 +408,14 @@ export class InnerBuildingControllerRe extends ViewController {
         movePioneer.setPosition(v3(originalX, originalY, 0));
         movePioneer.setScale(v3((originalX > 0 ? -1 : 1) * nodeScale.x, 1 * nodeScale.y, 1 * nodeScale.z));
         this._allMovingPioneers.push(movePioneer);
+        this._allMovingPioneers.sort((viewA, viewB) => {
+            return viewB.position.y - viewA.position.y;
+        });
+        let index: number = 0;
+        for (const view of this._allMovingPioneers) {
+            view.setSiblingIndex(index);
+            index += 1;
+        }
         tween()
             .target(movePioneer)
             .to(12, { position: v3(isMoveToRight ? rightOriginalX : leftOriginalX, originalY, 0) })

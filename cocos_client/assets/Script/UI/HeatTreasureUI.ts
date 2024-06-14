@@ -251,6 +251,7 @@ export class HeatTreasureUI extends Component {
             return;
         }
         let converNum: number = Math.floor(piotNum * coefficient);
+        converNum = 1;
         NetworkMgr.websocketMsg.player_piot_to_heat({
             piotNum: converNum * (1 / coefficient),
         });
