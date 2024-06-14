@@ -1452,8 +1452,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 231.703,
-      "y": 165,
+      "x": 3,
+      "y": 0,
       "z": 0
     },
     "_lrot": {
@@ -1465,8 +1465,8 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 2,
-      "y": 2,
+      "x": 1,
+      "y": 1,
       "z": 1
     },
     "_mobility": 0,
@@ -1493,8 +1493,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 106.69921875,
-      "height": 50.4
+      "width": 226,
+      "height": 108
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1505,10 +1505,10 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "3fBZnYQhRNeo5MHRxcAjC6"
+    "fileId": "27bH1W8ztB/632SjoSjW6J"
   },
   {
-    "__type__": "cc.Label",
+    "__type__": "cc.Sprite",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -1524,33 +1524,33 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 142,
-      "g": 218,
-      "b": 97,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
-    "_string": "Finish",
-    "_horizontalAlign": 1,
-    "_verticalAlign": 1,
-    "_actualFontSize": 40,
-    "_fontSize": 40,
-    "_fontFamily": "Arial",
-    "_lineHeight": 40,
-    "_overflow": 0,
-    "_enableWrapText": true,
-    "_font": null,
-    "_isSystemFontUsed": true,
-    "_spacingX": 0,
-    "_isItalic": false,
-    "_isBold": false,
-    "_isUnderline": false,
-    "_underlineHeight": 2,
-    "_cacheMode": 0,
+    "_spriteFrame": {
+      "__uuid__": "772c7518-6809-4d9b-a449-fb951a7b7416@f9941",
+      "__expectedType__": "cc.SpriteFrame"
+    },
+    "_type": 0,
+    "_fillType": 0,
+    "_sizeMode": 1,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_useGrayscale": false,
+    "_atlas": null,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "a3oC6IsLFPHK8smfKExkt0"
+    "fileId": "a4Qr7UCz1LTrwjeWWunQkm"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -1560,7 +1560,7 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "56TGK2vnpBypvHM8lWmE60",
+    "fileId": "e7NjzKXZBEj4n7tXlagzOO",
     "instance": null,
     "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
@@ -1771,7 +1771,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1920.0000000000002,
+      "width": 1920,
       "height": 1080
     },
     "_anchorPoint": {
