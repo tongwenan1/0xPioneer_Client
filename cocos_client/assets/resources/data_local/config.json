@@ -45,6 +45,13 @@
       150
     ]
   },
+  "10007": {
+    "id": "10007",
+    "**NOTES**": "default city vision",
+    "para": [
+      4
+    ]
+  },
   "20001": {
     "id": "20001",
     "**NOTES**": "Planar Shift condition",
