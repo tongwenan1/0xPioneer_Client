@@ -196,7 +196,7 @@ export class ResOprView extends Component {
             if (type == MapInteractType.Wormhole) {
                 //useLanMgr
                 // title = LanMgr.getLanById("107549");
-                title = "Wormhole Attack";
+                title = "Engage!";
             } else if (type == MapInteractType.Move) {
                 //useLanMgr
                 // title = LanMgr.getLanById("107549");
@@ -220,11 +220,11 @@ export class ResOprView extends Component {
             } else if (type == MapInteractType.Camp) {
                 //useLanMgr
                 // title = LanMgr.getLanById("107549");
-                title = "Go into Wormhole";
+                title = "Enter";
             } else if (type == MapInteractType.CampOut) {
                 //useLanMgr
                 // title = LanMgr.getLanById("107549");
-                title = "Out of Wormhole";
+                title = "Evacuate";
             } else if (type == MapInteractType.Talk) {
                 //useLanMgr
                 // title = LanMgr.getLanById("107549");
