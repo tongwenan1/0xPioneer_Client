@@ -289,7 +289,7 @@
     "icon": "icon_8005",
     "itemName": "401023",
     "itemDesc": "",
-    "grade": 4,
+    "grade": 3,
     "gain_item": null,
     "skill_learn": ""
   },
@@ -299,7 +299,7 @@
     "icon": "icon_8006",
     "itemName": "401024",
     "itemDesc": "",
-    "grade": 1,
+    "grade": 4,
     "gain_item": null,
     "skill_learn": ""
   },

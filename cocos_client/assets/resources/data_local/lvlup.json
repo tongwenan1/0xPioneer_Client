@@ -125,7 +125,11 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event_building": [],
+    "event_building": [
+      "building_13",
+      "building_14",
+      "building_15"
+    ],
     "env_up": 1,
     "reward": [
       [
@@ -184,7 +188,9 @@
     "hp_max": 0,
     "city_vision": 0,
     "city_feature": 0,
-    "event_building": [],
+    "event_building": [
+      "building_18"
+    ],
     "env_up": 2,
     "reward": [
       [
@@ -243,7 +249,9 @@
     "hp_max": 20,
     "city_vision": 1,
     "city_feature": 0,
-    "event_building": [],
+    "event_building": [
+      "building_19"
+    ],
     "env_up": 2,
     "reward": [
       [
@@ -302,7 +310,9 @@
     "hp_max": 20,
     "city_vision": 0,
     "city_feature": 0,
-    "event_building": [],
+    "event_building": [
+      "building_20"
+    ],
     "env_up": 2,
     "reward": [
       [

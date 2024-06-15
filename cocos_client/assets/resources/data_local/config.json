@@ -52,6 +52,20 @@
       4
     ]
   },
+  "10008": {
+    "id": "10008",
+    "**NOTES**": "piot for 3 picks",
+    "para": [
+      1
+    ]
+  },
+  "10009": {
+    "id": "10009",
+    "**NOTES**": "3 picks frequency",
+    "para": [
+      3
+    ]
+  },
   "20001": {
     "id": "20001",
     "**NOTES**": "Planar Shift condition",
@@ -363,7 +377,7 @@
     "id": "430002",
     "**NOTES**": "accumulated para of piot consumption",
     "para": [
-      1
+      10
     ]
   }
 }

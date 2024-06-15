@@ -15,6 +15,10 @@
     "id": "104004",
     "eng": "Please follow the instruction"
   },
+  "104005": {
+    "id": "104005",
+    "eng": "You are going to spend %s PIOT, Confirm?"
+  },
   "105001": {
     "id": "105001",
     "eng": "Common"
@@ -94,6 +98,14 @@
   "106010": {
     "id": "106010",
     "eng": "New things are discovered nearby…"
+  },
+  "106011": {
+    "id": "106011",
+    "eng": "%s has respawned."
+  },
+  "106012": {
+    "id": "106012",
+    "eng": "%s has recovered HP."
   },
   "107001": {
     "id": "107001",
@@ -2334,6 +2346,46 @@
   "1080011": {
     "id": "1080011",
     "eng": "Skill Des"
+  },
+  "1090051": {
+    "id": "1090051",
+    "eng": "Tinuvel is a beacon of hope in this post-apocalyptic wasteland. Her visions guide the survivors towards safety and sustenance."
+  },
+  "1090061": {
+    "id": "1090061",
+    "eng": "A master of resourcefulness."
+  },
+  "1090071": {
+    "id": "1090071",
+    "eng": "Keen, known for his unmatched speed and agility, wields dual blades with deadly precision."
+  },
+  "1090081": {
+    "id": "1090081",
+    "eng": "His reputation was built on the smoking barrels of his twin pistols, each a tale of survival."
+  },
+  "1090091": {
+    "id": "1090091",
+    "eng": "John, the lone hunter, tracks his prey across the barren lands. His survival skills are as sharp as the arrows in his quiver."
+  },
+  "1090301": {
+    "id": "1090301",
+    "eng": "An old chief, could pass away at any moment"
+  },
+  "1090311": {
+    "id": "1090311",
+    "eng": "'Wanna a couple of bullets?'"
+  },
+  "1090321": {
+    "id": "1090321",
+    "eng": "In name a doctor, but in reality…"
+  },
+  "1090331": {
+    "id": "1090331",
+    "eng": "His life is a mockery of the apocalypse."
+  },
+  "1090351": {
+    "id": "1090351",
+    "eng": "An unknown traveler, who perhaps has seen places abundant with resources."
   },
   "null": {
     "id": null,
