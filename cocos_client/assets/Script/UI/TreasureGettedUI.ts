@@ -102,50 +102,51 @@ export class TreasureGettedUI extends ViewController {
             .delay(closeDelayTime)
             .call(async () => {
                 UIPanelManger.inst.popPanel(this.node);
-                const rookieStep = DataMgr.s.userInfo.data.rookieStep;
-                if (rookieStep == RookieStep.OPEN_BOX_1 || rookieStep == RookieStep.OPEN_BOX_2 || rookieStep == RookieStep.OPEN_BOX_3) {
-                    let animType = null;
-                    let nextStep = null;
-                    if (rookieStep == RookieStep.OPEN_BOX_1) {
-                        animType = RookieResourceAnim.BOX_1_TO_PSYC;
-                        nextStep = RookieStep.NPC_TALK_5;
-                    } else if (rookieStep == RookieStep.OPEN_BOX_2) {
-                        animType = RookieResourceAnim.BOX_2_TO_PSYC;
-                        nextStep = RookieStep.NPC_TALK_7;
-                    } else if (rookieStep == RookieStep.OPEN_BOX_3) {
-                        animType = RookieResourceAnim.BOX_3_TO_PSYC;
-                        nextStep = RookieStep.SYSTEM_TALK_21;
+                if (threes.length > 0) {
+                    // select from three
+                    const result = await UIPanelManger.inst.pushPanel(UIName.ItemSelectFromThreeUI);
+                    if (!result.success) {
+                        return;
                     }
-                    NotificationMgr.triggerEvent(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, {
-                        animType: animType,
-                        callback: () => {
-                            if (threes.length <= 0) {
-                                for (const item of items) {
-                                    DataMgr.s.item.countChanged(item);
-                                }
-                                for (const artifact of artifacts) {
-                                    DataMgr.s.artifact.countChanged(artifact);
-                                }
-                            }
-                            DataMgr.s.userInfo.data.rookieStep = nextStep;
-                            NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
-                        },
-                    } as RookieResourceAnimStruct);
+                    result.node.getComponent(ItemSelectFromThreeUI).showItem(boxIndex, threes);
                 } else {
-                    if (threes.length <= 0) {
+                    const rookieStep = DataMgr.s.userInfo.data.rookieStep;
+                    if (rookieStep == RookieStep.OPEN_BOX_1 || rookieStep == RookieStep.OPEN_BOX_2 || rookieStep == RookieStep.OPEN_BOX_3) {
+                        let animType = null;
+                        let nextStep = null;
+                        if (rookieStep == RookieStep.OPEN_BOX_1) {
+                            animType = RookieResourceAnim.BOX_1_TO_PSYC;
+                            nextStep = RookieStep.NPC_TALK_5;
+                        } else if (rookieStep == RookieStep.OPEN_BOX_2) {
+                            animType = RookieResourceAnim.BOX_2_TO_PSYC;
+                            nextStep = RookieStep.NPC_TALK_7;
+                        } else if (rookieStep == RookieStep.OPEN_BOX_3) {
+                            animType = RookieResourceAnim.BOX_3_TO_PSYC;
+                            nextStep = RookieStep.SYSTEM_TALK_21;
+                        }
+                        NotificationMgr.triggerEvent(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, {
+                            animType: animType,
+                            callback: () => {
+                                if (threes.length <= 0) {
+                                    for (const item of items) {
+                                        DataMgr.s.item.countChanged(item);
+                                    }
+                                    for (const artifact of artifacts) {
+                                        DataMgr.s.artifact.countChanged(artifact);
+                                    }
+                                }
+                                DataMgr.s.userInfo.data.rookieStep = nextStep;
+                                NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+                            },
+                        } as RookieResourceAnimStruct);
+                    } else {
                         for (const item of items) {
                             DataMgr.s.item.countChanged(item);
                         }
                         for (const artifact of artifacts) {
                             DataMgr.s.artifact.countChanged(artifact);
                         }
-                        return;
                     }
-                    const result = await UIPanelManger.inst.pushPanel(UIName.ItemSelectFromThreeUI);
-                    if (!result.success) {
-                        return;
-                    }
-                    result.node.getComponent(ItemSelectFromThreeUI).showItem(boxIndex, threes);
                 }
             })
             .start();

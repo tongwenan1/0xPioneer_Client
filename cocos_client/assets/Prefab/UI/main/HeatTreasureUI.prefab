@@ -25,6 +25,9 @@
     "_active": true,
     "_components": [
       {
+        "__id__": 220
+      },
+      {
         "__id__": 222
       },
       {
@@ -32,13 +35,10 @@
       },
       {
         "__id__": 226
-      },
-      {
-        "__id__": 228
       }
     ],
     "_prefab": {
-      "__id__": 230
+      "__id__": 228
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -92,13 +92,10 @@
       },
       {
         "__id__": 217
-      },
-      {
-        "__id__": 219
       }
     ],
     "_prefab": {
-      "__id__": 221
+      "__id__": 219
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -4969,64 +4966,6 @@
     "fileId": "49ePlyVTBI6YIGMdsmy4vs"
   },
   {
-    "__type__": "cc.Button",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 2
-    },
-    "_enabled": true,
-    "__prefab": {
-      "__id__": 218
-    },
-    "clickEvents": [],
-    "_interactable": true,
-    "_transition": 0,
-    "_normalColor": {
-      "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
-      "a": 255
-    },
-    "_hoverColor": {
-      "__type__": "cc.Color",
-      "r": 211,
-      "g": 211,
-      "b": 211,
-      "a": 255
-    },
-    "_pressedColor": {
-      "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
-      "a": 255
-    },
-    "_disabledColor": {
-      "__type__": "cc.Color",
-      "r": 124,
-      "g": 124,
-      "b": 124,
-      "a": 255
-    },
-    "_normalSprite": null,
-    "_hoverSprite": null,
-    "_pressedSprite": null,
-    "_disabledSprite": null,
-    "_duration": 0.1,
-    "_zoomScale": 1.2,
-    "_target": {
-      "__id__": 2
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.CompPrefabInfo",
-    "fileId": "10viuqQytKqpTusAtPexMe"
-  },
-  {
     "__type__": "cc.Widget",
     "_name": "",
     "_objFlags": 0,
@@ -5036,7 +4975,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 220
+      "__id__": 218
     },
     "_alignFlags": 44,
     "_target": null,
@@ -5085,7 +5024,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 223
+      "__id__": 221
     },
     "_contentSize": {
       "__type__": "cc.Size",
@@ -5113,7 +5052,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 225
+      "__id__": 223
     },
     "_resizeMode": 0,
     "_layoutType": 0,
@@ -5151,7 +5090,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 227
+      "__id__": 225
     },
     "_alignFlags": 45,
     "_target": null,
@@ -5187,7 +5126,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 229
+      "__id__": 227
     },
     "_id": ""
   },

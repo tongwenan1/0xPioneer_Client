@@ -1,4 +1,4 @@
-import * as cc from 'cc';
+import * as cc from "cc";
 
 export enum TileHexDirection {
     LeftTop = 0,
@@ -6,7 +6,7 @@ export enum TileHexDirection {
     LeftBottom = 2,
     RightTop = 3,
     Right = 4,
-    RightBottom = 5
+    RightBottom = 5,
 }
 
 export enum TileMapType {
@@ -30,10 +30,9 @@ export enum TileMapType {
      * @type {Number}
      * @static
      */
-    ISO = 2
+    ISO = 2,
 }
 export class TilePos {
-
     x: number;
     y: number;
     calc_x: number;
@@ -43,17 +42,14 @@ export class TilePos {
     worldx: number;
     worldy: number;
     toInfo(): string {
-        return this.worldx + "," + this.worldy + "\n"
-            + this.calc_x + "," + this.calc_y + "," + this.calc_z;
+        return this.worldx + "," + this.worldy + "\n" + this.calc_x + "," + this.calc_y + "," + this.calc_z;
     }
     toInfoSingleLine(): string {
-        return this.worldx + "," + this.worldy + " "
-            + this.calc_x + "," + this.calc_y + "," + this.calc_z;
+        return this.worldx + "," + this.worldy + " " + this.calc_x + "," + this.calc_y + "," + this.calc_z;
     }
     g: number;
     h: number;
 }
-
 
 export interface IDynamicBlock {
     get TileX(): number;
@@ -75,7 +71,6 @@ export class MyTile extends cc.TiledTile {
     //         }
     //     }
     // }
-
 }
 export class TileMapHelper {
     constructor(tilemap: cc.TiledMap) {
@@ -88,17 +83,16 @@ export class TileMapHelper {
         if (this.type == TileMapType.ORTHO) {
             this.pixelwidth = this.tilewidth * this.width;
             this.pixelheight = this.tileheight * this.height;
-        }
-        else if (this.type == TileMapType.HEX) {
+        } else if (this.type == TileMapType.HEX) {
             this.pixelwidth = this.tilewidth * this.width + this.tilewidth * 0.5;
             this.pixelheight = this.tileheight * this.height * 0.75 + this.tileheight * 0.5;
         }
         this.InitPos();
     }
 
-    private _tilemap: cc.TiledMap
+    private _tilemap: cc.TiledMap;
     private _pos: TilePos[];
-    private _calcpos2pos: { [id: string]: TilePos } = {}
+    private _calcpos2pos: { [id: string]: TilePos } = {};
     width: number;
     height: number;
     tilewidth: number;
@@ -111,14 +105,13 @@ export class TileMapHelper {
         return this._pos;
     }
     getPos(x: number, y: number): TilePos {
-        if (x < 0 || y < 0 || x >= this.width || y >= this.height)
-            return null;
+        if (x < 0 || y < 0 || x >= this.width || y >= this.height) return null;
         return this._pos[y * this.width + x];
     }
     getPosWorld(x: number, y: number): cc.Vec3 {
         let outv = new cc.Vec3();
 
-        let pos = this.getPos(x, y)
+        let pos = this.getPos(x, y);
         let iv = new cc.Vec3(pos.worldx - this.pixelwidth * 0.5, this.pixelheight * 0.5 - pos.worldy, 0);
         // outv.x = iv.x;
         // outv.y = iv.y;
@@ -126,11 +119,11 @@ export class TileMapHelper {
         // outv.y *= 0.25;
         // outv.x += this.pixelwidth*0.5
         // outv.z = 0;
-        cc.Vec3.transformMat4(outv, iv, this._tilemap.node.worldMatrix)
+        cc.Vec3.transformMat4(outv, iv, this._tilemap.node.worldMatrix);
         return outv;
     }
     getPosByCalcPos(x: number, y: number, z: number): TilePos {
-        var index = this.getCalcPosKey(x, y, z)
+        var index = this.getCalcPosKey(x, y, z);
         //console.log("index=" + x + "," + y + "," + z + "=>" + index);
         return this._calcpos2pos[index];
     }
@@ -151,13 +144,10 @@ export class TileMapHelper {
         if (this.type == TileMapType.ORTHO) {
             //srcx = x*this.tilewidth ~ (x+1)*this.tilewidth
             //srcy =y ~y+1
-            let x = (wxfornode / this.tilewidth) | 0
-            let y = (wyfornode / this.tileheight) | 0
+            let x = (wxfornode / this.tilewidth) | 0;
+            let y = (wyfornode / this.tileheight) | 0;
             return this.getPos(wxfornode, wyfornode);
-        }
-        else if (this.type == TileMapType.HEX) {
-
-
+        } else if (this.type == TileMapType.HEX) {
             // p.worldx = (x + 0.5) * this.tilewidth;
             // if (cross)
             //     p.worldx += this.tilewidth * 0.5;
@@ -165,17 +155,15 @@ export class TileMapHelper {
 
             //srcx = x ~ (x+1)
             //srcx2 = x+0.5 ~ (x+1.5)
-            let x1 = ((wxfornode) / this.tilewidth) | 0;
+            let x1 = (wxfornode / this.tilewidth) | 0;
             let x2 = ((wxfornode - this.tilewidth * 0.5) / this.tilewidth) | 0;
 
             //srcy =  y*0.75 -0.5   -0.5 y*0.75
 
-            let y = ((wyfornode + ((this.tileheight * 0.75) * 1.5)
-                - this.tileheight * 1.0
-            ) / (this.tileheight * 0.75)) | 0;
+            let y = ((wyfornode + this.tileheight * 0.75 * 1.5 - this.tileheight * 1.0) / (this.tileheight * 0.75)) | 0;
             //5232+ya +64 /96 = 56
             //console.log("sx=" + x1 + "-" + x2 + "," + y);
-            let poss: TilePos[] = []
+            let poss: TilePos[] = [];
             var pos1 = this.getPos(x1, y - 1);
             var pos2 = this.getPos(x1, y);
             var pos3 = this.getPos(x1, y + 1);
@@ -201,30 +189,27 @@ export class TileMapHelper {
             }
             return outpos;
         }
-
     }
     getExtAround(pos: TilePos, extlen: number): TilePos[] {
         const postions = [];
         for (var y = pos.calc_y - extlen; y <= pos.calc_y + extlen; y++) {
             for (var x = pos.calc_x - extlen; x <= pos.calc_x + extlen; x++) {
                 var z = 0 - x - y;
-                if (z < pos.calc_z - extlen || z > pos.calc_z + extlen)
-                    continue;
+                if (z < pos.calc_z - extlen || z > pos.calc_z + extlen) continue;
                 var gpos = this.getPosByCalcPos(x, y, z);
                 //console.log("calcpos=" + x + "," + y + "," + z + "->" + gpos.x + "," + gpos.y);
                 if (gpos != null) {
                     postions.push(gpos);
-
                 }
             }
         }
         return postions;
     }
     private InitPos() {
-        this._pos = [];//TilePos[this.width * this.height];
+        this._pos = []; //TilePos[this.width * this.height];
         for (var y = 0; y < this.height; y++) {
             for (var x = 0; x < this.width; x++) {
-                let p = new TilePos()
+                let p = new TilePos();
                 p.x = x;
                 p.y = y;
                 if (this.type == 0) {
@@ -233,16 +218,12 @@ export class TileMapHelper {
                     p.calc_z = 0;
                     p.worldx = (x + 0.5) * this.tilewidth;
                     p.worldy = (y + 0.5) * this.tileheight;
-
-                }
-                else if (this.type == 1)//hex
-                {
+                } else if (this.type == 1) {
+                    //hex
                     var cross = y % 2 == 1;
                     p.worldx = (x + 0.5) * this.tilewidth;
-                    if (cross)
-                        p.worldx += this.tilewidth * 0.5;
-                    p.worldy = (y - 0.5) * (this.tileheight * 0.75)
-                        + this.tileheight * 1.0;
+                    if (cross) p.worldx += this.tilewidth * 0.5;
+                    p.worldy = (y - 0.5) * (this.tileheight * 0.75) + this.tileheight * 1.0;
 
                     p.calc_x = x - ((y / 2) | 0);
                     p.calc_y = y;
@@ -264,8 +245,7 @@ export class TileMapHelper {
     protected _freeShadowBorders: cc.Node[] = [];
     protected _usedSHadowBorders: cc.Node[] = [];
     protected _ShadowBorder_Reset() {
-        for (; this._usedSHadowBorders.length > 0;) {
-
+        for (; this._usedSHadowBorders.length > 0; ) {
             let borderNode = this._usedSHadowBorders[this._usedSHadowBorders.length - 1];
             this._shadowLayer.removeUserNode(borderNode);
 
@@ -276,8 +256,7 @@ export class TileMapHelper {
         let bn;
         if (this._freeShadowBorders.length > 0) {
             bn = this._freeShadowBorders.pop();
-        }
-        else {
+        } else {
             bn = cc.instantiate(this._shadowBorderPfb);
         }
 
@@ -301,10 +280,9 @@ export class TileMapHelper {
                 t.x = x;
                 t.y = y;
                 _node.parent = layer.node;
-                t.grid = this._shadowtag;//75 is all black
+                t.grid = this._shadowtag; //75 is all black
 
                 this._shadowtiles[y * this.width + x] = t;
-
             }
         }
     }
@@ -316,20 +294,14 @@ export class TileMapHelper {
         let y2 = 0;
         for (var i = 0; i < this._shadowtiles.length; i++) {
             var s = this._shadowtiles[i];
-            if (s.fall == -1)
-                continue;
-            if (s.fall == s.grid)
-                continue;
+            if (s.fall == -1) continue;
+            if (s.fall == s.grid) continue;
             s.timer += delta;
             if (s.timer > 1.0) {
-                if (x1 > s.x)
-                    x1 = s.x;
-                if (y1 > s.y)
-                    y1 = s.y;
-                if (x2 < s.x)
-                    x2 = s.x;
-                if (y2 < s.y)
-                    y2 = s.y;
+                if (x1 > s.x) x1 = s.x;
+                if (y1 > s.y) y1 = s.y;
+                if (x2 < s.x) x2 = s.x;
+                if (y2 < s.y) y2 = s.y;
                 s.grid = s.fall;
                 s.owner = null;
                 update = true;
@@ -349,21 +321,18 @@ export class TileMapHelper {
         for (var y = pos.calc_y - extlen; y <= pos.calc_y + extlen; y++) {
             for (var x = pos.calc_x - extlen; x <= pos.calc_x + extlen; x++) {
                 var z = 0 - x - y;
-                if (z < pos.calc_z - extlen || z > pos.calc_z + extlen)
-                    continue;
+                if (z < pos.calc_z - extlen || z > pos.calc_z + extlen) continue;
                 var gpos = this.getPosByCalcPos(x, y, z);
-                //console.log("calcpos=" + x + "," + y + "," + z + "->" + gpos.x + "," + gpos.y);
+                // console.log("calcpos=" + x + "," + y + "," + z + "->" + gpos.x + "," + gpos.y);
                 if (gpos != null) {
-                    if (vx > gpos.x)
-                        vx = gpos.x;
-                    if (vy > gpos.y)
-                        vy = gpos.y;
+                    if (vx > gpos.x) vx = gpos.x;
+                    if (vy > gpos.y) vy = gpos.y;
                     var s = this._shadowtiles[gpos.y * this.width + gpos.x];
-                    //console.log("find node-" + s.x + "," + s.y + " wpos=" + gpos.worldx + "," + gpos.worldy);
+                    // console.log("find node-" + s.x + "," + s.y + " wpos=" + gpos.worldx + "," + gpos.worldy);
                     if (!fall) {
                         if (s.grid == 0 && s.owner != null && s.owner != owner) {
                             s.timer = 0;
-                            continue;//Strengthen other people’s vision
+                            continue; //Strengthen other people’s vision
                         }
                         if (s.grid == this._shadowtag) {
                             newCleardPositons.push(gpos);
@@ -379,9 +348,8 @@ export class TileMapHelper {
                         }
                         s.owner = owner;
                         s.fall = this._shadowhalf2tag;
-                        s.timer = 0;//Fully open first, then the timing becomes semi-transparent
-                    }
-                    else {
+                        s.timer = 0; //Fully open first, then the timing becomes semi-transparent
+                    } else {
                         s.grid = this._shadowhalf2tag;
                         s.fall = -1;
                         s.timer = 0;
@@ -432,45 +400,39 @@ export class TileMapHelper {
         this._tilemap.getLayer("shadow").updateViewPort(0, 0, this.width, this.height);
     }
 
-    _blocked: boolean[] = []
-    _dynamicblock: IDynamicBlock[] = []
+    _blocked: boolean[] = [];
+    _dynamicblock: IDynamicBlock[] = [];
     Path_InitBlock(blocktag: number = 0, other: (x: number, y: number, tag: number) => void = null) {
         let layb = this._tilemap.getLayer("block");
         let layd = this._tilemap.getLayer("decoration");
         layb.node.active = false;
         layd.node.active = false;
 
-
-
         for (var y = 0; y < this.height; y++) {
-
             for (var x = 0; x < this.width; x++) {
                 var btag = layb.tiles[y * this.height + x];
-                var btag2 = layd.tiles[y * this.height + x];//decoration
+                var btag2 = layd.tiles[y * this.height + x]; //decoration
 
                 if (btag2 != 0) {
-                    if (other != null)
-                        other(x, y, btag2);
+                    if (other != null) other(x, y, btag2);
                 }
 
                 //block
                 var block = btag == blocktag;
 
                 this._blocked[y * this.height + x] = block;
-
             }
         }
     }
     Path_AddDynamicBlock(block: IDynamicBlock): void {
-        if (this._dynamicblock.some(temple => temple.TileX == block.TileX && temple.TileY == block.TileY)) {
+        if (this._dynamicblock.some((temple) => temple.TileX == block.TileX && temple.TileY == block.TileY)) {
             return;
         }
         this._dynamicblock.push(block);
     }
     Path_RemoveDynamicBlock(block: IDynamicBlock): void {
         for (let i = 0; i < this._dynamicblock.length; i++) {
-            if (this._dynamicblock[i].TileX == block.TileX &&
-                this._dynamicblock[i].TileY == block.TileY) {
+            if (this._dynamicblock[i].TileX == block.TileX && this._dynamicblock[i].TileY == block.TileY) {
                 this._dynamicblock.splice(i, 1);
                 break;
             }
@@ -537,22 +499,21 @@ export class TileMapHelper {
         return null;
     }
     Path_DistPos(a: TilePos, b: TilePos): number {
-        var dx = (a.calc_x - b.calc_x);
+        var dx = a.calc_x - b.calc_x;
         if (dx < 0) dx *= -1;
-        var dy = (a.calc_y - b.calc_y);
+        var dy = a.calc_y - b.calc_y;
         if (dy < 0) dy *= -1;
-        var dz = (a.calc_z - b.calc_z);
+        var dz = a.calc_z - b.calc_z;
         if (dz < 0) dz *= -1;
         //max
-        return (dx > dy) ? (dx > dz ? dx : dz) : (dy > dz ? dy : dz);
+        return dx > dy ? (dx > dz ? dx : dz) : dy > dz ? dy : dz;
     }
     Path_Equal(a: TilePos, b: TilePos): boolean {
         return a.calc_x == b.calc_x && a.calc_y == b.calc_y;
     }
     Path_Contains(list: TilePos[], pos: TilePos): boolean {
         for (var i = 0; i < list.length; i++) {
-            if (this.Path_Equal(list[i], pos))
-                return true;
+            if (this.Path_Equal(list[i], pos)) return true;
         }
         return false;
     }
@@ -562,8 +523,7 @@ export class TileMapHelper {
             return b;
         }
         for (var i = 0; i < this._dynamicblock.length; i++) {
-            if (this._dynamicblock[i].TileX == x &&
-                this._dynamicblock[i].TileY == y) {
+            if (this._dynamicblock[i].TileX == x && this._dynamicblock[i].TileY == y) {
                 if (isTarget && this._dynamicblock[i].canMoveTo) {
                     return false;
                 }
@@ -573,14 +533,13 @@ export class TileMapHelper {
         return false;
     }
     /**
-     * 
-     * @param from 
-     * @param to 
-     * @param limitstep 
+     *
+     * @param from
+     * @param to
+     * @param limitstep
      * @returns move path, if is only one pos from, cannot move to toPos
      */
     Path_FromTo(from: TilePos, to: TilePos, limitstep = 100): TilePos[] {
-
         if (this.Path_IsBlock(to.x, to.y, true)) {
             return [from];
         }
@@ -595,11 +554,10 @@ export class TileMapHelper {
         // push first point to opentable
         openPathTiles.push(currentTile);
 
-        for (var i = 0; i < limitstep; i++)
-        // while (openPathTiles.Count != 0)
+        for (var i = 0; i < limitstep; i++) // while (openPathTiles.Count != 0)
         {
             //     sort and get lowest F
-            openPathTiles.sort((a, b) => (a.g + a.h) - (b.g + b.h));
+            openPathTiles.sort((a, b) => a.g + a.h - (b.g + b.h));
             currentTile = openPathTiles[0];
             //    move current from open to close
             var ic = openPathTiles.indexOf(currentTile);
@@ -619,16 +577,12 @@ export class TileMapHelper {
 
             //    searach around
             var apprivateTiles = this.Path_GetAround(currentTile);
-            for (var i = 0; i < apprivateTiles.length; i++)
-            //     foreach (Tile adjacentTile in currentTile.apprivateTiles)
+            for (var i = 0; i < apprivateTiles.length; i++) //     foreach (Tile adjacentTile in currentTile.apprivateTiles)
             {
                 var adjacentTile = apprivateTiles[i];
 
-
                 //block skip
-                if (this.Path_IsBlock(adjacentTile.x, adjacentTile.y, to.x == adjacentTile.x && to.y == adjacentTile.y))
-                    continue;
-
+                if (this.Path_IsBlock(adjacentTile.x, adjacentTile.y, to.x == adjacentTile.x && to.y == adjacentTile.y)) continue;
 
                 //skip closed
                 if (closedPathTiles.indexOf(adjacentTile) >= 0) {
@@ -642,7 +596,7 @@ export class TileMapHelper {
                     openPathTiles.push(adjacentTile);
                 }
                 //    try to use low g
-                else if ((adjacentTile.g + adjacentTile.h) > g + adjacentTile.h) {
+                else if (adjacentTile.g + adjacentTile.h > g + adjacentTile.h) {
                     adjacentTile.g = g;
                 }
             }
@@ -657,7 +611,6 @@ export class TileMapHelper {
             path.push(currentTile);
 
             for (var i = to.g - 1; i >= 0; i--) {
-
                 //find and push
                 for (var j = 0; j < closedPathTiles.length; j++) {
                     var pnode = closedPathTiles[j];
@@ -666,23 +619,14 @@ export class TileMapHelper {
                         path.push(currentTile);
                         break;
                     }
-
                 }
-
             }
 
             path.reverse();
         }
 
-        return path
-
-
-
+        return path;
 
         return null;
-
-
     }
 }
-
-

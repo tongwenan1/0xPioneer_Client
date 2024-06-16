@@ -427,6 +427,7 @@ export class OuterTiledMapActionController extends ViewController {
                 }
             }
             const newCleardPositons = GameMainHelper.instance.tiledMapShadowErase(pioneer.stayPos, pioneer.id);
+            this._eraseMainCityShadow();
             if (!isExsit) {
                 // this._localEraseShadowWorldPos.push(pioneer.stayPos);
                 // if (Config.canSaveLocalData) {

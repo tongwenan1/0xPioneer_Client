@@ -3,6 +3,7 @@ import { InnerBuildingType, MapBuildingType } from "../Const/BuildingDefine";
 import ItemData, { ItemConfigType, ItemType } from "../Const/Item";
 import { NotificationName } from "../Const/Notification";
 import {
+    FIGHT_FINISHED_DATA,
     MINING_FINISHED_DATA,
     MapNpcPioneerObject,
     MapPioneerActionType,
@@ -407,6 +408,13 @@ export class DataMgr {
                     // hp
                     if (oldData.hp != newData.hp || oldData.hpMax != newData.hpMax) {
                         NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED);
+                        if (oldData.actionType != MapPioneerActionType.dead && newData.hp > oldData.hp && newData.hpMax == oldData.hpMax) {
+                            //re heal
+                            NotificationMgr.triggerEvent(
+                                NotificationName.GAME_SHOW_RESOURCE_TYPE_TIP,
+                                LanMgr.replaceLanById("106012", [LanMgr.getLanById(newData.name)])
+                            );
+                        }
                     }
                     // map reborn
                     if (oldData.rebornTime != newData.rebornTime) {
@@ -416,6 +424,17 @@ export class DataMgr {
                 }
             }
         }
+    };
+    public static pioneer_reborn_res = (e: any) => {
+        const p: s2c_user.Ipioneer_reborn_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        const pioneer = DataMgr.s.pioneer.getById(p.pioneerId);
+        if (pioneer == undefined) {
+            return;
+        }
+        NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_RESOURCE_TYPE_TIP, LanMgr.replaceLanById("106011", [LanMgr.getLanById(pioneer.name)]));
     };
     public static mappioneer_reborn_change = (e: any) => {
         NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_RESOURCE_TYPE_TIP, LanMgr.getLanById("106009"));
@@ -653,7 +672,10 @@ export class DataMgr {
             p.attackerName = "";
         }
         const isSelfAttack: boolean = DataMgr.s.userInfo.data.id != p.defenderUid;
+        const selfId: string = isSelfAttack ? DataMgr.s.userInfo.data.id : p.defenderUid;
         const selfName: string = isSelfAttack ? p.attackerName : p.defenderName + " " + LanMgr.getLanById("110010");
+
+        const otherId: string = isSelfAttack ? p.defenderUid : DataMgr.s.userInfo.data.id;
         const otherName: string = !isSelfAttack ? p.attackerName : p.defenderName + " " + LanMgr.getLanById("110010");
         const isSelfWin: boolean = isSelfAttack && p.fightResult;
         if (isSelfAttack) {
@@ -663,22 +685,24 @@ export class DataMgr {
         NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
             attacker: {
                 name: selfName,
+                id: selfId,
                 avatarIcon: "icon_player_avatar",
                 hp: isSelfWin ? 100 : 0,
                 hpMax: 100,
             },
             defender: {
                 name: otherName,
-                avatarIcon: "icon_player_avatar",
+                id: otherId,
                 hp: isSelfWin ? 0 : 50,
                 hpMax: 50,
             },
             attackerIsSelf: true,
             buildingId: null,
             position: null,
-            fightResult: isSelfWin ? "win" : "lose",
+            isWin: isSelfWin,
             rewards: [],
-        });
+            isWormhole: true,
+        } as FIGHT_FINISHED_DATA);
         NotificationMgr.triggerEvent(NotificationName.GAME_SHOW_RESOURCE_TYPE_TIP, LanMgr.getLanById("106007"));
     };
 

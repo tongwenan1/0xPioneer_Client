@@ -20,7 +20,7 @@ export default class RookieStepMgr {
     private _maskView: RookieStepMaskUI = null;
 
     public async init() {
-        const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI, UIPanelLayerType.HUD);
+        const result = await UIPanelManger.inst.pushPanel(UIName.RookieStepMaskUI, UIPanelLayerType.ROOKIE);
         if (!result.success) {
             return;
         }
@@ -241,6 +241,7 @@ export default class RookieStepMgr {
     private async _onRookieStepChange() {
         this._refreshMaskShow();
         const rookieStep = DataMgr.s.userInfo.data.rookieStep;
+        console.log("exce r: " + rookieStep);
         if (
             rookieStep == RookieStep.NPC_TALK_1 ||
             rookieStep == RookieStep.NPC_TALK_3 ||
@@ -508,6 +509,8 @@ export default class RookieStepMgr {
             tapPostionType = RookieTapPositionType.BUTTON;
         } else if (tag == "buildingUpgrade") {
             tapPostionType = RookieTapPositionType.BUTTON;
+        } else if (tag == "alterConfrim") {
+            tapPostionType = RookieTapPositionType.BUTTON;
         }
         this._maskView.configuration(
             isFromGameView,
@@ -526,6 +529,10 @@ export default class RookieStepMgr {
                     NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_BUILDING_UPGRADE, { tapIndex: tapIndex });
                 } else if (tag == "defend") {
                     NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_SET_DENFENDER, { tapIndex: tapIndex });
+                } else if (tag == "alterConfrim") {
+                    NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_ALTER_CONFRIM, { tapIndex: tapIndex });
+                } else if (tag == "selectFromThree") {
+                    NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_TAP_SELECT_ALL, { tapIndex: tapIndex });
                 }
             },
             isDialogUse,

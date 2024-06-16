@@ -1,4 +1,5 @@
 import ProtobufConfig from "../../Config/ProtobufConfig";
+import { ItemConfigType, ItemType } from "../../Const/Item";
 import { MapPioneerActionType } from "../../Const/PioneerDefine";
 import { natrium_ws } from "../../natrium/client/natrium_ws";
 import { registermsg } from "../../natrium/share/msgs/registermsg";
@@ -451,6 +452,12 @@ export namespace s2c_user {
     export interface Ipioneer_change {
         pioneers: share.Ipioneer_data[];
     }
+    export interface Ipioneer_reborn_res {
+        res: number;
+        pioneerId: string;
+        rebirthStartTime: number;
+        rebirthEndTime: number;
+    }
     export interface Inft_change {
         nfts: share.Infts_info_data[];
     }
@@ -849,7 +856,7 @@ export namespace share {
         confs: Iartifact_three_conf[];
     }
     export interface Iartifact_three_conf {
-        type: number;
+        type: ItemConfigType;
         propId: string;
         num: number;
     }

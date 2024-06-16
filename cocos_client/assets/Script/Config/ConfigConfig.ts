@@ -157,6 +157,11 @@ export default class ConfigConfig {
                     type: key,
                     coefficient: param[0],
                 };
+            } else if (key == ConfigType.SelectFromThreeGetAllCostCoefficient) {
+                temple = {
+                    type: key,
+                    coefficient: param[0],
+                };
             }
             this._config.set(key as ConfigType, temple);
         }

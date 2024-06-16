@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, Label, Node, ProgressBar, RichText, Sprite, SpriteFrame } from "cc";
+import { _decorator, Button, Component, Label, Node, ProgressBar, RichText, Sprite, SpriteFrame, v3, Widget } from "cc";
 import CommonTools from "db://assets/Script/Tool/CommonTools";
 import { BattleReportData, BattleReportExploringData, BattleReportType, LocationInfo } from "../Const/BattleReport";
 import { LanMgr } from "../Utils/Global";
@@ -123,21 +123,45 @@ export class BattleReportListItemUI extends Component {
     private _initWithFightReport(report: BattleReportData): void {
         const data = report.data as FIGHT_FINISHED_DATA;
         const selfRoleInfo = data.attackerIsSelf ? data.attacker : data.defender;
+
+        if (data.isWormhole) {
+            for (const child of this.node.getChildByPath("BgAvatar").children) {
+                child.active = child.name == "pioneer_0";
+            }
+            this.node.getChildByPath("BgAvatar-001").active = true;
+            for (const child of this.node.getChildByPath("BgAvatar-001").children) {
+                child.active = child.name == "pioneer_0";
+            }
+            this.node.getChildByPath("name-001").getComponent(Widget).left = 514.95;
+            this.node.getChildByPath("name-001").getComponent(Widget).updateAlignment();
+
+            this.node.getChildByPath("attackerOrDefenderSign-001").position = v3(13.696, 7.604);
+        } else {
+            for (const child of this.node.getChildByPath("BgAvatar").children) {
+                child.active = child.name == selfRoleInfo.id;
+            }
+            this.node.getChildByPath("BgAvatar-001").active = false;
+
+            this.node.getChildByPath("name-001").getComponent(Widget).left = 631.868;
+            this.node.getChildByPath("name-001").getComponent(Widget).updateAlignment();
+
+            this.node.getChildByPath("attackerOrDefenderSign-001").position = v3(130.614, 7.604);
+        }
+
         this.leftNameLabel.string =
             LanMgr.getLanById(selfRoleInfo.name).indexOf("LanguageErr") == -1 ? LanMgr.getLanById(selfRoleInfo.name) : selfRoleInfo.name;
         this.leftHpBar.progress = selfRoleInfo.hp / selfRoleInfo.hpMax;
-        this.leftHpText.string = `${selfRoleInfo.hp} / ${selfRoleInfo.hpMax}`;
+        this.leftHpText.string = `${CommonTools.getOneDecimalNum(selfRoleInfo.hp)} / ${CommonTools.getOneDecimalNum(selfRoleInfo.hpMax)}`;
         this.leftAttackerOrDefenderSign.spriteFrame = data.attackerIsSelf ? this.attackerSign : this.defenderSign;
 
         const enemyRoleInfo = !data.attackerIsSelf ? data.attacker : data.defender;
         this.rightNameLabel.string =
             LanMgr.getLanById(enemyRoleInfo.name).indexOf("LanguageErr") == -1 ? LanMgr.getLanById(enemyRoleInfo.name) : enemyRoleInfo.name;
         this.rightHpBar.progress = enemyRoleInfo.hp / enemyRoleInfo.hpMax;
-        this.rightHpText.string = `${enemyRoleInfo.hp} / ${enemyRoleInfo.hpMax}`;
+        this.rightHpText.string = `${CommonTools.getOneDecimalNum(enemyRoleInfo.hp)} / ${CommonTools.getOneDecimalNum(enemyRoleInfo.hpMax)}`;
         this.rightAttackerOrDefenderSign.spriteFrame = !data.attackerIsSelf ? this.attackerSign : this.defenderSign;
 
-        const selfWin = selfRoleInfo.hp != 0;
-        this.fightResultSprite.spriteFrame = selfWin ? this.fightResultVictory : this.fightResultDefeat;
+        this.fightResultSprite.spriteFrame = data.isWin ? this.fightResultVictory : this.fightResultDefeat;
         this.eventTimeLabel.string = CommonTools.formatDateTime(report.timestamp);
 
         this._locationInfo = { type: "pos", pos: data.position };
@@ -162,6 +186,9 @@ export class BattleReportListItemUI extends Component {
         const duration = report.data.duration; // in milliseconds
         const rewards = report.data.rewards;
 
+        for (const child of this.node.getChildByPath("BgAvatar").children) {
+            child.active = child.name == pioneerInfo.id;
+        }
         this.leftNameLabel.string = roleName;
 
         this._locationInfo = { type: "building", buildingId: buildingInfo.id };
@@ -186,6 +213,9 @@ export class BattleReportListItemUI extends Component {
         const roleName = LanMgr.getLanById(pioneerInfo == null ? "" : pioneerInfo.name);
         const rewards = report.data.rewards;
 
+        for (const child of this.node.getChildByPath("BgAvatar").children) {
+            child.active = child.name == pioneerInfo.id;
+        }
         this.leftNameLabel.string = roleName;
         this._locationInfo = { type: "building", buildingId: buildingInfo.id };
         this.eventLocationLabel.string = this._locationString(this._locationInfo);

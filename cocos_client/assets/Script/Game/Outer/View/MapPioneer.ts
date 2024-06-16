@@ -237,50 +237,12 @@ export class MapPioneer extends Component {
                         defender = DataMgr.s.pioneer.getById(fightDatas[0].attackerId);
                     }
                     if (defender != null) {
-                        GameMusicPlayMgr.playBeginFightEffect();
-                        this._fightAttackerOrigianlData = { id: attacker.id, name: attacker.name, hp: attacker.hp, hpmax: attacker.hpMax };
-                        this._fightDefenderOriginalData = { id: defender.id, name: defender.name, hp: defender.hp, hpmax: defender.hpMax };
-                        this._fightView.node.active = true;
-                        this._fightView.refreshUI(
-                            {
-                                name: attacker.name,
-                                hp: attacker.hp,
-                                hpMax: attacker.hpMax,
-                            },
-                            {
-                                name: defender.name,
-                                hp: defender.hp,
-                                hpMax: defender.hpMax,
-                            },
-                            true
-                        );
-                        this._fightInterval = setInterval(() => {
-                            if (fightDatas.length <= 0) {
-                                clearInterval(this._fightInterval);
-                                return;
-                            }
-                            const data = fightDatas.shift();
-                            if (data.attackerId == attacker.id) {
-                                // attacker action
-                                defender.hp -= data.hp;
-                            } else {
-                                attacker.hp -= data.hp;
-                                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED);
-                            }
-                            this._fightView.refreshUI(
-                                {
-                                    name: attacker.name,
-                                    hp: attacker.hp,
-                                    hpMax: attacker.hpMax,
-                                },
-                                {
-                                    name: defender.name,
-                                    hp: defender.hp,
-                                    hpMax: defender.hpMax,
-                                },
-                                true
-                            );
-                        }, 1000);
+                        NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_SHOW_FIGHT_ANIM, {
+                            fightDatas: this._model.fightData.slice(),
+                            isWin: this._model.fightResultWin,
+                            attackerData: { id: attacker.id, name: attacker.name, hp: attacker.hp, hpmax: attacker.hpMax },
+                            defenderData: { id: defender.id, name: defender.name, hp: defender.hp, hpmax: defender.hpMax },
+                        });
                     }
                 }
             }
@@ -400,12 +362,10 @@ export class MapPioneer extends Component {
 
     protected onEnable(): void {
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_FIGHT_BEGIN, this._onFightBegin, this);
-        NotificationMgr.addListener(NotificationName.MAP_PIONEER_FIGHT_END, this._onFightEnd, this);
     }
 
     protected onDisable(): void {
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_FIGHT_BEGIN, this._onFightBegin, this);
-        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_FIGHT_END, this._onFightEnd, this);
     }
 
     update(deltaTime: number) {
@@ -458,65 +418,5 @@ export class MapPioneer extends Component {
         }
         this._model = DataMgr.s.pioneer.getById(data.id);
         this.refreshUI(this._model);
-    }
-    private _onFightEnd(data: { id: string }) {
-        if (this._fightInterval == null) {
-            return;
-        }
-        if (this._model == null) {
-            return;
-        }
-        if (this._model.id != data.id) {
-            return;
-        }
-        if (this._fightAttackerOrigianlData == null || this._fightDefenderOriginalData == null) {
-            return;
-        }
-        if (this._model.fightData != null) {
-            for (const data of this._model.fightData) {
-                if (data.attackerId == this._fightAttackerOrigianlData.id) {
-                    this._fightDefenderOriginalData.hp -= data.hp;
-                } else {
-                    this._fightAttackerOrigianlData.hp -= data.hp;
-                }
-            }
-        }
-        clearInterval(this._fightInterval);
-        this._fightView.node.active = false;
-        this._fightResultView.node.active = true;
-        if (this._model.fightResultWin) {
-            GameMusicPlayMgr.playFightWinEffect();
-
-            const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
-            if (rookieStep == RookieStep.ENEMY_FIGHT && this._fightDefenderOriginalData.id == "gangster_1") {
-                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_FIGHT_ENEMY_WIN);
-            } else if (rookieStep == RookieStep.LOCAL_SYSTEM_TALK_32) {
-                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_FIGHT_ENEMY_WIN);
-            }
-        } else {
-            GameMusicPlayMgr.playFightFailEffect();
-        }
-        this._fightResultView.showResult(this._model.fightResultWin, () => {
-            NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
-                attacker: {
-                    name: this._fightAttackerOrigianlData.name,
-                    avatarIcon: "icon_player_avatar", // todo
-                    hp: this._fightAttackerOrigianlData.hp,
-                    hpMax: this._fightAttackerOrigianlData.hpmax,
-                },
-                defender: {
-                    name: this._fightDefenderOriginalData.name,
-                    avatarIcon: "icon_player_avatar",
-                    hp: this._fightDefenderOriginalData.hp,
-                    hpMax: this._fightDefenderOriginalData.hpmax,
-                },
-                attackerIsSelf: true,
-                buildingId: null,
-                position: this._model.stayPos,
-                fightResult: this._fightAttackerOrigianlData.hp != 0 ? "win" : "lose",
-                rewards: [],
-            });
-            this._fightResultView.node.active = false;
-        });
     }
 }

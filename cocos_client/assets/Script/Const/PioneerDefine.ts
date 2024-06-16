@@ -207,22 +207,23 @@ export interface MapNpcPioneerObject extends MapNpcPioneerData {
 
 export interface FIGHT_FINISHED_DATA {
     attacker: {
+        id: string;
         name: string;
-        avatarIcon: string;
         hp: number;
         hpMax: number;
     };
     defender: {
+        id: string;
         name: string;
-        avatarIcon: string;
         hp: number;
         hpMax: number;
     };
     attackerIsSelf: boolean;
     buildingId: string;
     position: Vec2;
-    fightResult: string;
+    isWin: boolean;
     rewards: [];
+    isWormhole: boolean;
 }
 export interface MINING_FINISHED_DATA {
     buildingId: string;

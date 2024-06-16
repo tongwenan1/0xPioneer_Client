@@ -188,6 +188,7 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("player_generate_troop_start_res", DataMgr.player_generate_troop_start_res);
         // map
         NetworkMgr.websocket.on("pioneer_change", DataMgr.pioneer_change);
+        NetworkMgr.websocket.on("pioneer_reborn_res", DataMgr.pioneer_reborn_res);
         NetworkMgr.websocket.on("mapbuilding_change", DataMgr.mapbuilding_change);
 
         NetworkMgr.websocket.on("mappioneer_reborn_change", DataMgr.mappioneer_reborn_change);

@@ -1,4 +1,4 @@
-import { _decorator, Animation, instantiate, Label, Layout, Node, ParticleSystem2D, Prefab, UITransform, v3 } from "cc";
+import { _decorator, Animation, instantiate, inverseLerp, Label, Layout, Node, ParticleSystem2D, Prefab, UITransform, v3 } from "cc";
 import { LanMgr, ResourcesMgr } from "../../../Utils/Global";
 import { MapBuildingType, InnerBuildingType, UserInnerBuildInfo } from "../../../Const/BuildingDefine";
 import ViewController from "../../../BasicView/ViewController";
@@ -20,15 +20,20 @@ export class OuterBuildingView extends ViewController {
     public async refreshUI(building: MapBuildingObject) {
         this._building = building;
 
+        const infoView = this.node.getChildByPath("InfoView/Content");
+        this.node.getChildByPath("InfoView/Gap").getComponent(UITransform).height =
+            this._viewHeightMap[this._building.animType] == null ? 120 : this._viewHeightMap[this._building.animType];
+        this.node.getChildByPath("InfoView").getComponent(Layout).updateLayout();
+
         let name: string = "";
         if (building.type == MapBuildingType.city) {
             name = DataMgr.s.userInfo.data.name + " " + LanMgr.getLanById(building.name);
         } else {
             name = LanMgr.getLanById(building.name);
         }
-        this.node.getChildByPath("Title/Text").getComponent(Label).string = name;
-        this.node.getChildByPath("Level/Text").getComponent(Label).string = "Lv." + building.level;
-        this.node.getChildByPath("Level/Difficult").active = building.type == MapBuildingType.event && building.level > DataMgr.s.artifact.getArtifactLevel();
+        infoView.getChildByPath("Title/Text").getComponent(Label).string = name;
+        infoView.getChildByPath("Level/Text").getComponent(Label).string = "Lv." + building.level;
+        infoView.getChildByPath("Level/Difficult").active = building.type == MapBuildingType.event && building.level > DataMgr.s.artifact.getArtifactLevel();
 
         if (this._building.type == MapBuildingType.wormhole) {
             for (const child of this.node.getChildByPath("BuildingContent").children) {
@@ -52,23 +57,23 @@ export class OuterBuildingView extends ViewController {
         exploreView.active = false;
         collectView.active = false;
 
-        const collectIcon = this.node.getChildByPath("Level/Collect");
-        const exploreIcon = this.node.getChildByPath("Level/Explore");
-        const strongholdIcon = this.node.getChildByPath("Level/Stronghold");
-        const battleIcon = this.node.getChildByPath("Level/Battle");
+        const collectIcon = infoView.getChildByPath("Level/Collect");
+        const exploreIcon = infoView.getChildByPath("Level/Explore");
+        const strongholdIcon = infoView.getChildByPath("Level/Stronghold");
+        const battleIcon = infoView.getChildByPath("Level/Battle");
 
         collectIcon.active = false;
         exploreIcon.active = false;
         strongholdIcon.active = false;
         battleIcon.active = false;
 
-        this.node.getChildByPath("Level").active = true;
+        infoView.getChildByPath("Level").active = true;
         if (building.type == MapBuildingType.city) {
             if (building.faction == MapMemberFactionType.enemy) {
-                this.node.getChildByPath("Level").active = true;
+                infoView.getChildByPath("Level").active = true;
                 battleIcon.active = true;
             } else {
-                this.node.getChildByPath("Level").active = false;
+                infoView.getChildByPath("Level").active = false;
             }
             let tempShowAni: string = null;
             const effectArtifac = DataMgr.s.artifact.getObj_artifact_equiped();
@@ -90,7 +95,7 @@ export class OuterBuildingView extends ViewController {
                 if (tempShowAni != null) {
                     const prb = await ResourcesMgr.loadResource(BundleName.MainBundle, "prefab/artifactX5/Prefab/artifact/" + tempShowAni, Prefab);
                     this._artifactShowView = instantiate(prb);
-                    this.node.getChildByPath("ArtifactShow").addChild(this._artifactShowView);
+                    infoView.getChildByPath("ArtifactShow").addChild(this._artifactShowView);
                 }
                 this._showArtifactAni = tempShowAni;
             }
@@ -270,7 +275,7 @@ export class OuterBuildingView extends ViewController {
             tavernView.active = countdownView.active || newPioneerView.active;
         }
 
-        this._levelShowing = this.node.getChildByPath("Level").active;
+        this._levelShowing = infoView.getChildByPath("Level").active;
 
         this._refreshEnergyTipShow();
         this._refreshBuildTipShow();
@@ -287,15 +292,6 @@ export class OuterBuildingView extends ViewController {
         }
     }
 
-    public showName(isShow: boolean) {
-        this.node.getChildByPath("Title").active = isShow;
-        if (isShow) {
-            this.node.getChildByPath("Level").active = this._levelShowing;
-        } else {
-            this.node.getChildByPath("Level").active = false;
-        }
-    }
-
     private _fakeAttack: boolean = false;
 
     private _toGetEnergyTip: Node = null;
@@ -308,13 +304,30 @@ export class OuterBuildingView extends ViewController {
     private _strongholdItem: Node = null;
     private _strongholdViews: Node[] = [];
     private _artifactShowView: Node = null;
+
+    private _viewHeightMap: { [key: string]: number } = {
+        Transfer_Matrix_Group: 280,
+        Pyramid_Group: 140,
+        Tree_Group: 180,
+        Aquatic_Relics_Group: 140,
+        ancient_ruins: 140,
+        laboratory: 140,
+        spider_cave: 120,
+        ruin: 140,
+        ambush: 160,
+        oasis: 120,
+        sand_mineral: 120,
+        swamp_jungle: 120,
+        treasure: 120,
+        city: 200,
+    };
     protected viewDidLoad(): void {
         super.viewDidLoad();
 
-        this._toGetEnergyTip = this.node.getChildByName("ToGetEnergyTip");
+        this._toGetEnergyTip = this.node.getChildByPath("InfoView/Content/ToGetEnergyTip");
         this._toGetEnergyTip.active = false;
 
-        this._toBuildBuildingTip = this.node.getChildByName("ToBuildBuildingTip");
+        this._toBuildBuildingTip = this.node.getChildByPath("InfoView/Content/ToBuildBuildingTip");
         this._toBuildBuildingTip.active = false;
 
         this._strongholdItem = this.node.getChildByPath("StrongholdContent/Item");

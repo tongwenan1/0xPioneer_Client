@@ -33,6 +33,8 @@ export enum ConfigType {
     MapDifficultCoefficient = "40001",
 
     PiotToHeatCoefficient = "430002",
+
+    SelectFromThreeGetAllCostCoefficient = "10008",
 }
 
 export interface ConfigData {
@@ -119,5 +121,9 @@ export interface MapDifficultCoefficientParam extends ConfigData {
 }
 
 export interface PiotToHeatCoefficientParam extends ConfigData {
+    coefficient: number;
+}
+
+export interface SelectFromThreeGetAllCostCoefficientParam extends ConfigData {
     coefficient: number;
 }

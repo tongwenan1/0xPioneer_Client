@@ -6,6 +6,7 @@ export enum UIPanelLayerType {
     Game,
     UI,
     HUD,
+    ROOKIE,
 }
 
 export interface UIPanelQueueItem {
@@ -38,6 +39,9 @@ export default class UIPanelManger extends Component {
                 } else if (layer == UIPanelLayerType.HUD) {
                     newNode.parent = this._hudLayer;
                     this._hudQueue.push({ name: name, node: newNode });
+                } else if (layer == UIPanelLayerType.ROOKIE) {
+                    newNode.parent = this._rookieLayer;
+                    this._rookieQueue.push({ name: name, node: newNode });
                 }
                 resolve({ success: true, node: newNode });
             } else {
@@ -135,18 +139,21 @@ export default class UIPanelManger extends Component {
     private _gameLayer: Node = null;
     private _uiLayer: Node = null;
     private _hudLayer: Node = null;
+    private _rookieLayer: Node = null;
 
     private _resourceMgr: ResourcesManager = null;
 
     private _gameQueue: UIPanelQueueItem[] = [];
     private _uiQueue: UIPanelQueueItem[] = [];
     private _hudQueue: UIPanelQueueItem[] = [];
+    private _rookieQueue: UIPanelQueueItem[] = [];
     protected onLoad(): void {
         this._resourceMgr = ResourcesMgr;
         UIPanelManger._inst = this;
         this._gameLayer = this.node.getChildByPath("Canvas/GameContent");
         this._uiLayer = this.node.getChildByPath("UI_Canvas/UI_ROOT");
         this._hudLayer = this.node.getChildByPath("UI_Canvas/UIHUD");
+        this._rookieLayer = this.node.getChildByPath("UI_Canvas/ROOKIE_ROOT");
     }
 
     private async _loadPrefab(path: string): Promise<Node | null> {

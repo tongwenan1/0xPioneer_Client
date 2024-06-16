@@ -17,13 +17,14 @@ import {
     randomRangeInt,
     Layout,
     Color,
+    pingPong,
 } from "cc";
 import { GameRankColor, GetPropRankColor, ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { ArtifactItem } from "./ArtifactItem";
 import { ArtifactMgr, ItemMgr, LanMgr } from "../Utils/Global";
 import ArtifactData from "../Model/ArtifactData";
 import ViewController from "../BasicView/ViewController";
-import { UIName } from "../Const/ConstUIDefine";
+import { HUDName, UIName } from "../Const/ConstUIDefine";
 import { ArtifactInfoUI } from "./ArtifactInfoUI";
 import { UIHUDController } from "./UIHUDController";
 import ArtifactConfig from "../Config/ArtifactConfig";
@@ -36,11 +37,19 @@ import { DataMgr } from "../Data/DataMgr";
 import { s2c_user, share } from "../Net/msg/WebsocketMsg";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
+import ItemConfig from "../Config/ItemConfig";
+import ConfigConfig from "../Config/ConfigConfig";
+import { ConfigType, SelectFromThreeGetAllCostCoefficientParam } from "../Const/Config";
+import { AlterView } from "./View/AlterView";
+import { RookieStep } from "../Const/RookieDefine";
+import NotificationMgr from "../Basic/NotificationMgr";
+import { NotificationName } from "../Const/Notification";
 const { ccclass, property } = _decorator;
 
 @ccclass("ItemSelectFromThreeUI")
 export class ItemSelectFromThreeUI extends ViewController {
     private _boxIndex: number;
+    private _getAllPiotCostNum: number;
 
     private _itemView: Node = null;
 
@@ -53,51 +62,80 @@ export class ItemSelectFromThreeUI extends ViewController {
             return;
         }
         this._boxIndex = boxIndex;
+        this._getAllPiotCostNum = 0;
+        const costCoefficient: number = (ConfigConfig.getConfig(ConfigType.SelectFromThreeGetAllCostCoefficient) as SelectFromThreeGetAllCostCoefficientParam)
+            .coefficient;
         const content = this.node.getChildByPath("__ViewContent/ImgTextBg/SelectContent").getComponent(Layout);
         for (let i = 0; i < threes.length; i++) {
-            const config = ArtifactConfig.getById(threes[i].propId);
-            if (config == null) {
+            let rank: number = 0;
+            let name: string = "";
+            let title: string = "";
+            let desc: string = "";
+            if (threes[i].type == ItemConfigType.Item) {
+                const itemConfig = ItemConfig.getById(threes[i].propId);
+                if (itemConfig == null) {
+                    continue;
+                }
+                rank = itemConfig.grade;
+                name = "";
+                title = LanMgr.getLanById(itemConfig.itemName) + "*" + threes[i].num;
+                desc = LanMgr.getLanById(itemConfig.itemDesc);
+            } else if (threes[i].type == ItemConfigType.Artifact) {
+                const artifactConfig = ArtifactConfig.getById(threes[i].propId);
+                if (artifactConfig == null) {
+                    continue;
+                }
+                rank = artifactConfig.rank;
+                name = LanMgr.getLanById(artifactConfig.name);
+                if (rank == 1) {
+                    title = LanMgr.getLanById("105001");
+                } else if (rank == 2) {
+                    title = LanMgr.getLanById("105002");
+                } else if (rank == 3) {
+                    title = LanMgr.getLanById("105003");
+                } else if (rank == 4) {
+                    title = LanMgr.getLanById("105004");
+                } else if (rank == 5) {
+                    title = LanMgr.getLanById("105005");
+                }
+                if (artifactConfig.effect.length > 0) {
+                    const firstEffectConfig = ArtifactEffectConfig.getById(artifactConfig.effect[0]);
+                    desc = firstEffectConfig.des;
+                }
+            }
+            if (rank == 0) {
                 continue;
             }
-            let useColor: Color = GameRankColor[config.rank - 1];
-            let useTitle: string = null;
-            if (config.rank == 1) {
-                useTitle = LanMgr.getLanById("105001");
-            } else if (config.rank == 2) {
-                useTitle = LanMgr.getLanById("105002");
-            } else if (config.rank == 3) {
-                useTitle = LanMgr.getLanById("105003");
-            } else if (config.rank == 4) {
-                useTitle = LanMgr.getLanById("105004");
-            } else if (config.rank == 5) {
-                useTitle = LanMgr.getLanById("105005");
-            }
+
+            this._getAllPiotCostNum += rank;
+
+            let useColor: Color = GameRankColor[rank - 1];
+
             const tempView = instantiate(this._itemView);
             tempView.active = true;
 
             // bg
             for (let i = 2; i <= 5; i++) {
-                tempView.getChildByPath("Bg/Rank_" + i).active = config.rank == i;
+                const rankBgView = tempView.getChildByPath("Bg/Rank_" + i);
+                rankBgView.active = rank == i;
+                if (rankBgView.active) {
+                    rankBgView.getChildByPath("Anim").active = threes[i].type == ItemConfigType.Artifact;
+                }
             }
 
             // name
-            tempView.getChildByName("Name").getComponent(Label).string = LanMgr.getLanById(config.name);
+            tempView.getChildByName("Name").getComponent(Label).string = name;
             tempView.getChildByName("Name").getComponent(Label).color = useColor;
 
             // item
             tempView.getChildByName("ArtifactItem").getComponent(ArtifactItem).refreshUI(new ArtifactData(threes[i].propId, 1));
 
             // title
-            tempView.getChildByName("Title").getComponent(Label).string = useTitle;
+            tempView.getChildByName("Title").getComponent(Label).string = title;
             tempView.getChildByName("Title").getComponent(Label).color = useColor;
 
             // effect
-            if (config.effect.length > 0) {
-                const firstEffectConfig = ArtifactEffectConfig.getById(config.effect[0]);
-                if (firstEffectConfig != null) {
-                    tempView.getChildByPath("StableEffect/Title").getComponent(Label).string = LanMgr.getLanById(firstEffectConfig.des);
-                }
-            }
+            tempView.getChildByPath("StableEffect/Title").getComponent(Label).string = desc;
             // button
             tempView.getChildByName("GetBtn").getComponent(Button).clickEvents[0].customEventData = i.toString();
             // useLanMgr
@@ -106,6 +144,10 @@ export class ItemSelectFromThreeUI extends ViewController {
             content.node.addChild(tempView);
         }
         content.updateLayout();
+
+        this._getAllPiotCostNum = Math.max(1, Math.floor(this._getAllPiotCostNum * costCoefficient - 1));
+
+        this.node.getChildByPath("__ViewContent/GetAllBtn/txtEnergyNum").getComponent(Label).string = this._getAllPiotCostNum.toString();
     }
 
     protected viewDidLoad(): void {
@@ -113,12 +155,31 @@ export class ItemSelectFromThreeUI extends ViewController {
 
         this._itemView = this.node.getChildByPath("__ViewContent/ImgTextBg/SelectContent/Item");
         this._itemView.active = false;
+
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_SELECT_ALL, this._onRookieTapThisSelectAll, this);
+    }
+    protected viewDidStart(): void {
+        super.viewDidStart();
+
+        const rookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep == RookieStep.OPEN_BOX_1 || rookieStep == RookieStep.OPEN_BOX_2 || rookieStep == RookieStep.OPEN_BOX_3) {
+            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
+                tag: "selectFromThree",
+                view: this.node.getChildByPath("__ViewContent/GetAllBtn"),
+                tapIndex: "-1",
+            });
+        }
     }
     protected viewPopAnimation(): boolean {
         return true;
     }
     protected contentView(): Node {
         return this.node.getChildByPath("__ViewContent");
+    }
+
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_SELECT_ALL, this._onRookieTapThisSelectAll, this);
     }
 
     //---------------------------------------------------- action
@@ -141,19 +202,31 @@ export class ItemSelectFromThreeUI extends ViewController {
 
     private async onTapGetAll() {
         GameMusicPlayMgr.playTapButtonEffect();
-        const energyNum: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Energy);
-        const needNum: number = 200;
-        if (energyNum >= needNum) {
+        const piotNum: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Gold);
+        if (this._getAllPiotCostNum > piotNum) {
+            // useLanMgr
+            // UIHUDController.showCenterTip(LanMgr.getLanById("201004"));
+            UIHUDController.showCenterTip("Insufficient resources for get all");
+            return;
+        }
+        const result = await UIPanelManger.inst.pushPanel(HUDName.Alter, UIPanelLayerType.HUD);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(AlterView).showTip(LanMgr.replaceLanById("104005", [this._getAllPiotCostNum]), async () => {
             NetworkMgr.websocketMsg.player_worldbox_open_select_artifact({
                 boxIndex: this._boxIndex,
                 artifactIndex: -1,
             });
             await this.playExitAnimation();
             UIPanelManger.inst.popPanel(this.node, UIPanelLayerType.UI);
-        } else {
-            // useLanMgr
-            // UIHUDController.showCenterTip(LanMgr.getLanById("201004"));
-            UIHUDController.showCenterTip("Insufficient resources for get all");
+        });
+    }
+
+    //----------------------------- notification
+    private _onRookieTapThisSelectAll(data: { tapIndex: string }) {
+        if (data.tapIndex == "-1") {
+            this.onTapGetAll();
         }
     }
 }

@@ -38,6 +38,8 @@ export default class UserInfoDataMgr {
         }
         const globalData: share.Iplayer_sinfo = NetGlobalData.userInfo;
         this._data = this._convertNetDataToObject(globalData);
+
+        // this._data.rookieStep = RookieStep.PIOT_TO_HEAT;
         this._initInterval();
     }
     private _initInterval() {}
@@ -71,15 +73,16 @@ export default class UserInfoDataMgr {
             NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
         }
         let step = null;
-        if (this._data != null) {
+        if (this._data != null && this._data.rookieStep != null) {
             step = this._data.rookieStep;
         }
         if (
-            newObj.rookieStep == RookieStep.NPC_TALK_3 ||
-            newObj.rookieStep == RookieStep.NPC_TALK_4 ||
-            newObj.rookieStep == RookieStep.NPC_TALK_5 ||
-            newObj.rookieStep == RookieStep.NPC_TALK_7 ||
-            newObj.rookieStep == RookieStep.SYSTEM_TALK_21
+            step != null &&
+            (newObj.rookieStep == RookieStep.NPC_TALK_3 ||
+                newObj.rookieStep == RookieStep.NPC_TALK_4 ||
+                newObj.rookieStep == RookieStep.NPC_TALK_5 ||
+                newObj.rookieStep == RookieStep.NPC_TALK_7 ||
+                newObj.rookieStep == RookieStep.SYSTEM_TALK_21)
         ) {
             newObj.rookieStep = step;
         }

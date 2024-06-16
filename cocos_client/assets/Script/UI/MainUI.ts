@@ -16,6 +16,8 @@ import CommonTools from "../Tool/CommonTools";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
 import { RookieResourceAnim, RookieResourceAnimStruct, RookieStep } from "../Const/RookieDefine";
+import TalkConfig from "../Config/TalkConfig";
+import { DialogueUI } from "./Outer/DialogueUI";
 
 const { ccclass, property } = _decorator;
 
@@ -143,7 +145,6 @@ export class MainUI extends ViewController {
         if (rookieStep >= RookieStep.FINISH) {
             taskButton.active = true;
             backpackButton.active = true;
-            nftButton.active = true;
             defendButton.active = true;
             test1Button.active = GAME_ENV_IS_DEBUG;
             test2Button.active = GAME_ENV_IS_DEBUG;
@@ -350,17 +351,17 @@ export class MainUI extends ViewController {
             return;
         }
         for (let i = 0; i < 5; i++) {
-            const resourceFly = instantiate(this.resourceFlyAnim);
-            resourceFly.setParent(this._animView);
-            resourceFly.position = fromPos;
-            tween()
-                .target(resourceFly)
-                .delay(i * 0.2)
-                .to(1, { position: toPos })
-                .call(() => {
-                    resourceFly.destroy();
-                })
-                .start();
+            // const resourceFly = instantiate(this.resourceFlyAnim);
+            // resourceFly.setParent(this._animView);
+            // resourceFly.position = fromPos;
+            // tween()
+            //     .target(resourceFly)
+            //     .delay(i * 0.2)
+            //     .to(1, { position: toPos })
+            //     .call(() => {
+            //         resourceFly.destroy();
+            //     })
+            //     .start();
 
             const icon = instantiate(moveView);
             icon.setParent(this._animView);

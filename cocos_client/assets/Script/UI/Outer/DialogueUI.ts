@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, UITransform } from "cc";
+import { _decorator, Button, Component, EventHandler, instantiate, Label, Layout, Node, UITransform, v3 } from "cc";
 import { NPCNameLangType } from "../../Const/ConstDefine";
 import { LanMgr, UserInfoMgr } from "../../Utils/Global";
 import ViewController from "../../BasicView/ViewController";
@@ -82,18 +82,27 @@ export class DialogueUI extends ViewController {
             selectView.active = false;
             dialogView.getChildByName("name_bg").active = false;
             dialogView.getChildByName("player_name").active = false;
-            if (this._roleViewNameMap.has(currentMesssage.name)) {
-                dialogView.getChildByName("name_bg").active = true;
-                dialogView.getChildByPath("name_bg/Label").getComponent(Label).string = LanMgr.getLanById(currentMesssage.name);
-            } else if (currentMesssage.name == NPCNameLangType.DefaultPlayer) {
+            if (currentMesssage.name == NPCNameLangType.DefaultPlayer) {
                 dialogView.getChildByName("player_name").active = true;
                 dialogView.getChildByPath("player_name/Label").getComponent(Label).string = DataMgr.s.userInfo.data.name;
+            } else if (LanMgr.getLanById(currentMesssage.name).indexOf("LanguageErr") == -1) {
+                dialogView.getChildByName("name_bg").active = true;
+                dialogView.getChildByPath("name_bg/Label").getComponent(Label).string = LanMgr.getLanById(currentMesssage.name);
             }
 
             dialogView.getChildByPath("dialog_bg/Label").getComponent(Label).string = LanMgr.getLanById(currentMesssage.text);
 
+            let isRoleShow: boolean = false;
             for (const roleName of this._roleNames) {
-                if (this._roleViewNameMap) dialogView.getChildByName(roleName).active = roleName == this._roleViewNameMap.get(currentMesssage.name);
+                if (this._roleViewNameMap) {
+                    dialogView.getChildByName(roleName).active = roleName == this._roleViewNameMap.get(currentMesssage.name);
+                    if (dialogView.getChildByName(roleName).active) {
+                        isRoleShow = true;
+                    }
+                }
+            }
+            if (dialogView.getChildByName("name_bg").active) {
+                dialogView.getChildByName("name_bg").position = isRoleShow ? v3(-302, dialogView.getChildByName("name_bg").position.y) : v3(-651, dialogView.getChildByName("name_bg").position.y);
             }
         } else if (currentMesssage.type == "1") {
             if (currentMesssage.text != undefined) {

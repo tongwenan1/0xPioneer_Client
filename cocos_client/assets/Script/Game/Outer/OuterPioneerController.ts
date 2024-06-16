@@ -21,6 +21,7 @@ import ViewController from "../../BasicView/ViewController";
 import UIPanelManger from "../../Basic/UIPanelMgr";
 import { DataMgr } from "../../Data/DataMgr";
 import {
+    FIGHT_FINISHED_DATA,
     MapPioneerActionType,
     MapPioneerLogicObject,
     MapPioneerLogicType,
@@ -33,6 +34,9 @@ import { OuterRebonView } from "./View/OuterRebonView";
 import GameMusicPlayMgr from "../../Manger/GameMusicPlayMgr";
 import { RookieStep } from "../../Const/RookieDefine";
 import RookieStepMgr from "../../Manger/RookieStepMgr";
+import { share } from "../../Net/msg/WebsocketMsg";
+import { ItemConfigData } from "../../Const/Item";
+import { OuterFightResultView } from "./View/OuterFightResultView";
 
 const { ccclass, property } = _decorator;
 
@@ -135,7 +139,20 @@ export class OuterPioneerController extends ViewController {
     private _rebornMap: Map<string, Node> = new Map();
 
     private _movingPioneerIds: string[] = [];
-    private _fightViewMap: Map<string, OuterFightView> = new Map();
+    private _fightDataMap: Map<
+        string,
+        {
+            isWin: boolean;
+            attackerId: string;
+            attackerHp: number;
+            attackerHpmax: number;
+            defenderId: string;
+            defenderHp: number;
+            defenderHpmax: number;
+            view: OuterFightView;
+            intervalId: number;
+        }
+    > = new Map();
     private _footPathMap: Map<string, Node[]> = new Map();
 
     private _actionPioneerView: Node = null;
@@ -170,6 +187,8 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_BEGIN_MOVE, this._onPioneerBeginMove, this);
         NotificationMgr.addListener(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, this._onPlayerPioneerDidMoveOneStep, this);
         // fight
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_SHOW_FIGHT_ANIM, this._onShowFightAnim, this);
+        NotificationMgr.addListener(NotificationName.MAP_PIONEER_FIGHT_END, this._onFightEnd, this);
         NotificationMgr.addListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
         // rebon
         NotificationMgr.addListener(NotificationName.MAP_PIONEER_REBON_CHANGE, this._refreshUI, this);
@@ -262,6 +281,8 @@ export class OuterPioneerController extends ViewController {
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_BEGIN_MOVE, this._onPioneerBeginMove, this);
         NotificationMgr.removeListener(NotificationName.MAP_PLAYER_PIONEER_DID_MOVE_STEP, this._onPlayerPioneerDidMoveOneStep, this);
         // fight
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_SHOW_FIGHT_ANIM, this._onShowFightAnim, this);
+        NotificationMgr.removeListener(NotificationName.MAP_PIONEER_FIGHT_END, this._onFightEnd, this);
         NotificationMgr.removeListener(NotificationName.MAP_FAKE_FIGHT_SHOW, this._onMapFakeFightShow, this);
         // rebon
         NotificationMgr.removeListener(NotificationName.MAP_PIONEER_REBON_CHANGE, this._refreshUI, this);
@@ -488,7 +509,6 @@ export class OuterPioneerController extends ViewController {
         }
         return footViews;
     }
-
     //--------------------------------------------- notification
     private _onRookieTapPioneer(data: { pioneerId: string }) {
         const view = this._pioneerMap.get(data.pioneerId);
@@ -636,6 +656,132 @@ export class OuterPioneerController extends ViewController {
             }
         }
         this.node.getComponent(OuterTiledMapActionController).sortMapItemSiblingIndex();
+    }
+
+    private _onShowFightAnim(data: {
+        fightDatas: share.Ifight_res[];
+        isWin: boolean;
+        attackerData: { id: string; name: string; hp: number; hpmax: number };
+        defenderData: { id: string; name: string; hp: number; hpmax: number };
+    }) {
+        const { fightDatas, isWin, attackerData, defenderData } = data;
+        const attackerView = this._pioneerMap.get(attackerData.id);
+        if (attackerView == null) {
+            return;
+        }
+        GameMusicPlayMgr.playBeginFightEffect();
+        const fightView = instantiate(this.fightPrefab).getComponent(OuterFightView);
+        fightView.node.setParent(this.node);
+        fightView.node.worldPosition = attackerView.worldPosition;
+        fightView.refreshUI(
+            {
+                name: attackerData.name,
+                hp: attackerData.hp,
+                hpMax: attackerData.hpmax,
+            },
+            {
+                name: defenderData.name,
+                hp: defenderData.hp,
+                hpMax: defenderData.hpmax,
+            },
+            true
+        );
+        const intervalId = setInterval(() => {
+            if (fightDatas.length <= 0) {
+                if (this._fightDataMap.has(attackerData.id)) {
+                    const temp = this._fightDataMap.get(attackerData.id);
+                    clearInterval(temp.intervalId);
+                }
+                return;
+            }
+            const tempFightData = fightDatas.shift();
+            if (tempFightData.attackerId == attackerData.id) {
+                // attacker action
+                defenderData.hp -= tempFightData.hp;
+            } else {
+                attackerData.hp -= tempFightData.hp;
+                NotificationMgr.triggerEvent(NotificationName.MAP_PIONEER_HP_CHANGED);
+            }
+            fightView.refreshUI(
+                {
+                    name: attackerData.name,
+                    hp: attackerData.hp,
+                    hpMax: attackerData.hpmax,
+                },
+                {
+                    name: defenderData.name,
+                    hp: defenderData.hp,
+                    hpMax: defenderData.hpmax,
+                },
+                true
+            );
+        }, 1000);
+        this._fightDataMap.set(attackerData.id, {
+            isWin: isWin,
+            attackerId: attackerData.id,
+            attackerHp: attackerData.hp,
+            attackerHpmax: attackerData.hpmax,
+
+            defenderId: defenderData.id,
+            defenderHp: defenderData.hp,
+            defenderHpmax: defenderData.hpmax,
+            view: fightView,
+            intervalId: intervalId,
+        });
+    }
+    private _onFightEnd(data: { id: string }) {
+        if (!this._fightDataMap.has(data.id)) {
+            return;
+        }
+        const fightData = this._fightDataMap.get(data.id);
+        clearInterval(fightData.intervalId);
+
+        const resultView = instantiate(this.fightResultPrefab);
+        resultView.setParent(this.node);
+        resultView.worldPosition = fightData.view.node.worldPosition;
+
+        fightData.view.node.destroy();
+
+        if (fightData.isWin) {
+            GameMusicPlayMgr.playFightWinEffect();
+
+            const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+            if (rookieStep == RookieStep.ENEMY_FIGHT && fightData.defenderId == "gangster_1") {
+                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_FIGHT_ENEMY_WIN);
+            } else if (rookieStep == RookieStep.LOCAL_SYSTEM_TALK_32) {
+                NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_FIGHT_ENEMY_WIN);
+            }
+        } else {
+            GameMusicPlayMgr.playFightFailEffect();
+        }
+        resultView.getComponent(OuterFightResultView).showResult(fightData.isWin, () => {
+            resultView.destroy();
+            const attackPioneer = DataMgr.s.pioneer.getById(fightData.attackerId);
+            const defendPioneer = DataMgr.s.pioneer.getById(fightData.defenderId);
+            if (attackPioneer != null && defendPioneer != null) {
+                NotificationMgr.triggerEvent(NotificationName.FIGHT_FINISHED, {
+                    attacker: {
+                        name: attackPioneer.name,
+                        id: attackPioneer.id,
+                        hp: fightData.attackerHp,
+                        hpMax: fightData.attackerHpmax,
+                    },
+                    defender: {
+                        name: defendPioneer.name,
+                        id: defendPioneer.id,
+                        hp: fightData.defenderHp,
+                        hpMax: fightData.defenderHpmax,
+                    },
+                    attackerIsSelf: true,
+                    buildingId: null,
+                    position: attackPioneer.stayPos,
+                    isWin: fightData.isWin,
+                    rewards: [],
+                    isWormhole: false,
+                } as FIGHT_FINISHED_DATA);
+            }
+        });
+        this._fightDataMap.delete(data.id);
     }
     private _onMapFakeFightShow(data: { stayPositions: Vec2[] }) {
         const fightView = instantiate(this.onlyFightPrefab);

@@ -1,8 +1,23 @@
-import { _decorator, Component, Node, instantiate, director, BoxCharacterController, Label, Layout, UITransform, ProgressBar, Button, tween, v3 } from "cc";
-import { UIName } from "../Const/ConstUIDefine";
+import {
+    _decorator,
+    Component,
+    Node,
+    instantiate,
+    director,
+    BoxCharacterController,
+    Label,
+    Layout,
+    UITransform,
+    ProgressBar,
+    Button,
+    tween,
+    v3,
+    Details,
+} from "cc";
+import { HUDName, UIName } from "../Const/ConstUIDefine";
 import { UIHUDController } from "./UIHUDController";
 import { BoxInfoConfigData } from "../Const/BoxInfo";
-import UIPanelManger from "../Basic/UIPanelMgr";
+import UIPanelManger, { UIPanelLayerType } from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import ConfigConfig from "../Config/ConfigConfig";
 import { BoxNumByHeatParam, ConfigType, ExploreForOneBoxParam, PiotToHeatCoefficientParam, WorldBoxThresholdParam } from "../Const/Config";
@@ -13,6 +28,8 @@ import { RookieStep } from "../Const/RookieDefine";
 import { NetworkMgr } from "../Net/NetworkMgr";
 import { ResourceCorrespondingItem } from "../Const/ConstDefine";
 import { share } from "../Net/msg/WebsocketMsg";
+import { AlterView } from "./View/AlterView";
+import { LanMgr } from "../Utils/Global";
 const { ccclass, property } = _decorator;
 
 @ccclass("HeatTreasureUI")
@@ -80,7 +97,7 @@ export class HeatTreasureUI extends Component {
         pointerView.angle = beginPointerValue + (endPointerValue - beginPointerValue) * Math.min(1, heatValue / maxHeatThreshold);
         if (heatValue >= maxHeatThreshold) {
             heatValueView.getChildByPath("Value").getComponent(Label).string = "Full";
-            heatAnimView.active = true;
+            // heatAnimView.active = true;
         } else {
             heatValueView.getChildByPath("Value").getComponent(Label).string = heatValue.toString();
             heatAnimView.active = false;
@@ -242,7 +259,7 @@ export class HeatTreasureUI extends Component {
             });
         }
     }
-    private onTapConvertPiotToHeat() {
+    private async onTapConvertPiotToHeat() {
         const piotNum: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Gold);
         const coefficient: number = (ConfigConfig.getConfig(ConfigType.PiotToHeatCoefficient) as PiotToHeatCoefficientParam).coefficient;
         if (piotNum * coefficient < 1) {
@@ -251,9 +268,16 @@ export class HeatTreasureUI extends Component {
             return;
         }
         let converNum: number = Math.floor(piotNum * coefficient);
-        converNum = 1;
-        NetworkMgr.websocketMsg.player_piot_to_heat({
-            piotNum: converNum * (1 / coefficient),
+        converNum = 10;
+        const costPiotNum: number = converNum * (1 / coefficient);
+        const result = await UIPanelManger.inst.pushPanel(HUDName.Alter, UIPanelLayerType.HUD);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(AlterView).showTip(LanMgr.replaceLanById("104005", [costPiotNum]), () => {
+            NetworkMgr.websocketMsg.player_piot_to_heat({
+                piotNum: costPiotNum,
+            });
         });
     }
     private onTapDetail() {
@@ -267,20 +291,21 @@ export class HeatTreasureUI extends Component {
 
     //----------------------------------- notification
     private _onHeatChange() {
+        const rookieStep = DataMgr.s.userInfo.data.rookieStep;
         const heatAnimView = this.node.getChildByPath("__ViewContent/Content/HeatProgress/HeatAnim");
-
         let delayTime: number = 1.5;
         if (heatAnimView.active) {
             delayTime = 0;
         }
-        heatAnimView.active = true;
+        // heatAnimView.active = true;
+        delayTime = 0;
         this.scheduleOnce(() => {
             this._refreshUI();
             if (DataMgr.s.userInfo.data.rookieStep == RookieStep.PIOT_TO_HEAT) {
                 this.scheduleOnce(() => {
                     DataMgr.s.userInfo.data.rookieStep = RookieStep.NPC_TALK_4;
                     NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
-                }, 0.1);
+                }, 0.2);
             }
         }, delayTime);
     }

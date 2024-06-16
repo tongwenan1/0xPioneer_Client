@@ -3,28 +3,44 @@ import ViewController from "../../BasicView/ViewController";
 import UIPanelManger, { UIPanelLayerType } from "../../Basic/UIPanelMgr";
 import { LanMgr } from "../../Utils/Global";
 import GameMusicPlayMgr from "../../Manger/GameMusicPlayMgr";
+import { RookieStep } from "../../Const/RookieDefine";
+import { DataMgr } from "../../Data/DataMgr";
+import NotificationMgr from "../../Basic/NotificationMgr";
+import { NotificationName } from "../../Const/Notification";
 
 const { ccclass, property } = _decorator;
 
-@ccclass('AlterView')
+@ccclass("AlterView")
 export class AlterView extends ViewController {
-
-    public showTip(tip: string, confirmCallback: ()=> void = null, cancelCallback: ()=> void = null) {
+    public showTip(tip: string, confirmCallback: () => void = null, cancelCallback: () => void = null) {
         // useLanMgr
         // this.node.getChildByPath("Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("Content/ConfrimButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("Content/CancelButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
-
-        
         this.node.getChildByPath("Content/Tip").getComponent(Label).string = tip;
         this._confirmCallback = confirmCallback;
         this._cancelCallback = cancelCallback;
     }
 
-    private _confirmCallback: ()=> void = null;
-    private _cancelCallback: ()=> void = null;
+    private _confirmCallback: () => void = null;
+    private _cancelCallback: () => void = null;
     protected viewDidLoad(): void {
         super.viewDidLoad();
+
+        NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_ALTER_CONFRIM, this._onRookieTapThis, this);
+    }
+
+    protected viewDidAppear(): void {
+        super.viewDidAppear();
+
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
+        if (rookieStep != RookieStep.FINISH) {
+            NotificationMgr.triggerEvent(NotificationName.ROOKIE_GUIDE_NEED_MASK_SHOW, {
+                tag: "alterConfrim",
+                view: this.node.getChildByPath("Content/ConfrimButton"),
+                tapIndex: "-1",
+            });
+        }
     }
 
     protected viewPopAnimation(): boolean {
@@ -34,6 +50,11 @@ export class AlterView extends ViewController {
         return this.node.getChildByPath("Content");
     }
 
+    protected viewDidDestroy(): void {
+        super.viewDidDestroy();
+
+        NotificationMgr.removeListener(NotificationName.ROOKIE_GUIDE_TAP_ALTER_CONFRIM, this._onRookieTapThis, this);
+    }
 
     //-------------------------------- action
     private async onTapConfrim() {
@@ -51,6 +72,13 @@ export class AlterView extends ViewController {
         UIPanelManger.inst.popPanel(this.node, UIPanelLayerType.HUD);
         if (this._cancelCallback != null) {
             this._cancelCallback();
+        }
+    }
+
+    //----------------------------- notification
+    private _onRookieTapThis(data: { tapIndex: string }) {
+        if (data.tapIndex == "-1") {
+            this.onTapConfrim();
         }
     }
 }
