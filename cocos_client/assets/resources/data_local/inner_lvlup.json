@@ -21,8 +21,8 @@
     "prefab_barr": "Damage_house_B",
     "desc_barr": "121002",
     "max_barr": 1500,
-    "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8003,50]]",
+    "time_barr": 20,
+    "rec_cost_barr": "[[8001,10],[8003,5]]",
     "prefab_house": "Damage_house_A",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV1_Group",
@@ -51,11 +51,11 @@
     "cost_main": [
       [
         8002,
-        200
+        150
       ],
       [
         8003,
-        200
+        240
       ]
     ],
     "prefab_main": "Headquarters",
@@ -63,7 +63,7 @@
     "cost_barr": [
       [
         8002,
-        200
+        120
       ],
       [
         8003,
@@ -73,8 +73,8 @@
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
     "max_barr": 2000,
-    "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8003,50]]",
+    "time_barr": 18,
+    "rec_cost_barr": "[[8001,10],[8003,5]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV1_Group",
@@ -107,7 +107,7 @@
       ],
       [
         8003,
-        300
+        480
       ]
     ],
     "prefab_main": "Headquarters",
@@ -115,18 +115,18 @@
     "cost_barr": [
       [
         8002,
-        300
+        240
       ],
       [
         8003,
-        300
+        400
       ]
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
     "max_barr": 2500,
-    "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8003,50]]",
+    "time_barr": 16,
+    "rec_cost_barr": "[[8001,10],[8003,5]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -155,11 +155,11 @@
     "cost_main": [
       [
         8002,
-        400
+        450
       ],
       [
         8003,
-        400
+        600
       ]
     ],
     "prefab_main": "Headquarters",
@@ -167,18 +167,18 @@
     "cost_barr": [
       [
         8002,
-        400
+        360
       ],
       [
         8003,
-        400
+        600
       ]
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
     "max_barr": 3000,
-    "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8003,50]]",
+    "time_barr": 14,
+    "rec_cost_barr": "[[8001,10],[8003,5]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -207,11 +207,11 @@
     "cost_main": [
       [
         8002,
-        500
+        600
       ],
       [
         8003,
-        500
+        720
       ]
     ],
     "prefab_main": "Headquarters",
@@ -219,18 +219,18 @@
     "cost_barr": [
       [
         8002,
-        500
+        480
       ],
       [
         8003,
-        500
+        800
       ]
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
     "max_barr": 3500,
-    "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8003,50]]",
+    "time_barr": 12,
+    "rec_cost_barr": "[[8001,8],[8003,4]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -259,11 +259,11 @@
     "cost_main": [
       [
         8002,
-        600
+        800
       ],
       [
         8003,
-        600
+        1000
       ]
     ],
     "prefab_main": "Headquarters",
@@ -275,14 +275,14 @@
       ],
       [
         8003,
-        600
+        1000
       ]
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
     "max_barr": 4000,
-    "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8003,50]]",
+    "time_barr": 10,
+    "rec_cost_barr": "[[8001,8],[8003,4]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -311,11 +311,11 @@
     "cost_main": [
       [
         8002,
-        700
+        1000
       ],
       [
         8003,
-        700
+        1400
       ]
     ],
     "prefab_main": "Headquarters",
@@ -323,18 +323,18 @@
     "cost_barr": [
       [
         8002,
-        700
+        720
       ],
       [
         8003,
-        700
+        1200
       ]
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
     "max_barr": 4500,
-    "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8003,50]]",
+    "time_barr": 9,
+    "rec_cost_barr": "[[8001,8],[8003,4]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -363,11 +363,11 @@
     "cost_main": [
       [
         8002,
-        800
+        1200
       ],
       [
         8003,
-        800
+        2000
       ]
     ],
     "prefab_main": "Headquarters",
@@ -375,18 +375,18 @@
     "cost_barr": [
       [
         8002,
-        800
+        1000
       ],
       [
         8003,
-        800
+        1500
       ]
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
     "max_barr": 5000,
-    "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8003,50]]",
+    "time_barr": 8,
+    "rec_cost_barr": "[[8001,6],[8003,3]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -415,11 +415,11 @@
     "cost_main": [
       [
         8002,
-        900
+        1500
       ],
       [
         8003,
-        900
+        2700
       ]
     ],
     "prefab_main": "Headquarters",
@@ -427,18 +427,18 @@
     "cost_barr": [
       [
         8002,
-        900
+        1500
       ],
       [
         8003,
-        900
+        2000
       ]
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
     "max_barr": 5500,
-    "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8003,50]]",
+    "time_barr": 7,
+    "rec_cost_barr": "[[8001,6],[8003,3]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
@@ -467,11 +467,11 @@
     "cost_main": [
       [
         8002,
-        1000
+        1800
       ],
       [
         8003,
-        1000
+        3600
       ]
     ],
     "prefab_main": "Headquarters",
@@ -479,18 +479,18 @@
     "cost_barr": [
       [
         8002,
-        1000
+        2000
       ],
       [
         8003,
-        1000
+        3000
       ]
     ],
     "prefab_barr": "Pioneer_factory_A",
     "desc_barr": "121002",
     "max_barr": 6000,
-    "time_barr": 5,
-    "rec_cost_barr": "[[8001,100],[8003,50]]",
+    "time_barr": 6,
+    "rec_cost_barr": "[[8001,5],[8003,3]]",
     "prefab_house": "Pioneer_house",
     "desc_house": "121003",
     "prefab_energy": "Energy_Station_LV2_Group",
