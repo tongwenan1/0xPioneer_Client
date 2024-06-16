@@ -174,7 +174,7 @@
     "complete_action": null,
     "quit_con": null,
     "progress": 0,
-    "exp": 0
+    "exp": 20
   },
   "770201": {
     "id": "770201",
@@ -229,7 +229,7 @@
     ],
     "quit_con": null,
     "progress": 100,
-    "exp": 0
+    "exp": 10
   },
   "task0101": {
     "id": "task0101",

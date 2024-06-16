@@ -2023,6 +2023,14 @@
     "id": "503086",
     "eng": "When other players attack our town via the wormhole, we can deploy characters to protect it from looting. With the defense set, I'll need to explore further. I noticed a suspicious person lurking nearby. I should check it out."
   },
+  "503087": {
+    "id": "503087",
+    "eng": "Beware! It seems something is coming!"
+  },
+  "503088": {
+    "id": "503088",
+    "eng": "It appears that there are two people coming over to join us."
+  },
   "504001": {
     "id": "504001",
     "eng": "Well…I'll try"
