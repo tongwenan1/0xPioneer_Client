@@ -45,7 +45,7 @@ export class TreasureGettedUI extends ViewController {
         itemShowNode.scale = v3(0.01, 0.01, 0.01);
         itemShowNode.active = false;
 
-        let closeDelayTime: number = 0;
+        let closeDelayTime: number = 0.2;
         if (threes.length > 0) {
         } else {
             closeDelayTime = 0.6 + 0.5;
@@ -92,10 +92,12 @@ export class TreasureGettedUI extends ViewController {
             .delay(3)
             .call(() => {
                 GameMusicPlayMgr.playOpenBoxStep2Effect();
+                console.log("exce play");
             })
             .delay(2.5)
             .set({ active: true })
             .call(() => {
+                console.log("exce itemshow: " + itemShowAnim.active);
                 itemShowAnim.getChildByName("Treasure_box_open_a").getComponent(ParticleSystem2D).resetSystem();
                 itemShowAnim.getChildByName("Treasure_box_open_b").getComponent(ParticleSystem2D).resetSystem();
             })
