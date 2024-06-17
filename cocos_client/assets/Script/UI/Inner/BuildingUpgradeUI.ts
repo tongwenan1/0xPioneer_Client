@@ -28,6 +28,7 @@ export class BuildingUpgradeUI extends ViewController {
         // useLanMgr
         // buildingInfoView.getChildByPath("Bg/Title").getComponent(Label).string = LanMgr.getLanById("107549");
         const innerData = DataMgr.s.innerBuilding.data;
+        console.log("exce map:", this._buildingMap);
         innerData.forEach((value: UserInnerBuildInfo, key: InnerBuildingType) => {
             if (this._buildingMap.has(key)) {
                 const innerConfig = InnerBuildingConfig.getByBuildingType(key);
@@ -35,7 +36,11 @@ export class BuildingUpgradeUI extends ViewController {
                     const view = this._buildingMap.get(key);
                     view.getChildByPath("Title/Label").getComponent(Label).string = LanMgr.getLanById(innerConfig.name);
                     view.getChildByPath("Level").getComponent(Label).string = "Lv." + value.buildLevel;
+
                     view.getComponent(Button).clickEvents[0].customEventData = value.buildType;
+                    if (view.name == "Barracks") {
+                        console.log("exce bu:", view.getComponent(Button));
+                    }
 
                     const levelConfig = InnerBuildingLvlUpConfig.getBuildingLevelData(value.buildLevel + 1, innerConfig.lvlup_cost);
                     if (levelConfig != null) {
@@ -123,6 +128,7 @@ export class BuildingUpgradeUI extends ViewController {
     }
 
     private _refreshUpgradeUI(buildingType: InnerBuildingType) {
+        console.log("exce reui: " + buildingType);
         if (buildingType == null) {
             return;
         }
@@ -212,6 +218,7 @@ export class BuildingUpgradeUI extends ViewController {
     //----------------------------- action
     private onTapBuildingUpgradeShow(event: Event, customEventData: string) {
         GameMusicPlayMgr.playTapButtonEffect();
+        console.log("exce cu: " + customEventData);
         const buildingType: InnerBuildingType = customEventData as InnerBuildingType;
         this._levelInfoView.active = true;
         this._curBuildingType = buildingType;
