@@ -60,14 +60,14 @@ export class GameMain extends ViewController {
             GameMainHelper.instance.changeCursor(ECursorType.Common);
         }
         if (loadingAnim) {
-            const result = await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.HUD);
+            const result = await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.ROOKIE);
             if (!result.success) {
                 return;
             }
             this.scheduleOnce(() => {
                 result.node.getComponent(LoadingUI).showLoadingProgress(1);
                 this.scheduleOnce(() => {
-                    UIPanelManger.inst.popPanel(result.node, UIPanelLayerType.HUD);
+                    UIPanelManger.inst.popPanel(result.node, UIPanelLayerType.ROOKIE);
                 }, 0.2);
             }, 0.3);
         }
@@ -78,9 +78,10 @@ export class GameMain extends ViewController {
         let loadingAnim: boolean = true;
         const isOuterShow: boolean = GameMainHelper.instance.isGameShowOuter;
         if (!isOuterShow && this._innerView == null) {
+            const beginTime: number = new Date().getTime();
             const result = await ResourcesMgr.initBundle(BundleName.InnerBundle);
             if (result.succeed) {
-                const loadingResult = await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.HUD);
+                const loadingResult = await UIPanelManger.inst.pushPanel(HUDName.Loading, UIPanelLayerType.ROOKIE);
                 result.bundle.loadDir(
                     "",
                     async (finished: number, total: number, item: AssetManager.RequestItem) => {
@@ -92,7 +93,12 @@ export class GameMain extends ViewController {
                         }
                     },
                     async (err: Error, data: Asset[]) => {
-                        UIPanelManger.inst.popPanel(loadingResult.node, UIPanelLayerType.HUD);
+                        const endTime: number = new Date().getTime();
+                        if (endTime - beginTime < 300) {
+                            this.scheduleOnce(() => {
+                                UIPanelManger.inst.popPanel(loadingResult.node, UIPanelLayerType.ROOKIE);
+                            }, 0.3 - (endTime - beginTime) / 1000);
+                        }
                         const innerViewResult = await ResourcesMgr.loadResource(BundleName.InnerBundle, "prefab/game/InnerSceneRe", Prefab);
                         if (innerViewResult != null) {
                             this._innerView = instantiate(innerViewResult);

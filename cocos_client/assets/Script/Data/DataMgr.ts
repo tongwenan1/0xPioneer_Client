@@ -812,6 +812,7 @@ export class DataMgr {
             nextStep = RookieStep.SYSTEM_TALK_21;
         }
         if (nextStep != null) {
+            DataMgr.s.userInfo.data.rookieStep = nextStep;
             NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
         }
     };
