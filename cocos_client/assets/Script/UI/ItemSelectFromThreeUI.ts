@@ -230,10 +230,18 @@ export class ItemSelectFromThreeUI extends ViewController {
             return;
         }
         result.node.getComponent(AlterView).showTip(LanMgr.replaceLanById("104005", [this._getAllPiotCostNum]), async () => {
-            NetworkMgr.websocketMsg.player_worldbox_open_select_artifact({
-                boxIndex: this._boxIndex,
-                artifactIndex: -1,
-            });
+            const rookieStep = DataMgr.s.userInfo.data.rookieStep;
+            if (rookieStep == RookieStep.OPEN_BOX_1 || rookieStep == RookieStep.OPEN_BOX_2 || rookieStep == RookieStep.OPEN_BOX_3) {
+                NetworkMgr.websocketMsg.player_worldbox_beginner_open_select_artifact({
+                    boxIndex: this._boxIndex,
+                    artifactIndex: -1,
+                });
+            } else {
+                NetworkMgr.websocketMsg.player_worldbox_open_select_artifact({
+                    boxIndex: this._boxIndex,
+                    artifactIndex: -1,
+                });
+            }
             await this.playExitAnimation();
             UIPanelManger.inst.popPanel(this.node, UIPanelLayerType.UI);
         });

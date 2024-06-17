@@ -121,6 +121,9 @@ export class WebsocketMsg {
     public player_worldbox_open_select_artifact(d: c2s_user.Iplayer_worldbox_open_select_artifact) {
         this.send_packet("player_worldbox_open_select_artifact", d);
     }
+    public player_worldbox_beginner_open_select_artifact(d: c2s_user.Iplayer_worldbox_beginner_open_select_artifact) {
+        this.send_packet("player_worldbox_beginner_open_select_artifact", d);
+    }
     public player_artifact_change(d: c2s_user.Iplayer_artifact_change) {
         this.send_packet("player_artifact_change", d);
     }
@@ -308,6 +311,10 @@ export namespace c2s_user {
         boxIndex: number;
     }
     export interface Iplayer_worldbox_open_select_artifact {
+        boxIndex: number;
+        artifactIndex: number;
+    }
+    export interface Iplayer_worldbox_beginner_open_select_artifact {
         boxIndex: number;
         artifactIndex: number;
     }
