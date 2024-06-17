@@ -319,7 +319,7 @@ export class OuterBuildingView extends ViewController {
         sand_mineral: 120,
         swamp_jungle: 120,
         treasure: 120,
-        city: 200,
+        city: 240,
     };
     protected viewDidLoad(): void {
         super.viewDidLoad();
@@ -403,6 +403,7 @@ export class OuterBuildingView extends ViewController {
                 this._toGetEnergyTip.active = true;
             }
         }
+        this._toGetEnergyTip.active = false;
     }
     private _refreshBuildTipShow() {
         if (this._toBuildBuildingTip == null) {
