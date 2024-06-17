@@ -174,8 +174,8 @@ export class ItemSelectFromThreeUI extends ViewController {
 
         NotificationMgr.addListener(NotificationName.ROOKIE_GUIDE_TAP_SELECT_ALL, this._onRookieTapThisSelectAll, this);
     }
-    protected viewDidStart(): void {
-        super.viewDidStart();
+    protected viewDidAppear(): void {
+        super.viewDidAppear();
 
         const rookieStep = DataMgr.s.userInfo.data.rookieStep;
         if (rookieStep == RookieStep.OPEN_BOX_1 || rookieStep == RookieStep.OPEN_BOX_2 || rookieStep == RookieStep.OPEN_BOX_3) {

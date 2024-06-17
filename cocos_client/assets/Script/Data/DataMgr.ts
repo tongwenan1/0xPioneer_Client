@@ -760,21 +760,60 @@ export class DataMgr {
         if (p.res !== 1) {
             return;
         }
+        let threes: share.Iartifact_three_conf[] = [];
+        if (p.threes != null) {
+            const keys = Object.keys(p.threes);
+            if (keys.length > 0) {
+                threes = p.threes[keys[0]].confs;
+            }
+        }
+
+        if (threes.length <= 0) {
+            // select from three cannot to next step
+            const rookieStep = DataMgr.s.userInfo.data.rookieStep;
+            if (rookieStep == RookieStep.OPEN_BOX_1 && p.boxId == "9001") {
+                NetworkMgr.websocketMsg.player_rookie_update({
+                    rookieStep: RookieStep.NPC_TALK_5,
+                });
+            } else if (rookieStep == RookieStep.OPEN_BOX_2 && p.boxId == "9002") {
+                NetworkMgr.websocketMsg.player_rookie_update({
+                    rookieStep: RookieStep.NPC_TALK_7,
+                });
+            } else if (rookieStep == RookieStep.OPEN_BOX_3 && p.boxId == "9003") {
+                NetworkMgr.websocketMsg.player_rookie_update({
+                    rookieStep: RookieStep.SYSTEM_TALK_21,
+                });
+            }
+        }
+
+        this._playOpenBoxAnim(p.boxIndex, p.boxId, p.items, p.artifacts, p.threes);
+    };
+    public static player_worldbox_beginner_open_select_artifact_res = (e: any) => {
+        const p: s2c_user.Iplayer_worldbox_beginner_open_select_artifact_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        let nextStep: RookieStep = null;
         const rookieStep = DataMgr.s.userInfo.data.rookieStep;
-        if (rookieStep == RookieStep.OPEN_BOX_1 && p.boxId == "9001") {
+        if (rookieStep == RookieStep.OPEN_BOX_1) {
             NetworkMgr.websocketMsg.player_rookie_update({
                 rookieStep: RookieStep.NPC_TALK_5,
             });
-        } else if (rookieStep == RookieStep.OPEN_BOX_2 && p.boxId == "9002") {
+            nextStep = RookieStep.NPC_TALK_5;
+        } else if (rookieStep == RookieStep.OPEN_BOX_2) {
             NetworkMgr.websocketMsg.player_rookie_update({
                 rookieStep: RookieStep.NPC_TALK_7,
             });
-        } else if (rookieStep == RookieStep.OPEN_BOX_3 && p.boxId == "9003") {
+            nextStep = RookieStep.NPC_TALK_7;
+        } else if (rookieStep == RookieStep.OPEN_BOX_3) {
             NetworkMgr.websocketMsg.player_rookie_update({
                 rookieStep: RookieStep.SYSTEM_TALK_21,
             });
+            nextStep = RookieStep.SYSTEM_TALK_21;
         }
-        this._playOpenBoxAnim(p.boxIndex, p.boxId, p.items, p.artifacts, p.threes);
+        if (nextStep != null) {
+            NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
+        }
     };
     public static player_worldbox_open_res = async (e: any) => {
         const p: s2c_user.Iplayer_worldbox_open_res = e.data;

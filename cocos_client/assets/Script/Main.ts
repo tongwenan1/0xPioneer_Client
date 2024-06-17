@@ -225,8 +225,9 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("get_user_task_info_res", DataMgr.get_user_task_info_res);
         NetworkMgr.websocket.on("user_task_action_talk", DataMgr.user_task_action_talk);
 
-        // box
+        // box  
         NetworkMgr.websocket.on("player_worldbox_beginner_open_res", DataMgr.player_worldbox_beginner_open_res);
+        NetworkMgr.websocket.on("player_worldbox_beginner_open_select_artifact_res", DataMgr.player_worldbox_beginner_open_select_artifact_res);
         NetworkMgr.websocket.on("player_worldbox_open_res", DataMgr.player_worldbox_open_res);
 
         //settlement

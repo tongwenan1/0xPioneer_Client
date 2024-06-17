@@ -514,6 +514,11 @@ export namespace s2c_user {
         artifacts: share.Iartifact_info_data[];
         threes: { [key: string]: share.Iartifact_three_confs };
     }
+    export interface Iplayer_worldbox_beginner_open_select_artifact_res {
+        res: number;
+        boxIndex: number;
+        artifactIndex: number;
+    }
     export interface Iplayer_worldbox_open_res {
         res: number;
         boxId: string;
