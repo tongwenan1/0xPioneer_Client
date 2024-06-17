@@ -103,7 +103,7 @@ export class ItemSelectFromThreeUI extends ViewController {
                 }
                 if (artifactConfig.effect.length > 0) {
                     const firstEffectConfig = ArtifactEffectConfig.getById(artifactConfig.effect[0]);
-                    desc = firstEffectConfig.des;
+                    desc = LanMgr.getLanById(firstEffectConfig.des);
                 }
                 data = new ArtifactData(threes[i].propId, threes[i].num);
             }
@@ -119,9 +119,9 @@ export class ItemSelectFromThreeUI extends ViewController {
             tempView.active = true;
 
             // bg
-            for (let i = 2; i <= 5; i++) {
-                const rankBgView = tempView.getChildByPath("Bg/Rank_" + i);
-                rankBgView.active = rank == i;
+            for (let j = 1; j <= 5; j++) {
+                const rankBgView = tempView.getChildByPath("Bg/Rank_" + j);
+                rankBgView.active = rank == j;
                 if (rankBgView.active) {
                     rankBgView.getChildByPath("Anim").active = threes[i].type == ItemConfigType.Artifact;
                 }
@@ -134,12 +134,12 @@ export class ItemSelectFromThreeUI extends ViewController {
             // item
             const itemView = tempView.getChildByPath("BackpackItem");
             const artifactView = tempView.getChildByPath("ArtifactItem");
-            if (data as ItemData) {
+            console.log("exce data: ", data);
+            if (data instanceof ItemData) {
                 itemView.active = true;
                 artifactView.active = false;
-
                 itemView.getComponent(BackpackItem).refreshUI(data as ItemData);
-            } else if (data as ArtifactData) {
+            } else if (data instanceof ArtifactData) {
                 itemView.active = false;
                 artifactView.active = true;
 

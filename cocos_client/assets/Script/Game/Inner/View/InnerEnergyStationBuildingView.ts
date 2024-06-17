@@ -125,6 +125,7 @@ export class InnerEnergyStationBuildingView extends InnerBuildingView {
             this._getInfoView.getChildByPath("BottomContent/PerNum").getComponent(Label).string = this._limitGetTimes.toString();
             this._getInfoView.getChildByPath("BottomContent").getComponent(Layout).updateLayout();
         }
+        this._produceInfoView.active = false;
         this._getInfoView.active = false;
     }
     //------------------------------- action

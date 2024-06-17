@@ -152,7 +152,7 @@ export class MainUI extends ViewController {
             battleReportButton.active = true;
             innerOuterChangeButton.active = true;
 
-            innerBuildButton.active = !GameMainHelper.instance.isGameShowOuter;
+            // innerBuildButton.active = !GameMainHelper.instance.isGameShowOuter;
 
             taskTrackView.active = true;
         } else if (rookieStep >= RookieStep.DEFEND_TAP) {

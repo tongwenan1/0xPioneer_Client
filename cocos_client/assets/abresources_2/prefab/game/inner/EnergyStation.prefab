@@ -430,7 +430,7 @@
     ],
     "value": {
       "__type__": "cc.Size",
-      "width": 152.27987670898438,
+      "width": 151.19140625,
       "height": 37.8
     }
   },
@@ -659,7 +659,7 @@
         "__id__": 78
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 118
