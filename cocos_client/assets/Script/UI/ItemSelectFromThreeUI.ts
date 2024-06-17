@@ -44,6 +44,7 @@ import { AlterView } from "./View/AlterView";
 import { RookieStep } from "../Const/RookieDefine";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
+import { BackpackItem } from "./BackpackItem";
 const { ccclass, property } = _decorator;
 
 @ccclass("ItemSelectFromThreeUI")
@@ -71,6 +72,7 @@ export class ItemSelectFromThreeUI extends ViewController {
             let name: string = "";
             let title: string = "";
             let desc: string = "";
+            let data: ItemData | ArtifactData = null;
             if (threes[i].type == ItemConfigType.Item) {
                 const itemConfig = ItemConfig.getById(threes[i].propId);
                 if (itemConfig == null) {
@@ -80,6 +82,7 @@ export class ItemSelectFromThreeUI extends ViewController {
                 name = "";
                 title = LanMgr.getLanById(itemConfig.itemName) + "*" + threes[i].num;
                 desc = LanMgr.getLanById(itemConfig.itemDesc);
+                data = new ItemData(threes[i].propId, threes[i].num);
             } else if (threes[i].type == ItemConfigType.Artifact) {
                 const artifactConfig = ArtifactConfig.getById(threes[i].propId);
                 if (artifactConfig == null) {
@@ -102,6 +105,7 @@ export class ItemSelectFromThreeUI extends ViewController {
                     const firstEffectConfig = ArtifactEffectConfig.getById(artifactConfig.effect[0]);
                     desc = firstEffectConfig.des;
                 }
+                data = new ArtifactData(threes[i].propId, threes[i].num);
             }
             if (rank == 0) {
                 continue;
@@ -128,7 +132,19 @@ export class ItemSelectFromThreeUI extends ViewController {
             tempView.getChildByName("Name").getComponent(Label).color = useColor;
 
             // item
-            tempView.getChildByName("ArtifactItem").getComponent(ArtifactItem).refreshUI(new ArtifactData(threes[i].propId, 1));
+            const itemView = tempView.getChildByPath("BackpackItem");
+            const artifactView = tempView.getChildByPath("ArtifactItem");
+            if (data as ItemData) {
+                itemView.active = true;
+                artifactView.active = false;
+
+                itemView.getComponent(BackpackItem).refreshUI(data as ItemData);
+            } else if (data as ArtifactData) {
+                itemView.active = false;
+                artifactView.active = true;
+
+                artifactView.getComponent(ArtifactItem).refreshUI(data as ArtifactData);
+            }
 
             // title
             tempView.getChildByName("Title").getComponent(Label).string = title;
