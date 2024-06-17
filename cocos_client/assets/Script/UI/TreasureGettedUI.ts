@@ -59,7 +59,7 @@ export class TreasureGettedUI extends ViewController {
             } else if (items.length > 0) {
                 data = items[0];
             }
-            if (data as ItemData) {
+            if (data instanceof ItemData) {
                 //item
                 const temple = data as ItemData;
                 let itemConf = ItemConfig.getById(temple.itemConfigId);
@@ -67,7 +67,7 @@ export class TreasureGettedUI extends ViewController {
                     iconspr.spriteFrame = await ItemMgr.getItemIcon(itemConf.icon);
                     rank = itemConf.grade;
                 }
-            } else if (data as ArtifactData) {
+            } else if (data instanceof ArtifactData) {
                 // artifact
                 const temple = data as ArtifactData;
                 const artifactConf = ArtifactConfig.getById(temple.artifactConfigId);
