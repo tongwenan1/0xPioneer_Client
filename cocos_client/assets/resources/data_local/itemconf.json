@@ -248,7 +248,7 @@
     "itemType": 0,
     "icon": "icon_8001",
     "itemName": "401019",
-    "itemDesc": "",
+    "itemDesc": "402020",
     "grade": 1,
     "gain_item": null,
     "skill_learn": ""
@@ -258,7 +258,7 @@
     "itemType": 0,
     "icon": "icon_8002",
     "itemName": "401020",
-    "itemDesc": "",
+    "itemDesc": "402021",
     "grade": 1,
     "gain_item": null,
     "skill_learn": ""
@@ -268,7 +268,7 @@
     "itemType": 0,
     "icon": "icon_8003",
     "itemName": "401021",
-    "itemDesc": "",
+    "itemDesc": "402022",
     "grade": 1,
     "gain_item": null,
     "skill_learn": ""
@@ -278,7 +278,7 @@
     "itemType": 0,
     "icon": "icon_8004",
     "itemName": "401022",
-    "itemDesc": "",
+    "itemDesc": "402023",
     "grade": 1,
     "gain_item": null,
     "skill_learn": ""
@@ -288,7 +288,7 @@
     "itemType": 0,
     "icon": "icon_8005",
     "itemName": "401023",
-    "itemDesc": "",
+    "itemDesc": "402024",
     "grade": 3,
     "gain_item": null,
     "skill_learn": ""
@@ -298,7 +298,7 @@
     "itemType": 0,
     "icon": "icon_8006",
     "itemName": "401024",
-    "itemDesc": "",
+    "itemDesc": "402025",
     "grade": 4,
     "gain_item": null,
     "skill_learn": ""

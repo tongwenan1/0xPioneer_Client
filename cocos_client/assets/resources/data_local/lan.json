@@ -1377,27 +1377,27 @@
   },
   "401019": {
     "id": "401019",
-    "eng": "food"
+    "eng": "Food"
   },
   "401020": {
     "id": "401020",
-    "eng": "wood"
+    "eng": "Wood"
   },
   "401021": {
     "id": "401021",
-    "eng": "stone"
+    "eng": "Stone"
   },
   "401022": {
     "id": "401022",
-    "eng": "troop"
+    "eng": "Troop"
   },
   "401023": {
     "id": "401023",
-    "eng": "energy"
+    "eng": "PSYC"
   },
   "401024": {
     "id": "401024",
-    "eng": "gold"
+    "eng": "PIOT"
   },
   "401025": {
     "id": "401025",
@@ -1470,6 +1470,30 @@
   "402019": {
     "id": "402019",
     "eng": "The proof given by the chief."
+  },
+  "402020": {
+    "id": "402020",
+    "eng": "One of the basic resources in this world. You may get foods from Desert Oasis."
+  },
+  "402021": {
+    "id": "402021",
+    "eng": "One of the basic resources in this world. You may get woods from Deadwood Marsh."
+  },
+  "402022": {
+    "id": "402022",
+    "eng": "One of the basic resources in this world. You may get stones from Desert Grotto."
+  },
+  "402023": {
+    "id": "402023",
+    "eng": "You will need this to recover your pioneers' HP. Try to recruit more through the Barrack."
+  },
+  "402024": {
+    "id": "402024",
+    "eng": "PSYC is the basic energy for most of your actions."
+  },
+  "402025": {
+    "id": "402025",
+    "eng": "You can earn more benefits by burning PIOT, such as more treasure chests, all the items inside the chests, etc."
   },
   "501001": {
     "id": "501001",
