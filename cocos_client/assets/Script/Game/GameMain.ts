@@ -98,6 +98,8 @@ export class GameMain extends ViewController {
                             this.scheduleOnce(() => {
                                 UIPanelManger.inst.popPanel(loadingResult.node, UIPanelLayerType.ROOKIE);
                             }, 0.3 - (endTime - beginTime) / 1000);
+                        } else {
+                            UIPanelManger.inst.popPanel(loadingResult.node, UIPanelLayerType.ROOKIE);
                         }
                         const innerViewResult = await ResourcesMgr.loadResource(BundleName.InnerBundle, "prefab/game/InnerSceneRe", Prefab);
                         if (innerViewResult != null) {
