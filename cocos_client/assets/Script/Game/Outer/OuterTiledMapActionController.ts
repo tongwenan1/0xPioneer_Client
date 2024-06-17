@@ -17,6 +17,8 @@ import {
     TiledMap,
     Animation,
     view,
+    find,
+    Layers,
 } from "cc";
 import { InnerBuildingType, MapBuildingType } from "../../Const/BuildingDefine";
 import {
@@ -57,6 +59,7 @@ import GameMusicPlayMgr from "../../Manger/GameMusicPlayMgr";
 import NotificationMgr from "../../Basic/NotificationMgr";
 import { NotificationName } from "../../Const/Notification";
 import { RookieStep } from "../../Const/RookieDefine";
+import CommonTools from "../../Tool/CommonTools";
 
 const { ccclass, property } = _decorator;
 
@@ -297,7 +300,7 @@ export class OuterTiledMapActionController extends ViewController {
             GameMainHelper.instance.tiledMapShadowErase(shadow);
         }
 
-        this._eraseMainCityShadow();
+        this._eraseMainCityShadow();        
     }
 
     protected viewDidAppear(): void {

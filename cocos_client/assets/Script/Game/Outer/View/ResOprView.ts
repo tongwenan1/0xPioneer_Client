@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, instantiate, Label, Layout, log, Node, Sprite, UITransform, v2, v3, Vec2, Vec3 } from "cc";
+import { _decorator, Button, Component, instantiate, Label, Layers, Layout, log, Node, Sprite, UITransform, v2, v3, Vec2, Vec3 } from "cc";
 import ConfigConfig from "../../../Config/ConfigConfig";
 import { ConfigType, OneStepCostEnergyParam } from "../../../Const/Config";
 import { MapBuildingObject, MapBuildingWormholeObject } from "../../../Const/MapBuilding";
@@ -14,6 +14,7 @@ import { DataMgr } from "../../../Data/DataMgr";
 import NotificationMgr from "../../../Basic/NotificationMgr";
 import { NotificationName } from "../../../Const/Notification";
 import { RookieStep } from "../../../Const/RookieDefine";
+import CommonTools from "../../../Tool/CommonTools";
 const { ccclass, property } = _decorator;
 
 @ccclass("ResOprView")
@@ -237,6 +238,8 @@ export class ResOprView extends Component {
             this._actionItemContent.addChild(actionItem);
         }
         this._confirmCallback = confirmCallback;
+
+        CommonTools.changeLayerIteratively(this.node, DataMgr.s.userInfo.data.rookieStep == RookieStep.FINISH ? Layers.Enum.DEFAULT : this.node.layer);
 
         this.scheduleOnce(() => {
             let view: Node = null;

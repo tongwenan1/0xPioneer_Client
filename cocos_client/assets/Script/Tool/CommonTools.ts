@@ -1,3 +1,5 @@
+import { Layers, Node } from "cc";
+
 export default class CommonTools {
     public static getOneDecimalNum(num: number): number {
         return Math.floor(num * 10) / 10;
@@ -231,5 +233,17 @@ export default class CommonTools {
             uuid += (i === 12 ? 4 : i === 16 ? (random & 3) | 8 : random).toString(16);
         }
         return uuid.substring(0, 16);
+    }
+
+    //----------------------------------- COCOS
+    public static changeLayerIteratively(rootNode: Node, layer: Layers.Enum) {
+        const stack = [rootNode];
+        while (stack.length > 0) {
+            const node = stack.pop();
+            node.layer = layer;
+            for (let i = 0; i < node.children.length; i++) {
+                stack.push(node.children[i]);
+            }
+        }
     }
 }

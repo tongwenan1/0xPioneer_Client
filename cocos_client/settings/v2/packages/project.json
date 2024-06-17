@@ -15,8 +15,12 @@
       "value": 1
     },
     {
-      "name": "SCENE_FLOAT",
+      "name": "UI",
       "value": 2
+    },
+    {
+      "name": "GAME_OVERLAY",
+      "value": 524288
     }
   ],
   "script": {
