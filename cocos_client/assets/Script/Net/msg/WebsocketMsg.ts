@@ -544,8 +544,9 @@ export namespace s2c_user {
         data: share.Ibuilding_data;
     }
     export interface Iplayer_building_delegate_nft_res {
-        innerBuildingId: string;
-        nftId: string;
+        res: number;
+        buildings: share.Ibuilding_data[];
+        nfts: share.Infts_info_data[];
     }
     export interface Iplayer_nft_lvlup_res {
         res: number;

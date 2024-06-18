@@ -92,12 +92,10 @@ export class TreasureGettedUI extends ViewController {
             .delay(3)
             .call(() => {
                 GameMusicPlayMgr.playOpenBoxStep2Effect();
-                console.log("exce play");
             })
             .delay(2.5)
             .set({ active: true })
             .call(() => {
-                console.log("exce itemshow: " + itemShowAnim.active);
                 itemShowAnim.getChildByName("Treasure_box_open_a").getComponent(ParticleSystem2D).resetSystem();
                 itemShowAnim.getChildByName("Treasure_box_open_b").getComponent(ParticleSystem2D).resetSystem();
             })

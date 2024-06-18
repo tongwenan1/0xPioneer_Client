@@ -619,7 +619,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 306.73828125,
+      "width": 133.359375,
       "height": 70.56
     },
     "_anchorPoint": {
@@ -655,7 +655,7 @@
       "b": 113,
       "a": 255
     },
-    "_string": "Artifacts Choice",
+    "_string": "Choice",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 40,

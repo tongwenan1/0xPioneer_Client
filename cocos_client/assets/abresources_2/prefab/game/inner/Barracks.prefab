@@ -452,7 +452,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 581,
+      "y": 508.557,
       "z": 0
     },
     "_lrot": {
@@ -480,7 +480,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "RecruitTime",
+    "_name": "Value",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -725,6 +725,8 @@
       "__id__": 0
     },
     "fileId": "71jQ+y9QxGHK0SBwpwd/LG",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -987,6 +989,7 @@
     },
     "fileId": "9eaThcXLpBw7naoppbCV4Z",
     "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": [
       {
         "__id__": 14

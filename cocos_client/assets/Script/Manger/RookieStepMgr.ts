@@ -241,7 +241,6 @@ export default class RookieStepMgr {
     private async _onRookieStepChange() {
         this._refreshMaskShow();
         const rookieStep = DataMgr.s.userInfo.data.rookieStep;
-        console.log("exce r: " + rookieStep);
         if (
             rookieStep == RookieStep.NPC_TALK_1 ||
             rookieStep == RookieStep.NPC_TALK_3 ||

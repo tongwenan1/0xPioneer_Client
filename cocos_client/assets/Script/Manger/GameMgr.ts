@@ -146,6 +146,24 @@ export default class GameMgr {
         }
     }
 
+    public getAfterEffectValueByBuilding(buildingType: InnerBuildingType, type: GameExtraEffectType, originalValue: number): number {
+        let resultEffectValue: number = 0;
+        const clevel: number = DataMgr.s.userInfo.data.level;
+        resultEffectValue += DataMgr.s.artifact.getEffectValueByEffectType(type, clevel);
+        if (type == GameExtraEffectType.BUILDING_LVUP_TIME) {
+            const nft = DataMgr.s.nftPioneer.getNFTByWorkingBuildingId(buildingType);
+            const buildingConfig = InnerBuildingConfig.getByBuildingType(buildingType);
+            if (nft != undefined && buildingConfig.staff_effect != null) {
+                for (const temple of buildingConfig.staff_effect) {
+                    if (temple[0] == "lvlup_time" && temple[1] == 1) {
+                        resultEffectValue -= nft.iq * temple[2][0];
+                    }
+                }
+            }
+        }
+        return this._getEffectResultNum(type, originalValue, resultEffectValue);
+    }
+
     public getAfterEffectValue(type: GameExtraEffectType, originalValue: number): number {
         const clevel: number = DataMgr.s.userInfo.data.level;
         const artifactEffectValue: number = DataMgr.s.artifact.getEffectValueByEffectType(type, clevel);
@@ -203,7 +221,7 @@ export default class GameMgr {
             type == GameExtraEffectType.GATHER_TIME ||
             type == GameExtraEffectType.TROOP_GENERATE_TIME
         ) {
-            originalValue = Math.floor(originalValue * (1 - effectNum));
+            originalValue = Math.max(1, Math.floor(originalValue * (1 - effectNum)));
         } else if (
             type == GameExtraEffectType.PIONEER_ONLY_VISION_RANGE ||
             type == GameExtraEffectType.CITY_AND_PIONEER_VISION_RANGE ||

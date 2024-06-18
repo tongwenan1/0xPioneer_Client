@@ -8,6 +8,9 @@ import { DataMgr } from "../Data/DataMgr";
 import InnerBuildingConfig from "../Config/InnerBuildingConfig";
 import { ItemMgr, LanMgr } from "../Utils/Global";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
+import { NetworkMgr } from "../Net/NetworkMgr";
+import { s2c_user } from "../Net/msg/WebsocketMsg";
+import { UIHUDController } from "./UIHUDController";
 const { ccclass, property } = _decorator;
 
 @ccclass("DelegateUI")
@@ -39,12 +42,16 @@ export class DelegateUI extends ViewController {
         // useLanMgr
         // this._NFTItem.getChildByPath("Working/Working").getComponent(Label).string = LanMgr.getLanById("107549");
         this._NFTItem.removeFromParent();
+
+        NetworkMgr.websocket.on("player_building_delegate_nft_res", this.player_building_delegate_nft_res);
     }
     protected viewDidStart(): void {
         super.viewDidStart();
     }
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
+
+        NetworkMgr.websocket.off("player_building_delegate_nft_res", this.player_building_delegate_nft_res);
     }
     protected viewPopAnimation(): boolean {
         return true;
@@ -74,7 +81,7 @@ export class DelegateUI extends ViewController {
             // await itemView.getComponent(NTFBackpackItem).refreshUI(data);
             itemView.getComponent(Button).clickEvents[0].customEventData = i.toString();
             itemView.getChildByPath("BgAvatar/Role").getComponent(Sprite).spriteFrame = await ItemMgr.getNFTIcon(data.skin);
-            itemView.getChildByPath("Working").active = data.workingBuildingId != null;
+            itemView.getChildByPath("Working").active = data.workingBuildingId != null && data.workingBuildingId.length > 0;
             itemView.parent = this._NFTContent;
             this._allNFTItems.push(itemView);
 
@@ -140,7 +147,27 @@ export class DelegateUI extends ViewController {
         if (this._selectIndex < 0) {
             return;
         }
-        DataMgr.s.nftPioneer.NFTChangeWork(this._datas[this._selectIndex].uniqueId, this._buildingId);
-        this._refreshUI();
+        // if (this._datas[this._selectIndex].workingBuildingId != this._buildingId) {
+        //     UIHUDController.showCenterTip("Pioneer is working");
+        //     // useLanMgr
+        //     // UIHUDController.showCenterTip(LanMgr.getLanById("201002"));
+        //     return;
+        // }
+        NetworkMgr.websocketMsg.player_building_delegate_nft({
+            innerBuildingId: this._buildingId,
+            nftId: this._datas[this._selectIndex].uniqueId,
+        });
     }
+
+    //-------------------------------------------------- notification
+    private player_building_delegate_nft_res = (e: any) => {
+        const p: s2c_user.Iplayer_building_delegate_nft_res = e.data;
+        if (p.res !== 1) {
+            return;
+        }
+        for (const temp of p.nfts) {
+            DataMgr.s.nftPioneer.replaceData(temp);
+        }
+        this._refreshUI();
+    };
 }

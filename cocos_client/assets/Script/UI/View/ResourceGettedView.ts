@@ -39,7 +39,6 @@ export class ResourceGettedView extends ViewController {
         if (this._itemDatas.length > 0) {
             this._isAddingItem = true;
             const item = this._itemDatas.shift();
-            console.log("exce item: " + JSON.stringify(item));
             const itemView = instantiate(this._showItem);
             if (item instanceof ItemData) {
                 itemView.getChildByPath("IconTip").active = true;

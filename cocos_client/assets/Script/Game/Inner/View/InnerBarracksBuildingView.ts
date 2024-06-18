@@ -20,11 +20,11 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
         return true;
     }
 
-    private _generateTime: Label = null;
+    private _generateTime: Node = null;
 
     protected innerBuildingLoad(): void {
         super.innerBuildingLoad();
-        this._generateTime = this.node.getChildByPath("RecruitTime/RecruitTime").getComponent(Label);
+        this._generateTime = this.node.getChildByPath("RecruitTime");
     }
 
     protected viewDidDestroy(): void {
@@ -60,10 +60,12 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
         }
         const currentTime: number = new Date().getTime();
         if (this._building.troopEndTime > currentTime) {
-            this._generateTime.node.active = true;
-            this._generateTime.string = CommonTools.formatSeconds((this._building.troopEndTime - currentTime) / 1000);
+            this._generateTime.active = true;
+            this._generateTime.getChildByPath("Value").getComponent(Label).string = CommonTools.formatSeconds(
+                (this._building.troopEndTime - currentTime) / 1000
+            );
         } else {
-            this._generateTime.node.active = false;
+            this._generateTime.active = false;
         }
     }
 }

@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, AssetManager, Asset } from "cc";
+import { _decorator, Component, Node, ProgressBar, Label, SceneAsset, director, Button, EventHandler, EditBox, AssetManager, Asset, tween, v3 } from "cc";
 import { md5 } from "../../Utils/Md5";
 import ConfigConfig from "../../Config/ConfigConfig";
 import ViewController from "../../BasicView/ViewController";
@@ -79,5 +79,17 @@ export class LoginUI extends ViewController {
         if (canEnter) {
             NotificationMgr.triggerEvent(NotificationName.USER_LOGIN_SUCCEED);
         }
+    }
+
+    private onTapCloseTip() {
+        GameMusicPlayMgr.playTapButtonEffect();
+        const contentView: Node = this.node.getChildByPath("AlertView/Img");
+        tween()
+            .target(contentView)
+            .to(0.5, { scale: v3(0, 0, 0) }, { easing: "bounceIn" })
+            .call(() => {
+                this.node.getChildByPath("AlertView").active = false;
+            })
+            .start();
     }
 }

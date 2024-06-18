@@ -112,7 +112,6 @@ export class ItemDataMgr {
         }
         if (change.count > 0) {
             if (config.itemType == ItemType.Resource) {
-                console.log("exce itemchange: " + JSON.stringify(change));
                 NotificationMgr.triggerEvent(NotificationName.RESOURCE_GETTED, { item: change });
             }
         } else if (change.count < 0) {

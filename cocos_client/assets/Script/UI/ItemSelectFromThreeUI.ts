@@ -134,7 +134,6 @@ export class ItemSelectFromThreeUI extends ViewController {
             // item
             const itemView = tempView.getChildByPath("BackpackItem");
             const artifactView = tempView.getChildByPath("ArtifactItem");
-            console.log("exce data: ", data);
             if (data instanceof ItemData) {
                 itemView.active = true;
                 artifactView.active = false;
