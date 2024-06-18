@@ -15,8 +15,8 @@ export class AlterView extends ViewController {
     public showTip(tip: string, confirmCallback: () => void = null, cancelCallback: () => void = null) {
         // useLanMgr
         // this.node.getChildByPath("Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByPath("Content/ConfrimButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
-        // this.node.getChildByPath("Content/CancelButton/Label").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("Content/ConfrimButton/name").getComponent(Label).string = LanMgr.getLanById("107549");
+        // this.node.getChildByPath("Content/CancelButton/name").getComponent(Label).string = LanMgr.getLanById("107549");
         this.node.getChildByPath("Content/Tip").getComponent(Label).string = tip;
         this._confirmCallback = confirmCallback;
         this._cancelCallback = cancelCallback;

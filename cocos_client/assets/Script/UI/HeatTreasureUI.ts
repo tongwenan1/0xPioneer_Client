@@ -20,7 +20,14 @@ import { BoxInfoConfigData } from "../Const/BoxInfo";
 import UIPanelManger, { UIPanelLayerType } from "../Basic/UIPanelMgr";
 import { DataMgr } from "../Data/DataMgr";
 import ConfigConfig from "../Config/ConfigConfig";
-import { BoxNumByHeatParam, ConfigType, ExploreForOneBoxParam, PiotToHeatCoefficientParam, WorldBoxThresholdParam } from "../Const/Config";
+import {
+    BoxNumByHeatParam,
+    ConfigType,
+    ExploreForOneBoxParam,
+    PerNumSelectBoxParam,
+    PiotToHeatCoefficientParam,
+    WorldBoxThresholdParam,
+} from "../Const/Config";
 import NotificationMgr from "../Basic/NotificationMgr";
 import { NotificationName } from "../Const/Notification";
 import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
@@ -34,7 +41,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass("HeatTreasureUI")
 export class HeatTreasureUI extends Component {
-    private _boxDatas: BoxInfoConfigData[] = [];
+    private _openIndex: number = -1;
 
     private _boxContent: Node = null;
     private _boxItem: Node = null;
@@ -186,10 +193,13 @@ export class HeatTreasureUI extends Component {
         this.node.getChildByPath("__ViewContent/Content/ProgressBar").getComponent(ProgressBar).progress = Math.min(1, exploreValue / exploreTotalValue);
 
         this._boxContent.removeAllChildren();
+        const perNumSelectBox: number = (ConfigConfig.getConfig(ConfigType.PerNumSelectBox) as PerNumSelectBoxParam).value;
+        this._openIndex = -1;
         for (let i = 0; i < worldBoxes.length; i++) {
+            let isSelectBox: boolean = (i + 1) % perNumSelectBox == 0;
             let rank = worldBoxes[i].rank;
             const getted = worldBoxes[i].isOpen;
-            const canGet = exploreValue >= (i + 1) * perBoxNeedExploreValue;
+            const canGet = exploreValue >= (i + 1) * perBoxNeedExploreValue && !getted;
             if (rookieStep != RookieStep.FINISH) {
                 rank = canGet ? 1 : 0;
             }
@@ -198,22 +208,29 @@ export class HeatTreasureUI extends Component {
             item.name = "HEAT_TREASURE_" + i;
             item.setParent(this._boxContent);
 
+            for (let j = 0; j <= 5; j++) {
+                item.getChildByPath("Treasure_box_" + j).active = false;
+            }
+            item.getChildByPath("Treasure_box_select").active = false;
+
+            item.getChildByPath("Treasure_box_empty").active = false;
+            item.getChildByPath("Treasure_box_select_empty").active = false;
+
             if (getted) {
-                item.getChildByPath("Treasure_box_Empty").active = true;
-                for (let j = 0; j <= 5; j++) {
-                    item.getChildByPath("Treasure_box_" + j).active = false;
+                if (isSelectBox) {
+                    item.getChildByPath("Treasure_box_select_empty").active = true;
+                } else {
+                    item.getChildByPath("Treasure_box_empty").active = true;
                 }
             } else {
                 let treasureView = null;
-                for (let j = 0; j <= 5; j++) {
-                    item.getChildByPath("Treasure_box_" + j).active = j == rank;
-                    if (j == rank) {
-                        treasureView = item.getChildByPath("Treasure_box_" + j);
-                    }
+                if (isSelectBox) {
+                    treasureView = item.getChildByPath("Treasure_box_select");
+                } else {
+                    treasureView = item.getChildByPath("Treasure_box_" + rank);
                 }
-                item.getChildByPath("Treasure_box_Empty").active = false;
-
                 if (treasureView != null) {
+                    treasureView.active = true;
                     treasureView.getChildByName("Common").active = exploreValue < (i + 1) * perBoxNeedExploreValue;
                     treasureView.getChildByName("Light").active = exploreValue >= (i + 1) * perBoxNeedExploreValue;
                     if (canGet) {
@@ -241,6 +258,9 @@ export class HeatTreasureUI extends Component {
             item.getComponent(Button).clickEvents[0].customEventData = i.toString();
             item.getComponent(Button).interactable = canGet;
             item.setPosition(v3(-boxContentWidth / 2 + (boxContentWidth / worldBoxes.length) * (i + 1), 0, 0));
+            if (canGet && this._openIndex == -1) {
+                this._openIndex = i;
+            }
         }
     }
 
@@ -248,6 +268,9 @@ export class HeatTreasureUI extends Component {
     private async onTapBoxItem(event: Event, customEventData: string) {
         GameMusicPlayMgr.playTapButtonEffect();
         const index = parseInt(customEventData);
+        if (index != this._openIndex) {
+            return;
+        }
         if (DataMgr.s.userInfo.data.rookieStep == RookieStep.FINISH) {
             NetworkMgr.websocketMsg.player_worldbox_open({
                 boxIndex: index,
@@ -282,7 +305,6 @@ export class HeatTreasureUI extends Component {
     }
     private onTapDetail() {
         GameMusicPlayMgr.playTapButtonEffect();
-        UIPanelManger.inst.pushPanel(UIName.WorldTreasureDetailUI);
     }
     private onTapQuestion() {
         GameMusicPlayMgr.playTapButtonEffect();

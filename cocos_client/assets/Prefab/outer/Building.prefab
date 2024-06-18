@@ -14714,7 +14714,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 530.423,
+      "y": 534.597,
       "z": 0
     },
     "_lrot": {
@@ -14754,8 +14754,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 200.861328125,
-      "height": 54.4
+      "width": 196.861328125,
+      "height": 50.4
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -14821,7 +14821,7 @@
     "node": {
       "__id__": 1105
     },
-    "_enabled": true,
+    "_enabled": false,
     "__prefab": {
       "__id__": 1111
     },
@@ -14848,8 +14848,6 @@
       "__id__": 0
     },
     "fileId": "f40PXze4hIZYZk4nV7kl4z",
-    "instance": null,
-    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {

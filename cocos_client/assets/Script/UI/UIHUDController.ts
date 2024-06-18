@@ -42,6 +42,8 @@ export class UIHUDController extends ViewController {
             this._resourceGettedView = result.node.getComponent(ResourceGettedView);
         }
 
+        NotificationMgr.addListener(NotificationName.GAME_RETRY_CONNECT_FAILED, this._onGameRetryConnectFailed, this);
+
         NotificationMgr.addListener(NotificationName.RESOURCE_GETTED, this._resourceGetted, this);
         NotificationMgr.addListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
         NotificationMgr.addListener(NotificationName.TASK_NEW_GETTED, this._onGetNewTask, this);
@@ -54,6 +56,8 @@ export class UIHUDController extends ViewController {
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
+
+        NotificationMgr.removeListener(NotificationName.GAME_RETRY_CONNECT_FAILED, this._onGameRetryConnectFailed, this);
 
         NotificationMgr.removeListener(NotificationName.RESOURCE_GETTED, this._resourceGetted, this);
         NotificationMgr.removeListener(NotificationName.INNER_BUILDING_UPGRADE_FINISHED, this._innerBuildingUpgradeFinished, this);
@@ -68,8 +72,11 @@ export class UIHUDController extends ViewController {
         }
     }
     //---------------------------------- notifiaction
+    private _onGameRetryConnectFailed() {
+        UIPanelManger.inst.pushPanel(HUDName.NetAlterView, UIPanelLayerType.ROOKIE);
+    }
+
     private async _resourceGetted(data: { item: ItemData }) {
-        console.log("exce d:", data);
         this._resoucesShowItems.push(data.item);
         this._showResouceGettedView();
     }

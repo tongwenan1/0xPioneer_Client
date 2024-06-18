@@ -21,7 +21,6 @@ export enum UIName {
     LootsPopup = "abresources/prefab/ui/LootsPopup",
     Artifact = "abresources/prefab/ui/Artifact",
     ArtifactInfoUI = "abresources/prefab/ui/ArtifactInfoUI",
-    ArtifactStore = "abresources/prefab/ui/ArtifactStore",
     NFTBackpackUI = "abresources/prefab/ui/NFTBackpack",
     NFTInfoUI = "abresources/prefab/ui/NFTInfoUI",
     NFTViewInfoUI = "abresources/prefab/ui/NFTViewInfoUI",
@@ -32,11 +31,7 @@ export enum UIName {
 
     DelegateUI = "abresources/prefab/ui/DelegateUI",
 
-    PointTreasureUI = "abresources/prefab/ui/PointTreasureUI",
-    WorldTreasureUI = "abresources/prefab/ui/WorldTreasureUI",
-    WorldTreasureUIRe = "abresources/prefab/ui/WorldTreasureUIRe",
     WorldTreasureTipUI = "abresources/prefab/ui/WorldTreasureTipUI",
-    WorldTreasureDetailUI = "abresources/prefab/ui/WorldTreasureDetailUI",
 
     DefenderSelectUI = "abresources/prefab/ui/DefenderSelectUI",
     DefenderSetUI = "abresources/prefab/ui/DefenderSetUI",
@@ -44,8 +39,6 @@ export enum UIName {
     TavernUI = "abresources/prefab/ui/TavernUI",
 
     MapActionConfrimTipUI = "abresources/prefab/ui/MapActionConfrimTipUI",
-
-    RelicSelectUI = "abresources/prefab/ui/RelicSelectUI",
 
     // bundle 2
     BuildingUpgradeUI = "abresources_2/prefab/ui/BuildingUpgradeUI",
@@ -63,4 +56,5 @@ export enum HUDName {
     Loading = "abresources/prefab/hud/LoadingUI",
     ResourceGetted = "abresources/prefab/hud/ResourceGettedView",
     Alter = "abresources/prefab/hud/AlterView",
+    NetAlterView = "abresources/prefab/hud/NetAlterView",
 }

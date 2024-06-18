@@ -254,6 +254,7 @@ export class Main extends ViewController {
         if (DataMgr.r.reconnects < 3) {
             this.reconnect();
         } else {
+            NotificationMgr.triggerEvent(NotificationName.GAME_RETRY_CONNECT_FAILED);
             CLog.error("Main/disconnected: retry connecting failed");
         }
     };

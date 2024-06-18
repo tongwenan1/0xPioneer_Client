@@ -2,6 +2,7 @@ export enum NotificationName {
     //------------------------------------ init and login
     CONFIG_LOADED = 100,
     GAME_INITED,
+    GAME_RETRY_CONNECT_FAILED,
     USER_LOGIN_SUCCEED,
 
     //------------------------------------ rookie guide

@@ -35,6 +35,8 @@ export enum ConfigType {
     PiotToHeatCoefficient = "430002",
 
     SelectFromThreeGetAllCostCoefficient = "10008",
+
+    PerNumSelectBox = "10009",
 }
 
 export interface ConfigData {
@@ -126,4 +128,8 @@ export interface PiotToHeatCoefficientParam extends ConfigData {
 
 export interface SelectFromThreeGetAllCostCoefficientParam extends ConfigData {
     coefficient: number;
+}
+
+export interface PerNumSelectBoxParam extends ConfigData {
+    value: number;
 }

@@ -1,5 +1,4 @@
 import { _decorator, Node, Button, Label, Vec3, UITransform, instantiate, tween, dynamicAtlasManager, find, Prefab } from "cc";
-import { ClaimRewardUI } from "./ClaimRewardUI";
 import { UIName } from "../Const/ConstUIDefine";
 import { TaskListUI } from "./TaskListUI";
 import { NewSettlementUI } from "./NewSettlementUI";
@@ -32,7 +31,6 @@ export class MainUI extends ViewController {
 
     private _animView: Node = null;
 
-    private _claimRewardUI: ClaimRewardUI;
     private _gangsterComingTipView: Node = null;
 
     protected viewDidLoad(): void {
@@ -49,7 +47,6 @@ export class MainUI extends ViewController {
         NotificationMgr.addListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onInnerOuterChanged, this);
 
         NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onPlayerLvlupChanged, this);
-        NotificationMgr.addListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._onPlayerExplorationValueChanged, this);
 
         // rookie
         NotificationMgr.addListener(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, this._onGameMainResourcePlayAnim, this);
@@ -60,9 +57,6 @@ export class MainUI extends ViewController {
 
     protected async viewDidStart(): Promise<void> {
         super.viewDidStart();
-
-        this._claimRewardUI = this.node.getChildByPath("CommonContent/reward_ui").getComponent(ClaimRewardUI);
-
         this._refreshElementShow();
         this._refreshSettlememntTip();
         this._onInnerOuterChanged();
@@ -94,7 +88,6 @@ export class MainUI extends ViewController {
         NotificationMgr.removeListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onInnerOuterChanged, this);
 
         NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_LEVEL, this._onPlayerLvlupChanged, this);
-        NotificationMgr.removeListener(NotificationName.USERINFO_DID_CHANGE_TREASURE_PROGRESS, this._onPlayerExplorationValueChanged, this);
 
         NotificationMgr.removeListener(NotificationName.GAME_MAIN_RESOURCE_PLAY_ANIM, this._onGameMainResourcePlayAnim, this);
         NotificationMgr.removeListener(NotificationName.USERINFO_ROOKE_STEP_CHANGE, this._onRookieStepChange, this);
@@ -305,9 +298,6 @@ export class MainUI extends ViewController {
             }
             this._refreshSettlememntTip();
         }
-    }
-    private _onPlayerExplorationValueChanged(): void {
-        this._claimRewardUI.refreshUI();
     }
 
     private _onGameMainResourcePlayAnim(data: RookieResourceAnimStruct) {
