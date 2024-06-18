@@ -69,6 +69,7 @@ export class UIHUDController extends ViewController {
     }
     //---------------------------------- notifiaction
     private async _resourceGetted(data: { item: ItemData }) {
+        console.log("exce d:", data);
         this._resoucesShowItems.push(data.item);
         this._showResouceGettedView();
     }
@@ -82,9 +83,7 @@ export class UIHUDController extends ViewController {
         if (config == null) {
             return;
         }
-        this._resoucesShowItems.push(
-            LanMgr.replaceLanById("106004", [LanMgr.getLanById(config.name), innerBuilding.get(buildingType).buildLevel])
-        );
+        this._resoucesShowItems.push(LanMgr.replaceLanById("106004", [LanMgr.getLanById(config.name), innerBuilding.get(buildingType).buildLevel]));
         this._showResouceGettedView();
     }
     private _onUseResourceGettedViewShowTip(tip: string) {

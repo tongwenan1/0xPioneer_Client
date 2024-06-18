@@ -300,7 +300,7 @@ export class OuterTiledMapActionController extends ViewController {
             GameMainHelper.instance.tiledMapShadowErase(shadow);
         }
 
-        this._eraseMainCityShadow();        
+        this._eraseMainCityShadow();
     }
 
     protected viewDidAppear(): void {
@@ -584,30 +584,39 @@ export class OuterTiledMapActionController extends ViewController {
             }
         }
 
+        const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
         let movePaths: TilePos[] = [];
-        if (sparePositions.length > 0) {
-            // building: find least move path
-            let minMovePath = null;
-            for (const templePos of sparePositions) {
-                const templePath = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, templePos, targetStayPositions);
-                if (templePath.canMove) {
-                    if (minMovePath == null) {
-                        minMovePath = templePath.path;
-                    } else {
-                        if (minMovePath.length > templePath.path.length) {
+        if (rookieStep == RookieStep.WORMHOLE_ATTACK) {
+            movePaths = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(
+                currentActionPioneer.stayPos,
+                v2(stayBuilding.stayMapPositions[0].x, stayBuilding.stayMapPositions[0].y + 2),
+                targetStayPositions
+            ).path;
+        } else {
+            if (sparePositions.length > 0) {
+                // building: find least move path
+                let minMovePath = null;
+                for (const templePos of sparePositions) {
+                    const templePath = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, templePos, targetStayPositions);
+                    if (templePath.canMove) {
+                        if (minMovePath == null) {
                             minMovePath = templePath.path;
+                        } else {
+                            if (minMovePath.length > templePath.path.length) {
+                                minMovePath = templePath.path;
+                            }
                         }
                     }
                 }
-            }
-            if (minMovePath != null) {
-                movePaths = minMovePath;
-            }
-        } else {
-            // pioneer or land
-            const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, taregtPos, targetStayPositions);
-            if (toPosMoveData.canMove) {
-                movePaths = toPosMoveData.path;
+                if (minMovePath != null) {
+                    movePaths = minMovePath;
+                }
+            } else {
+                // pioneer or land
+                const toPosMoveData = GameMainHelper.instance.tiledMapGetTiledMovePathByTiledPos(currentActionPioneer.stayPos, taregtPos, targetStayPositions);
+                if (toPosMoveData.canMove) {
+                    movePaths = toPosMoveData.path;
+                }
             }
         }
         // show move path

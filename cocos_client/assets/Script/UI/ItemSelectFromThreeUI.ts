@@ -208,9 +208,9 @@ export class ItemSelectFromThreeUI extends ViewController {
     private async onTapGet(event: Event, customEventData: string) {
         GameMusicPlayMgr.playTapButtonEffect();
         const index: number = parseInt(customEventData);
-        NetworkMgr.websocketMsg.player_worldbox_open_select_artifact({
+        NetworkMgr.websocketMsg.player_worldbox_open_select({
             boxIndex: this._boxIndex,
-            artifactIndex: index,
+            selectIndex: index,
         });
         await this.playExitAnimation();
         UIPanelManger.inst.popPanel(this.node);
@@ -232,14 +232,14 @@ export class ItemSelectFromThreeUI extends ViewController {
         result.node.getComponent(AlterView).showTip(LanMgr.replaceLanById("104005", [this._getAllPiotCostNum]), async () => {
             const rookieStep = DataMgr.s.userInfo.data.rookieStep;
             if (rookieStep == RookieStep.OPEN_BOX_1 || rookieStep == RookieStep.OPEN_BOX_2 || rookieStep == RookieStep.OPEN_BOX_3) {
-                NetworkMgr.websocketMsg.player_worldbox_beginner_open_select_artifact({
+                NetworkMgr.websocketMsg.player_worldbox_beginner_open_select({
                     boxIndex: this._boxIndex,
-                    artifactIndex: -1,
+                    selectIndex: -1,
                 });
             } else {
-                NetworkMgr.websocketMsg.player_worldbox_open_select_artifact({
+                NetworkMgr.websocketMsg.player_worldbox_open_select({
                     boxIndex: this._boxIndex,
-                    artifactIndex: -1,
+                    selectIndex: -1,
                 });
             }
             await this.playExitAnimation();

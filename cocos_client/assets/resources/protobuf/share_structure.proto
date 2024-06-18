@@ -30,9 +30,9 @@ message player_sinfo {
 
     required bool beginfin = 10;
     repeated string beginBoxes = 11;
-    map<string, uint32> beginBoxesRandom = 12;
+    // map<string, uint32> beginBoxesRandom = 12;
     repeated box_data boxes = 13;
-    map<string, uint32> boxesRandom = 14;
+    // map<string, uint32> boxesRandom = 14;
 
     required uint32 treasureProgress = 20;
     required heat_value_data heatValue = 21;

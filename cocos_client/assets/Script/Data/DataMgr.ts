@@ -788,8 +788,8 @@ export class DataMgr {
 
         this._playOpenBoxAnim(p.boxIndex, p.boxId, p.items, p.artifacts, p.threes);
     };
-    public static player_worldbox_beginner_open_select_artifact_res = (e: any) => {
-        const p: s2c_user.Iplayer_worldbox_beginner_open_select_artifact_res = e.data;
+    public static player_worldbox_beginner_open_select_res = (e: any) => {
+        const p: s2c_user.Iplayer_worldbox_beginner_open_select_res = e.data;
         if (p.res !== 1) {
             return;
         }

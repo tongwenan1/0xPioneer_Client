@@ -227,7 +227,7 @@ export class Main extends ViewController {
 
         // box  
         NetworkMgr.websocket.on("player_worldbox_beginner_open_res", DataMgr.player_worldbox_beginner_open_res);
-        NetworkMgr.websocket.on("player_worldbox_beginner_open_select_artifact_res", DataMgr.player_worldbox_beginner_open_select_artifact_res);
+        NetworkMgr.websocket.on("player_worldbox_beginner_open_select_res", DataMgr.player_worldbox_beginner_open_select_res);
         NetworkMgr.websocket.on("player_worldbox_open_res", DataMgr.player_worldbox_open_res);
 
         //settlement

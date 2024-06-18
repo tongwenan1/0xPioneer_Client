@@ -9,7 +9,7 @@ import InnerBuildingConfig from "../../Config/InnerBuildingConfig";
 
 const { ccclass, property } = _decorator;
 
-@ccclass('ResourceGettedView')
+@ccclass("ResourceGettedView")
 export class ResourceGettedView extends ViewController {
     //--------------------------------- public
     public showTip(items: (ItemData | string)[]) {
@@ -39,6 +39,7 @@ export class ResourceGettedView extends ViewController {
         if (this._itemDatas.length > 0) {
             this._isAddingItem = true;
             const item = this._itemDatas.shift();
+            console.log("exce item: " + JSON.stringify(item));
             const itemView = instantiate(this._showItem);
             if (item instanceof ItemData) {
                 itemView.getChildByPath("IconTip").active = true;
@@ -54,7 +55,6 @@ export class ResourceGettedView extends ViewController {
                 itemView.getChildByPath("IconTip/Icon/8005").active = item.itemConfigId == ResourceCorrespondingItem.Energy;
                 itemView.getChildByPath("IconTip/Name").getComponent(Label).string = LanMgr.getLanById(config.itemName);
                 itemView.getChildByPath("IconTip/Num").getComponent(Label).string = "+" + item.count;
-
             } else if (!!(item as string)) {
                 itemView.getChildByPath("IconTip").active = false;
                 itemView.getChildByPath("TextTip").active = true;

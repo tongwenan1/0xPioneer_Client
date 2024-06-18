@@ -120,7 +120,6 @@ export class RecruitUI extends ViewController {
         if (configMaxTroop != null) {
             this._maxTroop = configMaxTroop;
         }
-        this._maxTroop = 9999999;
         // perGenerateNum
         const configPerGenerateNum = InnerBuildingLvlUpConfig.getBuildingLevelData(barrackBuildingData.buildLevel, "time_barr");
         if (configPerGenerateNum != null) {

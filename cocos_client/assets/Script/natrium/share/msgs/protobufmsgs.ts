@@ -72,9 +72,9 @@ export enum protobuf_c2s {
 
     // ------ worldbox ------
     player_worldbox_open,
-    player_worldbox_open_select_artifact,
+    player_worldbox_open_select,
     player_worldbox_beginner_open,
-    player_worldbox_beginner_open_select_artifact,
+    player_worldbox_beginner_open_select,
 
 
     // ------ inner-building ------
@@ -205,9 +205,9 @@ export enum protobuf_s2c {
 
     // ------ worldbox ------
     player_worldbox_open_res,
-    player_worldbox_open_select_artifact_res,
+    player_worldbox_open_select_res,
     player_worldbox_beginner_open_res,
-    player_worldbox_beginner_open_select_artifact_res,
+    player_worldbox_beginner_open_select_res,
     // worldbox: notify
     player_worldbox_progress_change,
 

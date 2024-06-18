@@ -144,16 +144,16 @@ message player_artifact_combine {
 message player_worldbox_open {
     required uint32 boxIndex = 1;
 }
-message player_worldbox_open_select_artifact {
+message player_worldbox_open_select {
     required uint32 boxIndex = 1;
-    required int32 artifactIndex = 2;
+    required int32 selectIndex = 2;
 }
 message player_worldbox_beginner_open {
     required uint32 boxIndex = 1;
 }
-message player_worldbox_beginner_open_select_artifact {
+message player_worldbox_beginner_open_select {
     required uint32 boxIndex = 1;
-    required int32 artifactIndex = 2;
+    required int32 selectIndex = 2;
 }
 
 // ------ inner-building ------

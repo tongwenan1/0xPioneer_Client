@@ -118,11 +118,11 @@ export class WebsocketMsg {
     public player_worldbox_open(d: c2s_user.Iplayer_worldbox_open) {
         this.send_packet("player_worldbox_open", d);
     }
-    public player_worldbox_open_select_artifact(d: c2s_user.Iplayer_worldbox_open_select_artifact) {
-        this.send_packet("player_worldbox_open_select_artifact", d);
+    public player_worldbox_open_select(d: c2s_user.Iplayer_worldbox_open_select) {
+        this.send_packet("player_worldbox_open_select", d);
     }
-    public player_worldbox_beginner_open_select_artifact(d: c2s_user.Iplayer_worldbox_beginner_open_select_artifact) {
-        this.send_packet("player_worldbox_beginner_open_select_artifact", d);
+    public player_worldbox_beginner_open_select(d: c2s_user.Iplayer_worldbox_beginner_open_select) {
+        this.send_packet("player_worldbox_beginner_open_select", d);
     }
     public player_artifact_change(d: c2s_user.Iplayer_artifact_change) {
         this.send_packet("player_artifact_change", d);
@@ -310,13 +310,13 @@ export namespace c2s_user {
     export interface Iplayer_worldbox_open {
         boxIndex: number;
     }
-    export interface Iplayer_worldbox_open_select_artifact {
+    export interface Iplayer_worldbox_open_select {
         boxIndex: number;
-        artifactIndex: number;
+        selectIndex: number;
     }
-    export interface Iplayer_worldbox_beginner_open_select_artifact {
+    export interface Iplayer_worldbox_beginner_open_select {
         boxIndex: number;
-        artifactIndex: number;
+        selectIndex: number;
     }
     export interface Iplayer_artifact_change {
         artifactId: string;
@@ -514,10 +514,10 @@ export namespace s2c_user {
         artifacts: share.Iartifact_info_data[];
         threes: { [key: string]: share.Iartifact_three_confs };
     }
-    export interface Iplayer_worldbox_beginner_open_select_artifact_res {
+    export interface Iplayer_worldbox_beginner_open_select_res {
         res: number;
         boxIndex: number;
-        artifactIndex: number;
+        selectIndex: number;
     }
     export interface Iplayer_worldbox_open_res {
         res: number;
