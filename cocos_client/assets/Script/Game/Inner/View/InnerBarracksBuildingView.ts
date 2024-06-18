@@ -24,7 +24,7 @@ export class InnerBarracksBuildingView extends InnerBuildingView {
 
     protected innerBuildingLoad(): void {
         super.innerBuildingLoad();
-        this._generateTime = this.node.getChildByPath("RecruitTime").getComponent(Label);
+        this._generateTime = this.node.getChildByPath("RecruitTime/RecruitTime").getComponent(Label);
     }
 
     protected viewDidDestroy(): void {
