@@ -2,7 +2,7 @@
   "ver": "1.0.26",
   "importer": "image",
   "imported": true,
-  "uuid": "88fe557d-8ae6-4b79-bac4-59c04924ba10",
+  "uuid": "0dfbf331-f78f-456a-84b9-c1b1e478133f",
   "files": [
     ".json",
     ".png"
@@ -10,14 +10,14 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "88fe557d-8ae6-4b79-bac4-59c04924ba10@6c48a",
+      "uuid": "0dfbf331-f78f-456a-84b9-c1b1e478133f@6c48a",
       "displayName": "treasurebox_icon_highlevel",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "88fe557d-8ae6-4b79-bac4-59c04924ba10",
+        "imageUuidOrDatabaseUri": "0dfbf331-f78f-456a-84b9-c1b1e478133f",
         "isUuid": true,
         "visible": false,
         "minfilter": "linear",
@@ -34,7 +34,7 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "88fe557d-8ae6-4b79-bac4-59c04924ba10@f9941",
+      "uuid": "0dfbf331-f78f-456a-84b9-c1b1e478133f@f9941",
       "displayName": "treasurebox_icon_highlevel",
       "id": "f9941",
       "name": "spriteFrame",
@@ -114,7 +114,7 @@
           ]
         },
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "88fe557d-8ae6-4b79-bac4-59c04924ba10@6c48a",
+        "imageUuidOrDatabaseUri": "0dfbf331-f78f-456a-84b9-c1b1e478133f@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.12",
@@ -129,6 +129,6 @@
     "type": "sprite-frame",
     "hasAlpha": true,
     "fixAlphaTransparencyArtifacts": false,
-    "redirect": "88fe557d-8ae6-4b79-bac4-59c04924ba10@f9941"
+    "redirect": "0dfbf331-f78f-456a-84b9-c1b1e478133f@f9941"
   }
 }
