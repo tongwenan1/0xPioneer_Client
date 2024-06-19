@@ -766,8 +766,8 @@
     "drop": null,
     "pos": [
       {
-        "x": 17,
-        "y": 23
+        "x": 28,
+        "y": 11
       }
     ]
   },
@@ -1002,6 +1002,102 @@
         "range": 2,
         "speed": 80,
         "cond": ""
+      }
+    ]
+  },
+  "hred_11": {
+    "id": "hred_11",
+    "name": "109016",
+    "type": "4",
+    "friendly": 0,
+    "show": 0,
+    "level": 2,
+    "des": "320005",
+    "nft_pioneer": "",
+    "hp": 60,
+    "attack": 15,
+    "def": 12,
+    "spd": 4,
+    "winprogress": 7,
+    "exp": 5,
+    "animType": "monster_sandspider",
+    "drop": null,
+    "pos": [
+      {
+        "x": 30,
+        "y": 7
+      }
+    ]
+  },
+  "hred_12": {
+    "id": "hred_12",
+    "name": "109017",
+    "type": "4",
+    "friendly": 0,
+    "show": 0,
+    "level": 2,
+    "des": "320005",
+    "nft_pioneer": "",
+    "hp": 60,
+    "attack": 18,
+    "def": 11,
+    "spd": 7,
+    "winprogress": 7,
+    "exp": 5,
+    "animType": "monster_scorpion",
+    "drop": null,
+    "pos": [
+      {
+        "x": 20,
+        "y": 26
+      }
+    ]
+  },
+  "hred_13": {
+    "id": "hred_13",
+    "name": "109022",
+    "type": "4",
+    "friendly": 0,
+    "show": 0,
+    "level": 3,
+    "des": "320005",
+    "nft_pioneer": "",
+    "hp": 75,
+    "attack": 30,
+    "def": 12,
+    "spd": 1,
+    "winprogress": 7,
+    "exp": 5,
+    "animType": "monster_deathworm",
+    "drop": null,
+    "pos": [
+      {
+        "x": 34,
+        "y": 37
+      }
+    ]
+  },
+  "hred_14": {
+    "id": "hred_14",
+    "name": "109013",
+    "type": "4",
+    "friendly": 0,
+    "show": 1,
+    "level": 1,
+    "des": "320005",
+    "nft_pioneer": "",
+    "hp": 60,
+    "attack": 15,
+    "def": 10,
+    "spd": 5,
+    "winprogress": 7,
+    "exp": 5,
+    "animType": "monster_a_1",
+    "drop": null,
+    "pos": [
+      {
+        "x": 14,
+        "y": 50
       }
     ]
   },
