@@ -46,7 +46,7 @@ export class ArtifactDataMgr {
         if (ConfigConfig.getConfig(ConfigType.MapDifficultCoefficient) != null) {
             coefficient = (ConfigConfig.getConfig(ConfigType.MapDifficultCoefficient) as MapDifficultCoefficientParam).coefficient;
         }
-        return level * coefficient;
+        return level * coefficient + 2;
     }
     public getObj_artifact_equiped() {
         return this._data.filter((artifact) => artifact.effectIndex >= 0);
