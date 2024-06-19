@@ -10,7 +10,7 @@
         50
       ]
     ],
-    "prefab_main": "Headquarters_LV1",
+    "prefab_main": "City_Hall_Group",
     "desc_main": "121001",
     "cost_barr": [
       [
@@ -18,7 +18,7 @@
         50
       ]
     ],
-    "prefab_barr": "Damage_house_B",
+    "prefab_barr": "Barracks_Group",
     "desc_barr": "121002",
     "max_barr": 1500,
     "time_barr": 20,
@@ -41,7 +41,7 @@
       ]
     ],
     "relic_max": 3,
-    "prefab_tower": "Tower_Of_Babel_Group_01",
+    "prefab_tower": "Tower_Of_Babel_Group",
     "desc_babel": "121005"
   },
   "2": {
@@ -59,7 +59,7 @@
         240
       ]
     ],
-    "prefab_main": "Headquarters",
+    "prefab_main": "City_Hall_Group",
     "desc_main": "121001",
     "cost_barr": [
       [
@@ -71,7 +71,7 @@
         200
       ]
     ],
-    "prefab_barr": "Pioneer_factory_A",
+    "prefab_barr": "Barracks_Group",
     "desc_barr": "121002",
     "max_barr": 2000,
     "time_barr": 18,
@@ -94,7 +94,7 @@
       ]
     ],
     "relic_max": 4,
-    "prefab_tower": "Tower_Of_Babel_Group_01",
+    "prefab_tower": "Tower_Of_Babel_Group",
     "desc_babel": "121005"
   },
   "3": {
@@ -112,7 +112,7 @@
         480
       ]
     ],
-    "prefab_main": "Headquarters",
+    "prefab_main": "City_Hall_Group",
     "desc_main": "121001",
     "cost_barr": [
       [
@@ -124,7 +124,7 @@
         400
       ]
     ],
-    "prefab_barr": "Pioneer_factory_A",
+    "prefab_barr": "Barracks_Group",
     "desc_barr": "121002",
     "max_barr": 2500,
     "time_barr": 16,
@@ -147,7 +147,7 @@
       ]
     ],
     "relic_max": 5,
-    "prefab_tower": "Tower_Of_Babel_Group_01",
+    "prefab_tower": "Tower_Of_Babel_Group",
     "desc_babel": "121005"
   },
   "4": {
@@ -165,7 +165,7 @@
         600
       ]
     ],
-    "prefab_main": "Headquarters",
+    "prefab_main": "City_Hall_Group",
     "desc_main": "121001",
     "cost_barr": [
       [
@@ -177,7 +177,7 @@
         600
       ]
     ],
-    "prefab_barr": "Pioneer_factory_A",
+    "prefab_barr": "Barracks_Group",
     "desc_barr": "121002",
     "max_barr": 3000,
     "time_barr": 14,
@@ -218,7 +218,7 @@
         720
       ]
     ],
-    "prefab_main": "Headquarters",
+    "prefab_main": "City_Hall_Group",
     "desc_main": "121001",
     "cost_barr": [
       [
@@ -230,7 +230,7 @@
         800
       ]
     ],
-    "prefab_barr": "Pioneer_factory_A",
+    "prefab_barr": "Barracks_Group",
     "desc_barr": "121002",
     "max_barr": 3500,
     "time_barr": 12,
@@ -271,7 +271,7 @@
         1000
       ]
     ],
-    "prefab_main": "Headquarters",
+    "prefab_main": "City_Hall_Group",
     "desc_main": "121001",
     "cost_barr": [
       [
@@ -283,7 +283,7 @@
         1000
       ]
     ],
-    "prefab_barr": "Pioneer_factory_A",
+    "prefab_barr": "Barracks_Group",
     "desc_barr": "121002",
     "max_barr": 4000,
     "time_barr": 10,
@@ -324,7 +324,7 @@
         1400
       ]
     ],
-    "prefab_main": "Headquarters",
+    "prefab_main": "City_Hall_Group",
     "desc_main": "121001",
     "cost_barr": [
       [
@@ -336,7 +336,7 @@
         1200
       ]
     ],
-    "prefab_barr": "Pioneer_factory_A",
+    "prefab_barr": "Barracks_Group",
     "desc_barr": "121002",
     "max_barr": 4500,
     "time_barr": 9,
@@ -377,7 +377,7 @@
         2000
       ]
     ],
-    "prefab_main": "Headquarters",
+    "prefab_main": "City_Hall_Group",
     "desc_main": "121001",
     "cost_barr": [
       [
@@ -389,7 +389,7 @@
         1500
       ]
     ],
-    "prefab_barr": "Pioneer_factory_A",
+    "prefab_barr": "Barracks_Group",
     "desc_barr": "121002",
     "max_barr": 5000,
     "time_barr": 8,
@@ -430,7 +430,7 @@
         2700
       ]
     ],
-    "prefab_main": "Headquarters",
+    "prefab_main": "City_Hall_Group",
     "desc_main": "121001",
     "cost_barr": [
       [
@@ -442,7 +442,7 @@
         2000
       ]
     ],
-    "prefab_barr": "Pioneer_factory_A",
+    "prefab_barr": "Barracks_Group",
     "desc_barr": "121002",
     "max_barr": 5500,
     "time_barr": 7,
@@ -483,7 +483,7 @@
         3600
       ]
     ],
-    "prefab_main": "Headquarters",
+    "prefab_main": "City_Hall_Group",
     "desc_main": "121001",
     "cost_barr": [
       [
@@ -495,7 +495,7 @@
         3000
       ]
     ],
-    "prefab_barr": "Pioneer_factory_A",
+    "prefab_barr": "Barracks_Group",
     "desc_barr": "121002",
     "max_barr": 6000,
     "time_barr": 6,
