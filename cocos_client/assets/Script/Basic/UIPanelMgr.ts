@@ -50,6 +50,9 @@ export default class UIPanelManger extends Component {
         });
     }
     public popPanel(node: Node, layer: UIPanelLayerType = UIPanelLayerType.UI) {
+        if (node == null) {
+            return;
+        }
         let currentQueue: UIPanelQueueItem[] = null;
         if (layer == UIPanelLayerType.Game) {
             currentQueue = this._gameQueue;
