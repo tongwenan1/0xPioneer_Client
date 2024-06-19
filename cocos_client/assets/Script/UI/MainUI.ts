@@ -246,11 +246,6 @@ export class MainUI extends ViewController {
         UIPanelManger.inst.pushPanel(UIName.DefenderSetUI);
     }
     private onTapTest() {
-        for (let i = 0; i < 3; i++) {
-            DataMgr.s.item.countChanged(new ItemData("8001", 300));
-            DataMgr.s.item.countChanged(new ItemData("8002", 600));
-        }
-        return;
         GameMusicPlayMgr.playTapButtonEffect();
         const pioneerIds: string[] = ["pioneer_1", "pioneer_2", "pioneer_3"];
         for (let i = 0; i < pioneerIds.length; i++) {

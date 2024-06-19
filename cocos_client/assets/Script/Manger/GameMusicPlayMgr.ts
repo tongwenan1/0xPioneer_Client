@@ -119,4 +119,8 @@ export default class GameMusicPlayMgr {
         const clip = await ResourcesMgr.loadResource(BundleName.MainBundle, "music/resurrection", AudioClip);
         AudioMgr.playEffect(clip);
     }
+    public static async playCLVUpEffect() {
+        const clip = await ResourcesMgr.loadResource(BundleName.MainBundle, "music/clv_up", AudioClip);
+        AudioMgr.playEffect(clip);
+    }
 }

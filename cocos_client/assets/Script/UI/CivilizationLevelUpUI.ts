@@ -1,24 +1,23 @@
-import { _decorator, Animation, Button, Component, instantiate, Label, Layout, Node, Sprite, tween, v3 } from 'cc';
-import { BackpackItem } from './BackpackItem';
-import { ArtifactItem } from './ArtifactItem';
-import ArtifactData from '../Model/ArtifactData';
-import { LanMgr, UserInfoMgr } from '../Utils/Global';
-import { UIName } from '../Const/ConstUIDefine';
-import { SecretGuardGettedUI } from './Outer/SecretGuardGettedUI';
-import ViewController from '../BasicView/ViewController';
-import { ArtifactInfoUI } from './ArtifactInfoUI';
-import NotificationMgr from '../Basic/NotificationMgr';
-import { LvlupConfigData } from '../Const/Lvlup';
-import ItemData, { ItemConfigType } from '../Const/Item';
-import { NotificationName } from '../Const/Notification';
-import { ItemGettedUI } from './ItemGettedUI';
-import UIPanelManger from '../Basic/UIPanelMgr';
-import GameMusicPlayMgr from '../Manger/GameMusicPlayMgr';
+import { _decorator, Animation, Button, Component, instantiate, Label, Layout, Node, Sprite, tween, v3 } from "cc";
+import { BackpackItem } from "./BackpackItem";
+import { ArtifactItem } from "./ArtifactItem";
+import ArtifactData from "../Model/ArtifactData";
+import { LanMgr, UserInfoMgr } from "../Utils/Global";
+import { UIName } from "../Const/ConstUIDefine";
+import { SecretGuardGettedUI } from "./Outer/SecretGuardGettedUI";
+import ViewController from "../BasicView/ViewController";
+import { ArtifactInfoUI } from "./ArtifactInfoUI";
+import NotificationMgr from "../Basic/NotificationMgr";
+import { LvlupConfigData } from "../Const/Lvlup";
+import ItemData, { ItemConfigType } from "../Const/Item";
+import { NotificationName } from "../Const/Notification";
+import { ItemGettedUI } from "./ItemGettedUI";
+import UIPanelManger from "../Basic/UIPanelMgr";
+import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
 const { ccclass, property } = _decorator;
 
-@ccclass('CivilizationLevelUpUI')
+@ccclass("CivilizationLevelUpUI")
 export class CivilizationLevelUpUI extends ViewController {
-
     private _rewardItem: Node = null;
     private _artifactItem: Node = null;
     private _showRewardItems: Node[] = [];
@@ -51,13 +50,17 @@ export class CivilizationLevelUpUI extends ViewController {
         NotificationMgr.addListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
     }
 
+    protected viewDidStart(): void {
+        super.viewDidStart();
+
+        GameMusicPlayMgr.playCLVUpEffect();
+    }
+
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
         NotificationMgr.removeListener(NotificationName.CHANGE_LANG, this.refreshUI, this);
-        
     }
-
 
     public async refreshUI(levelConfig: LvlupConfigData) {
         if (levelConfig == null) {
@@ -72,7 +75,6 @@ export class CivilizationLevelUpUI extends ViewController {
         // this.node.getChildByPath("Content/RewardContent/ResGetRateUp").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("Content/RewardContent/GetHpMax").getComponent(Label).string = LanMgr.getLanById("107549");
         // this.node.getChildByPath("Content/RewardContent/Rewards/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-
 
         // anim
         if (this._showBuildAnimView != null) {
@@ -120,7 +122,7 @@ export class CivilizationLevelUpUI extends ViewController {
             })
             .start();
 
-        // level 
+        // level
         contentView.getChildByPath("Level/Before").getComponent(Label).string = "C.LV" + (Number(levelConfig.id) - 1).toString();
         contentView.getChildByPath("Level/After").getComponent(Label).string = "C.LV" + levelConfig.id;
 
@@ -142,7 +144,7 @@ export class CivilizationLevelUpUI extends ViewController {
             content.getChildByName("ResGetRateUp").active = true;
             // useLanMgr
             // content.getChildByPath("ResGetRateUp/Content/Title").getComponent(Label).string = LanMgr.getLanById("107549");
-            content.getChildByPath("ResGetRateUp/Value").getComponent(Label).string = "+" + (levelConfig.extra_res * 100) + "%!";
+            content.getChildByPath("ResGetRateUp/Value").getComponent(Label).string = "+" + levelConfig.extra_res * 100 + "%!";
         } else {
             content.getChildByName("ResGetRateUp").active = false;
         }
@@ -218,5 +220,3 @@ export class CivilizationLevelUpUI extends ViewController {
         }
     }
 }
-
-
