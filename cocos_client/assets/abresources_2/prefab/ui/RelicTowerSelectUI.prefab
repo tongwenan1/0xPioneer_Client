@@ -600,7 +600,7 @@
       "b": 87,
       "a": 255
     },
-    "_string": "NOT OCCUPIED",
+    "_string": "EMPTY",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 30,
