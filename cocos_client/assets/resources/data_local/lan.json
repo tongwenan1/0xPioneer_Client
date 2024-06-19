@@ -2121,7 +2121,7 @@
   },
   "503108": {
     "id": "503108",
-    "eng": "Collect any 2 resource points and I will reward you."
+    "eng": "Collect any 1 resource point and I will reward you."
   },
   "503109": {
     "id": "503109",
@@ -2165,11 +2165,11 @@
   },
   "504010": {
     "id": "504010",
-    "eng": "Good job"
+    "eng": "OK, I'm on it"
   },
   "504011": {
     "id": "504011",
-    "eng": "I'll try"
+    "eng": "Not now"
   },
   "504012": {
     "id": "504012",

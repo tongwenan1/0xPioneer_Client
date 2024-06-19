@@ -282,7 +282,15 @@
           "hred_7",
           "hred_8",
           "hred_9",
-          "hred_10"
+          "hred_10",
+          "hred_11",
+          "hred_12",
+          "hred_13",
+          "hred_14",
+          "hred_15",
+          "hred_16",
+          "hred_17",
+          "hred_18"
         ],
         5
       ]
@@ -290,7 +298,7 @@
     "complete_action": null,
     "quit_con": null,
     "progress": 100,
-    "exp": 0
+    "exp": 5
   },
   "770303": {
     "id": "770303",
@@ -437,7 +445,7 @@
     "complete_action": null,
     "quit_con": null,
     "progress": 100,
-    "exp": 0
+    "exp": 5
   },
   "770307": {
     "id": "770307",
@@ -1686,6 +1694,782 @@
     "quit_con": null,
     "progress": null,
     "exp": null
+  },
+  "800031": {
+    "id": "800031",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10",
+          "hred_11",
+          "hred_12",
+          "hred_13",
+          "hred_14",
+          "hred_15",
+          "hred_16",
+          "hred_17",
+          "hred_18"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800041": {
+    "id": "800041",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800051": {
+    "id": "800051",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10",
+          "hred_11",
+          "hred_12",
+          "hred_13",
+          "hred_14",
+          "hred_15",
+          "hred_16",
+          "hred_17",
+          "hred_18"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800061": {
+    "id": "800061",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800071": {
+    "id": "800071",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10",
+          "hred_11",
+          "hred_12",
+          "hred_13",
+          "hred_14",
+          "hred_15",
+          "hred_16",
+          "hred_17",
+          "hred_18"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800081": {
+    "id": "800081",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800091": {
+    "id": "800091",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10",
+          "hred_11",
+          "hred_12",
+          "hred_13",
+          "hred_14",
+          "hred_15",
+          "hred_16",
+          "hred_17",
+          "hred_18"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800101": {
+    "id": "800101",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800111": {
+    "id": "800111",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10",
+          "hred_11",
+          "hred_12",
+          "hred_13",
+          "hred_14",
+          "hred_15",
+          "hred_16",
+          "hred_17",
+          "hred_18"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800121": {
+    "id": "800121",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800131": {
+    "id": "800131",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10",
+          "hred_11",
+          "hred_12",
+          "hred_13",
+          "hred_14",
+          "hred_15",
+          "hred_16",
+          "hred_17",
+          "hred_18"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800141": {
+    "id": "800141",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800151": {
+    "id": "800151",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10",
+          "hred_11",
+          "hred_12",
+          "hred_13",
+          "hred_14",
+          "hred_15",
+          "hred_16",
+          "hred_17",
+          "hred_18"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800161": {
+    "id": "800161",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800171": {
+    "id": "800171",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10",
+          "hred_11",
+          "hred_12",
+          "hred_13",
+          "hred_14",
+          "hred_15",
+          "hred_16",
+          "hred_17",
+          "hred_18"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
+  },
+  "800181": {
+    "id": "800181",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 5
   },
   "task0101": {
     "id": "task0101",

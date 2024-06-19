@@ -1,4 +1,644 @@
 {
+  "80001": {
+    "id": "80001",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        8
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770302"
+    ]
+  },
+  "80002": {
+    "id": "80002",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        8
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk102",
+        "npc_8",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770306"
+    ]
+  },
+  "80003": {
+    "id": "80003",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80001",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800031"
+    ]
+  },
+  "80004": {
+    "id": "80004",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80002",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk102",
+        "npc_8",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800041"
+    ]
+  },
+  "80005": {
+    "id": "80005",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80003",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800051"
+    ]
+  },
+  "80006": {
+    "id": "80006",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80004",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk102",
+        "npc_8",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800061"
+    ]
+  },
+  "80007": {
+    "id": "80007",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80005",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800071"
+    ]
+  },
+  "80008": {
+    "id": "80008",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80006",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk102",
+        "npc_8",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800081"
+    ]
+  },
+  "80009": {
+    "id": "80009",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80007",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800091"
+    ]
+  },
+  "80010": {
+    "id": "80010",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80008",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk102",
+        "npc_8",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800101"
+    ]
+  },
+  "80011": {
+    "id": "80011",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80009",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800111"
+    ]
+  },
+  "80012": {
+    "id": "80012",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80010",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk102",
+        "npc_8",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800121"
+    ]
+  },
+  "80013": {
+    "id": "80013",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80011",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800131"
+    ]
+  },
+  "80014": {
+    "id": "80014",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80012",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk102",
+        "npc_8",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800141"
+    ]
+  },
+  "80015": {
+    "id": "80015",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80013",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800151"
+    ]
+  },
+  "80016": {
+    "id": "80016",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80014",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk102",
+        "npc_8",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800161"
+    ]
+  },
+  "80017": {
+    "id": "80017",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80015",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800171"
+    ]
+  },
+  "80018": {
+    "id": "80018",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "80016",
+        0,
+        1
+      ]
+    ],
+    "pre_action": [
+      [
+        5,
+        "talk102",
+        "npc_8",
+        0
+      ]
+    ],
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        0
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "800181"
+    ]
+  },
   "task12": {
     "id": "task12",
     "name": "501034",
