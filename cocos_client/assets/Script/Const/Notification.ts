@@ -6,6 +6,7 @@ export enum NotificationName {
     USER_LOGIN_SUCCEED,
 
     //------------------------------------ rookie guide
+    FAKE_ROOKIESTEP_CHANGE,
     ROOKIE_GUIDE_BEGIN_EYES,
     ROOKIE_GUIDE_THIRD_EYES,
     ROOKIE_GUIDE_END_PIONEER_WAKE_UP,
@@ -44,9 +45,12 @@ export enum NotificationName {
     GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_UP,
     GAME_INNER_LATTICE_EDIT_ACTION_MOUSE_MOVE,
 
+    GAME_OUTER_ACTION_ROLE_CHANGE,
+
     GAME_JUMP_INNER_AND_SHOW_RELIC_TOWER,
 
     GAME_MAIN_RESOURCE_PLAY_ANIM,
+
     //---------------------- userInfo
     USERINFO_DID_CHANGE_NAME,
     USERINFO_DID_CHANGE_EXP,
@@ -56,6 +60,8 @@ export enum NotificationName {
     USERINFO_BOX_INFO_CHANGE,
     USERINFO_ROOKE_STEP_CHANGE,
     USERINFO_CITY_RADIAL_RANGE_CHANGE,
+
+    USERINFO_DID_TRIGGER_LEFT_TALK,
 
     //---------------------- settlement
     SETTLEMENT_DATA_CHANGE,

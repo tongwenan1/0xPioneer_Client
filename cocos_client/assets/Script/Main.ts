@@ -14,7 +14,7 @@ import { NetworkMgr } from "./Net/NetworkMgr";
 import ChainConfig from "./Config/ChainConfig";
 import CLog from "./Utils/CLog";
 import { EthereumEventData_accountChanged, EthereumEventData_chainChanged, EthereumEventData_init, EthereumEventType } from "./Net/ethers/Ethereum";
-import { s2c_user } from "./Net/msg/WebsocketMsg";
+import { c2s_user, s2c_user } from "./Net/msg/WebsocketMsg";
 import { BundleName } from "./Basic/ResourcesMgr";
 const { ccclass, property } = _decorator;
 
@@ -224,13 +224,15 @@ export class Main extends ViewController {
         NetworkMgr.websocket.on("get_user_task_info_res", DataMgr.get_user_task_info_res);
         NetworkMgr.websocket.on("user_task_action_talk", DataMgr.user_task_action_talk);
 
-        // box  
+        // box
         NetworkMgr.websocket.on("player_worldbox_beginner_open_res", DataMgr.player_worldbox_beginner_open_res);
         NetworkMgr.websocket.on("player_worldbox_beginner_open_select_res", DataMgr.player_worldbox_beginner_open_select_res);
         NetworkMgr.websocket.on("player_worldbox_open_res", DataMgr.player_worldbox_open_res);
 
         //settlement
         NetworkMgr.websocket.on("get_user_settlement_info_res", DataMgr.get_user_settlement_info_res);
+
+        NotificationMgr.addListener(NotificationName.FAKE_ROOKIESTEP_CHANGE, this._onFakeRookieStepChange, this);
     }
 
     private async reconnect() {
@@ -303,4 +305,14 @@ export class Main extends ViewController {
             NetworkMgr.websocketMsg.enter_game({});
         }
     };
+
+    //------------------------ notification
+    private _onFakeRookieStepChange(d: c2s_user.Iplayer_rookie_update) {
+        DataMgr.player_rookie_update_res({
+            data: {
+                res: 1,
+                rookieStep: d.rookieStep,
+            },
+        });
+    }
 }

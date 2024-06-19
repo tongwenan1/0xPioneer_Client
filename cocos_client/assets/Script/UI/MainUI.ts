@@ -176,7 +176,7 @@ export class MainUI extends ViewController {
             taskButton.active = true;
         }
 
-        pioneerListView.active = DataMgr.s.pioneer.getAllPlayers(true).length > 1;
+        pioneerListView.active = GameMainHelper.instance.isGameShowOuter && DataMgr.s.pioneer.getAllPlayers(true).length > 1;
     }
 
     private _refreshSettlememntTip() {

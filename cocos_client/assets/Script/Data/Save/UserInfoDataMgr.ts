@@ -65,6 +65,7 @@ export default class UserInfoDataMgr {
             tavernGetPioneerTimestamp: 0,
             wormholeDefenderIds: new Map(),
             boxes: netData.boxes,
+            talkIds: netData.talkIds,
         };
         if (GAME_SKIP_ROOKIE) {
             newObj.rookieStep = RookieStep.FINISH;
