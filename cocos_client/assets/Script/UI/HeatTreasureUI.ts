@@ -42,6 +42,7 @@ const { ccclass, property } = _decorator;
 @ccclass("HeatTreasureUI")
 export class HeatTreasureUI extends Component {
     private _openIndex: number = -1;
+    private _commonCostPiotNum: number = 1;
 
     private _boxContent: Node = null;
     private _boxItem: Node = null;
@@ -91,7 +92,7 @@ export class HeatTreasureUI extends Component {
             questionButton.active = true;
         }
         //------------------------------------------ heat
-        let heatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
+        const heatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
         const worldBoxThreshold: number[] = (ConfigConfig.getConfig(ConfigType.WorldBoxThreshold) as WorldBoxThresholdParam).thresholds;
         const beginPointerValue: number = 113;
         const endPointerValue: number = -113;
@@ -103,7 +104,8 @@ export class HeatTreasureUI extends Component {
         const gapNum: number = 5;
         const perThreshold = 1 / gapNum;
         let angleValue: number = 0;
-        let heatLevel: number = 0;
+        let heatLevel: number = gapNum - 1;
+        let nextLevelNeedHeat: number = maxHeatThreshold;
         for (let i = 0; i < gapNum; i++) {
             let beginNum: number = 0;
             let endNum: number = 0;
@@ -117,10 +119,19 @@ export class HeatTreasureUI extends Component {
             } else if (heatValue < endNum) {
                 angleValue += (perThreshold * (heatValue - beginNum)) / (endNum - beginNum);
                 heatLevel = i;
+                nextLevelNeedHeat = endNum;
                 break;
             }
         }
         pointerView.angle = beginPointerValue + (endPointerValue - beginPointerValue) * Math.min(1, angleValue);
+        // next level cost piot
+        if (nextLevelNeedHeat == maxHeatThreshold) {
+            this._commonCostPiotNum = 0;
+        } else {
+            this._commonCostPiotNum = Math.ceil(
+                (nextLevelNeedHeat - heatValue) / (ConfigConfig.getConfig(ConfigType.PiotToHeatCoefficient) as PiotToHeatCoefficientParam).coefficient
+            );
+        }
 
         heatAnimView.active = false;
         if (heatValue >= maxHeatThreshold) {
@@ -297,6 +308,11 @@ export class HeatTreasureUI extends Component {
         }
     }
     private async onTapConvertPiotToHeat() {
+        if (this._commonCostPiotNum == 0) {
+            //useLanMgr
+            UIHUDController.showCenterTip("Piot has reached the maximum value");
+            return;
+        }
         const piotNum: number = DataMgr.s.item.getObj_item_count(ResourceCorrespondingItem.Gold);
         const coefficient: number = (ConfigConfig.getConfig(ConfigType.PiotToHeatCoefficient) as PiotToHeatCoefficientParam).coefficient;
         if (piotNum * coefficient < 1) {
@@ -304,9 +320,8 @@ export class HeatTreasureUI extends Component {
             UIHUDController.showCenterTip("Please get more PIOT");
             return;
         }
-        let converNum: number = Math.floor(piotNum * coefficient);
-        converNum = 10;
-        const costPiotNum: number = converNum * (1 / coefficient);
+        const costPiotNum: number = Math.min(this._commonCostPiotNum, piotNum);
+        
         const result = await UIPanelManger.inst.pushPanel(HUDName.Alter, UIPanelLayerType.HUD);
         if (!result.success) {
             return;

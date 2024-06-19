@@ -21,12 +21,12 @@ export class InnerBuildUI extends Component {
         }
         this.txtBuildName.string = `${buildingName} LV.${buildData.buildLevel}`;
 
-        if (!buildData || buildData.buildLevel <= 0) {// unlock
+        if (!buildData || buildData.buildLevel <= 0) {// lock
             this.unlockStatusIconNode.active = false;
             this.lockStatusIconNode.active = true;
 
         } else {
-            this.unlockStatusIconNode.active = true;
+            this.unlockStatusIconNode.active = false;
             this.lockStatusIconNode.active = false;
         }
     }
