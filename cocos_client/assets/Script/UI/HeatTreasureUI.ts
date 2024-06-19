@@ -91,7 +91,7 @@ export class HeatTreasureUI extends Component {
             questionButton.active = true;
         }
         //------------------------------------------ heat
-        const heatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
+        let heatValue: number = DataMgr.s.userInfo.data.heatValue.currentHeatValue;
         const worldBoxThreshold: number[] = (ConfigConfig.getConfig(ConfigType.WorldBoxThreshold) as WorldBoxThresholdParam).thresholds;
         const beginPointerValue: number = 113;
         const endPointerValue: number = -113;
@@ -100,8 +100,29 @@ export class HeatTreasureUI extends Component {
         const pointerView = this.node.getChildByPath("__ViewContent/Content/HeatProgress/Pointer");
         const heatValueView = this.node.getChildByPath("__ViewContent/Content/HeatProgress/HeatValue");
         const heatAnimView = this.node.getChildByPath("__ViewContent/Content/HeatProgress/HeatAnim");
+        const gapNum: number = 5;
+        const perThreshold = 1 / gapNum;
+        let angleValue: number = 0;
+        let heatLevel: number = 0;
+        for (let i = 0; i < gapNum; i++) {
+            let beginNum: number = 0;
+            let endNum: number = 0;
+            if (worldBoxThreshold[i - 1] != undefined) {
+                beginNum = worldBoxThreshold[i - 1];
+            }
+            endNum = worldBoxThreshold[i];
 
-        pointerView.angle = beginPointerValue + (endPointerValue - beginPointerValue) * Math.min(1, heatValue / maxHeatThreshold);
+            if (heatValue >= endNum) {
+                angleValue += perThreshold;
+            } else if (heatValue < endNum) {
+                angleValue += (perThreshold * (heatValue - beginNum)) / (endNum - beginNum);
+                heatLevel = i;
+                break;
+            }
+        }
+        pointerView.angle = beginPointerValue + (endPointerValue - beginPointerValue) * Math.min(1, angleValue);
+
+        heatAnimView.active = false;
         if (heatValue >= maxHeatThreshold) {
             heatValueView.getChildByPath("Value").getComponent(Label).string = "Full";
             // heatAnimView.active = true;
@@ -114,13 +135,6 @@ export class HeatTreasureUI extends Component {
         let exploreValue: number = DataMgr.s.userInfo.data.exploreProgress;
         const perBoxNeedExploreValue: number = (ConfigConfig.getConfig(ConfigType.ExploreForOneBox) as ExploreForOneBoxParam).value;
         const boxThreshold: number[] = (ConfigConfig.getConfig(ConfigType.BoxNumByHeat) as BoxNumByHeatParam).thresholds;
-        let heatLevel: number = 0;
-        for (let i = worldBoxThreshold.length - 1; i >= 0; i--) {
-            if (heatValue >= worldBoxThreshold[i]) {
-                heatLevel = i;
-                break;
-            }
-        }
         const maxBoxNum: number = boxThreshold[heatLevel];
 
         let isFinishRookie: boolean = rookieStep == RookieStep.FINISH;
