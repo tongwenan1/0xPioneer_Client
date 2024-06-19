@@ -57,5 +57,590 @@
       "770201",
       "770202"
     ]
+  },
+  "task100": {
+    "id": "task100",
+    "name": "501100",
+    "type": 1,
+    "pre_con": null,
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770301",
+      "770302"
+    ]
+  },
+  "task101": {
+    "id": "task101",
+    "name": "501101",
+    "type": 1,
+    "pre_con": null,
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770303",
+      "770304"
+    ]
+  },
+  "task102": {
+    "id": "task102",
+    "name": "501102",
+    "type": 1,
+    "pre_con": null,
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770305",
+      "770306"
+    ]
+  },
+  "task103": {
+    "id": "task103",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task100",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770307",
+      "770308"
+    ]
+  },
+  "task104": {
+    "id": "task104",
+    "name": "501101",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task103",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770309",
+      "770310"
+    ]
+  },
+  "task105": {
+    "id": "task105",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task104",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770311",
+      "770312"
+    ]
+  },
+  "task106": {
+    "id": "task106",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task105",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770313",
+      "770314"
+    ]
+  },
+  "task107": {
+    "id": "task107",
+    "name": "501101",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task106",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770315",
+      "770316"
+    ]
+  },
+  "task108": {
+    "id": "task108",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task107",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770317",
+      "770318"
+    ]
+  },
+  "task109": {
+    "id": "task109",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task108",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770319",
+      "770320"
+    ]
+  },
+  "task110": {
+    "id": "task110",
+    "name": "501101",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task109",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770321",
+      "770322"
+    ]
+  },
+  "task111": {
+    "id": "task111",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task110",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770323",
+      "770324"
+    ]
+  },
+  "task112": {
+    "id": "task112",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task111",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770325",
+      "770326"
+    ]
+  },
+  "task113": {
+    "id": "task113",
+    "name": "501101",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task112",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770326",
+      "770327"
+    ]
+  },
+  "task114": {
+    "id": "task114",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task113",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770328",
+      "770330"
+    ]
+  },
+  "task115": {
+    "id": "task115",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task114",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770331",
+      "770332"
+    ]
+  },
+  "task116": {
+    "id": "task116",
+    "name": "501101",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task115",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770333",
+      "770334"
+    ]
+  },
+  "task117": {
+    "id": "task117",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task116",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770335",
+      "770336"
+    ]
+  },
+  "task118": {
+    "id": "task118",
+    "name": "501102",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task117",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770337",
+      "770338"
+    ]
+  },
+  "task119": {
+    "id": "task119",
+    "name": "501101",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task118",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770339",
+      "770340"
+    ]
+  },
+  "task120": {
+    "id": "task120",
+    "name": "501100",
+    "type": 1,
+    "pre_con": [
+      1,
+      [
+        2,
+        0,
+        "task119",
+        0
+      ]
+    ],
+    "pre_action": null,
+    "close_con": null,
+    "take_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "fail_con": null,
+    "steps": [
+      "770341",
+      "770342"
+    ]
   }
 }

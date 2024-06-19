@@ -41,7 +41,8 @@
       ]
     ],
     "relic_max": 3,
-    "prefab_tower": "Tower_Of_Babel_Group_01"
+    "prefab_tower": "Tower_Of_Babel_Group_01",
+    "desc_babel": "121005"
   },
   "2": {
     "id": "2",
@@ -93,7 +94,8 @@
       ]
     ],
     "relic_max": 4,
-    "prefab_tower": "Tower_Of_Babel_Group_01"
+    "prefab_tower": "Tower_Of_Babel_Group_01",
+    "desc_babel": "121005"
   },
   "3": {
     "id": "3",
@@ -145,7 +147,8 @@
       ]
     ],
     "relic_max": 5,
-    "prefab_tower": "Tower_Of_Babel_Group_01"
+    "prefab_tower": "Tower_Of_Babel_Group_01",
+    "desc_babel": "121005"
   },
   "4": {
     "id": "4",
@@ -197,7 +200,8 @@
       ]
     ],
     "relic_max": 6,
-    "prefab_tower": "Tower_Of_Babel_Group"
+    "prefab_tower": "Tower_Of_Babel_Group",
+    "desc_babel": "121005"
   },
   "5": {
     "id": "5",
@@ -249,7 +253,8 @@
       ]
     ],
     "relic_max": 7,
-    "prefab_tower": "Tower_Of_Babel_Group"
+    "prefab_tower": "Tower_Of_Babel_Group",
+    "desc_babel": "121005"
   },
   "6": {
     "id": "6",
@@ -301,7 +306,8 @@
       ]
     ],
     "relic_max": 8,
-    "prefab_tower": "Tower_Of_Babel_Group"
+    "prefab_tower": "Tower_Of_Babel_Group",
+    "desc_babel": "121005"
   },
   "7": {
     "id": "7",
@@ -353,7 +359,8 @@
       ]
     ],
     "relic_max": 9,
-    "prefab_tower": "Tower_Of_Babel_Group"
+    "prefab_tower": "Tower_Of_Babel_Group",
+    "desc_babel": "121005"
   },
   "8": {
     "id": "8",
@@ -405,7 +412,8 @@
       ]
     ],
     "relic_max": 10,
-    "prefab_tower": "Tower_Of_Babel_Group"
+    "prefab_tower": "Tower_Of_Babel_Group",
+    "desc_babel": "121005"
   },
   "9": {
     "id": "9",
@@ -457,7 +465,8 @@
       ]
     ],
     "relic_max": 11,
-    "prefab_tower": "Tower_Of_Babel_Group"
+    "prefab_tower": "Tower_Of_Babel_Group",
+    "desc_babel": "121005"
   },
   "10": {
     "id": "10",
@@ -509,6 +518,7 @@
       ]
     ],
     "relic_max": 12,
-    "prefab_tower": "Tower_Of_Babel_Group"
+    "prefab_tower": "Tower_Of_Babel_Group",
+    "desc_babel": "121005"
   }
 }

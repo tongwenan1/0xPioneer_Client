@@ -231,6 +231,1462 @@
     "progress": 100,
     "exp": 5
   },
+  "770301": {
+    "id": "770301",
+    "name": "501045",
+    "start_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": 0,
+    "exp": 0
+  },
+  "770302": {
+    "id": "770302",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 0
+  },
+  "770303": {
+    "id": "770303",
+    "name": "501046",
+    "start_action": [
+      [
+        5,
+        "talk101",
+        "npc_7",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_7",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": 0,
+    "exp": 0
+  },
+  "770304": {
+    "id": "770304",
+    "name": "501046",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "gangster_1",
+          "gangster_2",
+          "gangster_3",
+          "gangster_4"
+        ],
+        3
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 0
+  },
+  "770305": {
+    "id": "770305",
+    "name": "501047",
+    "start_action": [
+      [
+        5,
+        "talk102",
+        "npc_8",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_8",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": 0,
+    "exp": 0
+  },
+  "770306": {
+    "id": "770306",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": 100,
+    "exp": 0
+  },
+  "770307": {
+    "id": "770307",
+    "name": "501047",
+    "start_action": [
+      [
+        5,
+        "talk102",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770308": {
+    "id": "770308",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770309": {
+    "id": "770309",
+    "name": "501046",
+    "start_action": [
+      [
+        5,
+        "talk101",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770310": {
+    "id": "770310",
+    "name": "501046",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "gangster_1",
+          "gangster_2",
+          "gangster_3",
+          "gangster_4"
+        ],
+        3
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770311": {
+    "id": "770311",
+    "name": "501045",
+    "start_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770312": {
+    "id": "770312",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770313": {
+    "id": "770313",
+    "name": "501047",
+    "start_action": [
+      [
+        5,
+        "talk102",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770314": {
+    "id": "770314",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770315": {
+    "id": "770315",
+    "name": "501046",
+    "start_action": [
+      [
+        5,
+        "talk101",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770316": {
+    "id": "770316",
+    "name": "501046",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "gangster_1",
+          "gangster_2",
+          "gangster_3",
+          "gangster_4"
+        ],
+        3
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770317": {
+    "id": "770317",
+    "name": "501045",
+    "start_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770318": {
+    "id": "770318",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770319": {
+    "id": "770319",
+    "name": "501047",
+    "start_action": [
+      [
+        5,
+        "talk102",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770320": {
+    "id": "770320",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770321": {
+    "id": "770321",
+    "name": "501046",
+    "start_action": [
+      [
+        5,
+        "talk101",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770322": {
+    "id": "770322",
+    "name": "501046",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "gangster_1",
+          "gangster_2",
+          "gangster_3",
+          "gangster_4"
+        ],
+        3
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770323": {
+    "id": "770323",
+    "name": "501045",
+    "start_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770324": {
+    "id": "770324",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770325": {
+    "id": "770325",
+    "name": "501047",
+    "start_action": [
+      [
+        5,
+        "talk102",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770326": {
+    "id": "770326",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770327": {
+    "id": "770327",
+    "name": "501046",
+    "start_action": [
+      [
+        5,
+        "talk101",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770328": {
+    "id": "770328",
+    "name": "501046",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "gangster_1",
+          "gangster_2",
+          "gangster_3",
+          "gangster_4"
+        ],
+        3
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770329": {
+    "id": "770329",
+    "name": "501045",
+    "start_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770330": {
+    "id": "770330",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770331": {
+    "id": "770331",
+    "name": "501047",
+    "start_action": [
+      [
+        5,
+        "talk102",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770332": {
+    "id": "770332",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770333": {
+    "id": "770333",
+    "name": "501046",
+    "start_action": [
+      [
+        5,
+        "talk101",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770334": {
+    "id": "770334",
+    "name": "501046",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "gangster_1",
+          "gangster_2",
+          "gangster_3",
+          "gangster_4"
+        ],
+        3
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770335": {
+    "id": "770335",
+    "name": "501045",
+    "start_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770336": {
+    "id": "770336",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770337": {
+    "id": "770337",
+    "name": "501047",
+    "start_action": [
+      [
+        5,
+        "talk102",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk102",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770338": {
+    "id": "770338",
+    "name": "501047",
+    "start_action": null,
+    "complete_con": [
+      2,
+      [
+        6,
+        1,
+        "building_5",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_6",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_7",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_8",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_9",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_10",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_11",
+        1
+      ],
+      [
+        6,
+        1,
+        "building_12",
+        1
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770339": {
+    "id": "770339",
+    "name": "501046",
+    "start_action": [
+      [
+        5,
+        "talk101",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk101",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770340": {
+    "id": "770340",
+    "name": "501046",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "gangster_1",
+          "gangster_2",
+          "gangster_3",
+          "gangster_4"
+        ],
+        3
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770341": {
+    "id": "770341",
+    "name": "501045",
+    "start_action": [
+      [
+        5,
+        "talk100",
+        "npc_6",
+        0
+      ]
+    ],
+    "complete_con": [
+      1,
+      [
+        1,
+        "talk100",
+        -1
+      ]
+    ],
+    "complete_action": [
+      [
+        1,
+        0,
+        "npc_6",
+        0,
+        0
+      ]
+    ],
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
+  "770342": {
+    "id": "770342",
+    "name": "501045",
+    "start_action": null,
+    "complete_con": [
+      1,
+      [
+        3,
+        0,
+        [
+          "hred_1",
+          "hred_2",
+          "hred_3",
+          "hred_4",
+          "hred_5",
+          "hred_6",
+          "hred_7",
+          "hred_8",
+          "hred_9",
+          "hred_10"
+        ],
+        5
+      ]
+    ],
+    "complete_action": null,
+    "quit_con": null,
+    "progress": null,
+    "exp": null
+  },
   "task0101": {
     "id": "task0101",
     "name": "501023",

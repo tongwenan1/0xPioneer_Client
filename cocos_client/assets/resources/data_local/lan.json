@@ -313,43 +313,43 @@
   },
   "109013": {
     "id": "109013",
-    "eng": "Alpacas"
+    "eng": "Boar"
   },
   "109014": {
     "id": "109014",
-    "eng": "herd"
+    "eng": "Lion"
   },
   "109015": {
     "id": "109015",
-    "eng": "herd"
+    "eng": "Buffalo"
   },
   "109016": {
     "id": "109016",
-    "eng": "herd"
+    "eng": "Sand Spider"
   },
   "109017": {
     "id": "109017",
-    "eng": "herd"
+    "eng": "Scorpion"
   },
   "109018": {
     "id": "109018",
-    "eng": "herd"
+    "eng": "Spider Queen"
   },
   "109019": {
     "id": "109019",
-    "eng": "herd"
+    "eng": "Double-headed Snake"
   },
   "109020": {
     "id": "109020",
-    "eng": "herd"
+    "eng": "Three-headed Snake"
   },
   "109021": {
     "id": "109021",
-    "eng": "herd"
+    "eng": "Terrestrial Shark"
   },
   "109022": {
     "id": "109022",
-    "eng": "herd"
+    "eng": "Death Worm "
   },
   "109023": {
     "id": "109023",
@@ -402,6 +402,10 @@
   "109035": {
     "id": "109035",
     "eng": "Scavenger Unknow"
+  },
+  "109036": {
+    "id": "109036",
+    "eng": "Space-time Raiders"
   },
   "110001": {
     "id": "110001",
@@ -1273,7 +1277,7 @@
   },
   "320005": {
     "id": "320005",
-    "eng": "go check your language config plz"
+    "eng": "Worm Hole"
   },
   "320006": {
     "id": "320006",
@@ -1671,6 +1675,30 @@
     "id": "501044",
     "eng": "Collect resources"
   },
+  "501045": {
+    "id": "501045",
+    "eng": "Hunting Beasts"
+  },
+  "501046": {
+    "id": "501046",
+    "eng": "Suppressing bandits"
+  },
+  "501047": {
+    "id": "501047",
+    "eng": "collection"
+  },
+  "501100": {
+    "id": "501100",
+    "eng": "Hunting Beasts"
+  },
+  "501101": {
+    "id": "501101",
+    "eng": "Suppressing bandits"
+  },
+  "501102": {
+    "id": "501102",
+    "eng": "collection"
+  },
   "502001": {
     "id": "502001",
     "eng": "Tinuvel the Prophetess"
@@ -2054,6 +2082,46 @@
   "503088": {
     "id": "503088",
     "eng": "It appears that there are two people coming over to join us."
+  },
+  "503100": {
+    "id": "503100",
+    "eng": "The number of prey has noticeably decreased recently."
+  },
+  "503101": {
+    "id": "503101",
+    "eng": "Maybe I can help you hunt."
+  },
+  "503102": {
+    "id": "503102",
+    "eng": "Really? Help me hunt 5 wild beasts, I can pay you the reward."
+  },
+  "503103": {
+    "id": "503103",
+    "eng": "There are many thieves nearby."
+  },
+  "503104": {
+    "id": "503104",
+    "eng": "I can go and eliminate them."
+  },
+  "503105": {
+    "id": "503105",
+    "eng": "After you kill three thieves, I will give you a reward."
+  },
+  "503106": {
+    "id": "503106",
+    "eng": "The supplies are becoming increasingly scarce now."
+  },
+  "503107": {
+    "id": "503107",
+    "eng": "How can I help you."
+  },
+  "503108": {
+    "id": "503108",
+    "eng": "Collect any 2 resource points and I will reward you."
+  },
+  "503109": {
+    "id": "503109",
+    "eng": "Go hand in the task now"
   },
   "504001": {
     "id": "504001",

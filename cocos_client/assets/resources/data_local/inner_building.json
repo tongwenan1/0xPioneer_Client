@@ -122,7 +122,7 @@
     "lvlup_cost": "cost_barr",
     "lvlup_time": "lvlup_time",
     "prefab": "prefab_tower",
-    "desc": "",
+    "desc": "desc_babel",
     "size": 2,
     "staff_effect": [
       [
