@@ -239,7 +239,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 712.8604118993135,
+    "_orthoHeight": 716.1379310344828,
     "_near": 0,
     "_far": 1001,
     "_color": {
@@ -562,7 +562,7 @@
     "_priority": 1,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 712.8604118993135,
+    "_orthoHeight": 716.1379310344828,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -1128,7 +1128,7 @@
     "_priority": 2,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 712.8604118993135,
+    "_orthoHeight": 716.1379310344828,
     "_near": 0,
     "_far": 1000,
     "_color": {
