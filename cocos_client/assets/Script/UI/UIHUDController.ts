@@ -73,7 +73,7 @@ export class UIHUDController extends ViewController {
     }
     //---------------------------------- notifiaction
     private _onGameRetryConnectFailed() {
-        UIPanelManger.inst.pushPanel(HUDName.NetAlterView, UIPanelLayerType.ROOKIE);
+        // UIPanelManger.inst.pushPanel(HUDName.NetAlterView, UIPanelLayerType.ROOKIE);
     }
 
     private async _resourceGetted(data: { item: ItemData }) {
