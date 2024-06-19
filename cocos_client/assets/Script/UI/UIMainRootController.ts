@@ -11,6 +11,8 @@ import GameMusicPlayMgr from "../Manger/GameMusicPlayMgr";
 import { RookieStep } from "../Const/RookieDefine";
 import { ResourcesMgr } from "../Utils/Global";
 import { BundleName } from "../Basic/ResourcesMgr";
+import TalkConfig from "../Config/TalkConfig";
+import { DialogueUI } from "./Outer/DialogueUI";
 
 const { ccclass, property } = _decorator;
 
@@ -46,12 +48,14 @@ export class UIMainRootController extends ViewController {
         super.viewDidStart();
 
         NotificationMgr.addListener(NotificationName.CHANGE_CURSOR, this._onCursorChanged, this);
+        NotificationMgr.addListener(NotificationName.USERINFO_DID_TRIGGER_LEFT_TALK, this._onUserInfoDidTriggerLeftTalk, this);
     }
 
     protected viewDidDestroy(): void {
         super.viewDidDestroy();
 
         NotificationMgr.removeListener(NotificationName.CHANGE_CURSOR, this._onCursorChanged, this);
+        NotificationMgr.removeListener(NotificationName.USERINFO_DID_TRIGGER_LEFT_TALK, this._onUserInfoDidTriggerLeftTalk, this);
     }
 
     //------------------------------------------ notification
@@ -60,5 +64,17 @@ export class UIMainRootController extends ViewController {
             type = 0;
         }
         MouseCursor.SetCursorStyle(ECursorStyle.url, this.cursorImages[type].nativeUrl);
+    }
+
+    private async _onUserInfoDidTriggerLeftTalk(data: { talkId: string }) {
+        const config = TalkConfig.getById(data.talkId);
+        if (config == null) {
+            return;
+        }
+        const result = await UIPanelManger.inst.pushPanel(UIName.DialogueUI);
+        if (!result.success) {
+            return;
+        }
+        result.node.getComponent(DialogueUI).dialogShow(config);
     }
 }

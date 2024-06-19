@@ -27,6 +27,8 @@ message player_sinfo {
     required uint32 level = 5;
     required uint32 exp = 6;
     required pos2d pos = 7;
+    
+    repeated string talkIds = 8;
 
     required bool beginfin = 10;
     repeated string beginBoxes = 11;

@@ -115,6 +115,7 @@ export class PlayerListUI extends Component {
                 }
                 DataMgr.s.pioneer.changeCurrentAction(this._pioneers[index].id);
                 this._refreshPlayerList();
+                NotificationMgr.triggerEvent(NotificationName.GAME_OUTER_ACTION_ROLE_CHANGE);
             }
         }
     }

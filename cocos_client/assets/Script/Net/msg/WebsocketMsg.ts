@@ -1,5 +1,7 @@
+import NotificationMgr from "../../Basic/NotificationMgr";
 import ProtobufConfig from "../../Config/ProtobufConfig";
 import { ItemConfigType, ItemType } from "../../Const/Item";
+import { NotificationName } from "../../Const/Notification";
 import { MapPioneerActionType } from "../../Const/PioneerDefine";
 import { natrium_ws } from "../../natrium/client/natrium_ws";
 import { registermsg } from "../../natrium/share/msgs/registermsg";
@@ -162,6 +164,8 @@ export class WebsocketMsg {
         this.send_packet("player_nft_skill_forget", d);
     }
     public player_rookie_update(d: c2s_user.Iplayer_rookie_update) {
+        // NotificationMgr.triggerEvent(NotificationName.FAKE_ROOKIESTEP_CHANGE, d);
+        // return;
         this.send_packet("player_rookie_update", d);
     }
     public player_rookie_wormhole_fight(d: c2s_user.Iplayer_rookie_wormhole_fight) {
@@ -668,6 +672,8 @@ export namespace share {
         gender: number;
 
         boxes: box_data[];
+
+        talkIds: string[];
 
         mapid: number;
         speed: number;

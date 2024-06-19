@@ -307,6 +307,11 @@ export default class GameMainHelper {
         if (DataMgr.s.userInfo.data.rookieStep != RookieStep.FINISH) {
             NotificationMgr.triggerEvent(NotificationName.USERINFO_ROOKE_STEP_CHANGE);
         }
+
+        const leftTalkIds: string[] = DataMgr.s.userInfo.data.talkIds;
+        if (leftTalkIds != null && leftTalkIds.length > 0) {
+            NotificationMgr.triggerEvent(NotificationName.USERINFO_DID_TRIGGER_LEFT_TALK, { talkId: leftTalkIds.splice(0, 1)[0] });
+        }
     }
 
     private static _instance: GameMainHelper;

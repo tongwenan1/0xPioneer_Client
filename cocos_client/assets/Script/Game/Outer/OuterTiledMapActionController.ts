@@ -149,6 +149,8 @@ export class OuterTiledMapActionController extends ViewController {
         this._initTileMap();
 
         NotificationMgr.addListener(NotificationName.USERINFO_CITY_RADIAL_RANGE_CHANGE, this._onCityRadialRangeChange, this);
+        NotificationMgr.addListener(NotificationName.GAME_OUTER_ACTION_ROLE_CHANGE, this._onHideActionView, this);
+        NotificationMgr.addListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onHideActionView, this);
     }
     protected viewDidStart(): void {
         super.viewDidStart();
@@ -327,6 +329,8 @@ export class OuterTiledMapActionController extends ViewController {
         super.viewDidDestroy();
 
         NotificationMgr.removeListener(NotificationName.USERINFO_CITY_RADIAL_RANGE_CHANGE, this._onCityRadialRangeChange, this);
+        NotificationMgr.removeListener(NotificationName.GAME_OUTER_ACTION_ROLE_CHANGE, this._onHideActionView, this);
+        NotificationMgr.removeListener(NotificationName.GAME_INNER_AND_OUTER_CHANGED, this._onHideActionView, this);
     }
     //------------------------------------
     private _initTileMap(): void {
@@ -621,6 +625,8 @@ export class OuterTiledMapActionController extends ViewController {
         }
         // show move path
         outPioneerController.showPioneerFootStep(currentActionPioneer.id, movePaths);
+
+        this["_actionViewFootStepPioneerId"] = currentActionPioneer.id;
         // show action panel
         await this._actionView.show(
             currentActionPioneer.id,
@@ -991,5 +997,22 @@ export class OuterTiledMapActionController extends ViewController {
     //----------------------- notification
     private _onCityRadialRangeChange() {
         this._eraseMainCityShadow();
+    }
+    private _onHideActionView() {
+        if (this["_actionViewFootStepPioneerId"] == null) {
+            return;
+        }
+        if (this["_actionViewActioned"] == true) {
+            this["_actionViewActioned"] = false;
+            return;
+        }
+        if (this._actionView.isShow) {
+            this._actionView.hide();
+            this._mapActionCursorView.hide();
+            const outPioneerController = this.node.getComponent(OuterPioneerController);
+            outPioneerController.hideMovingPioneerAction();
+            outPioneerController.clearPioneerFootStep(this["_actionViewFootStepPioneerId"]);
+            this["_actionViewFootStepPioneerId"] = null;
+        }
     }
 }

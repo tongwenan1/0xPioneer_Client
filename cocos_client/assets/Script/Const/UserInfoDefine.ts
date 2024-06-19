@@ -46,4 +46,6 @@ export interface UserInfoObject {
     wormholeDefenderIds: Map<number, string>;
 
     boxes: share.box_data[];
+
+    talkIds: string[];
 }
