@@ -137,7 +137,9 @@ export class MainUI extends ViewController {
 
         const rookieStep: RookieStep = DataMgr.s.userInfo.data.rookieStep;
         if (rookieStep >= RookieStep.FINISH) {
-            taskButton.active = true;
+            // taskButton.active = true;
+            taskButton.active = GameMainHelper.instance.isGameShowOuter ? true : false;
+
             backpackButton.active = true;
             defendButton.active = true;
             test1Button.active = GAME_ENV_IS_DEBUG;
@@ -151,7 +153,8 @@ export class MainUI extends ViewController {
             taskTrackView.active = true;
         } else if (rookieStep >= RookieStep.DEFEND_TAP) {
             defendButton.active = true;
-            taskButton.active = true;
+            // taskButton.active = true;
+            taskButton.active = GameMainHelper.instance.isGameShowOuter ? true : false;
 
             battleReportButton.active = true;
 
@@ -163,20 +166,27 @@ export class MainUI extends ViewController {
                 }
             }
         } else if (rookieStep >= RookieStep.MAIN_BUILDING_TAP_1) {
-            taskButton.active = true;
+            // taskButton.active = true;
+            taskButton.active = GameMainHelper.instance.isGameShowOuter ? true : false;
 
             battleReportButton.active = true;
 
             innerOuterChangeButton.active = true;
         } else if (rookieStep >= RookieStep.TASK_SHOW_TAP_2) {
-            taskButton.active = true;
+            // taskButton.active = true;
+            taskButton.active = GameMainHelper.instance.isGameShowOuter ? true : false;
 
             battleReportButton.active = true;
         } else if (rookieStep >= RookieStep.TASK_SHOW_TAP_1) {
-            taskButton.active = true;
+            // taskButton.active = true;
+            taskButton.active = GameMainHelper.instance.isGameShowOuter ? true : false;
         }
 
         pioneerListView.active = GameMainHelper.instance.isGameShowOuter && DataMgr.s.pioneer.getAllPlayers(true).length > 1;
+
+        if (!GameMainHelper.instance.isGameShowOuter && UIPanelManger.inst.panelIsShow(UIName.TaskListUI)) {
+            UIPanelManger.inst.popPanelByName(UIName.TaskListUI);
+        }
     }
 
     private _refreshSettlememntTip() {
