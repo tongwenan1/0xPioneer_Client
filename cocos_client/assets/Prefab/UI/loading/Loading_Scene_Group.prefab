@@ -27012,10 +27012,10 @@
       "__id__": 1453
     },
     "asset": {
-      "__uuid__": "4d5d827a-bb7b-4020-acdc-d9fcc6d305e5",
+      "__uuid__": "5eecb92c-cea0-498a-8f7f-054a3941ed0b",
       "__expectedType__": "cc.Prefab"
     },
-    "fileId": "6b/Rrh5ANOEJB0fhFXDbQz",
+    "fileId": "14qj1JVWNGUbN5IdejGctp",
     "instance": {
       "__id__": 1455
     },
@@ -27023,7 +27023,7 @@
   },
   {
     "__type__": "cc.PrefabInstance",
-    "fileId": "07pukUF2lAU5d4kTzqNaQl",
+    "fileId": "041uUC/+VCqIp/7Oh57kYY",
     "prefabRootNode": {
       "__id__": 1
     },
@@ -27053,12 +27053,12 @@
     "propertyPath": [
       "_name"
     ],
-    "value": "DoomGang_3P_Side_Walk_Loading"
+    "value": "Hunter_Side_Walk_Loading"
   },
   {
     "__type__": "cc.TargetInfo",
     "localID": [
-      "6b/Rrh5ANOEJB0fhFXDbQz"
+      "14qj1JVWNGUbN5IdejGctp"
     ]
   },
   {
@@ -27071,7 +27071,7 @@
     ],
     "value": {
       "__type__": "cc.Vec3",
-      "x": 1255.269,
+      "x": -1042.817,
       "y": 0,
       "z": 0
     }
@@ -27124,10 +27124,10 @@
       "__id__": 1461
     },
     "asset": {
-      "__uuid__": "5eecb92c-cea0-498a-8f7f-054a3941ed0b",
+      "__uuid__": "4d5d827a-bb7b-4020-acdc-d9fcc6d305e5",
       "__expectedType__": "cc.Prefab"
     },
-    "fileId": "14qj1JVWNGUbN5IdejGctp",
+    "fileId": "6b/Rrh5ANOEJB0fhFXDbQz",
     "instance": {
       "__id__": 1463
     },
@@ -27135,7 +27135,7 @@
   },
   {
     "__type__": "cc.PrefabInstance",
-    "fileId": "041uUC/+VCqIp/7Oh57kYY",
+    "fileId": "07pukUF2lAU5d4kTzqNaQl",
     "prefabRootNode": {
       "__id__": 1
     },
@@ -27165,12 +27165,12 @@
     "propertyPath": [
       "_name"
     ],
-    "value": "Hunter_Side_Walk_Loading"
+    "value": "DoomGang_3P_Side_Walk_Loading"
   },
   {
     "__type__": "cc.TargetInfo",
     "localID": [
-      "14qj1JVWNGUbN5IdejGctp"
+      "6b/Rrh5ANOEJB0fhFXDbQz"
     ]
   },
   {
@@ -27183,7 +27183,7 @@
     ],
     "value": {
       "__type__": "cc.Vec3",
-      "x": -1042.817,
+      "x": 1255.269,
       "y": 0,
       "z": 0
     }

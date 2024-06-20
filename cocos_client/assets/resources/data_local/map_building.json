@@ -327,7 +327,7 @@
     "id": "building_13",
     "name": "110004",
     "type": 4,
-    "show": 0,
+    "show": 1,
     "pos_type": 1,
     "positions": [
       8,
@@ -352,7 +352,7 @@
     "id": "building_14",
     "name": "110005",
     "type": 4,
-    "show": 0,
+    "show": 1,
     "pos_type": 1,
     "positions": [
       33,
@@ -377,7 +377,7 @@
     "id": "building_15",
     "name": "110006",
     "type": 4,
-    "show": 0,
+    "show": 1,
     "pos_type": 1,
     "positions": [
       27,
@@ -888,10 +888,10 @@
     "cost": 5
   },
   {
-    "id": "building_13",
+    "id": "building_36",
     "name": "110004",
     "type": 4,
-    "show": 0,
+    "show": 1,
     "pos_type": 1,
     "positions": [
       37,
@@ -913,10 +913,10 @@
     "cost": 5
   },
   {
-    "id": "building_14",
+    "id": "building_37",
     "name": "110005",
     "type": 4,
-    "show": 0,
+    "show": 1,
     "pos_type": 1,
     "positions": [
       44,
@@ -938,14 +938,491 @@
     "cost": 5
   },
   {
-    "id": "building_15",
+    "id": "building_38",
+    "name": "110006",
+    "type": 4,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      53,
+      53
+    ],
+    "node": "laboratory",
+    "level": 3,
+    "progress": 25,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "910301",
+    "des": "1100061",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_39",
+    "name": "110002",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      18,
+      20
+    ],
+    "node": "swamp_jungle",
+    "level": 1,
+    "progress": 10,
+    "resources": [
+      "8002",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "des": "320005",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_40",
+    "name": "110001",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      13,
+      32
+    ],
+    "node": "sand_mineral",
+    "level": 1,
+    "progress": 10,
+    "resources": [
+      "8003",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "des": "320005",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_41",
+    "name": "110003",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      13,
+      32
+    ],
+    "node": "oasis",
+    "level": 1,
+    "progress": 10,
+    "resources": [
+      "8001",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "des": "320005",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_42",
+    "name": "110001",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      54,
+      41
+    ],
+    "node": "sand_mineral",
+    "level": 1,
+    "progress": 10,
+    "resources": [
+      "8003",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "des": "320005",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_43",
+    "name": "110002",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      37,
+      54
+    ],
+    "node": "swamp_jungle",
+    "level": 1,
+    "progress": 10,
+    "resources": [
+      "8002",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "des": "320005",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_44",
+    "name": "110003",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      2,
+      35
+    ],
+    "node": "oasis",
+    "level": 1,
+    "progress": 10,
+    "resources": [
+      "8001",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "des": "320005",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_45",
+    "name": "110001",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      2,
+      45
+    ],
+    "node": "sand_mineral",
+    "level": 1,
+    "progress": 10,
+    "resources": [
+      "8003",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "des": "320005",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_46",
+    "name": "110002",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      18,
+      47
+    ],
+    "node": "swamp_jungle",
+    "level": 1,
+    "progress": 10,
+    "resources": [
+      "8002",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "des": "320005",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_47",
+    "name": "110003",
+    "type": 3,
+    "show": 1,
+    "pos_type": 1,
+    "positions": [
+      32,
+      6
+    ],
+    "node": "oasis",
+    "level": 1,
+    "progress": 10,
+    "resources": [
+      "8001",
+      100
+    ],
+    "quota": 1,
+    "exp": 5,
+    "event": "",
+    "des": "320005",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_48",
+    "name": "110004",
+    "type": 4,
+    "show": 0,
+    "pos_type": 1,
+    "positions": [
+      7,
+      39
+    ],
+    "node": "ancient_ruins",
+    "level": 1,
+    "progress": 25,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "910201",
+    "des": "1100041",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_49",
+    "name": "110005",
+    "type": 4,
+    "show": 0,
+    "pos_type": 1,
+    "positions": [
+      5,
+      51
+    ],
+    "node": "spider_cave",
+    "level": 1,
+    "progress": 25,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "910101",
+    "des": "1100051",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_50",
     "name": "110006",
     "type": 4,
     "show": 0,
     "pos_type": 1,
     "positions": [
-      53,
+      18,
+      56
+    ],
+    "node": "laboratory",
+    "level": 3,
+    "progress": 25,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "910301",
+    "des": "1100061",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_51",
+    "name": "110004",
+    "type": 4,
+    "show": 0,
+    "pos_type": 1,
+    "positions": [
+      51,
+      32
+    ],
+    "node": "ancient_ruins",
+    "level": 1,
+    "progress": 25,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "910201",
+    "des": "1100041",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_52",
+    "name": "110005",
+    "type": 4,
+    "show": 0,
+    "pos_type": 1,
+    "positions": [
+      52,
       53
+    ],
+    "node": "spider_cave",
+    "level": 1,
+    "progress": 25,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "910101",
+    "des": "1100051",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_53",
+    "name": "110006",
+    "type": 4,
+    "show": 0,
+    "pos_type": 1,
+    "positions": [
+      10,
+      2
+    ],
+    "node": "laboratory",
+    "level": 3,
+    "progress": 25,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "910301",
+    "des": "1100061",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_54",
+    "name": "110004",
+    "type": 4,
+    "show": 0,
+    "pos_type": 1,
+    "positions": [
+      43,
+      5
+    ],
+    "node": "ancient_ruins",
+    "level": 1,
+    "progress": 25,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "910201",
+    "des": "1100041",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_55",
+    "name": "110005",
+    "type": 4,
+    "show": 0,
+    "pos_type": 1,
+    "positions": [
+      56,
+      15
+    ],
+    "node": "spider_cave",
+    "level": 1,
+    "progress": 25,
+    "resources": null,
+    "quota": null,
+    "exp": null,
+    "event": "910101",
+    "des": "1100051",
+    "hp": null,
+    "attack": null,
+    "winprogress": null,
+    "faction": 0,
+    "defendPioneerIds": [],
+    "cost": 5
+  },
+  {
+    "id": "building_56",
+    "name": "110006",
+    "type": 4,
+    "show": 0,
+    "pos_type": 1,
+    "positions": [
+      46,
+      34
     ],
     "node": "laboratory",
     "level": 3,

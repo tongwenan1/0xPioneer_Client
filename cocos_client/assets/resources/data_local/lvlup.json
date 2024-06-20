@@ -126,9 +126,12 @@
     "city_vision": 0,
     "city_feature": 0,
     "event_building": [
-      "building_13",
-      "building_14",
-      "building_15"
+      "building_48",
+      "building_49",
+      "building_50",
+      "building_51",
+      "building_55",
+      "building_56"
     ],
     "env_up": 1,
     "reward": [
@@ -189,7 +192,10 @@
     "city_vision": 0,
     "city_feature": 0,
     "event_building": [
-      "building_18"
+      "building_18",
+      "building_52",
+      "building_53",
+      "building_54"
     ],
     "env_up": 2,
     "reward": [
