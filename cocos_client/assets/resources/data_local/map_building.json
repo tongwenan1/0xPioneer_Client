@@ -106,12 +106,12 @@
     "show": 1,
     "pos_type": 1,
     "positions": [
-      39,
-      11
+      57,
+      17
     ],
     "node": "swamp_jungle",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8002",
       100
@@ -139,7 +139,7 @@
     ],
     "node": "swamp_jungle",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8002",
       100
@@ -167,7 +167,7 @@
     ],
     "node": "oasis",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8001",
       100
@@ -195,7 +195,7 @@
     ],
     "node": "oasis",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8001",
       100
@@ -223,7 +223,7 @@
     ],
     "node": "oasis",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8001",
       100
@@ -279,7 +279,7 @@
     ],
     "node": "sand_mineral",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8003",
       100
@@ -307,7 +307,7 @@
     ],
     "node": "sand_mineral",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8003",
       100
@@ -535,7 +535,7 @@
     ],
     "node": "swamp_jungle",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8002",
       100
@@ -563,7 +563,7 @@
     ],
     "node": "oasis",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8001",
       100
@@ -591,7 +591,7 @@
     ],
     "node": "sand_mineral",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8003",
       100
@@ -619,7 +619,7 @@
     ],
     "node": "swamp_jungle",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8002",
       100
@@ -647,7 +647,7 @@
     ],
     "node": "oasis",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8001",
       100
@@ -675,7 +675,7 @@
     ],
     "node": "swamp_jungle",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8002",
       100
@@ -703,7 +703,7 @@
     ],
     "node": "sand_mineral",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8003",
       100
@@ -731,7 +731,7 @@
     ],
     "node": "oasis",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8001",
       100
@@ -759,7 +759,7 @@
     ],
     "node": "sand_mineral",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8003",
       100
@@ -787,7 +787,7 @@
     ],
     "node": "swamp_jungle",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8002",
       100
@@ -815,7 +815,7 @@
     ],
     "node": "oasis",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8001",
       100
@@ -843,7 +843,7 @@
     ],
     "node": "sand_mineral",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8003",
       100
@@ -871,7 +871,7 @@
     ],
     "node": "swamp_jungle",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8002",
       100
@@ -891,7 +891,7 @@
     "id": "building_36",
     "name": "110004",
     "type": 4,
-    "show": 1,
+    "show": 0,
     "pos_type": 1,
     "positions": [
       37,
@@ -916,10 +916,10 @@
     "id": "building_37",
     "name": "110005",
     "type": 4,
-    "show": 1,
+    "show": 0,
     "pos_type": 1,
     "positions": [
-      44,
+      45,
       5
     ],
     "node": "spider_cave",
@@ -941,7 +941,7 @@
     "id": "building_38",
     "name": "110006",
     "type": 4,
-    "show": 1,
+    "show": 0,
     "pos_type": 1,
     "positions": [
       53,
@@ -974,7 +974,7 @@
     ],
     "node": "swamp_jungle",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8002",
       100
@@ -1002,7 +1002,7 @@
     ],
     "node": "sand_mineral",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8003",
       100
@@ -1030,7 +1030,7 @@
     ],
     "node": "oasis",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8001",
       100
@@ -1058,7 +1058,7 @@
     ],
     "node": "sand_mineral",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8003",
       100
@@ -1086,7 +1086,7 @@
     ],
     "node": "swamp_jungle",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8002",
       100
@@ -1114,7 +1114,7 @@
     ],
     "node": "oasis",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8001",
       100
@@ -1142,7 +1142,7 @@
     ],
     "node": "sand_mineral",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8003",
       100
@@ -1170,7 +1170,7 @@
     ],
     "node": "swamp_jungle",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8002",
       100
@@ -1198,7 +1198,7 @@
     ],
     "node": "oasis",
     "level": 1,
-    "progress": 10,
+    "progress": 5,
     "resources": [
       "8001",
       100
@@ -1221,8 +1221,8 @@
     "show": 0,
     "pos_type": 1,
     "positions": [
-      7,
-      39
+      5,
+      2
     ],
     "node": "ancient_ruins",
     "level": 1,
@@ -1372,7 +1372,7 @@
     "pos_type": 1,
     "positions": [
       43,
-      5
+      10
     ],
     "node": "ancient_ruins",
     "level": 1,
