@@ -13,7 +13,7 @@ const { ccclass, property } = _decorator;
 export class SecretGuardGettedUI extends ViewController {
     public dialogShow(pioneerAnimType: string) {
         GameMusicPlayMgr.playGetNewPioneerEffect();
-        const names = ["secretGuard", "doomsdayGangSpy", "rebels"];
+        const names = ["doomsdayGangSpy", "secretGuard","rebels"];
 
         // useLanMgr
         const keen = [
